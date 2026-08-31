@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788156613,
+  "generated_at_unix": 1788160750,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1673,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-temporal-evidence-scope-coordinate.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -156,6 +157,7 @@
       ".github/workflows/k27-astge-current-ingest-convergence.yml",
       ".github/workflows/k27-astge-immutability-capability.yml",
       ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
+      ".github/workflows/k27-spatial-physical-observation-handoff.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -192,6 +194,7 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
+      ".github/workflows/thinkpad-longitudinal-envelope-series.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
@@ -1640,8 +1643,11 @@
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+      "tests/test_k27_eye_pose_observation_contract.py",
+      "tests/test_k27_spatial_physical_observation_handoff.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_temporal_evidence_scope_coordinate.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -1655,6 +1661,12 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+      "tools/k27_eye_pose_observation_contract.py",
+      "tools/k27_spatial_physical_observation_handoff.py",
+      "tools/temporal_evidence_scope_coordinate.py",
+      "tools/test_thinkpad_longitudinal_envelope_series.py",
+      "tools/thinkpad_longitudinal_envelope_series.py",
+      "tools/thinkpad_sustained_operating_envelope.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1777,16 +1789,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26603809,
-      "tokens_est": 6641308,
+      "files": 1673,
+      "bytes": 26695394,
+      "tokens_est": 6664208,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 17,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 280,
+        "python_module": 1012,
+        "schema_or_lexicon": 283,
         "support_file": 49
       }
     },
@@ -3933,6 +3945,38 @@
         "end_line": 34,
         "semantic_id": "tools/aura_review/aura_review_context_compiler.py#function:_canonical:bd9298f603c5393b",
         "signature_hash": "715348a547238606"
+      },
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_canonical:765fd3be1ef1f336",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_canonical:6b25ede425721fdb",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 44,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_canonical:3d8c2a7cdfc7797b",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 40,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_canonical:96b95fb3214ba6d4",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4398,6 +4442,38 @@
         "line": 59,
         "end_line": 60,
         "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_digest:ad2d52a10526f601",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_digest:3e4a1ab05bdb3880",
+        "signature_hash": "d4a8cba568e54ac5"
+      },
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_digest:7426ed05a57735ff",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_digest:8559491952c0dcb9",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_digest:946cf5d06b57806f",
         "signature_hash": "514f786724465716"
       }
     ],
@@ -8119,6 +8195,14 @@
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
         "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 212,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_canonical_json:ad18b204d8799926",
+        "signature_hash": "c6d0368c0d268d56"
       }
     ],
     "_sha": [
@@ -13777,6 +13861,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 42,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_sha256:4da6fd08d7ddce68",
+        "signature_hash": "c74191271dcacb07"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14739,6 +14831,14 @@
         "end_line": 30,
         "semantic_id": "tools/aura_review/aura_review_context_compiler.py#function:_text:577f5b6d445fde85",
         "signature_hash": "21d3244d1c80a19c"
+      },
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_text:04dcd62821d5b104",
+        "signature_hash": "56b4de4a77d3a7b6"
       }
     ],
     "_bounded": [
@@ -23665,6 +23765,14 @@
         "end_line": 105,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:_summary:6736c72d87f6b94d",
         "signature_hash": "2f9c8f7b06ab5b1f"
+      },
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 125,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_summary:10d438ca37e87cf4",
+        "signature_hash": "5a787fcab162c004"
       }
     ],
     "get_guide": [
@@ -26413,6 +26521,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_positive_int:0752bc2be9ded5de",
+        "signature_hash": "3b7bd9eb822e7406"
       }
     ],
     "_span_line_bounds": [
@@ -30781,6 +30897,14 @@
         "end_line": 388,
         "semantic_id": "aura_spatial_projection.py#function:_nonnegative_int:268b62b5575eb7c0",
         "signature_hash": "da3b10c24c5b5036"
+      },
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_nonnegative_int:ce79885c4c1e1055",
+        "signature_hash": "af41151bb978c8ca"
       }
     ],
     "WorkbenchState": [
@@ -31961,6 +32085,14 @@
         "end_line": 103,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:_finite:e26559cf2b618e2f",
         "signature_hash": "ee2fd2b67e42aa60"
+      },
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite:57c75e2e8e1c5514",
+        "signature_hash": "c71561197bc4f764"
       }
     ],
     "_optional_bounded": [
@@ -47571,6 +47703,14 @@
         "end_line": 117,
         "semantic_id": "aura_executable_refactor_benchmark.py#function:_delta:49ec7d9699222a6d",
         "signature_hash": "a2f4b05b94320968"
+      },
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 109,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_delta:ca49039d17ac3b12",
+        "signature_hash": "d5056305dfd4157b"
       }
     ],
     "_test_fraction": [
@@ -100643,6 +100783,14 @@
         "end_line": 65,
         "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_sha256:73daa254758f993e",
         "signature_hash": "e7468bc7ebd685f0"
+      },
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 53,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_require_sha256:9307400390a877b7",
+        "signature_hash": "e7468bc7ebd685f0"
       }
     ],
     "_global_id": [
@@ -136285,6 +136433,14 @@
         "end_line": 37,
         "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#function:request:18c2e59e31a1de3e",
         "signature_hash": "74d4e385221be9cc"
+      },
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 34,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#function:request:6261df1468e393db",
+        "signature_hash": "d278207fcc31dd7e"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -157271,6 +157427,264 @@
         "signature_hash": "63949ff0453e8579"
       }
     ],
+    "calibration": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 30,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:28e9abcc04967ab2",
+        "signature_hash": "f59fac0cedb002c5"
+      },
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 36,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:calibration:6f235f10011e4cb1",
+        "signature_hash": "80d0c39e9f5d65ed"
+      }
+    ],
+    "frame": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 47,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:d1556235ca21c7d0",
+        "signature_hash": "d986bf8a8e22e32d"
+      }
+    ],
+    "EyePoseObservationContractTests": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 170,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyePoseObservationContractTests:92ccf178978891ad",
+        "signature_hash": "0ab6a0fdc72f2159"
+      }
+    ],
+    "EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth:8090cd72d39540fd",
+        "signature_hash": "e1a978586c6c2d51"
+      }
+    ],
+    "EyePoseObservationContractTests.test_stale_frame_fails_closed": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 71,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_stale_frame_fails_closed:43d5bd63bbdba56c",
+        "signature_hash": "b5047fe9314a0d6e"
+      }
+    ],
+    "EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 83,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut:350757c7aa36354d",
+        "signature_hash": "79da1579c48d4265"
+      }
+    ],
+    "EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 95,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate:14cb16b4df918966",
+        "signature_hash": "4cb88962c7068094"
+      }
+    ],
+    "EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 107,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate:c2349f7d2edd384c",
+        "signature_hash": "a9cf4c2a286afa11"
+      }
+    ],
+    "EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 119,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed:e28597e01d6c9e7c",
+        "signature_hash": "7a579e0b94dd3d95"
+      }
+    ],
+    "EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 132,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized:81ca910e14a753d1",
+        "signature_hash": "050365dd551d50e3"
+      }
+    ],
+    "EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 153,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident:591790535fd26ecf",
+        "signature_hash": "8377b91b4d42debe"
+      }
+    ],
+    "EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 170,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents:bb0476af135e5cfd",
+        "signature_hash": "a37f9709b3c30236"
+      }
+    ],
+    "attempt": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 56,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#function:attempt:b9c90b17bc9c75bc",
+        "signature_hash": "b3b94ac137eac8c6"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 137,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#class:TestSpatialPhysicalObservationHandoff:12529ae48590044b",
+        "signature_hash": "35dfbe40a6465d38"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_happy_path_is_integrity_only": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 77,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_happy_path_is_integrity_only:cb10f9b6be301d9d",
+        "signature_hash": "5bf206fecad9de81"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_exact_two_parents_required": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_exact_two_parents_required:ca67c221a23978fe",
+        "signature_hash": "7e50329c53d66990"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_unsupported_metric_rejected": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_unsupported_metric_rejected:9fd390bd28754b89",
+        "signature_hash": "d68bc9a1b42ed8d8"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_request_digest_mismatch_rejected": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 94,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_request_digest_mismatch_rejected:030d9134ddfcfd4e",
+        "signature_hash": "59dee0a50ece12df"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_display_generation_aba_rejected": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 99,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_display_generation_aba_rejected:ccc5277db7fdd0cf",
+        "signature_hash": "4f72c550cc4b9db5"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_calibration_or_phase_substitution_rejected": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_calibration_or_phase_substitution_rejected:c7c77ad4c3815c5f",
+        "signature_hash": "78b17b664c99e136"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_budget_escape_rejected": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 113,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_budget_escape_rejected:ed942234d2574c8e",
+        "signature_hash": "9963141ea6a83ff4"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_metric_set_must_match_exactly": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 118,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_metric_set_must_match_exactly:4ee4e56237ab2039",
+        "signature_hash": "357874db73b47978"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_failed_attempt_cannot_be_relabelled_successful": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_failed_attempt_cannot_be_relabelled_successful:9bb3995bd7dcec1b",
+        "signature_hash": "af11ebee96b63818"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_receipt_deterministic_and_tamper_sensitive": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 131,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_receipt_deterministic_and_tamper_sensitive:7c5c0d484b0d522a",
+        "signature_hash": "f1d92e2fe19a6ebe"
+      }
+    ],
+    "TestSpatialPhysicalObservationHandoff.test_temporal_coordinate_is_bound_not_currentness_authority": [
+      {
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_temporal_coordinate_is_bound_not_currentness_authority:dde7aaffd9389028",
+        "signature_hash": "e0de21d8b1dd3f92"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157529,6 +157943,116 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "eye_receipt": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 73,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:cdfe16727bfa68c4",
+        "signature_hash": "9020eb40c8d5b771"
+      }
+    ],
+    "series": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 77,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:series:6abfab6e4795e1d7",
+        "signature_hash": "e3a95641818231ec"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 156,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinateTests:e24a09e66f248d98",
+        "signature_hash": "230c0e4416bb511a"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 89,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion:d5f1d9dae66ec1da",
+        "signature_hash": "fabcd849fc86c988"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 106,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality:86cbac1792b35f5c",
+        "signature_hash": "1a800ebec5a362cb"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified:9a1528a1ac7e2666",
+        "signature_hash": "b319af35511d2f4b"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 121,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit:793e9c1fbab6e2ec",
+        "signature_hash": "caafd8fef4bd35c5"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 129,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition:1721eb10f0e3a89d",
+        "signature_hash": "b2727eeb6f6a5228"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 142,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing:866496b235e9e472",
+        "signature_hash": "21389ce5e5f55866"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 148,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects:2b399a78af846400",
+        "signature_hash": "b99db4856f95ff5a"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 156,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic:0f80fde6dde5635a",
+        "signature_hash": "da6cbc800ca8f7c8"
       }
     ],
     "ReviewCacheRefusal": [
@@ -158861,6 +159385,752 @@
         "signature_hash": "f680ff8905fe4b81"
       }
     ],
+    "_finite_positive": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite_positive:74809e1755678bd8",
+        "signature_hash": "c763af4e62e0138d"
+      }
+    ],
+    "CameraCalibration": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 59,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:CameraCalibration:ee4d07347dc14a11",
+        "signature_hash": "960d15363264b4f7"
+      }
+    ],
+    "CameraCalibration.validate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 59,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:CameraCalibration.validate:07aebbb2da45c3d9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "IrisFrameObservation": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 96,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:IrisFrameObservation:c87bd3bb37e8f341",
+        "signature_hash": "b403f130812ee23a"
+      }
+    ],
+    "IrisFrameObservation.validate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 96,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:IrisFrameObservation.validate:e0f6472f6af3e0fe",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EyePoseEstimate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 107,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:EyePoseEstimate:f11cf7a67b7578f7",
+        "signature_hash": "4426a584e1b24e0e"
+      }
+    ],
+    "SteeringGate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 118,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:SteeringGate:96d323032a7c0afa",
+        "signature_hash": "f942ccb186596668"
+      }
+    ],
+    "estimate_eye_pose_from_assumed_ipd": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 152,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:estimate_eye_pose_from_assumed_ipd:6b4d707dff063222",
+        "signature_hash": "a55deab9508aba9c"
+      }
+    ],
+    "gate_eye_pose_for_steering": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 208,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:60cb74a522fb06ee",
+        "signature_hash": "c6d9f9a477e7e240"
+      }
+    ],
+    "build_eye_pose_receipt": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 215,
+        "end_line": 250,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:42d8ae9df25ff7d0",
+        "signature_hash": "d27cdddecd456503"
+      }
+    ],
+    "verify_eye_pose_receipt": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 253,
+        "end_line": 275,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:verify_eye_pose_receipt:df451dd0d0d41e8b",
+        "signature_hash": "447e8c7de4f26e0d"
+      }
+    ],
+    "_metric_names": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 66,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_metric_names:054774b9363f9321",
+        "signature_hash": "43a09db15c998651"
+      }
+    ],
+    "_parents": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_parents:5513f09e4086d54a",
+        "signature_hash": "9bb8e5ba9e061add"
+      }
+    ],
+    "SpatialPhysicalObservationRequest": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 123,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#class:SpatialPhysicalObservationRequest:c797feba6193909a",
+        "signature_hash": "d9cf2e06da88f584"
+      }
+    ],
+    "SpatialPhysicalObservationRequest.__post_init__": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 105,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationRequest.__post_init__:eab626bc18382ff7",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SpatialPhysicalObservationRequest.request_digest": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 123,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationRequest.request_digest:aebc7b9787c305ed",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "SpatialPhysicalObservationAttempt": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "class",
+        "line": 127,
+        "end_line": 192,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#class:SpatialPhysicalObservationAttempt:5b20b001ab957043",
+        "signature_hash": "696295db711286ac"
+      }
+    ],
+    "SpatialPhysicalObservationAttempt.__post_init__": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 170,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationAttempt.__post_init__:99d869f08363a665",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SpatialPhysicalObservationAttempt.attempt_digest": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 192,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationAttempt.attempt_digest:928d732ae5331f20",
+        "signature_hash": "4b8d2da6b7b52c2e"
+      }
+    ],
+    "join_spatial_physical_observation": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 247,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:join_spatial_physical_observation:ee129697ae39fedc",
+        "signature_hash": "b6b8cc17cbc43951"
+      }
+    ],
+    "build_receipt": [
+      {
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 267,
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:build_receipt:ef0d430bf96571d5",
+        "signature_hash": "352eca8c2bf9de18"
+      }
+    ],
+    "TemporalEvidenceScopeError": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeError:b6e0061efe702f05",
+        "signature_hash": "2340462d0127e911"
+      }
+    ],
+    "TemporalEvidenceScopeError.__init__": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeError.__init__:b0b3ea5930e70609",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_parse_time": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 53,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_parse_time:207a51d90fb9ee59",
+        "signature_hash": "0e7d03ca78676525"
+      },
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 65,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_parse_time:89a763df2b0f5eee",
+        "signature_hash": "0e7d03ca78676525"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 37,
+        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
+        "signature_hash": "92dd7ff707cc8d43"
+      }
+    ],
+    "_datetime_ns": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_datetime_ns:7649bd7747019780",
+        "signature_hash": "261c131fb889d031"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 99,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinate:a76dc6e6a47590f2",
+        "signature_hash": "cc261fd5e3e2c4b8"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate.to_dict": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 91,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.to_dict:bb7bab207d496b24",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate.coordinate_digest": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.coordinate_digest:94ea7ec41dce2315",
+        "signature_hash": "ab3c3df3e11c71cd"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate.evidence_ref": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 99,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.evidence_ref:6ea642c1d63d8a6f",
+        "signature_hash": "c27cb8129b449d59"
+      }
+    ],
+    "bind_temporal_evidence_scope": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 176,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:bind_temporal_evidence_scope:6a5978ea886832fb",
+        "signature_hash": "19027a376992efa4"
+      }
+    ],
+    "verify_temporal_evidence_scope_coordinate": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 211,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:verify_temporal_evidence_scope_coordinate:11674854ba2b738c",
+        "signature_hash": "97a71849ccb4be37"
+      }
+    ],
+    "portable_temporal_evidence_scope_receipt": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 214,
+        "end_line": 224,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:portable_temporal_evidence_scope_receipt:fc8dea3355f5f7e9",
+        "signature_hash": "d7df1893885c8c2e"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 171,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#class:ThinkPadLongitudinalEnvelopeSeriesTests:e204702492ed99f3",
+        "signature_hash": "85042344c6d70041"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.envelope": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 60,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.envelope:a6ac912901ce3ec3",
+        "signature_hash": "1825d18d64740f13"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.three": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 91,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.three:6e60b6985efcd62b",
+        "signature_hash": "1d05a972446889d2"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.build": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 103,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.build:5f1e7c5a53676b38",
+        "signature_hash": "603bd504af792457"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_ordered_three_phase_series_computes_descriptive_deltas": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 113,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_ordered_three_phase_series_computes_descriptive_deltas:67f4ffd55a99d3f5",
+        "signature_hash": "a47a96d60d8a4416"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_nonmonotonic_phase_times_fail_closed": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 119,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_nonmonotonic_phase_times_fail_closed:7a47f736d65cbd90",
+        "signature_hash": "b0eb0806aa274d71"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_exact_repeated_observation_fails_at_chronology_gate": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_exact_repeated_observation_fails_at_chronology_gate:5cc338bf4fdededc",
+        "signature_hash": "a4ad795b944dc05c"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_benchmark_and_query_bindings_require_exact_sha256": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_benchmark_and_query_bindings_require_exact_sha256:1265e5759d09ee52",
+        "signature_hash": "f5a1d9edd22e050e"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_missing_sensor_layers_remain_unknown": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_missing_sensor_layers_remain_unknown:75759b503d7c5a9f",
+        "signature_hash": "8237bef43a620a08"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_series_cannot_promote_correlation_to_causality_or_current_authority": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 159,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_series_cannot_promote_correlation_to_causality_or_current_authority:9efc5c99d8b59a50",
+        "signature_hash": "a23d6ee9a5aca121"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_parent_envelope_ceiling_widening_fails_before_series_reasoning": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 165,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_parent_envelope_ceiling_widening_fails_before_series_reasoning:bea7b6d99eaa565f",
+        "signature_hash": "3303d4b47c1f1625"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeriesTests.test_series_identity_is_deterministic": [
+      {
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 171,
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_series_identity_is_deterministic:96ba55b974a66390",
+        "signature_hash": "b1fda61728e0b12c"
+      }
+    ],
+    "LongitudinalEnvelopeError": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#class:LongitudinalEnvelopeError:b8ea5a0dccb581e1",
+        "signature_hash": "cecb3111bfadb48f"
+      }
+    ],
+    "LongitudinalEnvelopeError.__init__": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:LongitudinalEnvelopeError.__init__:e5b6d8bc0cf280a3",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_max_temp": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 74,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_max_temp:11acad794314ba66",
+        "signature_hash": "1896213fe92a74c2"
+      }
+    ],
+    "_min_current_khz": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 83,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_min_current_khz:714cce567f220c03",
+        "signature_hash": "04af5ebe55eefd2d"
+      }
+    ],
+    "_ac_online": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 94,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_ac_online:46794f5e56ab7833",
+        "signature_hash": "bec97f9b2a95e38c"
+      }
+    ],
+    "_battery_capacity": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 103,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_battery_capacity:3a478940e6cac92f",
+        "signature_hash": "be065d181b0f22a7"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeries": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "class",
+        "line": 129,
+        "end_line": 164,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#class:ThinkPadLongitudinalEnvelopeSeries:ce72425f8d59cb8e",
+        "signature_hash": "b02902c05078f8f8"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeries.to_dict": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 156,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeries.to_dict:49f9919ce2b1607b",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeries.series_digest": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 160,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeries.series_digest:02d4574f12f1b50f",
+        "signature_hash": "f50a503fde8ff086"
+      }
+    ],
+    "ThinkPadLongitudinalEnvelopeSeries.evidence_ref": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 164,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeries.evidence_ref:a63eee3d0f569395",
+        "signature_hash": "c27cb8129b449d59"
+      }
+    ],
+    "build_longitudinal_envelope_series": [
+      {
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 232,
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:build_longitudinal_envelope_series:686df88bffd8a3ee",
+        "signature_hash": "8eeea1c05c8ec09e"
+      }
+    ],
+    "OperatingEnvelopeError": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 27,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:OperatingEnvelopeError:74cbd8e2b5052600",
+        "signature_hash": "b5e304ecd30cb564"
+      }
+    ],
+    "OperatingEnvelopeError.__init__": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:OperatingEnvelopeError.__init__:c5e2561ccadb0fe0",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_read_text": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 59,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_read_text:b3d949745eb25009",
+        "signature_hash": "565a7cb0bc8e5a50"
+      }
+    ],
+    "_int_text": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_int_text:88c145464df3027b",
+        "signature_hash": "dd8e9bc11d0538c6"
+      }
+    ],
+    "_parse_meminfo": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 94,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_parse_meminfo:aa65031d262cab8f",
+        "signature_hash": "97aebb69642300ba"
+      }
+    ],
+    "_parse_psi": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 120,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_parse_psi:fac542e7306b0cfb",
+        "signature_hash": "cc3eac8d653a21df"
+      }
+    ],
+    "_bounded_dirs": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 130,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_bounded_dirs:341849d896486579",
+        "signature_hash": "4b699ff40e6cbc44"
+      }
+    ],
+    "PowerSupplyObservation": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "class",
+        "line": 134,
+        "end_line": 141,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:PowerSupplyObservation:18dc697f1cdd9e27",
+        "signature_hash": "1a5b01f75e2a8d96"
+      }
+    ],
+    "ThermalObservation": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "class",
+        "line": 145,
+        "end_line": 148,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:ThermalObservation:28fbf6c4ffc65939",
+        "signature_hash": "8683f3b7413768da"
+      }
+    ],
+    "CpuFrequencyObservation": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "class",
+        "line": 152,
+        "end_line": 156,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:CpuFrequencyObservation:3e77e8a66b5c482c",
+        "signature_hash": "008af24514752a66"
+      }
+    ],
+    "SustainedOperatingEnvelope": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 198,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:SustainedOperatingEnvelope:c74fe1f87eb6eb20",
+        "signature_hash": "8aa2e418ea768b81"
+      }
+    ],
+    "SustainedOperatingEnvelope.to_dict": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 190,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:SustainedOperatingEnvelope.to_dict:3ca03834bafdc52d",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "SustainedOperatingEnvelope.observation_digest": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 194,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:SustainedOperatingEnvelope.observation_digest:9f254bb97acff643",
+        "signature_hash": "28f677c5b8842bca"
+      }
+    ],
+    "SustainedOperatingEnvelope.evidence_ref": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 198,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:SustainedOperatingEnvelope.evidence_ref:d1b85b8dcabd5f4d",
+        "signature_hash": "c27cb8129b449d59"
+      }
+    ],
+    "_power_supplies": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 201,
+        "end_line": 215,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_power_supplies:79d1b79cd1a51fea",
+        "signature_hash": "8e28cdea7a39853c"
+      }
+    ],
+    "_thermal_zones": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 228,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_thermal_zones:a6680640fb147392",
+        "signature_hash": "b43e7c2ba347b294"
+      }
+    ],
+    "_cpu_frequencies": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 231,
+        "end_line": 243,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_cpu_frequencies:8ba310be07a4bde0",
+        "signature_hash": "5c57cb7e27caa734"
+      }
+    ],
+    "observe_sustained_operating_envelope": [
+      {
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "kind": "function",
+        "line": 246,
+        "end_line": 298,
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:observe_sustained_operating_envelope:5f0352a13b3c5ce6",
+        "signature_hash": "fa2aeb47e5b58fd7"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -159357,16 +160627,6 @@
         "end_line": 716,
         "semantic_id": "travel_price_sidecar.py#method:TravelPriceSidecar.query_prices:8988baf067830c1f",
         "signature_hash": "b4c46a087d4d5110"
-      }
-    ],
-    "_parse_time": [
-      {
-        "file": "travel_price_verifier.py",
-        "kind": "function",
-        "line": 25,
-        "end_line": 37,
-        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
-        "signature_hash": "92dd7ff707cc8d43"
       }
     ],
     "TravelPriceVerification": [
@@ -159983,6 +161243,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -160287,6 +161548,15 @@
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-temporal-evidence-scope-coordinate.yml",
+      ".github/workflows/thinkpad-longitudinal-envelope-series.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-temporal-evidence-scope-coordinate.yml",
+      ".github/workflows/thinkpad-longitudinal-envelope-series.yml"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -160309,12 +161579,9 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
-    "python3 -m py_compile": [
+    "python -m unittest": [
       ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
-    ],
-    "python3 -m unittest": [
-      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml"
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -160978,9 +162245,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -170012,6 +171276,67 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-temporal-evidence-scope-coordinate.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7155,
+      "lines": 156,
+      "tokens_est": 1789,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          70,
+          78,
+          86
+        ],
+        "python3 -m unittest": [
+          71,
+          79,
+          87
+        ]
+      },
+      "topology": {},
+      "digest8": "92ca3dce33d1dc47",
+      "vector": [
+        0.218785,
+        -0.277562,
+        0.055512,
+        0.242731,
+        -0.199192,
+        0.155653,
+        0.051159,
+        0.205723,
+        -0.033743,
+        -0.075105,
+        0.109937,
+        0.075105,
+        -0.022858,
+        -0.247085,
+        -0.088167,
+        -0.220961,
+        -0.2079,
+        -0.277562,
+        0.197015,
+        -0.183953,
+        0.181776,
+        0.168714,
+        0.277562,
+        -0.271032,
+        0.109937,
+        0.033743,
+        -0.066397,
+        0.088167,
+        -0.262324,
+        -0.031566,
+        -0.075105,
+        -0.2362
+      ]
+    },
+    {
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -170510,59 +171835,105 @@
       "path": ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 6139,
-      "lines": 150,
-      "tokens_est": 1535,
+      "bytes": 6351,
+      "lines": 155,
+      "tokens_est": 1588,
       "symbol_count": 0,
       "commands": [
-        "python3 -m py_compile",
-        "python3 -m unittest"
+        "python -m py_compile",
+        "python -m unittest"
       ],
       "command_lines": {
-        "python3 -m py_compile": [
-          79,
-          101
+        "python -m py_compile": [
+          84,
+          107
         ],
-        "python3 -m unittest": [
-          80,
-          104
+        "python -m unittest": [
+          110
         ]
       },
       "topology": {},
-      "digest8": "5c556ebe604a5ae1",
+      "digest8": "fd82bb10dc720a3a",
       "vector": [
-        0.176707,
-        0.055305,
-        0.311598,
-        0.254944,
-        0.084981,
-        -0.225268,
-        -0.141636,
-        -0.241455,
-        -0.22257,
-        0.314296,
-        0.095773,
-        -0.055305,
-        0.022931,
-        -0.190196,
-        -0.314296,
-        -0.033723,
-        0.187498,
-        -0.155125,
-        -0.122751,
-        0.165916,
-        -0.087679,
-        0.076888,
-        0.114657,
-        -0.063399,
-        -0.236059,
-        0.241455,
-        0.130844,
-        -0.168614,
-        -0.195592,
-        0.109262,
-        -0.033723,
-        0.163218
+        0.301319,
+        0.233553,
+        -0.064136,
+        0.262596,
+        -0.056876,
+        0.042354,
+        -0.015732,
+        0.255335,
+        -0.068977,
+        0.008471,
+        -0.020572,
+        0.177887,
+        0.127062,
+        -0.093179,
+        -0.180308,
+        -0.151265,
+        -0.296479,
+        0.265016,
+        -0.015732,
+        -0.194829,
+        0.151265,
+        0.013311,
+        0.243234,
+        -0.163366,
+        -0.131903,
+        0.238393,
+        0.114961,
+        0.076237,
+        0.30374,
+        -0.144004,
+        0.245654,
+        -0.148845
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-spatial-physical-observation-handoff.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1636,
+      "lines": 43,
+      "tokens_est": 409,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ca53ca4ac23ba099",
+      "vector": [
+        0.077599,
+        -0.201757,
+        -0.115802,
+        -0.113414,
+        0.130128,
+        -0.235185,
+        0.122965,
+        -0.228022,
+        -0.161167,
+        0.142066,
+        0.041784,
+        0.003581,
+        0.044172,
+        0.065661,
+        -0.122965,
+        0.228022,
+        0.242348,
+        -0.134903,
+        0.149229,
+        -0.230409,
+        -0.251898,
+        -0.103863,
+        0.103863,
+        0.125352,
+        -0.225634,
+        0.082374,
+        -0.15878,
+        -0.216083,
+        0.261449,
+        0.273387,
+        -0.273387,
+        0.256674
       ]
     },
     {
@@ -172896,6 +174267,63 @@
         0.028371,
         0.110334,
         0.246937
+      ]
+    },
+    {
+      "path": ".github/workflows/thinkpad-longitudinal-envelope-series.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4690,
+      "lines": 118,
+      "tokens_est": 1173,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          74
+        ],
+        "python3 -m unittest": [
+          78
+        ]
+      },
+      "topology": {},
+      "digest8": "82b7730183cdcf0d",
+      "vector": [
+        -0.2716,
+        -0.190653,
+        -0.067101,
+        0.16722,
+        -0.022367,
+        -0.003195,
+        0.041539,
+        0.228996,
+        -0.246038,
+        -0.214085,
+        -0.101184,
+        -0.205564,
+        0.190653,
+        -0.116096,
+        0.228996,
+        -0.239647,
+        0.096924,
+        -0.152309,
+        -0.239647,
+        0.231126,
+        -0.16083,
+        0.122486,
+        -0.030888,
+        0.226866,
+        -0.177871,
+        0.090533,
+        -0.26947,
+        0.233257,
+        0.033018,
+        -0.220475,
+        0.156569,
+        -0.079882
       ]
     },
     {
@@ -264775,6 +266203,100 @@
       ]
     },
     {
+      "path": "tests/test_k27_eye_pose_observation_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7712,
+      "lines": 175,
+      "tokens_est": 1928,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a54da33860b95f00",
+      "vector": [
+        -0.022386,
+        0.201475,
+        -0.128426,
+        -0.15199,
+        0.298089,
+        -0.088366,
+        -0.159059,
+        0.114287,
+        -0.298089,
+        -0.123713,
+        0.156703,
+        0.111931,
+        0.111931,
+        -0.109574,
+        -0.100148,
+        0.229752,
+        0.083653,
+        -0.168485,
+        -0.133138,
+        -0.194406,
+        -0.005891,
+        0.286307,
+        -0.203832,
+        -0.187336,
+        0.276881,
+        0.029455,
+        0.241534,
+        0.121356,
+        -0.107218,
+        -0.229752,
+        0.274525,
+        0.126069
+      ]
+    },
+    {
+      "path": "tests/test_k27_spatial_physical_observation_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5710,
+      "lines": 142,
+      "tokens_est": 1428,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5faaf232cc3ddacb",
+      "vector": [
+        -0.170712,
+        0.170712,
+        0.322455,
+        0.28199,
+        -0.158066,
+        0.170712,
+        0.069549,
+        0.223822,
+        0.137834,
+        -0.021497,
+        -0.294636,
+        -0.008852,
+        0.170712,
+        0.135305,
+        -0.01391,
+        0.251642,
+        0.223822,
+        0.029084,
+        0.016439,
+        -0.22888,
+        -0.064491,
+        0.024026,
+        0.160595,
+        0.190944,
+        -0.185886,
+        0.102427,
+        0.125189,
+        -0.001265,
+        0.077136,
+        0.276932,
+        0.244054,
+        -0.241525
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -264866,6 +266388,53 @@
         0.12901,
         0.168527,
         0.187123
+      ]
+    },
+    {
+      "path": "tests/test_temporal_evidence_scope_coordinate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6394,
+      "lines": 161,
+      "tokens_est": 1599,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6a41591f7c48b2bd",
+      "vector": [
+        -0.10936,
+        -0.207905,
+        0.068501,
+        -0.270397,
+        -0.304046,
+        -0.133396,
+        -0.284818,
+        -0.030044,
+        -0.200694,
+        -0.118975,
+        0.253572,
+        -0.234344,
+        0.203098,
+        -0.301643,
+        0.085325,
+        0.010816,
+        0.025237,
+        0.092536,
+        0.099746,
+        0.255976,
+        0.082922,
+        -0.126185,
+        -0.19108,
+        0.246361,
+        0.159835,
+        -0.078115,
+        0.087729,
+        -0.02043,
+        0.236747,
+        -0.128589,
+        -0.056483,
+        0.203098
       ]
     },
     {
@@ -265477,6 +267046,288 @@
         -0.109295,
         -0.070557,
         0.184002
+      ]
+    },
+    {
+      "path": "tools/k27_eye_pose_observation_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9814,
+      "lines": 276,
+      "tokens_est": 2454,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2566cb9278c688d2",
+      "vector": [
+        0.342518,
+        0.076892,
+        -0.322946,
+        0.093668,
+        0.130017,
+        -0.032155,
+        -0.174754,
+        0.25584,
+        0.127221,
+        0.314558,
+        0.208307,
+        -0.308966,
+        -0.25584,
+        -0.001398,
+        0.113241,
+        -0.032155,
+        0.032155,
+        -0.00699,
+        0.160774,
+        -0.275413,
+        -0.138405,
+        -0.023767,
+        0.118833,
+        -0.088076,
+        0.14959,
+        0.043339,
+        0.065708,
+        -0.233472,
+        0.051727,
+        0.230676,
+        0.160774,
+        0.08528
+      ]
+    },
+    {
+      "path": "tools/k27_spatial_physical_observation_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13311,
+      "lines": 268,
+      "tokens_est": 3328,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "940dad32da88c1fe",
+      "vector": [
+        -0.112874,
+        0.208485,
+        0.062413,
+        0.280193,
+        0.285505,
+        -0.043822,
+        0.163335,
+        -0.099595,
+        0.025231,
+        0.258946,
+        0.232388,
+        0.030542,
+        -0.07038,
+        -0.041166,
+        -0.046478,
+        -0.298784,
+        0.197861,
+        0.163335,
+        0.091627,
+        -0.073036,
+        -0.229732,
+        0.142088,
+        -0.073036,
+        -0.22442,
+        0.158024,
+        0.325343,
+        -0.200517,
+        -0.054445,
+        0.07038,
+        -0.171303,
+        0.282849,
+        -0.155368
+      ]
+    },
+    {
+      "path": "tools/temporal_evidence_scope_coordinate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8773,
+      "lines": 225,
+      "tokens_est": 2194,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "07bbe57113aa025a",
+      "vector": [
+        0.067781,
+        -0.052719,
+        -0.186129,
+        -0.220557,
+        -0.128031,
+        -0.01829,
+        0.239923,
+        0.231316,
+        -0.091451,
+        -0.237771,
+        -0.024745,
+        0.052719,
+        0.267896,
+        -0.218405,
+        -0.082843,
+        -0.112968,
+        0.003228,
+        0.222709,
+        -0.173218,
+        0.270048,
+        0.145245,
+        0.011835,
+        0.214102,
+        -0.214102,
+        0.121575,
+        0.244227,
+        0.205495,
+        -0.265744,
+        0.237771,
+        -0.074236,
+        -0.229164,
+        0.082843
+      ]
+    },
+    {
+      "path": "tools/test_thinkpad_longitudinal_envelope_series.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7547,
+      "lines": 176,
+      "tokens_est": 1887,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "902b0f72711388e5",
+      "vector": [
+        0.259211,
+        0.229521,
+        0.250076,
+        0.076507,
+        0.22267,
+        0.001142,
+        0.27063,
+        -0.10848,
+        -0.238657,
+        -0.021696,
+        0.195265,
+        0.199832,
+        -0.163291,
+        -0.069656,
+        0.247792,
+        0.284333,
+        0.046818,
+        0.083359,
+        0.158724,
+        0.133602,
+        -0.179278,
+        -0.049102,
+        0.266062,
+        0.131318,
+        0.186129,
+        -0.272914,
+        -0.021696,
+        0.010277,
+        -0.037683,
+        -0.122183,
+        -0.170143,
+        -0.195265
+      ]
+    },
+    {
+      "path": "tools/thinkpad_longitudinal_envelope_series.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8939,
+      "lines": 233,
+      "tokens_est": 2235,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c6402b29d139d2bd",
+      "vector": [
+        0.020449,
+        0.224944,
+        -0.272301,
+        -0.229249,
+        -0.18835,
+        0.063501,
+        -0.237859,
+        0.224944,
+        0.190503,
+        -0.039823,
+        0.12162,
+        0.033365,
+        -0.24647,
+        -0.1044,
+        0.039823,
+        0.184045,
+        -0.201266,
+        0.201266,
+        0.12162,
+        0.020449,
+        0.229249,
+        -0.024755,
+        0.11301,
+        -0.216334,
+        0.218486,
+        -0.024755,
+        -0.274453,
+        0.199113,
+        -0.125926,
+        0.039823,
+        -0.237859,
+        -0.261538
+      ]
+    },
+    {
+      "path": "tools/thinkpad_sustained_operating_envelope.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9692,
+      "lines": 299,
+      "tokens_est": 2423,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3a423b06e72411e5",
+      "vector": [
+        -0.03001,
+        -0.058715,
+        -0.262258,
+        0.110905,
+        0.14222,
+        -0.053495,
+        0.314449,
+        0.108296,
+        0.25443,
+        0.092638,
+        -0.001305,
+        -0.212677,
+        -0.126562,
+        -0.105686,
+        0.011743,
+        -0.288354,
+        0.121343,
+        0.058715,
+        -0.176144,
+        -0.014352,
+        -0.212677,
+        -0.147439,
+        0.08481,
+        0.327497,
+        0.037838,
+        -0.003914,
+        0.262258,
+        -0.238772,
+        -0.30923,
+        0.191801,
+        -0.043057,
+        0.243991
       ]
     },
     {
@@ -289384,16 +291235,16 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26603809,
-    "text_tokens_est": 6641308,
+    "file_count": 1673,
+    "total_bytes": 26695394,
+    "text_tokens_est": 6664208,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 17,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 280,
+      "python_module": 1012,
+      "schema_or_lexicon": 283,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289549,6 +291400,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-temporal-evidence-scope-coordinate.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -289559,6 +291411,7 @@
       ".github/workflows/k27-astge-current-ingest-convergence.yml",
       ".github/workflows/k27-astge-immutability-capability.yml",
       ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
+      ".github/workflows/k27-spatial-physical-observation-handoff.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -289595,6 +291448,7 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
+      ".github/workflows/thinkpad-longitudinal-envelope-series.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
@@ -291043,8 +292897,11 @@
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+      "tests/test_k27_eye_pose_observation_contract.py",
+      "tests/test_k27_spatial_physical_observation_handoff.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_temporal_evidence_scope_coordinate.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -291058,6 +292915,12 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+      "tools/k27_eye_pose_observation_contract.py",
+      "tools/k27_spatial_physical_observation_handoff.py",
+      "tools/temporal_evidence_scope_coordinate.py",
+      "tools/test_thinkpad_longitudinal_envelope_series.py",
+      "tools/thinkpad_longitudinal_envelope_series.py",
+      "tools/thinkpad_sustained_operating_envelope.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -448324,6 +450187,266 @@
         "file_digest8": "6c778071b97c5ee9"
       },
       {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyePoseObservationContractTests:92ccf178978891ad",
+        "name": "EyePoseObservationContractTests",
+        "kind": "class",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 50,
+        "end_line": 170,
+        "signature_hash": "0ab6a0fdc72f2159",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:28e9abcc04967ab2",
+        "name": "calibration",
+        "kind": "function",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 17,
+        "end_line": 30,
+        "signature_hash": "f59fac0cedb002c5",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:d1556235ca21c7d0",
+        "name": "frame",
+        "kind": "function",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 33,
+        "end_line": 47,
+        "signature_hash": "d986bf8a8e22e32d",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth:8090cd72d39540fd",
+        "name": "EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 51,
+        "end_line": 60,
+        "signature_hash": "e1a978586c6c2d51",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate:14cb16b4df918966",
+        "name": "EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 85,
+        "end_line": 95,
+        "signature_hash": "4cb88962c7068094",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized:81ca910e14a753d1",
+        "name": "EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 121,
+        "end_line": 132,
+        "signature_hash": "050365dd551d50e3",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate:c2349f7d2edd384c",
+        "name": "EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 97,
+        "end_line": 107,
+        "signature_hash": "a9cf4c2a286afa11",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed:e28597e01d6c9e7c",
+        "name": "EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 109,
+        "end_line": 119,
+        "signature_hash": "7a579e0b94dd3d95",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident:591790535fd26ecf",
+        "name": "EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 134,
+        "end_line": 153,
+        "signature_hash": "8377b91b4d42debe",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents:bb0476af135e5cfd",
+        "name": "EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 155,
+        "end_line": 170,
+        "signature_hash": "a37f9709b3c30236",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut:350757c7aa36354d",
+        "name": "EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 73,
+        "end_line": 83,
+        "signature_hash": "79da1579c48d4265",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_stale_frame_fails_closed:43d5bd63bbdba56c",
+        "name": "EyePoseObservationContractTests.test_stale_frame_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 62,
+        "end_line": 71,
+        "signature_hash": "b5047fe9314a0d6e",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#class:TestSpatialPhysicalObservationHandoff:12529ae48590044b",
+        "name": "TestSpatialPhysicalObservationHandoff",
+        "kind": "class",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 59,
+        "end_line": 137,
+        "signature_hash": "35dfbe40a6465d38",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#function:attempt:b9c90b17bc9c75bc",
+        "name": "attempt",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 37,
+        "end_line": 56,
+        "signature_hash": "b3b94ac137eac8c6",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#function:request:6261df1468e393db",
+        "name": "request",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 19,
+        "end_line": 34,
+        "signature_hash": "d278207fcc31dd7e",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_budget_escape_rejected:ed942234d2574c8e",
+        "name": "TestSpatialPhysicalObservationHandoff.test_budget_escape_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 108,
+        "end_line": 113,
+        "signature_hash": "9963141ea6a83ff4",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_calibration_or_phase_substitution_rejected:c7c77ad4c3815c5f",
+        "name": "TestSpatialPhysicalObservationHandoff.test_calibration_or_phase_substitution_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "78b17b664c99e136",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_display_generation_aba_rejected:ccc5277db7fdd0cf",
+        "name": "TestSpatialPhysicalObservationHandoff.test_display_generation_aba_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 96,
+        "end_line": 99,
+        "signature_hash": "4f72c550cc4b9db5",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_exact_two_parents_required:ca67c221a23978fe",
+        "name": "TestSpatialPhysicalObservationHandoff.test_exact_two_parents_required",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "7e50329c53d66990",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_failed_attempt_cannot_be_relabelled_successful:9bb3995bd7dcec1b",
+        "name": "TestSpatialPhysicalObservationHandoff.test_failed_attempt_cannot_be_relabelled_successful",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "af11ebee96b63818",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_happy_path_is_integrity_only:cb10f9b6be301d9d",
+        "name": "TestSpatialPhysicalObservationHandoff.test_happy_path_is_integrity_only",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 60,
+        "end_line": 77,
+        "signature_hash": "5bf206fecad9de81",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_metric_set_must_match_exactly:4ee4e56237ab2039",
+        "name": "TestSpatialPhysicalObservationHandoff.test_metric_set_must_match_exactly",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 115,
+        "end_line": 118,
+        "signature_hash": "357874db73b47978",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_receipt_deterministic_and_tamper_sensitive:7c5c0d484b0d522a",
+        "name": "TestSpatialPhysicalObservationHandoff.test_receipt_deterministic_and_tamper_sensitive",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 125,
+        "end_line": 131,
+        "signature_hash": "f1d92e2fe19a6ebe",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_request_digest_mismatch_rejected:030d9134ddfcfd4e",
+        "name": "TestSpatialPhysicalObservationHandoff.test_request_digest_mismatch_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 91,
+        "end_line": 94,
+        "signature_hash": "59dee0a50ece12df",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_temporal_coordinate_is_bound_not_currentness_authority:dde7aaffd9389028",
+        "name": "TestSpatialPhysicalObservationHandoff.test_temporal_coordinate_is_bound_not_currentness_authority",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "e0de21d8b1dd3f92",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_physical_observation_handoff.py#method:TestSpatialPhysicalObservationHandoff.test_unsupported_metric_rejected:9fd390bd28754b89",
+        "name": "TestSpatialPhysicalObservationHandoff.test_unsupported_metric_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_physical_observation_handoff.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "d68bc9a1b42ed8d8",
+        "file_digest8": "5faaf232cc3ddacb"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -448602,6 +450725,126 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinateTests:e24a09e66f248d98",
+        "name": "TemporalEvidenceScopeCoordinateTests",
+        "kind": "class",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 80,
+        "end_line": 156,
+        "signature_hash": "230c0e4416bb511a",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:calibration:6f235f10011e4cb1",
+        "name": "calibration",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 25,
+        "end_line": 36,
+        "signature_hash": "80d0c39e9f5d65ed",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:cdfe16727bfa68c4",
+        "name": "eye_receipt",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 39,
+        "end_line": 73,
+        "signature_hash": "9020eb40c8d5b771",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:series:6abfab6e4795e1d7",
+        "name": "series",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 76,
+        "end_line": 77,
+        "signature_hash": "e3a95641818231ec",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic:0f80fde6dde5635a",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 150,
+        "end_line": 156,
+        "signature_hash": "da6cbc800ca8f7c8",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit:793e9c1fbab6e2ec",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 116,
+        "end_line": 121,
+        "signature_hash": "caafd8fef4bd35c5",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition:1721eb10f0e3a89d",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 123,
+        "end_line": 129,
+        "signature_hash": "b2727eeb6f6a5228",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified:9a1528a1ac7e2666",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "b319af35511d2f4b",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion:d5f1d9dae66ec1da",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 81,
+        "end_line": 89,
+        "signature_hash": "fabcd849fc86c988",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality:86cbac1792b35f5c",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 91,
+        "end_line": 106,
+        "signature_hash": "1a800ebec5a362cb",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing:866496b235e9e472",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 131,
+        "end_line": 142,
+        "signature_hash": "21389ce5e5f55866",
+        "file_digest8": "6a41591f7c48b2bd"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects:2b399a78af846400",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 144,
+        "end_line": 148,
+        "signature_hash": "b99db4856f95ff5a",
+        "file_digest8": "6a41591f7c48b2bd"
       },
       {
         "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:CacheResponsibility:6e4eb98cde824ef3",
@@ -450084,6 +452327,916 @@
         "file_digest8": "9263834cccd1be44"
       },
       {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:CameraCalibration:ee4d07347dc14a11",
+        "name": "CameraCalibration",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 37,
+        "end_line": 59,
+        "signature_hash": "960d15363264b4f7",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:EyePoseEstimate:f11cf7a67b7578f7",
+        "name": "EyePoseEstimate",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 100,
+        "end_line": 107,
+        "signature_hash": "4426a584e1b24e0e",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:IrisFrameObservation:c87bd3bb37e8f341",
+        "name": "IrisFrameObservation",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 63,
+        "end_line": 96,
+        "signature_hash": "b403f130812ee23a",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:SteeringGate:96d323032a7c0afa",
+        "name": "SteeringGate",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 111,
+        "end_line": 118,
+        "signature_hash": "f942ccb186596668",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_canonical_json:ad18b204d8799926",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 211,
+        "end_line": 212,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite:57c75e2e8e1c5514",
+        "name": "_finite",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "c71561197bc4f764",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite_positive:74809e1755678bd8",
+        "name": "_finite_positive",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "c763af4e62e0138d",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:42d8ae9df25ff7d0",
+        "name": "build_eye_pose_receipt",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 215,
+        "end_line": 250,
+        "signature_hash": "d27cdddecd456503",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:estimate_eye_pose_from_assumed_ipd:6b4d707dff063222",
+        "name": "estimate_eye_pose_from_assumed_ipd",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 121,
+        "end_line": 152,
+        "signature_hash": "a55deab9508aba9c",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:60cb74a522fb06ee",
+        "name": "gate_eye_pose_for_steering",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 155,
+        "end_line": 208,
+        "signature_hash": "c6d9f9a477e7e240",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:verify_eye_pose_receipt:df451dd0d0d41e8b",
+        "name": "verify_eye_pose_receipt",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 253,
+        "end_line": 275,
+        "signature_hash": "447e8c7de4f26e0d",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:CameraCalibration.validate:07aebbb2da45c3d9",
+        "name": "CameraCalibration.validate",
+        "kind": "method",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 48,
+        "end_line": 59,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:IrisFrameObservation.validate:e0f6472f6af3e0fe",
+        "name": "IrisFrameObservation.validate",
+        "kind": "method",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 75,
+        "end_line": 96,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#class:SpatialPhysicalObservationAttempt:5b20b001ab957043",
+        "name": "SpatialPhysicalObservationAttempt",
+        "kind": "class",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 127,
+        "end_line": 192,
+        "signature_hash": "696295db711286ac",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#class:SpatialPhysicalObservationRequest:c797feba6193909a",
+        "name": "SpatialPhysicalObservationRequest",
+        "kind": "class",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 81,
+        "end_line": 123,
+        "signature_hash": "d9cf2e06da88f584",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_canonical:765fd3be1ef1f336",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_digest:3e4a1ab05bdb3880",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_metric_names:054774b9363f9321",
+        "name": "_metric_names",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 57,
+        "end_line": 66,
+        "signature_hash": "43a09db15c998651",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_nonnegative_int:ce79885c4c1e1055",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "af41151bb978c8ca",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_parents:5513f09e4086d54a",
+        "name": "_parents",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 69,
+        "end_line": 77,
+        "signature_hash": "9bb8e5ba9e061add",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_positive_int:0752bc2be9ded5de",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "3b7bd9eb822e7406",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_sha256:4da6fd08d7ddce68",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 38,
+        "end_line": 42,
+        "signature_hash": "c74191271dcacb07",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:_text:04dcd62821d5b104",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "56b4de4a77d3a7b6",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:build_receipt:ef0d430bf96571d5",
+        "name": "build_receipt",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 250,
+        "end_line": 267,
+        "signature_hash": "352eca8c2bf9de18",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#function:join_spatial_physical_observation:ee129697ae39fedc",
+        "name": "join_spatial_physical_observation",
+        "kind": "function",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 195,
+        "end_line": 247,
+        "signature_hash": "b6b8cc17cbc43951",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationAttempt.__post_init__:99d869f08363a665",
+        "name": "SpatialPhysicalObservationAttempt.__post_init__",
+        "kind": "method",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 144,
+        "end_line": 170,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationAttempt.attempt_digest:928d732ae5331f20",
+        "name": "SpatialPhysicalObservationAttempt.attempt_digest",
+        "kind": "method",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 173,
+        "end_line": 192,
+        "signature_hash": "4b8d2da6b7b52c2e",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationRequest.__post_init__:eab626bc18382ff7",
+        "name": "SpatialPhysicalObservationRequest.__post_init__",
+        "kind": "method",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 94,
+        "end_line": 105,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_physical_observation_handoff.py#method:SpatialPhysicalObservationRequest.request_digest:aebc7b9787c305ed",
+        "name": "SpatialPhysicalObservationRequest.request_digest",
+        "kind": "method",
+        "file": "tools/k27_spatial_physical_observation_handoff.py",
+        "line": 108,
+        "end_line": 123,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "940dad32da88c1fe"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinate:a76dc6e6a47590f2",
+        "name": "TemporalEvidenceScopeCoordinate",
+        "kind": "class",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 62,
+        "end_line": 99,
+        "signature_hash": "cc261fd5e3e2c4b8",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeError:b6e0061efe702f05",
+        "name": "TemporalEvidenceScopeError",
+        "kind": "class",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "2340462d0127e911",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_canonical:6b25ede425721fdb",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_datetime_ns:7649bd7747019780",
+        "name": "_datetime_ns",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "261c131fb889d031",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_digest:7426ed05a57735ff",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_parse_time:207a51d90fb9ee59",
+        "name": "_parse_time",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 46,
+        "end_line": 53,
+        "signature_hash": "0e7d03ca78676525",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:bind_temporal_evidence_scope:6a5978ea886832fb",
+        "name": "bind_temporal_evidence_scope",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 102,
+        "end_line": 176,
+        "signature_hash": "19027a376992efa4",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:portable_temporal_evidence_scope_receipt:fc8dea3355f5f7e9",
+        "name": "portable_temporal_evidence_scope_receipt",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 214,
+        "end_line": 224,
+        "signature_hash": "d7df1893885c8c2e",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:verify_temporal_evidence_scope_coordinate:11674854ba2b738c",
+        "name": "verify_temporal_evidence_scope_coordinate",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 179,
+        "end_line": 211,
+        "signature_hash": "97a71849ccb4be37",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.coordinate_digest:94ea7ec41dce2315",
+        "name": "TemporalEvidenceScopeCoordinate.coordinate_digest",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 94,
+        "end_line": 95,
+        "signature_hash": "ab3c3df3e11c71cd",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.evidence_ref:6ea642c1d63d8a6f",
+        "name": "TemporalEvidenceScopeCoordinate.evidence_ref",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 98,
+        "end_line": 99,
+        "signature_hash": "c27cb8129b449d59",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.to_dict:bb7bab207d496b24",
+        "name": "TemporalEvidenceScopeCoordinate.to_dict",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 90,
+        "end_line": 91,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeError.__init__:b0b3ea5930e70609",
+        "name": "TemporalEvidenceScopeError.__init__",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "07bbe57113aa025a"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#class:ThinkPadLongitudinalEnvelopeSeriesTests:e204702492ed99f3",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests",
+        "kind": "class",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 21,
+        "end_line": 171,
+        "signature_hash": "85042344c6d70041",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.build:5f1e7c5a53676b38",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.build",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 93,
+        "end_line": 103,
+        "signature_hash": "603bd504af792457",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.envelope:a6ac912901ce3ec3",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.envelope",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 22,
+        "end_line": 60,
+        "signature_hash": "1825d18d64740f13",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_benchmark_and_query_bindings_require_exact_sha256:1265e5759d09ee52",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_benchmark_and_query_bindings_require_exact_sha256",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "f5a1d9edd22e050e",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_exact_repeated_observation_fails_at_chronology_gate:5cc338bf4fdededc",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_exact_repeated_observation_fails_at_chronology_gate",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "a4ad795b944dc05c",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_missing_sensor_layers_remain_unknown:75759b503d7c5a9f",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_missing_sensor_layers_remain_unknown",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "8237bef43a620a08",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_nonmonotonic_phase_times_fail_closed:7a47f736d65cbd90",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_nonmonotonic_phase_times_fail_closed",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 115,
+        "end_line": 119,
+        "signature_hash": "b0eb0806aa274d71",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_ordered_three_phase_series_computes_descriptive_deltas:67f4ffd55a99d3f5",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_ordered_three_phase_series_computes_descriptive_deltas",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 105,
+        "end_line": 113,
+        "signature_hash": "a47a96d60d8a4416",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_parent_envelope_ceiling_widening_fails_before_series_reasoning:bea7b6d99eaa565f",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_parent_envelope_ceiling_widening_fails_before_series_reasoning",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 161,
+        "end_line": 165,
+        "signature_hash": "3303d4b47c1f1625",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_series_cannot_promote_correlation_to_causality_or_current_authority:9efc5c99d8b59a50",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_series_cannot_promote_correlation_to_causality_or_current_authority",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 146,
+        "end_line": 159,
+        "signature_hash": "a23d6ee9a5aca121",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.test_series_identity_is_deterministic:96ba55b974a66390",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.test_series_identity_is_deterministic",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 167,
+        "end_line": 171,
+        "signature_hash": "b1fda61728e0b12c",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeriesTests.three:6e60b6985efcd62b",
+        "name": "ThinkPadLongitudinalEnvelopeSeriesTests.three",
+        "kind": "method",
+        "file": "tools/test_thinkpad_longitudinal_envelope_series.py",
+        "line": 62,
+        "end_line": 91,
+        "signature_hash": "1d05a972446889d2",
+        "file_digest8": "902b0f72711388e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#class:LongitudinalEnvelopeError:b8ea5a0dccb581e1",
+        "name": "LongitudinalEnvelopeError",
+        "kind": "class",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "cecb3111bfadb48f",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#class:ThinkPadLongitudinalEnvelopeSeries:ce72425f8d59cb8e",
+        "name": "ThinkPadLongitudinalEnvelopeSeries",
+        "kind": "class",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 129,
+        "end_line": 164,
+        "signature_hash": "b02902c05078f8f8",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_ac_online:46794f5e56ab7833",
+        "name": "_ac_online",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 86,
+        "end_line": 94,
+        "signature_hash": "bec97f9b2a95e38c",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_battery_capacity:3a478940e6cac92f",
+        "name": "_battery_capacity",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 97,
+        "end_line": 103,
+        "signature_hash": "be065d181b0f22a7",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_canonical:3d8c2a7cdfc7797b",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 34,
+        "end_line": 44,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_delta:ca49039d17ac3b12",
+        "name": "_delta",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 106,
+        "end_line": 109,
+        "signature_hash": "d5056305dfd4157b",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_digest:8559491952c0dcb9",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_max_temp:11acad794314ba66",
+        "name": "_max_temp",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 68,
+        "end_line": 74,
+        "signature_hash": "1896213fe92a74c2",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_min_current_khz:714cce567f220c03",
+        "name": "_min_current_khz",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 77,
+        "end_line": 83,
+        "signature_hash": "04af5ebe55eefd2d",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_parse_time:89a763df2b0f5eee",
+        "name": "_parse_time",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 56,
+        "end_line": 65,
+        "signature_hash": "0e7d03ca78676525",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_require_sha256:9307400390a877b7",
+        "name": "_require_sha256",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 51,
+        "end_line": 53,
+        "signature_hash": "e7468bc7ebd685f0",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:_summary:10d438ca37e87cf4",
+        "name": "_summary",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 112,
+        "end_line": 125,
+        "signature_hash": "5a787fcab162c004",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#function:build_longitudinal_envelope_series:686df88bffd8a3ee",
+        "name": "build_longitudinal_envelope_series",
+        "kind": "function",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 167,
+        "end_line": 232,
+        "signature_hash": "8eeea1c05c8ec09e",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:LongitudinalEnvelopeError.__init__:e5b6d8bc0cf280a3",
+        "name": "LongitudinalEnvelopeError.__init__",
+        "kind": "method",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeries.evidence_ref:a63eee3d0f569395",
+        "name": "ThinkPadLongitudinalEnvelopeSeries.evidence_ref",
+        "kind": "method",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 163,
+        "end_line": 164,
+        "signature_hash": "c27cb8129b449d59",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeries.series_digest:02d4574f12f1b50f",
+        "name": "ThinkPadLongitudinalEnvelopeSeries.series_digest",
+        "kind": "method",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 159,
+        "end_line": 160,
+        "signature_hash": "f50a503fde8ff086",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_longitudinal_envelope_series.py#method:ThinkPadLongitudinalEnvelopeSeries.to_dict:49f9919ce2b1607b",
+        "name": "ThinkPadLongitudinalEnvelopeSeries.to_dict",
+        "kind": "method",
+        "file": "tools/thinkpad_longitudinal_envelope_series.py",
+        "line": 155,
+        "end_line": 156,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "c6402b29d139d2bd"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:CpuFrequencyObservation:3e77e8a66b5c482c",
+        "name": "CpuFrequencyObservation",
+        "kind": "class",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 152,
+        "end_line": 156,
+        "signature_hash": "008af24514752a66",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:OperatingEnvelopeError:74cbd8e2b5052600",
+        "name": "OperatingEnvelopeError",
+        "kind": "class",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 23,
+        "end_line": 27,
+        "signature_hash": "b5e304ecd30cb564",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:PowerSupplyObservation:18dc697f1cdd9e27",
+        "name": "PowerSupplyObservation",
+        "kind": "class",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 134,
+        "end_line": 141,
+        "signature_hash": "1a5b01f75e2a8d96",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:SustainedOperatingEnvelope:c74fe1f87eb6eb20",
+        "name": "SustainedOperatingEnvelope",
+        "kind": "class",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 160,
+        "end_line": 198,
+        "signature_hash": "8aa2e418ea768b81",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#class:ThermalObservation:28fbf6c4ffc65939",
+        "name": "ThermalObservation",
+        "kind": "class",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 145,
+        "end_line": 148,
+        "signature_hash": "8683f3b7413768da",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_bounded_dirs:341849d896486579",
+        "name": "_bounded_dirs",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 123,
+        "end_line": 130,
+        "signature_hash": "4b699ff40e6cbc44",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_canonical:96b95fb3214ba6d4",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 30,
+        "end_line": 40,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_cpu_frequencies:8ba310be07a4bde0",
+        "name": "_cpu_frequencies",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 231,
+        "end_line": 243,
+        "signature_hash": "5c57cb7e27caa734",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_digest:946cf5d06b57806f",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_int_text:88c145464df3027b",
+        "name": "_int_text",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "dd8e9bc11d0538c6",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_parse_meminfo:aa65031d262cab8f",
+        "name": "_parse_meminfo",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 72,
+        "end_line": 94,
+        "signature_hash": "97aebb69642300ba",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_parse_psi:fac542e7306b0cfb",
+        "name": "_parse_psi",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 97,
+        "end_line": 120,
+        "signature_hash": "cc3eac8d653a21df",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_power_supplies:79d1b79cd1a51fea",
+        "name": "_power_supplies",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 201,
+        "end_line": 215,
+        "signature_hash": "8e28cdea7a39853c",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_read_text:b3d949745eb25009",
+        "name": "_read_text",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 47,
+        "end_line": 59,
+        "signature_hash": "565a7cb0bc8e5a50",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:_thermal_zones:a6680640fb147392",
+        "name": "_thermal_zones",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 218,
+        "end_line": 228,
+        "signature_hash": "b43e7c2ba347b294",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#function:observe_sustained_operating_envelope:5f0352a13b3c5ce6",
+        "name": "observe_sustained_operating_envelope",
+        "kind": "function",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 246,
+        "end_line": 298,
+        "signature_hash": "fa2aeb47e5b58fd7",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:OperatingEnvelopeError.__init__:c5e2561ccadb0fe0",
+        "name": "OperatingEnvelopeError.__init__",
+        "kind": "method",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:SustainedOperatingEnvelope.evidence_ref:d1b85b8dcabd5f4d",
+        "name": "SustainedOperatingEnvelope.evidence_ref",
+        "kind": "method",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 197,
+        "end_line": 198,
+        "signature_hash": "c27cb8129b449d59",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:SustainedOperatingEnvelope.observation_digest:9f254bb97acff643",
+        "name": "SustainedOperatingEnvelope.observation_digest",
+        "kind": "method",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 193,
+        "end_line": 194,
+        "signature_hash": "28f677c5b8842bca",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
+        "semantic_id": "tools/thinkpad_sustained_operating_envelope.py#method:SustainedOperatingEnvelope.to_dict:3ca03834bafdc52d",
+        "name": "SustainedOperatingEnvelope.to_dict",
+        "kind": "method",
+        "file": "tools/thinkpad_sustained_operating_envelope.py",
+        "line": 189,
+        "end_line": 190,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "3a423b06e72411e5"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -451334,7 +454487,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d4c772e0befda8b3c13d6643de3c06f5",
-    "payload_hash": "fbcd6f924bcd9a8110f75505dc5f019a"
+    "record_fingerprint": "ff57d08d0a00b06a501afad2e08a9e9e",
+    "payload_hash": "b59400fcc20d929d9c8e36fb32b5ece3"
   }
 }
