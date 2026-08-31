@@ -84,19 +84,21 @@ jobs:
             tests/test_aura_external_knowledge_coordinate_memory_candidate.py
           python -m unittest tests.test_aura_external_knowledge_coordinate_memory_candidate -v
 
-      - name: Reexecute currentness parent in its owned dependency world
+      - name: Reexecute currentness parent in its exact test-runtime world
         shell: bash
         run: |
           set -euo pipefail
+          python -m pip install 'pytest>=8.2,<9.0'
           tmp="$(mktemp -d)"
           trap 'git worktree remove --force "$tmp" >/dev/null 2>&1 || true; rm -rf "$tmp"' EXIT
           git worktree add --detach "$tmp" "$CURRENTNESS_HEAD"
           (
             cd "$tmp"
             python -m py_compile aura_materialization_admission_currentness.py tests/test_aura_materialization_admission_currentness.py
-            python -m unittest tests.test_aura_materialization_admission_currentness -v
+            python -m pytest -q tests/test_aura_materialization_admission_currentness.py
           )
           echo 'PARENT_CONTRACT_EXECUTED_IN_OWNED_DEPENDENCY_WORLD=true'
+          echo 'PARENT_TEST_RUNTIME_DEPENDENCIES_RECREATED=true'
 
       - name: Run write-admission adversarial contract
         run: |
@@ -166,5 +168,6 @@ jobs:
           echo 'InsertPlan!=StoreMutation'
           echo 'NoopPlan!=Rewrite'
           echo 'SchemaPolicy!=MutationAuthority'
+          echo 'OwnedDependencyWorldIncludesParentTestRuntimeDependencies'
           echo 'CanonicalWriterMissing=true'
           echo 'NativePrivateTransformerKVAccessed=false'
