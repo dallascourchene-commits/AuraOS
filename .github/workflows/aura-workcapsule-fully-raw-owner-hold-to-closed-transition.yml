@@ -1,0 +1,128 @@
+name: Aura WorkCapsule Fully Raw-Owner HOLD-to-CLOSED Transition
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_owner_bound_reentry_closure.py'
+      - 'scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py'
+      - 'tests/test_aura_workcapsule_raw_owner_hold_to_closed_transition.py'
+      - 'tests/test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py'
+      - '.github/workflows/aura-workcapsule-fully-raw-owner-hold-to-closed-transition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR533_SHA: e09a1e85bfd8d601a1b4138b8ecf03c221123c2a
+      PR523_SEMANTIC_SHA: 432fb62eb7da4602830e306c63ee10f172c725e2
+    steps:
+      - name: Fetch exact child ancestry without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=100 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          git merge-base --is-ancestor "$PR533_SHA" HEAD
+          git merge-base --is-ancestor "$PR523_SEMANTIC_SHA" HEAD
+          echo 'PR533_ANCESTOR_BOUND=true'
+          echo 'PR523_SEMANTIC_ANCESTOR_BOUND=true'
+
+      - name: Re-prove PR533 raw-owner HOLD-to-CLOSED transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_hold_to_closed_transition
+
+      - name: Fetch exact PR523 semantic owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/pr523
+          git -C /tmp/pr523 init .
+          git -C /tmp/pr523 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr523 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR523_SEMANTIC_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr523 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr523 rev-parse HEAD)" = "$PR523_SEMANTIC_SHA"
+          test -z "$(git -C /tmp/pr523 config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR523 owner-bound re-entry closure
+        run: |
+          (cd /tmp/pr523 && python3 -m py_compile scripts/aura_workcapsule_owner_bound_reentry_closure.py)
+          (cd /tmp/pr523 && python3 -m unittest -v tests.test_aura_workcapsule_owner_bound_reentry_closure)
+
+      - name: Verify exact PR523 owner source blob was materialized
+        run: |
+          child_blob="$(git rev-parse HEAD:scripts/aura_workcapsule_owner_bound_reentry_closure.py)"
+          owner_blob="$(git -C /tmp/pr523 rev-parse HEAD:scripts/aura_workcapsule_owner_bound_reentry_closure.py)"
+          test "$child_blob" = "$owner_blob"
+          test "$owner_blob" = '9328a20c55b751d256f0a6374db88b61a8890b9b'
+          echo 'PR523_OWNER_SOURCE_BLOB_EXACT=true'
+
+      - name: Prove fully raw-owner temporal transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition
+
+      - name: Assert no caller lifecycle-intermediate escape hatch
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_fully_raw_owner_hold_to_closed_transition import verify_fully_raw_owner_hold_to_closed_transition
+          params = inspect.signature(verify_fully_raw_owner_hold_to_closed_transition).parameters
+          for forbidden in (
+              'post_closure_receipt', 'reentry_receipt', 'pre_observation_closure_receipt',
+              'source_observation_receipt', 'observed_source_witnesses', 'candidate_binding'
+          ):
+              assert forbidden not in params, forbidden
+          source = Path('scripts/aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py').read_text()
+          assert 'compile_owner_bound_reentry_closure' in source
+          assert 'verify_owner_bound_reentry_closure' in source
+          assert 'verify_raw_owner_hold_to_closed_transition' in source
+          assert 'post_closure_receipt=post_closure' in source
+          print('CALLER_POST_CLOSURE_RECEIPT_ACCEPTED=false')
+          print('CALLER_LIFECYCLE_INTERMEDIATE_ACCEPTED=false')
+          print('POST_CLOSURE_DERIVED_FROM_RAW_OWNER=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'RAW_OWNER_PRE_LIFECYCLE_DERIVED=true'
+          echo 'RAW_OWNER_POST_CLOSURE_DERIVED=true'
+          echo 'EXACT_HOLD_TO_CLOSED_TRANSITION=true'
+          echo 'CALLER_REENTRY_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_PRE_OBSERVATION_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_POST_CLOSURE_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_SOURCE_OBSERVATION_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_SOURCE_WITNESSES_ACCEPTED=false'
+          echo 'CALLER_CANDIDATE_BINDING_ACCEPTED=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
