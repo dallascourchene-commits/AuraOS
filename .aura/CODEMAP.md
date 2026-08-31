@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1645
-- **total_bytes**: 26479690
-- **text_tokens_est**: 6610276
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1718
+- **total_bytes**: 26920947
+- **text_tokens_est**: 6720615
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 244, 'native_accelerator': 38, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 309, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1645,
+  "repo_file_count": 1718,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-k27-astge-python-module-symbols.yml",
+    ".github/workflows/aura-k27-astge-source-materialization.yml",
+    ".github/workflows/aura-k27-astge-source-review-convergence.yml",
+    ".github/workflows/aura-k27-astge-source-scope.yml",
+    ".github/workflows/aura-k27-astge-splane.yml",
+    ".github/workflows/aura-k27-astge-treesitter-ingest.yml",
     ".github/workflows/aura-review-ghr002.yml",
     ".github/workflows/aura-review-ghr015.yml",
     ".github/workflows/aura-review-learning.yml",
@@ -169,6 +175,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/k27-astge-current-ingest-convergence.yml",
+    ".github/workflows/k27-astge-current-symbol-convergence.yml",
+    ".github/workflows/k27-astge-immutability-capability.yml",
+    ".github/workflows/k27-astge-nested-scope-source-review.yml",
+    ".github/workflows/k27-astge-post-edit-canonical-definition-target.yml",
+    ".github/workflows/k27-astge-post-edit-canonical-higher-owner.yml",
+    ".github/workflows/k27-astge-post-edit-higher-owner-continuity.yml",
+    ".github/workflows/k27-astge-post-edit-profiled-scope-currentness.yml",
+    ".github/workflows/k27-astge-python-nested-scopes.yml",
+    ".github/workflows/k27-astge-typed-nested-scope-review.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -947,6 +963,61 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "cognitive_search.rs",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "crates/aura-k27-astge-canonical-scope-review/Cargo.toml",
+    "crates/aura-k27-astge-canonical-scope-review/src/lib.rs",
+    "crates/aura-k27-astge-current-profiled-scopes/Cargo.toml",
+    "crates/aura-k27-astge-current-profiled-scopes/README.md",
+    "crates/aura-k27-astge-current-profiled-scopes/src/lib.rs",
+    "crates/aura-k27-astge-current-syntax/Cargo.toml",
+    "crates/aura-k27-astge-current-syntax/src/lib.rs",
+    "crates/aura-k27-astge-generation-domain/Cargo.toml",
+    "crates/aura-k27-astge-generation-domain/src/lib.rs",
+    "crates/aura-k27-astge-ingest/Cargo.toml",
+    "crates/aura-k27-astge-ingest/README.md",
+    "crates/aura-k27-astge-ingest/src/lib.rs",
+    "crates/aura-k27-astge-ingest/tests/current_stack_safe_default.rs",
+    "crates/aura-k27-astge-materialize/Cargo.toml",
+    "crates/aura-k27-astge-materialize/README.md",
+    "crates/aura-k27-astge-materialize/src/lib.rs",
+    "crates/aura-k27-astge-post-edit-canonical-higher-owner/Cargo.toml",
+    "crates/aura-k27-astge-post-edit-canonical-higher-owner/src/lib.rs",
+    "crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml",
+    "crates/aura-k27-astge-post-edit-canonical-scope/src/lib.rs",
+    "crates/aura-k27-astge-post-edit-higher-owner-continuity/Cargo.toml",
+    "crates/aura-k27-astge-post-edit-higher-owner-continuity/src/lib.rs",
+    "crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml",
+    "crates/aura-k27-astge-post-edit-profiled-scope/src/lib.rs",
+    "crates/aura-k27-astge-profiled-scopes/Cargo.toml",
+    "crates/aura-k27-astge-profiled-scopes/README.md",
+    "crates/aura-k27-astge-profiled-scopes/src/lib.rs",
+    "crates/aura-k27-astge-scope-review/Cargo.toml",
+    "crates/aura-k27-astge-scope-review/src/lib.rs",
+    "crates/aura-k27-astge-scope/Cargo.toml",
+    "crates/aura-k27-astge-scope/README.md",
+    "crates/aura-k27-astge-scope/src/lib.rs",
+    "crates/aura-k27-astge-scopes/Cargo.toml",
+    "crates/aura-k27-astge-scopes/examples/scope_fixture.rs",
+    "crates/aura-k27-astge-scopes/fixtures/python_nested_scopes.py",
+    "crates/aura-k27-astge-scopes/src/lib.rs",
+    "crates/aura-k27-astge-source-review/Cargo.toml",
+    "crates/aura-k27-astge-source-review/README.md",
+    "crates/aura-k27-astge-source-review/src/lib.rs",
+    "crates/aura-k27-astge-symbols/Cargo.toml",
+    "crates/aura-k27-astge-symbols/examples/symbol_fixture.rs",
+    "crates/aura-k27-astge-symbols/fixtures/python_module_symbols.py",
+    "crates/aura-k27-astge-symbols/src/lib.rs",
+    "crates/aura-k27-astge-symbols/tests/current_stack_symbol_referential_integrity.rs",
+    "crates/aura-k27-astge-syntax-profile/Cargo.toml",
+    "crates/aura-k27-astge-syntax-profile/src/lib.rs",
+    "crates/aura-k27-astge-typed-nested-scope-review/Cargo.toml",
+    "crates/aura-k27-astge-typed-nested-scope-review/src/lib.rs",
+    "crates/aura-k27-astge-typed-source-review/Cargo.toml",
+    "crates/aura-k27-astge-typed-source-review/src/lib.rs",
+    "crates/aura-k27-astge/Cargo.toml",
+    "crates/aura-k27-astge/README.md",
+    "crates/aura-k27-astge/src/lib.rs",
+    "crates/aura-k27-astge/src/v2.rs",
+    "crates/aura-k27-astge/src/v3.rs",
     "dag_executor.py",
     "dag_executor.rs",
     "debug_att.py",
@@ -1657,6 +1728,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_review/test_aura_review_context_compiler.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/k27_astge_python_module_symbol_oracle.py",
+    "tools/k27_astge_python_scope_oracle.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1693,6 +1766,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "crates/aura-k27-astge-scopes/fixtures/python_nested_scopes.py",
+    "crates/aura-k27-astge-symbols/fixtures/python_module_symbols.py",
     "scripts/aura_advanced_benchmark_runner.py",
     "scripts/aura_arch_v2_3_capsule_validator.py",
     "scripts/aura_architecture_harness.py",
@@ -1769,9 +1844,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_planning_enforcement.py",
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_connectome_v2.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1785,16 +1858,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1645,
-  "bytes": 26479690,
-  "tokens_est": 6610276,
+  "files": 1718,
+  "bytes": 26920947,
+  "tokens_est": 6720615,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
-    "native_accelerator": 12,
+    "knowledge_artifact": 244,
+    "native_accelerator": 38,
     "operator_script": 9,
-    "python_module": 1001,
-    "schema_or_lexicon": 273,
+    "python_module": 1005,
+    "schema_or_lexicon": 309,
     "support_file": 49
   }
 }
@@ -1934,6 +2007,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
     "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
     "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
+    "crates/aura-k27-astge-current-profiled-scopes/README.md",
+    "crates/aura-k27-astge-ingest/README.md",
+    "crates/aura-k27-astge-materialize/README.md",
+    "crates/aura-k27-astge-profiled-scopes/README.md",
+    "crates/aura-k27-astge-scope/README.md",
+    "crates/aura-k27-astge-source-review/README.md",
+    "crates/aura-k27-astge/README.md",
     "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
     "demo_assets/construction_tuwien/README.md",
@@ -2072,14 +2152,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md",
     "docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md",
     "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md",
-    "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
-    "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
-    "docs/AURA_TOKEN_ECONOMY_STACK.md",
-    "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
-    "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_SWARM_AND_MCP_COCKPIT.md"
   ]
 }
 ```
