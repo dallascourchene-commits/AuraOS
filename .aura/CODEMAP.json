@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788198915,
+  "generated_at_unix": 1788207727,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1659,
+    "repo_file_count": 1664,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -139,6 +139,7 @@
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
+      ".github/workflows/aura-external-version-transition-envelope-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1106,7 +1107,9 @@
       "docs/arena/.eki2-state",
       "docs/arena/.eki2-verifier",
       "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+      "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
       "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
+      "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -1483,6 +1486,7 @@
       "tests/test_aura_external_knowledge_store_writer.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_external_subject_lineage_bridge.py",
+      "tests/test_aura_external_version_transition_envelope.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
@@ -1651,6 +1655,7 @@
       "tools/aura_external_knowledge_ingress.py",
       "tools/aura_external_knowledge_store_writer.py",
       "tools/aura_external_subject_lineage_bridge.py",
+      "tools/aura_external_version_transition_envelope.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1775,16 +1780,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1659,
-      "bytes": 26562681,
-      "tokens_est": 6631017,
+      "files": 1664,
+      "bytes": 26610996,
+      "tokens_est": 6643097,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1004,
-        "schema_or_lexicon": 275,
+        "python_module": 1006,
+        "schema_or_lexicon": 277,
         "support_file": 56
       }
     },
@@ -3938,6 +3943,14 @@
         "line": 89,
         "end_line": 97,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_canonical:ecc9c85ee78af929",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 90,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_canonical:85311e867d6ba571",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8143,6 +8156,14 @@
         "end_line": 101,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha:c76a80c22b50a90e",
         "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 94,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_sha:8779648c3b4365e9",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -10789,6 +10810,14 @@
         "end_line": 11,
         "semantic_id": "test_universal_llm_logging.py#function:_rows:71f9043de48d1db5",
         "signature_hash": "7504a15fd68f28b2"
+      },
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_rows:1c3e473a6b0f7a95",
+        "signature_hash": "6138355be116cf10"
       }
     ],
     "run_cycle": [
@@ -13791,6 +13820,14 @@
         "end_line": 118,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha256:213a1c3c146dfa50",
         "signature_hash": "fda5827e1e9021fd"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 107,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_sha256:634a4a368d62ee6e",
+        "signature_hash": "fda5827e1e9021fd"
       }
     ],
     "PullRequestRouteBinding": [
@@ -15873,6 +15910,14 @@
         "end_line": 111,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_required:81252ba66344027a",
         "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 100,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_required:abb0b628c2ec8106",
+        "signature_hash": "8b28cfce6f68b96b"
       }
     ],
     "_hash": [
@@ -16439,6 +16484,14 @@
         "end_line": 53,
         "semantic_id": "tests/test_aura_agent_arena_github_bridge.py#function:_request:18f94b517401c54f",
         "signature_hash": "9415c13e5d948de9"
+      },
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 135,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_request:ccda38581b2a2b50",
+        "signature_hash": "c8995cc9ce89121b"
       },
       {
         "file": "tests/test_aura_gate_server.py",
@@ -34445,6 +34498,14 @@
         "end_line": 311,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_evidence:de1cf4f771411a9d",
         "signature_hash": "85763ba93532201c"
+      },
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 67,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_evidence:ec50a79ef90084fd",
+        "signature_hash": "ba7b447e9f95155d"
       }
     ],
     "_claim": [
@@ -46777,6 +46838,14 @@
         "end_line": 301,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_receipt:d3ae73715f72c220",
         "signature_hash": "e3dc9e7f8b7c4d5c"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 355,
+        "end_line": 412,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_receipt:c4e330988d17b668",
+        "signature_hash": "abcaa793a6b555d9"
       }
     ],
     "prepare_spatial_action_certificate_v2": [
@@ -99341,6 +99410,14 @@
         "signature_hash": "8b250679dc5bee83"
       },
       {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_write:e0f60306c95f7dcb",
+        "signature_hash": "6e0a03eb3da64cf2"
+      },
+      {
         "file": "tests/test_aura_phase_c1_route_capsules.py",
         "kind": "function",
         "line": 26,
@@ -136515,6 +136592,156 @@
         "signature_hash": "b7222c27a9387957"
       }
     ],
+    "_read": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 119,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_read:ca6a5ea2964362ea",
+        "signature_hash": "71e032a0b148d932"
+      }
+    ],
+    "VersionTransitionEnvelopeTests": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 138,
+        "end_line": 240,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#class:VersionTransitionEnvelopeTests:3775f9acb2792a2b",
+        "signature_hash": "548664c5f311bd59"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_exact_explicit_transition_is_ready_and_nonwriting": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 152,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_exact_explicit_transition_is_ready_and_nonwriting:3bbe09b1a7a6f103",
+        "signature_hash": "7150b5ddcc876d8f"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_four_identity_generation_domains_remain_distinct": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 162,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_four_identity_generation_domains_remain_distinct:57c8802169dc364a",
+        "signature_hash": "099e7560d9c3d23f"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_stable_subject_overwrite_requires_pr738_representation_hold": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 168,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_stable_subject_overwrite_requires_pr738_representation_hold:876fe356d37b074c",
+        "signature_hash": "7262569e8f11bf59"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_distinct_versioned_keys_do_not_pay_write_currentness": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 174,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_distinct_versioned_keys_do_not_pay_write_currentness:c5eed1f6baaf3e5a",
+        "signature_hash": "0a0db51ff4b4256d"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_read_obligation_cannot_be_paid_by_persisted_current_state": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 180,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_read_obligation_cannot_be_paid_by_persisted_current_state:2a93c17c4cba942e",
+        "signature_hash": "078d91c4ec484ffa"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_missing_source_read_axis_fails_closed": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 186,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_missing_source_read_axis_fails_closed:9c1856e2337b8dc3",
+        "signature_hash": "b8fdd6dd6df6794d"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_explicit_successor_beats_lexical_order": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 194,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_explicit_successor_beats_lexical_order:befad8901dbe6956",
+        "signature_hash": "c5b36aeaed686f51"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_missing_explicit_successor_edge_does_not_infer_latest": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 200,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_missing_explicit_successor_edge_does_not_infer_latest:3bd585ab0e5e41ee",
+        "signature_hash": "32d19717cb07ca6f"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_same_record_generation_is_not_a_version_transition": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 209,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_same_record_generation_is_not_a_version_transition:69db9e24ae35eba5",
+        "signature_hash": "57a1eb4471a7a1d7"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_cross_subject_successor_is_rejected": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_cross_subject_successor_is_rejected:591c361bfaab7695",
+        "signature_hash": "d5aef5a13133876d"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_write_witness_must_bind_exact_subject_and_evidence_generation": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 229,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_write_witness_must_bind_exact_subject_and_evidence_generation:8dcdee48c1388c05",
+        "signature_hash": "8c92ecc529fa8e18"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_store_integrity_is_exact": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 231,
+        "end_line": 235,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_store_integrity_is_exact:158390c94a50c580",
+        "signature_hash": "eee89ebe31731067"
+      }
+    ],
+    "VersionTransitionEnvelopeTests.test_model_prefix_kv_is_a_different_owner": [
+      {
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 237,
+        "end_line": 240,
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_model_prefix_kv_is_a_different_owner:fef38fa6bc6fbc14",
+        "signature_hash": "56e5da2bc5d57c52"
+      }
+    ],
     "_Response": [
       {
         "file": "tests/test_aura_fetch_construction_demo_source.py",
@@ -158829,6 +159056,14 @@
         "end_line": 130,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:legacy_semantic_id:434bb27fbfba5878",
         "signature_hash": "1bdf4193d7211fd4"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 170,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:legacy_semantic_id:095caa8eb83e77a7",
+        "signature_hash": "1bdf4193d7211fd4"
       }
     ],
     "current_subject_key": [
@@ -158838,6 +159073,14 @@
         "line": 133,
         "end_line": 144,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:current_subject_key:4823f3c41b517bc3",
+        "signature_hash": "924b24151b5ffc26"
+      },
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 118,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:current_subject_key:8b26c979a22626f8",
         "signature_hash": "924b24151b5ffc26"
       }
     ],
@@ -158939,6 +159182,156 @@
         "end_line": 522,
         "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1.resolve:d821aa73e0ffd6cd",
         "signature_hash": "516d8b0907581cee"
+      }
+    ],
+    "EnvelopeDisposition": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:EnvelopeDisposition:e9b7af34005e4c1c",
+        "signature_hash": "c8c3d7e004f59f32"
+      }
+    ],
+    "EnvelopeError": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 79,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:EnvelopeError:c3a3833d53368071",
+        "signature_hash": "b89165a892e64ae3"
+      }
+    ],
+    "current_evidence_generation_key": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 160,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:current_evidence_generation_key:2cac6b051c779014",
+        "signature_hash": "9f26e57992194ae2"
+      }
+    ],
+    "versioned_record_key": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 179,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:versioned_record_key:fb1ba7c8206927c6",
+        "signature_hash": "d58f1548feaf452d"
+      }
+    ],
+    "CurrentEvidenceDescriptorV1": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 183,
+        "end_line": 226,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:CurrentEvidenceDescriptorV1:b7f10286f3e72c48",
+        "signature_hash": "d40768e5b66d463f"
+      }
+    ],
+    "CurrentEvidenceDescriptorV1.validate": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 226,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:CurrentEvidenceDescriptorV1.validate:15c2c63e21a48e9b",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "VersionedRowBindingV1": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 230,
+        "end_line": 253,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:VersionedRowBindingV1:44a4d40f24d9d9a7",
+        "signature_hash": "b375f238d6641926"
+      }
+    ],
+    "VersionedRowBindingV1.validate": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 253,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:VersionedRowBindingV1.validate:57ac2b1331104f2e",
+        "signature_hash": "94db0a4879e99758"
+      }
+    ],
+    "WriteAdmissionWitnessV1": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 257,
+        "end_line": 287,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:WriteAdmissionWitnessV1:631c0ec791c240d7",
+        "signature_hash": "47cc91a4f34b56c2"
+      }
+    ],
+    "WriteAdmissionWitnessV1.validate": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 272,
+        "end_line": 287,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:WriteAdmissionWitnessV1.validate:d3e92d24618a6c52",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "FutureReadObligationV1": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 291,
+        "end_line": 309,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:FutureReadObligationV1:11c9fdd693077bc7",
+        "signature_hash": "91616eee33aeaf68"
+      }
+    ],
+    "FutureReadObligationV1.validate": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "method",
+        "line": 299,
+        "end_line": 309,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:FutureReadObligationV1.validate:5eeb9841b6d274e4",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "VersionTransitionRequestV1": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 313,
+        "end_line": 323,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:VersionTransitionRequestV1:2576a1cc389f1650",
+        "signature_hash": "1e85ac3907144e50"
+      }
+    ],
+    "VersionTransitionEnvelopeV1": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "class",
+        "line": 327,
+        "end_line": 352,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:VersionTransitionEnvelopeV1:d4280c6b7d46a918",
+        "signature_hash": "5af69f808bdc4b58"
+      }
+    ],
+    "build_version_transition_envelope": [
+      {
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "kind": "function",
+        "line": 415,
+        "end_line": 541,
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:build_version_transition_envelope:ad39a4a32a167426",
+        "signature_hash": "31ef49b55fa33e8d"
       }
     ],
     "_coordinates": [
@@ -160054,6 +160447,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
+      ".github/workflows/aura-external-version-transition-envelope-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -160360,6 +160754,7 @@
     "python -m unittest": [
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
+      ".github/workflows/aura-external-version-transition-envelope-v1.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
@@ -169683,6 +170078,63 @@
         -0.225223,
         -0.125394,
         0.135134
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-external-version-transition-envelope-v1.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 8025,
+      "lines": 162,
+      "tokens_est": 2007,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          57
+        ],
+        "python -m unittest": [
+          58
+        ]
+      },
+      "topology": {},
+      "digest8": "308637ffa9aae056",
+      "vector": [
+        -0.077215,
+        -0.003677,
+        0.236547,
+        -0.045348,
+        0.229193,
+        0.155655,
+        -0.052702,
+        0.292926,
+        -0.060056,
+        -0.013482,
+        -0.091922,
+        -0.280669,
+        -0.155655,
+        -0.283121,
+        -0.018384,
+        0.226742,
+        0.011031,
+        -0.231644,
+        -0.06741,
+        0.182619,
+        0.167911,
+        0.123789,
+        -0.248803,
+        -0.040446,
+        0.265962,
+        -0.143399,
+        0.202229,
+        0.278218,
+        0.050251,
+        0.307633,
+        -0.111532,
+        0.074763
       ]
     },
     {
@@ -237048,6 +237500,53 @@
       ]
     },
     {
+      "path": "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2607,
+      "lines": 56,
+      "tokens_est": 652,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "81089e3986907b02",
+      "vector": [
+        -0.219412,
+        0.136662,
+        0.021314,
+        0.101556,
+        -0.206874,
+        0.214397,
+        -0.096541,
+        0.246995,
+        0.028837,
+        -0.126632,
+        -0.284609,
+        0.274578,
+        0.018807,
+        -0.15923,
+        -0.216904,
+        0.151708,
+        0.121617,
+        0.111587,
+        -0.071466,
+        -0.199351,
+        0.199351,
+        -0.292131,
+        -0.068958,
+        -0.287116,
+        0.134155,
+        0.06645,
+        0.246995,
+        0.184306,
+        -0.104064,
+        0.214397,
+        -0.171768,
+        0.078988
+      ]
+    },
+    {
       "path": "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -237092,6 +237591,53 @@
         0.267448,
         0.043947,
         -0.227268
+      ]
+    },
+    {
+      "path": "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4829,
+      "lines": 78,
+      "tokens_est": 1207,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f8d7189a80f4ee63",
+      "vector": [
+        -0.159961,
+        0.132048,
+        -0.220081,
+        0.07837,
+        -0.207198,
+        0.041869,
+        -0.022545,
+        0.016103,
+        0.226522,
+        -0.132048,
+        -0.129901,
+        -0.220081,
+        0.194315,
+        -0.205051,
+        -0.247993,
+        -0.13849,
+        0.202904,
+        -0.267318,
+        -0.099842,
+        0.185727,
+        0.071929,
+        0.140637,
+        -0.271612,
+        -0.067635,
+        -0.151373,
+        -0.252288,
+        -0.174991,
+        -0.04831,
+        -0.258729,
+        0.082664,
+        0.269465,
+        0.190021
       ]
     },
     {
@@ -257497,6 +258043,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_external_version_transition_envelope.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10372,
+      "lines": 245,
+      "tokens_est": 2593,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "567425424a458eed",
+      "vector": [
+        0.022406,
+        0.01533,
+        0.008255,
+        0.206369,
+        -0.010613,
+        0.135614,
+        0.163916,
+        0.140331,
+        0.288917,
+        0.206369,
+        -0.244105,
+        -0.255898,
+        -0.185143,
+        0.248822,
+        0.161558,
+        0.272407,
+        -0.130897,
+        0.100236,
+        0.116746,
+        0.130897,
+        0.288917,
+        0.022406,
+        -0.064859,
+        0.088444,
+        0.279483,
+        0.260615,
+        -0.133255,
+        -0.168633,
+        0.005896,
+        -0.204011,
+        -0.168633,
+        0.166275
+      ]
+    },
+    {
       "path": "tests/test_aura_fetch_construction_demo_source.py",
       "role": "python_module",
       "binary": false,
@@ -265390,6 +265983,53 @@
         0.176555,
         -0.178833,
         -0.276792
+      ]
+    },
+    {
+      "path": "tools/aura_external_version_transition_envelope.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 22482,
+      "lines": 554,
+      "tokens_est": 5621,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ea4bc7e67d8eaa87",
+      "vector": [
+        -0.232853,
+        0.256493,
+        -0.183209,
+        -0.039006,
+        -0.055554,
+        0.055554,
+        -0.14775,
+        0.121746,
+        0.17139,
+        0.270677,
+        0.199757,
+        0.213941,
+        0.027186,
+        0.258857,
+        0.199757,
+        -0.256493,
+        0.232853,
+        0.213941,
+        -0.117018,
+        0.244673,
+        0.010638,
+        -0.050826,
+        -0.098106,
+        -0.133566,
+        0.166662,
+        -0.020094,
+        0.109926,
+        0.183209,
+        -0.284861,
+        0.15957,
+        0.223397,
+        -0.079194
       ]
     },
     {
@@ -289391,16 +290031,16 @@
     }
   },
   "summary": {
-    "file_count": 1659,
-    "total_bytes": 26562681,
-    "text_tokens_est": 6631017,
+    "file_count": 1664,
+    "total_bytes": 26610996,
+    "text_tokens_est": 6643097,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1004,
-      "schema_or_lexicon": 275,
+      "python_module": 1006,
+      "schema_or_lexicon": 277,
       "support_file": 56
     },
     "topology_nodes": 11478,
@@ -289549,6 +290189,7 @@
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
+      ".github/workflows/aura-external-version-transition-envelope-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -290516,7 +291157,9 @@
       "docs/arena/.eki2-state",
       "docs/arena/.eki2-verifier",
       "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+      "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
       "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
+      "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -290893,6 +291536,7 @@
       "tests/test_aura_external_knowledge_store_writer.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_external_subject_lineage_bridge.py",
+      "tests/test_aura_external_version_transition_envelope.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
@@ -291061,6 +291705,7 @@
       "tools/aura_external_knowledge_ingress.py",
       "tools/aura_external_knowledge_store_writer.py",
       "tools/aura_external_subject_lineage_bridge.py",
+      "tools/aura_external_version_transition_envelope.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -426249,6 +426894,196 @@
         "file_digest8": "640daa60ebe6c01e"
       },
       {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#class:VersionTransitionEnvelopeTests:3775f9acb2792a2b",
+        "name": "VersionTransitionEnvelopeTests",
+        "kind": "class",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 138,
+        "end_line": 240,
+        "signature_hash": "548664c5f311bd59",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_evidence:ec50a79ef90084fd",
+        "name": "_evidence",
+        "kind": "function",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 41,
+        "end_line": 67,
+        "signature_hash": "ba7b447e9f95155d",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_read:ca6a5ea2964362ea",
+        "name": "_read",
+        "kind": "function",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 111,
+        "end_line": 119,
+        "signature_hash": "71e032a0b148d932",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_request:ccda38581b2a2b50",
+        "name": "_request",
+        "kind": "function",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 122,
+        "end_line": 135,
+        "signature_hash": "c8995cc9ce89121b",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_rows:1c3e473a6b0f7a95",
+        "name": "_rows",
+        "kind": "function",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 70,
+        "end_line": 91,
+        "signature_hash": "6138355be116cf10",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#function:_write:e0f60306c95f7dcb",
+        "name": "_write",
+        "kind": "function",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 94,
+        "end_line": 108,
+        "signature_hash": "6e0a03eb3da64cf2",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_cross_subject_successor_is_rejected:591c361bfaab7695",
+        "name": "VersionTransitionEnvelopeTests.test_cross_subject_successor_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 211,
+        "end_line": 223,
+        "signature_hash": "d5aef5a13133876d",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_distinct_versioned_keys_do_not_pay_write_currentness:c5eed1f6baaf3e5a",
+        "name": "VersionTransitionEnvelopeTests.test_distinct_versioned_keys_do_not_pay_write_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 170,
+        "end_line": 174,
+        "signature_hash": "0a0db51ff4b4256d",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_exact_explicit_transition_is_ready_and_nonwriting:3bbe09b1a7a6f103",
+        "name": "VersionTransitionEnvelopeTests.test_exact_explicit_transition_is_ready_and_nonwriting",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 139,
+        "end_line": 152,
+        "signature_hash": "7150b5ddcc876d8f",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_explicit_successor_beats_lexical_order:befad8901dbe6956",
+        "name": "VersionTransitionEnvelopeTests.test_explicit_successor_beats_lexical_order",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 188,
+        "end_line": 194,
+        "signature_hash": "c5b36aeaed686f51",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_four_identity_generation_domains_remain_distinct:57c8802169dc364a",
+        "name": "VersionTransitionEnvelopeTests.test_four_identity_generation_domains_remain_distinct",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 154,
+        "end_line": 162,
+        "signature_hash": "099e7560d9c3d23f",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_missing_explicit_successor_edge_does_not_infer_latest:3bd585ab0e5e41ee",
+        "name": "VersionTransitionEnvelopeTests.test_missing_explicit_successor_edge_does_not_infer_latest",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 196,
+        "end_line": 200,
+        "signature_hash": "32d19717cb07ca6f",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_missing_source_read_axis_fails_closed:9c1856e2337b8dc3",
+        "name": "VersionTransitionEnvelopeTests.test_missing_source_read_axis_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 182,
+        "end_line": 186,
+        "signature_hash": "b8fdd6dd6df6794d",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_model_prefix_kv_is_a_different_owner:fef38fa6bc6fbc14",
+        "name": "VersionTransitionEnvelopeTests.test_model_prefix_kv_is_a_different_owner",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 237,
+        "end_line": 240,
+        "signature_hash": "56e5da2bc5d57c52",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_read_obligation_cannot_be_paid_by_persisted_current_state:2a93c17c4cba942e",
+        "name": "VersionTransitionEnvelopeTests.test_read_obligation_cannot_be_paid_by_persisted_current_state",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 176,
+        "end_line": 180,
+        "signature_hash": "078d91c4ec484ffa",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_same_record_generation_is_not_a_version_transition:69db9e24ae35eba5",
+        "name": "VersionTransitionEnvelopeTests.test_same_record_generation_is_not_a_version_transition",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 202,
+        "end_line": 209,
+        "signature_hash": "57a1eb4471a7a1d7",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_stable_subject_overwrite_requires_pr738_representation_hold:876fe356d37b074c",
+        "name": "VersionTransitionEnvelopeTests.test_stable_subject_overwrite_requires_pr738_representation_hold",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 164,
+        "end_line": 168,
+        "signature_hash": "7262569e8f11bf59",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_store_integrity_is_exact:158390c94a50c580",
+        "name": "VersionTransitionEnvelopeTests.test_store_integrity_is_exact",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 231,
+        "end_line": 235,
+        "signature_hash": "eee89ebe31731067",
+        "file_digest8": "567425424a458eed"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_version_transition_envelope.py#method:VersionTransitionEnvelopeTests.test_write_witness_must_bind_exact_subject_and_evidence_generation:8dcdee48c1388c05",
+        "name": "VersionTransitionEnvelopeTests.test_write_witness_must_bind_exact_subject_and_evidence_generation",
+        "kind": "method",
+        "file": "tests/test_aura_external_version_transition_envelope.py",
+        "line": 225,
+        "end_line": 229,
+        "signature_hash": "8c92ecc529fa8e18",
+        "file_digest8": "567425424a458eed"
+      },
+      {
         "semantic_id": "tests/test_aura_fetch_construction_demo_source.py#class:_Opener:f6571662cc6ec3ca",
         "name": "_Opener",
         "kind": "class",
@@ -450169,6 +451004,226 @@
         "file_digest8": "02767792e434ce3f"
       },
       {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:CurrentEvidenceDescriptorV1:b7f10286f3e72c48",
+        "name": "CurrentEvidenceDescriptorV1",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 183,
+        "end_line": 226,
+        "signature_hash": "d40768e5b66d463f",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:EnvelopeDisposition:e9b7af34005e4c1c",
+        "name": "EnvelopeDisposition",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "c8c3d7e004f59f32",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:EnvelopeError:c3a3833d53368071",
+        "name": "EnvelopeError",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 78,
+        "end_line": 79,
+        "signature_hash": "b89165a892e64ae3",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:FutureReadObligationV1:11c9fdd693077bc7",
+        "name": "FutureReadObligationV1",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 291,
+        "end_line": 309,
+        "signature_hash": "91616eee33aeaf68",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:VersionTransitionEnvelopeV1:d4280c6b7d46a918",
+        "name": "VersionTransitionEnvelopeV1",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 327,
+        "end_line": 352,
+        "signature_hash": "5af69f808bdc4b58",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:VersionTransitionRequestV1:2576a1cc389f1650",
+        "name": "VersionTransitionRequestV1",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 313,
+        "end_line": 323,
+        "signature_hash": "1e85ac3907144e50",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:VersionedRowBindingV1:44a4d40f24d9d9a7",
+        "name": "VersionedRowBindingV1",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 230,
+        "end_line": 253,
+        "signature_hash": "b375f238d6641926",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#class:WriteAdmissionWitnessV1:631c0ec791c240d7",
+        "name": "WriteAdmissionWitnessV1",
+        "kind": "class",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 257,
+        "end_line": 287,
+        "signature_hash": "47cc91a4f34b56c2",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_canonical:85311e867d6ba571",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 82,
+        "end_line": 90,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_receipt:c4e330988d17b668",
+        "name": "_receipt",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 355,
+        "end_line": 412,
+        "signature_hash": "abcaa793a6b555d9",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_required:abb0b628c2ec8106",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 97,
+        "end_line": 100,
+        "signature_hash": "8b28cfce6f68b96b",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_sha256:634a4a368d62ee6e",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 103,
+        "end_line": 107,
+        "signature_hash": "fda5827e1e9021fd",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_sha:8779648c3b4365e9",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 93,
+        "end_line": 94,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:build_version_transition_envelope:ad39a4a32a167426",
+        "name": "build_version_transition_envelope",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 415,
+        "end_line": 541,
+        "signature_hash": "31ef49b55fa33e8d",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:current_evidence_generation_key:2cac6b051c779014",
+        "name": "current_evidence_generation_key",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 121,
+        "end_line": 160,
+        "signature_hash": "9f26e57992194ae2",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:current_subject_key:8b26c979a22626f8",
+        "name": "current_subject_key",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 110,
+        "end_line": 118,
+        "signature_hash": "924b24151b5ffc26",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:legacy_semantic_id:095caa8eb83e77a7",
+        "name": "legacy_semantic_id",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 163,
+        "end_line": 170,
+        "signature_hash": "1bdf4193d7211fd4",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#function:versioned_record_key:fb1ba7c8206927c6",
+        "name": "versioned_record_key",
+        "kind": "function",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 173,
+        "end_line": 179,
+        "signature_hash": "d58f1548feaf452d",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:CurrentEvidenceDescriptorV1.validate:15c2c63e21a48e9b",
+        "name": "CurrentEvidenceDescriptorV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 202,
+        "end_line": 226,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:FutureReadObligationV1.validate:5eeb9841b6d274e4",
+        "name": "FutureReadObligationV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 299,
+        "end_line": 309,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:VersionedRowBindingV1.validate:57ac2b1331104f2e",
+        "name": "VersionedRowBindingV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 238,
+        "end_line": 253,
+        "signature_hash": "94db0a4879e99758",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
+        "semantic_id": "tools/aura_external_version_transition_envelope.py#method:WriteAdmissionWitnessV1.validate:d3e92d24618a6c52",
+        "name": "WriteAdmissionWitnessV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_version_transition_envelope.py",
+        "line": 272,
+        "end_line": 287,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ea4bc7e67d8eaa87"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -451419,7 +452474,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ccd8bfbd66936e5b579e9a74340f9a2b",
-    "payload_hash": "988a19ea6e44941956e10a2ae64e30a2"
+    "record_fingerprint": "9929d40e7311c99f9af87eaab4b79951",
+    "payload_hash": "f0542478055e50050601e45d29bca6a2"
   }
 }

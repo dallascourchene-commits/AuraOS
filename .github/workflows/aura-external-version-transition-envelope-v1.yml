@@ -1,0 +1,161 @@
+name: Aura External Version Transition Envelope V1
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_external_version_transition_envelope.py"
+      - "tests/test_aura_external_version_transition_envelope.py"
+      - "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json"
+      - "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md"
+      - ".github/workflows/aura-external-version-transition-envelope-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-version-transition:
+    runs-on: ubuntu-24.04
+    env:
+      PR738_HEAD: "906653a807f54b343d644b1764c7ef37bbbf7191"
+      PR738_BLOB: "367f29e04e33641d319a3daa1efd7a60b7860d07"
+      PR737_HEAD: "55ae020ae1c06501935a45f3ade45eeff532d905"
+      PR737_BLOB: "7dfaaf755a802e0a20a23ce06ba520fe47028f56"
+      EKI3_HEAD: "923edcf63187e14d771528cb08083d6a0467c87d"
+      EKI3_BLOB: "faca056a088ddf73c48018ee98b7f2a5488c1d31"
+      EKI2_HEAD: "b13ba81aa671693828e4fd97bd5b222db5d49d94"
+      EKI2_BLOB: "668b6736a527cae99a9272d174c69ac415caad4a"
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - name: Materialize exact parent and lineage artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${PR738_HEAD}/tools/aura_coordinate_memory_write_admission.py" -o /tmp/pr738_write_admission.py
+          curl -fsSL "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${PR737_HEAD}/tools/aura_external_knowledge_coordinate_memory_read_guard.py" -o /tmp/pr737_read_guard.py
+          curl -fsSL "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${EKI3_HEAD}/tools/aura_external_subject_lineage_bridge.py" -o /tmp/eki3_bridge.py
+          curl -fsSL "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${EKI2_HEAD}/tools/aura_external_knowledge_store_writer.py" -o /tmp/eki2_writer.py
+          test "$(git hash-object /tmp/pr738_write_admission.py)" = "${PR738_BLOB}"
+          test "$(git hash-object /tmp/pr737_read_guard.py)" = "${PR737_BLOB}"
+          test "$(git hash-object /tmp/eki3_bridge.py)" = "${EKI3_BLOB}"
+          test "$(git hash-object /tmp/eki2_writer.py)" = "${EKI2_BLOB}"
+
+      - name: Compile and run EKI-4 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_external_version_transition_envelope.py
+          python -m unittest -v tests.test_aura_external_version_transition_envelope
+
+      - name: Validate bounded external coordinate map
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          body = json.loads(Path("docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json").read_text())
+          assert body["schema"] == "AURA-EKI4-EXTERNAL-SOURCE-COORDINATE-MAP-v1"
+          assert len(body["entries"]) >= 5
+          assert any(e["id"] == "scholar-direct-gap" for e in body["entries"])
+          for entry in body["entries"]:
+              assert len(entry["sha256"]) == 64
+              assert len(entry["projection_13d"]) == 13
+              assert set(entry["projection_13d"]) <= {"0", "1", "2"}
+              assert len(entry["k27_xyz"]) == 3
+              assert all(type(v) is int and 0 <= v < 27 for v in entry["k27_xyz"])
+          for claim in (
+              "semantic_authority",
+              "currentness_witness",
+              "truth_authority",
+              "version_order_authority",
+              "instruction_authority",
+              "write_authority",
+              "effect_authority",
+              "native_private_transformer_kv_accessed",
+          ):
+              assert body[claim] is False
+          PY
+
+      - name: Prove explicit version edge carries separate write and read debts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tools.aura_external_version_transition_envelope import *
+
+          canonical_id = "2606.26511"
+          uri = "https://arxiv.org/abs/2606.26511"
+          subject = current_subject_key(provider="ARXIV", source_kind="PAPER", canonical_id=canonical_id)
+          evidence_key = current_evidence_generation_key(
+              subject_key=subject,
+              provider_revision="v2",
+              content_digest="8" * 64,
+              source_generated_at="2026-06-25T01:31:53Z",
+              exact_source_uri=uri,
+              verifier_generation="hosted-proof-v1",
+              verified_fields=("content_digest", "exact_source_uri"),
+          )
+          evidence = CurrentEvidenceDescriptorV1(
+              provider="ARXIV", source_kind="PAPER", canonical_id=canonical_id,
+              canonical_uri=uri, provider_revision="v2", content_digest="8" * 64,
+              source_generated_at="2026-06-25T01:31:53Z", exact_source_uri=uri,
+              verifier_generation="hosted-proof-v1",
+              verified_fields=("content_digest", "exact_source_uri"),
+              claimed_subject_key=subject,
+              claimed_evidence_generation_key=evidence_key,
+          )
+          legacy = legacy_semantic_id(legacy_source_kind="ARXIV", canonical_id=canonical_id)
+          r1, r2 = "f" * 64, "0" * 64
+          k1 = versioned_record_key(legacy_id=legacy, record_generation=r1)
+          k2 = versioned_record_key(legacy_id=legacy, record_generation=r2)
+          predecessor = VersionedRowBindingV1(k1, r1, legacy, canonical_id, uri, k2)
+          successor = VersionedRowBindingV1(k2, r2, legacy, canonical_id, uri, None)
+          write = WriteAdmissionWitnessV1(
+              PR738_HEAD, PR738_BLOB, PR738_REQUIRED_HOLD, subject, evidence_key,
+              "memory://eki4-hosted", "EKI4::HOSTED", "9" * 64,
+              True, True, True,
+          )
+          future = FutureReadObligationV1(
+              PR737_HEAD, PR737_BLOB, PR737_REQUIRED_AXES, EKI2_REQUIRED_AXES,
+              False, True,
+          )
+          request = VersionTransitionRequestV1(
+              "ARXIV", evidence, predecessor, successor, write, future,
+              "memory://eki4-hosted", "EKI4::HOSTED", "9" * 64,
+          )
+          receipt = build_version_transition_envelope(request)
+          assert receipt.disposition is EnvelopeDisposition.VERSION_TRANSITION_PLAN_READY
+          assert receipt.explicit_supersession_edge == (k1, k2)
+          assert receipt.predecessor_record_generation == r1
+          assert receipt.successor_record_generation == r2
+          assert receipt.write_currentness_resolved is True
+          assert receipt.read_currentness_debt_carried is True
+          assert receipt.required_future_read_axes == ("source",)
+          assert receipt.required_eki2_read_axes == ("SOURCE_GENERATION_CURRENT", "SOURCE_BODY_CURRENT")
+          assert receipt.chronological_order_inferred is False
+          assert receipt.persisted_currentness_is_witness is False
+          assert receipt.store_mutated is False
+          assert receipt.write_authority is False
+          assert receipt.effect_authority is False
+          assert receipt.native_private_transformer_kv_accessed is False
+          PY
+
+      - name: Assert claim ceiling constants
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'native_private_transformer_kv_accessed: bool = False' tools/aura_external_version_transition_envelope.py
+          grep -q 'chronological_order_inferred: bool = False' tools/aura_external_version_transition_envelope.py
+          grep -q 'persisted_currentness_is_witness: bool = False' tools/aura_external_version_transition_envelope.py
+          grep -q 'semantic_k27_authority: bool = False' tools/aura_external_version_transition_envelope.py
