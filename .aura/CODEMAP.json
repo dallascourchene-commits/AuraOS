@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788188321,
+  "generated_at_unix": 1788188713,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1641,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1524,6 +1524,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_proof_carrying_derived_cognition.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -1633,6 +1634,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_closed_world_result_lifecycle_gate.py",
+      "tools/aura_proof_carrying_derived_cognition.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1757,15 +1759,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1641,
-      "bytes": 26440479,
-      "tokens_est": 6600471,
+      "files": 1643,
+      "bytes": 26466541,
+      "tokens_est": 6606987,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1001,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3912,6 +3914,14 @@
         "line": 50,
         "end_line": 53,
         "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_canonical:678b565d2d564657",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_canonical:8c7b878dab53807d",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8092,6 +8102,14 @@
         "line": 56,
         "end_line": 57,
         "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_sha:e0a6f9968a1db67f",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_sha:f6281f174c7dd569",
         "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
@@ -13741,6 +13759,14 @@
         "end_line": 67,
         "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_sha256:9e05fffaff211cff",
         "signature_hash": "a46cbd439e4d33c2"
+      },
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_sha256:b03b30be20c10ecd",
+        "signature_hash": "a46cbd439e4d33c2"
       }
     ],
     "PullRequestRouteBinding": [
@@ -15806,6 +15832,14 @@
         "line": 60,
         "end_line": 62,
         "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_required:b03a704e3236269d",
+        "signature_hash": "9737d32c1db83273"
+      },
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_required:9e890d9844ccbaf7",
         "signature_hash": "9737d32c1db83273"
       }
     ],
@@ -113555,6 +113589,14 @@
         "signature_hash": "c3d68e6bce1db336"
       },
       {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:candidate:00e4b47e460ad8d5",
+        "signature_hash": "4a34e7ce5763930c"
+      },
+      {
         "file": "tests/test_aura_shadow_model_router.py",
         "kind": "function",
         "line": 42,
@@ -121883,6 +121925,14 @@
         "end_line": 184,
         "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
         "signature_hash": "96c8d2d81ca0f6b2"
+      },
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:policy:0b22a6871a49ea2d",
+        "signature_hash": "6753272820539b09"
       }
     ],
     "ClosedWorldLifecycleGateTests": [
@@ -126009,6 +126059,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:evidence:0f333741161e997b",
+        "signature_hash": "2ac8f4a4e80f1bb0"
       }
     ],
     "claim": [
@@ -145529,6 +145587,166 @@
         "signature_hash": "faa6d593407c8ebc"
       }
     ],
+    "parent": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 36,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:parent:e5f27c925adc6e73",
+        "signature_hash": "5c1580c93f808fd8"
+      }
+    ],
+    "derivation": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:derivation:f2f9935a3f62738a",
+        "signature_hash": "161669279cfd48fa"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 265,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#class:ProofCarryingDerivedCognitionTests:ecd8f85ce965c38f",
+        "signature_hash": "a45d95c8505f52a0"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_verified_happy_path_is_deterministic": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_verified_happy_path_is_deterministic:0751259f533e3153",
+        "signature_hash": "d5d272ae82f3621b"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_same_parents_and_output_but_exclusion_rule_change_changes_identity": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 127,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_same_parents_and_output_but_exclusion_rule_change_changes_identity:fea17b02892f6590",
+        "signature_hash": "d6ea70688fea5fc2"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_same_output_but_rounding_threshold_change_changes_identity": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 138,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_same_output_but_rounding_threshold_change_changes_identity:c53d63190a7a22ff",
+        "signature_hash": "1571b1fbf457cd68"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_stale_parent_validation_holds_before_semantic_reuse": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 148,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_stale_parent_validation_holds_before_semantic_reuse:29c40adef08db1da",
+        "signature_hash": "4af22918a9d1d7c0"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_missing_derivation_descriptor_never_upgrades_matching_bytes": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_missing_derivation_descriptor_never_upgrades_matching_bytes:78a543deebb88ddb",
+        "signature_hash": "15a581dbbc23d01b"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_ambiguous_omission_is_rejected_not_treated_as_none": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_ambiguous_omission_is_rejected_not_treated_as_none:43c05e4ce2f9a4c2",
+        "signature_hash": "b14125af00f9d405"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_search_mediated_evidence_cannot_receive_clean_independence_credit": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 179,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_search_mediated_evidence_cannot_receive_clean_independence_credit:3bbbedb71eafe37d",
+        "signature_hash": "9ccfc93c616c2069"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_conditioned_evidence_can_still_be_verified_for_non_independence_claim": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 192,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_conditioned_evidence_can_still_be_verified_for_non_independence_claim:8d73ac53cac9b24c",
+        "signature_hash": "89ff588873bab34a"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_same_semantic_derivation_from_two_producers_collapses_vdi_not_receipt": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 205,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_same_semantic_derivation_from_two_producers_collapses_vdi_not_receipt:247c15b026a67460",
+        "signature_hash": "c593d131457a013d"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_evidence_production_history_changes_identity_even_when_content_matches": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_evidence_production_history_changes_identity_even_when_content_matches:8a562ea66ad17cb2",
+        "signature_hash": "c1a234e1862757fe"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_currentness_authority_and_claim_scope_are_hard_gates": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 239,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_currentness_authority_and_claim_scope_are_hard_gates:eaa75f72db578e83",
+        "signature_hash": "82802e966f348b15"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_duplicate_parent_and_evidence_identity_fail_closed": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 241,
+        "end_line": 251,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_duplicate_parent_and_evidence_identity_fail_closed:e3968a10c5ac4ab6",
+        "signature_hash": "b386aa35fc93949a"
+      }
+    ],
+    "ProofCarryingDerivedCognitionTests.test_conflicting_predeclared_derivations_are_preserved_not_voted_together": [
+      {
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 253,
+        "end_line": 265,
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_conflicting_predeclared_derivations_are_preserved_not_voted_together:dacaef003318b2b1",
+        "signature_hash": "7f0fbd1c5459fca4"
+      }
+    ],
     "test_provider_key_pool_collects_primary_plural_numbered_and_aliases": [
       {
         "file": "tests/test_aura_provider_routing.py",
@@ -150145,6 +150363,14 @@
         "end_line": 273,
         "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_decision:a2752fa3e56fcec4",
         "signature_hash": "0f9c8cc08efb5955"
+      },
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 268,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_decision:4cb6b71e488db454",
+        "signature_hash": "f434101e75115b6c"
       }
     ],
     "test_wrapper_forwards_only_original_tool_arguments": [
@@ -157567,6 +157793,166 @@
         "end_line": 403,
         "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:validate_reuse_state:9b23d612362ecca0",
         "signature_hash": "6a5c948aff4604db"
+      }
+    ],
+    "_digest_or_none": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_digest_or_none:19037695d06cccbd",
+        "signature_hash": "a3182d9d4a6ae882"
+      }
+    ],
+    "ParentValidationRef": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 82,
+        "end_line": 95,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:ParentValidationRef:bad4e8d8a467b8ca",
+        "signature_hash": "22749c90e508f780"
+      }
+    ],
+    "ParentValidationRef.validate": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 95,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:ParentValidationRef.validate:6376b5bc63a91b79",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceIdentity": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 99,
+        "end_line": 138,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:EvidenceIdentity:bcabc916ba7ada20",
+        "signature_hash": "3df5599cd638ff5b"
+      }
+    ],
+    "EvidenceIdentity.validate": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 133,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:EvidenceIdentity.validate:fea3dff71b9c5fcc",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceIdentity.fingerprint": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:EvidenceIdentity.fingerprint:da0d1caff013966f",
+        "signature_hash": "639c2b791ce0b655"
+      }
+    ],
+    "DerivationDescriptor": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 169,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivationDescriptor:82027f79dbe72d52",
+        "signature_hash": "8bc7eaa8c3b905b6"
+      }
+    ],
+    "DerivationDescriptor.validate": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 164,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivationDescriptor.validate:7c20023665d4d2f6",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "DerivationDescriptor.fingerprint": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 169,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivationDescriptor.fingerprint:381f59ffd15080b3",
+        "signature_hash": "639c2b791ce0b655"
+      }
+    ],
+    "DerivedPolicy": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 190,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivedPolicy:fc515a3a72f79ee9",
+        "signature_hash": "3a47727c56872a48"
+      }
+    ],
+    "DerivedPolicy.validate": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 190,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivedPolicy.validate:2cc6f52d46bdb719",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "DerivedCandidate": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 194,
+        "end_line": 218,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivedCandidate:f0affac133361e7a",
+        "signature_hash": "1f917a2c770ad131"
+      }
+    ],
+    "DerivedCandidate.validate": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 218,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivedCandidate.validate:3bb2a3344d634cbe",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "DerivedDecision": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "class",
+        "line": 222,
+        "end_line": 230,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivedDecision:847baab6e1a861d4",
+        "signature_hash": "8e007b1c6d6cccd4"
+      }
+    ],
+    "verify_derived_cognition": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 271,
+        "end_line": 393,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:verify_derived_cognition:0df391ce4ab03adc",
+        "signature_hash": "3c2493ef1a4ba1eb"
+      }
+    ],
+    "verified_semantic_equivalent": [
+      {
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "kind": "function",
+        "line": 396,
+        "end_line": 403,
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:verified_semantic_equivalent:54aa671f76cafe90",
+        "signature_hash": "fcfda44e2e0355a9"
       }
     ],
     "_coordinates": [
@@ -258007,6 +258393,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_proof_carrying_derived_cognition.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11915,
+      "lines": 270,
+      "tokens_est": 2979,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a6351539eb6584bc",
+      "vector": [
+        -0.093273,
+        0.024794,
+        -0.28218,
+        -0.003542,
+        -0.17592,
+        0.142861,
+        0.180643,
+        0.010626,
+        0.29871,
+        -0.095634,
+        -0.28218,
+        -0.128693,
+        -0.159391,
+        0.206617,
+        0.201895,
+        0.097996,
+        -0.284542,
+        0.149945,
+        -0.003542,
+        0.173559,
+        -0.05313,
+        0.100357,
+        -0.225508,
+        -0.286903,
+        -0.29871,
+        -0.168836,
+        0.17592,
+        -0.161752,
+        -0.116886,
+        -0.079105,
+        -0.164113,
+        -0.112164
+      ]
+    },
+    {
       "path": "tests/test_aura_provider_routing.py",
       "role": "python_module",
       "binary": false,
@@ -263127,6 +263560,53 @@
         0.079869,
         0.134018,
         -0.261267
+      ]
+    },
+    {
+      "path": "tools/aura_proof_carrying_derived_cognition.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14147,
+      "lines": 404,
+      "tokens_est": 3537,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9b173bc6e34822ab",
+      "vector": [
+        0.209713,
+        -0.15825,
+        0.070762,
+        0.011579,
+        0.055323,
+        -0.258604,
+        -0.31264,
+        -0.065616,
+        -0.021872,
+        -0.153104,
+        -0.178835,
+        0.209713,
+        -0.083628,
+        0.266323,
+        0.027018,
+        -0.083628,
+        -0.199421,
+        0.099067,
+        0.31264,
+        0.173689,
+        -0.268896,
+        0.014152,
+        -0.099067,
+        -0.15825,
+        -0.173689,
+        -0.039884,
+        0.297201,
+        -0.268896,
+        0.178835,
+        0.042457,
+        -0.153104,
+        -0.183982
       ]
     },
     {
@@ -287128,15 +287608,15 @@
     }
   },
   "summary": {
-    "file_count": 1641,
-    "total_bytes": 26440479,
-    "text_tokens_est": 6600471,
+    "file_count": 1643,
+    "total_bytes": 26466541,
+    "text_tokens_est": 6606987,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1001,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -288671,6 +289151,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_proof_carrying_derived_cognition.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -288780,6 +289261,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_closed_world_result_lifecycle_gate.py",
+      "tools/aura_proof_carrying_derived_cognition.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -433568,6 +434050,196 @@
         "file_digest8": "7222033800a1bdcf"
       },
       {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#class:ProofCarryingDerivedCognitionTests:ecd8f85ce965c38f",
+        "name": "ProofCarryingDerivedCognitionTests",
+        "kind": "class",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 101,
+        "end_line": 265,
+        "signature_hash": "a45d95c8505f52a0",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:candidate:00e4b47e460ad8d5",
+        "name": "candidate",
+        "kind": "function",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 75,
+        "end_line": 87,
+        "signature_hash": "4a34e7ce5763930c",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:derivation:f2f9935a3f62738a",
+        "name": "derivation",
+        "kind": "function",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 56,
+        "end_line": 72,
+        "signature_hash": "161669279cfd48fa",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:evidence:0f333741161e997b",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 39,
+        "end_line": 53,
+        "signature_hash": "2ac8f4a4e80f1bb0",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:parent:e5f27c925adc6e73",
+        "name": "parent",
+        "kind": "function",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 28,
+        "end_line": 36,
+        "signature_hash": "5c1580c93f808fd8",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#function:policy:0b22a6871a49ea2d",
+        "name": "policy",
+        "kind": "function",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 90,
+        "end_line": 98,
+        "signature_hash": "6753272820539b09",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_ambiguous_omission_is_rejected_not_treated_as_none:43c05e4ce2f9a4c2",
+        "name": "ProofCarryingDerivedCognitionTests.test_ambiguous_omission_is_rejected_not_treated_as_none",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 159,
+        "end_line": 165,
+        "signature_hash": "b14125af00f9d405",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_conditioned_evidence_can_still_be_verified_for_non_independence_claim:8d73ac53cac9b24c",
+        "name": "ProofCarryingDerivedCognitionTests.test_conditioned_evidence_can_still_be_verified_for_non_independence_claim",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 181,
+        "end_line": 192,
+        "signature_hash": "89ff588873bab34a",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_conflicting_predeclared_derivations_are_preserved_not_voted_together:dacaef003318b2b1",
+        "name": "ProofCarryingDerivedCognitionTests.test_conflicting_predeclared_derivations_are_preserved_not_voted_together",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 253,
+        "end_line": 265,
+        "signature_hash": "7f0fbd1c5459fca4",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_currentness_authority_and_claim_scope_are_hard_gates:eaa75f72db578e83",
+        "name": "ProofCarryingDerivedCognitionTests.test_currentness_authority_and_claim_scope_are_hard_gates",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 225,
+        "end_line": 239,
+        "signature_hash": "82802e966f348b15",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_duplicate_parent_and_evidence_identity_fail_closed:e3968a10c5ac4ab6",
+        "name": "ProofCarryingDerivedCognitionTests.test_duplicate_parent_and_evidence_identity_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 241,
+        "end_line": 251,
+        "signature_hash": "b386aa35fc93949a",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_evidence_production_history_changes_identity_even_when_content_matches:8a562ea66ad17cb2",
+        "name": "ProofCarryingDerivedCognitionTests.test_evidence_production_history_changes_identity_even_when_content_matches",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 207,
+        "end_line": 223,
+        "signature_hash": "c1a234e1862757fe",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_missing_derivation_descriptor_never_upgrades_matching_bytes:78a543deebb88ddb",
+        "name": "ProofCarryingDerivedCognitionTests.test_missing_derivation_descriptor_never_upgrades_matching_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 150,
+        "end_line": 157,
+        "signature_hash": "15a581dbbc23d01b",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_same_output_but_rounding_threshold_change_changes_identity:c53d63190a7a22ff",
+        "name": "ProofCarryingDerivedCognitionTests.test_same_output_but_rounding_threshold_change_changes_identity",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 129,
+        "end_line": 138,
+        "signature_hash": "1571b1fbf457cd68",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_same_parents_and_output_but_exclusion_rule_change_changes_identity:fea17b02892f6590",
+        "name": "ProofCarryingDerivedCognitionTests.test_same_parents_and_output_but_exclusion_rule_change_changes_identity",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 116,
+        "end_line": 127,
+        "signature_hash": "d6ea70688fea5fc2",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_same_semantic_derivation_from_two_producers_collapses_vdi_not_receipt:247c15b026a67460",
+        "name": "ProofCarryingDerivedCognitionTests.test_same_semantic_derivation_from_two_producers_collapses_vdi_not_receipt",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 194,
+        "end_line": 205,
+        "signature_hash": "c593d131457a013d",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_search_mediated_evidence_cannot_receive_clean_independence_credit:3bbbedb71eafe37d",
+        "name": "ProofCarryingDerivedCognitionTests.test_search_mediated_evidence_cannot_receive_clean_independence_credit",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 167,
+        "end_line": 179,
+        "signature_hash": "9ccfc93c616c2069",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_stale_parent_validation_holds_before_semantic_reuse:29c40adef08db1da",
+        "name": "ProofCarryingDerivedCognitionTests.test_stale_parent_validation_holds_before_semantic_reuse",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 140,
+        "end_line": 148,
+        "signature_hash": "4af22918a9d1d7c0",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
+        "semantic_id": "tests/test_aura_proof_carrying_derived_cognition.py#method:ProofCarryingDerivedCognitionTests.test_verified_happy_path_is_deterministic:0751259f533e3153",
+        "name": "ProofCarryingDerivedCognitionTests.test_verified_happy_path_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_proof_carrying_derived_cognition.py",
+        "line": 102,
+        "end_line": 114,
+        "signature_hash": "d5d272ae82f3621b",
+        "file_digest8": "a6351539eb6584bc"
+      },
+      {
         "semantic_id": "tests/test_aura_provider_routing.py#class:test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM:437eaace1fcd07b5",
         "name": "test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM",
         "kind": "class",
@@ -446518,6 +447190,216 @@
         "file_digest8": "b525ebc9f2ad75a0"
       },
       {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivationDescriptor:82027f79dbe72d52",
+        "name": "DerivationDescriptor",
+        "kind": "class",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 142,
+        "end_line": 169,
+        "signature_hash": "8bc7eaa8c3b905b6",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivedCandidate:f0affac133361e7a",
+        "name": "DerivedCandidate",
+        "kind": "class",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 194,
+        "end_line": 218,
+        "signature_hash": "1f917a2c770ad131",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivedDecision:847baab6e1a861d4",
+        "name": "DerivedDecision",
+        "kind": "class",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 222,
+        "end_line": 230,
+        "signature_hash": "8e007b1c6d6cccd4",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:DerivedPolicy:fc515a3a72f79ee9",
+        "name": "DerivedPolicy",
+        "kind": "class",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 173,
+        "end_line": 190,
+        "signature_hash": "3a47727c56872a48",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:EvidenceIdentity:bcabc916ba7ada20",
+        "name": "EvidenceIdentity",
+        "kind": "class",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 99,
+        "end_line": 138,
+        "signature_hash": "3df5599cd638ff5b",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#class:ParentValidationRef:bad4e8d8a467b8ca",
+        "name": "ParentValidationRef",
+        "kind": "class",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 82,
+        "end_line": 95,
+        "signature_hash": "22749c90e508f780",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_canonical:8c7b878dab53807d",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_decision:4cb6b71e488db454",
+        "name": "_decision",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 233,
+        "end_line": 268,
+        "signature_hash": "f434101e75115b6c",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_digest_or_none:19037695d06cccbd",
+        "name": "_digest_or_none",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "a3182d9d4a6ae882",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_required:9e890d9844ccbaf7",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "9737d32c1db83273",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_sha256:b03b30be20c10ecd",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "a46cbd439e4d33c2",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:_sha:f6281f174c7dd569",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:verified_semantic_equivalent:54aa671f76cafe90",
+        "name": "verified_semantic_equivalent",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 396,
+        "end_line": 403,
+        "signature_hash": "fcfda44e2e0355a9",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#function:verify_derived_cognition:0df391ce4ab03adc",
+        "name": "verify_derived_cognition",
+        "kind": "function",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 271,
+        "end_line": 393,
+        "signature_hash": "3c2493ef1a4ba1eb",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivationDescriptor.fingerprint:381f59ffd15080b3",
+        "name": "DerivationDescriptor.fingerprint",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 167,
+        "end_line": 169,
+        "signature_hash": "639c2b791ce0b655",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivationDescriptor.validate:7c20023665d4d2f6",
+        "name": "DerivationDescriptor.validate",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 157,
+        "end_line": 164,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivedCandidate.validate:3bb2a3344d634cbe",
+        "name": "DerivedCandidate.validate",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 205,
+        "end_line": 218,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:DerivedPolicy.validate:2cc6f52d46bdb719",
+        "name": "DerivedPolicy.validate",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 180,
+        "end_line": 190,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:EvidenceIdentity.fingerprint:da0d1caff013966f",
+        "name": "EvidenceIdentity.fingerprint",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "639c2b791ce0b655",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:EvidenceIdentity.validate:fea3dff71b9c5fcc",
+        "name": "EvidenceIdentity.validate",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 112,
+        "end_line": 133,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
+        "semantic_id": "tools/aura_proof_carrying_derived_cognition.py#method:ParentValidationRef.validate:6376b5bc63a91b79",
+        "name": "ParentValidationRef.validate",
+        "kind": "method",
+        "file": "tools/aura_proof_carrying_derived_cognition.py",
+        "line": 89,
+        "end_line": 95,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "9b173bc6e34822ab"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -447768,7 +448650,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b04b94f4b355aec3a4ef00ef2fa496e5",
-    "payload_hash": "5e38a53ba8bc223c7ce9728fb79b3820"
+    "record_fingerprint": "821dd50c4815d0d57c7815c45e68bffa",
+    "payload_hash": "91444bf855091547f677aad109747bb6"
   }
 }
