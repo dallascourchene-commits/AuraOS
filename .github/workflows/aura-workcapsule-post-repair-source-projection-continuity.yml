@@ -1,0 +1,151 @@
+name: Aura WorkCapsule Post-Repair Source Projection Continuity
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py'
+      - 'tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py'
+      - 'scripts/aura_workcapsule_post_repair_source_projection_continuity.py'
+      - 'tests/test_aura_workcapsule_post_repair_source_projection_continuity.py'
+      - '.github/workflows/aura-workcapsule-post-repair-source-projection-continuity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  post-repair-source-projection-continuity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR537_SHA: 4953197babd6f6b79fc62fdc26f28a1260e4aefe
+    steps:
+      - name: Fetch exact child head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR536 canonical temporal lifecycle owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py
+          python3 -m unittest -v tests.test_aura_workcapsule_canonical_temporal_lifecycle_equivalence
+
+      - name: Fetch PR537 exact second parent into isolated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/pr537
+          git -C /tmp/pr537 init .
+          git -C /tmp/pr537 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr537 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR537_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr537 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr537 rev-parse HEAD)" = "$PR537_SHA"
+          test -z "$(git -C /tmp/pr537 config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR537 typed owner and portable projection
+        run: |
+          cargo fmt --check --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml
+          cargo test --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets
+          cargo test --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --doc
+          cargo clippy --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets -- -D warnings
+          cargo fmt --check --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml
+          cargo test --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets
+          cargo test --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --doc
+          cargo clippy --manifest-path /tmp/pr537/crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove stable cross-runtime schema agreement
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          rust = Path('/tmp/pr537/crates/aura-k27-astge-post-edit-canonical-projection/src/lib.rs').read_text()
+          py = Path('scripts/aura_workcapsule_post_repair_source_projection_continuity.py').read_text()
+          required = [
+              'AURA_ASTGE_POST_EDIT_CANONICAL_DEFINITION_TARGET_PROJECTION_V1',
+              'AURA_SERDE_JSON_STRUCT_ORDER_COMPACT_V1',
+              'source_generation_value',
+              'relative_path',
+              'file_id',
+              'source_sha256_hex',
+              'source_byte_len',
+              'selected_target_scope_local_id',
+              'selected_target_parent_scope_local_id',
+              'selected_target_semantic_handle_digest_hex',
+              'definition_owner_scope_local_id',
+              'definition_target_scope_local_id',
+              'producer_authenticated',
+          ]
+          for token in required:
+              assert token in rust, token
+              assert token in py, token
+          assert 'producer_authenticated: false' in rust
+          assert 'projection_producer_authenticated": False' in py
+          print('PR537_SECOND_PARENT_EXECUTED_AT_EXACT_SHA=true')
+          print('PR537_SCHEMA_MATCHED_ACROSS_RUNTIME=true')
+          print('SECOND_PARENT_TREE_COPIED_INTO_CHILD=false')
+          print('PROJECTION_PRODUCER_AUTHENTICATED=false')
+          PY
+
+      - name: Prove post-repair source-instance continuity
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_post_repair_source_projection_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_repair_source_projection_continuity
+
+      - name: Assert child owner and caller boundary
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_post_repair_source_projection_continuity import verify_post_repair_source_projection_continuity
+          params = inspect.signature(verify_post_repair_source_projection_continuity).parameters
+          for forbidden in ('candidate_binding', 'observed_source_witnesses', 'source_observation_receipt', 'post_edit_witness', 'projection_owner_receipt'):
+              assert forbidden not in params, forbidden
+          assert 'post_observation_bound_receipt' in params
+          assert 'astge_projection' in params
+          source = Path('scripts/aura_workcapsule_post_repair_source_projection_continuity.py').read_text()
+          for forbidden in ('compile_source_reentry_observations', 'compile_observation_bound_reentry_closure', 'derive_post_reentry_candidate'):
+              assert forbidden not in source, forbidden
+          assert 'verify_canonical_temporal_lifecycle_equivalence' in source
+          print('LOWER_WORKCAPSULE_REPLAY_REIMPLEMENTED_BY_CHILD=false')
+          print('CALLER_POST_EDIT_OWNER_RECEIPT_ACCEPTED=false')
+          print('CALLER_SOURCE_WITNESS_LIST_ACCEPTED=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'POST_CLOSED_SOURCE_INSTANCE_BOUND_TO_PORTABLE_ASTGE_PROJECTION=true'
+          echo 'PRE_REJECTED_DEPENDENCY_MATCH_REQUIRED=true'
+          echo 'POST_FILE_PATH_GENERATION_SHA_LENGTH_MATCH_REQUIRED=true'
+          echo 'CANONICAL_TARGET_PROJECTION_SCHEMA_VERIFIED=true'
+          echo 'PR537_SECOND_PARENT_EXECUTED_AT_EXACT_SHA=true'
+          echo 'SECOND_PARENT_TREE_COPIED_INTO_CHILD=false'
+          echo 'PROJECTION_PRODUCER_AUTHENTICATED=false'
+          echo 'CANONICAL_TARGET_PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_CURRENTNESS_MINTED_BY_CHILD=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
