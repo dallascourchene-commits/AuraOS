@@ -1,0 +1,134 @@
+name: GLM53 Q19 Representation Scoped Conformed Proposal
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_q19_representation_scoped_conformed_proposal.py"
+      - "tests/test_aura_glm53_q19_representation_scoped_conformed_proposal.py"
+      - ".github/workflows/glm53-q19-representation-scoped-conformed-proposal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q19-representation-scoped-proposal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      Q17_HEAD: a6de82e18f9c296b6ec0c3f3b3ff75d8ad29dab5
+      Q17_RUN: "33403753367"
+      Q17_JOB: "99526112800"
+      Q17_SOURCE_BLOB: 2734ca5fd9326fe730f196d6508d3bc5a7311f00
+      Q6_SEMANTIC_HEAD: 6403210cba7992b91ea855151e18aa79c2677f84
+      Q6_PROOF_HEAD: f6c61d9d19dcc04367b69577ba9cda090e8cd655
+      Q6_PROOF_RUN: "33404776198"
+      Q6_PROOF_JOB: "99529516026"
+      Q6_SOURCE_BLOB: d1784822445d7109d28ffa1aebc013e3feb5be75
+      Q6_RECEIPT_DIGEST: 5173b6c1df5f6f889a7912574c51beac546b09a92457cc32ba5918a8f6bd28a4
+      S1_HEAD: 9dab15c3a0bb0b9ad2408fdd54b09cfcfa1373d8
+      S1_RUN: "33403087858"
+
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Revalidate exact Q17 and repaired Q6 hosted generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          expected=(
+              (int(os.environ['Q17_RUN']),int(os.environ['Q17_JOB']),os.environ['Q17_HEAD']),
+              (int(os.environ['Q6_PROOF_RUN']),int(os.environ['Q6_PROOF_JOB']),os.environ['Q6_PROOF_HEAD']),
+          )
+          for run_id, job_id, head in expected:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: job=json.load(r)
+              assert job['status']=='completed' and job['conclusion']=='success',(job_id,job['status'],job['conclusion'])
+          req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{os.environ["S1_RUN"]}',headers=headers)
+          with urllib.request.urlopen(req,timeout=30) as r: s1=json.load(r)
+          assert s1['status']=='completed' and s1['conclusion']=='success',s1
+          print('Q19_PARENT_PROOFS_EXACT_GREEN=true')
+          PY
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q17_HEAD" "$Q6_SEMANTIC_HEAD"
+          test "$(git ls-tree "$Q17_HEAD" tools/quantization/aura_glm53_domain_product_gate_conformance.py | awk '{print $3}')" = "$Q17_SOURCE_BLOB"
+          test "$(git ls-tree "$Q6_SEMANTIC_HEAD" tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py | awk '{print $3}')" = "$Q6_SOURCE_BLOB"
+
+      - name: Install exact numeric dependency
+        run: python3 -m pip install --disable-pip-version-check numpy==2.3.5
+
+      - name: Run Q19 adversarial contract
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/quantization/aura_glm53_q19_representation_scoped_conformed_proposal.py tests/test_aura_glm53_q19_representation_scoped_conformed_proposal.py
+          python3 -m unittest -v tests.test_aura_glm53_q19_representation_scoped_conformed_proposal
+
+      - name: Reproduce repaired Q6 receipt from exact semantic generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          rm -rf /tmp/q6-src
+          git clone --no-checkout --filter=blob:none "https://github.com/${GITHUB_REPOSITORY}.git" /tmp/q6-src
+          git -C /tmp/q6-src -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q6_SEMANTIC_HEAD"
+          git -C /tmp/q6-src checkout --detach FETCH_HEAD
+          (cd /tmp/q6-src && python3 -m tools.quantization.aura_glm53_official_e8_vs_optimized_scalar_canary) > /tmp/q6-live.json
+          python3 - <<'PY'
+          import json, os
+          q6=json.load(open('/tmp/q6-live.json',encoding='utf-8'))
+          assert q6['receipt_digest']==os.environ['Q6_RECEIPT_DIGEST'],(q6['receipt_digest'],os.environ['Q6_RECEIPT_DIGEST'])
+          assert q6['aggregate_outcome']=='E8_WIN',q6['aggregate_outcome']
+          assert q6['exact_codec_rate_bpw']==2.25
+          assert q6['codec_rate_domain_only'] is True
+          assert q6['container_rate_comparison_claimed'] is False
+          print('Q19_LIVE_Q6_RECEIPT_REPRODUCED=true')
+          PY
+
+      - name: Admit exact live Q6 receipt through representation-scoped conformed product gate
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from dataclasses import asdict
+          from tools.quantization.aura_glm53_q19_representation_scoped_conformed_proposal import admit_representation_scoped_proposal
+          q6=json.load(open('/tmp/q6-live.json',encoding='utf-8'))
+          r=admit_representation_scoped_proposal(
+              q6,
+              source_gate_passed=True,
+              source_gate_generation=os.environ['S1_HEAD'],
+              require_exact_current=True,
+          )
+          assert r.generic_disposition=='ELIGIBLE_BOUNDED_PROPOSAL'
+          assert r.proposal_eligible is True
+          assert r.q18_1p25_proposal_mutated is False
+          assert r.q18_evidence_crosscast_into_q19 is False
+          for key in ('full_tensor_or_model_scope_granted','model_quality_proven','runtime_performance_proven','execution_authority_granted','effect_authority_granted','semantic_k27_authority_minted','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
+              assert getattr(r,key) is False,key
+          payload=asdict(r); payload['receipt_digest']=r.receipt_digest
+          open('/tmp/q19-receipt.json','w',encoding='utf-8').write(json.dumps(payload,sort_keys=True,separators=(',',':'))+'\n')
+          print(json.dumps(payload,sort_keys=True,separators=(',',':')))
+          print('Q19_REPRESENTATION_SCOPED_PROPOSAL_ELIGIBLE=true')
+          print('Q19_EXECUTION_AUTHORITY=false')
+          PY
