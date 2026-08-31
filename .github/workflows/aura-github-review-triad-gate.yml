@@ -1,0 +1,139 @@
+name: Aura GitHub Review Triad Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
+
+permissions:
+  contents: read
+  checks: read
+  statuses: read
+  pull-requests: read
+  issues: read
+
+jobs:
+  contract-tests:
+    if: >-
+      github.event_name != 'issue_comment' || github.event.issue.pull_request != null
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact event head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            PR_NUMBER='${{ github.event.issue.number }}'
+            HEAD_SHA="$(curl -fsSL \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" | python3 -c 'import json,sys; print(json.load(sys.stdin)["head"]["sha"])')"
+          else
+            HEAD_SHA='${{ github.event.pull_request.head.sha }}'
+          fi
+          test -n "$HEAD_SHA"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$HEAD_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Compile review triad verifier
+        run: python3 -m py_compile scripts/aura_github_review_triad_gate.py tests/test_aura_github_review_triad_gate.py
+
+      - name: Run focused review triad tests
+        run: python3 -m pytest -q tests/test_aura_github_review_triad_gate.py
+
+      - name: Assert canonical policy invariants are present
+        run: |
+          grep -F 'Codex code review' docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md
+          grep -F 'CodeRabbit code review' docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md
+          grep -F 'Codacy static/code-quality review' docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md
+          grep -F 'NewHeadSHA => PriorHeadReviewAdmissionInvalid' docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md
+          grep -F 'drafts: true' .coderabbit.yaml
+
+  exact-head-review-triad:
+    if: >-
+      github.event_name != 'issue_comment' || github.event.issue.pull_request != null
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Resolve exact PR head
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            PR_NUMBER='${{ github.event.issue.number }}'
+            PR_JSON="$(curl -fsSL \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}")"
+            HEAD_SHA="$(printf '%s' "$PR_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["head"]["sha"])')"
+          else
+            PR_NUMBER='${{ github.event.pull_request.number }}'
+            HEAD_SHA='${{ github.event.pull_request.head.sha }}'
+          fi
+          test -n "$PR_NUMBER"
+          test -n "$HEAD_SHA"
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch exact review-gate implementation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.resolve.outputs.head_sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$HEAD_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify Codex + CodeRabbit + Codacy evidence on exact head
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AURA_PR_NUMBER: ${{ steps.resolve.outputs.pr_number }}
+          AURA_REVIEW_HEAD_SHA: ${{ steps.resolve.outputs.head_sha }}
+        run: |
+          python3 scripts/aura_github_review_triad_gate.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --pr "$AURA_PR_NUMBER" \
+            --head "$AURA_REVIEW_HEAD_SHA" \
+            --output aura-review-triad-receipt.json
+
+      - name: Emit non-authority ceiling
+        if: always()
+        run: |
+          echo 'CODEX_REQUIRED=true'
+          echo 'CODERABBIT_REQUIRED=true'
+          echo 'CODACY_REQUIRED=true'
+          echo 'REPAIR_PUSH_REQUIRES_FRESH_TRIAD=true'
+          echo 'REVIEW_TRIAD_IS_MERGE_AUTHORITY=false'
+          echo 'SEMANTIC_CORRECTNESS_MINTED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+
+      - name: Upload exact-head triad receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-review-triad-${{ steps.resolve.outputs.head_sha }}
+          path: aura-review-triad-receipt.json
+          if-no-files-found: warn
+          retention-days: 30
