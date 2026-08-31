@@ -1,0 +1,131 @@
+name: Aura Q15 Execution-Qualified Portable Materialization Evidence
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_execution_qualified_portable_materialization_evidence.py"
+      - "tests/test_aura_execution_qualified_portable_materialization_evidence.py"
+      - "tests/fixtures/q14_official_source_e8_materialization_receipt.json"
+      - ".github/workflows/aura-q15-execution-qualified-portable-materialization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q15-execution-qualified-portable-materialization:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Checkout exact Q15 head with full parent history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove exact Q14 x A7 convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          merge=886a8282feedc4abb5ca517d6293945a1c34abc1
+          parents="$(git show -s --format='%P' "$merge")"
+          test "$parents" = "ee70934e0c45572588829e742e512a897b23863f 10481aa76117c24e5fdf7f93752e7820713a8285"
+          git merge-base --is-ancestor "$merge" HEAD
+          printf '%s\n' '["ee70934e0c45572588829e742e512a897b23863f","10481aa76117c24e5fdf7f93752e7820713a8285"]' > /tmp/parents.json
+          echo Q15_C0_EXACT_TWO_PARENT_DIAMOND=true
+
+      - name: Authenticate semantic-generation heads instead of replay timestamps
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 1801de258fa88075565e62bd8f2ce9dbe6663f09 10481aa76117c24e5fdf7f93752e7820713a8285
+          git merge-base --is-ancestor 5269c1ce8f6ba7017d6f02b6bd4624953a2a9113 ee70934e0c45572588829e742e512a897b23863f
+          test "$(git show -s --format='%aI' 1801de258fa88075565e62bd8f2ce9dbe6663f09)" = "2026-08-31T13:44:56+00:00"
+          test "$(git show -s --format='%aI' 5269c1ce8f6ba7017d6f02b6bd4624953a2a9113)" = "2026-08-31T13:45:40+00:00"
+          cat > /tmp/generation.json <<'JSON'
+          {
+            "a7": {"head":"1801de258fa88075565e62bd8f2ce9dbe6663f09","generated_at":"2026-08-31T13:44:56Z","ancestor_of":"10481aa76117c24e5fdf7f93752e7820713a8285","ancestor_proven":true},
+            "q14": {"head":"5269c1ce8f6ba7017d6f02b6bd4624953a2a9113","generated_at":"2026-08-31T13:45:40Z","ancestor_of":"ee70934e0c45572588829e742e512a897b23863f","ancestor_proven":true}
+          }
+          JSON
+          echo Q15_C5_SEMANTIC_GENERATION_AUTHENTICATED=true
+
+      - name: Reprove deterministic Q15 adversarial contract
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_aura_execution_qualified_portable_materialization_evidence -v
+
+      - name: Fetch immutable A7 and Q14 provider run job evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/actions/runs/33400287890" > /tmp/a7-run.json
+          gh api "repos/$REPO/actions/runs/33400287890/jobs?per_page=100" > /tmp/a7-jobs.json
+          gh api "repos/$REPO/actions/runs/33399560819" > /tmp/q14-run.json
+          gh api "repos/$REPO/actions/runs/33399560819/jobs?per_page=100" > /tmp/q14-jobs.json
+          python - <<'PY'
+          import json
+          cases=[
+            ("/tmp/a7-run.json",33400287890,"10481aa76117c24e5fdf7f93752e7820713a8285","Aura Execution-Qualified Portable Evidence Admission"),
+            ("/tmp/q14-run.json",33399560819,"ee70934e0c45572588829e742e512a897b23863f","Aura GLM-5.3 Official Source to E8 Materialization Canary")]
+          for path,run_id,head,name in cases:
+            r=json.load(open(path)); assert r["id"]==run_id and r["head_sha"]==head and r["name"]==name; assert r["status"]=="completed" and r["conclusion"]=="success"
+          for path,job_id,run_id in [("/tmp/a7-jobs.json",99514663480,33400287890),("/tmp/q14-jobs.json",99512130505,33399560819)]:
+            rows=[j for j in json.load(open(path))["jobs"] if j["id"]==job_id]; assert len(rows)==1 and rows[0]["run_id"]==run_id; assert rows[0]["status"]=="completed" and rows[0]["conclusion"]=="success"
+          print("Q15_C4_EXACT_PROVIDER_EXECUTION=true")
+          PY
+
+      - name: Download exact hosted Q14 materialization artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          meta="$(gh api "repos/$REPO/actions/artifacts/9760937399")"
+          test "$(printf '%s' "$meta" | python -c 'import json,sys; print(json.load(sys.stdin)["digest"])')" = "sha256:edc22355df8bfeff25f469f11b54d7948b10bbf72a831b769857068c63c77276"
+          rm -rf /tmp/q14-artifact; mkdir -p /tmp/q14-artifact
+          gh run download 33399560819 -n q14-official-source-e8-materialization-canary -D /tmp/q14-artifact
+          test "$(sha256sum /tmp/q14-artifact/q14.json | awk '{print $1}')" = "fe253b0a89bbe1cd97a0299053ae9b11582f03cd1437b35525242f54154ae2a0"
+          cmp /tmp/q14-artifact/q14.json tests/fixtures/q14_official_source_e8_materialization_receipt.json
+          echo Q15_C1_C2_C3_HOSTED_MATERIALIZATION_BOUND=true
+
+      - name: Admit execution-qualified portable materialization evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/quantization/aura_execution_qualified_portable_materialization_evidence.py \
+            --q14-receipt /tmp/q14-artifact/q14.json \
+            --q14-artifact-digest sha256:edc22355df8bfeff25f469f11b54d7948b10bbf72a831b769857068c63c77276 \
+            --convergence-parents /tmp/parents.json \
+            --generation-evidence /tmp/generation.json \
+            --a7-run /tmp/a7-run.json --a7-jobs /tmp/a7-jobs.json \
+            --q14-run /tmp/q14-run.json --q14-jobs /tmp/q14-jobs.json \
+            --output /tmp/q15.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/q15.json'))
+          fields=['c0_parent_identity','c1_source_slice_identity','c2_page_consequence','c3_portability_integrity','c4_provider_execution','c5_semantic_freshness','c6_nonpromotion_invalidation','c7_claim_ceiling']
+          assert all(r[x] is True for x in fields)
+          assert r['execution_qualified_portable_materialization_evidence'] is True
+          assert r['hyperscale_level']=='HS1'
+          for x in ['page_existence_implies_execution','execution_implies_page_identity','portability_resets_semantic_clock','replay_mints_successor_novelty','k27_coordinate_is_semantic_authority','native_private_transformer_kv_accessed','full_representative_page_set_proven','model_execution_proven','inference_proven','merge_or_deployment_authorized']:
+            assert r[x] is False
+          print('Q15_ALL_EIGHT_CRYSTALLINE_AXES_GREEN=true')
+          print('Q15_HYPERSCALE=HS1')
+          PY
+
+      - name: Preserve Q15 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q15-execution-qualified-portable-materialization
+          path: /tmp/q15.json
+
+      - name: Consequence ceiling
+        run: |
+          echo "PageExistence!=ProviderExecution!=PageIdentity"
+          echo "PortableIntegrity!=ExecutionQualification!=SemanticFreshness"
+          echo "BoundedMaterialization!=FullRepresentativePageSet!=ModelExecution!=Inference"
+          echo "CoordinateMemory!=SemanticAuthority"
+          echo "CoordinateMaterializedAfterCut!=SemanticGeneratedAfterCut"
+          echo "Q15_COMPLETE=true"
