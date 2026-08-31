@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788194962,
+  "generated_at_unix": 1788195904,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1683,
+    "repo_file_count": 1684,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -140,6 +140,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml",
+      ".github/workflows/aura-glm53-g2-predictor-calibration-exact-reproof.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -1799,16 +1800,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1683,
-      "bytes": 26632546,
-      "tokens_est": 6648536,
+      "files": 1684,
+      "bytes": 26638610,
+      "tokens_est": 6650052,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1026,
-        "schema_or_lexicon": 280,
+        "schema_or_lexicon": 281,
         "support_file": 49
       }
     },
@@ -159854,27 +159855,37 @@
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "class",
         "line": 65,
-        "end_line": 108,
+        "end_line": 112,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#class:G2PredictorCalibrationBindingTests:33de239352e5c3c6",
         "signature_hash": "16bd9142abbd0416"
       }
     ],
-    "G2PredictorCalibrationBindingTests.run": [
+    "G2PredictorCalibrationBindingTests.exercise": [
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
         "line": 66,
-        "end_line": 73,
-        "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.run:82471b65f2fe1e9b",
-        "signature_hash": "30adc7ffccb59d1a"
+        "end_line": 74,
+        "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.exercise:6d8c8353674bd932",
+        "signature_hash": "10a98fe155302559"
+      }
+    ],
+    "G2PredictorCalibrationBindingTests.test_testcase_runner_contract_is_not_shadowed": [
+      {
+        "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 77,
+        "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_testcase_runner_contract_is_not_shadowed:c3d701260b80a60c",
+        "signature_hash": "d6176eb8766d62f4"
       }
     ],
     "G2PredictorCalibrationBindingTests.test_exact_binding_preserves_g2_nonpromoting_admission": [
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
-        "line": 75,
-        "end_line": 80,
+        "line": 79,
+        "end_line": 84,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_exact_binding_preserves_g2_nonpromoting_admission:5e81b322a26fcb0d",
         "signature_hash": "c20ce779b0530629"
       }
@@ -159883,8 +159894,8 @@
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
-        "line": 82,
-        "end_line": 84,
+        "line": 86,
+        "end_line": 88,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_different_predictor_cannot_reuse_calibration:e3d316be3ce8d2ef",
         "signature_hash": "86170dbe74ec8003"
       }
@@ -159893,8 +159904,8 @@
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
-        "line": 86,
-        "end_line": 90,
+        "line": 90,
+        "end_line": 94,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_policy_calibration_or_policy_generation_cross_cast_rejected:3afa659e8cd4ba1e",
         "signature_hash": "92544afe5351c3a8"
       }
@@ -159903,8 +159914,8 @@
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
-        "line": 92,
-        "end_line": 96,
+        "line": 96,
+        "end_line": 100,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_layer_and_source_relation_must_commute:eaf0cef49ba6f6cd",
         "signature_hash": "ae23918fb13e187c"
       }
@@ -159913,8 +159924,8 @@
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
-        "line": 98,
-        "end_line": 100,
+        "line": 102,
+        "end_line": 104,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_forecast_calibration_must_equal_binding:6478d55e3ff76226",
         "signature_hash": "4330c5a464de7d57"
       }
@@ -159923,8 +159934,8 @@
       {
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "kind": "method",
-        "line": 102,
-        "end_line": 108,
+        "line": 106,
+        "end_line": 112,
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_stale_or_authority_widened_binding_fails_closed:5c21062021417e7b",
         "signature_hash": "73bd71f779e0a429"
       }
@@ -162458,11 +162469,13 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml",
+      ".github/workflows/aura-glm53-g2-predictor-calibration-exact-reproof.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml",
+      ".github/workflows/aura-glm53-g2-predictor-calibration-exact-reproof.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml"
     ],
     "python -m unittest": [
@@ -171780,9 +171793,9 @@
       "path": ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 3511,
-      "lines": 82,
-      "tokens_est": 878,
+      "bytes": 4515,
+      "lines": 103,
+      "tokens_est": 1129,
       "symbol_count": 0,
       "commands": [
         "python3 -m py_compile",
@@ -171790,47 +171803,104 @@
       ],
       "command_lines": {
         "python3 -m py_compile": [
-          68
+          88
         ],
         "python3 -m unittest": [
-          71
+          92
         ]
       },
       "topology": {},
-      "digest8": "8a868cfcf5204922",
+      "digest8": "a6a2e2ca4ce4f8bd",
       "vector": [
-        -0.216766,
-        0.294099,
-        0.005859,
-        -0.066787,
-        -0.062101,
-        0.015232,
-        -0.045697,
-        0.294099,
-        -0.188645,
-        0.090222,
-        0.069131,
-        0.003515,
-        0.268321,
-        0.228483,
-        0.158181,
-        -0.073818,
-        0.198019,
-        -0.188645,
-        0.209736,
-        -0.190989,
-        0.141777,
-        0.169898,
-        0.022262,
-        -0.284725,
-        -0.198019,
-        -0.265978,
-        -0.04101,
-        0.207393,
-        -0.183958,
-        -0.249574,
-        -0.146464,
-        -0.090222
+        0.032923,
+        0.339253,
+        0.18752,
+        0.050101,
+        0.024335,
+        -0.138851,
+        -0.20756,
+        0.267681,
+        -0.07873,
+        -0.021472,
+        -0.101633,
+        -0.216149,
+        -0.032923,
+        0.339253,
+        0.18752,
+        -0.196108,
+        0.130262,
+        0.178931,
+        -0.210423,
+        0.18752,
+        -0.084455,
+        0.253366,
+        -0.012883,
+        -0.224737,
+        -0.041512,
+        -0.29631,
+        -0.158891,
+        0.015746,
+        -0.153165,
+        0.135988,
+        -0.150302,
+        -0.16748
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g2-predictor-calibration-exact-reproof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4772,
+      "lines": 103,
+      "tokens_est": 1193,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          80
+        ],
+        "python3 -m unittest": [
+          88
+        ]
+      },
+      "topology": {},
+      "digest8": "48ee80b5d52fef90",
+      "vector": [
+        0.031501,
+        0.041581,
+        0.175144,
+        0.187744,
+        0.202864,
+        0.296106,
+        -0.0189,
+        -0.02394,
+        0.091982,
+        0.109622,
+        0.119702,
+        0.157503,
+        -0.217984,
+        -0.134823,
+        -0.286026,
+        0.162543,
+        -0.094502,
+        -0.293586,
+        0.298626,
+        -0.195304,
+        -0.296106,
+        0.059221,
+        -0.202864,
+        0.265865,
+        -0.162543,
+        0.02142,
+        -0.054181,
+        -0.137343,
+        -0.031501,
+        0.02394,
+        0.303666,
+        0.01134
       ]
     },
     {
@@ -268373,47 +268443,47 @@
       "path": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 4472,
-      "lines": 113,
-      "tokens_est": 1118,
-      "symbol_count": 12,
+      "bytes": 4760,
+      "lines": 117,
+      "tokens_est": 1190,
+      "symbol_count": 13,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "48cd4565e349bbe0",
+      "digest8": "db3bd1061db5e951",
       "vector": [
-        0.200158,
-        -0.090981,
-        0.088555,
-        -0.154061,
-        0.035179,
-        -0.302056,
-        0.066719,
-        -0.156487,
-        0.134652,
-        0.200158,
-        0.086129,
-        -0.200158,
-        -0.255959,
-        -0.248681,
-        0.166192,
-        -0.241402,
-        -0.064293,
-        0.103112,
-        0.146782,
-        0.071572,
-        0.008492,
-        -0.07885,
-        -0.248681,
-        -0.190453,
-        0.238976,
-        -0.214715,
-        -0.241402,
-        0.200158,
-        0.166192,
-        -0.044884,
-        0.192879,
-        0.255959
+        -0.177998,
+        0.267637,
+        -0.290688,
+        0.167754,
+        -0.116531,
+        -0.034575,
+        -0.170315,
+        0.298371,
+        -0.083237,
+        0.267637,
+        0.088359,
+        -0.149826,
+        -0.20617,
+        0.106287,
+        -0.129337,
+        0.029453,
+        0.221537,
+        -0.283004,
+        0.262515,
+        -0.126776,
+        -0.124215,
+        0.231782,
+        0.229221,
+        -0.149826,
+        -0.06787,
+        0.101164,
+        0.062748,
+        -0.162631,
+        -0.224098,
+        0.098603,
+        0.085798,
+        -0.014086
       ]
     },
     {
@@ -292697,16 +292767,16 @@
     }
   },
   "summary": {
-    "file_count": 1683,
-    "total_bytes": 26632546,
-    "text_tokens_est": 6648536,
+    "file_count": 1684,
+    "total_bytes": 26638610,
+    "text_tokens_est": 6650052,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1026,
-      "schema_or_lexicon": 280,
+      "schema_or_lexicon": 281,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -292856,6 +292926,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml",
+      ".github/workflows/aura-glm53-g2-predictor-calibration-exact-reproof.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -454324,9 +454395,9 @@
         "kind": "class",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "line": 65,
-        "end_line": 108,
+        "end_line": 112,
         "signature_hash": "16bd9142abbd0416",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#function:binding:40fcdb78b05d9775",
@@ -454336,7 +454407,7 @@
         "line": 51,
         "end_line": 62,
         "signature_hash": "c9d257df66631349",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#function:forecast:fc6648f419a4b4dd",
@@ -454346,7 +454417,7 @@
         "line": 25,
         "end_line": 33,
         "signature_hash": "a4bb2d304ccb7aee",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#function:policy:89e42b3454fdb33f",
@@ -454356,7 +454427,7 @@
         "line": 36,
         "end_line": 48,
         "signature_hash": "fc96ac7c083ba2d2",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#function:prediction:36258fee47089083",
@@ -454366,77 +454437,87 @@
         "line": 15,
         "end_line": 22,
         "signature_hash": "154295d52323ef38",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.run:82471b65f2fe1e9b",
-        "name": "G2PredictorCalibrationBindingTests.run",
+        "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.exercise:6d8c8353674bd932",
+        "name": "G2PredictorCalibrationBindingTests.exercise",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
         "line": 66,
-        "end_line": 73,
-        "signature_hash": "30adc7ffccb59d1a",
-        "file_digest8": "48cd4565e349bbe0"
+        "end_line": 74,
+        "signature_hash": "10a98fe155302559",
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_different_predictor_cannot_reuse_calibration:e3d316be3ce8d2ef",
         "name": "G2PredictorCalibrationBindingTests.test_different_predictor_cannot_reuse_calibration",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
-        "line": 82,
-        "end_line": 84,
+        "line": 86,
+        "end_line": 88,
         "signature_hash": "86170dbe74ec8003",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_exact_binding_preserves_g2_nonpromoting_admission:5e81b322a26fcb0d",
         "name": "G2PredictorCalibrationBindingTests.test_exact_binding_preserves_g2_nonpromoting_admission",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
-        "line": 75,
-        "end_line": 80,
+        "line": 79,
+        "end_line": 84,
         "signature_hash": "c20ce779b0530629",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_forecast_calibration_must_equal_binding:6478d55e3ff76226",
         "name": "G2PredictorCalibrationBindingTests.test_forecast_calibration_must_equal_binding",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
-        "line": 98,
-        "end_line": 100,
+        "line": 102,
+        "end_line": 104,
         "signature_hash": "4330c5a464de7d57",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_layer_and_source_relation_must_commute:eaf0cef49ba6f6cd",
         "name": "G2PredictorCalibrationBindingTests.test_layer_and_source_relation_must_commute",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
-        "line": 92,
-        "end_line": 96,
+        "line": 96,
+        "end_line": 100,
         "signature_hash": "ae23918fb13e187c",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_policy_calibration_or_policy_generation_cross_cast_rejected:3afa659e8cd4ba1e",
         "name": "G2PredictorCalibrationBindingTests.test_policy_calibration_or_policy_generation_cross_cast_rejected",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
-        "line": 86,
-        "end_line": 90,
+        "line": 90,
+        "end_line": 94,
         "signature_hash": "92544afe5351c3a8",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_stale_or_authority_widened_binding_fails_closed:5c21062021417e7b",
         "name": "G2PredictorCalibrationBindingTests.test_stale_or_authority_widened_binding_fails_closed",
         "kind": "method",
         "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
-        "line": 102,
-        "end_line": 108,
+        "line": 106,
+        "end_line": 112,
         "signature_hash": "73bd71f779e0a429",
-        "file_digest8": "48cd4565e349bbe0"
+        "file_digest8": "db3bd1061db5e951"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py#method:G2PredictorCalibrationBindingTests.test_testcase_runner_contract_is_not_shadowed:c3d701260b80a60c",
+        "name": "G2PredictorCalibrationBindingTests.test_testcase_runner_contract_is_not_shadowed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g2_predictor_calibration_binding.py",
+        "line": 76,
+        "end_line": 77,
+        "signature_hash": "d6176eb8766d62f4",
+        "file_digest8": "db3bd1061db5e951"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
@@ -456859,7 +456940,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "46a7bd90af89f9f4c7543fbfe0fc7451",
-    "payload_hash": "ea6e53950bab1c3a44bcec5e21721220"
+    "record_fingerprint": "2c17c839aea02fd4d4ac951c0df4af5f",
+    "payload_hash": "7aecd94726e21751c0a4ab34d8e7b875"
   }
 }
