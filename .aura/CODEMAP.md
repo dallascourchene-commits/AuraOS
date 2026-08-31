@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1744
-- **total_bytes**: 27291535
-- **text_tokens_est**: 6813268
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1059, 'schema_or_lexicon': 305, 'support_file': 49}
+- **file_count**: 1745
+- **total_bytes**: 27299736
+- **text_tokens_est**: 6815319
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1059, 'schema_or_lexicon': 306, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1744,
+  "repo_file_count": 1745,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -169,6 +169,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
     ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
     ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+    ".github/workflows/aura-workcapsule-causal-proof-transport-currentness-memory.yml",
     ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
     ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
     ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
@@ -1884,16 +1885,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1744,
-  "bytes": 27291535,
-  "tokens_est": 6813268,
+  "files": 1745,
+  "bytes": 27299736,
+  "tokens_est": 6815319,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 19,
     "operator_script": 9,
     "python_module": 1059,
-    "schema_or_lexicon": 305,
+    "schema_or_lexicon": 306,
     "support_file": 49
   }
 }
