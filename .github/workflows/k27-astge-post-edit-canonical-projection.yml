@@ -1,0 +1,108 @@
+name: K27 ASTGE Post-Edit Canonical Projection
+# Exact-head production proof after removal of the one-use formatter diagnostic.
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-generation-domain/**"
+      - "crates/aura-k27-astge-current-syntax/**"
+      - "crates/aura-k27-astge-current-profiled-scopes/**"
+      - "crates/aura-k27-astge-profiled-scopes/**"
+      - "crates/aura-k27-astge-post-edit-profiled-scope/**"
+      - "crates/aura-k27-astge-post-edit-canonical-scope/**"
+      - "crates/aura-k27-astge-post-edit-canonical-projection/**"
+      - ".github/workflows/k27-astge-post-edit-canonical-projection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-projection:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR525 typed owner receipt
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets -- -D warnings
+
+      - name: Projection rustfmt check
+        run: cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml
+
+      - name: Projection tests
+        run: cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets
+
+      - name: Projection doctests
+        run: cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --doc
+
+      - name: Projection fatal Clippy
+        run: cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify projection boundary is owner typed and authority negative
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge-post-edit-canonical-projection/src/lib.rs').read_text()
+          assert '&PostEditCanonicalDefinitionTargetCurrentV1' in text
+          assert 'AURA_ASTGE_POST_EDIT_CANONICAL_DEFINITION_TARGET_PROJECTION_V1' in text
+          assert 'relative_path: syntax.relative_path.clone()' in text
+          assert 'source_sha256_hex: hex(&syntax.source_sha256)' in text
+          assert 'selected_target_semantic_handle_digest_hex: hex(&handle)' in text
+          assert 'producer_authenticated: false' in text
+          assert 'local_scope_id_is_semantic_identity: false' in text
+          assert 'candidate_current.semantic_k27_derived' in text
+          print('REPOSITORY_OWNED_SERIALIZED_PR525_PROJECTION=true')
+          print('PROJECTION_PRODUCER_AUTHENTICATED=false')
+          print('SEMANTIC_AUTHORITY=false')
+          PY
+
+      - name: Safe-path unsafe scan
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge-post-edit-canonical-projection/src \
+            crates/aura-k27-astge-post-edit-canonical-projection/tests; then
+            echo 'unsafe block found in canonical projection path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'POST_EDIT_CANONICAL_DEFINITION_TARGET_PROJECTION_V1=true'
+          echo 'SOURCE_GENERATION_TYPED=true'
+          echo 'SOURCE_PATH_AND_BODY_BOUND=true'
+          echo 'TARGET_SPAN_AND_SEMANTIC_HANDLE_BOUND=true'
+          echo 'DETERMINISTIC_PAYLOAD_DIGEST=true'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
