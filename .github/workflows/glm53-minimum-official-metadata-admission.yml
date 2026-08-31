@@ -1,0 +1,184 @@
+name: GLM53 Minimum Official Metadata Admission Closure
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q15-minimum-official-metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prove exact Q7 x Q6 convergence and owner blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='b8b17171ef5538478505530eb05e22ff4ea7365d'
+          q7='7340091202f3f1a859841c3ec4314191f18fa1ad'
+          q6='6906337dd6e75f49a70a84652bfd9ab70d967eef'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,q7,q6], parents
+          expected = {
+            (q7,'tools/quantization/aura_glm53_official_source_admission.py'):'7ed09c57699fe303f555a3b6bdaadb791c64223f',
+            (q7,'tools/quantization/aura_glm53_official_source_c2_request_admission.py'):'31837eb716139170cbdd5290f7aae889cd7b90be',
+            (q6,'tools/quantization/aura_representative_canary_evidence_admission.py'):'400a28e12b2c8ac37b59c36ef7386bcb443b1923',
+          }
+          for (head,path),blob in expected.items():
+              observed=subprocess.check_output(['git','rev-parse',f'{head}:{path}'],text=True).strip()
+              assert observed==blob,(head,path,observed,blob)
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id,head,name in (
+              (33400557094,q7,'GLM53 Official Source C2 Request Admission'),
+              (33401482324,q6,'Aura Representative Canary Evidence Admission'),
+          ):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+          print('Q15_EXACT_Q7_Q6_PARENTS_GREEN=true')
+          PY
+
+      - name: Compile and run focused adversarial tests
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_minimum_official_metadata_admission.py tests/test_aura_glm53_minimum_official_metadata_admission.py
+          python -m unittest -v tests.test_aura_glm53_minimum_official_metadata_admission
+
+      - name: Execute exact minimum live metadata cone twice
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_minimum_official_metadata_admission | tee /tmp/q15-a.json
+          python -m tools.quantization.aura_glm53_minimum_official_metadata_admission | tee /tmp/q15-b.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/q15-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/q15-b.json',encoding='utf-8'))
+          assert a['receipt_digest']==b['receipt_digest']
+          assert a['index_sha256']=='e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf'
+          assert a['index_bytes_materialized']==11_359_251
+          assert a['minimum_metadata_evidence_cone_after']==[]
+          assert a['source_header_trial_eligible'] is True
+          assert a['source_bound_c2_request_admissible'] is True
+          assert a['blocker']=='NONE_HEADER_LEVEL_REQUEST_ADMISSIBLE'
+          assert a['tensor_payload_bytes_materialized']==0
+          for key in (
+              'source_tensor_payload_bound','real_tensor_quantization_eligible',
+              'execution_authorized_by_this_contract','owner_host_execution_observed',
+              'physical_io_attested','semantic_k27_authority_minted',
+              'native_private_transformer_kv_accessed','gate10_promoted',
+              'model_execution_observed','full_tensor_or_model_claim_earned',
+          ):
+              assert a[key] is False,(key,a[key])
+          print('Q15_MINIMUM_METADATA_CONE_CLOSED=true')
+          print('Q15_RECEIPT_DIGEST='+a['receipt_digest'])
+          print('Q15_NEEDED_SHARDS='+','.join(a['needed_representative_shards']))
+          PY
+
+      - name: Independent parent-owner replay without Q15 wrapper
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,struct,urllib.request
+          from tools.quantization.aura_glm53_official_source_admission import (
+              OFFICIAL_COMMIT,OFFICIAL_INDEX_FILENAME,OFFICIAL_INDEX_SIZE,OFFICIAL_REPO,
+              PR628_E8_PAGE_ARTIFACT_SHA,extract_expert_bundle,verify_official_index_bytes,
+          )
+          from tools.quantization.aura_glm53_official_source_c2_request_admission import (
+              admit_source_bound_c2_request,deterministic_request_fixture,
+          )
+          expected=json.load(open('/tmp/q15-a.json',encoding='utf-8'))
+          ua='AuraOS-Q15-IndependentParentReplay/1'
+          def url(name): return f'https://huggingface.co/{OFFICIAL_REPO}/resolve/{OFFICIAL_COMMIT}/{name}?download=true'
+          def full(name,limit):
+              req=urllib.request.Request(url(name),headers={'User-Agent':ua,'Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  assert (getattr(response,'status',None) or response.getcode())==200
+                  raw=response.read(limit+1)
+              assert len(raw)<=limit
+              return raw
+          def span(name,start,length):
+              end=start+length-1
+              req=urllib.request.Request(url(name),headers={'User-Agent':ua,'Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  assert (getattr(response,'status',None) or response.getcode())==206
+                  assert response.headers.get('Content-Range','').startswith(f'bytes {start}-{end}/')
+                  raw=response.read(length+1)
+              assert len(raw)==length
+              return raw
+          config=json.loads(full('config.json',2_000_000))
+          index_raw=full(OFFICIAL_INDEX_FILENAME,OFFICIAL_INDEX_SIZE)
+          index=verify_official_index_bytes(index_raw)
+          prefix='model.layers.3.mlp.experts.0'
+          keymap=extract_expert_bundle(index,prefix)
+          shards=sorted(set(keymap.values()))
+          prefixes={}
+          records=[]
+          for shard in shards:
+              first=span(shard,0,8); n=struct.unpack('<Q',first)[0]
+              assert 0<n<=4_000_000
+              header=span(shard,8,n)
+              prefixes[shard]=first+header
+              records.append((shard,n))
+          out=admit_source_bound_c2_request(
+              request=deterministic_request_fixture(),config=config,index_bytes=index_raw,
+              expert_prefix=prefix,shard_header_prefixes=prefixes,
+              candidate_parent_sha=PR628_E8_PAGE_ARTIFACT_SHA,
+          )
+          assert shards==expected['needed_representative_shards']
+          assert out.source_admission_digest==expected['source_admission_digest']
+          assert out.disposition_digest==expected['q7_disposition_digest']
+          assert out.source_header_trial_eligible is True
+          assert out.source_bound_c2_request_admissible is True
+          assert out.source_tensor_payload_bound is False
+          assert out.real_tensor_quantization_eligible is False
+          assert out.execution_authorized_by_this_contract is False
+          print('Q15_INDEPENDENT_PARENT_OWNER_REPLAY=true')
+          print('Q15_INDEPENDENT_HEADER_CONE='+json.dumps(records,separators=(',',':')))
+          PY
+
+      - name: Enforce Q15 consequence ceiling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q15-a.json',encoding='utf-8'))
+          assert r['source_header_trial_eligible'] is True
+          assert r['source_bound_c2_request_admissible'] is True
+          assert r['tensor_payload_bytes_materialized']==0
+          forbidden=(
+              r['source_tensor_payload_bound'],r['real_tensor_quantization_eligible'],
+              r['execution_authorized_by_this_contract'],r['owner_host_execution_observed'],
+              r['physical_io_attested'],r['semantic_k27_authority_minted'],
+              r['native_private_transformer_kv_accessed'],r['gate10_promoted'],
+              r['model_execution_observed'],r['full_tensor_or_model_claim_earned'],
+          )
+          assert not any(forbidden)
+          print('Q15_HEADER_LEVEL_ONLY_NONPROMOTION_CEILING=true')
+          PY
+
+      - name: Preserve Q15 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: glm53-q15-minimum-official-metadata-admission
+          path: /tmp/q15-a.json
+          if-no-files-found: error
