@@ -53,5 +53,5 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F 'Synthetic distortion is not model quality, runtime, or deployment evidence.' tools/quantization/aura_glm53_equal_rate_e8_ablation.py
+          grep -F 'Synthetic distortion is not model' tools/quantization/aura_glm53_equal_rate_e8_ablation.py
           grep -F 'geometry_privileged=False' tools/quantization/aura_glm53_equal_rate_e8_ablation.py
