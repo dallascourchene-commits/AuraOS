@@ -1,0 +1,80 @@
+name: Aura WorkCapsule Scoped Post-Repair Rebind
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - 'scripts/aura_workcapsule_source_bound_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - 'tests/test_aura_workcapsule_source_bound_exact_reentry.py'
+      - 'scripts/aura_workcapsule_scoped_post_repair_rebind.py'
+      - 'tests/test_aura_workcapsule_scoped_post_repair_rebind.py'
+      - '.github/workflows/aura-workcapsule-scoped-post-repair-rebind.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scoped-post-repair-rebind:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR519 exact observation-bound closure owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_observation_bound_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_observation_bound_exact_verifier
+
+      - name: Re-prove PR522 raw-owner stale-safe re-entry owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_source_bound_exact_reentry.py scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py
+          python3 -m unittest -v tests.test_aura_workcapsule_source_bound_exact_reentry
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_stale_safe_reentry
+
+      - name: Verify scoped post-repair compatibility membrane
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_scoped_post_repair_rebind.py
+          python3 -m unittest -v tests.test_aura_workcapsule_scoped_post_repair_rebind
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'SCOPED_POST_REPAIR_REBIND_EVIDENCE=true'
+          echo 'SAME_REJECTED_DEPENDENCY_IDENTITY_BOUND=true'
+          echo 'HISTORICAL_STALE_UNKNOWN_EVIDENCE_PRESERVED=true'
+          echo 'REENTRY_CLOSED=false'
+          echo 'REENTRY_SCOPE_NARROWED_BY_FRESH_SCOPE_CONTEXT=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'CLOSURE_ADMISSION_PRODUCER_AUTHENTICATED=false'
+          echo 'REENTRY_ADMISSION_PRODUCER_AUTHENTICATED=false'
+          echo 'POST_EDIT_WITNESS_PRODUCER_AUTHENTICATED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
