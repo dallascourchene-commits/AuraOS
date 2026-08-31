@@ -1,0 +1,59 @@
+name: Aura K27 ASTGE Recovery Reconstitution
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-mmap/**"
+      - "crates/aura-k27-astge-recovery/**"
+      - ".github/workflows/aura-k27-astge-recovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-k27-astge-recovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recovery-reconstitution:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove parent storage and immutable publication
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --locked
+          cargo test --manifest-path crates/aura-k27-astge-mmap/Cargo.toml --all-targets
+
+      - name: Format recovery contract
+        run: cargo fmt --manifest-path crates/aura-k27-astge-recovery/Cargo.toml -- --check
+
+      - name: Test crash-state reconstitution
+        run: cargo test --manifest-path crates/aura-k27-astge-recovery/Cargo.toml --all-targets
+
+      - name: Clippy fail-closed
+        run: cargo clippy --manifest-path crates/aura-k27-astge-recovery/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'VALID_CURRENT_ONLY_SERVING=true'
+          echo 'ORPHAN_AUTO_PROMOTION=false'
+          echo 'MISSING_OR_INVALID_CURRENT_HOLD=true'
+          echo 'PHYSICAL_POWER_LOSS_DURABILITY_PROVEN=false'
+          echo 'CROSS_FILESYSTEM_DURABILITY_PROVEN=false'
+          echo 'MERGE_DEPLOY_EFFECT_AUTHORITY=false'
