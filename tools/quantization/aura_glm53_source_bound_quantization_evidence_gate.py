@@ -10,15 +10,11 @@ A known official model/index object is not current raw-byte residency, and valid
 quantization evidence is not transferable merely because two schemes share an
 E8-family label.
 
-Q5's exact source owner is materialized byte-for-byte into this tree. Q7 calls
-that producer's ``current_public_state()`` instead of maintaining a parallel
-source-state schema.
-
-A historical exact-green producer (PR398) independently observed the exact
-official index relation and six representative layer-3/expert-0 safetensors
-header entries with zero tensor-payload bytes. Q7 binds that historical evidence
-as a separate temporal plane. Historical producer evidence constrains current
-reasoning but never impersonates current Q5 raw-byte residency.
+Q5's exact source owner is materialized into this tree and traversed through
+``current_public_state()``. Historical official W2 evidence is likewise consumed
+through the materialized historical-bridge producer rather than reconstructed in
+Q7. Historical producer evidence constrains current reasoning but never
+impersonates current Q5 raw-byte residency.
 """
 from __future__ import annotations
 
@@ -26,6 +22,21 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 
+from tools.quantization.aura_glm53_historical_official_w2_bridge import (
+    HistoricalOfficialW2BridgeReceipt,
+    PR398_DRIVE_OBSERVATION as HISTORICAL_W2_DRIVE_OBSERVATION,
+    PR398_EXPERT as HISTORICAL_W2_EXPERT_ID,
+    PR398_HEAD as HISTORICAL_W2_PRODUCER_HEAD,
+    PR398_HEADER_SHA256 as HISTORICAL_W2_HEADER_SHA256,
+    PR398_JOB as HISTORICAL_W2_JOB,
+    PR398_LAYER as HISTORICAL_W2_LAYER_ID,
+    PR398_RECEIPT_DIGEST as HISTORICAL_W2_RECEIPT_DIGEST,
+    PR398_RUN as HISTORICAL_W2_RUN,
+    PR398_SHARD as HISTORICAL_W2_SHARD,
+    VERSION as HISTORICAL_BRIDGE_VERSION,
+    build_historical_official_w2_bridge,
+    canonical_pr398_observation,
+)
 from tools.quantization.aura_glm53_official_source_admission import (
     AdmissionState,
     OFFICIAL_COMMIT,
@@ -42,7 +53,7 @@ from tools.quantization.aura_glm53_quantization_evidence_transfer import (
     q4_to_q5_disposition,
 )
 
-VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V3"
+VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V4"
 
 Q5_EXACT_HEAD = "730426b82235b0ff4e75fef1cff00707877a84ad"
 Q5_EXACT_RUN = 33369967425
@@ -57,19 +68,10 @@ Q5_CANDIDATE_SCHEME = PR628_E8_PAGE_SCHEME
 Q5_CURRENT_SOURCE_STATE_DIGEST = "583965be30974da13e1bc0cc895cdd2307afc3650fb34ea30e28c45c403094b0"
 Q5_CURRENT_BLOCKER = "OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED"
 
-# Historical exact official producer evidence. These identifiers are evidence
-# coordinates, not a copy of raw source bytes and not current-residency claims.
-HISTORICAL_W2_PRODUCER_HEAD = "131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8"
-HISTORICAL_W2_RUN = 33336508527
-HISTORICAL_W2_JOB = 99324255699
-HISTORICAL_W2_DRIVE_OBSERVATION = "1FIz2aGHogE32scM4pmxDkHT7MiGfr2UbUkWlIDfpI_w"
-HISTORICAL_W2_RECEIPT_DIGEST = "736f0a117eb02c486736e7224c4e0f5363ae60b9"
-HISTORICAL_W2_LAYER_ID = 3
-HISTORICAL_W2_EXPERT_ID = 0
-HISTORICAL_W2_SHARD = "model-00038-of-00141.safetensors"
-HISTORICAL_W2_HEADER_SHA256 = "8607b1b281f5ca8c7b166376e8f6d7eb9ca07f79200f6095f0f55ca35149ba56"
-HISTORICAL_W2_PAYLOAD_BYTES_READ = 0
-HISTORICAL_W2_ENTRY_COUNT = 6
+# This is the materialized bridge blob in the Q7 tree, not an authority claim about
+# the mutable PR646 tip. Hosted PR398 producer evidence remains the source of the
+# historical observation; the bridge only rebinds it through current Q5 grammar.
+HISTORICAL_BRIDGE_OWNER_BLOB_SHA = "e4697103ac693996526a646ae46ff4bb35005397"
 
 
 def _canonical(value: object) -> bytes:
@@ -98,6 +100,9 @@ class SourceBoundEvidenceGate:
     current_source_headers_observed: bool
     current_source_header_trial_eligible: bool
     current_source_tensor_payload_bound: bool
+    historical_bridge_version: str
+    historical_bridge_owner_blob: str
+    historical_bridge_digest: str
     historical_official_index_relation_observed: bool
     historical_official_headers_observed: bool
     historical_official_fp8_companions_bound: bool
@@ -140,6 +145,11 @@ def _current_q5_snapshot() -> AdmissionState:
     return current_public_state()
 
 
+def _current_historical_bridge() -> HistoricalOfficialW2BridgeReceipt:
+    """Traverse the materialized historical bridge producer; do not copy its state."""
+    return build_historical_official_w2_bridge(canonical_pr398_observation())
+
+
 def _validate_source_snapshot(source: AdmissionState) -> None:
     if type(source) is not AdmissionState:
         raise ValueError("Q5_TYPED_SOURCE_STATE_REQUIRED")
@@ -177,8 +187,49 @@ def _validate_source_snapshot(source: AdmissionState) -> None:
         raise ValueError("Q5_REAL_TENSOR_PRECONDITIONS_MISSING")
 
 
+def _validate_historical_bridge(bridge: HistoricalOfficialW2BridgeReceipt) -> None:
+    if type(bridge) is not HistoricalOfficialW2BridgeReceipt:
+        raise ValueError("HISTORICAL_BRIDGE_TYPED_RECEIPT_REQUIRED")
+    if bridge.version != HISTORICAL_BRIDGE_VERSION:
+        raise ValueError("HISTORICAL_BRIDGE_VERSION_MISMATCH")
+    if bridge.parent_heads != (Q5_EXACT_HEAD, HISTORICAL_W2_PRODUCER_HEAD):
+        raise ValueError("HISTORICAL_BRIDGE_PARENT_HEAD_MISMATCH")
+    if bridge.parent_runs != (Q5_EXACT_RUN, HISTORICAL_W2_RUN):
+        raise ValueError("HISTORICAL_BRIDGE_PARENT_RUN_MISMATCH")
+    if bridge.producer_job != HISTORICAL_W2_JOB or bridge.producer_drive_observation != HISTORICAL_W2_DRIVE_OBSERVATION:
+        raise ValueError("HISTORICAL_BRIDGE_PRODUCER_IDENTITY_MISMATCH")
+    if bridge.producer_receipt_digest != HISTORICAL_W2_RECEIPT_DIGEST:
+        raise ValueError("HISTORICAL_BRIDGE_RECEIPT_MISMATCH")
+    if bridge.producer_header_sha256 != HISTORICAL_W2_HEADER_SHA256:
+        raise ValueError("HISTORICAL_BRIDGE_HEADER_DIGEST_MISMATCH")
+    if not (
+        bridge.historical_raw_index_verification_observed
+        and bridge.historical_weight_map_relation_observed
+        and bridge.historical_representative_headers_observed
+        and bridge.historical_fp8_companions_bound
+        and bridge.current_pr639_schema_header_geometry_conforms
+        and bridge.representative_per_expert_serialization_proven
+    ):
+        raise ValueError("HISTORICAL_BRIDGE_REQUIRED_CONSEQUENCE_MISSING")
+    forbidden = (
+        bridge.all_layers_experts_uniformity_proven,
+        bridge.current_consumer_raw_index_bytes_materialized,
+        bridge.current_consumer_raw_header_prefixes_materialized,
+        bridge.current_pr639_raw_byte_header_trial_eligible,
+        bridge.source_tensor_payload_bound,
+        bridge.real_tensor_quantization_eligible,
+        bridge.semantic_k27_authority,
+        bridge.native_transformer_kv_accessed,
+        bridge.gate10_promoted,
+    )
+    if any(forbidden):
+        raise ValueError("HISTORICAL_BRIDGE_CEILING_WIDENED")
+
+
 def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
     _validate_source_snapshot(source)
+    bridge = _current_historical_bridge()
+    _validate_historical_bridge(bridge)
     transfer = q4_to_q5_disposition()
 
     current_source_transport_residual = not (
@@ -196,8 +247,6 @@ def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
     elif representation_residual:
         disposition = "HOLD_REPRESENTATION_EXACT_EVIDENCE"
     else:
-        # Q6's current evidence scope is synthetic distortion only, so even this
-        # state remains below GLM tensor/task/runtime evidence.
         disposition = "HEADER_BOUND_SYNTHETIC_EVIDENCE_ONLY"
 
     return SourceBoundEvidenceGate(
@@ -217,23 +266,26 @@ def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
         current_source_headers_observed=source.representative_headers_observed,
         current_source_header_trial_eligible=source.header_trial_eligible,
         current_source_tensor_payload_bound=source.source_tensor_payload_bound,
-        historical_official_index_relation_observed=True,
-        historical_official_headers_observed=True,
-        historical_official_fp8_companions_bound=True,
-        historical_observation_representative_only=True,
-        historical_producer_head=HISTORICAL_W2_PRODUCER_HEAD,
-        historical_producer_run=HISTORICAL_W2_RUN,
-        historical_producer_job=HISTORICAL_W2_JOB,
-        historical_drive_observation=HISTORICAL_W2_DRIVE_OBSERVATION,
-        historical_receipt_digest=HISTORICAL_W2_RECEIPT_DIGEST,
-        historical_layer_id=HISTORICAL_W2_LAYER_ID,
-        historical_expert_id=HISTORICAL_W2_EXPERT_ID,
-        historical_shard=HISTORICAL_W2_SHARD,
-        historical_header_sha256=HISTORICAL_W2_HEADER_SHA256,
-        historical_entry_count=HISTORICAL_W2_ENTRY_COUNT,
-        historical_payload_bytes_read=HISTORICAL_W2_PAYLOAD_BYTES_READ,
-        historical_evidence_implies_current_raw_bytes=False,
-        historical_evidence_implies_global_layout_uniformity=False,
+        historical_bridge_version=bridge.version,
+        historical_bridge_owner_blob=HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
+        historical_bridge_digest=bridge.digest,
+        historical_official_index_relation_observed=bridge.historical_weight_map_relation_observed,
+        historical_official_headers_observed=bridge.historical_representative_headers_observed,
+        historical_official_fp8_companions_bound=bridge.historical_fp8_companions_bound,
+        historical_observation_representative_only=not bridge.all_layers_experts_uniformity_proven,
+        historical_producer_head=bridge.parent_heads[1],
+        historical_producer_run=bridge.parent_runs[1],
+        historical_producer_job=bridge.producer_job,
+        historical_drive_observation=bridge.producer_drive_observation,
+        historical_receipt_digest=bridge.producer_receipt_digest,
+        historical_layer_id=bridge.representative_layer,
+        historical_expert_id=bridge.representative_expert,
+        historical_shard=bridge.representative_shard,
+        historical_header_sha256=bridge.producer_header_sha256,
+        historical_entry_count=6,
+        historical_payload_bytes_read=bridge.historical_payload_bytes_read,
+        historical_evidence_implies_current_raw_bytes=bridge.current_consumer_raw_index_bytes_materialized,
+        historical_evidence_implies_global_layout_uniformity=bridge.all_layers_experts_uniformity_proven,
         transfer_disposition_digest=transfer.disposition_digest,
         source_evidence_scope=transfer.source_evidence_scope,
         exact_representation_identity_match=transfer.exact_representation_identity_match,
