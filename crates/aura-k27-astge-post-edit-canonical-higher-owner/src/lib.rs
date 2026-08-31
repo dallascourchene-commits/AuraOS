@@ -60,10 +60,12 @@ fn require_shared_handle(
     candidate: [u8; 32],
 ) -> Result<(), PostEditCanonicalHigherOwnerErrorV1> {
     if pre_edit != candidate {
-        return Err(PostEditCanonicalHigherOwnerErrorV1::HigherOwnerHandleMismatch {
-            pre_edit,
-            candidate,
-        });
+        return Err(
+            PostEditCanonicalHigherOwnerErrorV1::HigherOwnerHandleMismatch {
+                pre_edit,
+                candidate,
+            },
+        );
     }
     Ok(())
 }
@@ -76,7 +78,8 @@ pub fn require_post_edit_canonical_higher_owner_continuity(
     canonical: &PostEditCanonicalDefinitionTargetCurrentV1,
     higher_owner: &PostEditHigherOwnerContinuityV1,
 ) -> Result<PostEditCanonicalHigherOwnerContinuityV1, PostEditCanonicalHigherOwnerErrorV1> {
-    if !canonical.post_edit_profiled_scope_current || !canonical.canonical_definition_target_current {
+    if !canonical.post_edit_profiled_scope_current || !canonical.canonical_definition_target_current
+    {
         return Err(PostEditCanonicalHigherOwnerErrorV1::CanonicalCurrentnessNotProven);
     }
     if !higher_owner.higher_owner_semantic_handle_continuity_proven {
@@ -88,10 +91,12 @@ pub fn require_post_edit_canonical_higher_owner_continuity(
 
     let selected = &canonical.post_edit_current.selected_candidate_scope;
     if canonical.relation.definition_target_scope_id != selected.scope_id {
-        return Err(PostEditCanonicalHigherOwnerErrorV1::CanonicalTargetMismatch {
-            selected_scope_id: selected.scope_id,
-            relation_target_scope_id: canonical.relation.definition_target_scope_id,
-        });
+        return Err(
+            PostEditCanonicalHigherOwnerErrorV1::CanonicalTargetMismatch {
+                selected_scope_id: selected.scope_id,
+                relation_target_scope_id: canonical.relation.definition_target_scope_id,
+            },
+        );
     }
 
     let candidate_handle = selected
