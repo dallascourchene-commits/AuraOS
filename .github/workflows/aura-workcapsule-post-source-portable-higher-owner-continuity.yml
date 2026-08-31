@@ -1,0 +1,143 @@
+name: Aura WorkCapsule Portable Higher-Owner POST Source Continuity
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_*.py'
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
+      - '.github/workflows/aura-workcapsule-post-source-portable-higher-owner-continuity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  post-source-portable-higher-owner-continuity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR541_SHA: 12e9d4ad114faa08230cbbffc2f8bea40e0a2bfe
+    steps:
+      - name: Fetch exact child head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR539 exact POST-source continuity owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_post_repair_source_projection_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_repair_source_projection_continuity
+
+      - name: Fetch exact PR541 portable owner-chain parent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/pr541
+          mkdir -p /tmp/pr541
+          git -C /tmp/pr541 init .
+          git -C /tmp/pr541 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr541 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR541_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr541 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr541 rev-parse HEAD)" = "$PR541_SHA"
+          test -z "$(git -C /tmp/pr541 config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR541 portable owner-chain parent
+        run: |
+          cargo fmt --check --manifest-path /tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml
+          cargo test --manifest-path /tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --all-targets
+          cargo test --manifest-path /tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --doc
+          cargo clippy --manifest-path /tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove cross-runtime portable owner-chain schema agreement
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          rust = Path('/tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/src/lib.rs').read_text()
+          py = Path('scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py').read_text()
+          required = [
+              'AURA_ASTGE_CANONICAL_HIGHER_OWNER_OWNER_CHAIN_PROJECTION_V1',
+              'AURA_SERDE_JSON_STRUCT_ORDER_COMPACT_V1',
+              'canonical_target_projection',
+              'continuous_semantic_handle_digest_hex',
+              'outer_constructor_reproved_by_inner_owner',
+              'one_canonical_post_edit_consequence',
+              'higher_owner_semantic_handle_continuity_proven',
+              'producer_authenticated',
+              'semantic_patch_correctness_proven',
+              'commit_authorized',
+          ]
+          for token in required:
+              assert token in rust, token
+              assert token in py, token
+          assert 'producer_authenticated: false' in rust
+          assert 'projection_producer_authenticated": False' in py
+          print('PR541_SECOND_PARENT_EXECUTED_AT_EXACT_SHA=true')
+          print('PR541_SCHEMA_MATCHED_ACROSS_RUNTIME=true')
+          print('PROJECTION_PRODUCER_AUTHENTICATED=false')
+          PY
+
+      - name: Verify portable higher-owner POST source continuity
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_source_portable_higher_owner_continuity
+
+      - name: Assert owner-only child boundary
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_post_source_portable_higher_owner_continuity import verify_post_source_portable_higher_owner_continuity
+          params = inspect.signature(verify_post_source_portable_higher_owner_continuity).parameters
+          assert 'portable_higher_owner_projection' in params
+          assert 'astge_projection' not in params
+          for forbidden in ('candidate_binding', 'observed_source_witnesses', 'source_observation_receipt', 'post_edit_witness', 'reduced_owner_chain'):
+              assert forbidden not in params, forbidden
+          source = Path('scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py').read_text()
+          assert 'verify_post_repair_source_projection_continuity' in source
+          assert 'verify_portable_canonical_target_projection' in source
+          for forbidden in ('compile_source_reentry_observations', 'derive_post_reentry_candidate'):
+              assert forbidden not in source, forbidden
+          print('LOWER_WORKCAPSULE_REPLAY_REIMPLEMENTED_BY_CHILD=false')
+          print('RAW_ASTGE_OWNER_RECEIPT_ACCEPTED=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'POST_CLOSED_SOURCE_INSTANCE_CONTINUITY_PROVEN=true'
+          echo 'PORTABLE_HIGHER_OWNER_OWNER_CHAIN_VERIFIED=true'
+          echo 'HIGHER_OWNER_SEMANTIC_HANDLE_CONTINUITY_PROVEN=true'
+          echo 'PORTABLE_TARGET_HANDLE_EQUALS_CONTINUOUS_HANDLE=true'
+          echo 'PR539_OWNER_REPROVED=true'
+          echo 'PR541_SECOND_PARENT_EXECUTED_AT_EXACT_SHA=true'
+          echo 'PROJECTION_PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_CURRENTNESS_MINTED_BY_CHILD=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
