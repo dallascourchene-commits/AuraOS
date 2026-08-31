@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1652
-- **total_bytes**: 26510621
-- **text_tokens_est**: 6618009
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1656
+- **total_bytes**: 26540728
+- **text_tokens_est**: 6625536
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 277, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1652,
+  "repo_file_count": 1656,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -168,7 +168,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/glm53-lattice-quantization-feasibility.yml",
     ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
+    ".github/workflows/glm53-live-payload-coverage-delta-push-proof.yml",
     ".github/workflows/glm53-live-payload-coverage-delta.yml",
+    ".github/workflows/glm53-remaining-official-payload-slices.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1504,6 +1506,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_oidc.py",
     "tests/test_aura_gate_server.py",
     "tests/test_aura_glm53_live_payload_coverage_delta.py",
+    "tests/test_aura_glm53_remaining_official_payload_slices.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
     "tests/test_aura_human_agent_arena.py",
@@ -1661,6 +1664,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
     "tools/quantization/aura_glm53_live_official_tensor_payload_canary.py",
     "tools/quantization/aura_glm53_live_payload_coverage_delta.py",
+    "tools/quantization/aura_glm53_remaining_official_payload_slices.py",
     "tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py",
     "tools/quantization/test_aura_glm53_lattice_quantization_feasibility.py",
     "tools/quantization/test_aura_glm53_live_official_tensor_payload_canary.py",
@@ -1792,16 +1796,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1652,
-  "bytes": 26510621,
-  "tokens_est": 6618009,
+  "files": 1656,
+  "bytes": 26540728,
+  "tokens_est": 6625536,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1005,
-    "schema_or_lexicon": 275,
+    "python_module": 1007,
+    "schema_or_lexicon": 277,
     "support_file": 49
   }
 }
