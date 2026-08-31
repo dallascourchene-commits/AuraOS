@@ -8,9 +8,10 @@ This membrane composes two already-owned Aura artifacts without changing either:
   attestation boundary.
 
 A prediction may stage bounded expert pages. It never chooses the executed expert set.
-The native route remains the sole source of expert-selection truth; prediction misses
-require exact demand loading. Physical-byte claims remain UNKNOWN because PR #338's
-pager receipt does not measure bytes.
+A supplied native-router output operand remains separate from prediction; this module
+never claims that route was host-observed. Prediction misses require exact demand-load
+residuals. Physical-byte claims remain UNKNOWN because PR #338's pager receipt does
+not measure bytes.
 """
 from __future__ import annotations
 
@@ -34,6 +35,7 @@ PAGER_PARENT_HEAD = "7f33d2e8f6e53b8862f8ecf0ddc28e0564fb388a"
 PAGER_SOURCE_BLOB = "2b9b50e23b8ed963be4c1981598d30adb04dc1fe"
 PAGER_SCHEMA = "AuraPackedExpertPagerReceiptV1"
 PAGER_CEILING = "SYNTHETIC_PAGER_CORE_ONLY_NO_FLAGSHIP_WEIGHT_OR_RUNTIME_PROOF"
+ROUTE_EVIDENCE_CLASS = "UNOBSERVED_NATIVE_ROUTER_OUTPUT_OPERAND"
 
 
 class PrefetchAccountingError(RuntimeError):
@@ -130,8 +132,10 @@ class PrefetchAccountingReceipt:
     whole_bank_reads: int | None
     whole_bank_materialized: bool | None
     backend_attestation_id: str | None
+    native_route_evidence_class: str = ROUTE_EVIDENCE_CLASS
+    native_route_required_for_execution_selection: bool = True
+    native_route_observed: bool = False
     physical_bytes_read: int | None = None
-    native_route_is_expert_selection_truth: bool = True
     prediction_can_change_native_route: bool = False
     demand_load_required_for_misses: bool = True
     demand_load_observed: bool = False
@@ -140,12 +144,15 @@ class PrefetchAccountingReceipt:
     g2_admitted: bool = False
     semantic_k27_authority: bool = False
     native_private_transformer_kv_accessed: bool = False
-    claim_ceiling: str = "PREFETCH_ACCOUNTING_ONLY_NO_ROUTE_MUTATION_EXECUTION_OR_PHYSICAL_BYTE_PROOF"
+    claim_ceiling: str = "PREFETCH_ACCOUNTING_ONLY_UNOBSERVED_ROUTE_NO_EXECUTION_OR_PHYSICAL_BYTE_PROOF"
 
     def validate_claim_ceiling(self) -> None:
-        if self.native_route_is_expert_selection_truth is not True:
-            raise PrefetchAccountingError("NATIVE_ROUTE_TRUTH_MUST_REMAIN_TRUE")
+        if self.native_route_evidence_class != ROUTE_EVIDENCE_CLASS:
+            raise PrefetchAccountingError("NATIVE_ROUTE_EVIDENCE_CLASS_MISMATCH")
+        if self.native_route_required_for_execution_selection is not True:
+            raise PrefetchAccountingError("NATIVE_ROUTE_SELECTION_REQUIREMENT_MUST_REMAIN_TRUE")
         forbidden = (
+            self.native_route_observed,
             self.prediction_can_change_native_route,
             self.demand_load_observed,
             self.execution_authorized,
@@ -155,7 +162,7 @@ class PrefetchAccountingReceipt:
             self.native_private_transformer_kv_accessed,
         )
         if any(value is not False for value in forbidden):
-            raise PrefetchAccountingError("PREFETCH_ACCOUNTING_CANNOT_PROMOTE_ROUTE_OR_EFFECT_AUTHORITY")
+            raise PrefetchAccountingError("PREFETCH_ACCOUNTING_CANNOT_PROMOTE_ROUTE_OBSERVATION_OR_EFFECT_AUTHORITY")
         if self.physical_bytes_read is not None:
             raise PrefetchAccountingError("PHYSICAL_BYTE_COUNT_UNEARNED")
         if self.demand_load_required_for_misses is not bool(self.demand_load_experts):
@@ -179,12 +186,13 @@ def account_speculative_prefetch(
     native_route_expert_ids: Sequence[int],
     prefetch_receipt: PagerReceipt,
 ) -> PrefetchAccountingReceipt:
-    """Account staged prediction vs native route without allowing prediction to route.
+    """Account staged prediction vs an unobserved native-router output operand.
 
     ``prefetch_receipt`` proves only that PR #338's bounded logical pager completed for
-    the predicted expert set. The native route is supplied separately and is never
-    derived from prediction. Any native expert absent from the staged set is a
-    mandatory exact demand-load residual, not a route mutation opportunity.
+    the predicted expert set. ``native_route_expert_ids`` is kept as a separate route
+    operand; this function does not prove it came from a live host/router. Any native
+    expert absent from the staged set is a mandatory exact demand-load residual, not a
+    route mutation opportunity.
     """
     predicted = canonical_expert_ids(predicted_expert_ids, binding.num_experts)
     if len(predicted) == binding.num_experts:
