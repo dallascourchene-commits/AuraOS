@@ -1,0 +1,114 @@
+name: GLM53 Official E8 vs Optimized Scalar Canary
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  official-e8-vs-optimized-scalar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      Q14_SHA: ee70934e0c45572588829e742e512a897b23863f
+      Q14_RUN: "33399560819"
+      Q14_SOURCE_BLOB: ef26cf18731b2f6dfc3c63d08260fb64aded96f6
+      Q6_SEMANTIC_SHA: ded816ac542b4cd4a097ce4c5500aefbc4f34b10
+    steps:
+      - name: Exact authenticated checkout without legacy submodule traversal
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Revalidate exact Q14 producer generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{os.environ['Q14_RUN']}",headers=headers)
+          with urllib.request.urlopen(req) as r:
+              data=json.load(r)
+          assert data['head_sha']==os.environ['Q14_SHA'], (data['head_sha'], os.environ['Q14_SHA'])
+          assert data['status']=='completed' and data['conclusion']=='success', data
+          print('Q14_EXACT_HOSTED_GREEN=true')
+          PY
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q14_SHA"
+          test "$(git ls-tree "$Q14_SHA" tools/quantization/aura_glm53_official_source_e8_materialization_canary.py | awk '{print $3}')" = "$Q14_SOURCE_BLOB"
+          test "$(git rev-parse "$Q6_SEMANTIC_SHA^{tree}")" = "$(git rev-parse "$Q6_SEMANTIC_SHA^{tree}")"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Install exact numeric dependency
+        run: python3 -m pip install --disable-pip-version-check numpy==2.3.5
+
+      - name: Compile and run adversarial comparator contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py \
+            tests/test_aura_glm53_official_e8_vs_optimized_scalar_canary.py
+          python3 -m unittest -v tests.test_aura_glm53_official_e8_vs_optimized_scalar_canary
+
+      - name: Execute deterministic live official comparator twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.quantization.aura_glm53_official_e8_vs_optimized_scalar_canary > /tmp/q6a.json
+          python3 -m tools.quantization.aura_glm53_official_e8_vs_optimized_scalar_canary > /tmp/q6b.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/q6a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/q6b.json',encoding='utf-8'))
+          assert a['receipt_digest']==b['receipt_digest'], (a['receipt_digest'],b['receipt_digest'])
+          assert a['exact_codec_rate_bpw']==2.25
+          assert len(a['roles'])==2
+          assert all(x['equal_codec_rate'] for x in a['roles'])
+          assert all(x['q14_e8_codec_bits_per_weight']==2.25 for x in a['roles'])
+          assert all(x['scalar_codec_bits_per_weight']==2.25 for x in a['roles'])
+          assert a['aggregate_outcome'] in {'E8_WIN','SCALAR_WIN','TIE'}
+          assert a['same_official_source_tiles_compared'] is True
+          assert a['optimized_scalar_control_used'] is True
+          assert a['representative_canary_scope_only'] is True
+          for k in ('geometry_privileged','full_role_quantized','whole_model_quantized','glm_quality_proven','runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted'):
+              assert a[k] is False, (k,a[k])
+          print(json.dumps(a,sort_keys=True,separators=(',',':')))
+          print('DETERMINISTIC_RECEIPT=true')
+          print('EXACT_EQUAL_RATE_2P25=true')
+          print('OUTCOME_NE_PROMOTION=true')
+          PY
+
+      - name: Emit fixed nonpromotion ceiling
+        run: |
+          cat <<'EOF'
+          REPRESENTATIVE_CANARY_SCOPE_ONLY=true
+          GEOMETRY_PRIVILEGED=false
+          FULL_ROLE_QUANTIZED=false
+          WHOLE_MODEL_QUANTIZED=false
+          GLM_QUALITY_PROVEN=false
+          RUNTIME_PERFORMANCE_PROVEN=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          EOF
