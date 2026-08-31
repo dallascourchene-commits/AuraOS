@@ -1,0 +1,81 @@
+name: K27 ASTGE Scope-Aware Source Review
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-scope-review/**"
+      - "crates/aura-k27-astge-source-review/**"
+      - "crates/aura-k27-astge-scopes/**"
+      - "tools/k27_astge_python_scope_oracle.py"
+      - ".github/workflows/aura-k27-astge-scope-aware-source-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-k27-astge-scope-aware-source-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scope-aware-source-review:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Show toolchain
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+
+      - name: Reprove current-source review parent
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-source-review/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Reprove nested-scope parent and independent CPython oracle
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-scopes/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-scopes/Cargo.toml --all-targets -- -D warnings
+          python3 tools/k27_astge_python_scope_oracle.py
+
+      - name: Verify composed lexical-owner review membrane
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-scope-review/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-scope-review/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-scope-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'CURRENT_SOURCE_REVIEW_REPROVED=true'
+          echo 'CPYTHON_SYMTABLE_SCOPE_TREE_CONFORMANT=true'
+          echo 'LEXICAL_OWNER_SCOPE_BOUND=true'
+          echo 'SELECTED_BINDING_EXPLICIT=true'
+          echo 'DUPLICATE_NAMES_RETAINED=true'
+          echo 'IDENTIFIER_USE_RESOLUTION_PROVEN=false'
+          echo 'RUNTIME_BINDING_WINNER_PROVEN=false'
+          echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'K27_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT_AUTHORIZED=false'
