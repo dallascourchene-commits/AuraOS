@@ -1,14 +1,19 @@
-"""Bind a calibrated GLM-5.3 C2 plan to its exact observed host operation.
+"""Structurally bind a calibrated GLM-5.3 C2 plan to an operation-witness claim.
 
 D0 / HS1 / NONPROMOTING.
 
 This relation consumes two independently proven lineages:
 * PR #729: calibrated G2 planning -> immutable C2 request attachment.
-* PR #727: operation/observer/backend provenance pattern for physical observations.
+* PR #727: operation/observer/backend provenance *pattern* for physical observations.
 
-It may establish that an observation belongs to the exact C2 attempt descended from an
-exact calibrated plan. It deliberately cannot infer that the plan *caused* byte or
-latency savings. Causal benefit requires an independently bound counterfactual/baseline.
+A caller-authored witness can prove deterministic relation consistency only. It cannot
+authenticate its own producer, observer registry, source-revalidation producer, or
+physical counters. Therefore this module never promotes a matching candidate witness
+to physical-observation truth or observational attribution. Those require a later
+external producer/observer-registry authentication receipt.
+
+Even after authenticated observation exists, causal plan benefit still requires an
+independently bound counterfactual or matched baseline.
 """
 from __future__ import annotations
 
@@ -24,16 +29,16 @@ from tools.awj032.glm53_owner_host_c2_handoff import (
     OwnerHostC2JoinReceipt,
 )
 
-SCHEMA = "AURA-GLM53-G2-C2-PLAN-OPERATION-OBSERVATION-JOIN-v1"
-WITNESS_SCHEMA = "AURA-GLM53-C2-OPERATION-OBSERVATION-WITNESS-v1"
+SCHEMA = "AURA-GLM53-G2-C2-PLAN-OPERATION-WITNESS-STRUCTURAL-JOIN-v2"
+WITNESS_SCHEMA = "AURA-GLM53-C2-OPERATION-OBSERVATION-WITNESS-CANDIDATE-v2"
 
 PLAN_PARENT_HEAD = "5d7180f9a899b07526fd36cb290c85c8ebab4969"
 PLAN_PARENT_BLOB = "c7be999691ef1a8c3e58c918c12574eab192c9e3"
 OBSERVATION_PARENT_HEAD = "293c59d7260372ccd3b9e8130b12979b052c3ed9"
 OBSERVATION_PARENT_BLOB = "98db548b6e8f7443b79d979eb0e177ac6aa68534"
 
-BOUND = "PLAN_ATTEMPT_OPERATION_OBSERVATION_BOUND"
-HOLD = "HOLD_OPERATION_OBSERVATION_REQUIRED"
+STRUCTURAL = "PLAN_ATTEMPT_OBSERVATION_WITNESS_STRUCTURALLY_BOUND_AUTHENTICATION_REQUIRED"
+HOLD = "HOLD_OPERATION_OBSERVATION_WITNESS_REQUIRED"
 HEX = frozenset("0123456789abcdef")
 
 
@@ -66,11 +71,12 @@ def _nonnegative_int(value: Any, code: str) -> int:
 
 @dataclass(frozen=True)
 class GLM53OperationObservationWitness:
-    """Exact operation-scoped witness projected from an external owner/observer plane.
+    """Caller-supplied candidate witness: structural claims, never provenance truth.
 
-    This module validates relation consistency but does not itself authenticate the
-    external producer registry. The provenance references therefore remain explicit in
-    the final relation and no execution/effect authority is granted.
+    Names ending in ``_claimed`` are deliberate. The caller may assert that an observer
+    is current or that source binding was revalidated, but this module has no registry
+    capable of authenticating those claims. The candidate can therefore participate in
+    a deterministic structural join only.
     """
 
     schema: str
@@ -90,12 +96,15 @@ class GLM53OperationObservationWitness:
     lifecycle_measurement_ref: str
     physical_io_attestation_ref: str
     source_binding_revalidation_ref: str
-    physical_read_bytes: int
-    observer_current: bool = True
-    exact_operation_bound: bool = True
-    source_binding_revalidated: bool = True
-    glm53_workload: bool = True
+    claimed_physical_read_bytes: int
+    observer_current_claimed: bool = True
+    exact_operation_bound_claimed: bool = True
+    source_binding_revalidated_claimed: bool = True
+    glm53_workload_claimed: bool = True
     tiny_fixture_crosscast: bool = False
+    producer_authenticated: bool = False
+    observer_registry_authenticated: bool = False
+    physical_observation_proven: bool = False
     execution_authority_granted: bool = False
     effect_authority_granted: bool = False
     semantic_k27_authority: bool = False
@@ -126,27 +135,28 @@ class GLM53OperationObservationWitness:
             (self.source_binding_revalidation_ref, "WITNESS_SOURCE_REVALIDATION_REF_REQUIRED"),
         ):
             _text(value, code)
-        _nonnegative_int(self.physical_read_bytes, "WITNESS_PHYSICAL_READ_BYTES_INVALID")
-        if self.observer_current is not True:
-            raise ValueError("WITNESS_OBSERVER_CURRENTNESS_REQUIRED")
-        if self.exact_operation_bound is not True:
-            raise ValueError("WITNESS_EXACT_OPERATION_BINDING_REQUIRED")
-        if self.source_binding_revalidated is not True:
-            raise ValueError("WITNESS_SOURCE_BINDING_REVALIDATION_REQUIRED")
-        if self.glm53_workload is not True or self.tiny_fixture_crosscast is not False:
-            raise ValueError("WITNESS_MUST_BE_GLM53_NOT_TINY_FIXTURE_CROSSCAST")
+        _nonnegative_int(self.claimed_physical_read_bytes, "WITNESS_CLAIMED_PHYSICAL_READ_BYTES_INVALID")
+        if type(self.observer_current_claimed) is not bool or type(self.exact_operation_bound_claimed) is not bool:
+            raise ValueError("WITNESS_BOOLEAN_CLAIMS_MUST_BE_BOOL")
+        if type(self.source_binding_revalidated_claimed) is not bool or type(self.glm53_workload_claimed) is not bool:
+            raise ValueError("WITNESS_BOOLEAN_CLAIMS_MUST_BE_BOOL")
+        if self.tiny_fixture_crosscast is not False:
+            raise ValueError("WITNESS_TINY_FIXTURE_CROSSCAST_FORBIDDEN")
         if any((
+            self.producer_authenticated,
+            self.observer_registry_authenticated,
+            self.physical_observation_proven,
             self.execution_authority_granted,
             self.effect_authority_granted,
             self.semantic_k27_authority,
             self.native_private_transformer_kv_accessed,
         )):
-            raise ValueError("WITNESS_CANNOT_WIDEN_AUTHORITY")
+            raise ValueError("CALLER_WITNESS_CANNOT_SELF_AUTHENTICATE_OR_WIDEN_AUTHORITY")
 
     @property
     def witness_digest(self) -> str:
         self.validate()
-        return _digest({"domain": WITNESS_SCHEMA, "witness": asdict(self)})
+        return _digest({"domain": WITNESS_SCHEMA, "candidate_witness": asdict(self)})
 
 
 @dataclass(frozen=True)
@@ -160,15 +170,19 @@ class PlanOperationObservationJoin:
     request_digest: str
     attempt_receipt_digest: str
     c2_join_logical_id: str
-    operation_observation_digest: str | None
-    operation_id: str | None
-    owner_host_observation_id: str | None
-    physical_read_bytes: int | None
+    candidate_witness_digest: str | None
+    operation_id_claim: str | None
+    owner_host_observation_id_claim: str | None
+    claimed_physical_read_bytes: int | None
     plan_to_request_bound: bool
     request_to_attempt_bound: bool
-    attempt_to_observation_bound: bool
-    source_binding_revalidation_bound: bool
-    observational_attribution_bound: bool
+    attempt_to_candidate_witness_structurally_bound: bool
+    source_binding_revalidation_claim_carried: bool
+    producer_authentication_required: bool
+    observer_registry_authentication_required: bool
+    physical_observation_proven: bool = False
+    observational_attribution_bound: bool = False
+    source_binding_revalidation_proven: bool = False
     counterfactual_baseline_required: bool = True
     causal_plan_benefit_proven: bool = False
     bytes_saved_proven: bool = False
@@ -195,9 +209,14 @@ class PlanOperationObservationJoin:
             (self.c2_join_logical_id, "PLAN_OPERATION_JOIN_C2_JOIN_ID_INVALID"),
         ):
             _sha256(value, code)
+        if self.producer_authentication_required is not True or self.observer_registry_authentication_required is not True:
+            raise ValueError("EXTERNAL_PRODUCER_AND_OBSERVER_AUTHENTICATION_REMAIN_REQUIRED")
         if self.counterfactual_baseline_required is not True:
             raise ValueError("COUNTERFACTUAL_BASELINE_REQUIREMENT_CANNOT_BE_REMOVED")
         forbidden = (
+            self.physical_observation_proven,
+            self.observational_attribution_bound,
+            self.source_binding_revalidation_proven,
             self.causal_plan_benefit_proven,
             self.bytes_saved_proven,
             self.latency_saved_proven,
@@ -212,25 +231,24 @@ class PlanOperationObservationJoin:
             self.merge_deploy_spend_public_financial_human_effect,
         )
         if any(v is not False for v in forbidden):
-            raise ValueError("PLAN_OPERATION_JOIN_CANNOT_MINT_CAUSAL_BENEFIT_OR_AUTHORITY")
-        if self.disposition == BOUND:
+            raise ValueError("STRUCTURAL_JOIN_CANNOT_MINT_OBSERVATION_CAUSALITY_OR_AUTHORITY")
+        if self.disposition == STRUCTURAL:
             if not all((
                 self.plan_to_request_bound,
                 self.request_to_attempt_bound,
-                self.attempt_to_observation_bound,
-                self.source_binding_revalidation_bound,
-                self.observational_attribution_bound,
+                self.attempt_to_candidate_witness_structurally_bound,
+                self.source_binding_revalidation_claim_carried,
             )):
-                raise ValueError("BOUND_PLAN_OPERATION_JOIN_REQUIRES_COMPLETE_RELATION")
-            if self.operation_observation_digest is None or self.operation_id is None or self.owner_host_observation_id is None:
-                raise ValueError("BOUND_PLAN_OPERATION_JOIN_REQUIRES_OBSERVATION_IDENTITY")
-            _sha256(self.operation_observation_digest, "PLAN_OPERATION_JOIN_OBSERVATION_DIGEST_INVALID")
-            if self.physical_read_bytes is None:
-                raise ValueError("BOUND_PLAN_OPERATION_JOIN_REQUIRES_OBSERVED_PHYSICAL_BYTES")
-            _nonnegative_int(self.physical_read_bytes, "PLAN_OPERATION_JOIN_PHYSICAL_BYTES_INVALID")
+                raise ValueError("STRUCTURAL_JOIN_REQUIRES_COMPLETE_IDENTITY_RELATION")
+            if self.candidate_witness_digest is None or self.operation_id_claim is None or self.owner_host_observation_id_claim is None:
+                raise ValueError("STRUCTURAL_JOIN_REQUIRES_CANDIDATE_WITNESS_IDENTITY")
+            _sha256(self.candidate_witness_digest, "STRUCTURAL_JOIN_WITNESS_DIGEST_INVALID")
+            if self.claimed_physical_read_bytes is None:
+                raise ValueError("STRUCTURAL_JOIN_REQUIRES_CLAIMED_BYTE_FIELD")
+            _nonnegative_int(self.claimed_physical_read_bytes, "STRUCTURAL_JOIN_CLAIMED_BYTES_INVALID")
         elif self.disposition == HOLD:
-            if self.attempt_to_observation_bound or self.observational_attribution_bound:
-                raise ValueError("HELD_PLAN_OPERATION_JOIN_CANNOT_CLAIM_OBSERVATION_BINDING")
+            if self.attempt_to_candidate_witness_structurally_bound or self.source_binding_revalidation_claim_carried:
+                raise ValueError("HELD_JOIN_CANNOT_CLAIM_WITNESS_BINDING")
         else:
             raise ValueError("PLAN_OPERATION_JOIN_DISPOSITION_INVALID")
 
@@ -248,7 +266,7 @@ def bind_plan_attempt_operation_observation(
     c2_join: OwnerHostC2JoinReceipt,
     witness: GLM53OperationObservationWitness | None,
 ) -> PlanOperationObservationJoin:
-    """Join exact planning and observation identities without claiming causality."""
+    """Join exact identities structurally; never authenticate caller-supplied evidence."""
     attachment.validate_claim_ceiling()
     request_digest = request.request_digest
     attempt_digest = attempt.receipt_digest
@@ -274,18 +292,19 @@ def bind_plan_attempt_operation_observation(
         c2_join_logical_id=join_id,
         plan_to_request_bound=True,
         request_to_attempt_bound=True,
+        producer_authentication_required=True,
+        observer_registry_authentication_required=True,
     )
     if witness is None:
         out = PlanOperationObservationJoin(
             disposition=HOLD,
-            reason_code="EXACT_OPERATION_OBSERVATION_WITNESS_REQUIRED",
-            operation_observation_digest=None,
-            operation_id=None,
-            owner_host_observation_id=None,
-            physical_read_bytes=None,
-            attempt_to_observation_bound=False,
-            source_binding_revalidation_bound=False,
-            observational_attribution_bound=False,
+            reason_code="OPERATION_OBSERVATION_WITNESS_CANDIDATE_REQUIRED",
+            candidate_witness_digest=None,
+            operation_id_claim=None,
+            owner_host_observation_id_claim=None,
+            claimed_physical_read_bytes=None,
+            attempt_to_candidate_witness_structurally_bound=False,
+            source_binding_revalidation_claim_carried=False,
             **common,
         )
         out.validate_claim_ceiling()
@@ -304,21 +323,20 @@ def bind_plan_attempt_operation_observation(
         and witness.source_snapshot_digest == attempt.source_snapshot_digest
         and witness.host_measurement_ref == attempt.host_measurement_ref
         and witness.lifecycle_measurement_ref == attempt.lifecycle_measurement_ref
-        and witness.physical_read_bytes == attempt.physical_read_bytes
+        and witness.claimed_physical_read_bytes == attempt.physical_read_bytes
     )
     if not exact:
-        raise ValueError("PLAN_ATTEMPT_OBSERVATION_IDENTITY_MISMATCH")
+        raise ValueError("PLAN_ATTEMPT_WITNESS_IDENTITY_MISMATCH")
 
     out = PlanOperationObservationJoin(
-        disposition=BOUND,
-        reason_code="EXACT_PLAN_ATTEMPT_OPERATION_OBSERVATION_RELATION_BOUND",
-        operation_observation_digest=witness.witness_digest,
-        operation_id=witness.operation_id,
-        owner_host_observation_id=witness.owner_host_observation_id,
-        physical_read_bytes=witness.physical_read_bytes,
-        attempt_to_observation_bound=True,
-        source_binding_revalidation_bound=True,
-        observational_attribution_bound=True,
+        disposition=STRUCTURAL,
+        reason_code="EXACT_STRUCTURAL_WITNESS_RELATION_BOUND_EXTERNAL_AUTHENTICATION_REQUIRED",
+        candidate_witness_digest=witness.witness_digest,
+        operation_id_claim=witness.operation_id,
+        owner_host_observation_id_claim=witness.owner_host_observation_id,
+        claimed_physical_read_bytes=witness.claimed_physical_read_bytes,
+        attempt_to_candidate_witness_structurally_bound=True,
+        source_binding_revalidation_claim_carried=True,
         **common,
     )
     out.validate_claim_ceiling()
@@ -326,12 +344,16 @@ def bind_plan_attempt_operation_observation(
 
 
 LAWS = (
-    "PlanAttachment+ExactC2Attempt+OperationWitness=>ObservationalAttribution",
-    "ObservationalAttribution!=CausalPlanBenefit",
-    "ObservedPhysicalReadBytes!=BytesSaved",
+    "PlanAttachment+ExactC2Attempt+CallerWitness=>StructuralRelationOnly",
+    "StructuralWitnessRelation!=AuthenticatedObservationalAttribution",
+    "CallerWitness!=BackendObservationProvenance",
+    "UnauthenticatedC2Receipt+MatchingWitness!=PhysicalObservationTruth",
+    "ProducerRegistryAuthenticationRequiredBeforeObservationalAttribution",
+    "SourceRevalidationClaim!=AuthenticatedSourceRevalidation",
+    "AuthenticatedObservationalAttribution!=CausalPlanBenefit",
+    "ClaimedPhysicalReadBytes!=ObservedPhysicalReadBytes!=BytesSaved",
     "SameAttempt!=CounterfactualBaseline",
     "PlanBenefitRequiresIndependentCounterfactualOrMatchedBaseline",
-    "SourceBindingRevalidation!=ExecutionAuthority",
     "TinyFixtureObservationPattern!=GLM53PerformanceEvidence",
     "K27Coordinate!=PlanIdentity!=ObservationAuthority!=CausalAuthority",
 )
