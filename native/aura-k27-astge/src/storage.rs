@@ -274,6 +274,12 @@ pub fn publish_snapshot(
 }
 
 fn validate_inputs(nodes: &[NodeInput]) -> IoResult<()> {
+    if nodes.is_empty() {
+        return Err(Error::new(
+            ErrorKind::InvalidInput,
+            "V0 snapshots require at least one node",
+        ));
+    }
     for (index, node) in nodes.iter().enumerate() {
         if node.node_id != index as u64 {
             return Err(Error::new(
@@ -304,7 +310,7 @@ fn write_nodes(path: &Path, records: &[NodeRecord]) -> IoResult<()> {
     file.sync_all()?;
     let expected = records.len() as u64 * NODE_RECORD_SIZE as u64;
     if file.metadata()?.len() != expected {
-        return Err(Error::new(ErrorKind::Other, "node table length mismatch after write"));
+        return Err(Error::other("node table length mismatch after write"));
     }
     Ok(())
 }
@@ -317,7 +323,7 @@ fn write_edges(path: &Path, pages: &[[u8; BLOCK_SIZE]]) -> IoResult<()> {
     file.sync_all()?;
     let expected = pages.len() as u64 * BLOCK_SIZE as u64;
     if file.metadata()?.len() != expected {
-        return Err(Error::new(ErrorKind::Other, "edge table length mismatch after write"));
+        return Err(Error::other("edge table length mismatch after write"));
     }
     Ok(())
 }
