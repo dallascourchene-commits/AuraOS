@@ -41,7 +41,7 @@ jobs:
           unset AUTH_HEADER GH_TOKEN
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-          parents="$(git show -s --format=%P "$CONVERGENCE_SHA")"
+          parents="$(git cat-file -p "$CONVERGENCE_SHA" | awk '$1 == "parent" {print $2}' | paste -sd ' ' -)"
           test "$parents" = "$PR548_SHA $PR541_SHA"
           echo "TRUE_TWO_PARENT_CONVERGENCE=$CONVERGENCE_SHA"
 
