@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from types import SimpleNamespace
 import unittest
 
 from tools.awj032.glm53_router_separated_prefetch import (
@@ -43,11 +44,22 @@ def route(ids=(1, 3, 5, 9), **overrides):
 
 
 class FakePager:
-    def __init__(self):
+    def __init__(self, *, binding_digests=None, returned_expert_sets=None):
         self.calls = []
+        self.binding_digests = list(binding_digests or [])
+        self.returned_expert_sets = list(returned_expert_sets or [])
 
     def load_selected(self, expert_ids, *, model_revision, index_digest):
-        self.calls.append((tuple(expert_ids), model_revision, index_digest))
+        requested = tuple(expert_ids)
+        self.calls.append((requested, model_revision, index_digest))
+        index = len(self.calls) - 1
+        binding = self.binding_digests[index] if index < len(self.binding_digests) else BINDING
+        returned = self.returned_expert_sets[index] if index < len(self.returned_expert_sets) else requested
+        return SimpleNamespace(binding_digest=binding, expert_ids=tuple(returned))
+
+
+class MissingProofPager:
+    def load_selected(self, expert_ids, *, model_revision, index_digest):
         return {"loaded": tuple(expert_ids)}
 
 
@@ -82,6 +94,57 @@ class RouterSeparatedPrefetchTests(unittest.TestCase):
         )
         self.assertEqual([c[0] for c in pager.calls], [(1, 3, 5, 7), (9,)])
         self.assertEqual(out.executed_experts, (1, 3, 5, 9))
+
+    def test_stage_requires_prefetch_result_to_bind_exact_source(self):
+        pager = FakePager(binding_digests=("wrong-binding",))
+        with self.assertRaisesRegex(ValueError, "PREFETCH_PAGER_RESULT_BINDING_MISMATCH"):
+            stage_then_demand_load(
+                pager=pager,
+                prediction=prediction(),
+                native_route=route(),
+                num_experts=NUM_EXPERTS,
+                logical_bytes_by_expert=BYTES,
+                model_revision="glm53-rev",
+                index_digest="index-digest",
+            )
+
+    def test_stage_requires_demand_result_to_bind_exact_source(self):
+        pager = FakePager(binding_digests=(BINDING, "wrong-binding"))
+        with self.assertRaisesRegex(ValueError, "DEMAND_PAGER_RESULT_BINDING_MISMATCH"):
+            stage_then_demand_load(
+                pager=pager,
+                prediction=prediction((1, 3, 5, 7)),
+                native_route=route((1, 3, 5, 9)),
+                num_experts=NUM_EXPERTS,
+                logical_bytes_by_expert=BYTES,
+                model_revision="glm53-rev",
+                index_digest="index-digest",
+            )
+
+    def test_stage_requires_exact_expert_set_from_pager_result(self):
+        pager = FakePager(returned_expert_sets=((1, 3, 5, 9),))
+        with self.assertRaisesRegex(ValueError, "PREFETCH_PAGER_RESULT_EXPERTS_MISMATCH"):
+            stage_then_demand_load(
+                pager=pager,
+                prediction=prediction((1, 3, 5, 7)),
+                native_route=route((1, 3, 5, 9)),
+                num_experts=NUM_EXPERTS,
+                logical_bytes_by_expert=BYTES,
+                model_revision="glm53-rev",
+                index_digest="index-digest",
+            )
+
+    def test_stage_rejects_unproved_loader_result(self):
+        with self.assertRaisesRegex(ValueError, "PREFETCH_PAGER_RESULT_BINDING_REQUIRED"):
+            stage_then_demand_load(
+                pager=MissingProofPager(),
+                prediction=prediction(),
+                native_route=route(),
+                num_experts=NUM_EXPERTS,
+                logical_bytes_by_expert=BYTES,
+                model_revision="glm53-rev",
+                index_digest="index-digest",
+            )
 
     def test_perfect_prediction_has_no_demand_or_waste(self):
         p = prediction((1, 3, 5, 9))

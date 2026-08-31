@@ -64,7 +64,7 @@ jobs:
           set -euo pipefail
           python3 -m unittest -v tools.awj032.test_glm53_router_separated_prefetch
 
-      - name: Prove routing and authority ceiling
+      - name: Prove routing, pager-binding, and authority ceiling
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -73,6 +73,7 @@ jobs:
               'PrefetchPrediction!=NativeExecutionRoute',
               'PredictionMiss=>DemandLoadExactNativeExpertsNotRouteMutation',
               'PredictionWasteMayIncreaseIOWithoutChangingExecutedExperts',
+              'PagerResultMustBindExactRequestedExpertsAndSource',
               'LogicalPrefetchBytes!=PhysicalNVMeBytesAbsentAttestation',
               'FullShardLoad!=SelectivePrefetch',
               'CoordinateMemory!=TransformerKVCache',
@@ -80,6 +81,8 @@ jobs:
           }
           assert required <= set(LAWS), required-set(LAWS)
           print('ROUTER_SEPARATED_PREFETCH_CONTRACT=true')
+          print('PAGER_RESULT_SOURCE_BINDING_REQUIRED=true')
+          print('PAGER_RESULT_EXACT_EXPERT_SET_REQUIRED=true')
           print('MODEL_PROVIDER_EXECUTION=false')
           print('PHYSICAL_IO_OBSERVED=false')
           print('G2_ADMITTED=false')
