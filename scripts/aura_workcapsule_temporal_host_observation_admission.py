@@ -95,7 +95,8 @@ def verify_host_resolution(*, expected_gate: str, resolution: Any) -> list[str]:
     violations: list[str] = []
     if resolution.get("schema") != HOST_RESOLUTION_SCHEMA:
         violations.append("HOST_RESOLUTION_SCHEMA_MISMATCH")
-    if resolution.get("version") != HOST_RESOLUTION_VERSION:
+    version = resolution.get("version")
+    if type(version) is not int or version != HOST_RESOLUTION_VERSION:
         violations.append("HOST_RESOLUTION_VERSION_MISMATCH")
     if resolution.get("gate") != expected_gate:
         violations.append("HOST_RESOLUTION_GATE_MISMATCH")
