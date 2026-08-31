@@ -16,9 +16,11 @@ malformed, exceptional, mismatched, or drifting owner state.
 
 The resolver is a trusted integration boundary supplied by the owning
 runtime/control plane. This pure contract does not authenticate the resolver
-producer or independently prove source/runtime truth. It records those limits
-explicitly so resolver injection cannot be laundered into producer-authentication
-or effect authority.
+producer or independently prove source/runtime truth. It also cannot prove
+that the externally supplied epoch token is change-complete and non-reused;
+that seqlock/OCC-style property is a mandatory integration invariant. These
+limits are carried explicitly so value/protocol shape cannot be laundered into
+producer authentication, snapshot truth, or effect authority.
 
 It never executes a transfer, mutates native routing, proves physical I/O, or
 grants execution/effect/Gate-10/K27/native-KV authority.
@@ -83,8 +85,9 @@ class OwnerReuseStateObservation:
     """Resolver projection for one exact G4 plan identity and epoch.
 
     ``owner`` describes the integration responsibility, not producer
-    authentication by this contract. The resolver implementation must be bound
-    by the trusted runtime/control plane outside this pure membrane.
+    authentication by this contract. The resolver implementation and epoch
+    semantics must be bound by the trusted runtime/control plane outside this
+    pure membrane.
     """
 
     plan_identity_digest: str
@@ -121,9 +124,14 @@ class G4OwnerReuseStateResolver(Protocol):
     membrane deliberately has no API accepting raw currentness strings from a
     caller. The same nonempty epoch must bracket the full owner observation.
 
-    Trust in the resolver implementation is external to this contract. Merely
-    satisfying this Python protocol does not cryptographically authenticate a
-    producer and does not itself prove source/runtime truth.
+    For ``epoch_before == epoch_after`` to imply a coherent snapshot, the owner
+    must guarantee that the epoch changes for every consequence-bearing
+    mutation and is not reset/reused across the read window. This pure contract
+    can require that integration invariant but cannot prove it.
+
+    Trust in the resolver implementation is also external to this contract.
+    Merely satisfying this Python protocol does not cryptographically
+    authenticate a producer and does not itself prove source/runtime truth.
     """
 
     def resolve_g4_state_epoch(self, *, plan_identity_digest: str) -> str | None: ...
@@ -150,6 +158,8 @@ class G4OwnerCurrentnessReceipt:
     recompute_g3_required: bool
     owner_resolver_authenticated_by_this_contract: bool = False
     owner_currentness_truth_proven_by_this_contract: bool = False
+    owner_epoch_change_complete_required: bool = True
+    owner_epoch_change_complete_proven_by_this_contract: bool = False
     revalidation_required_at_effect_boundary: bool = True
     plan_executed_by_this_contract: bool = False
     transfer_effect_authorized: bool = False
@@ -195,11 +205,14 @@ class G4OwnerCurrentnessReceipt:
                 if not self.changed_axes or not self.recompute_g3_required:
                     raise ValueError("OWNER_RESOLVED_RECOMPUTE_STATE_INVALID")
 
+        if self.owner_epoch_change_complete_required is not True:
+            raise ValueError("OWNER_EPOCH_CHANGE_COMPLETE_SEMANTICS_REQUIRED")
         if self.revalidation_required_at_effect_boundary is not True:
             raise ValueError("EFFECT_BOUNDARY_REVALIDATION_REQUIRED")
         forbidden = (
             self.owner_resolver_authenticated_by_this_contract,
             self.owner_currentness_truth_proven_by_this_contract,
+            self.owner_epoch_change_complete_proven_by_this_contract,
             self.plan_executed_by_this_contract,
             self.transfer_effect_authorized,
             self.native_route_mutated,
@@ -273,9 +286,10 @@ def revalidate_g3_plan_owner_resolved(
 
     Raw ``CurrentReuseContext`` is intentionally absent from this public API.
     Matching caller-created strings therefore cannot mint current reuse state
-    through this membrane directly. Resolver producer authenticity remains an
-    external runtime/control-plane obligation and is explicitly *not* proven by
-    the returned receipt.
+    through this membrane directly. Resolver producer authenticity, currentness
+    truth, and change-complete/non-reused epoch semantics remain external
+    runtime/control-plane obligations and are explicitly *not* proven by the
+    returned receipt.
     """
 
     plan.validate()
