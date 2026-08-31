@@ -10,6 +10,16 @@ on:
       - "tests/test_aura_archive_versioned_chunk_dag.py"
       - ".github/workflows/aura-structural-archive-probe.yml"
       - ".github/workflows/aura-archive-versioned-chunk-dag.yml"
+  push:
+    branches:
+      - "arena/aura-archive-structural-probe-v1-20260831-gpt56sol"
+    paths:
+      - "tools/aura_structural_archive_probe.py"
+      - "tests/test_aura_structural_archive_probe.py"
+      - "tools/aura_archive_versioned_chunk_dag.py"
+      - "tests/test_aura_archive_versioned_chunk_dag.py"
+      - ".github/workflows/aura-structural-archive-probe.yml"
+      - ".github/workflows/aura-archive-versioned-chunk-dag.yml"
   workflow_dispatch:
 
 permissions:
