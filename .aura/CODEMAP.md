@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1645
+- **total_bytes**: 26451774
+- **text_tokens_est**: 6603297
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1645,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-fractal-k27-nav03a.yml",
+    ".github/workflows/aura-nav07a-epistemic-route.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1488,6 +1490,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_financial_contracts.py",
     "tests/test_aura_financial_contracts_regressions.py",
     "tests/test_aura_forge.py",
+    "tests/test_aura_fractal_k27.py",
     "tests/test_aura_fst_provenance.py",
     "tests/test_aura_gate.py",
     "tests/test_aura_gate_adapters.py",
@@ -1522,6 +1525,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_model_connectome_bridge.py",
     "tests/test_aura_music_mitosis_adapter.py",
     "tests/test_aura_native_cockpit_contract.py",
+    "tests/test_aura_nav_epistemic_route.py",
     "tests/test_aura_node_inspector.py",
     "tests/test_aura_pascal_spatial_presentation.py",
     "tests/test_aura_persistence_integrations.py",
@@ -1649,6 +1653,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_fractal_k27.py",
+    "tools/aura_nav_epistemic_route.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1779,16 +1785,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1645,
+  "bytes": 26451774,
+  "tokens_est": 6603297,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 1001,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
