@@ -1,0 +1,81 @@
+name: Aura O62 Exact Typed Witness Lifecycle Proof
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-o62-exact-proof-trigger-v2.yml"
+      - "tools/aura_closed_world_result_lifecycle_gate.py"
+      - "tests/test_aura_closed_world_result_lifecycle_gate.py"
+
+permissions:
+  contents: read
+
+jobs:
+  o62-exact-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      Q19_CUT: "2026-08-31T15:13:42+00:00"
+      O62_SEMANTIC_HEAD: "51a31f9df1b13636f9878a4dcbb9dc2e3f8c757f"
+      O62_TEST_HEAD: "87253e487f110d7f119262c3a6159b296f90d62b"
+      O62_SOURCE_BLOB: "f69becb5998701923e9e0e9aaac429fd291e9e55"
+      O62_TEST_BLOB: "0942f6a01471550fd0cb8e2a77afc2ecbff89094"
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate post-Q19 O62 semantic and adversarial generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$O62_SEMANTIC_HEAD" "$O62_TEST_HEAD"
+          sem_time="$(git show -s --format='%cI' "$O62_SEMANTIC_HEAD")"
+          test_time="$(git show -s --format='%cI' "$O62_TEST_HEAD")"
+          python3 - "$Q19_CUT" "$sem_time" "$test_time" <<'PY'
+          import datetime as dt, sys
+          cut, sem, test = (dt.datetime.fromisoformat(x) for x in sys.argv[1:])
+          assert sem > cut, (sem, cut)
+          assert test > cut, (test, cut)
+          print('O62_POST_Q19_SEMANTIC_GENERATION=true')
+          PY
+          test "$(git rev-parse "$O62_SEMANTIC_HEAD:tools/aura_closed_world_result_lifecycle_gate.py")" = "$O62_SOURCE_BLOB"
+          test "$(git rev-parse "$O62_TEST_HEAD:tests/test_aura_closed_world_result_lifecycle_gate.py")" = "$O62_TEST_BLOB"
+          test "$(git rev-parse HEAD:tools/aura_closed_world_result_lifecycle_gate.py)" = "$O62_SOURCE_BLOB"
+          test "$(git rev-parse HEAD:tests/test_aura_closed_world_result_lifecycle_gate.py)" = "$O62_TEST_BLOB"
+
+      - name: Compile and run exact O62 adversarial suite
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/aura_closed_world_result_lifecycle_gate.py tests/test_aura_closed_world_result_lifecycle_gate.py
+          python3 -m unittest -v tests.test_aura_closed_world_result_lifecycle_gate
+
+      - name: Prove typed external witnesses and nonpromotion ceiling
+        run: |
+          set -euo pipefail
+          python3 tools/aura_closed_world_result_lifecycle_gate.py > /tmp/o62.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/o62.json',encoding='utf-8'))
+          laws=set(d['laws'])
+          required={
+              'HostDerivedEvidenceRequiresAttemptAndOutputBinding',
+              'IndependentReviewRequiresTypedDistinctReviewerReceipt',
+              'K27Coordinate!=EvidenceTruth!=Authority!=PhysicalPlacement',
+          }
+          assert required <= laws, required-laws
+          assert all(v is False for v in d['claim_ceiling'].values()), d['claim_ceiling']
+          print('O62_TYPED_WITNESS_LIFECYCLE_EXACT=true')
+          print('O62_EXECUTION_EFFECT_AUTHORITY=false')
+          PY
