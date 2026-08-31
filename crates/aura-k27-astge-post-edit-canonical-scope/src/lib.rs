@@ -15,8 +15,8 @@ use aura_k27_astge::NodeIndexRecordV1;
 use aura_k27_astge_generation_domain::SourceGenerationV1;
 use aura_k27_astge_materialize::AdmittedSourceCatalogV1;
 use aura_k27_astge_post_edit_profiled_scope::{
-    CandidateProfiledScopeSelectorV1, PostEditProfiledScopeCurrentV1,
-    PostEditProfiledScopeErrorV1, admit_post_edit_profiled_scope_current,
+    admit_post_edit_profiled_scope_current, CandidateProfiledScopeSelectorV1,
+    PostEditProfiledScopeCurrentV1, PostEditProfiledScopeErrorV1,
 };
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
 use aura_k27_astge_scopes::PythonLexicalScopeIndexV1;
@@ -108,17 +108,25 @@ pub fn require_candidate_definition_target_relation(
     let selected = &current.selected_candidate_scope;
     let profile = &current.candidate_current.profiled_scopes;
 
-    let selected_in_profile = profile.profiled_scopes.iter().any(|scope| scope == selected);
+    let selected_in_profile = profile
+        .profiled_scopes
+        .iter()
+        .any(|scope| scope == selected);
     if !selected_in_profile {
         return Err(PostEditCanonicalScopeErrorV1::SelectedScopeNotInCandidateProfile);
     }
 
-    let selected_parent_scope_id = selected.parent_scope_id.ok_or(
-        PostEditCanonicalScopeErrorV1::SelectedScopeHasNoParent(selected.scope_id),
-    )?;
-    let syntax_ordinal = selected.syntax_ordinal.ok_or(
-        PostEditCanonicalScopeErrorV1::SelectedScopeHasNoSyntaxOrdinal(selected.scope_id),
-    )?;
+    let selected_parent_scope_id =
+        selected
+            .parent_scope_id
+            .ok_or(PostEditCanonicalScopeErrorV1::SelectedScopeHasNoParent(
+                selected.scope_id,
+            ))?;
+    let syntax_ordinal = selected
+        .syntax_ordinal
+        .ok_or(PostEditCanonicalScopeErrorV1::SelectedScopeHasNoSyntaxOrdinal(
+            selected.scope_id,
+        ))?;
     let ast_local_node_id = selected.ast_local_node_id.ok_or(
         PostEditCanonicalScopeErrorV1::SelectedScopeHasNoAstWitness(selected.scope_id),
     )?;
@@ -156,12 +164,10 @@ pub fn require_candidate_definition_target_relation(
     };
 
     if binding.owner_scope_id != selected_parent_scope_id {
-        return Err(
-            PostEditCanonicalScopeErrorV1::BindingOwnerParentMismatch {
-                binding_owner_scope_id: binding.owner_scope_id,
-                selected_parent_scope_id,
-            },
-        );
+        return Err(PostEditCanonicalScopeErrorV1::BindingOwnerParentMismatch {
+            binding_owner_scope_id: binding.owner_scope_id,
+            selected_parent_scope_id,
+        });
     }
 
     let owner = profile
@@ -256,7 +262,7 @@ mod tests {
     use aura_k27_astge_post_edit_profiled_scope::CandidateProfiledScopeSelectorV1;
     use aura_k27_astge_profiled_scopes::build_profiled_python_scopes;
     use aura_k27_astge_scopes::index_python_nested_scopes;
-    use serde_json::{Value, json};
+    use serde_json::{json, Value};
     use sha2::{Digest, Sha256};
     use std::fs;
     use std::path::PathBuf;
@@ -509,7 +515,8 @@ mod tests {
         assert!(receipt.canonical_definition_target_current);
         assert_eq!(receipt.source_generation.value(), 13);
         assert_eq!(
-            receipt.post_edit_current
+            receipt
+                .post_edit_current
                 .candidate_source_generation_coordinate
                 .domain,
             GenerationDomainV1::Source
