@@ -16,7 +16,8 @@ env:
 
 jobs:
   exact-head-proof:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Checkout exact event head
         uses: actions/checkout@v4
@@ -36,9 +37,13 @@ jobs:
           test "$actual" = "$expected"
           git merge-base --is-ancestor 4e2733b2b6600f74457850aaa45bfe399d7e8502 HEAD
           git merge-base --is-ancestor 4cb7e5caa9aeb7c9049d9ec17ea521a7820f49af HEAD
+          git merge-base --is-ancestor 3233ca5720711e133a602e4c52d2740e18e45fc0 HEAD
           parents="$(git cat-file -p 5b99729664caf91d613f230f4c50c203c9c1b9ec | grep '^parent ' || true)"
           echo "$parents" | grep '4e2733b2b6600f74457850aaa45bfe399d7e8502'
           echo "$parents" | grep '4cb7e5caa9aeb7c9049d9ec17ea521a7820f49af'
+          w3parents="$(git cat-file -p b96dcc4e16c57ff78e40302d4a6e890655a4f4dd | grep '^parent ' || true)"
+          echo "$w3parents" | grep 'f74bced35f8b2afac6a9ac29ffe43bcd8f45124a'
+          echo "$w3parents" | grep '3233ca5720711e133a602e4c52d2740e18e45fc0'
 
       - name: Compile parent and child membranes
         run: |
