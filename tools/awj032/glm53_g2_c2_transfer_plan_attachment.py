@@ -12,8 +12,9 @@ Exactly two newer foreign semantic artifacts define the attachment boundary:
 - PR #726 binds G2 calibration to the exact predictor and policy generations that
   emitted and evaluated the prediction.
 
-The sidecar therefore binds an exact calibrated planning receipt to an exact immutable
-C2 request digest while keeping physical I/O UNKNOWN until a later owner-host attempt.
+A proof-plumbing scar on PR #726 established a further provenance distinction:
+semantic source generation and verification generation are separate identities. The
+sidecar therefore carries both without granting the verifier semantic sibling credit.
 """
 from __future__ import annotations
 
@@ -31,6 +32,8 @@ G1_PHYSICAL_QUARANTINE_HEAD = "de33bd7d5d1bdc3e8374e42dd5ec533c6536b3de"
 G1_PHYSICAL_QUARANTINE_BLOB = "dcf54745dc4e938ad55a9874df7b289ef5fab92d"
 G2_PREDICTOR_CALIBRATION_HEAD = "0aa762e11d9de31378658b6a40cdf0205209d3ac"
 G2_PREDICTOR_CALIBRATION_BLOB = "9ecba5cd71a2fe6096e9fde08a139a5feace3f53"
+G2_PREDICTOR_CALIBRATION_TEST_BLOB = "c084d71182519d49463072fd3d3a1da155e3ce05"
+G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD = "543391fd79d150a33fda972817a179ae6ce4f1f5"
 C2_OWNER_HEAD = "aed91d3dc1d6bafdf51bd977fcb5b42d196e2d07"
 C2_OWNER_BLOB = "91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe"
 
@@ -81,9 +84,8 @@ def _canonical_experts(values: tuple[int, ...]) -> tuple[int, ...]:
 class CalibratedTransferPlanRef:
     """Portable reference to an already-derived calibrated G2 planning receipt.
 
-    The reference carries identities and the permanent non-effect ceiling. It is not a
-    replacement for the PR #726 predictor/calibration proof or PR #725 physical-I/O
-    provenance owner.
+    The reference carries identities and the permanent non-effect ceiling. Semantic
+    source identity and proof/reverification identity are deliberately separate.
     """
 
     g2_receipt_digest: str
@@ -104,6 +106,8 @@ class CalibratedTransferPlanRef:
     g1_physical_quarantine_blob: str = G1_PHYSICAL_QUARANTINE_BLOB
     g2_predictor_calibration_head: str = G2_PREDICTOR_CALIBRATION_HEAD
     g2_predictor_calibration_blob: str = G2_PREDICTOR_CALIBRATION_BLOB
+    g2_predictor_calibration_test_blob: str = G2_PREDICTOR_CALIBRATION_TEST_BLOB
+    g2_predictor_calibration_verification_head: str = G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD
     schema: str = PLAN_REF_SCHEMA
 
     def validate(self) -> None:
@@ -130,6 +134,10 @@ class CalibratedTransferPlanRef:
             raise ValueError("G2_PREDICTOR_CALIBRATION_HEAD_MISMATCH")
         if self.g2_predictor_calibration_blob != G2_PREDICTOR_CALIBRATION_BLOB:
             raise ValueError("G2_PREDICTOR_CALIBRATION_BLOB_MISMATCH")
+        if self.g2_predictor_calibration_test_blob != G2_PREDICTOR_CALIBRATION_TEST_BLOB:
+            raise ValueError("G2_PREDICTOR_CALIBRATION_TEST_BLOB_MISMATCH")
+        if self.g2_predictor_calibration_verification_head != G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD:
+            raise ValueError("G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD_MISMATCH")
         _canonical_experts(self.admitted_experts)
         if isinstance(self.admitted_logical_bytes, bool) or not isinstance(self.admitted_logical_bytes, int):
             raise ValueError("ADMITTED_LOGICAL_BYTES_MUST_BE_INT")
@@ -283,6 +291,8 @@ LAWS = (
     "G2PlanEligibility!=C2TransferAuthority",
     "C2TransferPlanAttachment!=C2RequestMutation",
     "PredictorCalibrationBindingMustCommuteBeforeAttachment",
+    "SemanticGeneration!=VerificationGeneration",
+    "ReproofSuccess!=NewSemanticConsequence",
     "PhysicalIOMustRemainUnknownBeforeOwnerHostAttempt",
     "G1PhysicalIOQuarantine+C2OwnerHostReceipt=>MeasurementPlaneRemainsDownstream",
     "AttachedExpertSet!=NativeExecutionRoute",
