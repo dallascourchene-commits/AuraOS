@@ -46,32 +46,22 @@ jobs:
           print('Q7_EXACT_TWO_PARENT_GREEN=true')
           PY
 
-      - name: Regenerate exact current Q5 source-admission state from parent producer
+      - name: Prove exact Q5 producer blob is materialized in child
         shell: bash
         run: |
           set -euo pipefail
-          git show 730426b82235b0ff4e75fef1cff00707877a84ad:tools/quantization/aura_glm53_official_source_admission.py > /tmp/q5_source_admission.py
-          python3 - <<'PY'
-          from dataclasses import asdict
-          import importlib.util, json, sys
-          spec=importlib.util.spec_from_file_location('q5_source_admission','/tmp/q5_source_admission.py')
-          mod=importlib.util.module_from_spec(spec)
-          sys.modules[spec.name]=mod
-          spec.loader.exec_module(mod)
-          state=asdict(mod.current_public_state())
-          json.dump(state,open('/tmp/q5-current.json','w',encoding='utf-8'),sort_keys=True,separators=(',',':'))
-          assert state['header_trial_eligible'] is False
-          assert state['index_bytes_verified'] is False
-          assert state['representative_headers_observed'] is False
-          assert state['candidate_representation_bound'] is True
-          print('Q5_CURRENT_HOLD_REGENERATED=true')
-          PY
+          Q5=730426b82235b0ff4e75fef1cff00707877a84ad
+          BLOB=7ed09c57699fe303f555a3b6bdaadb791c64223f
+          test "$(git rev-parse "HEAD:tools/quantization/aura_glm53_official_source_admission.py")" = "$BLOB"
+          test "$(git show "$Q5:tools/quantization/aura_glm53_official_source_admission.py" | git hash-object --stdin)" = "$BLOB"
+          echo "Q5_EXACT_PRODUCER_MATERIALIZED=true"
 
       - name: Compile and run Q6 plus Q7 adversarial suites
         shell: bash
         run: |
           set -euo pipefail
           python3 -m py_compile \
+            tools/quantization/aura_glm53_official_source_admission.py \
             tools/quantization/aura_glm53_quantization_evidence_transfer.py \
             tools/quantization/aura_glm53_representation_specific_source_trial_gate.py \
             tools/quantization/test_aura_glm53_quantization_evidence_transfer.py \
@@ -80,12 +70,30 @@ jobs:
             tools.quantization.test_aura_glm53_quantization_evidence_transfer \
             tools.quantization.test_aura_glm53_representation_specific_source_trial_gate
 
+      - name: Enforce zero-input current admission boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.quantization.aura_glm53_representation_specific_source_trial_gate import (
+              current_representation_specific_source_trial,
+          )
+          assert tuple(inspect.signature(current_representation_specific_source_trial).parameters) == ()
+          r=current_representation_specific_source_trial()
+          assert r.source_producer_traversed is True
+          assert r.source_snapshot_caller_supplied is False
+          assert r.q5_source_blob_sha == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
+          print('PUBLIC_SOURCE_INPUTS=NONE')
+          print('Q5_PRODUCER_TRAVERSED=true')
+          print('CALLER_SOURCE_SNAPSHOT_ACCEPTED=false')
+          PY
+
       - name: Emit exact Q7 current receipt
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m tools.quantization.aura_glm53_representation_specific_source_trial_gate \
-            --source-json /tmp/q5-current.json | tee /tmp/q7.json
+          python3 -m tools.quantization.aura_glm53_representation_specific_source_trial_gate | tee /tmp/q7.json
           python3 - <<'PY'
           import json
           r=json.load(open('/tmp/q7.json',encoding='utf-8'))
@@ -93,6 +101,9 @@ jobs:
               '4137aabd972feff9c4412bb4786ef8fd4de207e0',
               '730426b82235b0ff4e75fef1cff00707877a84ad',
           ]
+          assert r['q5_source_blob_sha']=='7ed09c57699fe303f555a3b6bdaadb791c64223f'
+          assert r['source_producer_traversed'] is True
+          assert r['source_snapshot_caller_supplied'] is False
           assert r['source_header_eligible'] is False
           assert r['exact_target_representation_identity_bound'] is True
           assert r['disposition']=='HOLD_SOURCE_HEADER_NOT_ELIGIBLE'
@@ -110,6 +121,8 @@ jobs:
         run: |
           cat <<'EOF'
           OFFICIAL_SOURCE_OBJECT_IDENTITY_IS_NOT_TRIAL_AUTHORITY=true
+          CALLER_AUTHORED_Q5_SNAPSHOT_IS_NOT_PRODUCER_EVIDENCE=true
+          Q5_PRODUCER_TRAVERSED=true
           HEADER_TRIAL_ELIGIBLE=false
           CURRENT_DISPOSITION=HOLD_SOURCE_HEADER_NOT_ELIGIBLE
           EXACT_REPRESENTATION_IDENTITY_IS_REQUIRED_FOR_FUTURE_HEADER_CANDIDATE=true
