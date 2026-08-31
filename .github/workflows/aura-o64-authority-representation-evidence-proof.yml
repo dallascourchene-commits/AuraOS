@@ -1,0 +1,145 @@
+name: Aura O64 Authority Representation Evidence Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_authority_scoped_evidence_admission.py"
+      - "tests/test_aura_authority_scoped_evidence_admission.py"
+      - ".github/workflows/aura-o64-authority-representation-evidence-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SEMANTIC_HEAD: 6f3401b65628df022cd18af86df111fcb59157b4
+
+jobs:
+  o64-authority-representation-evidence-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact proof generation
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate immutable semantic blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$SEMANTIC_HEAD" HEAD
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_authority_scoped_evidence_admission.py")" = "f4874e53b80987da8d3248778d64e419d676309e"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_authority_scoped_evidence_admission.py")" = "b0e57c12c10c02d5fe40cc7275261c10694a4e31"
+          echo O64_SEMANTIC_GENERATION_AUTHENTICATED=true
+
+      - name: Compile exact semantic surface
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_authority_scoped_evidence_admission.py \
+            tests/test_aura_authority_scoped_evidence_admission.py
+
+      - name: Run focused adversarial suite
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_aura_authority_scoped_evidence_admission -v
+
+      - name: Independently prove authority representation and accounting separation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from dataclasses import replace
+          from tools.aura_authority_scoped_evidence_admission import (
+              AUTHORITY_SCHEMA, CANDIDATE_SCHEMA, POLICY_SCHEMA, REPRESENTATION_SCHEMA,
+              AuthorityBindingRef, EvidenceAdmissionCandidate, EvidenceAdmissionPolicy,
+              RepresentationIdentity, admit_evidence,
+          )
+
+          A='a'*64; B='b'*64; C='c'*64; D='d'*64; E='e'*64; F='f'*64; G='1'*64; ROUTE='5'*64
+          rep=RepresentationIdentity(
+              schema_version=REPRESENTATION_SCHEMA,
+              representation_family='E8_CODEC_V2', representation_digest=A,
+              accounting_domain='CODEC_PAYLOAD_BPW', accounting_contract_digest=B,
+              rate_numerator=9, rate_denominator=4, bounded_scope_digest=C,
+          )
+          authority=AuthorityBindingRef(
+              schema_version=AUTHORITY_SCHEMA, owner_ref='owner:host-authority:v1',
+              policy_generation_ref='authority-policy-gen-7', binding_receipt_digest=D,
+              authority_state='VERIFIED_BOUNDED', authority_scope='D0_BOUNDED_EVIDENCE',
+              execution_required=True, expected_route_fingerprint=ROUTE,
+              expected_observer_identity='HOST_OBSERVER',
+              expected_source_verifier_identity='SOURCE_VERIFIER',
+          )
+          policy=EvidenceAdmissionPolicy(
+              schema_version=POLICY_SCHEMA, policy_owner_ref='owner:evidence-admission:v1',
+              policy_generation_ref='admission-policy-gen-3',
+              expected_authority_owner_ref='owner:host-authority:v1',
+              expected_authority_policy_generation_ref='authority-policy-gen-7',
+              expected_authority_scope='D0_BOUNDED_EVIDENCE', require_execution_authority=True,
+              allowed_accounting_domains=('CODEC_PAYLOAD_BPW','SERIALIZED_CONTAINER_BPW'),
+              allowed_representation_families=('E8_CODEC_V2',),
+          )
+          candidate=EvidenceAdmissionCandidate(
+              schema_version=CANDIDATE_SCHEMA, evidence_id='evidence:o64:proof',
+              evidence_generation='evidence-gen-11', evidence_receipt_digest=E,
+              evidence_scope_digest=C, source_generation='source-gen-5',
+              source_receipt_digest=F, source_scope_digest=G,
+              route_fingerprint=ROUTE, observer_identity='HOST_OBSERVER',
+              source_verifier_identity='SOURCE_VERIFIER', outcome='SUPPORTS',
+              representation=rep, currentness_roots=('science:11','source:5','authority:7','policy:3'),
+          )
+          supports=admit_evidence(candidate=candidate, authority=authority, policy=policy)
+          opposes=admit_evidence(candidate=replace(candidate,outcome='OPPOSES'), authority=authority, policy=policy)
+          equivalent=admit_evidence(
+              candidate=replace(candidate,representation=replace(rep,rate_numerator=225,rate_denominator=100)),
+              authority=authority, policy=policy,
+          )
+          container=admit_evidence(
+              candidate=replace(candidate,representation=replace(rep,accounting_domain='SERIALIZED_CONTAINER_BPW',accounting_contract_digest='2'*64)),
+              authority=authority, policy=policy,
+          )
+          assert supports.disposition == 'VERIFIED_BOUNDED'
+          assert opposes.disposition == 'VERIFIED_BOUNDED'
+          assert supports.score_mass_eligible and opposes.score_mass_eligible
+          assert supports.evidence_admission_fingerprint != opposes.evidence_admission_fingerprint
+          assert supports.representation_fingerprint == equivalent.representation_fingerprint
+          assert supports.evidence_admission_fingerprint == equivalent.evidence_admission_fingerprint
+          assert supports.representation_fingerprint != container.representation_fingerprint
+          assert supports.evidence_admission_fingerprint != container.evidence_admission_fingerprint
+          assert supports.execution_authorized is False
+          assert supports.provider_effect_authorized is False
+          assert supports.gate10_promoted is False
+          receipt={
+              'schema':'AURA-O64-HOSTED-PROOF-v1',
+              'semantic_head':'6f3401b65628df022cd18af86df111fcb59157b4',
+              'positive_negative_gate_symmetry':True,
+              'equivalent_rational_rate_collapsed':True,
+              'accounting_domains_remain_distinct':True,
+              'authority_policy_bound':True,
+              'admission_policy_generation_bound':True,
+              'execution_authorized':False,
+              'provider_effect_authorized':False,
+              'gate10_promoted':False,
+          }
+          with open('/tmp/o64.json','w',encoding='utf-8') as f:
+              json.dump(receipt,f,sort_keys=True,indent=2); f.write('\n')
+          print('O64_AUTHORITY_REPRESENTATION_EVIDENCE_PROVEN=true')
+          PY
+
+      - name: Preserve O64 proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: o64-authority-representation-evidence-proof
+          path: /tmp/o64.json
+          retention-days: 90
+
+      - name: Consequence ceiling
+        run: |
+          echo 'ReceiptFieldsPresent!=HostAuthority'
+          echo 'SameOutcome!=SameRepresentation'
+          echo 'SameNominalRate!=SameAccountingDomain'
+          echo 'PositiveAndNegativeScoreMassShareTheSameHardGates'
+          echo 'O64_COMPLETE=true'
