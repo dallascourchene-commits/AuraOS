@@ -137,6 +137,11 @@ def _is_sha256(value: Any) -> bool:
     )
 
 
+def _is_state(value: Any) -> bool:
+    """Return exact state membership without allowing unhashable inputs to escape."""
+    return isinstance(value, str) and value in STATES
+
+
 def artifact_target_ref(local_receipt: dict[str, Any]) -> str:
     """Return a deterministic evidence reference, not a semantic identifier."""
     return "aura-workcapsule-target-sha256:" + _sha256(local_receipt)
@@ -197,7 +202,7 @@ def _resolution_integrity_violations(
         violations.append("HOST_RESOLUTION_VERSION_MISMATCH:" + gate)
     if resolution.get("gate") != gate:
         violations.append("HOST_RESOLUTION_GATE_MISMATCH:" + gate)
-    if resolution.get("state") not in STATES:
+    if not _is_state(resolution.get("state")):
         violations.append("HOST_RESOLUTION_STATE_INVALID:" + gate)
 
     revoked = resolution.get("revoked")
@@ -229,12 +234,19 @@ def _gate_shape_violations(
     for gate in GATES:
         state = states.get(gate)
         resolution = resolutions.get(gate)
-        if state not in STATES:
+        if not _is_state(state):
             violations.append("HOST_GATE_STATE_INVALID:" + gate)
             continue
         if state == "UNKNOWN":
-            if resolution is not None:
-                violations.append("UNKNOWN_GATE_HAS_RESOLUTION:" + gate)
+            if resolution is None:
+                continue
+            violations.extend(
+                _resolution_integrity_violations(
+                    gate=gate,
+                    effective_state=state,
+                    resolution=resolution,
+                )
+            )
             continue
         violations.extend(
             _resolution_integrity_violations(
@@ -247,7 +259,9 @@ def _gate_shape_violations(
 
 
 def _derived_host_state(states: dict[str, Any]) -> dict[str, Any] | None:
-    if set(states) != set(GATES) or any(states.get(gate) not in STATES for gate in GATES):
+    if set(states) != set(GATES) or any(
+        not _is_state(states.get(gate)) for gate in GATES
+    ):
         return None
     fail_mask = sum(
         1 << GATE_INDEX[gate] for gate in GATES if states[gate] == "FAIL"
