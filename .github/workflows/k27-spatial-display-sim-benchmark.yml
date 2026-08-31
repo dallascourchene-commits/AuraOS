@@ -1,0 +1,23 @@
+name: K27 spatial-display simulation benchmark contract
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27_spatial_display_sim_benchmark_contract.py"
+      - "tests/test_k27_spatial_display_sim_benchmark_contract.py"
+      - ".github/workflows/k27-spatial-display-sim-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run software-only cold-warm-restart benchmark contract battery
+        run: python -m unittest tests/test_k27_spatial_display_sim_benchmark_contract.py -v
