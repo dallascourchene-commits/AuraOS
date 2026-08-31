@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Converge PR532 scoped post-repair evidence with PR539 portable target evidence.
+"""Canonical shared-target coordinate owner for scoped + portable WorkCapsule evidence.
 
-This D0 membrane invokes both existing owners independently and proves only that the
-coordinates they expose identify one post-edit target: dependency file/path, SOURCE
-generation/body, canonical syntax ordinal, byte span, and semantic-handle digest.
+PR548 originally joined PR532 scoped post-repair evidence with PR539 portable target
+evidence by independently invoking both parents and comparing the exact coordinate
+intersection they both own.  The receipt-level comparator below is now the canonical
+owner of that coordinate relation.  The legacy two-bundle API remains stable as a
+wrapper: it validates/adopts its parents and then delegates all cross-parent equality
+to the receipt-level owner.
 
-PR539 independently carries a canonical definition owner/parent relation. PR532 does
-not expose that relation, so this child deliberately does not claim cross-parent
-owner/parent equality, semantic repair correctness, producer authentication, re-entry
-closure, invalidation narrowing, runtime resolution, or authority.
+The comparator is intentionally polymorphic over the stronger PR542 receipt: PR539
+exposes ``selected_target_semantic_handle_digest_hex`` while PR542 exposes the same
+continuity-bound target as ``continuous_semantic_handle_digest_hex``.  No semantic,
+producer, re-entry, invalidation, runtime, review, or effect authority follows.
 """
 from __future__ import annotations
 
@@ -35,6 +38,8 @@ SOURCE_BYTE_LEN_MISMATCH = "SOURCE_BYTE_LEN_MISMATCH"
 SYNTAX_ORDINAL_MISMATCH = "SYNTAX_ORDINAL_MISMATCH"
 TARGET_SPAN_MISMATCH = "TARGET_SPAN_MISMATCH"
 SEMANTIC_HANDLE_MISMATCH = "SEMANTIC_HANDLE_MISMATCH"
+MALFORMED_SCOPED_RECEIPT = "MALFORMED_SCOPED_RECEIPT"
+MALFORMED_SOURCE_RECEIPT = "MALFORMED_SOURCE_RECEIPT"
 
 
 def _canonical_bytes(value: Any) -> bytes:
@@ -52,12 +57,61 @@ def _identity(payload_without_identity: dict[str, Any]) -> dict[str, str]:
     }
 
 
+def _source_semantic_handle(source_receipt: dict[str, Any]) -> Any:
+    """Return the canonical target handle from PR539 or stronger PR542 evidence."""
+    if "selected_target_semantic_handle_digest_hex" in source_receipt:
+        return source_receipt.get("selected_target_semantic_handle_digest_hex")
+    return source_receipt.get("continuous_semantic_handle_digest_hex")
+
+
+def verify_shared_target_coordinates(
+    *,
+    scoped_receipt: dict[str, Any],
+    source_receipt: dict[str, Any],
+) -> list[str]:
+    """Own the shared post-edit target coordinate relation at receipt level.
+
+    ``scoped_receipt`` is a PR532-shaped admission. ``source_receipt`` may be the
+    PR539 source-continuity admission used by the legacy PR548 API or the stronger
+    PR542 portable-higher-owner admission. The function compares only the relation
+    both evidence planes expose: dependency identity, SOURCE generation/body/length,
+    syntax ordinal, exact target span, and semantic handle.
+    """
+    if not isinstance(scoped_receipt, dict):
+        return [MALFORMED_SCOPED_RECEIPT]
+    if not isinstance(source_receipt, dict):
+        return [MALFORMED_SOURCE_RECEIPT]
+
+    violations: list[str] = []
+    if scoped_receipt.get("dependency_key") != source_receipt.get("repaired_dependency_key"):
+        violations.append(DEPENDENCY_IDENTITY_MISMATCH)
+    if scoped_receipt.get("post_source_generation") != source_receipt.get("post_source_generation"):
+        violations.append(SOURCE_GENERATION_MISMATCH)
+    if scoped_receipt.get("post_body_sha256") != source_receipt.get("post_source_sha256"):
+        violations.append(SOURCE_BODY_SHA_MISMATCH)
+    if scoped_receipt.get("post_byte_len") != source_receipt.get("post_source_byte_len"):
+        violations.append(SOURCE_BYTE_LEN_MISMATCH)
+    if scoped_receipt.get("syntax_ordinal") != source_receipt.get("selected_target_syntax_ordinal"):
+        violations.append(SYNTAX_ORDINAL_MISMATCH)
+    if (
+        scoped_receipt.get("byte_start"),
+        scoped_receipt.get("byte_end"),
+    ) != (
+        source_receipt.get("selected_target_byte_start"),
+        source_receipt.get("selected_target_byte_end"),
+    ):
+        violations.append(TARGET_SPAN_MISMATCH)
+    if scoped_receipt.get("semantic_handle_digest") != _source_semantic_handle(source_receipt):
+        violations.append(SEMANTIC_HANDLE_MISMATCH)
+    return list(dict.fromkeys(violations))
+
+
 def verify_scoped_portable_target_identity(
     *,
     scoped_rebind_inputs: dict[str, Any],
     post_source_inputs: dict[str, Any],
 ) -> list[str]:
-    """Require both parent owners to admit one identical post-edit target coordinate."""
+    """Legacy PR548 API: validate both parents, then delegate coordinate ownership."""
     if not isinstance(scoped_rebind_inputs, dict):
         return [SCOPED_PREFIX + "MALFORMED_PARENT_INPUTS"]
     if not isinstance(post_source_inputs, dict):
@@ -79,31 +133,7 @@ def verify_scoped_portable_target_identity(
 
     scoped = admit_scoped_post_repair_rebind(**scoped_rebind_inputs)
     source = admit_post_repair_source_projection_continuity(**post_source_inputs)
-
-    if scoped.get("dependency_key") != source.get("repaired_dependency_key"):
-        violations.append(DEPENDENCY_IDENTITY_MISMATCH)
-    if scoped.get("post_source_generation") != source.get("post_source_generation"):
-        violations.append(SOURCE_GENERATION_MISMATCH)
-    if scoped.get("post_body_sha256") != source.get("post_source_sha256"):
-        violations.append(SOURCE_BODY_SHA_MISMATCH)
-    if scoped.get("post_byte_len") != source.get("post_source_byte_len"):
-        violations.append(SOURCE_BYTE_LEN_MISMATCH)
-    if scoped.get("syntax_ordinal") != source.get("selected_target_syntax_ordinal"):
-        violations.append(SYNTAX_ORDINAL_MISMATCH)
-    if (
-        scoped.get("byte_start"),
-        scoped.get("byte_end"),
-    ) != (
-        source.get("selected_target_byte_start"),
-        source.get("selected_target_byte_end"),
-    ):
-        violations.append(TARGET_SPAN_MISMATCH)
-    if scoped.get("semantic_handle_digest") != source.get(
-        "selected_target_semantic_handle_digest_hex"
-    ):
-        violations.append(SEMANTIC_HANDLE_MISMATCH)
-
-    return list(dict.fromkeys(violations))
+    return verify_shared_target_coordinates(scoped_receipt=scoped, source_receipt=source)
 
 
 def admit_scoped_portable_target_identity(
@@ -111,7 +141,7 @@ def admit_scoped_portable_target_identity(
     scoped_rebind_inputs: dict[str, Any],
     post_source_inputs: dict[str, Any],
 ) -> dict[str, Any]:
-    """Emit one identity-only convergence receipt or fail closed."""
+    """Emit the legacy identity receipt while using one canonical coordinate owner."""
     violations = verify_scoped_portable_target_identity(
         scoped_rebind_inputs=scoped_rebind_inputs,
         post_source_inputs=post_source_inputs,
@@ -129,6 +159,7 @@ def admit_scoped_portable_target_identity(
         "same_syntax_ordinal_proven": True,
         "same_target_span_proven": True,
         "same_semantic_handle_proven": True,
+        "canonical_shared_target_coordinate_owner": "verify_shared_target_coordinates",
         "dependency_key": dict(scoped["dependency_key"]),
         "post_source_generation": int(scoped["post_source_generation"]),
         "post_source_sha256": str(scoped["post_body_sha256"]),
