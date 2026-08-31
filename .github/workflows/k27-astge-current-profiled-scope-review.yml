@@ -1,0 +1,94 @@
+name: K27 ASTGE Current Profiled Scope Review
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-current-profiled-scope-review/**'
+      - 'crates/aura-k27-astge-current-profiled-scopes/**'
+      - 'crates/aura-k27-astge-profiled-scope-review/**'
+      - 'crates/aura-k27-astge-current-syntax/**'
+      - 'crates/aura-k27-astge-generation-domain/**'
+      - 'crates/aura-k27-astge-profiled-scopes/**'
+      - 'crates/aura-k27-astge-syntax-profile/**'
+      - 'tools/k27_astge_python_scope_oracle.py'
+      - '.github/workflows/k27-astge-current-profiled-scope-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-current-profiled-scope-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Prove exact detached head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          echo "EXACT_HEAD_SHA=$(git rev-parse HEAD)"
+
+      - name: Format contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fmt --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml -- --check
+          cargo fmt --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml -- --check
+          cargo fmt --manifest-path crates/aura-k27-astge-current-profiled-scope-review/Cargo.toml -- --check
+
+      - name: Reprove current typed profiled owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo test --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml
+          cargo test --doc --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml --all-targets -- -D warnings
+
+      - name: Reprove profiled scope review owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo test --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove current profiled review membrane
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo test --manifest-path crates/aura-k27-astge-current-profiled-scope-review/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-current-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Independent CPython scope oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/k27_astge_python_scope_oracle.py
+
+      - name: Public boundary and claim-ceiling assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=crates/aura-k27-astge-current-profiled-scope-review/src/lib.rs
+          grep -q 'pub fn admit_current_profiled_scope_review' "$src"
+          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'selected_scope_id'
+          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'source_owner_ref'
+          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'expected_source_generation'
+          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'grammar'
+          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'profile_ref'
+          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'graph_sha'
+          grep -q 'runtime_name_resolution_proven: false' "$src"
+          grep -q 'semantic_correctness_proven: false' "$src"
+          grep -q 'b_minus_approved: false' "$src"
+          grep -q 'commit_authorized: false' "$src"
+          grep -q 'external_effect_authorized: false' "$src"
+          echo 'CURRENT_PROFILED_SCOPE_REVIEW_READY=true'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'EXTERNAL_EFFECT_AUTHORIZED=false'
