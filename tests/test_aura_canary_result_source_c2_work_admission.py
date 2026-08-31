@@ -100,6 +100,15 @@ def test_q7_admission_without_header_rejected():
         admit_canary_result_to_c2_work(current_q5_fixture(), replace(current_q7_fixture(), source_bound_c2_request_admissible=True))
 
 
+@pytest.mark.parametrize("field", ["source_tensor_payload_bound", "real_tensor_quantization_eligible"])
+def test_q7_source_or_quantization_widening_rejected(field):
+    with pytest.raises(ValueError, match="Q7_AUTHORITY_OR_EFFECT_WIDENING"):
+        admit_canary_result_to_c2_work(
+            current_q5_fixture(),
+            replace(current_q7_fixture(), **{field: True}),
+        )
+
+
 def test_q7_effect_widening_rejected():
     with pytest.raises(ValueError, match="Q7_AUTHORITY_OR_EFFECT_WIDENING"):
         admit_canary_result_to_c2_work(current_q5_fixture(), replace(current_q7_fixture(), owner_host_execution_observed=True))
