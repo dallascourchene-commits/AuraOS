@@ -1,0 +1,107 @@
+name: Aura WorkCapsule Canonical Temporal Lifecycle Equivalence
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_two_phase_owner_reduced_transition.py'
+      - 'tests/test_aura_workcapsule_two_phase_owner_reduced_transition.py'
+      - 'scripts/aura_workcapsule_two_phase_observation_bound_exact.py'
+      - 'tests/test_aura_workcapsule_two_phase_observation_bound_exact.py'
+      - 'scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py'
+      - 'tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py'
+      - '.github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-temporal-lifecycle-equivalence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR530 specialized owner-reduced transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_two_phase_owner_reduced_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_two_phase_owner_reduced_transition
+
+      - name: Re-prove PR529 general two-phase exact observation replay
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_two_phase_observation_bound_exact.py
+          python3 -m unittest -v tests.test_aura_workcapsule_two_phase_observation_bound_exact
+
+      - name: Prove canonical temporal lifecycle equivalence
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py
+          python3 -m unittest -v tests.test_aura_workcapsule_canonical_temporal_lifecycle_equivalence
+
+      - name: Assert child consumes only parent owner boundaries
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_canonical_temporal_lifecycle_equivalence import verify_canonical_temporal_lifecycle_equivalence
+          params = inspect.signature(verify_canonical_temporal_lifecycle_equivalence).parameters
+          assert 'candidate_binding' not in params
+          assert 'observed_source_witnesses' not in params
+          assert 'closure_receipt' not in params
+          assert 'pre_observation_closure_receipt' in params
+          assert 'post_observation_bound_receipt' in params
+          source = Path('scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py').read_text()
+          forbidden = [
+              'compile_source_reentry_observations',
+              'compile_expected_source_bound_reentry',
+              'compile_observation_bound_reentry_closure',
+              'compile_reentry_closure',
+              'derive_post_reentry_candidate',
+          ]
+          for name in forbidden:
+              assert name not in source, name
+          assert 'verify_two_phase_owner_reduced_transition' in source
+          assert 'verify_two_phase_observation_bound_exact' in source
+          print('LOWER_RAW_REPLAY_REIMPLEMENTED_BY_CHILD=false')
+          print('PR530_OWNER_CONSUMED=true')
+          print('PR529_OWNER_CONSUMED=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'CANONICAL_TEMPORAL_LIFECYCLE_EQUIVALENCE_PROVEN=true'
+          echo 'SAME_PRE_SOURCE_OBSERVATION_IDENTITY_REQUIRED=true'
+          echo 'SAME_PRE_O8_IDENTITY_REQUIRED=true'
+          echo 'SAME_POST_SOURCE_PROJECTION_IDENTITY_REQUIRED=true'
+          echo 'SAME_POST_DERIVED_CANDIDATE_IDENTITY_REQUIRED=true'
+          echo 'SAME_POST_INNER_CLOSURE_IDENTITY_REQUIRED=true'
+          echo 'POST_CLOSED_REQUIRED=true'
+          echo 'POST_HOLD_EQUIVALENCE_GRANTED=false'
+          echo 'LOWER_RAW_REPLAY_REIMPLEMENTED_BY_CHILD=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
