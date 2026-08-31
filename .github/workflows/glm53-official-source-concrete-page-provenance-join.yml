@@ -1,0 +1,99 @@
+name: GLM53 Official Source Concrete Page Provenance Join
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-provenance-frontier:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact Q8 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact Q642 x Q641 convergence and hosted parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='22625150948c3143b57400e58a6d09af418a9a28'
+          bridge='023cc10c25372f0e871f287cc5a22b9196c8a094'
+          concrete='a8d4605a36e04d64cf03f43f457be4bde553e602'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,bridge,concrete], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33370777504,bridge),(33370700852,concrete)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['conclusion']=='success', (run_id,run['conclusion'])
+              assert run['head_sha']==head, (run_id,run['head_sha'],head)
+          print('Q8_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Prove exact parent source blobs and negative cross-domain owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse 023cc10c25372f0e871f287cc5a22b9196c8a094:tools/quantization/aura_glm53_official_source_trial_bridge.py)" = "733e6cb7a0ef404b8d8348410ecfc56e70f0e987"
+          test "$(git rev-parse a8d4605a36e04d64cf03f43f457be4bde553e602:tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py)" = "157afcb2e457c630d03a8c72aef09f0a6ba04a4d"
+          git show 023cc10c25372f0e871f287cc5a22b9196c8a094:tools/quantization/aura_glm53_official_source_trial_bridge.py > /tmp/bridge.py
+          git show a8d4605a36e04d64cf03f43f457be4bde553e602:tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py > /tmp/concrete.py
+          python3 - <<'PY'
+          bridge=open('/tmp/bridge.py',encoding='utf-8').read()
+          concrete=open('/tmp/concrete.py',encoding='utf-8').read()
+          assert 'official_source_byte_domain_bound_to_trial = False' in bridge
+          assert 'candidate_materialization_owner_bound = False' in bridge
+          assert 'official_glm_source_authenticated=False' in concrete
+          assert 'baseline_same_source_tensor_set_proven=False' in concrete
+          assert 'page_set_executed_in_model=False' in concrete
+          print('Q8_PARENT_NEGATIVE_OWNERS_REPROVED=true')
+          PY
+
+      - name: Run Q8 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_official_source_concrete_page_provenance_join.py \
+            tools/quantization/test_aura_glm53_official_source_concrete_page_provenance_join.py
+          python3 -m unittest -v tools.quantization.test_aura_glm53_official_source_concrete_page_provenance_join
+          python3 -m tools.quantization.aura_glm53_official_source_concrete_page_provenance_join | tee /tmp/q8.json
+
+      - name: Assert independent reopen leaves and consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q8.json',encoding='utf-8'))
+          assert r['disposition']=='HOLD_OFFICIAL_SOURCE_TO_CONCRETE_PAGE_PROVENANCE'
+          assert r['concrete_candidate_identity_bound'] is True
+          assert r['concrete_candidate_sample_bound'] is True
+          assert r['official_source_transport_frontier_complete'] is False
+          assert r['official_source_tensor_payload_observed'] is False
+          assert r['official_source_byte_domain_bound_to_trial'] is False
+          assert r['concrete_page_source_tensor_set_bound_to_official_source'] is False
+          assert r['candidate_page_materialization_owner_bound'] is False
+          assert r['source_transport_repair_alone_sufficient'] is False
+          assert r['cross_domain_provenance_reopen_required'] is True
+          assert len(r['required_successor_evidence'])==4
+          for key in ('real_tensor_quantization_eligible','generalized_quality_proven','runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','deployment_authorized'):
+              assert r[key] is False, key
+          print('Q8_FAIL_CLOSED_PROVENANCE_FRONTIER=true')
+          PY

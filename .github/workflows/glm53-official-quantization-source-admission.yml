@@ -1,0 +1,64 @@
+name: GLM53 Official Quantization Source Admission
+
+on:
+  pull_request:
+    paths:
+      - tools/quantization/aura_glm53_official_source_admission.py
+      - tests/test_aura_glm53_official_source_admission.py
+      - .github/workflows/glm53-official-quantization-source-admission.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  q5-source-admission:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Compile exact Q5 surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_official_source_admission.py tests/test_aura_glm53_official_source_admission.py
+      - name: Run Q5 adversarial source-admission suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest -v tests.test_aura_glm53_official_source_admission
+      - name: Emit current official-source HOLD receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/quantization/aura_glm53_official_source_admission.py | tee /tmp/q5.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/q5.json'))
+          assert r['official_revision'] == '7cda81930d6e4cef42f48555de830aa32ecdde28'
+          assert r['candidate_parent_sha'] == 'b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae'
+          assert r['config_profile_bound'] is True
+          assert r['index_object_identity_bound'] is True
+          assert r['index_bytes_verified'] is False
+          assert r['representative_key_to_shard_bound'] is False
+          assert r['representative_headers_observed'] is False
+          assert r['fp8_companions_bound'] is False
+          assert r['header_trial_eligible'] is False
+          assert r['source_tensor_payload_bound'] is False
+          assert r['real_tensor_quantization_eligible'] is False
+          assert r['semantic_k27_authority'] is False
+          assert r['native_transformer_kv_accessed'] is False
+          assert r['gate10_promoted'] is False
+          print('CURRENT_OFFICIAL_SOURCE_STATE=HOLD')
+          PY
+      - name: Prove raw-byte admission boundary and parent pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'def admit_official_header_state(' tools/quantization/aura_glm53_official_source_admission.py
+          grep -F 'verify_official_index_bytes(index_bytes)' tools/quantization/aura_glm53_official_source_admission.py
+          grep -F 'b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae' tools/quantization/aura_glm53_official_source_admission.py
+          grep -F 'e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf' tools/quantization/aura_glm53_official_source_admission.py
