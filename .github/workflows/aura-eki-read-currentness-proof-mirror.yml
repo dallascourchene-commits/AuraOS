@@ -84,7 +84,7 @@ jobs:
           from tools.aura_external_knowledge_coordinate_memory_read_guard import resolve_with_read_currentness
           from tests.test_aura_external_knowledge_coordinate_memory_read_guard import current_node, materialize, guarded, context
 
-          candidate=project_external_knowledge_coordinate_memory_candidate(node=current_node()).candidate
+          candidate=project_external_knowledge_candidate(node=current_node()).candidate
           assert candidate is not None
           snapshot_bytes, adapter=materialize(candidate)
           contract=guarded(candidate,snapshot_bytes)
