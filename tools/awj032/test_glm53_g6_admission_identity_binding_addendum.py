@@ -14,20 +14,7 @@ D4 = "4" * 64
 D5 = "5" * 64
 
 
-def base_reuse() -> g6.AdmissionReuseProjection:
-    return g6.AdmissionReuseProjection(
-        proof_head=g6.REUSE_HEAD,
-        proof_run=g6.REUSE_RUN,
-        proof_job=g6.REUSE_JOB,
-        source_blob=g6.REUSE_SOURCE_BLOB,
-        test_blob=g6.REUSE_TEST_BLOB,
-        admission_family=g6.REUSE_FAMILY,
-        disposition=g6.REUSE_DISPOSITION,
-        current_context_exact=True,
-    )
-
-
-def provenance() -> g6.ObservationProvenanceContractProjection:
+def provenance(*, complete: bool = True) -> g6.ObservationProvenanceContractProjection:
     return g6.ObservationProvenanceContractProjection(
         g6.PROV_HEAD,
         g6.PROV_RUN,
@@ -35,7 +22,7 @@ def provenance() -> g6.ObservationProvenanceContractProjection:
         g6.PROV_SOURCE_BLOB,
         True,
         True,
-        True,
+        complete,
     )
 
 
@@ -64,15 +51,6 @@ def evidence() -> g6.EvidenceContractProjection:
     )
 
 
-def base_request(*, provenance_ok: bool = True) -> g6.G6RequestReceipt:
-    p = provenance()
-    if not provenance_ok:
-        p = replace(p, producer_authentication_required=False)
-    return g6.compile_gate10_owner_host_evidence_request(
-        reuse=base_reuse(), provenance=p, owner=owner(), evidence=evidence()
-    )
-
-
 def identity() -> a.AdmissionReuseIdentityProjection:
     return a.AdmissionReuseIdentityProjection(
         proof_head=a.REUSE_HEAD,
@@ -92,13 +70,33 @@ def identity() -> a.AdmissionReuseIdentityProjection:
     )
 
 
+def compile_bound(
+    *,
+    reuse_identity: a.AdmissionReuseIdentityProjection | None = None,
+    provenance_complete: bool = True,
+) -> a.G6AdmissionIdentityBindingReceipt:
+    return a.compile_identity_bound_g6_request(
+        reuse_identity=reuse_identity or identity(),
+        provenance=provenance(complete=provenance_complete),
+        owner=owner(),
+        evidence=evidence(),
+    )
+
+
 class G6AdmissionIdentityBindingTests(unittest.TestCase):
-    def test_exact_identity_binds_without_authenticating_or_executing(self) -> None:
-        receipt = a.bind_g6_request_to_admission_identity(
-            base_request=base_request(), reuse_identity=identity()
+    def test_public_api_constructs_base_internally_and_accepts_no_base_request(self) -> None:
+        self.assertEqual(
+            a.public_api_parameters(),
+            ("reuse_identity", "provenance", "owner", "evidence"),
         )
+        self.assertFalse(hasattr(a, "bind_g6_request_to_admission_identity"))
+
+    def test_exact_identity_binds_without_authenticating_or_executing(self) -> None:
+        receipt = compile_bound()
         self.assertEqual(receipt.disposition, a.IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED)
         self.assertTrue(receipt.base_g6_request_compiled)
+        self.assertTrue(receipt.base_g6_request_constructed_by_this_contract)
+        self.assertFalse(receipt.caller_supplied_base_request_accepted)
         self.assertTrue(receipt.exact_glm53_reuse_family_bound)
         self.assertTrue(receipt.exact_reuse_candidate_identity_bound)
         self.assertEqual(receipt.admission_receipt_digest, D4)
@@ -114,25 +112,17 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
             with self.subTest(wrong=wrong), self.assertRaisesRegex(
                 ValueError, a.HOLD_EXACT_REUSE_FAMILY_REQUIRED
             ):
-                a.bind_g6_request_to_admission_identity(
-                    base_request=base_request(),
-                    reuse_identity=replace(identity(), admission_family=wrong),
-                )
+                compile_bound(reuse_identity=replace(identity(), admission_family=wrong))
 
     def test_non_candidate_disposition_cannot_bind(self) -> None:
         with self.assertRaisesRegex(ValueError, a.HOLD_REUSE_CANDIDATE_REQUIRED):
-            a.bind_g6_request_to_admission_identity(
-                base_request=base_request(),
-                reuse_identity=replace(identity(), disposition="HOLD_SUBJECT_CHANGED"),
+            compile_bound(
+                reuse_identity=replace(identity(), disposition="HOLD_SUBJECT_CHANGED")
             )
 
-    def test_uncompiled_base_request_cannot_receive_identity_binding(self) -> None:
-        hold = base_request(provenance_ok=False)
-        self.assertNotEqual(hold.disposition, g6.COMPILED)
+    def test_failed_base_g6_precondition_cannot_receive_identity_binding(self) -> None:
         with self.assertRaisesRegex(ValueError, a.HOLD_BASE_G6_REQUEST_REQUIRED):
-            a.bind_g6_request_to_admission_identity(
-                base_request=hold, reuse_identity=identity()
-            )
+            compile_bound(provenance_complete=False)
 
     def test_every_pr769_text_identity_axis_is_required(self) -> None:
         for field in (
@@ -143,23 +133,17 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
             "decision_context_key",
         ):
             with self.subTest(field=field), self.assertRaises(ValueError):
-                a.bind_g6_request_to_admission_identity(
-                    base_request=base_request(),
-                    reuse_identity=replace(identity(), **{field: " "}),
-                )
+                compile_bound(reuse_identity=replace(identity(), **{field: " "}))
 
     def test_every_pr769_digest_identity_axis_is_required(self) -> None:
         for field in ("admission_receipt_digest", "reuse_digest"):
             with self.subTest(field=field), self.assertRaises(ValueError):
-                a.bind_g6_request_to_admission_identity(
-                    base_request=base_request(),
-                    reuse_identity=replace(identity(), **{field: "not-a-digest"}),
+                compile_bound(
+                    reuse_identity=replace(identity(), **{field: "not-a-digest"})
                 )
 
-    def test_every_pr769_identity_axis_changes_binding_digest(self) -> None:
-        canonical = a.bind_g6_request_to_admission_identity(
-            base_request=base_request(), reuse_identity=identity()
-        )
+    def test_every_pr769_identity_axis_changes_binding_even_when_base_summary_is_same(self) -> None:
+        canonical = compile_bound()
         substitutions = {
             "admission_receipt_digest": "a" * 64,
             "reuse_digest": "b" * 64,
@@ -171,9 +155,11 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
         }
         for field, value in substitutions.items():
             with self.subTest(field=field):
-                changed = a.bind_g6_request_to_admission_identity(
-                    base_request=base_request(),
-                    reuse_identity=replace(identity(), **{field: value}),
+                changed = compile_bound(
+                    reuse_identity=replace(identity(), **{field: value})
+                )
+                self.assertEqual(
+                    canonical.base_g6_request_digest, changed.base_g6_request_digest
                 )
                 self.assertNotEqual(canonical.binding_digest, changed.binding_digest)
                 self.assertNotEqual(canonical.receipt_digest, changed.receipt_digest)
@@ -189,10 +175,7 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaisesRegex(
                 ValueError, "REUSE_PARENT_PROOF_COORDINATE_MISMATCH"
             ):
-                a.bind_g6_request_to_admission_identity(
-                    base_request=base_request(),
-                    reuse_identity=replace(identity(), **{field: value}),
-                )
+                compile_bound(reuse_identity=replace(identity(), **{field: value}))
 
     def test_reuse_projection_cannot_self_mint_truth_or_authority(self) -> None:
         for field in (
@@ -204,16 +187,12 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
             "native_private_transformer_kv_accessed",
         ):
             with self.subTest(field=field), self.assertRaises(ValueError):
-                a.bind_g6_request_to_admission_identity(
-                    base_request=base_request(),
-                    reuse_identity=replace(identity(), **{field: True}),
-                )
+                compile_bound(reuse_identity=replace(identity(), **{field: True}))
 
-    def test_binding_receipt_cannot_self_mint_truth_authority_or_gate10(self) -> None:
-        receipt = a.bind_g6_request_to_admission_identity(
-            base_request=base_request(), reuse_identity=identity()
-        )
+    def test_binding_receipt_cannot_accept_caller_base_or_mint_truth_authority_gate10(self) -> None:
+        receipt = compile_bound()
         for field in (
+            "caller_supplied_base_request_accepted",
             "reuse_receipt_authenticated_by_this_contract",
             "source_currentness_proven_by_this_contract",
             "owner_authenticated_by_this_contract",
@@ -232,20 +211,9 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 replace(receipt, **{field: True}).validate_claim_ceiling()
 
-    def test_base_flagship_source_identity_substitution_rejected(self) -> None:
-        with self.assertRaisesRegex(ValueError, "BASE_G6_FLAGSHIP_SOURCE_IDENTITY_MISMATCH"):
-            a.bind_g6_request_to_admission_identity(
-                base_request=replace(base_request(), source_set_digest="c" * 64),
-                reuse_identity=identity(),
-            )
-
     def test_deterministic(self) -> None:
-        first = a.bind_g6_request_to_admission_identity(
-            base_request=base_request(), reuse_identity=identity()
-        )
-        second = a.bind_g6_request_to_admission_identity(
-            base_request=base_request(), reuse_identity=identity()
-        )
+        first = compile_bound()
+        second = compile_bound()
         self.assertEqual(first, second)
         self.assertEqual(first.receipt_digest, second.receipt_digest)
 
@@ -257,6 +225,8 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
             "ReuseCandidateSummary!=AdmissionReuseReceiptIdentity",
             "GLM53AdmissionFamilyMustRemainExact",
             "AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection",
+            "CallerSuppliedBaseRequest+IndependentIdentity!=JoinedRequestIdentity",
+            "IdentityBoundWrapperMustConstructBaseRequest",
             "IdentityBinding!=ReceiptProducerAuthentication",
             "RepoHeadChanged!=TensorSourceGenerationChanged",
             "CoordinateMemory!=MODEL_PREFIX_KV",
