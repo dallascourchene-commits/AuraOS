@@ -189,6 +189,17 @@ class TemporalHostObservationAdmissionTests(unittest.TestCase):
                     host_observation_resolver=FakeResolver(by_gate),
                 )
 
+    def test_boolean_version_cannot_impersonate_integer_version(self):
+        bad = resolution("U_HEAD", version=True)
+        by_gate = {gate: resolution(gate) for gate in target.GATES}
+        by_gate["U_HEAD"] = bad
+        with local_owner():
+            with self.assertRaisesRegex(ValueError, "HOST_RESOLUTION_VERSION_MISMATCH"):
+                target.admit_temporal_host_observation_admission(
+                    host_observations=observations(),
+                    host_observation_resolver=FakeResolver(by_gate),
+                )
+
     def test_unknown_extra_gate_is_rejected(self):
         supplied = observations()
         supplied["U_INVENTED"] = {"pointer": "invented"}
