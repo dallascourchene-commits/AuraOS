@@ -12,8 +12,8 @@ use aura_k27_astge::NodeIndexRecordV1;
 use aura_k27_astge_generation_domain::SourceGenerationV1;
 use aura_k27_astge_materialize::AdmittedSourceCatalogV1;
 use aura_k27_astge_post_edit_profiled_scope::{
-    CandidateProfiledScopeSelectorV1, PostEditProfiledScopeCurrentV1,
-    PostEditProfiledScopeErrorV1, admit_post_edit_profiled_scope_current,
+    CandidateProfiledScopeSelectorV1, PostEditProfiledScopeCurrentV1, PostEditProfiledScopeErrorV1,
+    admit_post_edit_profiled_scope_current,
 };
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
 use aura_k27_astge_scopes::PythonLexicalScopeIndexV1;
