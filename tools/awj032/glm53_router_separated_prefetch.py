@@ -37,6 +37,20 @@ def _sha(value: Any) -> str:
     return hashlib.sha256(_canonical(value)).hexdigest()
 
 
+def _canonical_prefetch_expert_ids(expert_ids: Sequence[int], num_experts: int) -> tuple[int, ...]:
+    """Canonicalize a speculative transfer set while permitting abstention.
+
+    PR338's ``canonical_expert_ids`` correctly forbids an empty *routed* expert
+    request.  A speculative predictor has a different contract: it may safely
+    abstain and let the authoritative native route demand-load every required
+    expert.  Non-empty predictions retain the exact PR338 range/canonicalization
+    rules rather than introducing a second expert-ID policy.
+    """
+    if not expert_ids:
+        return ()
+    return canonical_expert_ids(expert_ids, num_experts)
+
+
 @dataclass(frozen=True)
 class PrefetchPrediction:
     schema: str
@@ -50,7 +64,7 @@ class PrefetchPrediction:
             raise ValueError("PREFETCH_SCHEMA_MISMATCH")
         if not self.predictor_generation.strip() or not self.layer_id.strip() or not self.binding_digest.strip():
             raise ValueError("PREFETCH_IDENTITY_FIELDS_REQUIRED")
-        expected = canonical_expert_ids(self.predicted_experts, num_experts)
+        expected = _canonical_prefetch_expert_ids(self.predicted_experts, num_experts)
         if expected != self.predicted_experts:
             raise ValueError("PREDICTED_EXPERTS_MUST_BE_CANONICAL")
 
@@ -310,6 +324,11 @@ LAWS = (
     "PrefetchPrediction!=NativeExecutionRoute",
     "PredictionMiss=>DemandLoadExactNativeExpertsNotRouteMutation",
     "PredictionWasteMayIncreaseIOWithoutChangingExecutedExperts",
+    "PredictionAbstention!=RoutingFailure",
+    "EmptyTransferPlan!=EmptyExecutionPlan",
+    "NoPrefetchPrediction=>DemandLoadExactNativeRoute",
+    "PredictorMayAbstainNativeRouterMayNot",
+    "Abstention!=PhysicalIOSavingsProof",
     "LogicalPrefetchBytes!=PhysicalNVMeBytesAbsentAttestation",
     "FullShardLoad!=SelectivePrefetch",
     "CoordinateMemory!=TransformerKVCache",
