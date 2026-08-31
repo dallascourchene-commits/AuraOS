@@ -11,15 +11,28 @@ jobs:
   handoff-contract:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - name: Fetch exact pull-request head without submodule traversal
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - name: Prove exact checked-out head
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           python3 -m py_compile tools/awj032/glm53_owner_host_c2_handoff.py
           python3 -m unittest -v tools.awj032.test_glm53_owner_host_c2_handoff
       - name: Assert nonpromotion ceiling
