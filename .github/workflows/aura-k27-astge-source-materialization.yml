@@ -1,0 +1,59 @@
+name: Aura K27 ASTGE Source Materialization
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-ingest/**"
+      - "crates/aura-k27-astge-materialize/**"
+      - ".github/workflows/aura-k27-astge-source-materialization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-k27-astge-source-materialize-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-materialization:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove Tree-Sitter ingestion parent
+        run: cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets
+
+      - name: Format materialization contract
+        run: cargo fmt --manifest-path crates/aura-k27-astge-materialize/Cargo.toml -- --check
+
+      - name: Test file-id source materialization
+        run: cargo test --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets
+
+      - name: Clippy fail-closed
+        run: cargo clippy --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'FILE_ID_MATERIALIZATION_PROVEN=true'
+          echo 'SOURCE_BYTES_REVALIDATED=true'
+          echo 'PATH_GUESSING_ALLOWED=false'
+          echo 'SYMLINK_SOURCE_PATH_ALLOWED=false'
+          echo 'SEMANTIC_IDENTITY_PROVEN=false'
+          echo 'SOURCE_AUTHORITY_MINTED=false'
+          echo 'AURAOS_RUNTIME_INTEGRATION_PROVEN=false'
+          echo 'MERGE_DEPLOY_EFFECT_AUTHORITY=false'
