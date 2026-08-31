@@ -62,10 +62,14 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf /tmp/pr559
-          git clone --no-checkout --filter=blob:none "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/pr559
-          git -C /tmp/pr559 fetch --no-tags --depth=1 origin "$PR559_SHA"
-          git -C /tmp/pr559 checkout --detach "$PR559_SHA"
-          git -C /tmp/pr559 remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          mkdir -p /tmp/pr559
+          git -C /tmp/pr559 init .
+          git -C /tmp/pr559 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr559 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR559_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr559 checkout --detach FETCH_HEAD
           test "$(git -C /tmp/pr559 rev-parse HEAD)" = "$PR559_SHA"
           test -z "$(git -C /tmp/pr559 config --local --get-all http.https://github.com/.extraheader || true)"
           cd /tmp/pr559
