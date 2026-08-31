@@ -68,7 +68,7 @@ class Pager:
 
 
 class PreReadSourceAddendumTests(unittest.TestCase):
-    def run(self, pager=None, *, p=None, r=None, revision=REVISION, index=INDEX):
+    def run_guard(self, pager=None, *, p=None, r=None, revision=REVISION, index=INDEX):
         return stage_then_demand_load_prebound(
             pager=pager or Pager(),
             prediction=p or prediction(),
@@ -81,7 +81,7 @@ class PreReadSourceAddendumTests(unittest.TestCase):
 
     def test_exact_concrete_source_delegates_to_canonical_post_read_owner(self):
         pager = Pager()
-        trace = self.run(pager)
+        trace = self.run_guard(pager)
         self.assertEqual([x[0] for x in pager.calls], [(1, 3, 5, 7), (9,)])
         self.assertEqual(trace.executed_experts, (1, 3, 5, 9))
         self.assertFalse(trace.execution_authorized)
@@ -89,7 +89,7 @@ class PreReadSourceAddendumTests(unittest.TestCase):
     def test_wrong_concrete_binding_fails_before_any_read(self):
         pager = Pager(Binding(digest="wrong-binding"))
         with self.assertRaisesRegex(ValueError, "PREFETCH_CONCRETE_PAGER_BINDING_MISMATCH"):
-            self.run(pager)
+            self.run_guard(pager)
         self.assertEqual(pager.calls, [])
 
     def test_wrong_layer_or_expert_count_fails_before_any_read(self):
@@ -100,28 +100,28 @@ class PreReadSourceAddendumTests(unittest.TestCase):
             with self.subTest(reason=reason):
                 pager = Pager(binding)
                 with self.assertRaisesRegex(ValueError, reason):
-                    self.run(pager)
+                    self.run_guard(pager)
                 self.assertEqual(pager.calls, [])
 
     def test_wrong_revision_or_index_argument_fails_before_any_read(self):
         pager = Pager()
         with self.assertRaisesRegex(ValueError, "PREFETCH_CALL_REVISION_NOT_PAGER_REVISION"):
-            self.run(pager, revision="other-revision")
+            self.run_guard(pager, revision="other-revision")
         self.assertEqual(pager.calls, [])
 
         pager = Pager()
         with self.assertRaisesRegex(ValueError, "PREFETCH_CALL_INDEX_NOT_PAGER_INDEX"):
-            self.run(pager, index="other-index")
+            self.run_guard(pager, index="other-index")
         self.assertEqual(pager.calls, [])
 
     def test_prediction_route_mismatch_still_fails_before_any_read(self):
         pager = Pager()
         with self.assertRaisesRegex(ValueError, "PREFETCH_NATIVE_SOURCE_BINDING_MISMATCH"):
-            self.run(pager, p=prediction("A"), r=route("B"))
+            self.run_guard(pager, p=prediction("A"), r=route("B"))
         self.assertEqual(pager.calls, [])
 
     def test_claim_ceiling_remains_nonpromoting(self):
-        trace = self.run()
+        trace = self.run_guard()
         for field in (
             "routing_mutated_by_predictor",
             "output_semantics_changed_by_prediction",
