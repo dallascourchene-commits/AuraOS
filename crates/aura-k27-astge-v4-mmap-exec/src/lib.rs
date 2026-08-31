@@ -303,7 +303,7 @@ fn decode_records(
         .into());
     }
     let mut records = Vec::with_capacity(binding.node_count as usize);
-    for chunk in bytes.chunks_exact(NODE_INDEX_RECORD_SIZE) {
+    for chunk in bytes.as_chunks::<NODE_INDEX_RECORD_SIZE>().0 {
         let record = NodeIndexRecordV1::decode(chunk)?;
         if record.pbn >= binding.page_count {
             return Err(GenerationStorageError::IndexPageOutOfRange {
