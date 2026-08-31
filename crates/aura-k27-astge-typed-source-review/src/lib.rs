@@ -213,8 +213,14 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(receipt.source_generation, SourceGenerationV1::new(generation));
-        assert_eq!(receipt.source_generation_coordinate.domain, GenerationDomainV1::Source);
+        assert_eq!(
+            receipt.source_generation,
+            SourceGenerationV1::new(generation)
+        );
+        assert_eq!(
+            receipt.source_generation_coordinate.domain,
+            GenerationDomainV1::Source
+        );
         assert_eq!(receipt.source_generation_coordinate.value, generation);
         assert!(receipt.owner_admission.source_currentness_verified);
         assert!(receipt.owner_admission.outside_authorized_scope_unchanged);
