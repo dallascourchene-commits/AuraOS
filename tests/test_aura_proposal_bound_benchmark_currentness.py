@@ -15,6 +15,8 @@ from tools.aura_bounded_proposal_capsule import (
     create_bounded_proposal_capsule,
 )
 from tools.aura_proposal_bound_benchmark_currentness import (
+    USE_BINDING_SCHEMA,
+    ProposalBenchmarkUseBinding,
     evaluate_proposal_bound_benchmark_currentness,
 )
 from tools.benchmarks.aura_benchmark_score_admission import (
@@ -74,11 +76,70 @@ def basis(**changes):
     return replace(base, **changes)
 
 
+def benchmark_policy(**changes):
+    base = BenchmarkAdmissionPolicy(
+        policy_generation="benchmark-policy-gen-1",
+        authority_scope="BENCHMARK_EVIDENCE_ONLY",
+        expected_execution_route_fingerprint="route:harbor:host-observed",
+        trusted_execution_observer_identity="BENCHMARK_HOST_OBSERVER",
+        trusted_source_verifier_identity="UPSTREAM_SOURCE_VERIFIER",
+        execution_authority_verified=True,
+        source_verifier_authority_verified=True,
+    )
+    return replace(base, **changes)
+
+
+def benchmark_receipt(**changes):
+    base = BenchmarkTaskReceipt(
+        campaign_id="arena-benchmark-20260831",
+        suite_id="terminal-bench@2.0",
+        suite_generation="upstream-pinned-generation",
+        harness_id="harbor",
+        harness_generation="pinned-harbor-generation",
+        task_id="task-001",
+        task_input_digest="4" * 64,
+        agent_id="aura-adapter",
+        agent_generation="5" * 40,
+        model_id="provider/model",
+        run_id="run-1",
+        attempt_id="attempt-1",
+        result_state="PASS",
+        measurement_class="OBSERVED",
+        wall_time_ms=100.0,
+        source_verified=True,
+        execution_observed=True,
+        execution_route_fingerprint="route:harbor:host-observed",
+        execution_observer_identity="BENCHMARK_HOST_OBSERVER",
+        source_verifier_identity="UPSTREAM_SOURCE_VERIFIER",
+    )
+    return replace(base, **changes)
+
+
+def use_binding(capsule, *, receipt=None, policy=None, **changes):
+    receipt = receipt or benchmark_receipt()
+    policy = policy or benchmark_policy()
+    base = ProposalBenchmarkUseBinding(
+        schema_version=USE_BINDING_SCHEMA,
+        binding_generation="benchmark-use-binding-gen-1",
+        proposal_id=capsule.proposal_id,
+        proposal_basis_digest=capsule.proposal_basis_digest,
+        benchmark_score_identity=receipt.score_identity,
+        benchmark_receipt_digest=receipt.receipt_digest,
+        benchmark_policy_generation=policy.policy_generation,
+        binding_current=True,
+        execution_authorized=False,
+        provider_effect_authorized=False,
+        gate10_promoted=False,
+    )
+    return replace(base, **changes)
+
+
 class OwnerResolver:
-    def __init__(self, b: ProposalBasis, *, roots=None, invalidators=None):
+    def __init__(self, b: ProposalBasis, *, roots=None, invalidators=None, binding=None):
         self.b = b
         self.roots = roots or {root: True for root in b.currentness_roots}
         self.invalidators = invalidators or {name: False for name in b.invalidators}
+        self.binding = binding
 
     def resolve_eligibility(self, *, owner_ref: str, transition_id: str):
         e = self.b.eligibility
@@ -120,8 +181,19 @@ class OwnerResolver:
     def invalidator_is_triggered(self, *, invalidator: str):
         return self.invalidators.get(invalidator)
 
+    def resolve_benchmark_use_binding(self, *, proposal_id: str, benchmark_score_identity: str):
+        if self.binding is None:
+            return None
+        if self.binding.proposal_id != proposal_id:
+            return None
+        if self.binding.benchmark_score_identity != benchmark_score_identity:
+            return None
+        return self.binding
 
-def capsule_and_resolver(*, b=None, roots=None, invalidators=None):
+
+def capsule_and_resolver(
+    *, b=None, roots=None, invalidators=None, receipt=None, policy=None, binding=True
+):
     b = b or basis()
     creator_resolver = OwnerResolver(b)
     capsule = create_bounded_proposal_capsule(
@@ -129,76 +201,124 @@ def capsule_and_resolver(*, b=None, roots=None, invalidators=None):
         producer_identity="proposal-worker-a",
         owner_resolver=creator_resolver,
     ).capsule
-    return capsule, OwnerResolver(b, roots=roots, invalidators=invalidators)
-
-
-def benchmark_policy(**changes):
-    base = BenchmarkAdmissionPolicy(
-        policy_generation="benchmark-policy-gen-1",
-        authority_scope="BENCHMARK_EVIDENCE_ONLY",
-        expected_execution_route_fingerprint="route:harbor:host-observed",
-        trusted_execution_observer_identity="BENCHMARK_HOST_OBSERVER",
-        trusted_source_verifier_identity="UPSTREAM_SOURCE_VERIFIER",
-        execution_authority_verified=True,
-        source_verifier_authority_verified=True,
-    )
-    return replace(base, **changes)
-
-
-def benchmark_receipt(**changes):
-    base = BenchmarkTaskReceipt(
-        campaign_id="arena-benchmark-20260831",
-        suite_id="terminal-bench@2.0",
-        suite_generation="upstream-pinned-generation",
-        harness_id="harbor",
-        harness_generation="pinned-harbor-generation",
-        task_id="task-001",
-        task_input_digest="4" * 64,
-        agent_id="aura-adapter",
-        agent_generation="5" * 40,
-        model_id="provider/model",
-        run_id="run-1",
-        attempt_id="attempt-1",
-        result_state="PASS",
-        measurement_class="OBSERVED",
-        wall_time_ms=100.0,
-        source_verified=True,
-        execution_observed=True,
-        execution_route_fingerprint="route:harbor:host-observed",
-        execution_observer_identity="BENCHMARK_HOST_OBSERVER",
-        source_verifier_identity="UPSTREAM_SOURCE_VERIFIER",
-    )
-    return replace(base, **changes)
+    resolver = OwnerResolver(b, roots=roots, invalidators=invalidators)
+    if binding:
+        resolver.binding = use_binding(
+            capsule,
+            receipt=receipt or benchmark_receipt(),
+            policy=policy or benchmark_policy(),
+        )
+    return capsule, resolver
 
 
 def evaluate(*, receipt=None, policy=None, capsule=None, resolver=None, coordinate=None):
+    receipt = receipt or benchmark_receipt()
+    policy = policy or benchmark_policy()
     if capsule is None:
-        capsule, default_resolver = capsule_and_resolver()
+        capsule, default_resolver = capsule_and_resolver(receipt=receipt, policy=policy)
         resolver = default_resolver if resolver is None else resolver
     return evaluate_proposal_bound_benchmark_currentness(
-        benchmark_receipt=receipt or benchmark_receipt(),
-        benchmark_policy=policy or benchmark_policy(),
+        benchmark_receipt=receipt,
+        benchmark_policy=policy,
         proposal_capsule=capsule,
         proposal_owner_resolver=resolver,
         retrieval_k27_coordinate=coordinate,
     )
 
 
-def test_current_proposal_plus_admitted_score_is_current_use_admissible():
+def test_current_proposal_plus_admitted_score_and_exact_use_binding_is_current_use_admissible():
     relation = evaluate()
     assert relation.historical_score_admitted is True
     assert relation.proposal_currentness_state == "CURRENT_NONEXECUTABLE"
+    assert relation.benchmark_use_binding_matches is True
+    assert relation.benchmark_use_binding_current is True
     assert relation.current_use_admissible is True
     assert relation.score_credit_delta == 0
+
+
+def test_unrelated_admitted_score_cannot_be_laundered_into_current_proposal_use():
+    default_receipt = benchmark_receipt()
+    default_policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(receipt=default_receipt, policy=default_policy)
+    unrelated = benchmark_receipt(task_id="unrelated-task", task_input_digest="6" * 64)
+    relation = evaluate(
+        receipt=unrelated,
+        policy=default_policy,
+        capsule=capsule,
+        resolver=resolver,
+    )
+    assert relation.historical_score_admitted is True
+    assert relation.proposal_currentness_state == "CURRENT_NONEXECUTABLE"
+    assert relation.benchmark_use_binding_matches is False
+    assert relation.current_use_admissible is False
+    assert relation.score_credit_delta == 0
+
+
+def test_missing_use_binding_revokes_current_use_without_rewriting_historical_score():
+    receipt = benchmark_receipt()
+    policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(receipt=receipt, policy=policy, binding=False)
+    relation = evaluate(receipt=receipt, policy=policy, capsule=capsule, resolver=resolver)
+    assert relation.historical_score_admitted is True
+    assert relation.benchmark_score_identity == receipt.score_identity
+    assert relation.benchmark_use_binding_reason == "BENCHMARK_USE_BINDING_UNAVAILABLE_OR_UNKNOWN"
+    assert relation.current_use_admissible is False
+
+
+def test_stale_use_binding_revokes_current_use_only():
+    receipt = benchmark_receipt()
+    policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(receipt=receipt, policy=policy)
+    resolver.binding = replace(resolver.binding, binding_current=False)
+    relation = evaluate(receipt=receipt, policy=policy, capsule=capsule, resolver=resolver)
+    assert relation.historical_score_admitted is True
+    assert relation.benchmark_use_binding_current is False
+    assert relation.benchmark_use_binding_reason == "BENCHMARK_USE_BINDING_NOT_CURRENT"
+    assert relation.current_use_admissible is False
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"proposal_basis_digest": "7" * 64},
+        {"benchmark_receipt_digest": "8" * 64},
+        {"benchmark_policy_generation": "other-policy-generation"},
+    ],
+)
+def test_use_binding_operand_substitution_fails_current_use_closed(change):
+    receipt = benchmark_receipt()
+    policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(receipt=receipt, policy=policy)
+    resolver.binding = replace(resolver.binding, **change)
+    relation = evaluate(receipt=receipt, policy=policy, capsule=capsule, resolver=resolver)
+    assert relation.historical_score_admitted is True
+    assert relation.benchmark_use_binding_matches is False
+    assert relation.benchmark_use_binding_reason == "BENCHMARK_USE_BINDING_OPERAND_MISMATCH"
+    assert relation.current_use_admissible is False
+
+
+def test_invalid_use_binding_authority_is_fail_closed_not_promoted():
+    receipt = benchmark_receipt()
+    policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(receipt=receipt, policy=policy)
+    resolver.binding = replace(resolver.binding, execution_authorized=True)
+    relation = evaluate(receipt=receipt, policy=policy, capsule=capsule, resolver=resolver)
+    assert relation.historical_score_admitted is True
+    assert relation.benchmark_use_binding_reason == "BENCHMARK_USE_BINDING_INVALID"
+    assert relation.current_use_admissible is False
+    assert relation.execution_authorized is False
 
 
 def test_proposal_invalidation_preserves_historical_score_identity_but_revokes_current_use():
     b = basis()
     roots = {root: True for root in b.currentness_roots}
     roots["source-current:4"] = False
-    capsule, resolver = capsule_and_resolver(b=b, roots=roots)
     receipt = benchmark_receipt()
-    relation = evaluate(receipt=receipt, capsule=capsule, resolver=resolver)
+    policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(
+        b=b, roots=roots, receipt=receipt, policy=policy
+    )
+    relation = evaluate(receipt=receipt, policy=policy, capsule=capsule, resolver=resolver)
     assert relation.benchmark_score_identity == receipt.score_identity
     assert relation.historical_score_admitted is True
     assert relation.proposal_currentness_state == "INVALIDATED"
@@ -213,14 +333,19 @@ def test_missing_proposal_owner_resolver_fails_current_use_closed_without_rewrit
     assert relation.benchmark_score_identity == receipt.score_identity
     assert relation.current_use_admissible is False
     assert relation.proposal_currentness_reason == "OWNER_RESOLVER_UNAVAILABLE"
+    assert relation.benchmark_use_binding_reason == "BENCHMARK_USE_BINDING_OWNER_UNAVAILABLE"
 
 
 def test_triggered_proposal_invalidator_revokes_current_use_only():
     b = basis()
     invalidators = {name: False for name in b.invalidators}
     invalidators["request-envelope-change"] = True
-    capsule, resolver = capsule_and_resolver(b=b, invalidators=invalidators)
-    relation = evaluate(capsule=capsule, resolver=resolver)
+    receipt = benchmark_receipt()
+    policy = benchmark_policy()
+    capsule, resolver = capsule_and_resolver(
+        b=b, invalidators=invalidators, receipt=receipt, policy=policy
+    )
+    relation = evaluate(receipt=receipt, policy=policy, capsule=capsule, resolver=resolver)
     assert relation.historical_score_admitted is True
     assert relation.current_use_admissible is False
 
@@ -235,11 +360,13 @@ def test_benchmark_source_verifier_substitution_never_reaches_relation():
         evaluate(receipt=benchmark_receipt(source_verifier_identity="CALLER_MINTED"))
 
 
-def test_policy_generation_recomputes_relation_without_rewriting_score_identity():
+def test_policy_generation_recomputes_relation_and_requires_matching_use_binding():
     receipt = benchmark_receipt()
     first = evaluate(receipt=receipt, policy=benchmark_policy(policy_generation="policy-gen-a"))
     second = evaluate(receipt=receipt, policy=benchmark_policy(policy_generation="policy-gen-b"))
     assert first.benchmark_score_identity == second.benchmark_score_identity == receipt.score_identity
+    assert first.current_use_admissible is second.current_use_admissible is True
+    assert first.benchmark_use_binding_digest != second.benchmark_use_binding_digest
     assert first.relation_digest != second.relation_digest
 
 
@@ -256,11 +383,12 @@ def test_tampered_proposal_basis_is_rejected_by_owner_capsule_integrity():
         evaluate(capsule=tampered, resolver=resolver)
 
 
-def test_k27_coordinate_is_retrieval_metadata_not_semantic_currentness():
+def test_k27_coordinate_is_retrieval_metadata_not_semantic_currentness_or_use_binding():
     first = evaluate(coordinate=(1, 2, 3))
     second = evaluate(coordinate=(26, 25, 24))
     assert first.relation_digest == second.relation_digest
     assert first.current_use_admissible == second.current_use_admissible
+    assert first.benchmark_use_binding_digest == second.benchmark_use_binding_digest
     assert first.retrieval_k27_coordinate != second.retrieval_k27_coordinate
 
 
@@ -278,6 +406,7 @@ def test_relation_cannot_smuggle_effect_or_score_authority():
         replace(relation, semantic_k27_authority=True),
         replace(relation, native_private_transformer_kv_accessed=True),
         replace(relation, gate10_promoted=True),
+        replace(relation, benchmark_use_binding_matches=False),
     ):
         with pytest.raises(ValueError):
             changed.validate()
