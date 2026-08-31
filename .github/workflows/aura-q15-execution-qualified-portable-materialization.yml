@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "tools/quantization/aura_execution_qualified_portable_materialization_evidence.py"
+      - "tools/quantization/aura_execution_qualified_portable_materialization_currentness.py"
       - "tests/test_aura_execution_qualified_portable_materialization_evidence.py"
       - "tests/fixtures/q14_official_source_e8_materialization_receipt.json"
       - ".github/workflows/aura-q15-execution-qualified-portable-materialization.yml"
@@ -57,6 +58,22 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest tests.test_aura_execution_qualified_portable_materialization_evidence -v
+          python - <<'PY'
+          from tools.quantization import aura_execution_qualified_portable_materialization_currentness as c
+          d=c.descriptor()
+          assert d == {
+            'q14_run':33399560819,
+            'q14_job':99512247000,
+            'q14_job_name':'q14-official-source-e8-canary',
+            'q14_workflow':'GLM53 Official Source E8 Materialization Canary',
+            'q14_head':'ee70934e0c45572588829e742e512a897b23863f',
+            'q14_artifact_id':9760937399,
+            'semantic_owner_unchanged':True,
+            'provider_descriptor_is_semantic_authority':False,
+            'provider_descriptor_is_effect_authority':False,
+          }
+          print('Q15_PROVIDER_DESCRIPTOR_CURRENT=true')
+          PY
 
       - name: Fetch immutable A7 and Q14 provider run job evidence
         shell: bash
@@ -70,11 +87,16 @@ jobs:
           import json
           cases=[
             ("/tmp/a7-run.json",33400287890,"10481aa76117c24e5fdf7f93752e7820713a8285","Aura Execution-Qualified Portable Evidence Admission"),
-            ("/tmp/q14-run.json",33399560819,"ee70934e0c45572588829e742e512a897b23863f","Aura GLM-5.3 Official Source to E8 Materialization Canary")]
+            ("/tmp/q14-run.json",33399560819,"ee70934e0c45572588829e742e512a897b23863f","GLM53 Official Source E8 Materialization Canary")]
           for path,run_id,head,name in cases:
             r=json.load(open(path)); assert r["id"]==run_id and r["head_sha"]==head and r["name"]==name; assert r["status"]=="completed" and r["conclusion"]=="success"
-          for path,job_id,run_id in [("/tmp/a7-jobs.json",99514663480,33400287890),("/tmp/q14-jobs.json",99512130505,33399560819)]:
-            rows=[j for j in json.load(open(path))["jobs"] if j["id"]==job_id]; assert len(rows)==1 and rows[0]["run_id"]==run_id; assert rows[0]["status"]=="completed" and rows[0]["conclusion"]=="success"
+          jobs=[
+            ("/tmp/a7-jobs.json",99514663480,33400287890,"execution-qualified-portable-evidence"),
+            ("/tmp/q14-jobs.json",99512247000,33399560819,"q14-official-source-e8-canary")]
+          for path,job_id,run_id,job_name in jobs:
+            rows=[j for j in json.load(open(path))["jobs"] if j["id"]==job_id]
+            assert len(rows)==1 and rows[0]["run_id"]==run_id and rows[0]["name"]==job_name
+            assert rows[0]["status"]=="completed" and rows[0]["conclusion"]=="success"
           print("Q15_C4_EXACT_PROVIDER_EXECUTION=true")
           PY
 
@@ -94,7 +116,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tools/quantization/aura_execution_qualified_portable_materialization_evidence.py \
+          python tools/quantization/aura_execution_qualified_portable_materialization_currentness.py \
             --q14-receipt /tmp/q14-artifact/q14.json \
             --q14-artifact-digest sha256:edc22355df8bfeff25f469f11b54d7948b10bbf72a831b769857068c63c77276 \
             --convergence-parents /tmp/parents.json \
