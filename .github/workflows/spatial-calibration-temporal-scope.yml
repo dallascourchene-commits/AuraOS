@@ -1,0 +1,43 @@
+name: Aura Spatial Calibration Temporal Scope
+
+on:
+  pull_request:
+    paths:
+      - 'tools/spatial/eye_calibration_contract.py'
+      - 'tools/spatial/calibration_temporal_scope.py'
+      - 'tests/test_spatial_calibration_temporal_scope.py'
+      - '.github/workflows/spatial-calibration-temporal-scope.yml'
+  workflow_dispatch:
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile
+        run: python -m py_compile tools/spatial/eye_calibration_contract.py tools/spatial/calibration_temporal_scope.py
+      - name: Focused adversarial suite
+        run: python -m unittest -v tests.test_spatial_calibration_temporal_scope
+      - name: Enforce exact parents and negative consequence ceiling
+        run: |
+          python - <<'PY'
+          from tools.spatial.calibration_temporal_scope import EXACT_PARENT_IDS
+          assert EXACT_PARENT_IDS == (
+              'PR621:944c4e52be670d251ebf43b05558f7fab275bed2',
+              'PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67',
+          )
+          text = open('tools/spatial/calibration_temporal_scope.py', encoding='utf-8').read()
+          for needle in (
+              'calibration_current_now_proven: bool = False',
+              'calibration_accuracy_at_use_time_proven: bool = False',
+              'sensor_matches_original_calibration_proven: bool = False',
+              'physical_gaze_accuracy_proven: bool = False',
+              'producer_authenticated: bool = False',
+              'native_private_transformer_kv_accessed: bool = False',
+          ):
+              assert needle in text, needle
+          print('O58_DECLARED_SCOPE_NE_CALIBRATION_TRUTH=true')
+          PY
