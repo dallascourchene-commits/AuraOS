@@ -39,14 +39,14 @@ EARNED_GATE_CANONICAL_SHA256 = "0db00dc5a76ce5b91273dd7be7e12b5d47121154b5c1f440
 EARNED_GATE_RAW_WEIGHT_SHA256 = "2d4e5f36478b598043431b3691ce6a48639e01b6f804b1db62ca4af4d14063e8"
 EARNED_GATE_RAW_SCALE_SHA256 = "671dd3b32b3f4cc651b93f3420ae47957ae09c1f745d278c0795d56e5d511c55"
 
-# Exact PR652 six-slice source manifest. Offsets are SafeTensors data-buffer relative.
+# Exact PR652 hosted six-slice manifest. Offsets are SafeTensors data-buffer relative.
 _SOURCE_SLICES = (
-    ("gate", "weight", "model.layers.3.mlp.experts.0.gate_proj.weight", "F8_E4M3", (2048, 6144), 2_594_598_912, 2_607_181_824, 12_582_912),
-    ("gate", "scale", "model.layers.3.mlp.experts.0.gate_proj.weight_scale_inv", "F32", (16, 48), 2_607_181_824, 2_607_184_896, 3_072),
-    ("up", "weight", "model.layers.3.mlp.experts.0.up_proj.weight", "F8_E4M3", (2048, 6144), 2_629_145_856, 2_641_728_768, 12_582_912),
-    ("up", "scale", "model.layers.3.mlp.experts.0.up_proj.weight_scale_inv", "F32", (16, 48), 2_641_728_768, 2_641_731_840, 3_072),
-    ("down", "weight", "model.layers.3.mlp.experts.0.down_proj.weight", "F8_E4M3", (6144, 2048), 2_514_883_584, 2_527_466_496, 12_582_912),
-    ("down", "scale", "model.layers.3.mlp.experts.0.down_proj.weight_scale_inv", "F32", (48, 16), 2_527_466_496, 2_527_469_568, 3_072),
+    ("gate", "weight", "model.layers.3.mlp.experts.0.gate_proj.weight", "F8_E4M3", (2048, 6144), 4_070_207_936, 4_082_790_848, 12_582_912),
+    ("gate", "scale", "model.layers.3.mlp.experts.0.gate_proj.weight_scale_inv", "F32", (16, 48), 993_728, 996_800, 3_072),
+    ("up", "weight", "model.layers.3.mlp.experts.0.up_proj.weight", "F8_E4M3", (2048, 6144), 4_082_790_848, 4_095_373_760, 12_582_912),
+    ("up", "scale", "model.layers.3.mlp.experts.0.up_proj.weight_scale_inv", "F32", (16, 48), 996_800, 999_872, 3_072),
+    ("down", "weight", "model.layers.3.mlp.experts.0.down_proj.weight", "F8_E4M3", (6144, 2048), 4_057_625_024, 4_070_207_936, 12_582_912),
+    ("down", "scale", "model.layers.3.mlp.experts.0.down_proj.weight_scale_inv", "F32", (48, 16), 990_656, 993_728, 3_072),
 )
 
 
