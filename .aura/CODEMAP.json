@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788141372,
+  "generated_at_unix": 1788156613,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1658,
+    "repo_file_count": 1661,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -155,6 +155,7 @@
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/k27-astge-current-ingest-convergence.yml",
       ".github/workflows/k27-astge-immutability-capability.yml",
+      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1638,6 +1639,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1652,6 +1654,7 @@
       "tools/aura_review/test_aura_review_context_compiler.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_astge_thinkpad_owner_host_benchmark.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1774,16 +1777,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1658,
-      "bytes": 26574180,
-      "tokens_est": 6633900,
+      "files": 1661,
+      "bytes": 26603809,
+      "tokens_est": 6641308,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 17,
         "operator_script": 9,
-        "python_module": 1001,
-        "schema_or_lexicon": 279,
+        "python_module": 1003,
+        "schema_or_lexicon": 280,
         "support_file": 49
       }
     },
@@ -4388,6 +4391,14 @@
         "end_line": 38,
         "semantic_id": "tools/aura_review/aura_review_context_compiler.py#function:_digest:3aecf4ead109e4ed",
         "signature_hash": "218a3c5a87d1b770"
+      },
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_digest:ad2d52a10526f601",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -52054,6 +52065,14 @@
         "end_line": 63,
         "semantic_id": "aura_gate_oidc.py#function:_require_text:78662a81d2bc47ed",
         "signature_hash": "5a34bc621c690ee0"
+      },
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 70,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_text:cc7e4b7a60eea514",
+        "signature_hash": "43aee94117e62815"
       }
     ],
     "_decode_base64url": [
@@ -79620,6 +79639,14 @@
         "end_line": 48,
         "semantic_id": "aura_substrate_release.py#function:_canonical_bytes:165bc480b5a187a6",
         "signature_hash": "ae498563dfd7e8b1"
+      },
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 56,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_canonical_bytes:8613c15bfe8c8666",
+        "signature_hash": "5ac132afaebe3a2d"
       }
     ],
     "_bounded_json": [
@@ -100608,6 +100635,14 @@
         "end_line": 70,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:_require_sha256:e1903a9df5073f64",
         "signature_hash": "980a9398c967ba8e"
+      },
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 65,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_sha256:73daa254758f993e",
+        "signature_hash": "e7468bc7ebd685f0"
       }
     ],
     "_global_id": [
@@ -136242,6 +136277,14 @@
         "end_line": 223,
         "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
         "signature_hash": "9045b73142116e1c"
+      },
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 37,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#function:request:18c2e59e31a1de3e",
+        "signature_hash": "74d4e385221be9cc"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -157028,6 +157071,206 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "samples": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 96,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#function:samples:1ef77d7bb0ba2d4b",
+        "signature_hash": "7a64efd054247659"
+      }
+    ],
+    "samples.phase": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 77,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:samples.phase:f7ceef439647ef7c",
+        "signature_hash": "350114ab9b7c29dd"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "class",
+        "line": 99,
+        "end_line": 259,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkContractTests:130c2d9e7eb87076",
+        "signature_hash": "3b5909c428636615"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.assert_code": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 103,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.assert_code:06bdd0797ad38932",
+        "signature_hash": "eb1a74aa8011ddd4"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.admit": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 112,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.admit:7c0e63b73da0d1dc",
+        "signature_hash": "deb94cc2e6deec2c"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_exact_three_phase_same_graph_contract": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 122,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_exact_three_phase_same_graph_contract:853e9b2b6818c1f7",
+        "signature_hash": "f3c09c4738402096"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_process_cold_is_not_os_or_device_cold": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 128,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_process_cold_is_not_os_or_device_cold:80ea78d7ae08504d",
+        "signature_hash": "20669643283fb16d"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_device_counter_delta_still_does_not_authenticate_physical_io": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 136,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_device_counter_delta_still_does_not_authenticate_physical_io:b621f035f60939ac",
+        "signature_hash": "fa1d650845729e15"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_warm_speedup_does_not_mint_winner": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 144,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_warm_speedup_does_not_mint_winner:c27da442aa27b070",
+        "signature_hash": "00cb22f102206088"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_query_sequence_mismatch_fails_before_comparison": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 153,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_query_sequence_mismatch_fails_before_comparison:444383c7f90944bf",
+        "signature_hash": "856497b70e67c724"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_request_digest_mismatch_fails": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 162,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_request_digest_mismatch_fails:c7dcbe3442eeab1d",
+        "signature_hash": "0b9ece8ee59a4601"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_cold_and_warm_require_same_process": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 171,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_cold_and_warm_require_same_process:f308a9286c4b2b4f",
+        "signature_hash": "68e73426d1dd95af"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_restart_requires_new_process": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 180,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_restart_requires_new_process:2ba188e4611151fe",
+        "signature_hash": "c6c55276c36a2d13"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_process_counter_rollback_fails": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 193,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_process_counter_rollback_fails:745c717c91ec7f1b",
+        "signature_hash": "535b9200d98a3973"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_cache_accounting_must_close": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 202,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_cache_accounting_must_close:d7d258a840f61545",
+        "signature_hash": "d403ca9f42daab1d"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_device_counter_pair_is_optional_but_cannot_be_partial": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 210,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_device_counter_pair_is_optional_but_cannot_be_partial:a7224e34d19af83c",
+        "signature_hash": "14bd8dbad1246e61"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_request_refuses_unproved_coldness_and_authority": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 212,
+        "end_line": 224,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_request_refuses_unproved_coldness_and_authority:da30b1de4d606894",
+        "signature_hash": "877e87ee018bf052"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_public_admission_has_no_physical_or_policy_override": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 242,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_public_admission_has_no_physical_or_policy_override:3003c6a168870045",
+        "signature_hash": "6daa85650889f03d"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_parent_evidence_generations_are_pinned": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 252,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_parent_evidence_generations_are_pinned:311606955cca4175",
+        "signature_hash": "69f742325c9c4471"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkContractTests.test_receipt_identity_is_deterministic": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 259,
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_receipt_identity_is_deterministic:75a3f4105decfe0e",
+        "signature_hash": "63949ff0453e8579"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -158416,6 +158659,206 @@
         "end_line": 224,
         "semantic_id": "tools/aura_review/test_aura_review_context_compiler.py#method:T.test_coordinate_locator_order_does_not_change_identity:9561a0884d298e23",
         "signature_hash": "acf16eb57d91cb81"
+      }
+    ],
+    "ThinkPadBenchmarkContractError": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 43,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadBenchmarkContractError:97211b0582384eb9",
+        "signature_hash": "c6da7233a5780482"
+      }
+    ],
+    "ThinkPadBenchmarkContractError.__init__": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadBenchmarkContractError.__init__:64a328bb6a449a84",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_require_nonnegative_int": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 75,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_nonnegative_int:b8cdb05c85b03d24",
+        "signature_hash": "157f27158867b08b"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkRequest": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 156,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkRequest:197748fed66ad877",
+        "signature_hash": "8e962a99434b50d3"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkRequest.__post_init__": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 137,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.__post_init__:0bfeb9f3bccdcdf4",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkRequest.query_count_per_phase": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 141,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.query_count_per_phase:c92b72b19193e16a",
+        "signature_hash": "4eee61fc08e96d38"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkRequest.query_sequence_sha256": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 152,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.query_sequence_sha256:32df1b2e9bf0bf3e",
+        "signature_hash": "c3c4fc32402c7dc0"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkRequest.request_digest": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 156,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.request_digest:3ee3b992cbfeaa30",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkPhaseSample": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 224,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkPhaseSample:eeb3de76b1e81430",
+        "signature_hash": "ce8790bfa1682b7d"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkPhaseSample.__post_init__": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 205,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.__post_init__:31f393748388d8f5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkPhaseSample.process_read_bytes_delta": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 209,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.process_read_bytes_delta:b4e66fb1ebb88802",
+        "signature_hash": "07be273d7199bad1"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkPhaseSample.minor_faults_delta": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 212,
+        "end_line": 213,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.minor_faults_delta:3738cc24262ca45b",
+        "signature_hash": "ceb91c3bfc919bf6"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkPhaseSample.major_faults_delta": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 216,
+        "end_line": 217,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.major_faults_delta:0fbc1770fe8dfac3",
+        "signature_hash": "b293bcf7c713edc5"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkPhaseSample.device_read_bytes_delta": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 224,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.device_read_bytes_delta:df38aa1e12a4def9",
+        "signature_hash": "fde83075ea23dc6e"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkReceipt": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "class",
+        "line": 228,
+        "end_line": 260,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkReceipt:0b30faaf3a9ca6b5",
+        "signature_hash": "33a73e0e84df6d12"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkReceipt.to_dict": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 255,
+        "end_line": 256,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkReceipt.to_dict:3d4400e5923cdcf7",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ThinkPadASTGEBenchmarkReceipt.receipt_digest": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 260,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkReceipt.receipt_digest:a6d3c89a296dabe7",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_monotonic": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 265,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_monotonic:b417aa1618d8de75",
+        "signature_hash": "67be6edd92124c0e"
+      }
+    ],
+    "_validate_sample": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 293,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_validate_sample:b9159727600831be",
+        "signature_hash": "56443b0d6efa1815"
+      }
+    ],
+    "admit_thinkpad_owner_host_benchmark": [
+      {
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "kind": "function",
+        "line": 296,
+        "end_line": 351,
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:admit_thinkpad_owner_host_benchmark:6581e28afa725597",
+        "signature_hash": "f680ff8905fe4b81"
       }
     ],
     "_coordinates": [
@@ -159866,6 +160309,13 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml"
+    ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
     ],
@@ -160385,9 +160835,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -170057,6 +170504,65 @@
         0.179069,
         -0.292685,
         -0.102501
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6139,
+      "lines": 150,
+      "tokens_est": 1535,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          79,
+          101
+        ],
+        "python3 -m unittest": [
+          80,
+          104
+        ]
+      },
+      "topology": {},
+      "digest8": "5c556ebe604a5ae1",
+      "vector": [
+        0.176707,
+        0.055305,
+        0.311598,
+        0.254944,
+        0.084981,
+        -0.225268,
+        -0.141636,
+        -0.241455,
+        -0.22257,
+        0.314296,
+        0.095773,
+        -0.055305,
+        0.022931,
+        -0.190196,
+        -0.314296,
+        -0.033723,
+        0.187498,
+        -0.155125,
+        -0.122751,
+        0.165916,
+        -0.087679,
+        0.076888,
+        0.114657,
+        -0.063399,
+        -0.236059,
+        0.241455,
+        0.130844,
+        -0.168614,
+        -0.195592,
+        0.109262,
+        -0.033723,
+        0.163218
       ]
     },
     {
@@ -264222,6 +264728,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9246,
+      "lines": 264,
+      "tokens_est": 2312,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6c778071b97c5ee9",
+      "vector": [
+        0.135652,
+        0.044417,
+        -0.224486,
+        -0.210081,
+        0.150058,
+        -0.054021,
+        0.205279,
+        -0.277306,
+        0.046818,
+        -0.058823,
+        0.140454,
+        0.198076,
+        -0.202878,
+        0.111643,
+        -0.015606,
+        0.253297,
+        0.23409,
+        0.003601,
+        0.296514,
+        0.003601,
+        0.222085,
+        -0.123647,
+        -0.114044,
+        0.253297,
+        -0.298915,
+        -0.154859,
+        0.20768,
+        0.159661,
+        0.092435,
+        -0.070827,
+        0.140454,
+        -0.241293
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -264877,6 +265430,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14244,
+      "lines": 352,
+      "tokens_est": 3561,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9263834cccd1be44",
+      "vector": [
+        -0.009684,
+        0.308515,
+        0.120362,
+        0.012451,
+        0.112062,
+        -0.026286,
+        0.291914,
+        0.045655,
+        -0.25871,
+        0.314049,
+        -0.106528,
+        -0.117596,
+        -0.128663,
+        0.175702,
+        0.25871,
+        -0.070557,
+        -0.092693,
+        0.125896,
+        0.026286,
+        -0.269778,
+        -0.189536,
+        0.13143,
+        -0.139731,
+        -0.017985,
+        0.291914,
+        0.333418,
+        -0.136964,
+        0.206138,
+        -0.009684,
+        -0.109295,
+        -0.070557,
+        0.184002
       ]
     },
     {
@@ -288784,16 +289384,16 @@
     }
   },
   "summary": {
-    "file_count": 1658,
-    "total_bytes": 26574180,
-    "text_tokens_est": 6633900,
+    "file_count": 1661,
+    "total_bytes": 26603809,
+    "text_tokens_est": 6641308,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 17,
       "operator_script": 9,
-      "python_module": 1001,
-      "schema_or_lexicon": 279,
+      "python_module": 1003,
+      "schema_or_lexicon": 280,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288958,6 +289558,7 @@
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/k27-astge-current-ingest-convergence.yml",
       ".github/workflows/k27-astge-immutability-capability.yml",
+      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -290441,6 +291042,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -290455,6 +291057,7 @@
       "tools/aura_review/test_aura_review_context_compiler.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_astge_thinkpad_owner_host_benchmark.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -447511,6 +448114,216 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkContractTests:130c2d9e7eb87076",
+        "name": "ThinkPadASTGEBenchmarkContractTests",
+        "kind": "class",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 99,
+        "end_line": 259,
+        "signature_hash": "3b5909c428636615",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#function:request:18c2e59e31a1de3e",
+        "name": "request",
+        "kind": "function",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 25,
+        "end_line": 37,
+        "signature_hash": "74d4e385221be9cc",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#function:samples:1ef77d7bb0ba2d4b",
+        "name": "samples",
+        "kind": "function",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 40,
+        "end_line": 96,
+        "signature_hash": "7a64efd054247659",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.admit:7c0e63b73da0d1dc",
+        "name": "ThinkPadASTGEBenchmarkContractTests.admit",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 105,
+        "end_line": 112,
+        "signature_hash": "deb94cc2e6deec2c",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.assert_code:06bdd0797ad38932",
+        "name": "ThinkPadASTGEBenchmarkContractTests.assert_code",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 100,
+        "end_line": 103,
+        "signature_hash": "eb1a74aa8011ddd4",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_cache_accounting_must_close:d7d258a840f61545",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_cache_accounting_must_close",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 195,
+        "end_line": 202,
+        "signature_hash": "d403ca9f42daab1d",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_cold_and_warm_require_same_process:f308a9286c4b2b4f",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_cold_and_warm_require_same_process",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 164,
+        "end_line": 171,
+        "signature_hash": "68e73426d1dd95af",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_device_counter_delta_still_does_not_authenticate_physical_io:b621f035f60939ac",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_device_counter_delta_still_does_not_authenticate_physical_io",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 130,
+        "end_line": 136,
+        "signature_hash": "fa1d650845729e15",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_device_counter_pair_is_optional_but_cannot_be_partial:a7224e34d19af83c",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_device_counter_pair_is_optional_but_cannot_be_partial",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 204,
+        "end_line": 210,
+        "signature_hash": "14bd8dbad1246e61",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_exact_three_phase_same_graph_contract:853e9b2b6818c1f7",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_exact_three_phase_same_graph_contract",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 114,
+        "end_line": 122,
+        "signature_hash": "f3c09c4738402096",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_parent_evidence_generations_are_pinned:311606955cca4175",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_parent_evidence_generations_are_pinned",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 244,
+        "end_line": 252,
+        "signature_hash": "69f742325c9c4471",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_process_cold_is_not_os_or_device_cold:80ea78d7ae08504d",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_process_cold_is_not_os_or_device_cold",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 124,
+        "end_line": 128,
+        "signature_hash": "20669643283fb16d",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_process_counter_rollback_fails:745c717c91ec7f1b",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_process_counter_rollback_fails",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 182,
+        "end_line": 193,
+        "signature_hash": "535b9200d98a3973",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_public_admission_has_no_physical_or_policy_override:3003c6a168870045",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_public_admission_has_no_physical_or_policy_override",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 226,
+        "end_line": 242,
+        "signature_hash": "6daa85650889f03d",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_query_sequence_mismatch_fails_before_comparison:444383c7f90944bf",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_query_sequence_mismatch_fails_before_comparison",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 146,
+        "end_line": 153,
+        "signature_hash": "856497b70e67c724",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_receipt_identity_is_deterministic:75a3f4105decfe0e",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_receipt_identity_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 254,
+        "end_line": 259,
+        "signature_hash": "63949ff0453e8579",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_request_digest_mismatch_fails:c7dcbe3442eeab1d",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_request_digest_mismatch_fails",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 155,
+        "end_line": 162,
+        "signature_hash": "0b9ece8ee59a4601",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_request_refuses_unproved_coldness_and_authority:da30b1de4d606894",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_request_refuses_unproved_coldness_and_authority",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 212,
+        "end_line": 224,
+        "signature_hash": "877e87ee018bf052",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_restart_requires_new_process:2ba188e4611151fe",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_restart_requires_new_process",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 173,
+        "end_line": 180,
+        "signature_hash": "c6c55276c36a2d13",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkContractTests.test_warm_speedup_does_not_mint_winner:c27da442aa27b070",
+        "name": "ThinkPadASTGEBenchmarkContractTests.test_warm_speedup_does_not_mint_winner",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 138,
+        "end_line": 144,
+        "signature_hash": "00cb22f102206088",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py#method:samples.phase:f7ceef439647ef7c",
+        "name": "samples.phase",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 43,
+        "end_line": 77,
+        "signature_hash": "350114ab9b7c29dd",
+        "file_digest8": "6c778071b97c5ee9"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -449031,6 +449844,246 @@
         "file_digest8": "aaec38d45a1a5e4c"
       },
       {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkPhaseSample:eeb3de76b1e81430",
+        "name": "ThinkPadASTGEBenchmarkPhaseSample",
+        "kind": "class",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 160,
+        "end_line": 224,
+        "signature_hash": "ce8790bfa1682b7d",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkReceipt:0b30faaf3a9ca6b5",
+        "name": "ThinkPadASTGEBenchmarkReceipt",
+        "kind": "class",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 228,
+        "end_line": 260,
+        "signature_hash": "33a73e0e84df6d12",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadASTGEBenchmarkRequest:197748fed66ad877",
+        "name": "ThinkPadASTGEBenchmarkRequest",
+        "kind": "class",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 79,
+        "end_line": 156,
+        "signature_hash": "8e962a99434b50d3",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#class:ThinkPadBenchmarkContractError:97211b0582384eb9",
+        "name": "ThinkPadBenchmarkContractError",
+        "kind": "class",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 37,
+        "end_line": 43,
+        "signature_hash": "c6da7233a5780482",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_canonical_bytes:8613c15bfe8c8666",
+        "name": "_canonical_bytes",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 46,
+        "end_line": 56,
+        "signature_hash": "5ac132afaebe3a2d",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_digest:ad2d52a10526f601",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_monotonic:b417aa1618d8de75",
+        "name": "_monotonic",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 263,
+        "end_line": 265,
+        "signature_hash": "67be6edd92124c0e",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_nonnegative_int:b8cdb05c85b03d24",
+        "name": "_require_nonnegative_int",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 73,
+        "end_line": 75,
+        "signature_hash": "157f27158867b08b",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_sha256:73daa254758f993e",
+        "name": "_require_sha256",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 63,
+        "end_line": 65,
+        "signature_hash": "e7468bc7ebd685f0",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_require_text:cc7e4b7a60eea514",
+        "name": "_require_text",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 68,
+        "end_line": 70,
+        "signature_hash": "43aee94117e62815",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:_validate_sample:b9159727600831be",
+        "name": "_validate_sample",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 268,
+        "end_line": 293,
+        "signature_hash": "56443b0d6efa1815",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#function:admit_thinkpad_owner_host_benchmark:6581e28afa725597",
+        "name": "admit_thinkpad_owner_host_benchmark",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 296,
+        "end_line": 351,
+        "signature_hash": "f680ff8905fe4b81",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.__post_init__:31f393748388d8f5",
+        "name": "ThinkPadASTGEBenchmarkPhaseSample.__post_init__",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 179,
+        "end_line": 205,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.device_read_bytes_delta:df38aa1e12a4def9",
+        "name": "ThinkPadASTGEBenchmarkPhaseSample.device_read_bytes_delta",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 220,
+        "end_line": 224,
+        "signature_hash": "fde83075ea23dc6e",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.major_faults_delta:0fbc1770fe8dfac3",
+        "name": "ThinkPadASTGEBenchmarkPhaseSample.major_faults_delta",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 216,
+        "end_line": 217,
+        "signature_hash": "b293bcf7c713edc5",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.minor_faults_delta:3738cc24262ca45b",
+        "name": "ThinkPadASTGEBenchmarkPhaseSample.minor_faults_delta",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 212,
+        "end_line": 213,
+        "signature_hash": "ceb91c3bfc919bf6",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkPhaseSample.process_read_bytes_delta:b4e66fb1ebb88802",
+        "name": "ThinkPadASTGEBenchmarkPhaseSample.process_read_bytes_delta",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 208,
+        "end_line": 209,
+        "signature_hash": "07be273d7199bad1",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkReceipt.receipt_digest:a6d3c89a296dabe7",
+        "name": "ThinkPadASTGEBenchmarkReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 259,
+        "end_line": 260,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkReceipt.to_dict:3d4400e5923cdcf7",
+        "name": "ThinkPadASTGEBenchmarkReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 255,
+        "end_line": 256,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.__post_init__:0bfeb9f3bccdcdf4",
+        "name": "ThinkPadASTGEBenchmarkRequest.__post_init__",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 98,
+        "end_line": 137,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.query_count_per_phase:c92b72b19193e16a",
+        "name": "ThinkPadASTGEBenchmarkRequest.query_count_per_phase",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 140,
+        "end_line": 141,
+        "signature_hash": "4eee61fc08e96d38",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.query_sequence_sha256:32df1b2e9bf0bf3e",
+        "name": "ThinkPadASTGEBenchmarkRequest.query_sequence_sha256",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 144,
+        "end_line": 152,
+        "signature_hash": "c3c4fc32402c7dc0",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadASTGEBenchmarkRequest.request_digest:3ee3b992cbfeaa30",
+        "name": "ThinkPadASTGEBenchmarkRequest.request_digest",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 155,
+        "end_line": 156,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_owner_host_benchmark.py#method:ThinkPadBenchmarkContractError.__init__:64a328bb6a449a84",
+        "name": "ThinkPadBenchmarkContractError.__init__",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "9263834cccd1be44"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -450281,7 +451334,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4c2197143abc8b3d1c8ffe4f97ffc975",
-    "payload_hash": "361c3f49322a65458b045d3d8cb2df2e"
+    "record_fingerprint": "d4c772e0befda8b3c13d6643de3c06f5",
+    "payload_hash": "fbcd6f924bcd9a8110f75505dc5f019a"
   }
 }
