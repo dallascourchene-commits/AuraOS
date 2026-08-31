@@ -1,0 +1,139 @@
+name: GLM53 Bounded Official E8 Page Materialization Canary
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py"
+      - "tests/test_glm53_bounded_official_e8_page_materialization_canary.py"
+      - ".github/workflows/glm53-bounded-official-e8-page-materialization-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  bounded-official-e8-page-materialization:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q14 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exact numeric dependency
+        run: python -m pip install --disable-pip-version-check "numpy==2.3.5"
+
+      - name: Prove exact Q13 x A6 convergence and historical codec identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONVERGENCE=f93fe24fa5801378815d7094bbf64c815fd48af1
+          Q13=eb09b5ffd14577d1676f57bb908e5ddd81125605
+          A6=fa428111f83a0f69319c10c1b28bde910544b776
+          PR628=b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae
+          test "$(git show -s --format=%P "$CONVERGENCE")" = "$Q13 $A6"
+          git merge-base --is-ancestor "$CONVERGENCE" HEAD
+          test "$(git rev-parse "$PR628:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py")" = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py)" = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+          echo Q14_TRUE_TWO_PARENT_CONVERGENCE_AND_CODEC_PIN=true
+
+      - name: Revalidate exact Q13 and A6 hosted generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          expected=[
+              (33397035043,'eb09b5ffd14577d1676f57bb908e5ddd81125605','GLM53 Full Representative Canonical Source Set',99503908177),
+              (33397763034,'fa428111f83a0f69319c10c1b28bde910544b776','Aura Fresh Portable Semantic Evidence Admission',99506305907),
+          ]
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          def get(path):
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GH_REPO']}/{path}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          for run_id,head,name,job_id in expected:
+              run=get(f'actions/runs/{run_id}')
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+              jobs=get(f'actions/runs/{run_id}/jobs')['jobs']
+              hit=[j for j in jobs if j['id']==job_id]
+              assert len(hit)==1 and hit[0]['status']=='completed' and hit[0]['conclusion']=='success',jobs
+          print('Q14_PARENT_GENERATIONS_EXACT_GREEN=true')
+          PY
+
+      - name: Compile and run bounded materialization adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py \
+            tests/test_glm53_bounded_official_e8_page_materialization_canary.py
+          PYTHONPATH=. python3 -m unittest -v tests.test_glm53_bounded_official_e8_page_materialization_canary
+
+      - name: Materialize exact bounded live source slices into E8 pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_bounded_official_e8_page_materialization_canary | tee /tmp/q14-a.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q14-a.json',encoding='utf-8'))
+          assert r['new_raw_payload_bytes_read']==136
+          assert r['source_slice_count']==2
+          assert r['materialized_page_count']==2
+          assert r['q13_full_source_set_parent_bound'] is True
+          assert r['exact_source_slice_coordinates_bound'] is True
+          assert r['actual_e8_page_payloads_materialized'] is True
+          assert r['bounded_source_slice_to_page_derivation_proven'] is True
+          assert r['candidate_page_materialization_owner_bound_for_bounded_canary'] is True
+          assert sorted(p['tensor_role'] for p in r['pages'])==['down_proj','gate_up_proj']
+          for key in ('source_slice_identity_is_full_tensor_identity','bounded_materialization_is_full_representative_source_set_materialization','baseline_same_official_source_tensor_set_proven','whole_model_coverage_proven','model_execution_observed','generalized_quality_proven','runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
+              assert r[key] is False,key
+          print('Q14_BOUNDED_SOURCE_TO_PAGE_MATERIALIZATION=true')
+          print('Q14_RECEIPT_DIGEST='+r['receipt_digest'])
+          PY
+
+      - name: Independently refetch and reproduce bounded page receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_bounded_official_e8_page_materialization_canary | tee /tmp/q14-b.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/q14-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/q14-b.json',encoding='utf-8'))
+          assert a['receipt_digest']==b['receipt_digest'],(a['receipt_digest'],b['receipt_digest'])
+          assert a['live_header_sha256']==b['live_header_sha256']
+          assert a['pages']==b['pages']
+          assert a['new_raw_payload_bytes_read']==b['new_raw_payload_bytes_read']==136
+          print('Q14_INDEPENDENT_LIVE_REFETCH_AND_PAGE_REPRODUCTION=true')
+          PY
+
+      - name: Preserve Q14 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: q14-bounded-official-e8-page-materialization-receipts
+          path: |
+            /tmp/q14-a.json
+            /tmp/q14-b.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Consequence ceiling
+        run: |
+          echo 'FullSourceIdentity != SliceIdentity != PageIdentity.'
+          echo 'Bounded source-slice materialization != full representative page set != model execution.'
+          echo 'Historical codec reuse != fresh semantic sibling.'
+          echo 'No semantic K27 authority, native/private transformer KV, Gate-10, merge or deployment authority.'
