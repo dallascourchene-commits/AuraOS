@@ -1,0 +1,178 @@
+name: GLM53 Live Official Tensor Payload Canary
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q10-live-official-payload-canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q10 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR628 x PR398 convergence and green runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='cd7ea64f104fc2dcfb89839306412a5e831bf683'
+          pr628='b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae'
+          pr398='131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,pr628,pr398], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33367948262,pr628),(33336508527,pr398)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['conclusion']=='success', (run_id,run['conclusion'])
+              assert run['head_sha']==head, (run_id,run['head_sha'],head)
+          print('Q10_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Revalidate exact PR398 live header producer and immutable metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          req=urllib.request.Request(
+              f'https://api.github.com/repos/{repo}/actions/jobs/99324255699',
+              headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as response:
+              job=json.load(response)
+          assert job['run_id']==33336508527
+          assert job['head_sha']=='131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8'
+          assert job['conclusion']=='success'
+          step={s['name']:s for s in job['steps']}['Observe official GLM-5.3 header evidence without payload']
+          assert step['conclusion']=='success'
+          print('Q10_PR398_LIVE_HEADER_JOB_REVALIDATED=true')
+          PY
+          git show 131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8:tools/awj032/glm53_safetensors_header_transport.py > /tmp/glm53_safetensors_header_transport.py
+          python3 - <<'PY'
+          import importlib.util, json
+          spec=importlib.util.spec_from_file_location('w2','/tmp/glm53_safetensors_header_transport.py')
+          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+          r=mod.collect_header_evidence(
+              repo_id='zai-org/GLM-5.3',
+              model_revision='7cda81930d6e4cef42f48555de830aa32ecdde28',
+              expected_index_sha256='e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf',
+              selected_layer=3,
+              selected_expert=0,
+          )
+          assert r.receipt_digest == '736f0a117eb02c486736e7224c4e0f5363ae60b9', r.receipt_digest
+          by={e.tensor_key:e for e in r.entries}
+          w=by['model.layers.3.mlp.experts.0.gate_proj.weight']
+          s=by['model.layers.3.mlp.experts.0.gate_proj.weight_scale_inv']
+          assert (w.shard_name,w.dtype,w.shape,w.data_offsets,w.header_sha256)==(
+              'model-00038-of-00141.safetensors','F8_E4M3',(2048,6144),(4070207936,4082790848),'8607b1b281f5ca8c7b166376e8f6d7eb9ca07f79200f6095f0f55ca35149ba56')
+          assert (s.shard_name,s.dtype,s.shape,s.data_offsets,s.header_sha256)==(
+              'model-00038-of-00141.safetensors','F32',(16,48),(993728,996800),'8607b1b281f5ca8c7b166376e8f6d7eb9ca07f79200f6095f0f55ca35149ba56')
+          print('Q10_LIVE_HEADER_REOBSERVATION_EXACT=true')
+          PY
+
+      - name: Prove PR628 source identity is canonical float32 not raw FP8 bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py > /tmp/pr628.py
+          grep -F 'src = np.asarray(w, dtype="<f4").tobytes(order="C")' /tmp/pr628.py
+          grep -F 'source_tensor_sha256' /tmp/pr628.py
+          grep -F 'TENSOR_ROLES = frozenset({"gate_up_proj", "down_proj"})' /tmp/pr628.py
+          echo 'Q10_PR628_SOURCE_IDENTITY_SEMANTICS_BOUND=true'
+
+      - name: Run Q10 adversarial suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_live_official_tensor_payload_canary.py \
+            tools/quantization/test_aura_glm53_live_official_tensor_payload_canary.py
+          python3 -m unittest -v tools.quantization.test_aura_glm53_live_official_tensor_payload_canary
+
+      - name: Observe bounded live official FP8 weight and scale payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.quantization.aura_glm53_live_official_tensor_payload_canary | tee /tmp/q10.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q10.json',encoding='utf-8'))
+          assert r['live_representative_tensor_payload_pair_observed'] is True
+          assert r['weight_payload_bytes']==12_582_912
+          assert r['scale_payload_bytes']==3_072
+          assert r['total_payload_bytes_read']==12_585_984
+          assert len(r['weight_payload_sha256'])==64
+          assert len(r['scale_payload_sha256'])==64
+          assert r['representative_scope_only'] is True
+          assert r['full_expert_payload_observed'] is False
+          assert r['raw_fp8_payload_is_pr628_canonical_float32_source_identity'] is False
+          assert r['official_tensor_to_pr628_source_tensor_relation_proven'] is False
+          assert r['candidate_page_materialization_owner_bound'] is False
+          print('Q10_LIVE_REPRESENTATIVE_PAYLOAD_PAIR_OBSERVED=true')
+          print('Q10_WEIGHT_SHA256='+r['weight_payload_sha256'])
+          print('Q10_SCALE_SHA256='+r['scale_payload_sha256'])
+          PY
+
+      - name: Independently refetch and reproduce payload hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, urllib.request
+          r=json.load(open('/tmp/q10.json',encoding='utf-8'))
+          url='https://huggingface.co/zai-org/GLM-5.3/resolve/7cda81930d6e4cef42f48555de830aa32ecdde28/model-00038-of-00141.safetensors?download=true'
+          def fetch(pair):
+              start,end_exclusive=pair; end=end_exclusive-1; length=end_exclusive-start
+              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q10-IndependentReplay/1','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  status=getattr(response,'status',None) or response.getcode()
+                  assert status==206,status
+                  cr=str(response.headers.get('Content-Range',''))
+                  assert cr.startswith(f'bytes {start}-{end}/'),cr
+                  raw=response.read(length+1)
+              assert len(raw)==length,(len(raw),length)
+              return hashlib.sha256(raw).hexdigest()
+          assert fetch(r['weight_absolute_range'])==r['weight_payload_sha256']
+          assert fetch(r['scale_absolute_range'])==r['scale_payload_sha256']
+          print('Q10_INDEPENDENT_PAYLOAD_HASH_REPLAY=true')
+          PY
+
+      - name: Consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q10.json',encoding='utf-8'))
+          for key in (
+              'full_expert_payload_observed','all_layer_expert_payload_uniformity_proven',
+              'raw_fp8_payload_is_pr628_canonical_float32_source_identity',
+              'official_tensor_to_pr628_source_tensor_relation_proven','candidate_page_materialization_owner_bound',
+              'baseline_same_official_source_tensor_set_proven','real_tensor_quantization_eligible',
+              'model_execution_observed','generalized_quality_proven','runtime_performance_proven',
+              'semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','deployment_authorized'):
+              assert r[key] is False,key
+          print('Q10_NONPROMOTION_CEILING=true')
+          PY
