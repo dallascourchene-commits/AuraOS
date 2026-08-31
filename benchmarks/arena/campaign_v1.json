@@ -1,0 +1,76 @@
+{
+  "schema_id": "AURA_ARENA_BENCHMARK_CAMPAIGN_V1",
+  "campaign_id": "arena-benchmark-20260831",
+  "parent_issue": 689,
+  "claim_ceiling": "CONTRACT_AND_PROVENANCE_ONLY_NO_BENCHMARK_SCORE",
+  "semantic_k27_coordinate": "UNRESOLVED_CANONICAL_RESOLVER_REQUIRED",
+  "physical_placement_is_semantic_identity": false,
+  "cache_or_index_hit_is_evidence": false,
+  "suites": [
+    {
+      "suite_id": "terminal-bench@2.0",
+      "execution_owner_issue": 691,
+      "upstream_class": "PRIMARY_UPSTREAM",
+      "harness": "Harbor",
+      "execution_mode": "MANUAL_RUNTIME_GATED",
+      "official_score_claimed": false
+    },
+    {
+      "suite_id": "SWE-bench_Verified",
+      "canonical_task_count": 500,
+      "execution_owner_issue": 692,
+      "upstream_class": "PRIMARY_UPSTREAM",
+      "execution_mode": "MANUAL_RUNTIME_GATED",
+      "smoke_subset": {
+        "name": "Aura Verified-50 Smoke",
+        "size": 50,
+        "official": false,
+        "leaderboard_score": false,
+        "selection_must_be_deterministic": true
+      },
+      "official_score_claimed": false
+    },
+    {
+      "suite_id": "aura-long-horizon-state-v1",
+      "execution_owner_issue": 693,
+      "upstream_class": "AURA_LOCAL_BENCHMARK",
+      "execution_mode": "MANUAL_OR_PR_SAFE_LOCAL_ADAPTER",
+      "simulated_comparative_values_forbidden": true,
+      "missing_measurement_policy": "UNKNOWN_NOT_ZERO",
+      "official_score_claimed": false
+    }
+  ],
+  "external_pressure": [
+    {
+      "key": "terminal-bench-paper-2601.11868",
+      "class": "SCHOLARLY_PRIMARY",
+      "locator": "arXiv:2601.11868",
+      "authority": "EVIDENCE_PRESSURE_ONLY"
+    },
+    {
+      "key": "long-horizon-terminal-bench-2607.08964",
+      "class": "SCHOLARLY",
+      "locator": "arXiv:2607.08964",
+      "authority": "EVIDENCE_PRESSURE_ONLY"
+    },
+    {
+      "key": "proactive-memory-agent-2607.08716",
+      "class": "SCHOLARLY",
+      "locator": "arXiv:2607.08716",
+      "authority": "EVIDENCE_PRESSURE_ONLY"
+    },
+    {
+      "key": "reddit-terminal-bench-practitioner-pressure",
+      "class": "COMMUNITY_ZERO_AUTHORITY",
+      "locator": "reddit-search-cut-2026-08-31",
+      "authority": "ZERO"
+    }
+  ],
+  "reopen_conditions": [
+    "canonical K27 resolver becomes callable",
+    "upstream suite or harness generation changes",
+    "runtime/provider execution becomes authorized and observed",
+    "score-admission validator generation changes",
+    "raw evidence contradicts indexed metadata"
+  ]
+}

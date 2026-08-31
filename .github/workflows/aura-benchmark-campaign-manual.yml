@@ -1,0 +1,144 @@
+name: Aura Benchmark Campaign Manual Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Bounded suite action"
+        required: true
+        type: choice
+        options:
+          - plan-only
+          - terminal-bench-oracle-smoke
+          - swebench-verified-gold-one
+      max_tasks:
+        description: "Maximum task count; hard-capped below"
+        required: true
+        default: "1"
+        type: string
+      max_workers:
+        description: "Maximum concurrent workers; hard-capped below"
+        required: true
+        default: "1"
+        type: string
+      confirm_effect:
+        description: "Type RUN_BOUNDED_BENCHMARK to permit Docker/evaluation effects"
+        required: true
+        default: "PLAN_ONLY"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  PYTHONHASHSEED: "0"
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      suite: ${{ steps.gate.outputs.suite }}
+      max_tasks: ${{ steps.gate.outputs.max_tasks }}
+      max_workers: ${{ steps.gate.outputs.max_workers }}
+      execute: ${{ steps.gate.outputs.execute }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: gate
+        name: Validate bounded effect request
+        shell: bash
+        env:
+          SUITE_INPUT: ${{ inputs.suite }}
+          MAX_TASKS_INPUT: ${{ inputs.max_tasks }}
+          MAX_WORKERS_INPUT: ${{ inputs.max_workers }}
+          CONFIRM_EFFECT_INPUT: ${{ inputs.confirm_effect }}
+        run: |
+          set -euo pipefail
+          suite="$SUITE_INPUT"
+          tasks="$MAX_TASKS_INPUT"
+          workers="$MAX_WORKERS_INPUT"
+          confirm="$CONFIRM_EFFECT_INPUT"
+          case "$suite" in
+            plan-only|terminal-bench-oracle-smoke|swebench-verified-gold-one) ;;
+            *) echo "invalid suite"; exit 2 ;;
+          esac
+          [[ "$tasks" =~ ^[0-9]+$ ]] && (( tasks >= 1 && tasks <= 20 )) || { echo "max_tasks must be 1..20"; exit 2; }
+          [[ "$workers" =~ ^[0-9]+$ ]] && (( workers >= 1 && workers <= 4 )) || { echo "max_workers must be 1..4"; exit 2; }
+          execute=false
+          if [[ "$suite" != "plan-only" && "$confirm" == "RUN_BOUNDED_BENCHMARK" ]]; then execute=true; fi
+          echo "suite=$suite" >> "$GITHUB_OUTPUT"
+          echo "max_tasks=$tasks" >> "$GITHUB_OUTPUT"
+          echo "max_workers=$workers" >> "$GITHUB_OUTPUT"
+          echo "execute=$execute" >> "$GITHUB_OUTPUT"
+          python -m json.tool benchmarks/arena/campaign_v1.json > /dev/null
+          printf 'suite=%s\nmax_tasks=%s\nmax_workers=%s\nexecute=%s\n' "$suite" "$tasks" "$workers" "$execute"
+
+  terminal-bench-oracle-smoke:
+    needs: gate
+    if: needs.gate.outputs.suite == 'terminal-bench-oracle-smoke' && needs.gate.outputs.execute == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install official Harbor harness
+        run: uv tool install harbor
+      - name: Record versions before effect
+        run: |
+          harbor --help >/dev/null
+          docker version
+      - name: Run bounded Terminal-Bench 2.0 oracle smoke
+        env:
+          MAX_WORKERS: ${{ needs.gate.outputs.max_workers }}
+          MAX_TASKS: ${{ needs.gate.outputs.max_tasks }}
+        run: |
+          harbor run --dataset terminal-bench@2.0 \
+            --agent oracle \
+            --n-concurrent "$MAX_WORKERS" \
+            --max-tasks "$MAX_TASKS"
+      - name: Upload raw Harbor jobs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terminal-bench-oracle-smoke-${{ github.run_id }}
+          path: jobs/
+          if-no-files-found: warn
+          retention-days: 30
+
+  swebench-verified-gold-one:
+    needs: gate
+    if: needs.gate.outputs.suite == 'swebench-verified-gold-one' && needs.gate.outputs.execute == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Enforce one-instance gold setup probe
+        env:
+          MAX_TASKS: ${{ needs.gate.outputs.max_tasks }}
+        run: test "$MAX_TASKS" = '1'
+      - name: Install SWE-bench evaluation harness
+        run: python -m pip install swebench
+      - name: Verify Docker before effect
+        run: docker version
+      - name: Run official one-instance gold evaluation
+        run: |
+          python -m swebench.harness.run_evaluation \
+            --dataset_name princeton-nlp/SWE-bench_Verified \
+            --split test \
+            --predictions_path gold \
+            --max_workers 1 \
+            --instance_ids sympy__sympy-20590 \
+            --run_id aura-verified-gold-${{ github.run_id }}
+      - name: Upload raw SWE-bench evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swebench-verified-gold-one-${{ github.run_id }}
+          path: |
+            logs/
+            evaluation_results/
+          if-no-files-found: warn
+          retention-days: 30

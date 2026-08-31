@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788191888,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1656,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -133,6 +133,8 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-benchmark-campaign-contracts.yml",
+      ".github/workflows/aura-benchmark-campaign-manual.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -919,6 +921,7 @@
       "aura_workspace/outbox/WO-UNIVERSAL-GLOBAL-BENCHMARK-DAEMON-EXHAUSTIVE.telemetry.json",
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/arena/campaign_v1.json",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -1361,6 +1364,7 @@
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
+      "tests/test_aura_benchmark_score_admission.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
@@ -1623,14 +1627,27 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_long_horizon_preregistration.py",
+      "tests/test_long_horizon_state_benchmark.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_paired_comparison_admission.py",
+      "tests/test_persistent_adapter_protocol.py",
+      "tests/test_persistent_adapter_runner.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_select_swe_verified_smoke.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/benchmarks/aura_benchmark_score_admission.py",
+      "tools/benchmarks/long_horizon_preregistration.py",
+      "tools/benchmarks/long_horizon_state_benchmark.py",
+      "tools/benchmarks/paired_comparison_admission.py",
+      "tools/benchmarks/persistent_adapter_protocol.py",
+      "tools/benchmarks/persistent_adapter_runner.py",
+      "tools/benchmarks/select_swe_verified_smoke.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1739,6 +1756,7 @@
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
+      "tests/test_aura_benchmark_score_admission.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
@@ -1746,8 +1764,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1772,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1656,
+      "bytes": 26511270,
+      "tokens_est": 6618176,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1011,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -3461,6 +3478,38 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 178,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:main:8f6350fcb6375b6b",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 95,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:main:aff2274cb5a57719",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 354,
+        "end_line": 371,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:main:ee0b6594a86bc7c9",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 78,
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:main:7bc8712e6428394a",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3653,6 +3702,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 87,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:run:ed429c65d46a8377",
+        "signature_hash": "20ab0bc3a6821820"
       }
     ],
     "run.record": [
@@ -4337,6 +4394,22 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_digest:37f03a5ff42df73a",
+        "signature_hash": "e3dbc3c92109621f"
+      },
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:_digest:0fc53bcf06ff9226",
+        "signature_hash": "6db9016a3f6bed4c"
       }
     ],
     "_token_proxy": [
@@ -8057,6 +8130,14 @@
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
         "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 18,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_canonical_json:b53b2f3ce67e8903",
+        "signature_hash": "a5c16b842176e713"
       }
     ],
     "_sha": [
@@ -11061,6 +11142,14 @@
         "end_line": 205,
         "semantic_id": "aura_crucible_types.py#function:canonical_digest:51a5b70d8537754d",
         "signature_hash": "fd08555a00404e81"
+      },
+      {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:canonical_digest:71e80304abbc65b0",
+        "signature_hash": "35a2499e95f22ae8"
       }
     ],
     "CodingTask": [
@@ -15765,6 +15854,14 @@
         "end_line": 81,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_required:fd9913556df96604",
         "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_required:65930e0555164866",
+        "signature_hash": "24cabde161aeb9da"
       }
     ],
     "_hash": [
@@ -20123,6 +20220,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
         "signature_hash": "bd189b17ea870e50"
+      },
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:digest:c689117845a6cc3a",
+        "signature_hash": "37cf7141f4901513"
       }
     ],
     "_runtime_binding_digest": [
@@ -27101,6 +27206,22 @@
         "end_line": 139,
         "semantic_id": "aura_construction_architect_refactor.py#function:_canonical_digest:be0ef5279214bc45",
         "signature_hash": "0513d5eea6b714f2"
+      },
+      {
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:_canonical_digest:971ca01c805f0fc2",
+        "signature_hash": "305798929204fa24"
+      },
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_canonical_digest:c5b55b7467f54d89",
+        "signature_hash": "305798929204fa24"
       }
     ],
     "_markdown_integer": [
@@ -113271,6 +113392,14 @@
         "signature_hash": "c73d3075455b50af"
       },
       {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:fixture:31bdb489dbb99df9",
+        "signature_hash": "879fb97b430d30c7"
+      },
+      {
         "file": "tests/test_aura_construction_adapter.py",
         "kind": "function",
         "line": 23,
@@ -117959,6 +118088,194 @@
         "end_line": 225,
         "semantic_id": "tests/test_aura_benchmark_four_hardening.py#function:test_council_replan_never_leaves_waiting_state_without_turn:64656ab4c1e7f4bb",
         "signature_hash": "92237d6ca00456a9"
+      }
+    ],
+    "policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:policy:551e4a27ed4e5f16",
+        "signature_hash": "934f05f4cd97dc8e"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 184,
+        "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
+        "signature_hash": "96c8d2d81ca0f6b2"
+      }
+    ],
+    "test_duplicate_attempt_does_not_inflate_score": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_duplicate_attempt_does_not_inflate_score:b61f37cc2ab5b31f",
+        "signature_hash": "ba1c0c9f8b6364a5"
+      }
+    ],
+    "test_changed_agent_generation_is_distinct_parent_state": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_agent_generation_is_distinct_parent_state:99b732c02c64794e",
+        "signature_hash": "852838b385478f60"
+      }
+    ],
+    "test_changed_dataset_generation_is_distinct_parent_state": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_dataset_generation_is_distinct_parent_state:b24c54f643e15858",
+        "signature_hash": "2827c0b522e3ca90"
+      }
+    ],
+    "test_contradictory_duplicate_result_fails_closed": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_contradictory_duplicate_result_fails_closed:c42c76deb08994e9",
+        "signature_hash": "3901707bceee8cc3"
+      }
+    ],
+    "test_scoring_result_requires_source_verification_for_pass_and_fail": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_source_verification_for_pass_and_fail:d8435f19f35587e5",
+        "signature_hash": "84081f410a82a424"
+      }
+    ],
+    "test_scoring_result_requires_observed_execution": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_observed_execution:5f3e47c37ddd938b",
+        "signature_hash": "5160518f1b7839fb"
+      }
+    ],
+    "test_receipt_booleans_cannot_self_mint_execution_authority": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_booleans_cannot_self_mint_execution_authority:4c6adfc589f400f0",
+        "signature_hash": "3ce30efdeab1ab27"
+      }
+    ],
+    "test_receipt_route_must_match_trusted_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_route_must_match_trusted_policy:313cd25ef6463444",
+        "signature_hash": "ee129637911bb9e3"
+      }
+    ],
+    "test_receipt_observer_must_match_trusted_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_observer_must_match_trusted_policy:ae7da3f80a855263",
+        "signature_hash": "4cc0bc385fbf6a01"
+      }
+    ],
+    "test_source_verifier_must_be_authorized_and_match_trusted_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 135,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_source_verifier_must_be_authorized_and_match_trusted_policy:8a49850b943dbe71",
+        "signature_hash": "1951d6edb6d8fa72"
+      }
+    ],
+    "test_authority_scope_must_match_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_authority_scope_must_match_policy:2754efea33b58173",
+        "signature_hash": "56369d592f6f1d80"
+      }
+    ],
+    "test_unknown_measurement_cannot_launder_zero_or_estimates": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 148,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_cannot_launder_zero_or_estimates:5ddcee441aef0de2",
+        "signature_hash": "6274b69b265d7904"
+      }
+    ],
+    "test_unknown_measurement_with_no_values_is_valid": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 168,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_with_no_values_is_valid:f35de23fca4be3ee",
+        "signature_hash": "8b877b6410c11bd2"
+      }
+    ],
+    "test_estimated_measurement_remains_explicitly_estimated": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 171,
+        "end_line": 173,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_estimated_measurement_remains_explicitly_estimated:00a3a1877a5b0db1",
+        "signature_hash": "2f16a9de1c2adf1e"
+      }
+    ],
+    "test_score_identity_excludes_retry_identity_but_binds_model": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 181,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_score_identity_excludes_retry_identity_but_binds_model:b2f496964c1eea02",
+        "signature_hash": "3e8d35ef8f0f1c67"
+      }
+    ],
+    "test_policy_generation_changes_evidence_generation_not_score_identity": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 189,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_policy_generation_changes_evidence_generation_not_score_identity:2270da309905ea99",
+        "signature_hash": "45936c10cad1e989"
+      }
+    ],
+    "test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 192,
+        "end_line": 193,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_is_deterministic:94c317548259ede6",
+        "signature_hash": "834891cb2aea3ac1"
       }
     ],
     "workflow": [
@@ -136639,16 +136956,6 @@
         "end_line": 130,
         "semantic_id": "tests/test_aura_gate.py#method:FailingStartAudit.export_siem:7735373c6cd24eef",
         "signature_hash": "49f2fd618649a7d1"
-      }
-    ],
-    "policy": [
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 152,
-        "end_line": 184,
-        "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
-        "signature_hash": "96c8d2d81ca0f6b2"
       }
     ],
     "test_policy_round_trip_and_strict_contract": [
@@ -156921,6 +157228,86 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "arms": [
+      {
+        "file": "tests/test_long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 30,
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:arms:a7ceec4e2d10675f",
+        "signature_hash": "ee8bb314454ae45b"
+      }
+    ],
+    "test_preregistration_is_order_independent_and_frozen": [
+      {
+        "file": "tests/test_long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 54,
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_preregistration_is_order_independent_and_frozen:fb4b87cc37d34c48",
+        "signature_hash": "882da0da6c027bd9"
+      }
+    ],
+    "test_condition_mapping_cannot_be_embedded_in_blinded_manifest": [
+      {
+        "file": "tests/test_long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 67,
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_condition_mapping_cannot_be_embedded_in_blinded_manifest:0f6c80dfe5d0403e",
+        "signature_hash": "4d3975f9804cee13"
+      }
+    ],
+    "test_duplicate_blinded_label_fails_closed": [
+      {
+        "file": "tests/test_long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 80,
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_duplicate_blinded_label_fails_closed:fff0ffa05a52137e",
+        "signature_hash": "3612f626c9341a04"
+      }
+    ],
+    "test_adapter_generation_and_command_digest_are_identity_bearing": [
+      {
+        "file": "tests/test_long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 111,
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_adapter_generation_and_command_digest_are_identity_bearing:44b734f5256d5d7f",
+        "signature_hash": "89932b71eb04fe4b"
+      }
+    ],
+    "test_invalid_identity_or_timeout_fails_closed": [
+      {
+        "file": "tests/test_long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 144,
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_invalid_identity_or_timeout_fails_closed:a236e1b5e8303a99",
+        "signature_hash": "c95d66e532b165c3"
+      }
+    ],
+    "test_workload_is_deterministic_contains_rollback_and_keeps_answers_runner_side": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 59,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_workload_is_deterministic_contains_rollback_and_keeps_answers_runner_side:ba5f3df54c5fd921",
+        "signature_hash": "6aa5f12a5f57e54a"
+      }
+    ],
+    "test_compatibility_entrypoint_uses_preregistered_persistent_protocol": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 89,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_compatibility_entrypoint_uses_preregistered_persistent_protocol:337475f1e86869a1",
+        "signature_hash": "104e0b044a1d9def"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157141,6 +157528,266 @@
         "signature_hash": "a7f899fb2c74e634"
       }
     ],
+    "prereg": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 39,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:prereg:364bfcefd6d7881b",
+        "signature_hash": "c4b4adaed36d5c0e"
+      }
+    ],
+    "report": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 90,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:report:480f92eb7f273adf",
+        "signature_hash": "357c2af6eb2313cb"
+      }
+    ],
+    "matched_pair": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 111,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:matched_pair:e8a2588cd207b03e",
+        "signature_hash": "6ec9763da0526d03"
+      }
+    ],
+    "test_exact_pair_is_admitted_but_remains_blinded_without_winner": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 123,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_exact_pair_is_admitted_but_remains_blinded_without_winner:fc315d31893d8890",
+        "signature_hash": "37189165f3e6a9a9"
+      }
+    ],
+    "test_observed_label_without_values_does_not_mint_metric_comparability": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 130,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_observed_label_without_values_does_not_mint_metric_comparability:059db60366507c35",
+        "signature_hash": "3c3367e0dddba5c3"
+      }
+    ],
+    "test_only_metrics_observed_on_every_turn_in_both_arms_are_comparable": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 173,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_only_metrics_observed_on_every_turn_in_both_arms_are_comparable:cea8be38f3f36178",
+        "signature_hash": "eb23ad2ec471e219"
+      }
+    ],
+    "test_pair_rejects_workload_command_and_generation_substitution": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 194,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_pair_rejects_workload_command_and_generation_substitution:88eb52bae2b9d80b",
+        "signature_hash": "959cbcdc0f9d372d"
+      }
+    ],
+    "test_startup_failure_is_retained_as_matched_inconclusive_evidence": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 214,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_startup_failure_is_retained_as_matched_inconclusive_evidence:7c90f810180e943e",
+        "signature_hash": "73616eb8a0789231"
+      }
+    ],
+    "test_unblinded_fields_and_duplicate_labels_fail_closed": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 227,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_unblinded_fields_and_duplicate_labels_fail_closed:802044dca786b558",
+        "signature_hash": "08660021925732b4"
+      }
+    ],
+    "test_tampered_evidence_digest_fails_closed": [
+      {
+        "file": "tests/test_paired_comparison_admission.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 236,
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_tampered_evidence_digest_fails_closed:217a0ecd8991ac79",
+        "signature_hash": "3ff89b4054ca5abb"
+      }
+    ],
+    "handshake": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 28,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:handshake:7c5982dd10d4cb85",
+        "signature_hash": "f2af84dd2db94202"
+      }
+    ],
+    "test_handshake_preserves_generation_and_capabilities": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 36,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_handshake_preserves_generation_and_capabilities:1a35445e57f3d369",
+        "signature_hash": "69293f8b801c8ac6"
+      }
+    ],
+    "test_nonpersistent_adapter_cannot_claim_persistent_protocol": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 43,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_nonpersistent_adapter_cannot_claim_persistent_protocol:71addd865fa9a47c",
+        "signature_hash": "ba9c1bbc4461d2f4"
+      }
+    ],
+    "test_turn_response_is_bound_to_turn_and_adapter_generation": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 65,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_turn_response_is_bound_to_turn_and_adapter_generation:92d2e6ec6f225623",
+        "signature_hash": "aa27e9b7bebc54f1"
+      }
+    ],
+    "test_unknown_telemetry_still_cannot_carry_zero": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 77,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_unknown_telemetry_still_cannot_carry_zero:b0f827a38f11332f",
+        "signature_hash": "cf02fb51fab080de"
+      }
+    ],
+    "test_observed_or_estimated_metric_values_must_be_well_typed": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 107,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_observed_or_estimated_metric_values_must_be_well_typed:6035a5538ff5b0b3",
+        "signature_hash": "70d196c22d8350de"
+      }
+    ],
+    "test_turn_request_does_not_include_expected_state_digest": [
+      {
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 124,
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_turn_request_does_not_include_expected_state_digest:aec7f7820ead727e",
+        "signature_hash": "7feaea487554bcb9"
+      }
+    ],
+    "write_adapter": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:write_adapter:2e52077e1143be42",
+        "signature_hash": "985d5e8d60413212"
+      }
+    ],
+    "make_prereg": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 76,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:make_prereg:50e3664f9cbec454",
+        "signature_hash": "ae508f40a293163d"
+      }
+    ],
+    "test_persistent_adapter_keeps_state_in_one_process": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 102,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_persistent_adapter_keeps_state_in_one_process:3b8e95e53d87e670",
+        "signature_hash": "8d2bea1083ca7866"
+      }
+    ],
+    "test_changed_command_is_rejected_before_process_launch": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 115,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_changed_command_is_rejected_before_process_launch:c87f8e644e26655b",
+        "signature_hash": "8502fe23295ee06e"
+      }
+    ],
+    "test_handshake_generation_mismatch_stops_before_turn_effects": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 127,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_handshake_generation_mismatch_stops_before_turn_effects:a394747ff906c76e",
+        "signature_hash": "e3ab9d11f33f8b42"
+      }
+    ],
+    "test_turn_generation_mismatch_fails_protocol_and_stops_later_effects": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 130,
+        "end_line": 141,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_turn_generation_mismatch_fails_protocol_and_stops_later_effects:473ab572cae745ae",
+        "signature_hash": "f9786e49c95f0186"
+      }
+    ],
+    "test_real_digest_mismatch_does_not_desynchronize_persistent_process": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 144,
+        "end_line": 155,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_real_digest_mismatch_does_not_desynchronize_persistent_process:d10b010b8a7ac0d1",
+        "signature_hash": "491741d4a05fe0cc"
+      }
+    ],
+    "test_timeout_is_retained_and_future_turns_are_not_replayed": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 170,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_timeout_is_retained_and_future_turns_are_not_replayed:1cc0651326fce56f",
+        "signature_hash": "f7c2c68ae6de6bba"
+      }
+    ],
+    "test_invalid_handshake_is_inconclusive_without_turn_execution": [
+      {
+        "file": "tests/test_persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 182,
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_invalid_handshake_is_inconclusive_without_turn_execution:41444841f448e0ae",
+        "signature_hash": "67cea62fa91d0a27"
+      }
+    ],
     "test_default_dockerfile_launches_unified_showcase": [
       {
         "file": "tests/test_render_four_tab_deployment.py",
@@ -157179,6 +157826,406 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "ids": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:ids:40ec7171f1917992",
+        "signature_hash": "ca70b72979216612"
+      }
+    ],
+    "test_selection_is_deterministic_and_order_independent": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_selection_is_deterministic_and_order_independent:968c173c1c436c2c",
+        "signature_hash": "a1be78a2a242f72e"
+      }
+    ],
+    "test_seed_changes_selection": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_seed_changes_selection:fd431273f50c6207",
+        "signature_hash": "6ae891d873e029a1"
+      }
+    ],
+    "test_duplicate_instance_id_fails_closed": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_duplicate_instance_id_fails_closed:58b4b476d64a62b8",
+        "signature_hash": "a908467555d12851"
+      }
+    ],
+    "test_invalid_count_fails_closed": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_invalid_count_fails_closed:c44ebcd2677e832f",
+        "signature_hash": "ff94c772a2b8057c"
+      }
+    ],
+    "test_manifest_is_explicitly_non_official": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 38,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_manifest_is_explicitly_non_official:9d5af20b32d68af1",
+        "signature_hash": "4eb7f7eae665f4d5"
+      }
+    ],
+    "test_source_generation_is_bound_into_manifest": [
+      {
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 45,
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_source_generation_is_bound_into_manifest:bf55f64bf5c15a09",
+        "signature_hash": "00f96a9158515b26"
+      }
+    ],
+    "BenchmarkAdmissionPolicy": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 74,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkAdmissionPolicy:447ed156ed44fcaa",
+        "signature_hash": "ef5d9a695466db4f"
+      }
+    ],
+    "BenchmarkAdmissionPolicy.validate": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 59,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate:42c96566bd720cd5",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BenchmarkAdmissionPolicy.validate_receipt": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 74,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate_receipt:8ba846bb707e33f6",
+        "signature_hash": "20caa3e8d201d843"
+      }
+    ],
+    "BenchmarkTaskReceipt": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 210,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkTaskReceipt:f3b51ef4ca94faa4",
+        "signature_hash": "1ce69d153abe8aa6"
+      }
+    ],
+    "BenchmarkTaskReceipt.validate": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 153,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.validate:eb88403220ae5ddc",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BenchmarkTaskReceipt.score_identity": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 171,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.score_identity:ce3250c0e831210e",
+        "signature_hash": "2b78a67bca4cde6d"
+      }
+    ],
+    "BenchmarkTaskReceipt.receipt_digest": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 176,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.receipt_digest:9f94e1fe49cbf639",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "BenchmarkTaskReceipt.to_dict": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 210,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.to_dict:22eaff9db72bbd98",
+        "signature_hash": "c9885ae795ae11e7"
+      }
+    ],
+    "admit_score": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 213,
+        "end_line": 254,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:admit_score:c0102ef0fa43b713",
+        "signature_hash": "e5de6c318529836a"
+      }
+    ],
+    "command_digest": [
+      {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:command_digest:8c778b497111aafc",
+        "signature_hash": "7ebd3c8e541c2dab"
+      }
+    ],
+    "_normalize_arms": [
+      {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 63,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:_normalize_arms:1484c96716065881",
+        "signature_hash": "496b08e13641996a"
+      }
+    ],
+    "build_preregistration": [
+      {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 103,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:build_preregistration:1ce381ef4efb7650",
+        "signature_hash": "4329ad39173613d5"
+      }
+    ],
+    "validate_preregistration": [
+      {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 144,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:validate_preregistration:0a463bdf944cd034",
+        "signature_hash": "5d787411a55f3670"
+      }
+    ],
+    "get_preregistered_arm": [
+      {
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 152,
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:get_preregistered_arm:a0063a1b88fe1b4b",
+        "signature_hash": "383848c18ee5af67"
+      }
+    ],
+    "build_workload": [
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 49,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:build_workload:7f9f36594ec815d3",
+        "signature_hash": "201dfe0430e98fcb"
+      }
+    ],
+    "run_adapter": [
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 73,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:run_adapter:3eb20198f6d3d2ed",
+        "signature_hash": "0a84987635e14daf"
+      }
+    ],
+    "_verify_embedded_digest": [
+      {
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:_verify_embedded_digest:255d2b615ffb0595",
+        "signature_hash": "9f193f276c7e9034"
+      }
+    ],
+    "_observed_metrics": [
+      {
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 46,
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:_observed_metrics:99863462e7ed672a",
+        "signature_hash": "53b6b66184bd4c3c"
+      }
+    ],
+    "admit_blinded_pair": [
+      {
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 156,
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:admit_blinded_pair:1a369e6b697d203e",
+        "signature_hash": "2566a4fd6d6018d1"
+      }
+    ],
+    "validate_handshake": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 45,
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:validate_handshake:f45e6b435d53c2c6",
+        "signature_hash": "0f407fc4c26734c1"
+      }
+    ],
+    "_validate_telemetry": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 63,
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:_validate_telemetry:1ee5331378bb543e",
+        "signature_hash": "a63c40a6ce5a659b"
+      }
+    ],
+    "validate_turn_response": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 93,
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:validate_turn_response:4e1324d89df587b6",
+        "signature_hash": "a77d08fd685d9512"
+      }
+    ],
+    "make_turn_request": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 110,
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:make_turn_request:afb8d2b45d8166f9",
+        "signature_hash": "cd13b99715e07e08"
+      }
+    ],
+    "_reader": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 43,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_reader:e5b60866b02d00f3",
+        "signature_hash": "813b8f7e8973b145"
+      }
+    ],
+    "_stderr_reader": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 48,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_stderr_reader:ca5711cd9b5e5ac7",
+        "signature_hash": "1a0cf8f790a86815"
+      }
+    ],
+    "_receive_line": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_receive_line:e4ae8c127ab304b2",
+        "signature_hash": "14773114efbe0319"
+      }
+    ],
+    "_terminate": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 78,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_terminate:9e50fbec9b481b1b",
+        "signature_hash": "57e6bf55283b96b5"
+      }
+    ],
+    "_startup_failure_report": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 117,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_startup_failure_report:c55bb2b9a2c28dc1",
+        "signature_hash": "04492a3eabf57cd2"
+      }
+    ],
+    "run_persistent_adapter": [
+      {
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 351,
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:run_persistent_adapter:cf61fac0fc222db7",
+        "signature_hash": "9d702f888de31fc0"
+      }
+    ],
+    "select_instance_ids": [
+      {
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 25,
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:select_instance_ids:80e55c852a78b9c8",
+        "signature_hash": "ae8901658d3114b0"
+      }
+    ],
+    "select_instance_ids.rank": [
+      {
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#method:select_instance_ids.rank:2e633a17aa585227",
+        "signature_hash": "ef2014bd8ba89c6f"
+      }
+    ],
+    "read_jsonl_ids": [
+      {
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 39,
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:read_jsonl_ids:35c437e5751857d4",
+        "signature_hash": "cba518eb266f480f"
+      }
+    ],
+    "build_manifest": [
+      {
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 59,
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:build_manifest:e7297dbd73e8c390",
+        "signature_hash": "fe36517684959971"
       }
     ],
     "_coordinates": [
@@ -158289,6 +159336,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-benchmark-campaign-contracts.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -158420,6 +159468,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-benchmark-campaign-contracts.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -158526,6 +159575,7 @@
     "python -m json.tool": [
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
+      ".github/workflows/aura-benchmark-campaign-manual.yml",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md"
     ],
     "python aura_architect_consolidation_benchmark_v2.py score \\": [
@@ -158574,6 +159624,9 @@
     ],
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
+    ],
+    "python -m swebench.harness.run_evaluation": [
+      ".github/workflows/aura-benchmark-campaign-manual.yml"
     ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
@@ -167548,6 +168601,120 @@
         0.083353,
         0.128562,
         -0.241583
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-benchmark-campaign-contracts.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2602,
+      "lines": 68,
+      "tokens_est": 651,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          41
+        ],
+        "python -m pytest": [
+          60
+        ]
+      },
+      "topology": {},
+      "digest8": "b30916a1a59c9be4",
+      "vector": [
+        -0.27353,
+        -0.2338,
+        -0.001528,
+        -0.114608,
+        -0.010697,
+        0.38661,
+        0.044315,
+        0.093214,
+        0.019865,
+        0.080989,
+        0.117664,
+        -0.163507,
+        0.001528,
+        -0.102383,
+        -0.001528,
+        0.148226,
+        0.270474,
+        -0.230743,
+        0.157395,
+        0.047371,
+        -0.221575,
+        0.12072,
+        0.2338,
+        -0.319373,
+        -0.019865,
+        0.062652,
+        -0.181844,
+        0.224631,
+        0.29798,
+        0.206294,
+        0.126832,
+        0.090158
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-benchmark-campaign-manual.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5089,
+      "lines": 145,
+      "tokens_est": 1273,
+      "symbol_count": 0,
+      "commands": [
+        "python -m json.tool",
+        "python -m swebench.harness.run_evaluation"
+      ],
+      "command_lines": {
+        "python -m json.tool": [
+          73
+        ],
+        "python -m swebench.harness.run_evaluation": [
+          128
+        ]
+      },
+      "topology": {},
+      "digest8": "49e30d06d3535632",
+      "vector": [
+        0.16353,
+        0.003383,
+        -0.025939,
+        -0.287587,
+        -0.071051,
+        0.224431,
+        0.068795,
+        -0.01015,
+        -0.14323,
+        -0.127441,
+        -0.186086,
+        -0.170297,
+        -0.028195,
+        -0.156763,
+        -0.118418,
+        -0.256009,
+        -0.28082,
+        0.025939,
+        0.226686,
+        -0.165785,
+        0.050751,
+        0.287587,
+        0.192852,
+        -0.213153,
+        0.206386,
+        0.034962,
+        -0.019172,
+        0.269542,
+        -0.276309,
+        0.134207,
+        -0.073306,
+        -0.285331
       ]
     },
     {
@@ -225631,6 +226798,53 @@
       ]
     },
     {
+      "path": "benchmarks/arena/campaign_v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2476,
+      "lines": 77,
+      "tokens_est": 619,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "21dd5ee90e57ea72",
+      "vector": [
+        0.25425,
+        -0.029988,
+        -0.324657,
+        0.26468,
+        0.032596,
+        -0.001304,
+        -0.168196,
+        0.066496,
+        -0.113434,
+        0.045635,
+        0.131688,
+        0.191665,
+        0.074319,
+        -0.014342,
+        0.275111,
+        0.129081,
+        0.306403,
+        0.048242,
+        -0.202096,
+        -0.079534,
+        0.28815,
+        -0.032596,
+        0.066496,
+        0.306403,
+        0.225565,
+        0.168196,
+        -0.121258,
+        0.019558,
+        0.282934,
+        0.238603,
+        0.032596,
+        0.006519
+      ]
+    },
+    {
       "path": "benchmarks/real_refactor_trial/plans.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -249958,6 +251172,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_benchmark_score_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6670,
+      "lines": 194,
+      "tokens_est": 1668,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2c8131ed44e088a6",
+      "vector": [
+        -0.033668,
+        0.216127,
+        0.255225,
+        0.261741,
+        0.253053,
+        0.27043,
+        0.250881,
+        0.094488,
+        0.03584,
+        -0.122725,
+        0.127069,
+        0.101004,
+        0.10752,
+        -0.203094,
+        0.120553,
+        -0.242192,
+        0.118381,
+        -0.153135,
+        0.007602,
+        0.220471,
+        -0.142274,
+        -0.081455,
+        0.127069,
+        0.274774,
+        0.224815,
+        0.014119,
+        0.059734,
+        -0.163996,
+        0.103176,
+        -0.229159,
+        -0.276946,
+        0.122725
+      ]
+    },
+    {
       "path": "tests/test_aura_bilateral_gate_dialogue.py",
       "role": "python_module",
       "binary": false,
@@ -262272,6 +263533,100 @@
       ]
     },
     {
+      "path": "tests/test_long_horizon_preregistration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4293,
+      "lines": 145,
+      "tokens_est": 1074,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7fa1a49679932c24",
+      "vector": [
+        -0.268872,
+        0.163123,
+        -0.264372,
+        0.203622,
+        -0.088874,
+        0.086624,
+        0.147373,
+        -0.165373,
+        0.057374,
+        -0.190123,
+        -0.277871,
+        -0.165373,
+        -0.196872,
+        0.154123,
+        0.001125,
+        -0.286871,
+        0.113624,
+        0.068624,
+        0.010125,
+        0.172123,
+        -0.088874,
+        -0.277871,
+        -0.041624,
+        0.021375,
+        0.010125,
+        0.187873,
+        -0.172123,
+        -0.091124,
+        0.277871,
+        0.203622,
+        -0.246372,
+        0.221622
+      ]
+    },
+    {
+      "path": "tests/test_long_horizon_state_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3016,
+      "lines": 90,
+      "tokens_est": 754,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b5d0120f10ebbf16",
+      "vector": [
+        -0.173403,
+        -0.074316,
+        0.157758,
+        0.246415,
+        0.040417,
+        0.170795,
+        0.050848,
+        0.043025,
+        0.089961,
+        0.181226,
+        0.032595,
+        -0.050848,
+        0.285528,
+        -0.003911,
+        0.097784,
+        -0.199479,
+        0.105606,
+        -0.097784,
+        -0.05867,
+        -0.131682,
+        0.001304,
+        -0.121252,
+        -0.298566,
+        -0.308996,
+        -0.215124,
+        -0.209909,
+        0.204694,
+        0.160365,
+        -0.322034,
+        -0.225554,
+        -0.087353,
+        -0.327249
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -262319,6 +263674,147 @@
       ]
     },
     {
+      "path": "tests/test_paired_comparison_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8141,
+      "lines": 237,
+      "tokens_est": 2036,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "697655739ed56622",
+      "vector": [
+        0.027794,
+        -0.024868,
+        -0.311585,
+        -0.021943,
+        0.244294,
+        0.092159,
+        -0.296956,
+        0.311585,
+        -0.109713,
+        -0.124341,
+        0.007314,
+        -0.092159,
+        -0.264774,
+        0.282328,
+        0.209186,
+        0.062902,
+        0.223814,
+        -0.057051,
+        0.100936,
+        0.270625,
+        0.291105,
+        -0.285254,
+        -0.065828,
+        0.07753,
+        0.106787,
+        -0.024868,
+        0.051199,
+        0.144821,
+        0.121416,
+        0.130193,
+        0.150672,
+        0.103862
+      ]
+    },
+    {
+      "path": "tests/test_persistent_adapter_protocol.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4199,
+      "lines": 125,
+      "tokens_est": 1050,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "260804e924953205",
+      "vector": [
+        0.048048,
+        0.151535,
+        0.28459,
+        0.277198,
+        -0.171247,
+        0.163855,
+        0.045584,
+        0.220526,
+        0.183567,
+        -0.144143,
+        -0.020944,
+        0.065296,
+        -0.269806,
+        -0.289518,
+        0.045584,
+        0.220526,
+        -0.255022,
+        -0.139215,
+        -0.040656,
+        -0.287054,
+        0.107183,
+        -0.173711,
+        -0.136751,
+        -0.146607,
+        -0.05544,
+        0.114575,
+        -0.070223,
+        -0.107183,
+        -0.158927,
+        -0.121967,
+        -0.301838,
+        0.171247
+      ]
+    },
+    {
+      "path": "tests/test_persistent_adapter_runner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6927,
+      "lines": 183,
+      "tokens_est": 1732,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3d9029c17d31931b",
+      "vector": [
+        -0.209042,
+        -0.169923,
+        0.172368,
+        0.111245,
+        -0.182148,
+        -0.196817,
+        0.260386,
+        0.289725,
+        -0.226157,
+        -0.09902,
+        0.09413,
+        -0.118579,
+        -0.167478,
+        -0.042786,
+        -0.30684,
+        0.275055,
+        -0.050121,
+        -0.072126,
+        -0.162588,
+        0.08435,
+        0.260386,
+        -0.233491,
+        0.045231,
+        -0.10391,
+        0.015892,
+        0.07946,
+        0.245716,
+        -0.231047,
+        -0.09413,
+        -0.179703,
+        -0.143029,
+        -0.140584
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -262363,6 +263859,53 @@
         0.12901,
         0.168527,
         0.187123
+      ]
+    },
+    {
+      "path": "tests/test_select_swe_verified_smoke.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1674,
+      "lines": 46,
+      "tokens_est": 419,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "25b208097e68da85",
+      "vector": [
+        -0.006463,
+        0.25204,
+        0.102108,
+        0.249455,
+        0.109864,
+        0.102108,
+        0.23653,
+        -0.050408,
+        -0.009048,
+        0.275305,
+        0.086598,
+        0.295985,
+        -0.084013,
+        0.021973,
+        0.019388,
+        -0.25721,
+        -0.329591,
+        0.052993,
+        0.208094,
+        -0.089183,
+        0.009048,
+        -0.102108,
+        -0.019388,
+        -0.187414,
+        -0.285645,
+        -0.31925,
+        0.270135,
+        0.021973,
+        0.148639,
+        0.161564,
+        -0.086598,
+        -0.127959
       ]
     },
     {
@@ -262645,6 +264188,335 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/benchmarks/aura_benchmark_score_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10593,
+      "lines": 255,
+      "tokens_est": 2649,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "502f3993ced4d3a1",
+      "vector": [
+        0.087348,
+        0.051903,
+        -0.011393,
+        -0.274704,
+        0.122794,
+        -0.284831,
+        0.29749,
+        0.168367,
+        0.264576,
+        -0.122794,
+        -0.049371,
+        -0.127858,
+        0.051903,
+        0.026584,
+        0.122794,
+        0.143049,
+        0.003798,
+        0.046839,
+        -0.216472,
+        -0.259513,
+        -0.024052,
+        0.170899,
+        0.044307,
+        -0.08988,
+        0.279767,
+        -0.317745,
+        -0.024052,
+        0.069625,
+        0.294958,
+        -0.229131,
+        0.175962,
+        0.216472
+      ]
+    },
+    {
+      "path": "tools/benchmarks/long_horizon_preregistration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7898,
+      "lines": 183,
+      "tokens_est": 1975,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "13ab9081b2ef4c4a",
+      "vector": [
+        -0.271747,
+        0.174405,
+        0.052727,
+        -0.206852,
+        -0.144661,
+        0.155477,
+        0.044615,
+        -0.325826,
+        -0.174405,
+        -0.277155,
+        -0.004056,
+        0.087878,
+        0.19874,
+        -0.004056,
+        0.131141,
+        -0.077062,
+        0.155477,
+        -0.106806,
+        0.039207,
+        -0.017576,
+        -0.239299,
+        -0.014872,
+        0.309602,
+        0.236595,
+        -0.220372,
+        -0.041911,
+        -0.093286,
+        -0.271747,
+        0.02028,
+        -0.339345,
+        -0.117622,
+        -0.101398
+      ]
+    },
+    {
+      "path": "tools/benchmarks/long_horizon_state_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3512,
+      "lines": 100,
+      "tokens_est": 878,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ea269c8bd7057dcb",
+      "vector": [
+        0.098327,
+        0.11775,
+        -0.1396,
+        -0.11775,
+        -0.037631,
+        0.273131,
+        -0.193012,
+        -0.188157,
+        -0.302265,
+        0.023064,
+        0.059482,
+        0.188157,
+        -0.018209,
+        -0.074049,
+        0.231858,
+        0.040059,
+        -0.248852,
+        -0.1396,
+        -0.248852,
+        0.188157,
+        0.1396,
+        0.258564,
+        0.246425,
+        -0.115322,
+        -0.105611,
+        -0.265847,
+        -0.231858,
+        0.076477,
+        -0.018209,
+        0.134744,
+        -0.180873,
+        0.265847
+      ]
+    },
+    {
+      "path": "tools/benchmarks/paired_comparison_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6960,
+      "lines": 157,
+      "tokens_est": 1740,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e43b0fe38ac993cd",
+      "vector": [
+        -0.313989,
+        0.193975,
+        -0.062798,
+        0.286079,
+        -0.071171,
+        -0.018142,
+        -0.205139,
+        -0.205139,
+        -0.258168,
+        -0.051634,
+        0.302825,
+        -0.057216,
+        -0.04047,
+        0.09629,
+        0.199557,
+        -0.057216,
+        -0.18002,
+        -0.154901,
+        -0.322362,
+        -0.241422,
+        0.138155,
+        0.205139,
+        0.18002,
+        0.065589,
+        -0.143737,
+        -0.057216,
+        0.062798,
+        0.093499,
+        0.241422,
+        0.20793,
+        0.1242,
+        0.009769
+      ]
+    },
+    {
+      "path": "tools/benchmarks/persistent_adapter_protocol.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4645,
+      "lines": 111,
+      "tokens_est": 1162,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3eff04d54e436698",
+      "vector": [
+        0.081266,
+        -0.060663,
+        -0.037772,
+        -0.186569,
+        -0.273558,
+        0.193436,
+        -0.193436,
+        0.147653,
+        0.23922,
+        0.09958,
+        0.175123,
+        0.040061,
+        -0.257534,
+        -0.101869,
+        -0.037772,
+        -0.216328,
+        0.193436,
+        -0.076688,
+        0.202593,
+        0.275847,
+        0.090423,
+        -0.01488,
+        0.168255,
+        0.262112,
+        -0.268979,
+        -0.024036,
+        -0.21175,
+        -0.264401,
+        -0.252955,
+        0.019458,
+        0.198015,
+        0.024036
+      ]
+    },
+    {
+      "path": "tools/benchmarks/persistent_adapter_runner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14150,
+      "lines": 376,
+      "tokens_est": 3538,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cfea79ab313cdc55",
+      "vector": [
+        -0.292243,
+        0.187782,
+        0.021141,
+        0.03109,
+        0.207679,
+        -0.215141,
+        -0.023628,
+        -0.150474,
+        -0.165397,
+        -0.182808,
+        0.140526,
+        -0.055961,
+        0.1455,
+        0.165397,
+        -0.155449,
+        0.016167,
+        0.103218,
+        0.001244,
+        0.18032,
+        -0.026115,
+        0.212654,
+        0.262397,
+        -0.244987,
+        0.1455,
+        -0.307166,
+        0.215141,
+        0.118141,
+        0.150474,
+        -0.237525,
+        -0.150474,
+        0.252449,
+        -0.222602
+      ]
+    },
+    {
+      "path": "tools/benchmarks/select_swe_verified_smoke.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3377,
+      "lines": 83,
+      "tokens_est": 845,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f9eb66dc5dd16a86",
+      "vector": [
+        -0.300233,
+        0.290509,
+        0.093595,
+        0.142216,
+        0.013371,
+        0.207854,
+        0.273492,
+        0.166526,
+        0.117905,
+        0.086302,
+        -0.258906,
+        0.052267,
+        -0.205423,
+        -0.01094,
+        0.115474,
+        0.278354,
+        0.195699,
+        -0.015802,
+        -0.164095,
+        -0.122768,
+        -0.079009,
+        -0.227302,
+        0.083871,
+        0.144647,
+        -0.300233,
+        0.088733,
+        -0.134923,
+        -0.054698,
+        0.280785,
+        -0.200561,
+        -0.001216,
+        0.147078
       ]
     },
     {
@@ -286646,16 +288518,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1656,
+    "total_bytes": 26511270,
+    "text_tokens_est": 6618176,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1011,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286798,6 +288670,8 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-benchmark-campaign-contracts.yml",
+      ".github/workflows/aura-benchmark-campaign-manual.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -287584,6 +289458,7 @@
       "aura_workspace/outbox/WO-UNIVERSAL-GLOBAL-BENCHMARK-DAEMON-EXHAUSTIVE.telemetry.json",
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/arena/campaign_v1.json",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -288026,6 +289901,7 @@
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
+      "tests/test_aura_benchmark_score_admission.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
@@ -288288,14 +290164,27 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_long_horizon_preregistration.py",
+      "tests/test_long_horizon_state_benchmark.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_paired_comparison_admission.py",
+      "tests/test_persistent_adapter_protocol.py",
+      "tests/test_persistent_adapter_runner.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_select_swe_verified_smoke.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/benchmarks/aura_benchmark_score_admission.py",
+      "tools/benchmarks/long_horizon_preregistration.py",
+      "tools/benchmarks/long_horizon_state_benchmark.py",
+      "tools/benchmarks/paired_comparison_admission.py",
+      "tools/benchmarks/persistent_adapter_protocol.py",
+      "tools/benchmarks/persistent_adapter_runner.py",
+      "tools/benchmarks/select_swe_verified_smoke.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -404934,6 +406823,196 @@
         "file_digest8": "9a23dbc2b49b58f3"
       },
       {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:fixture:31bdb489dbb99df9",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 27,
+        "end_line": 54,
+        "signature_hash": "879fb97b430d30c7",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:policy:551e4a27ed4e5f16",
+        "name": "policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 14,
+        "end_line": 24,
+        "signature_hash": "934f05f4cd97dc8e",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_authority_scope_must_match_policy:2754efea33b58173",
+        "name": "test_authority_scope_must_match_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 138,
+        "end_line": 143,
+        "signature_hash": "56369d592f6f1d80",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_agent_generation_is_distinct_parent_state:99b732c02c64794e",
+        "name": "test_changed_agent_generation_is_distinct_parent_state",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 66,
+        "end_line": 71,
+        "signature_hash": "852838b385478f60",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_dataset_generation_is_distinct_parent_state:b24c54f643e15858",
+        "name": "test_changed_dataset_generation_is_distinct_parent_state",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 74,
+        "end_line": 79,
+        "signature_hash": "2827c0b522e3ca90",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_contradictory_duplicate_result_fails_closed:c42c76deb08994e9",
+        "name": "test_contradictory_duplicate_result_fails_closed",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 82,
+        "end_line": 87,
+        "signature_hash": "3901707bceee8cc3",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_duplicate_attempt_does_not_inflate_score:b61f37cc2ab5b31f",
+        "name": "test_duplicate_attempt_does_not_inflate_score",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "ba1c0c9f8b6364a5",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_estimated_measurement_remains_explicitly_estimated:00a3a1877a5b0db1",
+        "name": "test_estimated_measurement_remains_explicitly_estimated",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 171,
+        "end_line": 173,
+        "signature_hash": "2f16a9de1c2adf1e",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_policy_generation_changes_evidence_generation_not_score_identity:2270da309905ea99",
+        "name": "test_policy_generation_changes_evidence_generation_not_score_identity",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 184,
+        "end_line": 189,
+        "signature_hash": "45936c10cad1e989",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_booleans_cannot_self_mint_execution_authority:4c6adfc589f400f0",
+        "name": "test_receipt_booleans_cannot_self_mint_execution_authority",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "3ce30efdeab1ab27",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_is_deterministic:94c317548259ede6",
+        "name": "test_receipt_is_deterministic",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 192,
+        "end_line": 193,
+        "signature_hash": "834891cb2aea3ac1",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_observer_must_match_trusted_policy:ae7da3f80a855263",
+        "name": "test_receipt_observer_must_match_trusted_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 117,
+        "end_line": 122,
+        "signature_hash": "4cc0bc385fbf6a01",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_route_must_match_trusted_policy:313cd25ef6463444",
+        "name": "test_receipt_route_must_match_trusted_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 109,
+        "end_line": 114,
+        "signature_hash": "ee129637911bb9e3",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_score_identity_excludes_retry_identity_but_binds_model:b2f496964c1eea02",
+        "name": "test_score_identity_excludes_retry_identity_but_binds_model",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 176,
+        "end_line": 181,
+        "signature_hash": "3e8d35ef8f0f1c67",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_observed_execution:5f3e47c37ddd938b",
+        "name": "test_scoring_result_requires_observed_execution",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 96,
+        "end_line": 98,
+        "signature_hash": "5160518f1b7839fb",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_source_verification_for_pass_and_fail:d8435f19f35587e5",
+        "name": "test_scoring_result_requires_source_verification_for_pass_and_fail",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "84081f410a82a424",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_source_verifier_must_be_authorized_and_match_trusted_policy:8a49850b943dbe71",
+        "name": "test_source_verifier_must_be_authorized_and_match_trusted_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 125,
+        "end_line": 135,
+        "signature_hash": "1951d6edb6d8fa72",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_cannot_launder_zero_or_estimates:5ddcee441aef0de2",
+        "name": "test_unknown_measurement_cannot_launder_zero_or_estimates",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 146,
+        "end_line": 148,
+        "signature_hash": "6274b69b265d7904",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_with_no_values_is_valid:f35de23fca4be3ee",
+        "name": "test_unknown_measurement_with_no_values_is_valid",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 151,
+        "end_line": 168,
+        "signature_hash": "8b877b6410c11bd2",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_affordance_map_declares_current_review_learning_extension:a941916efef5400e",
         "name": "test_affordance_map_declares_current_review_learning_extension",
         "kind": "function",
@@ -445354,6 +447433,86 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:arms:a7ceec4e2d10675f",
+        "name": "arms",
+        "kind": "function",
+        "file": "tests/test_long_horizon_preregistration.py",
+        "line": 16,
+        "end_line": 30,
+        "signature_hash": "ee8bb314454ae45b",
+        "file_digest8": "7fa1a49679932c24"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_adapter_generation_and_command_digest_are_identity_bearing:44b734f5256d5d7f",
+        "name": "test_adapter_generation_and_command_digest_are_identity_bearing",
+        "kind": "function",
+        "file": "tests/test_long_horizon_preregistration.py",
+        "line": 83,
+        "end_line": 111,
+        "signature_hash": "89932b71eb04fe4b",
+        "file_digest8": "7fa1a49679932c24"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_condition_mapping_cannot_be_embedded_in_blinded_manifest:0f6c80dfe5d0403e",
+        "name": "test_condition_mapping_cannot_be_embedded_in_blinded_manifest",
+        "kind": "function",
+        "file": "tests/test_long_horizon_preregistration.py",
+        "line": 57,
+        "end_line": 67,
+        "signature_hash": "4d3975f9804cee13",
+        "file_digest8": "7fa1a49679932c24"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_duplicate_blinded_label_fails_closed:fff0ffa05a52137e",
+        "name": "test_duplicate_blinded_label_fails_closed",
+        "kind": "function",
+        "file": "tests/test_long_horizon_preregistration.py",
+        "line": 70,
+        "end_line": 80,
+        "signature_hash": "3612f626c9341a04",
+        "file_digest8": "7fa1a49679932c24"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_invalid_identity_or_timeout_fails_closed:a236e1b5e8303a99",
+        "name": "test_invalid_identity_or_timeout_fails_closed",
+        "kind": "function",
+        "file": "tests/test_long_horizon_preregistration.py",
+        "line": 114,
+        "end_line": 144,
+        "signature_hash": "c95d66e532b165c3",
+        "file_digest8": "7fa1a49679932c24"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_preregistration.py#function:test_preregistration_is_order_independent_and_frozen:fb4b87cc37d34c48",
+        "name": "test_preregistration_is_order_independent_and_frozen",
+        "kind": "function",
+        "file": "tests/test_long_horizon_preregistration.py",
+        "line": 33,
+        "end_line": 54,
+        "signature_hash": "882da0da6c027bd9",
+        "file_digest8": "7fa1a49679932c24"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_compatibility_entrypoint_uses_preregistered_persistent_protocol:337475f1e86869a1",
+        "name": "test_compatibility_entrypoint_uses_preregistered_persistent_protocol",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 62,
+        "end_line": 89,
+        "signature_hash": "104e0b044a1d9def",
+        "file_digest8": "b5d0120f10ebbf16"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_workload_is_deterministic_contains_rollback_and_keeps_answers_runner_side:ba5f3df54c5fd921",
+        "name": "test_workload_is_deterministic_contains_rollback_and_keeps_answers_runner_side",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 53,
+        "end_line": 59,
+        "signature_hash": "6aa5f12a5f57e54a",
+        "file_digest8": "b5d0120f10ebbf16"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -445594,6 +447753,286 @@
         "file_digest8": "bec72310a01d581a"
       },
       {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:digest:c689117845a6cc3a",
+        "name": "digest",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "37cf7141f4901513",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:matched_pair:e8a2588cd207b03e",
+        "name": "matched_pair",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 93,
+        "end_line": 111,
+        "signature_hash": "6ec9763da0526d03",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:prereg:364bfcefd6d7881b",
+        "name": "prereg",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 18,
+        "end_line": 39,
+        "signature_hash": "c4b4adaed36d5c0e",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:report:480f92eb7f273adf",
+        "name": "report",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 42,
+        "end_line": 90,
+        "signature_hash": "357c2af6eb2313cb",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_exact_pair_is_admitted_but_remains_blinded_without_winner:fc315d31893d8890",
+        "name": "test_exact_pair_is_admitted_but_remains_blinded_without_winner",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 114,
+        "end_line": 123,
+        "signature_hash": "37189165f3e6a9a9",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_observed_label_without_values_does_not_mint_metric_comparability:059db60366507c35",
+        "name": "test_observed_label_without_values_does_not_mint_metric_comparability",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 126,
+        "end_line": 130,
+        "signature_hash": "3c3367e0dddba5c3",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_only_metrics_observed_on_every_turn_in_both_arms_are_comparable:cea8be38f3f36178",
+        "name": "test_only_metrics_observed_on_every_turn_in_both_arms_are_comparable",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 133,
+        "end_line": 173,
+        "signature_hash": "eb23ad2ec471e219",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_pair_rejects_workload_command_and_generation_substitution:88eb52bae2b9d80b",
+        "name": "test_pair_rejects_workload_command_and_generation_substitution",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 176,
+        "end_line": 194,
+        "signature_hash": "959cbcdc0f9d372d",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_startup_failure_is_retained_as_matched_inconclusive_evidence:7c90f810180e943e",
+        "name": "test_startup_failure_is_retained_as_matched_inconclusive_evidence",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 197,
+        "end_line": 214,
+        "signature_hash": "73616eb8a0789231",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_tampered_evidence_digest_fails_closed:217a0ecd8991ac79",
+        "name": "test_tampered_evidence_digest_fails_closed",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 230,
+        "end_line": 236,
+        "signature_hash": "3ff89b4054ca5abb",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_paired_comparison_admission.py#function:test_unblinded_fields_and_duplicate_labels_fail_closed:802044dca786b558",
+        "name": "test_unblinded_fields_and_duplicate_labels_fail_closed",
+        "kind": "function",
+        "file": "tests/test_paired_comparison_admission.py",
+        "line": 217,
+        "end_line": 227,
+        "signature_hash": "08660021925732b4",
+        "file_digest8": "697655739ed56622"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:handshake:7c5982dd10d4cb85",
+        "name": "handshake",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 16,
+        "end_line": 28,
+        "signature_hash": "f2af84dd2db94202",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_handshake_preserves_generation_and_capabilities:1a35445e57f3d369",
+        "name": "test_handshake_preserves_generation_and_capabilities",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 31,
+        "end_line": 36,
+        "signature_hash": "69293f8b801c8ac6",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_nonpersistent_adapter_cannot_claim_persistent_protocol:71addd865fa9a47c",
+        "name": "test_nonpersistent_adapter_cannot_claim_persistent_protocol",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 39,
+        "end_line": 43,
+        "signature_hash": "ba9c1bbc4461d2f4",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_observed_or_estimated_metric_values_must_be_well_typed:6035a5538ff5b0b3",
+        "name": "test_observed_or_estimated_metric_values_must_be_well_typed",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 80,
+        "end_line": 107,
+        "signature_hash": "70d196c22d8350de",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_turn_request_does_not_include_expected_state_digest:aec7f7820ead727e",
+        "name": "test_turn_request_does_not_include_expected_state_digest",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 110,
+        "end_line": 124,
+        "signature_hash": "7feaea487554bcb9",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_turn_response_is_bound_to_turn_and_adapter_generation:92d2e6ec6f225623",
+        "name": "test_turn_response_is_bound_to_turn_and_adapter_generation",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 46,
+        "end_line": 65,
+        "signature_hash": "aa27e9b7bebc54f1",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_protocol.py#function:test_unknown_telemetry_still_cannot_carry_zero:b0f827a38f11332f",
+        "name": "test_unknown_telemetry_still_cannot_carry_zero",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_protocol.py",
+        "line": 68,
+        "end_line": 77,
+        "signature_hash": "cf02fb51fab080de",
+        "file_digest8": "260804e924953205"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:make_prereg:50e3664f9cbec454",
+        "name": "make_prereg",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 61,
+        "end_line": 76,
+        "signature_hash": "ae508f40a293163d",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:run:ed429c65d46a8377",
+        "name": "run",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 79,
+        "end_line": 87,
+        "signature_hash": "20ab0bc3a6821820",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_changed_command_is_rejected_before_process_launch:c87f8e644e26655b",
+        "name": "test_changed_command_is_rejected_before_process_launch",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 105,
+        "end_line": 115,
+        "signature_hash": "8502fe23295ee06e",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_handshake_generation_mismatch_stops_before_turn_effects:a394747ff906c76e",
+        "name": "test_handshake_generation_mismatch_stops_before_turn_effects",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 118,
+        "end_line": 127,
+        "signature_hash": "e3ab9d11f33f8b42",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_invalid_handshake_is_inconclusive_without_turn_execution:41444841f448e0ae",
+        "name": "test_invalid_handshake_is_inconclusive_without_turn_execution",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 173,
+        "end_line": 182,
+        "signature_hash": "67cea62fa91d0a27",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_persistent_adapter_keeps_state_in_one_process:3b8e95e53d87e670",
+        "name": "test_persistent_adapter_keeps_state_in_one_process",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 90,
+        "end_line": 102,
+        "signature_hash": "8d2bea1083ca7866",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_real_digest_mismatch_does_not_desynchronize_persistent_process:d10b010b8a7ac0d1",
+        "name": "test_real_digest_mismatch_does_not_desynchronize_persistent_process",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 144,
+        "end_line": 155,
+        "signature_hash": "491741d4a05fe0cc",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_timeout_is_retained_and_future_turns_are_not_replayed:1cc0651326fce56f",
+        "name": "test_timeout_is_retained_and_future_turns_are_not_replayed",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 158,
+        "end_line": 170,
+        "signature_hash": "f7c2c68ae6de6bba",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:test_turn_generation_mismatch_fails_protocol_and_stops_later_effects:473ab572cae745ae",
+        "name": "test_turn_generation_mismatch_fails_protocol_and_stops_later_effects",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 130,
+        "end_line": 141,
+        "signature_hash": "f9786e49c95f0186",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
+        "semantic_id": "tests/test_persistent_adapter_runner.py#function:write_adapter:2e52077e1143be42",
+        "name": "write_adapter",
+        "kind": "function",
+        "file": "tests/test_persistent_adapter_runner.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "985d5e8d60413212",
+        "file_digest8": "3d9029c17d31931b"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -445632,6 +448071,516 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:ids:40ec7171f1917992",
+        "name": "ids",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "ca70b72979216612",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_duplicate_instance_id_fails_closed:58b4b476d64a62b8",
+        "name": "test_duplicate_instance_id_fails_closed",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "a908467555d12851",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_invalid_count_fails_closed:c44ebcd2677e832f",
+        "name": "test_invalid_count_fails_closed",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "ff94c772a2b8057c",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_manifest_is_explicitly_non_official:9d5af20b32d68af1",
+        "name": "test_manifest_is_explicitly_non_official",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 32,
+        "end_line": 38,
+        "signature_hash": "4eb7f7eae665f4d5",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_seed_changes_selection:fd431273f50c6207",
+        "name": "test_seed_changes_selection",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "6ae891d873e029a1",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_selection_is_deterministic_and_order_independent:968c173c1c436c2c",
+        "name": "test_selection_is_deterministic_and_order_independent",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "a1be78a2a242f72e",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tests/test_select_swe_verified_smoke.py#function:test_source_generation_is_bound_into_manifest:bf55f64bf5c15a09",
+        "name": "test_source_generation_is_bound_into_manifest",
+        "kind": "function",
+        "file": "tests/test_select_swe_verified_smoke.py",
+        "line": 41,
+        "end_line": 45,
+        "signature_hash": "00f96a9158515b26",
+        "file_digest8": "25b208097e68da85"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkAdmissionPolicy:447ed156ed44fcaa",
+        "name": "BenchmarkAdmissionPolicy",
+        "kind": "class",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 31,
+        "end_line": 74,
+        "signature_hash": "ef5d9a695466db4f",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkTaskReceipt:f3b51ef4ca94faa4",
+        "name": "BenchmarkTaskReceipt",
+        "kind": "class",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 78,
+        "end_line": 210,
+        "signature_hash": "1ce69d153abe8aa6",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_canonical_json:b53b2f3ce67e8903",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 15,
+        "end_line": 18,
+        "signature_hash": "a5c16b842176e713",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_digest:37f03a5ff42df73a",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "e3dbc3c92109621f",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_required:65930e0555164866",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "24cabde161aeb9da",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:admit_score:c0102ef0fa43b713",
+        "name": "admit_score",
+        "kind": "function",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 213,
+        "end_line": 254,
+        "signature_hash": "e5de6c318529836a",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate:42c96566bd720cd5",
+        "name": "BenchmarkAdmissionPolicy.validate",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 47,
+        "end_line": 59,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate_receipt:8ba846bb707e33f6",
+        "name": "BenchmarkAdmissionPolicy.validate_receipt",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 61,
+        "end_line": 74,
+        "signature_hash": "20caa3e8d201d843",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.receipt_digest:9f94e1fe49cbf639",
+        "name": "BenchmarkTaskReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 174,
+        "end_line": 176,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.score_identity:ce3250c0e831210e",
+        "name": "BenchmarkTaskReceipt.score_identity",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 156,
+        "end_line": 171,
+        "signature_hash": "2b78a67bca4cde6d",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.to_dict:22eaff9db72bbd98",
+        "name": "BenchmarkTaskReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 178,
+        "end_line": 210,
+        "signature_hash": "c9885ae795ae11e7",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.validate:eb88403220ae5ddc",
+        "name": "BenchmarkTaskReceipt.validate",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 105,
+        "end_line": 153,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:_normalize_arms:1484c96716065881",
+        "name": "_normalize_arms",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 29,
+        "end_line": 63,
+        "signature_hash": "496b08e13641996a",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:build_preregistration:1ce381ef4efb7650",
+        "name": "build_preregistration",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 66,
+        "end_line": 103,
+        "signature_hash": "4329ad39173613d5",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:canonical_digest:71e80304abbc65b0",
+        "name": "canonical_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 18,
+        "end_line": 20,
+        "signature_hash": "35a2499e95f22ae8",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:command_digest:8c778b497111aafc",
+        "name": "command_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "7ebd3c8e541c2dab",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:get_preregistered_arm:a0063a1b88fe1b4b",
+        "name": "get_preregistered_arm",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 147,
+        "end_line": 152,
+        "signature_hash": "383848c18ee5af67",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:main:8f6350fcb6375b6b",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 155,
+        "end_line": 178,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_preregistration.py#function:validate_preregistration:0a463bdf944cd034",
+        "name": "validate_preregistration",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_preregistration.py",
+        "line": 106,
+        "end_line": 144,
+        "signature_hash": "5d787411a55f3670",
+        "file_digest8": "13ab9081b2ef4c4a"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:_digest:0fc53bcf06ff9226",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 13,
+        "end_line": 15,
+        "signature_hash": "6db9016a3f6bed4c",
+        "file_digest8": "ea269c8bd7057dcb"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:build_workload:7f9f36594ec815d3",
+        "name": "build_workload",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 18,
+        "end_line": 49,
+        "signature_hash": "201dfe0430e98fcb",
+        "file_digest8": "ea269c8bd7057dcb"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:main:aff2274cb5a57719",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 76,
+        "end_line": 95,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "ea269c8bd7057dcb"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:run_adapter:3eb20198f6d3d2ed",
+        "name": "run_adapter",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 52,
+        "end_line": 73,
+        "signature_hash": "0a84987635e14daf",
+        "file_digest8": "ea269c8bd7057dcb"
+      },
+      {
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:_canonical_digest:971ca01c805f0fc2",
+        "name": "_canonical_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "305798929204fa24",
+        "file_digest8": "e43b0fe38ac993cd"
+      },
+      {
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:_observed_metrics:99863462e7ed672a",
+        "name": "_observed_metrics",
+        "kind": "function",
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "line": 32,
+        "end_line": 46,
+        "signature_hash": "53b6b66184bd4c3c",
+        "file_digest8": "e43b0fe38ac993cd"
+      },
+      {
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:_verify_embedded_digest:255d2b615ffb0595",
+        "name": "_verify_embedded_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "9f193f276c7e9034",
+        "file_digest8": "e43b0fe38ac993cd"
+      },
+      {
+        "semantic_id": "tools/benchmarks/paired_comparison_admission.py#function:admit_blinded_pair:1a369e6b697d203e",
+        "name": "admit_blinded_pair",
+        "kind": "function",
+        "file": "tools/benchmarks/paired_comparison_admission.py",
+        "line": 49,
+        "end_line": 156,
+        "signature_hash": "2566a4fd6d6018d1",
+        "file_digest8": "e43b0fe38ac993cd"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:_validate_telemetry:1ee5331378bb543e",
+        "name": "_validate_telemetry",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "line": 48,
+        "end_line": 63,
+        "signature_hash": "a63c40a6ce5a659b",
+        "file_digest8": "3eff04d54e436698"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:make_turn_request:afb8d2b45d8166f9",
+        "name": "make_turn_request",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "line": 96,
+        "end_line": 110,
+        "signature_hash": "cd13b99715e07e08",
+        "file_digest8": "3eff04d54e436698"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:validate_handshake:f45e6b435d53c2c6",
+        "name": "validate_handshake",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "line": 12,
+        "end_line": 45,
+        "signature_hash": "0f407fc4c26734c1",
+        "file_digest8": "3eff04d54e436698"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_protocol.py#function:validate_turn_response:4e1324d89df587b6",
+        "name": "validate_turn_response",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_protocol.py",
+        "line": 66,
+        "end_line": 93,
+        "signature_hash": "a77d08fd685d9512",
+        "file_digest8": "3eff04d54e436698"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_canonical_digest:c5b55b7467f54d89",
+        "name": "_canonical_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "305798929204fa24",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_reader:e5b60866b02d00f3",
+        "name": "_reader",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 38,
+        "end_line": 43,
+        "signature_hash": "813b8f7e8973b145",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_receive_line:e4ae8c127ab304b2",
+        "name": "_receive_line",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 51,
+        "end_line": 58,
+        "signature_hash": "14773114efbe0319",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_startup_failure_report:c55bb2b9a2c28dc1",
+        "name": "_startup_failure_report",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 81,
+        "end_line": 117,
+        "signature_hash": "04492a3eabf57cd2",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_stderr_reader:ca5711cd9b5e5ac7",
+        "name": "_stderr_reader",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 46,
+        "end_line": 48,
+        "signature_hash": "1a0cf8f790a86815",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:_terminate:9e50fbec9b481b1b",
+        "name": "_terminate",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 61,
+        "end_line": 78,
+        "signature_hash": "57e6bf55283b96b5",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:main:ee0b6594a86bc7c9",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 354,
+        "end_line": 371,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/persistent_adapter_runner.py#function:run_persistent_adapter:cf61fac0fc222db7",
+        "name": "run_persistent_adapter",
+        "kind": "function",
+        "file": "tools/benchmarks/persistent_adapter_runner.py",
+        "line": 120,
+        "end_line": 351,
+        "signature_hash": "9d702f888de31fc0",
+        "file_digest8": "cfea79ab313cdc55"
+      },
+      {
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:build_manifest:e7297dbd73e8c390",
+        "name": "build_manifest",
+        "kind": "function",
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "line": 42,
+        "end_line": 59,
+        "signature_hash": "fe36517684959971",
+        "file_digest8": "f9eb66dc5dd16a86"
+      },
+      {
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:main:7bc8712e6428394a",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "line": 62,
+        "end_line": 78,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "f9eb66dc5dd16a86"
+      },
+      {
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:read_jsonl_ids:35c437e5751857d4",
+        "name": "read_jsonl_ids",
+        "kind": "function",
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "line": 28,
+        "end_line": 39,
+        "signature_hash": "cba518eb266f480f",
+        "file_digest8": "f9eb66dc5dd16a86"
+      },
+      {
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:select_instance_ids:80e55c852a78b9c8",
+        "name": "select_instance_ids",
+        "kind": "function",
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "line": 12,
+        "end_line": 25,
+        "signature_hash": "ae8901658d3114b0",
+        "file_digest8": "f9eb66dc5dd16a86"
+      },
+      {
+        "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#method:select_instance_ids.rank:2e633a17aa585227",
+        "name": "select_instance_ids.rank",
+        "kind": "method",
+        "file": "tools/benchmarks/select_swe_verified_smoke.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "ef2014bd8ba89c6f",
+        "file_digest8": "f9eb66dc5dd16a86"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +449833,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "4f358d7da82728ec185e262332172551",
+    "payload_hash": "1be044930839c8278d4bf02d8ffbf64b"
   }
 }
