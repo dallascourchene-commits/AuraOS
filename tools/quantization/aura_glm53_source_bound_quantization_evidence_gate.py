@@ -11,10 +11,10 @@ quantization evidence is not transferable merely because two schemes share an
 E8-family label.
 
 Q5's exact source owner is materialized into this tree and traversed through
-``current_public_state()``. Historical official W2 evidence is likewise consumed
-through the materialized historical-bridge producer rather than reconstructed in
-Q7. Historical producer evidence constrains current reasoning but never
-impersonates current Q5 raw-byte residency.
+``current_public_state()``. Historical official W2 evidence is consumed through
+the exact-green PR646 bridge blob/generation, not reconstructed inside Q7.
+Historical producer evidence constrains current reasoning but never impersonates
+current Q5 raw-byte residency.
 """
 from __future__ import annotations
 
@@ -53,7 +53,7 @@ from tools.quantization.aura_glm53_quantization_evidence_transfer import (
     q4_to_q5_disposition,
 )
 
-VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V4"
+VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V5"
 
 Q5_EXACT_HEAD = "730426b82235b0ff4e75fef1cff00707877a84ad"
 Q5_EXACT_RUN = 33369967425
@@ -61,17 +61,19 @@ Q5_OWNER_BLOB_SHA = "7ed09c57699fe303f555a3b6bdaadb791c64223f"
 Q6_EXACT_HEAD = "4137aabd972feff9c4412bb4786ef8fd4de207e0"
 Q6_EXACT_RUN = 33370305329
 
+# Exact-green historical bridge owner generation, independently revalidated by
+# GitHub Actions run 33371459229. The mutable PR646 tip may move without changing
+# this pinned semantic owner.
+HISTORICAL_BRIDGE_OWNER_HEAD = "71d4816cf0702a39b57ecf7d6bae6298ec239800"
+HISTORICAL_BRIDGE_OWNER_RUN = 33371459229
+HISTORICAL_BRIDGE_OWNER_BLOB_SHA = "77a90ea9f5a438aa438103acd4de05432fe7875a"
+
 OFFICIAL_REPOSITORY = OFFICIAL_REPO
 OFFICIAL_REVISION = OFFICIAL_COMMIT
 Q5_CANDIDATE_PARENT_SHA = PR628_E8_PAGE_ARTIFACT_SHA
 Q5_CANDIDATE_SCHEME = PR628_E8_PAGE_SCHEME
 Q5_CURRENT_SOURCE_STATE_DIGEST = "583965be30974da13e1bc0cc895cdd2307afc3650fb34ea30e28c45c403094b0"
 Q5_CURRENT_BLOCKER = "OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED"
-
-# This is the materialized bridge blob in the Q7 tree, not an authority claim about
-# the mutable PR646 tip. Hosted PR398 producer evidence remains the source of the
-# historical observation; the bridge only rebinds it through current Q5 grammar.
-HISTORICAL_BRIDGE_OWNER_BLOB_SHA = "e4697103ac693996526a646ae46ff4bb35005397"
 
 
 def _canonical(value: object) -> bytes:
@@ -101,6 +103,8 @@ class SourceBoundEvidenceGate:
     current_source_header_trial_eligible: bool
     current_source_tensor_payload_bound: bool
     historical_bridge_version: str
+    historical_bridge_owner_head: str
+    historical_bridge_owner_run: int
     historical_bridge_owner_blob: str
     historical_bridge_digest: str
     historical_official_index_relation_observed: bool
@@ -146,7 +150,7 @@ def _current_q5_snapshot() -> AdmissionState:
 
 
 def _current_historical_bridge() -> HistoricalOfficialW2BridgeReceipt:
-    """Traverse the materialized historical bridge producer; do not copy its state."""
+    """Traverse the exact-green materialized PR646 producer; do not copy its state."""
     return build_historical_official_w2_bridge(canonical_pr398_observation())
 
 
@@ -267,6 +271,8 @@ def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
         current_source_header_trial_eligible=source.header_trial_eligible,
         current_source_tensor_payload_bound=source.source_tensor_payload_bound,
         historical_bridge_version=bridge.version,
+        historical_bridge_owner_head=HISTORICAL_BRIDGE_OWNER_HEAD,
+        historical_bridge_owner_run=HISTORICAL_BRIDGE_OWNER_RUN,
         historical_bridge_owner_blob=HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
         historical_bridge_digest=bridge.digest,
         historical_official_index_relation_observed=bridge.historical_weight_map_relation_observed,
