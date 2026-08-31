@@ -45,6 +45,7 @@ PRE_NOT_HOLD = "PRE_RAW_OWNER_LIFECYCLE_NOT_HOLD"
 POST_NOT_CLOSED = "DERIVED_POST_O10_NOT_CLOSED"
 POST_CLOSURE_IDENTITY_MISMATCH = "POST_O10_IDENTITY_MISMATCH"
 POST_CANDIDATE_IDENTITY_MISMATCH = "POST_CANDIDATE_IDENTITY_MISMATCH"
+PRE_POST_EVIDENCE_ROOTS_NOT_DISTINCT = "PRE_POST_EVIDENCE_ROOTS_NOT_DISTINCT"
 
 
 def _derive_transition_inputs(
@@ -103,6 +104,9 @@ def verify_raw_owner_derived_post_closure_transition(
     post_graph_witness: dict[str, Any],
 ) -> list[str]:
     """Verify one fully raw-owner HOLD -> CLOSED transition without caller closure input."""
+    if pre_root.resolve() == post_root.resolve():
+        return [PR518_PREFIX + PRE_POST_EVIDENCE_ROOTS_NOT_DISTINCT]
+
     try:
         pre, _projection, _candidate, post_closure = _derive_transition_inputs(
             pre_root=pre_root,
