@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1642
-- **total_bytes**: 26432764
-- **text_tokens_est**: 6598543
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1644
+- **total_bytes**: 26434758
+- **text_tokens_est**: 6599043
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 273, 'support_file': 50}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1642,
+  "repo_file_count": 1644,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -38,6 +38,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/SECURITY.md",
     ".aura/amd_track3_demo_tasks.json",
     ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+    ".aura/arena/nav03a-proof-activation-sol2.txt",
     ".aura/arena_routes/coding.v1.json",
     ".aura/arena_routes/construction.v1.json",
     ".aura/arena_routes/human_agent.v1.json",
@@ -155,6 +156,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-fractal-k27-nav03a.yml",
+    ".github/workflows/aura-nav03a-hosted-proof-mirror-sol2.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1782,17 +1784,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1642,
-  "bytes": 26432764,
-  "tokens_est": 6598543,
+  "files": 1644,
+  "bytes": 26434758,
+  "tokens_est": 6599043,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 999,
-    "schema_or_lexicon": 272,
-    "support_file": 49
+    "schema_or_lexicon": 273,
+    "support_file": 50
   }
 }
 ```
