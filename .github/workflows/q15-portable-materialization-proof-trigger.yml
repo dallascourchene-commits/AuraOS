@@ -1,0 +1,163 @@
+name: Q15 Portable Materialization Exact Proof Trigger
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/q15-portable-materialization-proof-trigger.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q15-exact-proof-trigger:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      Q15_HEAD: f4d8b31564c2b257fb784700266a2165af115895
+      Q14_HEAD: ee70934e0c45572588829e742e512a897b23863f
+      A7_HEAD: 10481aa76117c24e5fdf7f93752e7820713a8285
+      Q14_SEMANTIC: 74e5ee32379ddabb498587b08ba40ff21cebf13d
+      A7_SEMANTIC: 1801de258fa88075565e62bd8f2ce9dbe6663f09
+      CONVERGENCE: 886a8282feedc4abb5ca517d6293945a1c34abc1
+
+    steps:
+      - name: Materialize immutable Q15 generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init q15
+          cd q15
+          git remote add origin "https://github.com/$REPO.git"
+          git fetch --no-tags --depth=250 origin +refs/heads/arena-q15-execution-qualified-portable-materialization:refs/remotes/origin/q15
+          git checkout --detach "$Q15_HEAD"
+          test "$(git rev-parse HEAD)" = "$Q15_HEAD"
+          echo Q15_TRIGGER_EXACT_HEAD=true
+
+      - name: Revalidate exact two-parent convergence and semantic ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/commits/$CONVERGENCE" > /tmp/convergence.json
+          gh api "repos/$REPO/compare/$Q14_SEMANTIC...$Q14_HEAD" > /tmp/q14-ancestry.json
+          gh api "repos/$REPO/compare/$A7_SEMANTIC...$A7_HEAD" > /tmp/a7-ancestry.json
+          gh api "repos/$REPO/commits/$Q14_SEMANTIC" > /tmp/q14-semantic.json
+          gh api "repos/$REPO/commits/$A7_SEMANTIC" > /tmp/a7-semantic.json
+          python - <<'PY'
+          import json
+          c=json.load(open('/tmp/convergence.json'))
+          assert [p['sha'] for p in c['parents']] == [
+            'ee70934e0c45572588829e742e512a897b23863f',
+            '10481aa76117c24e5fdf7f93752e7820713a8285']
+          for path in ['/tmp/q14-ancestry.json','/tmp/a7-ancestry.json']:
+            d=json.load(open(path)); assert d['status'] in {'ahead','identical'}
+          q14=json.load(open('/tmp/q14-semantic.json'))
+          a7=json.load(open('/tmp/a7-semantic.json'))
+          assert q14['commit']['author']['date']=='2026-08-31T13:43:26Z'
+          assert a7['commit']['author']['date']=='2026-08-31T13:44:56Z'
+          print('Q15_TRIGGER_SEMANTIC_ANCESTRY=true')
+          PY
+          cat > /tmp/parents.json <<'JSON'
+          ["ee70934e0c45572588829e742e512a897b23863f","10481aa76117c24e5fdf7f93752e7820713a8285"]
+          JSON
+          cat > /tmp/generation.json <<'JSON'
+          {
+            "a7": {"head":"1801de258fa88075565e62bd8f2ce9dbe6663f09","generated_at":"2026-08-31T13:44:56Z","ancestor_of":"10481aa76117c24e5fdf7f93752e7820713a8285","ancestor_proven":true},
+            "q14": {"head":"74e5ee32379ddabb498587b08ba40ff21cebf13d","generated_at":"2026-08-31T13:43:26Z","ancestor_of":"ee70934e0c45572588829e742e512a897b23863f","ancestor_proven":true}
+          }
+          JSON
+
+      - name: Reprove Q15 deterministic contract and provider descriptor
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd q15
+          python -m unittest tests.test_aura_execution_qualified_portable_materialization_evidence -v
+          python - <<'PY'
+          from tools.quantization import aura_execution_qualified_portable_materialization_currentness as c
+          d=c.descriptor()
+          assert d['q14_run']==33399560819
+          assert d['q14_job']==99512247000
+          assert d['q14_job_name']=='q14-official-source-e8-canary'
+          assert d['q14_workflow']=='GLM53 Official Source E8 Materialization Canary'
+          assert d['q14_head']=='ee70934e0c45572588829e742e512a897b23863f'
+          assert d['q14_artifact_id']==9760937399
+          assert d['semantic_owner_unchanged'] is True
+          assert d['provider_descriptor_is_semantic_authority'] is False
+          assert d['provider_descriptor_is_effect_authority'] is False
+          print('Q15_TRIGGER_PROVIDER_DESCRIPTOR_CURRENT=true')
+          PY
+
+      - name: Bind exact immutable parent provider executions
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/actions/runs/33400287890" > /tmp/a7-run.json
+          gh api "repos/$REPO/actions/runs/33400287890/jobs?per_page=100" > /tmp/a7-jobs.json
+          gh api "repos/$REPO/actions/runs/33399560819" > /tmp/q14-run.json
+          gh api "repos/$REPO/actions/runs/33399560819/jobs?per_page=100" > /tmp/q14-jobs.json
+          python - <<'PY'
+          import json
+          cases=[
+            ('/tmp/a7-run.json',33400287890,'10481aa76117c24e5fdf7f93752e7820713a8285','Aura Execution-Qualified Portable Evidence Admission'),
+            ('/tmp/q14-run.json',33399560819,'ee70934e0c45572588829e742e512a897b23863f','GLM53 Official Source E8 Materialization Canary')]
+          for path,run_id,head,name in cases:
+            r=json.load(open(path)); assert r['id']==run_id and r['head_sha']==head and r['name']==name
+            assert r['status']=='completed' and r['conclusion']=='success'
+          jobs=[
+            ('/tmp/a7-jobs.json',99514663480,33400287890,'execution-qualified-portable-evidence'),
+            ('/tmp/q14-jobs.json',99512247000,33399560819,'q14-official-source-e8-canary')]
+          for path,job_id,run_id,name in jobs:
+            rows=[j for j in json.load(open(path))['jobs'] if j['id']==job_id]
+            assert len(rows)==1 and rows[0]['run_id']==run_id and rows[0]['name']==name
+            assert rows[0]['status']=='completed' and rows[0]['conclusion']=='success'
+          print('Q15_TRIGGER_EXACT_PARENT_EXECUTION=true')
+          PY
+
+      - name: Download immutable Q14 artifact and run Q15 admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          meta="$(gh api "repos/$REPO/actions/artifacts/9760937399")"
+          test "$(printf '%s' "$meta" | python -c 'import json,sys; print(json.load(sys.stdin)["digest"])')" = "sha256:edc22355df8bfeff25f469f11b54d7948b10bbf72a831b769857068c63c77276"
+          rm -rf /tmp/q14-artifact; mkdir -p /tmp/q14-artifact
+          gh run download 33399560819 -R "$REPO" -n q14-official-source-e8-materialization-canary -D /tmp/q14-artifact
+          test "$(sha256sum /tmp/q14-artifact/q14.json | awk '{print $1}')" = "fe253b0a89bbe1cd97a0299053ae9b11582f03cd1437b35525242f54154ae2a0"
+          cmp /tmp/q14-artifact/q14.json q15/tests/fixtures/q14_official_source_e8_materialization_receipt.json
+          cd q15
+          python -m tools.quantization.aura_execution_qualified_portable_materialization_currentness \
+            --q14-receipt /tmp/q14-artifact/q14.json \
+            --q14-artifact-digest sha256:edc22355df8bfeff25f469f11b54d7948b10bbf72a831b769857068c63c77276 \
+            --convergence-parents /tmp/parents.json \
+            --generation-evidence /tmp/generation.json \
+            --a7-run /tmp/a7-run.json --a7-jobs /tmp/a7-jobs.json \
+            --q14-run /tmp/q14-run.json --q14-jobs /tmp/q14-jobs.json \
+            --output /tmp/q15.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/q15.json'))
+          axes=['c0_parent_identity','c1_source_slice_identity','c2_page_consequence','c3_portability_integrity','c4_provider_execution','c5_semantic_freshness','c6_nonpromotion_invalidation','c7_claim_ceiling']
+          assert all(r[x] is True for x in axes)
+          assert r['execution_qualified_portable_materialization_evidence'] is True
+          assert r['hyperscale_level']=='HS1'
+          for x in ['page_existence_implies_execution','execution_implies_page_identity','portability_resets_semantic_clock','replay_mints_successor_novelty','k27_coordinate_is_semantic_authority','native_private_transformer_kv_accessed','full_representative_page_set_proven','model_execution_proven','inference_proven','merge_or_deployment_authorized']:
+            assert r[x] is False
+          print('Q15_TRIGGER_ALL_EIGHT_AXES_GREEN=true')
+          PY
+
+      - name: Preserve non-owner proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q15-exact-proof-trigger-receipt
+          path: /tmp/q15.json
+
+      - name: Nonpromotion ceiling
+        run: |
+          echo 'PROOF_TRIGGER_ONLY=true'
+          echo 'SEMANTIC_OWNER=PR683'
+          echo 'Q15_EXACT_HEAD=f4d8b31564c2b257fb784700266a2165af115895'
+          echo 'Q15_TERMINAL_CLAIM=execution-qualified portable bounded official-source-to-E8 materialization evidence only'
+          echo 'NO_GATE10_NO_MERGE_NO_DEPLOY_NO_NATIVE_PRIVATE_KV=true'
