@@ -7,9 +7,9 @@ Objective H converges two independently owned and hosted-proven surfaces:
 - NAV03A recursive K27 adaptive zoom (locality/retrieval geometry only), and
 - collision-safe rebase assessment (semantic overlap/owner-currentness only).
 
-The two axes are deliberately evaluated independently.  A different K27 path
+The two axes are deliberately evaluated independently. A different K27 path
 cannot prove a different semantic owner, and a shared K27 path cannot prove
-semantic duplication.  This module returns only a bounded Navigator route and
+semantic duplication. This module returns only a bounded Navigator route and
 hydration plan; it grants no semantic, evidence, currentness, write, tool, or
 effect authority.
 """
@@ -121,7 +121,7 @@ class NavigatorK27CollisionReceiptV1:
 
 
 def _path_text(path: K27Path) -> str:
-    return path.to_string()
+    return str(path)
 
 
 def _hydration_plan(
@@ -166,8 +166,8 @@ def route_k27_collision(
 ) -> NavigatorK27CollisionReceiptV1:
     """Join independent locality and semantic-collision evidence.
 
-    K27 is used strictly to shape hydration/locality.  Semantic collision is
-    assessed strictly by the collision-safe rebase owner.  Neither surface can
+    K27 is used strictly to shape hydration/locality. Semantic collision is
+    assessed strictly by the collision-safe rebase owner. Neither surface can
     borrow authority from the other.
     """
     if not isinstance(owner_path, K27Path) or not isinstance(candidate_path, K27Path):
@@ -198,7 +198,11 @@ def route_k27_collision(
         )
     ):
         raise ValueError("K27_LOCALITY_RECEIPT_EXCEEDED_AUTHORITY_CEILING")
-    if semantic.sibling_credit_earned or semantic.semantic_authority_granted or semantic.effect_authority_granted:
+    if (
+        semantic.sibling_credit_earned
+        or semantic.semantic_authority_granted
+        or semantic.effect_authority_granted
+    ):
         raise ValueError("COLLISION_ASSESSMENT_EXCEEDED_AUTHORITY_CEILING")
 
     if semantic.disposition is CollisionDisposition.HOLD_OWNER_CURRENTNESS_REQUIRED:
