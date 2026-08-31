@@ -1,0 +1,122 @@
+name: Aura GLM53 G4 W3 Owner Currentness Quarantine
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g4-w3-owner-currentness-quarantine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Authenticate independent currentness-law proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          expected_head = "2a483a4232ce8745ee25e81246c39004ff28537e"
+          run_id = 33336734334
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+              headers={
+                  "Accept": "application/vnd.github+json",
+                  "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              },
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              run = json.load(response)
+          if run.get("conclusion") != "success":
+              raise SystemExit("CURRENTNESS_LAW_RUN_NOT_SUCCESS")
+          if run.get("head_sha") != expected_head:
+              raise SystemExit(f"CURRENTNESS_LAW_HEAD_MISMATCH:{run.get('head_sha')}")
+          PY
+
+      - name: Verify G4 parent semantic surface is preserved
+        run: |
+          test "$(git rev-parse HEAD^:tools/awj032/glm53_g4_prefetch_plan_revalidation.py | git hash-object --stdin)" = \
+            "$(git rev-parse HEAD:tools/awj032/glm53_g4_prefetch_plan_revalidation.py)"
+
+      - name: Compile G4 and W3 surfaces
+        run: |
+          python3 -m py_compile \
+            tools/awj032/glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/glm53_g4_owner_currentness_quarantine.py \
+            tools/awj032/test_glm53_g4_owner_currentness_quarantine.py
+
+      - name: Reproduce inherited G4 classifier contract
+        run: python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
+
+      - name: Execute W3 currentness quarantine adversarials
+        run: python3 -m unittest tools.awj032.test_glm53_g4_owner_currentness_quarantine -v
+
+      - name: Exhaust quarantined eight-axis lattice
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g4_prefetch_plan_revalidation import G3PlanProjection
+          from tools.awj032.glm53_g4_owner_currentness_quarantine import prove_quarantine_lattice
+
+          plan = G3PlanProjection(
+              g3_receipt_digest="a" * 64,
+              prediction_digest="b" * 64,
+              layer_id="moe.17",
+              binding_digest="binding::glm53::rev::idx",
+              admitted_experts=(1, 4),
+              prediction_generation="pred::17",
+              calibration_generation="cal::17",
+              policy_generation="policy::17",
+              source_binding_generation="source::17",
+              runtime_generation="runtime::17",
+              cache_generation="cache::17",
+              storage_geometry_generation="storage::17",
+              host_profile_generation="host::17",
+          )
+          proof = prove_quarantine_lattice(plan)
+          expected = {
+              "states": 256,
+              "owner_observation_holds": 1,
+              "recompute_holds": 255,
+              "reusable": 0,
+          }
+          if proof != expected:
+              raise SystemExit(f"G4_W3_LATTICE_MISMATCH:{proof}")
+          print(proof)
+          PY
+
+      - name: Enforce W3 claim ceiling
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/awj032/glm53_g4_owner_currentness_quarantine.py").read_text()
+          required = (
+              'HOLD_OWNER_OBSERVATION_AUTH_REQUIRED',
+              'independently_resolved_currentness_proven: bool = False',
+              'reusable_without_recompute: bool = False',
+              'native_private_transformer_kv_accessed: bool = False',
+              'semantic_k27_authority_minted: bool = False',
+          )
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"G4_W3_CEILING_MARKER_MISSING:{marker}")
+          PY
