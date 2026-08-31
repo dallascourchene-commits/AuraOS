@@ -1,3 +1,4 @@
+# Owner-authored reproof trigger only; comparator semantics are unchanged.
 import math
 import struct
 import unittest
