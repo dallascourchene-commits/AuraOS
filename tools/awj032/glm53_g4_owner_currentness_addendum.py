@@ -1,29 +1,23 @@
-"""G4 W3 addendum: owner-resolved, epoch-stable reuse currentness for GLM-5.3.
+"""G4 W3 addendum: resolver-obtained, epoch-stable currentness candidate for GLM-5.3.
 
 D0 / HS1 / NONPROMOTING / STACKED ADDENDUM.
 
-PR #757 owns the G4 generation-bound plan-revalidation semantics. This module
-owns only a post-authoring W3 residual: ``CurrentReuseContext`` is a plain value
-object, so direct caller construction cannot itself prove that the eight
-use-time generations came from their respective owners or coexisted in one
-state generation.
+PR #757 owns canonical G4 structural generation comparison. This module owns a
+post-authoring W3 residual: raw caller-constructed CurrentReuseContext values do
+not prove owner currentness. The addendum therefore accepts an owner-resolver
+integration boundary, brackets one observation with an epoch, and delegates
+axis drift classification to G4 v2.
 
-The addendum therefore accepts no direct use-time context. It requires an
-owner resolver, brackets the consequence-bearing read with one stable owner
-state epoch, obtains a plan-bound owner observation, delegates the actual
-changed-axis decision to G4 unchanged, and fails closed on any missing,
-malformed, exceptional, mismatched, or drifting owner state.
+Critical trust ceiling: satisfying the resolver Protocol, returning a stable
+epoch, and matching all eight labels still do not authenticate the resolver
+producer, prove epoch change-completeness/non-reuse, or prove currentness truth.
+Therefore the zero-drift result is only a resolver-matched candidate requiring
+external trust. It is never marked reusable by this pure contract.
 
-The resolver is a trusted integration boundary supplied by the owning
-runtime/control plane. This pure contract does not authenticate the resolver
-producer or independently prove source/runtime truth. It also cannot prove
-that the externally supplied epoch token is change-complete and non-reused;
-that seqlock/OCC-style property is a mandatory integration invariant. These
-limits are carried explicitly so value/protocol shape cannot be laundered into
-producer authentication, snapshot truth, or effect authority.
-
-It never executes a transfer, mutates native routing, proves physical I/O, or
-grants execution/effect/Gate-10/K27/native-KV authority.
+Laws:
+    MatchingGenerationLabels != AuthenticatedOwnerCurrentness
+    StableResolverEpoch != AuthenticatedResolverIdentity
+    ResolverMatchedCandidate != ReuseAuthority
 """
 from __future__ import annotations
 
@@ -36,17 +30,16 @@ from tools.awj032.glm53_g4_prefetch_plan_revalidation import (
     CurrentReuseContext,
     G3PlanProjection,
     HOLD_RECOMPUTE_G3,
-    REVALIDATED_UNCHANGED,
+    STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED,
     revalidate_g3_plan,
 )
 
-SCHEMA = "AURA-GLM53-G4-OWNER-CURRENTNESS-W3-v1"
-OWNER_REVALIDATED_UNCHANGED = "OWNER_REVALIDATED_UNCHANGED"
+SCHEMA = "AURA-GLM53-G4-OWNER-CURRENTNESS-W3-v2"
+RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED = "RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED"
 HOLD_OWNER_CURRENTNESS_REQUIRED = "HOLD_OWNER_CURRENTNESS_REQUIRED"
 HOLD_OWNER_STATE_EPOCH_CHANGED = "HOLD_OWNER_STATE_EPOCH_CHANGED"
 HOLD_RECOMPUTE_G3_OWNER_RESOLVED = "HOLD_RECOMPUTE_G3_OWNER_RESOLVED"
 
-# Exact-green serializability precedent consumed as a law anchor, not copied.
 O65_HEAD = "7efca33d95f6dc39c4e159250d45373b260060ed"
 O65_RUN = 33410032496
 O65_JOB = 99546999922
@@ -84,10 +77,8 @@ def _sha256(value: str, name: str) -> None:
 class OwnerReuseStateObservation:
     """Resolver projection for one exact G4 plan identity and epoch.
 
-    ``owner`` describes the integration responsibility, not producer
-    authentication by this contract. The resolver implementation and epoch
-    semantics must be bound by the trusted runtime/control plane outside this
-    pure membrane.
+    ``owner`` describes integration responsibility only. Producer authentication
+    and epoch semantics remain external runtime/control-plane obligations.
     """
 
     plan_identity_digest: str
@@ -118,20 +109,12 @@ class OwnerReuseStateObservation:
 
 
 class G4OwnerReuseStateResolver(Protocol):
-    """Trusted integration boundary for G4 use-time state.
+    """External integration boundary for G4 use-time state.
 
-    Implementations are supplied by the owning runtime/control plane. The
-    membrane deliberately has no API accepting raw currentness strings from a
-    caller. The same nonempty epoch must bracket the full owner observation.
-
-    For ``epoch_before == epoch_after`` to imply a coherent snapshot, the owner
-    must guarantee that the epoch changes for every consequence-bearing
-    mutation and is not reset/reused across the read window. This pure contract
-    can require that integration invariant but cannot prove it.
-
-    Trust in the resolver implementation is also external to this contract.
-    Merely satisfying this Python protocol does not cryptographically
-    authenticate a producer and does not itself prove source/runtime truth.
+    Merely implementing this Protocol does not authenticate a resolver. For
+    ``epoch_before == epoch_after`` to support a coherent snapshot, the owning
+    runtime must independently guarantee change-complete, non-reused epoch
+    semantics across every consequence-bearing mutation.
     """
 
     def resolve_g4_state_epoch(self, *, plan_identity_digest: str) -> str | None: ...
@@ -156,6 +139,7 @@ class G4OwnerCurrentnessReceipt:
     owner_state_epoch_stable: bool
     reusable_without_recompute: bool
     recompute_g3_required: bool
+    external_resolver_trust_required: bool = True
     owner_resolver_authenticated_by_this_contract: bool = False
     owner_currentness_truth_proven_by_this_contract: bool = False
     owner_epoch_change_complete_required: bool = True
@@ -183,7 +167,11 @@ class G4OwnerCurrentnessReceipt:
         if self.base_g4_receipt_digest is not None:
             _sha256(self.base_g4_receipt_digest, "BASE_G4_RECEIPT_DIGEST")
 
-        if self.disposition == OWNER_REVALIDATED_UNCHANGED:
+        changed_set = set(self.changed_axes)
+        if len(changed_set) != len(self.changed_axes):
+            raise ValueError("G4_W3_CHANGED_AXES_MUST_BE_UNIQUE")
+
+        if self.disposition == RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED:
             if not (
                 self.owner_context_resolved
                 and self.owner_state_epoch_stable
@@ -192,23 +180,33 @@ class G4OwnerCurrentnessReceipt:
                 and self.owner_observation_digest is not None
                 and self.base_g4_receipt_digest is not None
                 and not self.changed_axes
-                and self.reusable_without_recompute
+                and not self.reusable_without_recompute
                 and not self.recompute_g3_required
             ):
-                raise ValueError("OWNER_REVALIDATED_STATE_INVALID")
-        else:
+                raise ValueError("RESOLVER_MATCHED_CANDIDATE_STATE_INVALID")
+        elif self.disposition == HOLD_RECOMPUTE_G3_OWNER_RESOLVED:
+            if not self.owner_context_resolved or not self.owner_state_epoch_stable:
+                raise ValueError("OWNER_RESOLVED_RECOMPUTE_REQUIRES_STABLE_OWNER_STATE")
+            if not self.changed_axes or not self.recompute_g3_required:
+                raise ValueError("OWNER_RESOLVED_RECOMPUTE_STATE_INVALID")
             if self.reusable_without_recompute:
                 raise ValueError("HOLD_CANNOT_CLAIM_REUSABLE")
-            if self.disposition == HOLD_RECOMPUTE_G3_OWNER_RESOLVED:
-                if not self.owner_context_resolved or not self.owner_state_epoch_stable:
-                    raise ValueError("OWNER_RESOLVED_RECOMPUTE_REQUIRES_STABLE_OWNER_STATE")
-                if not self.changed_axes or not self.recompute_g3_required:
-                    raise ValueError("OWNER_RESOLVED_RECOMPUTE_STATE_INVALID")
+        elif self.disposition in (
+            HOLD_OWNER_CURRENTNESS_REQUIRED,
+            HOLD_OWNER_STATE_EPOCH_CHANGED,
+        ):
+            if self.reusable_without_recompute:
+                raise ValueError("HOLD_CANNOT_CLAIM_REUSABLE")
+        else:
+            raise ValueError("G4_W3_DISPOSITION_INVALID")
 
+        if self.external_resolver_trust_required is not True:
+            raise ValueError("EXTERNAL_RESOLVER_TRUST_MUST_REMAIN_REQUIRED")
         if self.owner_epoch_change_complete_required is not True:
             raise ValueError("OWNER_EPOCH_CHANGE_COMPLETE_SEMANTICS_REQUIRED")
         if self.revalidation_required_at_effect_boundary is not True:
             raise ValueError("EFFECT_BOUNDARY_REVALIDATION_REQUIRED")
+
         forbidden = (
             self.owner_resolver_authenticated_by_this_contract,
             self.owner_currentness_truth_proven_by_this_contract,
@@ -282,14 +280,12 @@ def revalidate_g3_plan_owner_resolved(
     plan: G3PlanProjection,
     owner_resolver: G4OwnerReuseStateResolver | None,
 ) -> G4OwnerCurrentnessReceipt:
-    """Revalidate G4 through one resolver-obtained, epoch-stable observation.
+    """Produce a resolver-matched candidate or fail closed.
 
-    Raw ``CurrentReuseContext`` is intentionally absent from this public API.
-    Matching caller-created strings therefore cannot mint current reuse state
-    through this membrane directly. Resolver producer authenticity, currentness
-    truth, and change-complete/non-reused epoch semantics remain external
-    runtime/control-plane obligations and are explicitly *not* proven by the
-    returned receipt.
+    Raw CurrentReuseContext is absent from this public API. Even a stable,
+    zero-drift resolver result remains non-reusable until a separate trusted
+    runtime/registry proves resolver provenance, currentness truth, and epoch
+    semantics at the effect boundary.
     """
 
     plan.validate()
@@ -387,7 +383,7 @@ def revalidate_g3_plan_owner_resolved(
         return _hold(
             plan_identity_digest=plan_identity,
             disposition=HOLD_RECOMPUTE_G3_OWNER_RESOLVED,
-            reason_code="OWNER_RESOLVED_AXIS_DRIFT_REQUIRES_G3_RECOMPUTE",
+            reason_code="RESOLVER_OBSERVED_AXIS_DRIFT_REQUIRES_G3_RECOMPUTE",
             epoch=epoch_before,
             observation=observation,
             base_g4_receipt_digest=base.receipt_digest,
@@ -396,13 +392,13 @@ def revalidate_g3_plan_owner_resolved(
             owner_state_epoch_stable=True,
             recompute_g3_required=True,
         )
-    if base.disposition != REVALIDATED_UNCHANGED:
+    if base.disposition != STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED:
         raise AssertionError("UNEXPECTED_BASE_G4_DISPOSITION")
 
     receipt = G4OwnerCurrentnessReceipt(
         schema=SCHEMA,
-        disposition=OWNER_REVALIDATED_UNCHANGED,
-        reason_code="RESOLVER_CONTEXT_UNCHANGED_IN_ONE_STABLE_EPOCH",
+        disposition=RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED,
+        reason_code="RESOLVER_CONTEXT_STRUCTURALLY_MATCHED_IN_STABLE_EPOCH_EXTERNAL_TRUST_REQUIRED",
         plan_identity_digest=plan_identity,
         owner_state_epoch=epoch_before,
         owner_resolver_generation=observation.resolver_generation,
@@ -411,7 +407,7 @@ def revalidate_g3_plan_owner_resolved(
         changed_axes=(),
         owner_context_resolved=True,
         owner_state_epoch_stable=True,
-        reusable_without_recompute=True,
+        reusable_without_recompute=False,
         recompute_g3_required=False,
     )
     receipt.validate_claim_ceiling()
