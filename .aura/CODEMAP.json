@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788203083,
+  "generated_at_unix": 1788209781,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1686,
+    "repo_file_count": 1690,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -140,6 +140,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
+      ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -1115,6 +1116,7 @@
       "docs/arena/AWJ032_G3_COLLISION_SCAN_20260831.md",
       "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
       "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
+      "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1663,6 +1665,7 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
@@ -1672,6 +1675,7 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+      "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -1802,16 +1806,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1686,
-      "bytes": 26651478,
-      "tokens_est": 6653268,
+      "files": 1690,
+      "bytes": 26688661,
+      "tokens_est": 6662563,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 247,
+        "knowledge_artifact": 248,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1025,
-        "schema_or_lexicon": 280,
+        "python_module": 1027,
+        "schema_or_lexicon": 281,
         "support_file": 49
       }
     },
@@ -3982,6 +3986,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_canonical:3c62b739d09eecfb",
+        "signature_hash": "8d5bf5695239b859"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -8186,6 +8198,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_sha:ff4f3be033d12cab",
+        "signature_hash": "e47bc2e8d0ade77b"
       },
       {
         "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
@@ -13850,6 +13870,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_sha256:794633af6ae98cb3",
+        "signature_hash": "a46cbd439e4d33c2"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14796,6 +14824,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_text:7ffc2125743d278e",
+        "signature_hash": "dc3769a64f0c5af1"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -158306,6 +158342,126 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "G3PlanProjection": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 142,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:G3PlanProjection:8aae4caa19fcf4cd",
+        "signature_hash": "6d0b1ef1f118ddd5"
+      }
+    ],
+    "G3PlanProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 126,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G3PlanProjection.validate:5f15e426311e3e0f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "G3PlanProjection.plan_identity_digest": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 142,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G3PlanProjection.plan_identity_digest:6cb967e05f45cbd3",
+        "signature_hash": "df7031df9266e4fc"
+      }
+    ],
+    "CurrentReuseContext": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "class",
+        "line": 146,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:CurrentReuseContext:1dcf7d585f5bcf9a",
+        "signature_hash": "56048dc44b20b5b3"
+      }
+    ],
+    "CurrentReuseContext.validate": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:CurrentReuseContext.validate:ebaff1afaa7eaad7",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "G4RevalidationReceipt": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 259,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:G4RevalidationReceipt:985d1c6c62eb2ce7",
+        "signature_hash": "ba19561c31ab1fe8"
+      }
+    ],
+    "G4RevalidationReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 254,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G4RevalidationReceipt.validate_claim_ceiling:4ba5b1587a1a7d9b",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "G4RevalidationReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 257,
+        "end_line": 259,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G4RevalidationReceipt.receipt_digest:bd034b16fccf00e0",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "changed_axes_tree": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 285,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:changed_axes_tree:9efc5f27af7f0709",
+        "signature_hash": "2d26931da116b446"
+      }
+    ],
+    "changed_axes_table": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 288,
+        "end_line": 295,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:changed_axes_table:613b76af68890e6a",
+        "signature_hash": "de02305a06313ad3"
+      }
+    ],
+    "revalidate_g3_plan": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 298,
+        "end_line": 335,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:revalidate_g3_plan:9939522196b9a4fb",
+        "signature_hash": "3eabd111bbb77aaa"
+      }
+    ],
+    "prove_finite_drift_lattice": [
+      {
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 376,
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:prove_finite_drift_lattice:ecfa6f65520c2919",
+        "signature_hash": "31ba3c1bba6f8e1d"
+      }
+    ],
     "TargetClass": [
       {
         "file": "tools/awj032/glm53_io_feasibility.py",
@@ -159930,6 +160086,236 @@
         "end_line": 215,
         "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_nonempty_g2_path_remains_unchanged:b898cbe5e10b2255",
         "signature_hash": "cf84346ec6c6e80f"
+      }
+    ],
+    "d": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#function:d:576a781baff44827",
+        "signature_hash": "20548e4956440a9b"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 214,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#class:GLM53G4PrefetchPlanRevalidationTests:6e585bdcaa59ff3c",
+        "signature_hash": "06d3dfdb4dcb1acd"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.plan": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.plan:43c2cb3183ceba05",
+        "signature_hash": "ba2cc4c5a5735aba"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.current": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.current:cef6ccdfea1aecd7",
+        "signature_hash": "5ccabbf43c436c76"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_unchanged_labels_are_structural_match_not_reuse_authority": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_unchanged_labels_are_structural_match_not_reuse_authority:a0ec0d78f6b75408",
+        "signature_hash": "2c4ff81c0ed9302a"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_caller_context_cannot_self_mint_owner_authentication": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_caller_context_cannot_self_mint_owner_authentication:ccd0f2c8d6bfbada",
+        "signature_hash": "1ba7c22d922c9827"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_matching_arbitrary_labels_do_not_authenticate_currentness": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_matching_arbitrary_labels_do_not_authenticate_currentness:c62e54ed89c464c0",
+        "signature_hash": "c4cf9a62b293be31"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_every_single_axis_drift_holds": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_every_single_axis_drift_holds:511ae4db1d9d0cee",
+        "signature_hash": "e704f7eed1712fea"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_multiple_drift_axes_are_canonical": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_multiple_drift_axes_are_canonical:f8c75f63a9f76484",
+        "signature_hash": "5b0f625153e271dd"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_empty_abstention_plan_still_requires_structural_revalidation": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_empty_abstention_plan_still_requires_structural_revalidation:ad19f632bb5db292",
+        "signature_hash": "825dbb8b10d03486"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_finite_drift_lattice_exhausts_256_states_without_authorizing_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 134,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_finite_drift_lattice_exhausts_256_states_without_authorizing_reuse:48db55faba228a09",
+        "signature_hash": "8e976c2c19e6d9d9"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_plan_identity_is_generation_sensitive": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_plan_identity_is_generation_sensitive:f70bd2a112886850",
+        "signature_hash": "a109dbcab0cf5b4f"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_receipt_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_receipt_is_deterministic:e34516d824e465f7",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_noncanonical_expert_set_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 149,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_noncanonical_expert_set_rejected:828d9017f5f7c283",
+        "signature_hash": "9ace0da15ee5c88f"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_bad_plan_digest_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 153,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_bad_plan_digest_rejected:3f2685fd53193504",
+        "signature_hash": "9a50f2146ddfe971"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_blank_generation_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 157,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_blank_generation_rejected:e1e6307436ced30e",
+        "signature_hash": "223cf229ec0c8e8d"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_projection_cannot_self_mint_authority": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_projection_cannot_self_mint_authority:beea2c175704b232",
+        "signature_hash": "4bf5ff276e13873c"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_receipt_cannot_self_mint_currentness_reuse_or_effect_authority": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 185,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_receipt_cannot_self_mint_currentness_reuse_or_effect_authority:af8d6ee7be6639cb",
+        "signature_hash": "ceae79dbc6429216"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_receipt_requires_owner_authentication_gate": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 190,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_receipt_requires_owner_authentication_gate:8fa511f994330759",
+        "signature_hash": "e24ddbbf46941b90"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_manual_receipt_cannot_launder_bad_identity_digest": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 197,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_manual_receipt_cannot_launder_bad_identity_digest:c04dbe6e345cc39e",
+        "signature_hash": "cd6848f1f52e9a0c"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_changed_receipt_cannot_claim_structural_match": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 202,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_changed_receipt_cannot_claim_structural_match:ea8d6d531434b216",
+        "signature_hash": "374b1b99b88bb712"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_unchanged_receipt_cannot_claim_recompute": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 207,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_unchanged_receipt_cannot_claim_recompute:c8f671adc9b3e38d",
+        "signature_hash": "472b4cfa6eebda77"
+      }
+    ],
+    "GLM53G4PrefetchPlanRevalidationTests.test_changed_axes_reject_unknown_and_duplicate_entries": [
+      {
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 214,
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_changed_axes_reject_unknown_and_duplicate_entries:3cac9ffab6f28854",
+        "signature_hash": "df9b74a32dd491bd"
       }
     ],
     "IOFeasibilityTests": [
@@ -162497,6 +162883,7 @@
       "tools/awj032/README.md"
     ],
     "python3 -m py_compile": [
+      ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
@@ -171864,6 +172251,59 @@
         0.019187,
         -0.180359,
         -0.07547
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5832,
+      "lines": 149,
+      "tokens_est": 1458,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          77
+        ]
+      },
+      "topology": {},
+      "digest8": "96a9b9a291b1fad0",
+      "vector": [
+        -0.037779,
+        -0.269328,
+        0.24008,
+        0.201082,
+        0.162084,
+        -0.196207,
+        -0.19377,
+        -0.179146,
+        0.047528,
+        0.191333,
+        0.081651,
+        0.198645,
+        -0.140148,
+        -0.127961,
+        0.098713,
+        0.169396,
+        -0.176708,
+        0.025592,
+        0.201082,
+        -0.291264,
+        -0.198645,
+        0.106025,
+        -0.210831,
+        0.227893,
+        -0.301014,
+        0.001219,
+        -0.054841,
+        -0.103588,
+        0.166959,
+        0.149897,
+        -0.247392,
+        0.118212
       ]
     },
     {
@@ -239642,6 +240082,53 @@
       ]
     },
     {
+      "path": "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7027,
+      "lines": 120,
+      "tokens_est": 1756,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5390161908c21753",
+      "vector": [
+        0.243913,
+        0.008847,
+        -0.200943,
+        -0.04676,
+        0.271716,
+        0.094785,
+        -0.221164,
+        -0.104895,
+        -0.104895,
+        -0.168085,
+        -0.261606,
+        -0.04676,
+        -0.011374,
+        0.276771,
+        -0.021485,
+        0.205999,
+        0.147864,
+        0.069509,
+        -0.251495,
+        -0.23633,
+        -0.122588,
+        -0.294464,
+        -0.102367,
+        0.193361,
+        -0.089729,
+        -0.094785,
+        -0.051816,
+        -0.137754,
+        -0.04676,
+        0.132699,
+        -0.317213,
+        -0.266661
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -268168,6 +268655,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14216,
+      "lines": 377,
+      "tokens_est": 3554,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "22221fa4e7e9844b",
+      "vector": [
+        -0.151161,
+        -0.256623,
+        -0.015233,
+        0.031638,
+        -0.273028,
+        0.270684,
+        0.01992,
+        -0.284746,
+        -0.153505,
+        0.291776,
+        -0.069136,
+        -0.181628,
+        0.183971,
+        -0.059761,
+        0.015233,
+        -0.287089,
+        0.022264,
+        -0.139443,
+        0.097259,
+        0.256623,
+        -0.172254,
+        -0.134756,
+        0.237874,
+        0.200377,
+        -0.144131,
+        0.076167,
+        -0.214438,
+        0.172254,
+        -0.183971,
+        0.16991,
+        0.003515,
+        0.097259
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_io_feasibility.py",
       "role": "python_module",
       "binary": false,
@@ -268588,6 +269122,53 @@
         0.25173,
         0.164303,
         0.052758
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10108,
+      "lines": 219,
+      "tokens_est": 2527,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f5f0708da3b94f39",
+      "vector": [
+        0.239029,
+        0.088914,
+        0.165127,
+        0.118937,
+        -0.068129,
+        -0.153579,
+        -0.294456,
+        -0.245958,
+        -0.146651,
+        0.225173,
+        0.229792,
+        -0.172055,
+        0.178983,
+        -0.012702,
+        -0.155889,
+        -0.275981,
+        -0.169746,
+        0.118937,
+        0.181293,
+        0.266743,
+        -0.075058,
+        0.273671,
+        0.144341,
+        -0.172055,
+        0.169746,
+        -0.243648,
+        -0.049653,
+        0.015012,
+        -0.091224,
+        0.222863,
+        -0.06351,
+        -0.001155
       ]
     },
     {
@@ -292871,16 +293452,16 @@
     }
   },
   "summary": {
-    "file_count": 1686,
-    "total_bytes": 26651478,
-    "text_tokens_est": 6653268,
+    "file_count": 1690,
+    "total_bytes": 26688661,
+    "text_tokens_est": 6662563,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 247,
+      "knowledge_artifact": 248,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1025,
-      "schema_or_lexicon": 280,
+      "python_module": 1027,
+      "schema_or_lexicon": 281,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293030,6 +293611,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
+      ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -294005,6 +294587,7 @@
       "docs/arena/AWJ032_G3_COLLISION_SCAN_20260831.md",
       "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
       "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
+      "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -294553,6 +295136,7 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
@@ -294562,6 +295146,7 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+      "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -452916,6 +453501,166 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:CurrentReuseContext:1dcf7d585f5bcf9a",
+        "name": "CurrentReuseContext",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 146,
+        "end_line": 169,
+        "signature_hash": "56048dc44b20b5b3",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:G3PlanProjection:8aae4caa19fcf4cd",
+        "name": "G3PlanProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 77,
+        "end_line": 142,
+        "signature_hash": "6d0b1ef1f118ddd5",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:G4RevalidationReceipt:985d1c6c62eb2ce7",
+        "name": "G4RevalidationReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 173,
+        "end_line": 259,
+        "signature_hash": "ba19561c31ab1fe8",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_canonical:3c62b739d09eecfb",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_sha256:794633af6ae98cb3",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "a46cbd439e4d33c2",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_sha:ff4f3be033d12cab",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_text:7ffc2125743d278e",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "dc3769a64f0c5af1",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:changed_axes_table:613b76af68890e6a",
+        "name": "changed_axes_table",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 288,
+        "end_line": 295,
+        "signature_hash": "de02305a06313ad3",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:changed_axes_tree:9efc5f27af7f0709",
+        "name": "changed_axes_tree",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 262,
+        "end_line": 285,
+        "signature_hash": "2d26931da116b446",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:prove_finite_drift_lattice:ecfa6f65520c2919",
+        "name": "prove_finite_drift_lattice",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 338,
+        "end_line": 376,
+        "signature_hash": "31ba3c1bba6f8e1d",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:revalidate_g3_plan:9939522196b9a4fb",
+        "name": "revalidate_g3_plan",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 298,
+        "end_line": 335,
+        "signature_hash": "3eabd111bbb77aaa",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:CurrentReuseContext.validate:ebaff1afaa7eaad7",
+        "name": "CurrentReuseContext.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 163,
+        "end_line": 169,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G3PlanProjection.plan_identity_digest:6cb967e05f45cbd3",
+        "name": "G3PlanProjection.plan_identity_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 129,
+        "end_line": 142,
+        "signature_hash": "df7031df9266e4fc",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G3PlanProjection.validate:5f15e426311e3e0f",
+        "name": "G3PlanProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 99,
+        "end_line": 126,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G4RevalidationReceipt.receipt_digest:bd034b16fccf00e0",
+        "name": "G4RevalidationReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 257,
+        "end_line": 259,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#method:G4RevalidationReceipt.validate_claim_ceiling:4ba5b1587a1a7d9b",
+        "name": "G4RevalidationReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+        "line": 198,
+        "end_line": 254,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "22221fa4e7e9844b"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:IOFeasibilityReceipt:6d9e8e12da87a4af",
         "name": "IOFeasibilityReceipt",
         "kind": "class",
@@ -454634,6 +455379,236 @@
         "end_line": 34,
         "signature_hash": "0df0c57f238a2bb4",
         "file_digest8": "610691ae4f369676"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#class:GLM53G4PrefetchPlanRevalidationTests:6e585bdcaa59ff3c",
+        "name": "GLM53G4PrefetchPlanRevalidationTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 21,
+        "end_line": 214,
+        "signature_hash": "06d3dfdb4dcb1acd",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#function:d:576a781baff44827",
+        "name": "d",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "20548e4956440a9b",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.current:cef6ccdfea1aecd7",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.current",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 39,
+        "end_line": 43,
+        "signature_hash": "5ccabbf43c436c76",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.plan:43c2cb3183ceba05",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.plan",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 22,
+        "end_line": 37,
+        "signature_hash": "ba2cc4c5a5735aba",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_bad_plan_digest_rejected:3f2685fd53193504",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_bad_plan_digest_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 151,
+        "end_line": 153,
+        "signature_hash": "9a50f2146ddfe971",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_blank_generation_rejected:e1e6307436ced30e",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_blank_generation_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 155,
+        "end_line": 157,
+        "signature_hash": "223cf229ec0c8e8d",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_caller_context_cannot_self_mint_owner_authentication:ccd0f2c8d6bfbada",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_caller_context_cannot_self_mint_owner_authentication",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "1ba7c22d922c9827",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_changed_axes_reject_unknown_and_duplicate_entries:3cac9ffab6f28854",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_changed_axes_reject_unknown_and_duplicate_entries",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 209,
+        "end_line": 214,
+        "signature_hash": "df9b74a32dd491bd",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_changed_receipt_cannot_claim_structural_match:ea8d6d531434b216",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_changed_receipt_cannot_claim_structural_match",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 199,
+        "end_line": 202,
+        "signature_hash": "374b1b99b88bb712",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_empty_abstention_plan_still_requires_structural_revalidation:ad19f632bb5db292",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_empty_abstention_plan_still_requires_structural_revalidation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 118,
+        "end_line": 127,
+        "signature_hash": "825dbb8b10d03486",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_every_single_axis_drift_holds:511ae4db1d9d0cee",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_every_single_axis_drift_holds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 88,
+        "end_line": 100,
+        "signature_hash": "e704f7eed1712fea",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_finite_drift_lattice_exhausts_256_states_without_authorizing_reuse:48db55faba228a09",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_finite_drift_lattice_exhausts_256_states_without_authorizing_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 129,
+        "end_line": 134,
+        "signature_hash": "8e976c2c19e6d9d9",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_manual_receipt_cannot_launder_bad_identity_digest:c04dbe6e345cc39e",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_manual_receipt_cannot_launder_bad_identity_digest",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 192,
+        "end_line": 197,
+        "signature_hash": "cd6848f1f52e9a0c",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_matching_arbitrary_labels_do_not_authenticate_currentness:c62e54ed89c464c0",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_matching_arbitrary_labels_do_not_authenticate_currentness",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 61,
+        "end_line": 86,
+        "signature_hash": "c4cf9a62b293be31",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_multiple_drift_axes_are_canonical:f8c75f63a9f76484",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_multiple_drift_axes_are_canonical",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 102,
+        "end_line": 116,
+        "signature_hash": "5b0f625153e271dd",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_noncanonical_expert_set_rejected:828d9017f5f7c283",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_noncanonical_expert_set_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 146,
+        "end_line": 149,
+        "signature_hash": "9ace0da15ee5c88f",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_plan_identity_is_generation_sensitive:f70bd2a112886850",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_plan_identity_is_generation_sensitive",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "a109dbcab0cf5b4f",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_projection_cannot_self_mint_authority:beea2c175704b232",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_projection_cannot_self_mint_authority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 159,
+        "end_line": 168,
+        "signature_hash": "4bf5ff276e13873c",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_receipt_cannot_self_mint_currentness_reuse_or_effect_authority:af8d6ee7be6639cb",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_receipt_cannot_self_mint_currentness_reuse_or_effect_authority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 170,
+        "end_line": 185,
+        "signature_hash": "ceae79dbc6429216",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_receipt_is_deterministic:e34516d824e465f7",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 140,
+        "end_line": 144,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_receipt_requires_owner_authentication_gate:8fa511f994330759",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_receipt_requires_owner_authentication_gate",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 187,
+        "end_line": 190,
+        "signature_hash": "e24ddbbf46941b90",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_unchanged_labels_are_structural_match_not_reuse_authority:a0ec0d78f6b75408",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_unchanged_labels_are_structural_match_not_reuse_authority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 45,
+        "end_line": 55,
+        "signature_hash": "2c4ff81c0ed9302a",
+        "file_digest8": "f5f0708da3b94f39"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_unchanged_receipt_cannot_claim_recompute:c8f671adc9b3e38d",
+        "name": "GLM53G4PrefetchPlanRevalidationTests.test_unchanged_receipt_cannot_claim_recompute",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+        "line": 204,
+        "end_line": 207,
+        "signature_hash": "472b4cfa6eebda77",
+        "file_digest8": "f5f0708da3b94f39"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
@@ -457056,7 +458031,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "73f812f167e168c022c8ae1c3c9fa066",
-    "payload_hash": "6bed5068baf2d4a38353be58edf35e5b"
+    "record_fingerprint": "60caaf1659d757d3ac0584a05dafb350",
+    "payload_hash": "f9de1fb5e28d853bd79152fef06c65b3"
   }
 }
