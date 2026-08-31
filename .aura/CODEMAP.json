@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788137833,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1648,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,9 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-mmap-admission.yml",
+      ".github/workflows/k27-astge-mmap-lifecycle.yml",
+      ".github/workflows/k27-astge-reference.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1623,6 +1626,9 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_astge_mmap_admission.py",
+      "tests/test_k27_astge_mmap_lifecycle.py",
+      "tests/test_k27_astge_reference.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1633,6 +1639,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_astge_mmap_admission.py",
+      "tools/k27_astge_mmap_lifecycle.py",
+      "tools/k27_astge_reference.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1764,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1648,
+      "bytes": 26499670,
+      "tokens_est": 6615272,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1003,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -3895,6 +3904,22 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 46,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_canonical:86779fd8da4cb531",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_canonical:3f87f8a1b466be59",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4337,6 +4362,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_digest:431129eb6fbf9de1",
+        "signature_hash": "c978f5ef05fda5cb"
       }
     ],
     "_token_proxy": [
@@ -51971,6 +52004,14 @@
         "end_line": 63,
         "semantic_id": "aura_gate_oidc.py#function:_require_text:78662a81d2bc47ed",
         "signature_hash": "5a34bc621c690ee0"
+      },
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 57,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_require_text:e5e3b878142bbaa4",
+        "signature_hash": "27d34569fd09f08e"
       }
     ],
     "_decode_base64url": [
@@ -100525,6 +100566,14 @@
         "end_line": 70,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:_require_sha256:e1903a9df5073f64",
         "signature_hash": "980a9398c967ba8e"
+      },
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 68,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_require_sha256:a6f4e4a0ca69c4a2",
+        "signature_hash": "6c5bd19d238efb35"
       }
     ],
     "_global_id": [
@@ -156921,6 +156970,466 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "ASTGEMmapAdmissionTests": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 246,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#class:ASTGEMmapAdmissionTests:5c76c63a83d188a0",
+        "signature_hash": "6b755a4e8b30b61a"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.fixture": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 24,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.fixture:ad9561d6f446f333",
+        "signature_hash": "46c775cb3cf9d3c7"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.capability": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 49,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.capability:ad6d7558d08edd2d",
+        "signature_hash": "28be33292e79059a"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.private_open": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.private_open:691e7e703ea4844d",
+        "signature_hash": "ab1140275f849284"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_production_registry_is_empty_and_public_path_holds": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 74,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_production_registry_is_empty_and_public_path_holds:b5ecff31e2541129",
+        "signature_hash": "55579ef3caad5ad2"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_public_signature_has_no_capability_or_registry_override": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 89,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_public_signature_has_no_capability_or_registry_override:d15c078677ea8e73",
+        "signature_hash": "8d1f53b8a76392ca"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_exact_private_capability_admits_only_eligibility": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 109,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_exact_private_capability_admits_only_eligibility:ca185f2e3a9c7de8",
+        "signature_hash": "08528dc0284ee735"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_same_publisher_and_verifier_is_not_independent": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 117,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_same_publisher_and_verifier_is_not_independent:b2df8d5d235132f3",
+        "signature_hash": "62ec50adf3a39a14"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_truthy_non_boolean_capability_state_fails_closed": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 124,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_truthy_non_boolean_capability_state_fails_closed:eef924f297991a23",
+        "signature_hash": "11e427aada9bb44e"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_effect_authority_widening_fails_closed": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 131,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_effect_authority_widening_fails_closed:78381224c6c817db",
+        "signature_hash": "4ee3cba32c151312"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_snapshot_or_manifest_substitution_cannot_match_capability": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 152,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_snapshot_or_manifest_substitution_cannot_match_capability:2bc59135c95498ee",
+        "signature_hash": "e771ded0eeb8bb9e"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_opened_file_identity_or_generation_substitution_cannot_match": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 164,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_opened_file_identity_or_generation_substitution_cannot_match:2e23d73805e3dbba",
+        "signature_hash": "6a8fbcb31a1966ed"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_stale_or_revoked_exact_capability_fails_with_typed_state": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 173,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_stale_or_revoked_exact_capability_fails_with_typed_state:d68417f001e24d0a",
+        "signature_hash": "9780b9ea9530d842"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_multiple_exact_capabilities_fail_ambiguous": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 181,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_multiple_exact_capabilities_fail_ambiguous:55f1b3b221c5f7a1",
+        "signature_hash": "5b2eb13be95d41d8"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_malformed_unrelated_registry_neighbor_poisoning_is_fail_closed": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 193,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_malformed_unrelated_registry_neighbor_poisoning_is_fail_closed:a7fc2b18466fefce",
+        "signature_hash": "6e5aea58975ee1aa"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_capability_does_not_replace_runtime_generation_guard": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 207,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_capability_does_not_replace_runtime_generation_guard:a909eabffbb04c9c",
+        "signature_hash": "9a88d9d75d922464"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_reopen_requires_fresh_admission": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 215,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_reopen_requires_fresh_admission:cd0501481889276a",
+        "signature_hash": "69e39506244648b3"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_read_only_permissions_alone_do_not_admit_mmap": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 217,
+        "end_line": 232,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_read_only_permissions_alone_do_not_admit_mmap:7bbea1bead2aa71a",
+        "signature_hash": "da885750c3e9f38c"
+      }
+    ],
+    "ASTGEMmapAdmissionTests.test_capability_policy_flags_must_be_exact_true": [
+      {
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 246,
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_capability_policy_flags_must_be_exact_true:bdab9f7d60311cef",
+        "signature_hash": "283b681d55405e3a"
+      }
+    ],
+    "heap_nodes": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 26,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#function:heap_nodes:d06a41a84f0c3791",
+        "signature_hash": "fe879bd367f5f99f"
+      }
+    ],
+    "ASTGEMmapLifecycleTests": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 169,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#class:ASTGEMmapLifecycleTests:be7c39b09bb99393",
+        "signature_hash": "90695aea735c5b04"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.fixture": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 35,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.fixture:dd860cb280d27b1f",
+        "signature_hash": "3d8acbaeb7abf9ad"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_unchanged_generation_preserves_reference_cone": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_unchanged_generation_preserves_reference_cone:1a0faa31a6901c8f",
+        "signature_hash": "f5f6a5c24cac706f"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_nodes_truncation_is_rejected_before_delegate_mmap_read": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_nodes_truncation_is_rejected_before_delegate_mmap_read:3af2c9c0f80a16ea",
+        "signature_hash": "39601ade31d29559"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_edges_truncation_is_rejected_before_query": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_edges_truncation_is_rejected_before_query:bda72a7d57b3475d",
+        "signature_hash": "3b4620b10c5885fc"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_path_replacement_is_distinct_from_open_fd_generation": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 80,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_path_replacement_is_distinct_from_open_fd_generation:7ea1e16c65d71929",
+        "signature_hash": "977611b89a10004f"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_same_size_in_place_mutation_is_detected": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 93,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_same_size_in_place_mutation_is_detected:ff6761c44e219f75",
+        "signature_hash": "1cbc18a9b5c75118"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_missing_path_is_rejected_even_while_open_fd_exists": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 101,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_missing_path_is_rejected_even_while_open_fd_exists:f160e03597c07db0",
+        "signature_hash": "31e4ab21099039da"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_closed_reader_cannot_be_reused": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 111,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_closed_reader_cannot_be_reused:899fe88fdfd491d3",
+        "signature_hash": "e308a55245236935"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_bounded_slice_rejects_negative_unknown_and_past_end": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 123,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_bounded_slice_rejects_negative_unknown_and_past_end:9f7ac34c59223a0b",
+        "signature_hash": "6f63c1fec857168c"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_reopen_establishes_new_generation_after_explicit_rebuild": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 142,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_reopen_establishes_new_generation_after_explicit_rebuild:2457148574b52568",
+        "signature_hash": "53236efd8f35f99f"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_generation_receipt_is_deterministic_while_files_are_unchanged": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 151,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_generation_receipt_is_deterministic_while_files_are_unchanged:3f93e0b2b58ec84e",
+        "signature_hash": "d00283ba97ac4379"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_metadata_only_generation_change_fails_closed": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 160,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_metadata_only_generation_change_fails_closed:263b66c4290da8ea",
+        "signature_hash": "f158cdb29a0fb93a"
+      }
+    ],
+    "ASTGEMmapLifecycleTests.test_claim_ceiling_is_explicitly_non_native": [
+      {
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 169,
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_claim_ceiling_is_explicitly_non_native:4aef418de882fea2",
+        "signature_hash": "f39b4a5cc43e4bb9"
+      }
+    ],
+    "ASTGEReferenceTests": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 141,
+        "semantic_id": "tests/test_k27_astge_reference.py#class:ASTGEReferenceTests:050992ad94741f92",
+        "signature_hash": "640a29d7f36f2b8a"
+      }
+    ],
+    "ASTGEReferenceTests.test_fixed_layout_contract": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_fixed_layout_contract:a771f26ebea1a5fc",
+        "signature_hash": "1071bd15c5cda5cc"
+      }
+    ],
+    "ASTGEReferenceTests.test_native_k27_is_three_axis_logical_cell_not_trithash": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 22,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_native_k27_is_three_axis_logical_cell_not_trithash:6aac7bc695e757b2",
+        "signature_hash": "cf5b62a84b7e3333"
+      }
+    ],
+    "ASTGEReferenceTests.test_experimental_sid_trithash_is_deterministic_and_scheme_qualified": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_experimental_sid_trithash_is_deterministic_and_scheme_qualified:33bc203f4667db71",
+        "signature_hash": "e7f839d76c4b1b62"
+      }
+    ],
+    "ASTGEReferenceTests.test_serializer_node_table_is_direct_id_indexed_for_both_placements": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 42,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_serializer_node_table_is_direct_id_indexed_for_both_placements:0bdb9ddf022739e1",
+        "signature_hash": "53ba15afb8a834fa"
+      }
+    ],
+    "ASTGEReferenceTests.test_same_graph_heap_and_both_mmap_cones_are_exactly_equal": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_same_graph_heap_and_both_mmap_cones_are_exactly_equal:5c72240e73f8b1c5",
+        "signature_hash": "cb50c481745d3c37"
+      }
+    ],
+    "ASTGEReferenceTests.test_trithash_blocks_are_prefix_homogeneous": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 78,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_trithash_blocks_are_prefix_homogeneous:31bc38a0cf6a9a11",
+        "signature_hash": "2d8a9ce55fc9a162"
+      }
+    ],
+    "ASTGEReferenceTests.test_hash_prefix_placement_can_amplify_pages_vs_contiguous": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 97,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_hash_prefix_placement_can_amplify_pages_vs_contiguous:d0a1fdf98acd815d",
+        "signature_hash": "549499b685d3dcbc"
+      }
+    ],
+    "ASTGEReferenceTests.test_truncated_node_table_fails_closed": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 108,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_truncated_node_table_fails_closed:70d46ddd73957ee7",
+        "signature_hash": "6321779aeb815e86"
+      }
+    ],
+    "ASTGEReferenceTests.test_block_pbn_substitution_fails_closed": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 121,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_block_pbn_substitution_fails_closed:77db25bbd8a185ed",
+        "signature_hash": "2a6ba00a27d1b9c9"
+      }
+    ],
+    "ASTGEReferenceTests.test_out_degree_above_block_capacity_rejected": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 129,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_out_degree_above_block_capacity_rejected:64be7dd1a1a6ad39",
+        "signature_hash": "a0d32ec6e46c7f12"
+      }
+    ],
+    "ASTGEReferenceTests.test_benchmark_is_same_graph_and_does_not_claim_superiority": [
+      {
+        "file": "tests/test_k27_astge_reference.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 141,
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_benchmark_is_same_graph_and_does_not_claim_superiority:883c5215099d9cba",
+        "signature_hash": "5f0d521d0e7a0979"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157179,6 +157688,826 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "_require_exact_bool": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_require_exact_bool:97b0878ca518947b",
+        "signature_hash": "f71e58c2e817cd67"
+      }
+    ],
+    "BackingFileImmutabilityCapabilityV1": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 105,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:BackingFileImmutabilityCapabilityV1:8525f085b67e7f3c",
+        "signature_hash": "193954e7bb376d00"
+      }
+    ],
+    "BackingFileImmutabilityCapabilityV1.capability_digest": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 105,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:BackingFileImmutabilityCapabilityV1.capability_digest:5c5a1e19be96adc2",
+        "signature_hash": "b55bd4b4d3ed376a"
+      }
+    ],
+    "BackingFileImmutabilityRegistryReceiptV1": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "class",
+        "line": 114,
+        "end_line": 124,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:BackingFileImmutabilityRegistryReceiptV1:98cb95f6a0d41e40",
+        "signature_hash": "1ca77f58e00027b0"
+      }
+    ],
+    "BackingFileImmutabilityRegistryReceiptV1.registry_digest": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 124,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:BackingFileImmutabilityRegistryReceiptV1.registry_digest:48de7f418a4713d3",
+        "signature_hash": "c4b77aeb00b00c2c"
+      }
+    ],
+    "MmapAdmissionReceiptV1": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "class",
+        "line": 128,
+        "end_line": 148,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:MmapAdmissionReceiptV1:5881abeda11bd917",
+        "signature_hash": "b3c1283e1cf392d0"
+      }
+    ],
+    "MmapAdmissionReceiptV1.receipt_digest": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 148,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:MmapAdmissionReceiptV1.receipt_digest:9aafb8e26f55353e",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_validate_capability_shape": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 202,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_validate_capability_shape:9d7070ce7e415e8b",
+        "signature_hash": "6cd30a38452849bf"
+      }
+    ],
+    "_registry_receipt_from_records": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 205,
+        "end_line": 224,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_registry_receipt_from_records:257ae20b9c2a15fc",
+        "signature_hash": "3b5ec7538ef1db89"
+      }
+    ],
+    "backing_immutability_capability_registry_receipt": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 227,
+        "end_line": 228,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:backing_immutability_capability_registry_receipt:c80c51d10ba8335e",
+        "signature_hash": "93f4e45e5cc93958"
+      }
+    ],
+    "_observed_storage_root": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 231,
+        "end_line": 236,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_observed_storage_root:75afb335ee4fb2c9",
+        "signature_hash": "a7dc17c9a62f4c57"
+      }
+    ],
+    "_binding_matches": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 239,
+        "end_line": 261,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_binding_matches:90b7f50fbb7d20af",
+        "signature_hash": "13ed5d0be78e353c"
+      }
+    ],
+    "_resolve_capability": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 264,
+        "end_line": 303,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_resolve_capability:7e3b785a09d0b64a",
+        "signature_hash": "c4df6283795607fe"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "class",
+        "line": 306,
+        "end_line": 350,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:CapabilityAdmittedMmapGraphReader:dcb387f627dea804",
+        "signature_hash": "aba0a88688366787"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.__init__": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 316,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.__init__:de1dd3f1fb90b7e5",
+        "signature_hash": "893d56a8eac6597a"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.node_count": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 319,
+        "end_line": 320,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.node_count:61facf19b53f8646",
+        "signature_hash": "bb4bc1ce5ac5d5cf"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.block_count": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 323,
+        "end_line": 324,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.block_count:eb3229d0ee6f8ba1",
+        "signature_hash": "e6a644bee7671bc5"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.validate_generation": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 327,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.validate_generation:ac2b02dbcc9d1801",
+        "signature_hash": "835761c9e40fe9f7"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.get_node": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 329,
+        "end_line": 330,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.get_node:05969ddd65d7f785",
+        "signature_hash": "8273e64a472ed488"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.query_affected_cone": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 332,
+        "end_line": 333,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.query_affected_cone:230cfc3f0680c6fc",
+        "signature_hash": "56dad7f6cfb0e42b"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.read_bounded_slice": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 335,
+        "end_line": 336,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.read_bounded_slice:068d2295c7411d9f",
+        "signature_hash": "78628f7aa1bf1ce3"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.reopen": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 338,
+        "end_line": 339,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.reopen:a685f2da7c24d0a7",
+        "signature_hash": "f3f9af89325ea95f"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.close": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 341,
+        "end_line": 344,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.close:7143de6a74c04f1b",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.__enter__": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 346,
+        "end_line": 347,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.__enter__:b09ea493552f40b1",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "CapabilityAdmittedMmapGraphReader.__exit__": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "method",
+        "line": 349,
+        "end_line": 350,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.__exit__:d869329b12322315",
+        "signature_hash": "ab11a5bbb17a5da2"
+      }
+    ],
+    "_open_with_records": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 353,
+        "end_line": 381,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_open_with_records:6925a9a68ddad067",
+        "signature_hash": "098119dee154dfc6"
+      }
+    ],
+    "open_admitted_mmap_graph_reader": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 384,
+        "end_line": 403,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:open_admitted_mmap_graph_reader:52aa30107a7f04c4",
+        "signature_hash": "295ff02239f0efed"
+      }
+    ],
+    "mmap_admission_parameter_names": [
+      {
+        "file": "tools/k27_astge_mmap_admission.py",
+        "kind": "function",
+        "line": 406,
+        "end_line": 407,
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:mmap_admission_parameter_names:5110d6a5faa79cce",
+        "signature_hash": "4bd002375774edd8"
+      }
+    ],
+    "MmapLifecycleError": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:MmapLifecycleError:a6bbc7c1080968f1",
+        "signature_hash": "2e46b026c5fbac02"
+      }
+    ],
+    "_digest_fd": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 69,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_digest_fd:bfbfd8fb80aa2ef7",
+        "signature_hash": "b8128b60b3dc5add"
+      }
+    ],
+    "MappedFileGenerationV1": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 87,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:MappedFileGenerationV1:bd1c97e3e6243116",
+        "signature_hash": "7adaeaf664f4c2f5"
+      }
+    ],
+    "MappedFileGenerationV1.generation_digest": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:MappedFileGenerationV1.generation_digest:ab433167e8989240",
+        "signature_hash": "008e19630aa360d5"
+      }
+    ],
+    "MmapLifecycleValidationReceiptV1": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 103,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:MmapLifecycleValidationReceiptV1:e0d3aa5f5b0b61a7",
+        "signature_hash": "19a24d4e5fba72f7"
+      }
+    ],
+    "_capture_generation": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 125,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_capture_generation:5c4d17812951744c",
+        "signature_hash": "19f136bc36b69eaf"
+      }
+    ],
+    "_validate_generation": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 149,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_validate_generation:51825589c039c587",
+        "signature_hash": "cd093d0713cde52a"
+      }
+    ],
+    "_combined_digest": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 159,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_combined_digest:3f66d0f2cd9924d0",
+        "signature_hash": "af9d0dbf3941cfde"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "class",
+        "line": 162,
+        "end_line": 257,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:LifecycleGuardedMmapGraphReader:27cac6fb03e7f592",
+        "signature_hash": "09d53cc757b3c072"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.__init__": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 179,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.__init__:b80aa626bf90aa4f",
+        "signature_hash": "799bba49fbe4d294"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.node_count": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 184,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.node_count:6960e659ed18ed66",
+        "signature_hash": "bb4bc1ce5ac5d5cf"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.block_count": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 189,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.block_count:1c0c4e58ec3c7627",
+        "signature_hash": "e6a644bee7671bc5"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader._require_open": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 193,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader._require_open:2b750a9a02c35476",
+        "signature_hash": "aac6e2bc7a4d52e6"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.validate_generation": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 205,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.validate_generation:75b96402b2795090",
+        "signature_hash": "835761c9e40fe9f7"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader._validated_operation": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 213,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader._validated_operation:93344dacbd206604",
+        "signature_hash": "dfa3b407f8515a8a"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.get_node": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 216,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.get_node:b34fbd6ee976cd5d",
+        "signature_hash": "8273e64a472ed488"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.query_affected_cone": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 221,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.query_affected_cone:a3138ab521822e06",
+        "signature_hash": "56dad7f6cfb0e42b"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.read_bounded_slice": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 240,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.read_bounded_slice:4d4ad7a557339898",
+        "signature_hash": "2f22a2a8a47411da"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.reopen": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 246,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.reopen:73c002f4e7b10838",
+        "signature_hash": "f3f9af89325ea95f"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.close": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 248,
+        "end_line": 251,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.close:a246471f9aa61fc8",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.__enter__": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 253,
+        "end_line": 254,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.__enter__:cfe628964cf7d960",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "LifecycleGuardedMmapGraphReader.__exit__": [
+      {
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "kind": "method",
+        "line": 256,
+        "end_line": 257,
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.__exit__:247dced1a02dbb46",
+        "signature_hash": "ab11a5bbb17a5da2"
+      }
+    ],
+    "ASTGEFormatError": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/k27_astge_reference.py#class:ASTGEFormatError:9a720bf68109bd80",
+        "signature_hash": "fd966ad68ada3c51"
+      }
+    ],
+    "NativeK27Cell": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 62,
+        "semantic_id": "tools/k27_astge_reference.py#class:NativeK27Cell:04e037f1eceb24d9",
+        "signature_hash": "9be6ccd2ec0b92b4"
+      }
+    ],
+    "NativeK27Cell.__post_init__": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/k27_astge_reference.py#method:NativeK27Cell.__post_init__:3f7776ee234da2fd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "NativeK27Cell.ordinal": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/k27_astge_reference.py#method:NativeK27Cell.ordinal:acdc9e03cfd75b45",
+        "signature_hash": "4d88ec1cfeb827c4"
+      }
+    ],
+    "SIDTriHash27": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 94,
+        "semantic_id": "tools/k27_astge_reference.py#class:SIDTriHash27:e76923c59b5c552c",
+        "signature_hash": "e01044c3ce95dbe9"
+      }
+    ],
+    "SIDTriHash27.from_sid_and_domain": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 82,
+        "semantic_id": "tools/k27_astge_reference.py#method:SIDTriHash27.from_sid_and_domain:b753c130a69a0c4f",
+        "signature_hash": "b9409495a167ea7e"
+      }
+    ],
+    "SIDTriHash27.trit": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "tools/k27_astge_reference.py#method:SIDTriHash27.trit:a41639021eb2b870",
+        "signature_hash": "6e72e4ee711750ba"
+      }
+    ],
+    "SIDTriHash27.prefix9": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 94,
+        "semantic_id": "tools/k27_astge_reference.py#method:SIDTriHash27.prefix9:77a3fca29ef60d4c",
+        "signature_hash": "ba22ab479d8bbcb7"
+      }
+    ],
+    "NodeRecord": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 98,
+        "end_line": 126,
+        "semantic_id": "tools/k27_astge_reference.py#class:NodeRecord:b7d21b5db8d086d4",
+        "signature_hash": "3b4dfec5b7487cbc"
+      }
+    ],
+    "NodeRecord.pack": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 120,
+        "semantic_id": "tools/k27_astge_reference.py#method:NodeRecord.pack:6d6bb716d6b513da",
+        "signature_hash": "54beee84a2d2d957"
+      }
+    ],
+    "NodeRecord.unpack": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 126,
+        "semantic_id": "tools/k27_astge_reference.py#method:NodeRecord.unpack:9ec8687cf21a4d2b",
+        "signature_hash": "60ea3074c10f59ec"
+      }
+    ],
+    "GraphBuildReceipt": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 139,
+        "semantic_id": "tools/k27_astge_reference.py#class:GraphBuildReceipt:4cdbce77243bd368",
+        "signature_hash": "8df53fac2fa6a719"
+      }
+    ],
+    "HydratedCone": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tools/k27_astge_reference.py#class:HydratedCone:8b65d710917d4776",
+        "signature_hash": "dcc99da7e62d2a4a"
+      }
+    ],
+    "BenchmarkReceipt": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 151,
+        "end_line": 176,
+        "semantic_id": "tools/k27_astge_reference.py#class:BenchmarkReceipt:de09bde33c26491d",
+        "signature_hash": "2910293d710144e8"
+      }
+    ],
+    "_semantic_digest": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 182,
+        "semantic_id": "tools/k27_astge_reference.py#function:_semantic_digest:703310103c07b00c",
+        "signature_hash": "0c3fe73e7048c0f2"
+      }
+    ],
+    "build_balanced_tree": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 201,
+        "semantic_id": "tools/k27_astge_reference.py#function:build_balanced_tree:782fe55e55a17429",
+        "signature_hash": "6e46393d84b88b68"
+      }
+    ],
+    "_validate_graph": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 214,
+        "semantic_id": "tools/k27_astge_reference.py#function:_validate_graph:ac62bad2afeea46e",
+        "signature_hash": "f15804cca69a47a9"
+      }
+    ],
+    "serialize_graph": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 316,
+        "semantic_id": "tools/k27_astge_reference.py#function:serialize_graph:f2f8ed1af8987536",
+        "signature_hash": "23c767a4b01cd4a9"
+      }
+    ],
+    "serialize_graph.flush": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 287,
+        "semantic_id": "tools/k27_astge_reference.py#method:serialize_graph.flush:9e224cdd8c834cf0",
+        "signature_hash": "f70ce389b3a776a8"
+      }
+    ],
+    "MmapGraphReader": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "class",
+        "line": 319,
+        "end_line": 423,
+        "semantic_id": "tools/k27_astge_reference.py#class:MmapGraphReader:1a28e79ef8594f85",
+        "signature_hash": "5e06d40ff97ea6a3"
+      }
+    ],
+    "MmapGraphReader.__init__": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 320,
+        "end_line": 334,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.__init__:876f18b70d7127e9",
+        "signature_hash": "799bba49fbe4d294"
+      }
+    ],
+    "MmapGraphReader.close": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 336,
+        "end_line": 346,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.close:6969d7ac95415938",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "MmapGraphReader.__enter__": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 348,
+        "end_line": 349,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.__enter__:861dc8be456c5c43",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "MmapGraphReader.__exit__": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 351,
+        "end_line": 352,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.__exit__:ccd00d5d63f7d2f9",
+        "signature_hash": "ab11a5bbb17a5da2"
+      }
+    ],
+    "MmapGraphReader.get_node": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 354,
+        "end_line": 363,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.get_node:e651d7df2a5c10c0",
+        "signature_hash": "8273e64a472ed488"
+      }
+    ],
+    "MmapGraphReader._block_row_targets": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 365,
+        "end_line": 394,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader._block_row_targets:4ca8a7f4748ee21e",
+        "signature_hash": "d3fad0c2766daa87"
+      }
+    ],
+    "MmapGraphReader.query_affected_cone": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "method",
+        "line": 396,
+        "end_line": 423,
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.query_affected_cone:9b1eab96717ee92b",
+        "signature_hash": "56dad7f6cfb0e42b"
+      }
+    ],
+    "query_heap": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 426,
+        "end_line": 441,
+        "semantic_id": "tools/k27_astge_reference.py#function:query_heap:19483f19f52b15b5",
+        "signature_hash": "a83a1350b743537e"
+      }
+    ],
+    "verify_equivalence": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 444,
+        "end_line": 454,
+        "semantic_id": "tools/k27_astge_reference.py#function:verify_equivalence:f23be5d3c1db13e4",
+        "signature_hash": "64ab249e3d6061d4"
+      }
+    ],
+    "_time_queries": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 457,
+        "end_line": 464,
+        "semantic_id": "tools/k27_astge_reference.py#function:_time_queries:8b934122fd7dc754",
+        "signature_hash": "827a563104ee87d9"
+      }
+    ],
+    "benchmark_same_graph": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 467,
+        "end_line": 555,
+        "semantic_id": "tools/k27_astge_reference.py#function:benchmark_same_graph:186f9f057767ac16",
+        "signature_hash": "597f8b0151bfcdcc"
+      }
+    ],
+    "_main": [
+      {
+        "file": "tools/k27_astge_reference.py",
+        "kind": "function",
+        "line": 558,
+        "end_line": 577,
+        "semantic_id": "tools/k27_astge_reference.py#function:_main:e2e6b557bb963855",
+        "signature_hash": "3812140ec410659d"
       }
     ],
     "_coordinates": [
@@ -158302,6 +159631,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-mmap-lifecycle.yml",
+      ".github/workflows/k27-astge-reference.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -158627,6 +159958,13 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python3 -m py_compile": [
+      ".github/workflows/k27-astge-mmap-admission.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/k27-astge-mmap-admission.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -159147,9 +160485,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168530,6 +169865,169 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-mmap-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3066,
+      "lines": 78,
+      "tokens_est": 767,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          42
+        ],
+        "python3 -m unittest": [
+          49
+        ]
+      },
+      "topology": {},
+      "digest8": "1c442585de9d7475",
+      "vector": [
+        -0.154965,
+        0.2445,
+        0.076909,
+        -0.253683,
+        -0.145782,
+        0.154965,
+        -0.164148,
+        0.148078,
+        0.290416,
+        0.070021,
+        -0.017218,
+        -0.049359,
+        0.235317,
+        0.145782,
+        -0.189402,
+        -0.118233,
+        0.219247,
+        -0.079204,
+        -0.27205,
+        0.0815,
+        0.239909,
+        0.143486,
+        0.113641,
+        0.262866,
+        -0.237613,
+        0.088387,
+        0.0815,
+        -0.067725,
+        -0.079204,
+        0.283528,
+        -0.249092,
+        -0.118233
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-mmap-lifecycle.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3296,
+      "lines": 77,
+      "tokens_est": 824,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          43
+        ]
+      },
+      "topology": {},
+      "digest8": "b1845d1eb7ccea6a",
+      "vector": [
+        -0.041818,
+        -0.223367,
+        -0.213168,
+        -0.223367,
+        -0.154011,
+        -0.18053,
+        -0.054057,
+        -0.227447,
+        0.119333,
+        0.16625,
+        0.207048,
+        -0.084655,
+        0.233566,
+        -0.062216,
+        0.013259,
+        0.207048,
+        -0.135652,
+        0.143812,
+        -0.16829,
+        -0.258045,
+        0.241726,
+        0.064256,
+        0.239686,
+        0.182569,
+        -0.209088,
+        0.235606,
+        -0.060177,
+        -0.258045,
+        0.100974,
+        0.227447,
+        0.119333,
+        -0.125453
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-reference.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2627,
+      "lines": 59,
+      "tokens_est": 657,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          39
+        ]
+      },
+      "topology": {},
+      "digest8": "67e455de6232cb3f",
+      "vector": [
+        0.263228,
+        0.09458,
+        0.21309,
+        -0.096859,
+        0.044441,
+        -0.149277,
+        0.11737,
+        0.169788,
+        0.226764,
+        0.151556,
+        0.11737,
+        -0.153835,
+        -0.115091,
+        0.178904,
+        -0.149277,
+        -0.267786,
+        0.25867,
+        0.279182,
+        0.126486,
+        -0.019372,
+        -0.09458,
+        0.021651,
+        0.037604,
+        -0.240438,
+        0.108254,
+        0.167509,
+        0.274624,
+        0.23588,
+        -0.103696,
+        -0.158393,
+        -0.167509,
+        0.290577
       ]
     },
     {
@@ -262272,6 +263770,147 @@
       ]
     },
     {
+      "path": "tests/test_k27_astge_mmap_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12169,
+      "lines": 251,
+      "tokens_est": 3043,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "43be46cd333d29a7",
+      "vector": [
+        0.162395,
+        0.289086,
+        0.252231,
+        0.231499,
+        -0.233803,
+        0.081773,
+        -0.097898,
+        0.090987,
+        -0.263748,
+        0.123236,
+        0.268355,
+        0.051828,
+        -0.120932,
+        -0.169305,
+        0.038007,
+        -0.176216,
+        -0.261444,
+        0.114022,
+        0.125539,
+        0.252231,
+        0.07947,
+        -0.201554,
+        0.130146,
+        -0.194644,
+        -0.049525,
+        0.08638,
+        -0.130146,
+        -0.275265,
+        0.038007,
+        0.160092,
+        0.125539,
+        -0.224589
+      ]
+    },
+    {
+      "path": "tests/test_k27_astge_mmap_lifecycle.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8877,
+      "lines": 174,
+      "tokens_est": 2220,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a562446de2478f29",
+      "vector": [
+        -0.181889,
+        -0.287502,
+        -0.052806,
+        0.059847,
+        -0.285155,
+        0.203011,
+        0.282808,
+        0.036378,
+        0.010561,
+        -0.195971,
+        -0.252297,
+        0.097399,
+        -0.083317,
+        -0.132603,
+        0.041072,
+        -0.022296,
+        0.240563,
+        -0.141991,
+        -0.207705,
+        -0.095052,
+        0.280461,
+        -0.141991,
+        0.24291,
+        -0.181889,
+        -0.181889,
+        -0.254644,
+        -0.02699,
+        0.034031,
+        -0.163113,
+        -0.195971,
+        -0.198317,
+        -0.102092
+      ]
+    },
+    {
+      "path": "tests/test_k27_astge_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6955,
+      "lines": 146,
+      "tokens_est": 1739,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5bafacff4a6e5aca",
+      "vector": [
+        -0.19887,
+        0.168965,
+        0.357368,
+        -0.189899,
+        -0.076258,
+        0.067287,
+        -0.121116,
+        -0.124107,
+        0.076258,
+        0.091211,
+        0.168965,
+        0.031401,
+        -0.034391,
+        0.076258,
+        -0.36933,
+        0.234757,
+        -0.001495,
+        0.13906,
+        0.354378,
+        0.249709,
+        0.249709,
+        -0.282605,
+        0.207842,
+        -0.231766,
+        -0.052334,
+        -0.046353,
+        0.067287,
+        0.08224,
+        0.121116,
+        -0.037382,
+        -0.010467,
+        0.08224
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -262739,6 +264378,147 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/k27_astge_mmap_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15579,
+      "lines": 408,
+      "tokens_est": 3895,
+      "symbol_count": 32,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "838c6284a6830eae",
+      "vector": [
+        -0.247582,
+        -0.034729,
+        -0.059375,
+        -0.187087,
+        0.03921,
+        0.066097,
+        -0.283431,
+        0.265507,
+        0.050413,
+        0.254304,
+        0.227417,
+        -0.274469,
+        -0.178125,
+        0.140035,
+        0.220696,
+        -0.07954,
+        -0.267747,
+        0.086262,
+        -0.090743,
+        0.23862,
+        0.128832,
+        0.222936,
+        -0.068337,
+        -0.189328,
+        -0.274469,
+        -0.052653,
+        0.113149,
+        0.110908,
+        -0.097465,
+        -0.012323,
+        0.032488,
+        0.27671
+      ]
+    },
+    {
+      "path": "tools/k27_astge_mmap_lifecycle.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9856,
+      "lines": 258,
+      "tokens_est": 2464,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ad6410e093594825",
+      "vector": [
+        -0.216445,
+        -0.161475,
+        0.264544,
+        0.090472,
+        0.234768,
+        -0.248511,
+        -0.24393,
+        0.111086,
+        -0.049244,
+        0.0836,
+        0.129409,
+        -0.278286,
+        -0.223316,
+        -0.095053,
+        -0.230188,
+        0.202702,
+        0.090472,
+        -0.161475,
+        0.179798,
+        -0.230188,
+        0.051535,
+        0.246221,
+        -0.058406,
+        0.019469,
+        -0.156894,
+        0.065277,
+        -0.198122,
+        0.246221,
+        0.150023,
+        0.065277,
+        -0.246221,
+        -0.02863
+      ]
+    },
+    {
+      "path": "tools/k27_astge_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 22197,
+      "lines": 582,
+      "tokens_est": 5550,
+      "symbol_count": 32,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7e91c238b114d6f5",
+      "vector": [
+        -0.228076,
+        -0.185799,
+        -0.28148,
+        -0.210275,
+        0.248103,
+        -0.003338,
+        0.170223,
+        -0.016689,
+        -0.023364,
+        0.127945,
+        -0.188024,
+        0.188024,
+        -0.154647,
+        -0.277029,
+        0.027814,
+        -0.134621,
+        -0.094568,
+        0.245878,
+        0.070092,
+        0.010013,
+        -0.210275,
+        -0.232527,
+        0.219176,
+        -0.167998,
+        -0.007788,
+        -0.232527,
+        -0.192474,
+        0.194699,
+        0.245878,
+        0.152422,
+        -0.172448,
+        0.023364
       ]
     },
     {
@@ -286646,16 +288426,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1648,
+    "total_bytes": 26499670,
+    "text_tokens_est": 6615272,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1003,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286814,6 +288594,9 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-mmap-admission.yml",
+      ".github/workflows/k27-astge-mmap-lifecycle.yml",
+      ".github/workflows/k27-astge-reference.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -288288,6 +290071,9 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_astge_mmap_admission.py",
+      "tests/test_k27_astge_mmap_lifecycle.py",
+      "tests/test_k27_astge_reference.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -288298,6 +290084,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_astge_mmap_admission.py",
+      "tools/k27_astge_mmap_lifecycle.py",
+      "tools/k27_astge_reference.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -445354,6 +447143,466 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#class:ASTGEMmapAdmissionTests:5c76c63a83d188a0",
+        "name": "ASTGEMmapAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 15,
+        "end_line": 246,
+        "signature_hash": "6b755a4e8b30b61a",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.capability:ad6d7558d08edd2d",
+        "name": "ASTGEMmapAdmissionTests.capability",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 26,
+        "end_line": 49,
+        "signature_hash": "28be33292e79059a",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.fixture:ad9561d6f446f333",
+        "name": "ASTGEMmapAdmissionTests.fixture",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 19,
+        "end_line": 24,
+        "signature_hash": "46c775cb3cf9d3c7",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.private_open:691e7e703ea4844d",
+        "name": "ASTGEMmapAdmissionTests.private_open",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 51,
+        "end_line": 58,
+        "signature_hash": "ab1140275f849284",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_capability_does_not_replace_runtime_generation_guard:a909eabffbb04c9c",
+        "name": "ASTGEMmapAdmissionTests.test_capability_does_not_replace_runtime_generation_guard",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 195,
+        "end_line": 207,
+        "signature_hash": "9a88d9d75d922464",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_capability_policy_flags_must_be_exact_true:bdab9f7d60311cef",
+        "name": "ASTGEMmapAdmissionTests.test_capability_policy_flags_must_be_exact_true",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 234,
+        "end_line": 246,
+        "signature_hash": "283b681d55405e3a",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_effect_authority_widening_fails_closed:78381224c6c817db",
+        "name": "ASTGEMmapAdmissionTests.test_effect_authority_widening_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 126,
+        "end_line": 131,
+        "signature_hash": "4ee3cba32c151312",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_exact_private_capability_admits_only_eligibility:ca185f2e3a9c7de8",
+        "name": "ASTGEMmapAdmissionTests.test_exact_private_capability_admits_only_eligibility",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 91,
+        "end_line": 109,
+        "signature_hash": "08528dc0284ee735",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_malformed_unrelated_registry_neighbor_poisoning_is_fail_closed:a7fc2b18466fefce",
+        "name": "ASTGEMmapAdmissionTests.test_malformed_unrelated_registry_neighbor_poisoning_is_fail_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 183,
+        "end_line": 193,
+        "signature_hash": "6e5aea58975ee1aa",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_multiple_exact_capabilities_fail_ambiguous:55f1b3b221c5f7a1",
+        "name": "ASTGEMmapAdmissionTests.test_multiple_exact_capabilities_fail_ambiguous",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 175,
+        "end_line": 181,
+        "signature_hash": "5b2eb13be95d41d8",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_opened_file_identity_or_generation_substitution_cannot_match:2e23d73805e3dbba",
+        "name": "ASTGEMmapAdmissionTests.test_opened_file_identity_or_generation_substitution_cannot_match",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 154,
+        "end_line": 164,
+        "signature_hash": "6a8fbcb31a1966ed",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_production_registry_is_empty_and_public_path_holds:b5ecff31e2541129",
+        "name": "ASTGEMmapAdmissionTests.test_production_registry_is_empty_and_public_path_holds",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 60,
+        "end_line": 74,
+        "signature_hash": "55579ef3caad5ad2",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_public_signature_has_no_capability_or_registry_override:d15c078677ea8e73",
+        "name": "ASTGEMmapAdmissionTests.test_public_signature_has_no_capability_or_registry_override",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 76,
+        "end_line": 89,
+        "signature_hash": "8d1f53b8a76392ca",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_read_only_permissions_alone_do_not_admit_mmap:7bbea1bead2aa71a",
+        "name": "ASTGEMmapAdmissionTests.test_read_only_permissions_alone_do_not_admit_mmap",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 217,
+        "end_line": 232,
+        "signature_hash": "da885750c3e9f38c",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_reopen_requires_fresh_admission:cd0501481889276a",
+        "name": "ASTGEMmapAdmissionTests.test_reopen_requires_fresh_admission",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 209,
+        "end_line": 215,
+        "signature_hash": "69e39506244648b3",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_same_publisher_and_verifier_is_not_independent:b2df8d5d235132f3",
+        "name": "ASTGEMmapAdmissionTests.test_same_publisher_and_verifier_is_not_independent",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 111,
+        "end_line": 117,
+        "signature_hash": "62ec50adf3a39a14",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_snapshot_or_manifest_substitution_cannot_match_capability:2bc59135c95498ee",
+        "name": "ASTGEMmapAdmissionTests.test_snapshot_or_manifest_substitution_cannot_match_capability",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 133,
+        "end_line": 152,
+        "signature_hash": "e771ded0eeb8bb9e",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_stale_or_revoked_exact_capability_fails_with_typed_state:d68417f001e24d0a",
+        "name": "ASTGEMmapAdmissionTests.test_stale_or_revoked_exact_capability_fails_with_typed_state",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 166,
+        "end_line": 173,
+        "signature_hash": "9780b9ea9530d842",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_admission.py#method:ASTGEMmapAdmissionTests.test_truthy_non_boolean_capability_state_fails_closed:eef924f297991a23",
+        "name": "ASTGEMmapAdmissionTests.test_truthy_non_boolean_capability_state_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_admission.py",
+        "line": 119,
+        "end_line": 124,
+        "signature_hash": "11e427aada9bb44e",
+        "file_digest8": "43be46cd333d29a7"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#class:ASTGEMmapLifecycleTests:be7c39b09bb99393",
+        "name": "ASTGEMmapLifecycleTests",
+        "kind": "class",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 29,
+        "end_line": 169,
+        "signature_hash": "90695aea735c5b04",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#function:heap_nodes:d06a41a84f0c3791",
+        "name": "heap_nodes",
+        "kind": "function",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 13,
+        "end_line": 26,
+        "signature_hash": "fe879bd367f5f99f",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.fixture:dd860cb280d27b1f",
+        "name": "ASTGEMmapLifecycleTests.fixture",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 30,
+        "end_line": 35,
+        "signature_hash": "3d8acbaeb7abf9ad",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_bounded_slice_rejects_negative_unknown_and_past_end:9f7ac34c59223a0b",
+        "name": "ASTGEMmapLifecycleTests.test_bounded_slice_rejects_negative_unknown_and_past_end",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 113,
+        "end_line": 123,
+        "signature_hash": "6f63c1fec857168c",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_claim_ceiling_is_explicitly_non_native:4aef418de882fea2",
+        "name": "ASTGEMmapLifecycleTests.test_claim_ceiling_is_explicitly_non_native",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 162,
+        "end_line": 169,
+        "signature_hash": "f39b4a5cc43e4bb9",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_closed_reader_cannot_be_reused:899fe88fdfd491d3",
+        "name": "ASTGEMmapLifecycleTests.test_closed_reader_cannot_be_reused",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 103,
+        "end_line": 111,
+        "signature_hash": "e308a55245236935",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_edges_truncation_is_rejected_before_query:bda72a7d57b3475d",
+        "name": "ASTGEMmapLifecycleTests.test_edges_truncation_is_rejected_before_query",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "3b4620b10c5885fc",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_generation_receipt_is_deterministic_while_files_are_unchanged:3f93e0b2b58ec84e",
+        "name": "ASTGEMmapLifecycleTests.test_generation_receipt_is_deterministic_while_files_are_unchanged",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 144,
+        "end_line": 151,
+        "signature_hash": "d00283ba97ac4379",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_metadata_only_generation_change_fails_closed:263b66c4290da8ea",
+        "name": "ASTGEMmapLifecycleTests.test_metadata_only_generation_change_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 153,
+        "end_line": 160,
+        "signature_hash": "f158cdb29a0fb93a",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_missing_path_is_rejected_even_while_open_fd_exists:f160e03597c07db0",
+        "name": "ASTGEMmapLifecycleTests.test_missing_path_is_rejected_even_while_open_fd_exists",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 95,
+        "end_line": 101,
+        "signature_hash": "31e4ab21099039da",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_nodes_truncation_is_rejected_before_delegate_mmap_read:3af2c9c0f80a16ea",
+        "name": "ASTGEMmapLifecycleTests.test_nodes_truncation_is_rejected_before_delegate_mmap_read",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 53,
+        "end_line": 60,
+        "signature_hash": "39601ade31d29559",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_path_replacement_is_distinct_from_open_fd_generation:7ea1e16c65d71929",
+        "name": "ASTGEMmapLifecycleTests.test_path_replacement_is_distinct_from_open_fd_generation",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 71,
+        "end_line": 80,
+        "signature_hash": "977611b89a10004f",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_reopen_establishes_new_generation_after_explicit_rebuild:2457148574b52568",
+        "name": "ASTGEMmapLifecycleTests.test_reopen_establishes_new_generation_after_explicit_rebuild",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 125,
+        "end_line": 142,
+        "signature_hash": "53236efd8f35f99f",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_same_size_in_place_mutation_is_detected:ff6761c44e219f75",
+        "name": "ASTGEMmapLifecycleTests.test_same_size_in_place_mutation_is_detected",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 82,
+        "end_line": 93,
+        "signature_hash": "1cbc18a9b5c75118",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_mmap_lifecycle.py#method:ASTGEMmapLifecycleTests.test_unchanged_generation_preserves_reference_cone:1a0faa31a6901c8f",
+        "name": "ASTGEMmapLifecycleTests.test_unchanged_generation_preserves_reference_cone",
+        "kind": "method",
+        "file": "tests/test_k27_astge_mmap_lifecycle.py",
+        "line": 37,
+        "end_line": 51,
+        "signature_hash": "f5f6a5c24cac706f",
+        "file_digest8": "a562446de2478f29"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#class:ASTGEReferenceTests:050992ad94741f92",
+        "name": "ASTGEReferenceTests",
+        "kind": "class",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 11,
+        "end_line": 141,
+        "signature_hash": "640a29d7f36f2b8a",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_benchmark_is_same_graph_and_does_not_claim_superiority:883c5215099d9cba",
+        "name": "ASTGEReferenceTests.test_benchmark_is_same_graph_and_does_not_claim_superiority",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 131,
+        "end_line": 141,
+        "signature_hash": "5f0d521d0e7a0979",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_block_pbn_substitution_fails_closed:77db25bbd8a185ed",
+        "name": "ASTGEReferenceTests.test_block_pbn_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 110,
+        "end_line": 121,
+        "signature_hash": "2a6ba00a27d1b9c9",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_experimental_sid_trithash_is_deterministic_and_scheme_qualified:33bc203f4667db71",
+        "name": "ASTGEReferenceTests.test_experimental_sid_trithash_is_deterministic_and_scheme_qualified",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "e7f839d76c4b1b62",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_fixed_layout_contract:a771f26ebea1a5fc",
+        "name": "ASTGEReferenceTests.test_fixed_layout_contract",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 12,
+        "end_line": 16,
+        "signature_hash": "1071bd15c5cda5cc",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_hash_prefix_placement_can_amplify_pages_vs_contiguous:d0a1fdf98acd815d",
+        "name": "ASTGEReferenceTests.test_hash_prefix_placement_can_amplify_pages_vs_contiguous",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 80,
+        "end_line": 97,
+        "signature_hash": "549499b685d3dcbc",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_native_k27_is_three_axis_logical_cell_not_trithash:6aac7bc695e757b2",
+        "name": "ASTGEReferenceTests.test_native_k27_is_three_axis_logical_cell_not_trithash",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 18,
+        "end_line": 22,
+        "signature_hash": "cf5b62a84b7e3333",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_out_degree_above_block_capacity_rejected:64be7dd1a1a6ad39",
+        "name": "ASTGEReferenceTests.test_out_degree_above_block_capacity_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 123,
+        "end_line": 129,
+        "signature_hash": "a0d32ec6e46c7f12",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_same_graph_heap_and_both_mmap_cones_are_exactly_equal:5c72240e73f8b1c5",
+        "name": "ASTGEReferenceTests.test_same_graph_heap_and_both_mmap_cones_are_exactly_equal",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 44,
+        "end_line": 60,
+        "signature_hash": "cb50c481745d3c37",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_serializer_node_table_is_direct_id_indexed_for_both_placements:0bdb9ddf022739e1",
+        "name": "ASTGEReferenceTests.test_serializer_node_table_is_direct_id_indexed_for_both_placements",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 33,
+        "end_line": 42,
+        "signature_hash": "53ba15afb8a834fa",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_trithash_blocks_are_prefix_homogeneous:31bc38a0cf6a9a11",
+        "name": "ASTGEReferenceTests.test_trithash_blocks_are_prefix_homogeneous",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 62,
+        "end_line": 78,
+        "signature_hash": "2d8a9ce55fc9a162",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_reference.py#method:ASTGEReferenceTests.test_truncated_node_table_fails_closed:70d46ddd73957ee7",
+        "name": "ASTGEReferenceTests.test_truncated_node_table_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_reference.py",
+        "line": 99,
+        "end_line": 108,
+        "signature_hash": "6321779aeb815e86",
+        "file_digest8": "5bafacff4a6e5aca"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -445632,6 +447881,876 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:BackingFileImmutabilityCapabilityV1:8525f085b67e7f3c",
+        "name": "BackingFileImmutabilityCapabilityV1",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 79,
+        "end_line": 105,
+        "signature_hash": "193954e7bb376d00",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:BackingFileImmutabilityRegistryReceiptV1:98cb95f6a0d41e40",
+        "name": "BackingFileImmutabilityRegistryReceiptV1",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 114,
+        "end_line": 124,
+        "signature_hash": "1ca77f58e00027b0",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:CapabilityAdmittedMmapGraphReader:dcb387f627dea804",
+        "name": "CapabilityAdmittedMmapGraphReader",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 306,
+        "end_line": 350,
+        "signature_hash": "aba0a88688366787",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#class:MmapAdmissionReceiptV1:5881abeda11bd917",
+        "name": "MmapAdmissionReceiptV1",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 128,
+        "end_line": 148,
+        "signature_hash": "b3c1283e1cf392d0",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_binding_matches:90b7f50fbb7d20af",
+        "name": "_binding_matches",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 239,
+        "end_line": 261,
+        "signature_hash": "13ed5d0be78e353c",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_canonical:86779fd8da4cb531",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 39,
+        "end_line": 46,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_digest:431129eb6fbf9de1",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_observed_storage_root:75afb335ee4fb2c9",
+        "name": "_observed_storage_root",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 231,
+        "end_line": 236,
+        "signature_hash": "a7dc17c9a62f4c57",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_open_with_records:6925a9a68ddad067",
+        "name": "_open_with_records",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 353,
+        "end_line": 381,
+        "signature_hash": "098119dee154dfc6",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_registry_receipt_from_records:257ae20b9c2a15fc",
+        "name": "_registry_receipt_from_records",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 205,
+        "end_line": 224,
+        "signature_hash": "3b5ec7538ef1db89",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_require_exact_bool:97b0878ca518947b",
+        "name": "_require_exact_bool",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "f71e58c2e817cd67",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_require_sha256:a6f4e4a0ca69c4a2",
+        "name": "_require_sha256",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 60,
+        "end_line": 68,
+        "signature_hash": "6c5bd19d238efb35",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_require_text:e5e3b878142bbaa4",
+        "name": "_require_text",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 53,
+        "end_line": 57,
+        "signature_hash": "27d34569fd09f08e",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_resolve_capability:7e3b785a09d0b64a",
+        "name": "_resolve_capability",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 264,
+        "end_line": 303,
+        "signature_hash": "c4df6283795607fe",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:_validate_capability_shape:9d7070ce7e415e8b",
+        "name": "_validate_capability_shape",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 151,
+        "end_line": 202,
+        "signature_hash": "6cd30a38452849bf",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:backing_immutability_capability_registry_receipt:c80c51d10ba8335e",
+        "name": "backing_immutability_capability_registry_receipt",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 227,
+        "end_line": 228,
+        "signature_hash": "93f4e45e5cc93958",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:mmap_admission_parameter_names:5110d6a5faa79cce",
+        "name": "mmap_admission_parameter_names",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 406,
+        "end_line": 407,
+        "signature_hash": "4bd002375774edd8",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#function:open_admitted_mmap_graph_reader:52aa30107a7f04c4",
+        "name": "open_admitted_mmap_graph_reader",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 384,
+        "end_line": 403,
+        "signature_hash": "295ff02239f0efed",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:BackingFileImmutabilityCapabilityV1.capability_digest:5c5a1e19be96adc2",
+        "name": "BackingFileImmutabilityCapabilityV1.capability_digest",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 104,
+        "end_line": 105,
+        "signature_hash": "b55bd4b4d3ed376a",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:BackingFileImmutabilityRegistryReceiptV1.registry_digest:48de7f418a4713d3",
+        "name": "BackingFileImmutabilityRegistryReceiptV1.registry_digest",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 123,
+        "end_line": 124,
+        "signature_hash": "c4b77aeb00b00c2c",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.__enter__:b09ea493552f40b1",
+        "name": "CapabilityAdmittedMmapGraphReader.__enter__",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 346,
+        "end_line": 347,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.__exit__:d869329b12322315",
+        "name": "CapabilityAdmittedMmapGraphReader.__exit__",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 349,
+        "end_line": 350,
+        "signature_hash": "ab11a5bbb17a5da2",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.__init__:de1dd3f1fb90b7e5",
+        "name": "CapabilityAdmittedMmapGraphReader.__init__",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 307,
+        "end_line": 316,
+        "signature_hash": "893d56a8eac6597a",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.block_count:eb3229d0ee6f8ba1",
+        "name": "CapabilityAdmittedMmapGraphReader.block_count",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 323,
+        "end_line": 324,
+        "signature_hash": "e6a644bee7671bc5",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.close:7143de6a74c04f1b",
+        "name": "CapabilityAdmittedMmapGraphReader.close",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 341,
+        "end_line": 344,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.get_node:05969ddd65d7f785",
+        "name": "CapabilityAdmittedMmapGraphReader.get_node",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 329,
+        "end_line": 330,
+        "signature_hash": "8273e64a472ed488",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.node_count:61facf19b53f8646",
+        "name": "CapabilityAdmittedMmapGraphReader.node_count",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 319,
+        "end_line": 320,
+        "signature_hash": "bb4bc1ce5ac5d5cf",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.query_affected_cone:230cfc3f0680c6fc",
+        "name": "CapabilityAdmittedMmapGraphReader.query_affected_cone",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 332,
+        "end_line": 333,
+        "signature_hash": "56dad7f6cfb0e42b",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.read_bounded_slice:068d2295c7411d9f",
+        "name": "CapabilityAdmittedMmapGraphReader.read_bounded_slice",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 335,
+        "end_line": 336,
+        "signature_hash": "78628f7aa1bf1ce3",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.reopen:a685f2da7c24d0a7",
+        "name": "CapabilityAdmittedMmapGraphReader.reopen",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 338,
+        "end_line": 339,
+        "signature_hash": "f3f9af89325ea95f",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:CapabilityAdmittedMmapGraphReader.validate_generation:ac2b02dbcc9d1801",
+        "name": "CapabilityAdmittedMmapGraphReader.validate_generation",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 326,
+        "end_line": 327,
+        "signature_hash": "835761c9e40fe9f7",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_admission.py#method:MmapAdmissionReceiptV1.receipt_digest:9aafb8e26f55353e",
+        "name": "MmapAdmissionReceiptV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_admission.py",
+        "line": 147,
+        "end_line": 148,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "838c6284a6830eae"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:LifecycleGuardedMmapGraphReader:27cac6fb03e7f592",
+        "name": "LifecycleGuardedMmapGraphReader",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 162,
+        "end_line": 257,
+        "signature_hash": "09d53cc757b3c072",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:MappedFileGenerationV1:bd1c97e3e6243116",
+        "name": "MappedFileGenerationV1",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 73,
+        "end_line": 87,
+        "signature_hash": "7adaeaf664f4c2f5",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:MmapLifecycleError:a6bbc7c1080968f1",
+        "name": "MmapLifecycleError",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "2e46b026c5fbac02",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#class:MmapLifecycleValidationReceiptV1:e0d3aa5f5b0b61a7",
+        "name": "MmapLifecycleValidationReceiptV1",
+        "kind": "class",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 91,
+        "end_line": 103,
+        "signature_hash": "19a24d4e5fba72f7",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_canonical:3f87f8a1b466be59",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_capture_generation:5c4d17812951744c",
+        "name": "_capture_generation",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 106,
+        "end_line": 125,
+        "signature_hash": "19f136bc36b69eaf",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_combined_digest:3f66d0f2cd9924d0",
+        "name": "_combined_digest",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 152,
+        "end_line": 159,
+        "signature_hash": "af9d0dbf3941cfde",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_digest_fd:bfbfd8fb80aa2ef7",
+        "name": "_digest_fd",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 42,
+        "end_line": 69,
+        "signature_hash": "b8128b60b3dc5add",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#function:_validate_generation:51825589c039c587",
+        "name": "_validate_generation",
+        "kind": "function",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 128,
+        "end_line": 149,
+        "signature_hash": "cd093d0713cde52a",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.__enter__:cfe628964cf7d960",
+        "name": "LifecycleGuardedMmapGraphReader.__enter__",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 253,
+        "end_line": 254,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.__exit__:247dced1a02dbb46",
+        "name": "LifecycleGuardedMmapGraphReader.__exit__",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 256,
+        "end_line": 257,
+        "signature_hash": "ab11a5bbb17a5da2",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.__init__:b80aa626bf90aa4f",
+        "name": "LifecycleGuardedMmapGraphReader.__init__",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 165,
+        "end_line": 179,
+        "signature_hash": "799bba49fbe4d294",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader._require_open:2b750a9a02c35476",
+        "name": "LifecycleGuardedMmapGraphReader._require_open",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 191,
+        "end_line": 193,
+        "signature_hash": "aac6e2bc7a4d52e6",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader._validated_operation:93344dacbd206604",
+        "name": "LifecycleGuardedMmapGraphReader._validated_operation",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 207,
+        "end_line": 213,
+        "signature_hash": "dfa3b407f8515a8a",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.block_count:1c0c4e58ec3c7627",
+        "name": "LifecycleGuardedMmapGraphReader.block_count",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 187,
+        "end_line": 189,
+        "signature_hash": "e6a644bee7671bc5",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.close:a246471f9aa61fc8",
+        "name": "LifecycleGuardedMmapGraphReader.close",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 248,
+        "end_line": 251,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.get_node:b34fbd6ee976cd5d",
+        "name": "LifecycleGuardedMmapGraphReader.get_node",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 215,
+        "end_line": 216,
+        "signature_hash": "8273e64a472ed488",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.node_count:6960e659ed18ed66",
+        "name": "LifecycleGuardedMmapGraphReader.node_count",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 182,
+        "end_line": 184,
+        "signature_hash": "bb4bc1ce5ac5d5cf",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.query_affected_cone:a3138ab521822e06",
+        "name": "LifecycleGuardedMmapGraphReader.query_affected_cone",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 218,
+        "end_line": 221,
+        "signature_hash": "56dad7f6cfb0e42b",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.read_bounded_slice:4d4ad7a557339898",
+        "name": "LifecycleGuardedMmapGraphReader.read_bounded_slice",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 223,
+        "end_line": 240,
+        "signature_hash": "2f22a2a8a47411da",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.reopen:73c002f4e7b10838",
+        "name": "LifecycleGuardedMmapGraphReader.reopen",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 242,
+        "end_line": 246,
+        "signature_hash": "f3f9af89325ea95f",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:LifecycleGuardedMmapGraphReader.validate_generation:75b96402b2795090",
+        "name": "LifecycleGuardedMmapGraphReader.validate_generation",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 195,
+        "end_line": 205,
+        "signature_hash": "835761c9e40fe9f7",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_mmap_lifecycle.py#method:MappedFileGenerationV1.generation_digest:ab433167e8989240",
+        "name": "MappedFileGenerationV1.generation_digest",
+        "kind": "method",
+        "file": "tools/k27_astge_mmap_lifecycle.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "008e19630aa360d5",
+        "file_digest8": "ad6410e093594825"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:ASTGEFormatError:9a720bf68109bd80",
+        "name": "ASTGEFormatError",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "fd966ad68ada3c51",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:BenchmarkReceipt:de09bde33c26491d",
+        "name": "BenchmarkReceipt",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 151,
+        "end_line": 176,
+        "signature_hash": "2910293d710144e8",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:GraphBuildReceipt:4cdbce77243bd368",
+        "name": "GraphBuildReceipt",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 130,
+        "end_line": 139,
+        "signature_hash": "8df53fac2fa6a719",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:HydratedCone:8b65d710917d4776",
+        "name": "HydratedCone",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "dcc99da7e62d2a4a",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:MmapGraphReader:1a28e79ef8594f85",
+        "name": "MmapGraphReader",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 319,
+        "end_line": 423,
+        "signature_hash": "5e06d40ff97ea6a3",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:NativeK27Cell:04e037f1eceb24d9",
+        "name": "NativeK27Cell",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 51,
+        "end_line": 62,
+        "signature_hash": "9be6ccd2ec0b92b4",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:NodeRecord:b7d21b5db8d086d4",
+        "name": "NodeRecord",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 98,
+        "end_line": 126,
+        "signature_hash": "3b4dfec5b7487cbc",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#class:SIDTriHash27:e76923c59b5c552c",
+        "name": "SIDTriHash27",
+        "kind": "class",
+        "file": "tools/k27_astge_reference.py",
+        "line": 66,
+        "end_line": 94,
+        "signature_hash": "e01044c3ce95dbe9",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:_main:e2e6b557bb963855",
+        "name": "_main",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 558,
+        "end_line": 577,
+        "signature_hash": "3812140ec410659d",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:_semantic_digest:703310103c07b00c",
+        "name": "_semantic_digest",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 179,
+        "end_line": 182,
+        "signature_hash": "0c3fe73e7048c0f2",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:_time_queries:8b934122fd7dc754",
+        "name": "_time_queries",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 457,
+        "end_line": 464,
+        "signature_hash": "827a563104ee87d9",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:_validate_graph:ac62bad2afeea46e",
+        "name": "_validate_graph",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 204,
+        "end_line": 214,
+        "signature_hash": "f15804cca69a47a9",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:benchmark_same_graph:186f9f057767ac16",
+        "name": "benchmark_same_graph",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 467,
+        "end_line": 555,
+        "signature_hash": "597f8b0151bfcdcc",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:build_balanced_tree:782fe55e55a17429",
+        "name": "build_balanced_tree",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 185,
+        "end_line": 201,
+        "signature_hash": "6e46393d84b88b68",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:query_heap:19483f19f52b15b5",
+        "name": "query_heap",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 426,
+        "end_line": 441,
+        "signature_hash": "a83a1350b743537e",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:serialize_graph:f2f8ed1af8987536",
+        "name": "serialize_graph",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 217,
+        "end_line": 316,
+        "signature_hash": "23c767a4b01cd4a9",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#function:verify_equivalence:f23be5d3c1db13e4",
+        "name": "verify_equivalence",
+        "kind": "function",
+        "file": "tools/k27_astge_reference.py",
+        "line": 444,
+        "end_line": 454,
+        "signature_hash": "64ab249e3d6061d4",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.__enter__:861dc8be456c5c43",
+        "name": "MmapGraphReader.__enter__",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 348,
+        "end_line": 349,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.__exit__:ccd00d5d63f7d2f9",
+        "name": "MmapGraphReader.__exit__",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 351,
+        "end_line": 352,
+        "signature_hash": "ab11a5bbb17a5da2",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.__init__:876f18b70d7127e9",
+        "name": "MmapGraphReader.__init__",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 320,
+        "end_line": 334,
+        "signature_hash": "799bba49fbe4d294",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader._block_row_targets:4ca8a7f4748ee21e",
+        "name": "MmapGraphReader._block_row_targets",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 365,
+        "end_line": 394,
+        "signature_hash": "d3fad0c2766daa87",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.close:6969d7ac95415938",
+        "name": "MmapGraphReader.close",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 336,
+        "end_line": 346,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.get_node:e651d7df2a5c10c0",
+        "name": "MmapGraphReader.get_node",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 354,
+        "end_line": 363,
+        "signature_hash": "8273e64a472ed488",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:MmapGraphReader.query_affected_cone:9b1eab96717ee92b",
+        "name": "MmapGraphReader.query_affected_cone",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 396,
+        "end_line": 423,
+        "signature_hash": "56dad7f6cfb0e42b",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:NativeK27Cell.__post_init__:3f7776ee234da2fd",
+        "name": "NativeK27Cell.__post_init__",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:NativeK27Cell.ordinal:acdc9e03cfd75b45",
+        "name": "NativeK27Cell.ordinal",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "4d88ec1cfeb827c4",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:NodeRecord.pack:6d6bb716d6b513da",
+        "name": "NodeRecord.pack",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 109,
+        "end_line": 120,
+        "signature_hash": "54beee84a2d2d957",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:NodeRecord.unpack:9ec8687cf21a4d2b",
+        "name": "NodeRecord.unpack",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 123,
+        "end_line": 126,
+        "signature_hash": "60ea3074c10f59ec",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:SIDTriHash27.from_sid_and_domain:b753c130a69a0c4f",
+        "name": "SIDTriHash27.from_sid_and_domain",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 70,
+        "end_line": 82,
+        "signature_hash": "b9409495a167ea7e",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:SIDTriHash27.prefix9:77a3fca29ef60d4c",
+        "name": "SIDTriHash27.prefix9",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 93,
+        "end_line": 94,
+        "signature_hash": "ba22ab479d8bbcb7",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:SIDTriHash27.trit:a41639021eb2b870",
+        "name": "SIDTriHash27.trit",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 84,
+        "end_line": 90,
+        "signature_hash": "6e72e4ee711750ba",
+        "file_digest8": "7e91c238b114d6f5"
+      },
+      {
+        "semantic_id": "tools/k27_astge_reference.py#method:serialize_graph.flush:9e224cdd8c834cf0",
+        "name": "serialize_graph.flush",
+        "kind": "method",
+        "file": "tools/k27_astge_reference.py",
+        "line": 244,
+        "end_line": 287,
+        "signature_hash": "f70ce389b3a776a8",
+        "file_digest8": "7e91c238b114d6f5"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +450003,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "7ce1b8e5d430755e965a41774c088c07",
+    "payload_hash": "489fe0072ee2db4bf34f3b1f8f01c5bc"
   }
 }
