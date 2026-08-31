@@ -1,0 +1,69 @@
+name: Aura Dimensional History Directory
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_dimensional_history_directory.py"
+      - "tests/test_aura_dimensional_history_directory.py"
+      - ".github/workflows/aura-dimensional-history-directory.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  dimensional-history-directory:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact candidate head
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Prove true two-parent convergence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          merge = "24f92d33fd05f4de3265a1d7a0c3385518d0aab8"
+          parents = subprocess.check_output(["git", "show", "-s", "--format=%P", merge], text=True).strip().split()
+          assert parents == [
+              "b13ba81aa671693828e4fd97bd5b222db5d49d94",
+              "906653a807f54b343d644b1764c7ef37bbbf7191",
+          ], parents
+          PY
+      - name: Compile and replay exact-green PR739 versioned store contracts
+        run: |
+          python -m py_compile tools/aura_external_knowledge_store_writer.py tools/aura_dimensional_history_directory.py tests/test_aura_dimensional_history_directory.py
+          python -m unittest tests.test_aura_external_knowledge_store_writer tests.test_aura_external_knowledge_store_reader_integration -v
+      - name: Run dimensional history adversarials
+        run: python -m unittest tests.test_aura_dimensional_history_directory -v
+      - name: Reexecute PR738 stable-subject history blocker in its own exact tree
+        uses: actions/checkout@v4
+        with:
+          ref: 906653a807f54b343d644b1764c7ef37bbbf7191
+          path: .parent-pr738
+      - name: Run PR738 source-controlled write-admission contract
+        working-directory: .parent-pr738
+        run: |
+          python -m py_compile tools/aura_coordinate_memory_write_admission.py tests/test_aura_coordinate_memory_write_admission.py
+          python -m unittest tests.test_aura_coordinate_memory_write_admission -v
+      - name: Enforce dimensional anti-bleed laws
+        shell: bash
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          python - <<'PY'
+          from tools.aura_dimensional_history_directory import HistoryQueryReceipt
+          fields = HistoryQueryReceipt.__dataclass_fields__
+          defaults = {name: field.default for name, field in fields.items()}
+          assert defaults["source_currentness_revalidation_required"] is True
+          assert defaults["timeline_is_source_truth"] is False
+          assert defaults["temporal_adjacency_is_causal_dependency"] is False
+          assert defaults["placement_is_semantic_identity"] is False
+          assert defaults["semantic_truth"] is False
+          assert defaults["instruction_authority"] is False
+          assert defaults["write_authority"] is False
+          assert defaults["effect_authority"] is False
+          assert defaults["native_private_transformer_kv_accessed"] is False
+          PY
