@@ -116,11 +116,7 @@ pub fn open_data_serving_reader(
             {
                 return Err(DataServingExecutionErrorV1::AdmissionReceiptIncoherent);
             }
-            let reader = GenerationBoundGraphReader::open(
-                &node_index_path,
-                &page_path,
-                binding,
-            )?;
+            let reader = GenerationBoundGraphReader::open(&node_index_path, &page_path, binding)?;
             Ok(DataServingReaderV1::ReadSeek { receipt, reader })
         }
         DataServingBackendAdmissionV1::MmapCapabilityGated {
@@ -236,12 +232,12 @@ impl ExactHandleMmapReaderV1 {
             .checked_add(BLOCK_SIZE)
             .ok_or(GenerationStorageError::LengthOverflow)?;
         let expected = expected_len(self.binding.page_count, BLOCK_SIZE)?;
-        let raw: [u8; BLOCK_SIZE] = self.pages_mmap[offset..end]
-            .try_into()
-            .map_err(|_| GenerationStorageError::PageFileLengthMismatch {
+        let raw: [u8; BLOCK_SIZE] = self.pages_mmap[offset..end].try_into().map_err(|_| {
+            GenerationStorageError::PageFileLengthMismatch {
                 expected,
                 actual: self.pages_mmap.len() as u64,
-            })?;
+            }
+        })?;
         let page = PhysicalPageV1::decode(&raw).map_err(GenerationStorageError::from)?;
         bind_page(&page, pbn, &self.binding)?;
         Ok(page)
@@ -483,7 +479,11 @@ mod tests {
             targets: vec![1, 2],
             edge_kinds: vec![0, 0],
         };
-        (binding, index_bytes, page.encode().expect("encode page").to_vec())
+        (
+            binding,
+            index_bytes,
+            page.encode().expect("encode page").to_vec(),
+        )
     }
 
     fn write_fixture(root: &Path) -> (StorageGenerationBindingV1, PathBuf, PathBuf) {
@@ -513,14 +513,9 @@ mod tests {
     fn production_empty_registry_stays_on_read_seek_safe_default() {
         let root = temp_root("safe-default");
         let (binding, node_path, page_path) = write_fixture(&root);
-        let mut reader = open_data_serving_reader(
-            &root,
-            &node_path,
-            &page_path,
-            binding,
-            [0x44; 32],
-        )
-        .expect("safe default opens");
+        let mut reader =
+            open_data_serving_reader(&root, &node_path, &page_path, binding, [0x44; 32])
+                .expect("safe default opens");
         assert_eq!(reader.backend(), DataServingBackendV1::ReadSeekSafeDefault);
         assert_eq!(
             reader.receipt().reason,
@@ -537,12 +532,8 @@ mod tests {
     fn exact_handle_mmap_matches_generation_bound_read_seek() {
         let root = temp_root("equivalence");
         let (binding, node_path, page_path) = write_fixture(&root);
-        let mut safe = GenerationBoundGraphReader::open(
-            &node_path,
-            &page_path,
-            binding.clone(),
-        )
-        .expect("safe reader");
+        let mut safe = GenerationBoundGraphReader::open(&node_path, &page_path, binding.clone())
+            .expect("safe reader");
         let expected = safe.query_cone(0, 2, 10, None).expect("safe cone");
         let mmap = map_exact_admitted_handles(
             positive_receipt(),
@@ -570,13 +561,8 @@ mod tests {
         assert!(!node_path.exists());
         assert!(!page_path.exists());
 
-        let mmap = map_exact_admitted_handles(
-            positive_receipt(),
-            node_file,
-            page_file,
-            binding,
-        )
-        .expect("mapping consumes opened handles");
+        let mmap = map_exact_admitted_handles(positive_receipt(), node_file, page_file, binding)
+            .expect("mapping consumes opened handles");
         let cone = mmap.query_cone(0, 1, 10, None).expect("query");
         assert_eq!(cone.node_ids, vec![0, 1, 2]);
         drop(mmap);
