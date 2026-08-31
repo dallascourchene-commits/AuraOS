@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788188599,
+  "generated_at_unix": 1788210238,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1640,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-generation-bound-admission-reuse.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -147,6 +148,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-current-generation-bounded-c2-proposal.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1097,6 +1099,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1480,6 +1483,8 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_generation_bound_admission_reuse.py",
+      "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1631,6 +1636,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_generation_bound_admission_reuse.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -1756,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1640,
-      "bytes": 26426975,
-      "tokens_est": 6597095,
+      "files": 1646,
+      "bytes": 26478849,
+      "tokens_est": 6610064,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 998,
-        "schema_or_lexicon": 271,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3904,6 +3910,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 70,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_canonical:c3505d526fac8b72",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4346,6 +4360,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_digest:f3ba94d258ccc08c",
+        "signature_hash": "5880d7b3614e1b56"
       }
     ],
     "_token_proxy": [
@@ -8076,6 +8098,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 74,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_sha:c532daf94ff906fd",
+        "signature_hash": "3c3bc3c037860fe9"
       },
       {
         "file": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -14670,6 +14700,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 80,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_text:711c12da2c4a3a49",
+        "signature_hash": "0f196e838c2631a3"
       }
     ],
     "_bounded": [
@@ -113294,6 +113332,14 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 307,
+        "end_line": 330,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:fixture:f7e71d479bfe3c11",
+        "signature_hash": "94601899173d6692"
       }
     ],
     "session": [
@@ -138552,6 +138598,226 @@
         "signature_hash": "ee5f19dbb698e25c"
       }
     ],
+    "GenerationBoundAdmissionReuseTests": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 128,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#class:GenerationBoundAdmissionReuseTests:681728ac439b4e09",
+        "signature_hash": "095e2bef44513757"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_exact_reuse_is_candidate_only_for_both_families": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_exact_reuse_is_candidate_only_for_both_families:42420bf7d8140945",
+        "signature_hash": "1714a9ba33787e75"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_parent_generation_is_pinned": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_parent_generation_is_pinned:911c71eb47411447",
+        "signature_hash": "ba2fd761ddc7bbca"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_positive_disposition_is_required": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_positive_disposition_is_required:0c2c4355c20657ad",
+        "signature_hash": "ffeec763e0525f11"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_claim_ceiling_is_fail_closed": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_claim_ceiling_is_fail_closed:743aa2062fc8e47d",
+        "signature_hash": "5b9620d0548dc452"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_each_identity_bearing_axis_drifts_to_typed_hold": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_each_identity_bearing_axis_drifts_to_typed_hold:01ad764724787e97",
+        "signature_hash": "ec663c0ddecb5c9a"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_hold_receipts_do_not_echo_stale_identity_as_current": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 102,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_hold_receipts_do_not_echo_stale_identity_as_current:66cc0b1903d86c9c",
+        "signature_hash": "7f1a6c1a389551ca"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_receipt_is_deterministic:0880f777858e21c6",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_complete_two_family_128_state_different_j_lattice": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_complete_two_family_128_state_different_j_lattice:f225d9505ae1c89e",
+        "signature_hash": "c68a86bddbd2b32d"
+      }
+    ],
+    "GenerationBoundAdmissionReuseTests.test_family_pins_are_distinct_and_exact": [
+      {
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 128,
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_family_pins_are_distinct_and_exact:82895ea740ae8f95",
+        "signature_hash": "10e00555a04ca6f3"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 179,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#class:CurrentGenerationBoundedC2ProposalTests:38e7de00df381173",
+        "signature_hash": "36deb6ab5c9f979f"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.setUp": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 12,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.setUp:ad920a3f95160fd4",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_exact_current_generations_admit_only_bounded_proposal": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_exact_current_generations_admit_only_bounded_proposal:d2515603931ae284",
+        "signature_hash": "28c7175c9e0693b8"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_q16_generation_identity_substitutions_fail_closed": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_q16_generation_identity_substitutions_fail_closed:62d256d278555cd7",
+        "signature_hash": "2b722fa9f2ec18d6"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_q16_digest_substitutions_fail_closed": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_q16_digest_substitutions_fail_closed:2a97fbf4c8fedda8",
+        "signature_hash": "430a232708a19bd9"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_q16_scope_or_measurement_drift_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_q16_scope_or_measurement_drift_fails_closed:99afb803019c9c2f",
+        "signature_hash": "c36f50d78f472e71"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_s1_generation_identity_substitutions_fail_closed": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_s1_generation_identity_substitutions_fail_closed:bdfb591eddafc79d",
+        "signature_hash": "07a0ac763dc9ce09"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_s1_digest_substitutions_fail_closed": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 115,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_s1_digest_substitutions_fail_closed:1b7c82598d3c70bd",
+        "signature_hash": "ad6c317d012ba921"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_s1_materialization_or_gate_drift_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 130,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_s1_materialization_or_gate_drift_fails_closed:9333f97a9d672ffd",
+        "signature_hash": "54a821514420bc94"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_legacy_q7_disposition_injection_is_rejected": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 138,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_legacy_q7_disposition_injection_is_rejected:179e34ec7b637850",
+        "signature_hash": "5c9d960a3938a7d0"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_official_source_identity_drift_is_rejected_on_both_parents": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 148,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_official_source_identity_drift_is_rejected_on_both_parents:54dbd5ef8c9f7a89",
+        "signature_hash": "92a2d5c4a96f8843"
+      }
+    ],
+    "CurrentGenerationBoundedC2ProposalTests.test_receipt_is_deterministic_and_authority_ceiling_cannot_widen": [
+      {
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 179,
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_receipt_is_deterministic_and_authority_ceiling_cannot_widen:05ede85ffa5d25ae",
+        "signature_hash": "639470aaa690ac04"
+      }
+    ],
     "_write_minimal_codemap": [
       {
         "file": "tests/test_aura_harness_issue_capsules.py",
@@ -157198,6 +157464,136 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "AdmissionFamily": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 36,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:AdmissionFamily:916cf3ad9d11d060",
+        "signature_hash": "53d54937848c29e0"
+      }
+    ],
+    "ReuseDisposition": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 59,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:ReuseDisposition:6d8000dc0111d6b8",
+        "signature_hash": "e3473aa46381574c"
+      }
+    ],
+    "AdmissionReceiptProjectionV1": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 128,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:AdmissionReceiptProjectionV1:5860761e6d1bcc59",
+        "signature_hash": "0a31756b7df0e396"
+      }
+    ],
+    "AdmissionReceiptProjectionV1.validate_shape": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 128,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#method:AdmissionReceiptProjectionV1.validate_shape:345e3b7e8f4366a9",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "CurrentAdmissionUseContextV1": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "class",
+        "line": 132,
+        "end_line": 149,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:CurrentAdmissionUseContextV1:5e5757b385b7b0e4",
+        "signature_hash": "34d39d9b9d925473"
+      }
+    ],
+    "CurrentAdmissionUseContextV1.validate_shape": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 149,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#method:CurrentAdmissionUseContextV1.validate_shape:b63ba50aa4ff1790",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "AdmissionReuseReceiptV1": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "class",
+        "line": 153,
+        "end_line": 175,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:AdmissionReuseReceiptV1:399d673569c44134",
+        "signature_hash": "414d9734241b6f44"
+      }
+    ],
+    "AdmissionReuseReceiptV1.reusable_candidate": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 175,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#method:AdmissionReuseReceiptV1.reusable_candidate:1bed2df04828dbad",
+        "signature_hash": "58e65659bec185dd"
+      }
+    ],
+    "_claim_ceiling_breached": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 190,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_claim_ceiling_breached:9571fd193a6627da",
+        "signature_hash": "659ed969db647b97"
+      }
+    ],
+    "_classify_tree": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 193,
+        "end_line": 218,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_classify_tree:f49a8269ee3ae51e",
+        "signature_hash": "96a3cbbcb2798108"
+      }
+    ],
+    "_classify_table": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 221,
+        "end_line": 243,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_classify_table:745606cbf0f04a54",
+        "signature_hash": "f4636a578e142309"
+      }
+    ],
+    "revalidate_admission_reuse": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 246,
+        "end_line": 304,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:revalidate_admission_reuse:4e908bcef000e973",
+        "signature_hash": "7fcab2e9d81f39d9"
+      }
+    ],
+    "prove_different_j": [
+      {
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "kind": "function",
+        "line": 333,
+        "end_line": 349,
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:prove_different_j:ba5c9c0010771c37",
+        "signature_hash": "545054efddc8fb30"
+      }
+    ],
     "_require_sha": [
       {
         "file": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -158389,6 +158785,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-generation-bound-admission-reuse.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -158397,6 +158794,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-current-generation-bounded-c2-proposal.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -167837,6 +168235,59 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-generation-bound-admission-reuse.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5725,
+      "lines": 141,
+      "tokens_est": 1432,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          104
+        ]
+      },
+      "topology": {},
+      "digest8": "bc0ed593ae509877",
+      "vector": [
+        -0.122363,
+        0.312993,
+        -0.246015,
+        -0.145548,
+        0.096603,
+        -0.034777,
+        0.251167,
+        0.094027,
+        0.145548,
+        0.199645,
+        -0.032201,
+        -0.155852,
+        -0.233134,
+        0.238287,
+        -0.20995,
+        -0.145548,
+        -0.22283,
+        0.099179,
+        -0.047657,
+        -0.166157,
+        -0.101755,
+        0.13782,
+        -0.171309,
+        -0.132668,
+        -0.055386,
+        -0.199645,
+        -0.042505,
+        0.248591,
+        -0.28208,
+        0.021897,
+        -0.320721,
+        -0.070842
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-learning.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -168512,6 +168963,59 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-current-generation-bounded-c2-proposal.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7746,
+      "lines": 171,
+      "tokens_est": 1937,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          115
+        ]
+      },
+      "topology": {},
+      "digest8": "b7067cfb869fe9d8",
+      "vector": [
+        0.037794,
+        -0.264556,
+        -0.113381,
+        0.225459,
+        0.037794,
+        -0.087317,
+        0.157691,
+        -0.00391,
+        -0.123807,
+        0.207214,
+        -0.037794,
+        0.280195,
+        0.233279,
+        0.100349,
+        0.196788,
+        -0.21764,
+        0.21764,
+        0.076891,
+        -0.178543,
+        0.191575,
+        0.019548,
+        0.178543,
+        -0.332324,
+        0.188969,
+        -0.076891,
+        -0.037794,
+        0.08471,
+        0.272376,
+        0.251524,
+        0.280195,
+        -0.074284,
+        0.076891
       ]
     },
     {
@@ -234917,6 +235421,53 @@
       ]
     },
     {
+      "path": "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7966,
+      "lines": 168,
+      "tokens_est": 1989,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "21b6692c881d1075",
+      "vector": [
+        -0.232148,
+        -0.193635,
+        -0.204333,
+        0.16796,
+        0.174379,
+        0.148703,
+        0.200054,
+        -0.236428,
+        0.125168,
+        -0.131586,
+        -0.067398,
+        -0.026745,
+        0.157262,
+        0.099492,
+        -0.227869,
+        0.142284,
+        -0.253545,
+        -0.217171,
+        -0.163681,
+        0.240707,
+        0.041723,
+        -0.146564,
+        -0.208613,
+        -0.195775,
+        0.251405,
+        0.22573,
+        0.189356,
+        0.200054,
+        -0.022466,
+        -0.105911,
+        0.129447,
+        0.159401
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -255648,6 +256199,100 @@
       ]
     },
     {
+      "path": "tests/test_aura_generation_bound_admission_reuse.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6166,
+      "lines": 133,
+      "tokens_est": 1542,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3c84dd94321f99ef",
+      "vector": [
+        0.168582,
+        0.124402,
+        0.126727,
+        -0.126727,
+        0.056969,
+        0.124402,
+        -0.1058,
+        -0.296472,
+        -0.259267,
+        0.024415,
+        -0.029066,
+        -0.02209,
+        -0.108125,
+        0.247641,
+        0.063945,
+        -0.294146,
+        -0.049993,
+        0.261593,
+        0.145329,
+        -0.166257,
+        0.089523,
+        -0.163931,
+        -0.294146,
+        -0.068595,
+        -0.133703,
+        -0.254617,
+        -0.222063,
+        0.040692,
+        -0.005813,
+        0.296472,
+        0.231364,
+        0.229039
+      ]
+    },
+    {
+      "path": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8758,
+      "lines": 184,
+      "tokens_est": 2190,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8b24529f46a53c54",
+      "vector": [
+        -0.212543,
+        0.156674,
+        -0.127526,
+        0.227117,
+        -0.302418,
+        0.212543,
+        -0.001215,
+        -0.047367,
+        0.061941,
+        -0.241691,
+        0.057083,
+        0.146958,
+        0.112951,
+        -0.258695,
+        -0.241691,
+        -0.040079,
+        0.010931,
+        -0.290273,
+        0.027934,
+        0.035221,
+        -0.190681,
+        0.295131,
+        -0.214972,
+        -0.052225,
+        0.248979,
+        0.083803,
+        -0.248979,
+        -0.156674,
+        -0.06437,
+        -0.253837,
+        0.06437,
+        -0.098377
+      ]
+    },
+    {
       "path": "tests/test_aura_harness_issue_capsules.py",
       "role": "python_module",
       "binary": false,
@@ -262742,6 +263387,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_generation_bound_admission_reuse.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15513,
+      "lines": 362,
+      "tokens_est": 3879,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5826cd4bbce15f19",
+      "vector": [
+        -0.139739,
+        -0.144005,
+        -0.065069,
+        0.013867,
+        -0.216541,
+        -0.020267,
+        -0.020267,
+        0.08427,
+        -0.242142,
+        -0.043735,
+        -0.248543,
+        -0.116271,
+        -0.144005,
+        0.205874,
+        0.182407,
+        -0.122671,
+        -0.218675,
+        -0.244276,
+        -0.227209,
+        0.173873,
+        0.118404,
+        0.186674,
+        0.227209,
+        -0.267743,
+        -0.229342,
+        -0.263477,
+        -0.037335,
+        0.118404,
+        -0.25281,
+        -0.099204,
+        0.237876,
+        -0.154672
       ]
     },
     {
@@ -286790,16 +287482,16 @@
     }
   },
   "summary": {
-    "file_count": 1640,
-    "total_bytes": 26426975,
-    "text_tokens_est": 6597095,
+    "file_count": 1646,
+    "total_bytes": 26478849,
+    "text_tokens_est": 6610064,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 998,
-      "schema_or_lexicon": 271,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286945,6 +287637,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-generation-bound-admission-reuse.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -286956,6 +287649,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-current-generation-bounded-c2-proposal.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -287906,6 +288600,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -288289,6 +288984,8 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_generation_bound_admission_reuse.py",
+      "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -288440,6 +289137,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_generation_bound_admission_reuse.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -425959,6 +426657,226 @@
         "file_digest8": "ada41f95735768a2"
       },
       {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#class:GenerationBoundAdmissionReuseTests:681728ac439b4e09",
+        "name": "GenerationBoundAdmissionReuseTests",
+        "kind": "class",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 19,
+        "end_line": 128,
+        "signature_hash": "095e2bef44513757",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_claim_ceiling_is_fail_closed:743aa2062fc8e47d",
+        "name": "GenerationBoundAdmissionReuseTests.test_claim_ceiling_is_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 52,
+        "end_line": 70,
+        "signature_hash": "5b9620d0548dc452",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_complete_two_family_128_state_different_j_lattice:f225d9505ae1c89e",
+        "name": "GenerationBoundAdmissionReuseTests.test_complete_two_family_128_state_different_j_lattice",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 113,
+        "end_line": 114,
+        "signature_hash": "c68a86bddbd2b32d",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_each_identity_bearing_axis_drifts_to_typed_hold:01ad764724787e97",
+        "name": "GenerationBoundAdmissionReuseTests.test_each_identity_bearing_axis_drifts_to_typed_hold",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 72,
+        "end_line": 89,
+        "signature_hash": "ec663c0ddecb5c9a",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_exact_reuse_is_candidate_only_for_both_families:42420bf7d8140945",
+        "name": "GenerationBoundAdmissionReuseTests.test_exact_reuse_is_candidate_only_for_both_families",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 20,
+        "end_line": 33,
+        "signature_hash": "1714a9ba33787e75",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_family_pins_are_distinct_and_exact:82895ea740ae8f95",
+        "name": "GenerationBoundAdmissionReuseTests.test_family_pins_are_distinct_and_exact",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 116,
+        "end_line": 128,
+        "signature_hash": "10e00555a04ca6f3",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_hold_receipts_do_not_echo_stale_identity_as_current:66cc0b1903d86c9c",
+        "name": "GenerationBoundAdmissionReuseTests.test_hold_receipts_do_not_echo_stale_identity_as_current",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 91,
+        "end_line": 102,
+        "signature_hash": "7f1a6c1a389551ca",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_parent_generation_is_pinned:911c71eb47411447",
+        "name": "GenerationBoundAdmissionReuseTests.test_parent_generation_is_pinned",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 35,
+        "end_line": 40,
+        "signature_hash": "ba2fd761ddc7bbca",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_positive_disposition_is_required:0c2c4355c20657ad",
+        "name": "GenerationBoundAdmissionReuseTests.test_positive_disposition_is_required",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 42,
+        "end_line": 50,
+        "signature_hash": "ffeec763e0525f11",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_generation_bound_admission_reuse.py#method:GenerationBoundAdmissionReuseTests.test_receipt_is_deterministic:0880f777858e21c6",
+        "name": "GenerationBoundAdmissionReuseTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_generation_bound_admission_reuse.py",
+        "line": 104,
+        "end_line": 111,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "3c84dd94321f99ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#class:CurrentGenerationBoundedC2ProposalTests:38e7de00df381173",
+        "name": "CurrentGenerationBoundedC2ProposalTests",
+        "kind": "class",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 9,
+        "end_line": 179,
+        "signature_hash": "36deb6ab5c9f979f",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.setUp:ad920a3f95160fd4",
+        "name": "CurrentGenerationBoundedC2ProposalTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 10,
+        "end_line": 12,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_exact_current_generations_admit_only_bounded_proposal:d2515603931ae284",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_exact_current_generations_admit_only_bounded_proposal",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 14,
+        "end_line": 43,
+        "signature_hash": "28c7175c9e0693b8",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_legacy_q7_disposition_injection_is_rejected:179e34ec7b637850",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_legacy_q7_disposition_injection_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 132,
+        "end_line": 138,
+        "signature_hash": "5c9d960a3938a7d0",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_official_source_identity_drift_is_rejected_on_both_parents:54dbd5ef8c9f7a89",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_official_source_identity_drift_is_rejected_on_both_parents",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 140,
+        "end_line": 148,
+        "signature_hash": "92a2d5c4a96f8843",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_q16_digest_substitutions_fail_closed:2a97fbf4c8fedda8",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_q16_digest_substitutions_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 58,
+        "end_line": 70,
+        "signature_hash": "430a232708a19bd9",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_q16_generation_identity_substitutions_fail_closed:62d256d278555cd7",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_q16_generation_identity_substitutions_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 45,
+        "end_line": 56,
+        "signature_hash": "2b722fa9f2ec18d6",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_q16_scope_or_measurement_drift_fails_closed:99afb803019c9c2f",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_q16_scope_or_measurement_drift_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 72,
+        "end_line": 87,
+        "signature_hash": "c36f50d78f472e71",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_receipt_is_deterministic_and_authority_ceiling_cannot_widen:05ede85ffa5d25ae",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_receipt_is_deterministic_and_authority_ceiling_cannot_widen",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 150,
+        "end_line": 179,
+        "signature_hash": "639470aaa690ac04",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_s1_digest_substitutions_fail_closed:1b7c82598d3c70bd",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_s1_digest_substitutions_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 102,
+        "end_line": 115,
+        "signature_hash": "ad6c317d012ba921",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_s1_generation_identity_substitutions_fail_closed:bdfb591eddafc79d",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_s1_generation_identity_substitutions_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 89,
+        "end_line": 100,
+        "signature_hash": "07a0ac763dc9ce09",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py#method:CurrentGenerationBoundedC2ProposalTests.test_s1_materialization_or_gate_drift_fails_closed:9333f97a9d672ffd",
+        "name": "CurrentGenerationBoundedC2ProposalTests.test_s1_materialization_or_gate_drift_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+        "line": 117,
+        "end_line": 130,
+        "signature_hash": "54a821514420bc94",
+        "file_digest8": "8b24529f46a53c54"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -445779,6 +446697,186 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:AdmissionFamily:916cf3ad9d11d060",
+        "name": "AdmissionFamily",
+        "kind": "class",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 34,
+        "end_line": 36,
+        "signature_hash": "53d54937848c29e0",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:AdmissionReceiptProjectionV1:5860761e6d1bcc59",
+        "name": "AdmissionReceiptProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 91,
+        "end_line": 128,
+        "signature_hash": "0a31756b7df0e396",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:AdmissionReuseReceiptV1:399d673569c44134",
+        "name": "AdmissionReuseReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 153,
+        "end_line": 175,
+        "signature_hash": "414d9734241b6f44",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:CurrentAdmissionUseContextV1:5e5757b385b7b0e4",
+        "name": "CurrentAdmissionUseContextV1",
+        "kind": "class",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 132,
+        "end_line": 149,
+        "signature_hash": "34d39d9b9d925473",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#class:ReuseDisposition:6d8000dc0111d6b8",
+        "name": "ReuseDisposition",
+        "kind": "class",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 49,
+        "end_line": 59,
+        "signature_hash": "e3473aa46381574c",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_canonical:c3505d526fac8b72",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 62,
+        "end_line": 70,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_claim_ceiling_breached:9571fd193a6627da",
+        "name": "_claim_ceiling_breached",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 178,
+        "end_line": 190,
+        "signature_hash": "659ed969db647b97",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_classify_table:745606cbf0f04a54",
+        "name": "_classify_table",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 221,
+        "end_line": 243,
+        "signature_hash": "f4636a578e142309",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_classify_tree:f49a8269ee3ae51e",
+        "name": "_classify_tree",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 193,
+        "end_line": 218,
+        "signature_hash": "96a3cbbcb2798108",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_digest:f3ba94d258ccc08c",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_sha:c532daf94ff906fd",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 73,
+        "end_line": 74,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_text:711c12da2c4a3a49",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 77,
+        "end_line": 80,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:fixture:f7e71d479bfe3c11",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 307,
+        "end_line": 330,
+        "signature_hash": "94601899173d6692",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:prove_different_j:ba5c9c0010771c37",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 333,
+        "end_line": 349,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:revalidate_admission_reuse:4e908bcef000e973",
+        "name": "revalidate_admission_reuse",
+        "kind": "function",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 246,
+        "end_line": 304,
+        "signature_hash": "7fcab2e9d81f39d9",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#method:AdmissionReceiptProjectionV1.validate_shape:345e3b7e8f4366a9",
+        "name": "AdmissionReceiptProjectionV1.validate_shape",
+        "kind": "method",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 111,
+        "end_line": 128,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#method:AdmissionReuseReceiptV1.reusable_candidate:1bed2df04828dbad",
+        "name": "AdmissionReuseReceiptV1.reusable_candidate",
+        "kind": "method",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 174,
+        "end_line": 175,
+        "signature_hash": "58e65659bec185dd",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
+        "semantic_id": "tools/aura_generation_bound_admission_reuse.py#method:CurrentAdmissionUseContextV1.validate_shape:b63ba50aa4ff1790",
+        "name": "CurrentAdmissionUseContextV1.validate_shape",
+        "kind": "method",
+        "file": "tools/aura_generation_bound_admission_reuse.py",
+        "line": 140,
+        "end_line": 149,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "5826cd4bbce15f19"
+      },
+      {
         "semantic_id": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py#class:RepresentativeGeneration:ecd8b8d2427b7a28",
         "name": "RepresentativeGeneration",
         "kind": "class",
@@ -447129,7 +448227,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d9118a5fbd7044ce6f255e440cf9fe0c",
-    "payload_hash": "a95cc64ededef1d149acbb454cbd4761"
+    "record_fingerprint": "8c21cf1f9801133587cf81bf76685e94",
+    "payload_hash": "f56b83c277344d2828d67bca48809398"
   }
 }
