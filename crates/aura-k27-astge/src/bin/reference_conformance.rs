@@ -50,9 +50,7 @@ fn build_balanced_tree(depth: usize, branching: usize) -> Vec<Vec<u64>> {
     adjacency
 }
 
-fn native_reader(
-    adjacency: &[Vec<u64>],
-) -> Result<SPlaneGraphReader<MemoryPages>, StorageError> {
+fn native_reader(adjacency: &[Vec<u64>]) -> Result<SPlaneGraphReader<MemoryPages>, StorageError> {
     let mut records = Vec::<NodeIndexRecordV1>::with_capacity(adjacency.len());
     let mut pages = HashMap::<u64, [u8; BLOCK_SIZE]>::new();
     let placement_scheme_digest = [0x51_u8; 32];
