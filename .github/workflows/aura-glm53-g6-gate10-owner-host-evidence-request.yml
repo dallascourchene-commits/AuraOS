@@ -1,0 +1,100 @@
+name: Aura GLM53 G6 Gate10 Owner Host Evidence Request
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py"
+      - "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py"
+      - "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md"
+      - ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml"
+  push:
+    branches: ["arena/glm53-g6-gate10-owner-host-evidence-request-v2-20260831-sol"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g6-owner-host-evidence-request-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REUSE_HEAD: "d1a0f94255527835a59a70a0af7dc417ba1d023d"
+      REUSE_SOURCE_BLOB: "d171d0938e469a4383490d1a691750c2068f21e7"
+      REUSE_TEST_BLOB: "58fad37a0f89853098fa3dbbe2f2a1771574e449"
+      REUSE_RUN: "33437612722"
+      REUSE_JOB: "99637780915"
+      PROV_HEAD: "293c59d7260372ccd3b9e8130b12979b052c3ed9"
+      PROV_SOURCE_BLOB: "98db548b6e8f7443b79d979eb0e177ac6aa68534"
+      PROV_RUN: "33416248604"
+      PROV_JOB: "99567478616"
+    steps:
+      - name: Fetch exact candidate and terminal parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$TARGET_SHA" "$REUSE_HEAD" "$PROV_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact parent semantic blobs
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")" = "$REUSE_SOURCE_BLOB"
+          test "$(git rev-parse "$REUSE_HEAD:tests/test_aura_generation_bound_admission_reuse.py")" = "$REUSE_TEST_BLOB"
+          test "$(git rev-parse "$PROV_HEAD:tools/awj032/airllm_secure_fixture_observation_envelope.py")" = "$PROV_SOURCE_BLOB"
+          echo "G6_V2_EXACT_PARENT_BLOBS=true"
+
+      - name: Revalidate terminal hosted parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          expected=((int(os.environ['REUSE_RUN']),int(os.environ['REUSE_JOB']),os.environ['REUSE_HEAD'],'Aura Generation Bound Admission Reuse Proof'),(int(os.environ['PROV_RUN']),int(os.environ['PROV_JOB']),os.environ['PROV_HEAD'],'AWJ032 Secure Fixture Observation Envelope'))
+          for run_id,job_id,head,name in expected:
+            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+            with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+            assert run['head_sha']==head and run['name']==name and run['status']=='completed' and run['conclusion']=='success',run
+            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers)
+            with urllib.request.urlopen(req,timeout=30) as r: job=json.load(r)
+            assert job['head_sha']==head and job['status']=='completed' and job['conclusion']=='success',job
+          print('G6_V2_TERMINAL_PARENTS_REVALIDATED=true')
+          PY
+
+      - name: Compile and execute G6 W3 adversarials
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py
+          python3 -m unittest -v tools.awj032.test_glm53_g6_gate10_owner_host_evidence_request
+
+      - name: Exhaust 512-state Different-J request lattice
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import prove_different_j
+          assert prove_different_j()==512
+          print('G6_V2_DIFFERENT_J_512=PASS')
+          PY
+
+      - name: Enforce Gate10 and provenance nonpromotion laws
+        run: |
+          set -euo pipefail
+          grep -q 'AdmissionValidAtProduce!=AdmissionReusableAtUse' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'CallerWitness!=BackendObservationProvenance' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'PhysicalAttestationBoolean!=PhysicalObservationProvenance' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'Gate10DebtMustRemainExplicitUntilObserved' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          echo "OWNER_HOST_EXECUTION_OBSERVED=false"
+          echo "AUTHENTICATED_PHYSICAL_OBSERVATION=false"
+          echo "FULL_FLAGSHIP_MODEL_LOADED=false"
+          echo "AURAOS_RESIDENT_ROUTING_PROVEN=false"
+          echo "GATE10_PROMOTED=false"
