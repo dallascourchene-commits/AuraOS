@@ -102,8 +102,8 @@ fn module_symbols_survive_current_generation_and_safe_backend_without_reclassifi
     assert!(!admission.receipt().human_authority);
     assert!(!admission.receipt().external_effect);
 
-    let admitted_index = load_admitted_node_index(&node_path, &binding)
-        .expect("admit current node index");
+    let admitted_index =
+        load_admitted_node_index(&node_path, &binding).expect("admit current node index");
     for symbol in &symbols.symbols {
         let record = admitted_index
             .get(&symbol.node_id)
