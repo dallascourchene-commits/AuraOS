@@ -62,13 +62,34 @@ jobs:
           print("G2_EXACT_GREEN_PARENT=PASS")
           PY
 
+      - name: Prove unittest runner integrity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          from pathlib import Path
+
+          path = Path("tools/awj032/test_glm53_g2_predictor_calibration_binding.py")
+          tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+          for node in tree.body:
+              if isinstance(node, ast.ClassDef) and node.name == "G2PredictorCalibrationBindingTests":
+                  method_names = {child.name for child in node.body if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))}
+                  assert "run" not in method_names, "TESTCASE_RUNNER_SHADOWED"
+                  assert "exercise" in method_names, "G2_TEST_HELPER_MISSING"
+                  break
+          else:
+              raise AssertionError("G2_TEST_CLASS_MISSING")
+          print("UNITTEST_RUNNER_INTEGRITY=PASS")
+          PY
+
       - name: Run G2 and predictor-calibration adversarial suites
         run: |
           set -euo pipefail
           python3 -m py_compile \
             tools/awj032/glm53_prefetch_transfer_admission.py \
-            tools/awj032/glm53_g2_predictor_calibration_binding.py
-          python3 -m unittest \
+            tools/awj032/glm53_g2_predictor_calibration_binding.py \
+            tools/awj032/test_glm53_g2_predictor_calibration_binding.py
+          python3 -m unittest -v \
             tools.awj032.test_glm53_prefetch_transfer_admission \
             tools.awj032.test_glm53_g2_predictor_calibration_binding
 
