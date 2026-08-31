@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1683
-- **total_bytes**: 26632546
-- **text_tokens_est**: 6648536
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1684
+- **total_bytes**: 26639143
+- **text_tokens_est**: 6650186
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1683,
+  "repo_file_count": 1684,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-glm53-g2-calibration-w3-exact-reproof.yml",
     ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml",
     ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
     ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
@@ -1823,16 +1824,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1683,
-  "bytes": 26632546,
-  "tokens_est": 6648536,
+  "files": 1684,
+  "bytes": 26639143,
+  "tokens_est": 6650186,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1026,
-    "schema_or_lexicon": 280,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
