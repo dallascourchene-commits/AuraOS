@@ -1,14 +1,20 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass, field
 from hashlib import sha256
 import json
 import math
 import re
 from typing import Mapping, Sequence
 
-SCHEMA = "AURA_K27_SPATIAL_PHYSICAL_OBSERVATION_HANDOFF_V1"
-PARENT_TEMPORAL = "PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67"
+from tools.temporal_evidence_scope_coordinate import (
+    PORTABLE_SCOPE as TEMPORAL_PORTABLE_SCOPE,
+    SCHEMA as TEMPORAL_SCHEMA,
+    verify_temporal_evidence_scope_coordinate,
+)
+
+SCHEMA = "AURA_K27_SPATIAL_PHYSICAL_OBSERVATION_HANDOFF_V2"
+PARENT_TEMPORAL = "PR622:a998e370dd3d757810ebd888f6c982ef9ec9cca0"
 PARENT_OWNER_HOST = "PR582:24a5404ee3b987dee12192917e40b35d3a43e81c"
 EXACT_PARENT_IDS = (PARENT_TEMPORAL, PARENT_OWNER_HOST)
 
@@ -70,16 +76,14 @@ def _parents(values: Sequence[str]) -> tuple[str, str]:
     if isinstance(values, (str, bytes)):
         raise ValueError("parent_artifact_ids must be a sequence")
     parents = tuple(values)
-    if len(parents) != 2 or len(set(parents)) != 2:
-        raise ValueError("exactly two distinct parent artifact ids are required")
-    if set(parents) != set(EXACT_PARENT_IDS):
-        raise ValueError("parent artifact ids must match the exact O57 parents")
+    if len(parents) != 2 or len(set(parents)) != 2 or set(parents) != set(EXACT_PARENT_IDS):
+        raise ValueError("parent artifact ids must match the exact repaired O57 parents")
     return EXACT_PARENT_IDS
 
 
 @dataclass(frozen=True)
 class SpatialPhysicalObservationRequest:
-    temporal_coordinate_digest: str
+    temporal_coordinate: InitVar[Mapping[str, object]]
     phase_mask_artifact_digest: str
     display_device_instance: str
     display_runtime_generation: str
@@ -90,9 +94,33 @@ class SpatialPhysicalObservationRequest:
     max_capture_bytes: int
     effect_admission_ref: str
     parent_artifact_ids: tuple[str, str] = EXACT_PARENT_IDS
+    temporal_coordinate_digest: str = field(init=False)
+    temporal_schema: str = field(init=False)
+    temporal_portable_scope: str = field(init=False)
+    temporal_point_admissible: bool = field(init=False)
+    temporal_hold_reason: str = field(init=False)
 
-    def __post_init__(self) -> None:
-        object.__setattr__(self, "temporal_coordinate_digest", _sha256("temporal_coordinate_digest", self.temporal_coordinate_digest))
+    def __post_init__(self, temporal_coordinate: Mapping[str, object]) -> None:
+        try:
+            temporal = dict(temporal_coordinate)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("temporal_coordinate must be a mapping") from exc
+        if not verify_temporal_evidence_scope_coordinate(temporal):
+            raise ValueError("exact repaired portable temporal coordinate is invalid")
+        if temporal.get("schema") != TEMPORAL_SCHEMA:
+            raise ValueError("temporal schema is not the repaired V3 schema")
+        if temporal.get("portable_scope") != TEMPORAL_PORTABLE_SCOPE:
+            raise ValueError("temporal portable scope mismatch")
+        if temporal.get("point_observation_temporal_admissible") is not False:
+            raise ValueError("V2 physical handoff cannot consume self-promoted temporal admission")
+        hold = temporal.get("hold_reason")
+        if hold not in {"POINT_EVIDENCE_NOT_AUTHENTICATED", "POINT_SOFTWARE_GATE_NOT_ADMISSIBLE"}:
+            raise ValueError("typed temporal hold is required")
+        object.__setattr__(self, "temporal_coordinate_digest", _sha256("coordinate_digest", str(temporal["coordinate_digest"])))
+        object.__setattr__(self, "temporal_schema", str(temporal["schema"]))
+        object.__setattr__(self, "temporal_portable_scope", str(temporal["portable_scope"]))
+        object.__setattr__(self, "temporal_point_admissible", False)
+        object.__setattr__(self, "temporal_hold_reason", str(hold))
         object.__setattr__(self, "phase_mask_artifact_digest", _sha256("phase_mask_artifact_digest", self.phase_mask_artifact_digest))
         object.__setattr__(self, "display_device_instance", _text("display_device_instance", self.display_device_instance))
         object.__setattr__(self, "display_runtime_generation", _text("display_runtime_generation", self.display_runtime_generation))
@@ -110,6 +138,10 @@ class SpatialPhysicalObservationRequest:
             "schema": SCHEMA,
             "kind": "request",
             "temporal_coordinate_digest": self.temporal_coordinate_digest,
+            "temporal_schema": self.temporal_schema,
+            "temporal_portable_scope": self.temporal_portable_scope,
+            "temporal_point_admissible": self.temporal_point_admissible,
+            "temporal_hold_reason": self.temporal_hold_reason,
             "phase_mask_artifact_digest": self.phase_mask_artifact_digest,
             "display_device_instance": self.display_device_instance,
             "display_runtime_generation": self.display_runtime_generation,
@@ -192,7 +224,10 @@ class SpatialPhysicalObservationAttempt:
         })
 
 
-def join_spatial_physical_observation(request: SpatialPhysicalObservationRequest, attempt: SpatialPhysicalObservationAttempt) -> dict[str, object]:
+def join_spatial_physical_observation(
+    request: SpatialPhysicalObservationRequest,
+    attempt: SpatialPhysicalObservationAttempt,
+) -> dict[str, object]:
     if attempt.request_digest != request.request_digest:
         raise ValueError("attempt/request digest mismatch")
     if attempt.observed_display_device_instance != request.display_device_instance:
@@ -227,7 +262,11 @@ def join_spatial_physical_observation(request: SpatialPhysicalObservationRequest
         "reported_observation_digest": reported_observation_digest,
         "integrity_joined": True,
         "reported_measurement_present": True,
+        "temporal_portable_verified": True,
         "temporal_coordinate_bound": True,
+        "temporal_point_admissible": False,
+        "temporal_hold_reason": request.temporal_hold_reason,
+        "physical_attempt_cannot_upgrade_temporal_parent": True,
         "display_generation_bound": True,
         "calibration_reference_bound": True,
         "phase_mask_identity_bound": True,
@@ -247,13 +286,21 @@ def join_spatial_physical_observation(request: SpatialPhysicalObservationRequest
     }
 
 
-def build_receipt(request: SpatialPhysicalObservationRequest, attempt: SpatialPhysicalObservationAttempt) -> dict[str, object]:
+def build_receipt(
+    request: SpatialPhysicalObservationRequest,
+    attempt: SpatialPhysicalObservationAttempt,
+) -> dict[str, object]:
     joined = join_spatial_physical_observation(request, attempt)
     receipt = {
         "schema": SCHEMA,
         "parent_artifact_ids": request.parent_artifact_ids,
         "request": {
             "request_digest": request.request_digest,
+            "temporal_coordinate_digest": request.temporal_coordinate_digest,
+            "temporal_schema": request.temporal_schema,
+            "temporal_portable_scope": request.temporal_portable_scope,
+            "temporal_point_admissible": request.temporal_point_admissible,
+            "temporal_hold_reason": request.temporal_hold_reason,
             "requested_metrics": request.requested_metrics,
             "effect_admission_ref": request.effect_admission_ref,
         },

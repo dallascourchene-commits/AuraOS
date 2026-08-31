@@ -3,6 +3,9 @@ name: K27 spatial physical-observation handoff
 on:
   pull_request:
     paths:
+      - 'tools/k27_eye_pose_observation_contract.py'
+      - 'tools/temporal_evidence_scope_coordinate.py'
+      - 'tests/test_temporal_evidence_scope_coordinate.py'
       - 'tools/k27_spatial_physical_observation_handoff.py'
       - 'tests/test_k27_spatial_physical_observation_handoff.py'
       - '.github/workflows/k27-spatial-physical-observation-handoff.yml'
@@ -13,30 +16,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Compile contract
-        run: python -m py_compile tools/k27_spatial_physical_observation_handoff.py
-      - name: Run focused adversarial suite
-        run: python -m unittest -v tests.test_k27_spatial_physical_observation_handoff
-      - name: Enforce exact parents and nonpromotion ceiling
+      - name: Compile repaired temporal parent and handoff
+        run: python -m py_compile tools/k27_eye_pose_observation_contract.py tools/temporal_evidence_scope_coordinate.py tools/k27_spatial_physical_observation_handoff.py
+      - name: Reprove temporal V3 and handoff V2
+        run: |
+          python -m unittest -v tests.test_temporal_evidence_scope_coordinate
+          python -m unittest -v tests.test_k27_spatial_physical_observation_handoff
+      - name: Enforce exact repaired temporal parent and nonpromotion ceiling
         run: |
           python - <<'PY'
-          from tools.k27_spatial_physical_observation_handoff import EXACT_PARENT_IDS
+          from tools.k27_spatial_physical_observation_handoff import EXACT_PARENT_IDS, PARENT_TEMPORAL
+          from tools.temporal_evidence_scope_coordinate import SCHEMA as TEMPORAL_SCHEMA, PORTABLE_SCOPE
+          assert PARENT_TEMPORAL == 'PR622:a998e370dd3d757810ebd888f6c982ef9ec9cca0'
           assert EXACT_PARENT_IDS == (
-              'PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67',
+              'PR622:a998e370dd3d757810ebd888f6c982ef9ec9cca0',
               'PR582:24a5404ee3b987dee12192917e40b35d3a43e81c',
           )
+          assert TEMPORAL_SCHEMA == 'AuraTemporalEvidenceScopeCoordinateV3'
+          assert PORTABLE_SCOPE == 'SOFTWARE_UNAUTHENTICATED_POINT_V1'
           text = open('tools/k27_spatial_physical_observation_handoff.py', encoding='utf-8').read()
           for needle in (
+              '"temporal_point_admissible": False',
+              '"physical_attempt_cannot_upgrade_temporal_parent": True',
               '"producer_authenticated": False',
               '"physical_measurement_attested": False',
               '"optical_truth_proven": False',
-              '"optical_safety_proven": False',
               '"effect_authority_proven": False',
               '"native_transformer_kv_accessed": False',
           ):
               assert needle in text, needle
-          print('O57_NONPROMOTION_CEILING=true')
+          print('O57_V2_FULL_TEMPORAL_PARENT_VERIFIED=true')
+          print('O57_V2_TEMPORAL_HOLD_PRESERVED=true')
+          print('O57_V2_PHYSICAL_ATTEMPT_NE_TEMPORAL_AUTHENTICATION=true')
           PY

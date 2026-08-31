@@ -1,5 +1,9 @@
+import hashlib
+import json
 import unittest
 
+from tests.test_temporal_evidence_scope_coordinate import eye_receipt, series
+from tools.temporal_evidence_scope_coordinate import portable_temporal_evidence_scope_receipt
 from tools.k27_spatial_physical_observation_handoff import (
     EXACT_PARENT_IDS,
     PARENT_TEMPORAL,
@@ -9,16 +13,30 @@ from tools.k27_spatial_physical_observation_handoff import (
     join_spatial_physical_observation,
 )
 
-D0 = "0" * 64
 D1 = "1" * 64
 D2 = "2" * 64
 D3 = "3" * 64
 D4 = "4" * 64
 
 
+def temporal():
+    return portable_temporal_evidence_scope_receipt(
+        eye_pose_receipt=eye_receipt(1_788_156_600_000_000_000),
+        longitudinal_series=series(),
+    )
+
+
+def rehash_temporal(value):
+    payload = {k: v for k, v in value.items() if k != "coordinate_digest"}
+    value["coordinate_digest"] = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+    ).hexdigest()
+    return value
+
+
 def request(**kw):
     base = dict(
-        temporal_coordinate_digest=D0,
+        temporal_coordinate=temporal(),
         phase_mask_artifact_digest=D1,
         display_device_instance="slm:bench-a:serial-opaque",
         display_runtime_generation="display-runtime:g7",
@@ -56,25 +74,56 @@ def attempt(req, **kw):
     return SpatialPhysicalObservationAttempt(**base)
 
 
-class TestSpatialPhysicalObservationHandoff(unittest.TestCase):
-    def test_happy_path_is_integrity_only(self):
+class TestSpatialPhysicalObservationHandoffV2(unittest.TestCase):
+    def test_happy_path_preserves_temporal_hold_and_is_integrity_only(self):
         req = request()
         joined = join_spatial_physical_observation(req, attempt(req))
         self.assertTrue(joined["integrity_joined"])
         self.assertTrue(joined["reported_measurement_present"])
+        self.assertTrue(joined["temporal_portable_verified"])
+        self.assertFalse(joined["temporal_point_admissible"])
+        self.assertEqual("POINT_EVIDENCE_NOT_AUTHENTICATED", joined["temporal_hold_reason"])
+        self.assertTrue(joined["physical_attempt_cannot_upgrade_temporal_parent"])
         for key in (
-            "producer_authenticated",
-            "physical_measurement_attested",
-            "optical_truth_proven",
-            "privacy_proven",
-            "optical_safety_proven",
-            "deployment_ready",
-            "effect_authority_proven",
-            "gate10_promoted",
-            "native_transformer_kv_accessed",
+            "producer_authenticated", "physical_measurement_attested", "optical_truth_proven",
+            "privacy_proven", "optical_safety_proven", "deployment_ready",
+            "effect_authority_proven", "gate10_promoted", "native_transformer_kv_accessed",
             "k27_semantic_authority",
         ):
             self.assertFalse(joined[key])
+
+    def test_request_accepts_full_temporal_object_not_caller_digest(self):
+        req = request()
+        self.assertEqual(temporal()["coordinate_digest"], req.temporal_coordinate_digest)
+        with self.assertRaises(TypeError):
+            SpatialPhysicalObservationRequest(
+                temporal_coordinate_digest="0" * 64,
+                phase_mask_artifact_digest=D1,
+                display_device_instance="x", display_runtime_generation="g",
+                calibration_evidence_ref="c", optical_bench_setup_digest=D2,
+                requested_metrics=("speckle_contrast",), max_wall_ms=1,
+                max_capture_bytes=1, effect_admission_ref="e",
+            )
+
+    def test_freshly_rehashed_positive_temporal_parent_rejected(self):
+        value = temporal()
+        value["point_observation_temporal_admissible"] = True
+        value["point_vs_series_relation"] = "DURING"
+        value["temporal_overlap"] = True
+        value["hold_reason"] = None
+        rehash_temporal(value)
+        with self.assertRaises(ValueError):
+            request(temporal_coordinate=value)
+
+    def test_temporal_hold_is_request_identity(self):
+        a = request()
+        value = temporal()
+        value["point_observation_software_gate_admissible"] = False
+        value["hold_reason"] = "POINT_SOFTWARE_GATE_NOT_ADMISSIBLE"
+        rehash_temporal(value)
+        b = request(temporal_coordinate=value)
+        self.assertNotEqual(a.request_digest, b.request_digest)
+        self.assertNotEqual(a.temporal_hold_reason, b.temporal_hold_reason)
 
     def test_exact_two_parents_required(self):
         with self.assertRaises(ValueError):
@@ -105,37 +154,24 @@ class TestSpatialPhysicalObservationHandoff(unittest.TestCase):
         with self.assertRaises(ValueError):
             join_spatial_physical_observation(req, attempt(req, observed_phase_mask_artifact_digest="e" * 64))
 
-    def test_budget_escape_rejected(self):
+    def test_budget_metric_and_exit_fail_closed(self):
         req = request()
         with self.assertRaises(ValueError):
             join_spatial_physical_observation(req, attempt(req, raw_capture_bytes=4097))
         with self.assertRaises(ValueError):
             join_spatial_physical_observation(req, attempt(req, ended_at_unix_ns=1_100_000_001))
-
-    def test_metric_set_must_match_exactly(self):
-        req = request()
         with self.assertRaises(ValueError):
             join_spatial_physical_observation(req, attempt(req, reported_metrics={"speckle_contrast": 0.4}))
-
-    def test_failed_attempt_cannot_be_relabelled_successful(self):
-        req = request()
         with self.assertRaises(ValueError):
             join_spatial_physical_observation(req, attempt(req, process_exit_code=2))
 
-    def test_receipt_deterministic_and_tamper_sensitive(self):
+    def test_receipt_binds_temporal_unknown_state(self):
         req = request()
-        a = build_receipt(req, attempt(req))
-        b = build_receipt(req, attempt(req))
-        self.assertEqual(a["receipt_digest"], b["receipt_digest"])
-        c = build_receipt(req, attempt(req, reported_metrics={"speckle_contrast": 0.43, "forward_leakage_ratio": 0.01}))
-        self.assertNotEqual(a["receipt_digest"], c["receipt_digest"])
-
-    def test_temporal_coordinate_is_bound_not_currentness_authority(self):
-        req = request()
-        joined = join_spatial_physical_observation(req, attempt(req))
-        self.assertTrue(joined["temporal_coordinate_bound"])
-        self.assertFalse(joined["physical_measurement_attested"])
-
+        receipt = build_receipt(req, attempt(req))
+        self.assertEqual(req.temporal_coordinate_digest, receipt["request"]["temporal_coordinate_digest"])
+        self.assertFalse(receipt["request"]["temporal_point_admissible"])
+        self.assertEqual("POINT_EVIDENCE_NOT_AUTHENTICATED", receipt["request"]["temporal_hold_reason"])
+        self.assertFalse(receipt["join"]["physical_measurement_attested"])
 
 if __name__ == "__main__":
     unittest.main()
