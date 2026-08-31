@@ -8,14 +8,14 @@ import json
 import re
 from typing import Any
 
-VERSION = "AURA_PROVENANCE_CORROBORATION_MEMORY_ADMISSION_V1"
-NODE_VERSION = "AURA_PROVENANCE_EVIDENCE_NODE_V1"
+VERSION = "AURA_PROVENANCE_CORROBORATION_MEMORY_ADMISSION_V2"
+NODE_VERSION = "AURA_PROVENANCE_EVIDENCE_NODE_V2"
 DIGEST_PROFILE = "JSON_SORT_KEYS_COMPACT_UTF8_V1"
 SCHEME_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 NODE_FIELDS = {
     "version", "artifact_ref", "artifact_ref_scheme", "artifact_ref_value",
-    "evidence_type", "claim_key", "claim_value_ref", "world_ref",
+    "evidence_type", "currentness_domain", "claim_key", "claim_value_ref", "world_ref",
     "dependency_class_ref", "generation_ref", "allowed_scopes",
     "allowed_use_classes", "current", "digest_verified", "schema_ok", "revoked",
     "supersedes_artifact_refs", "receipt_identity",
@@ -24,10 +24,13 @@ IDENTITY_FIELDS = {
     "kind", "algorithm_or_provider", "canonicalization_profile",
     "scope_profile", "value", "schema_version",
 }
-CONTEXT_FIELDS = {"scope", "use_class", "accepted_evidence_types"}
+CONTEXT_FIELDS = {
+    "scope", "use_class", "accepted_evidence_types", "accepted_currentness_domains"
+}
 REASON_ORDER = (
     "SCOPE_NOT_ALLOWED", "USE_CLASS_NOT_ALLOWED", "EVIDENCE_TYPE_NOT_ACCEPTED",
-    "NOT_CURRENT", "DIGEST_NOT_VERIFIED", "SCHEMA_NOT_OK", "REVOKED",
+    "CURRENTNESS_DOMAIN_NOT_ACCEPTED", "NOT_CURRENT", "DIGEST_NOT_VERIFIED",
+    "SCHEMA_NOT_OK", "REVOKED",
 )
 
 
@@ -105,8 +108,8 @@ def verify_evidence_node(node: dict[str, Any]) -> list[str]:
             violations.append("NODE_VERSION_MISMATCH")
         _require_typed_ref(node)
         for field in (
-            "evidence_type", "claim_key", "claim_value_ref", "world_ref",
-            "dependency_class_ref", "generation_ref",
+            "evidence_type", "currentness_domain", "claim_key", "claim_value_ref",
+            "world_ref", "dependency_class_ref", "generation_ref",
         ):
             _require_str(node[field], field)
         _require_list(node["allowed_scopes"], "allowed_scopes")
@@ -142,10 +145,11 @@ def verify_context(context: dict[str, Any]) -> list[str]:
     for field in ("scope", "use_class"):
         if type(context[field]) is not str or not context[field]:
             violations.append(f"CONTEXT_{field.upper()}_INVALID")
-    try:
-        _require_list(context["accepted_evidence_types"], "accepted_evidence_types")
-    except ValueError as exc:
-        violations.append(f"CONTEXT_{exc}")
+    for field in ("accepted_evidence_types", "accepted_currentness_domains"):
+        try:
+            _require_list(context[field], field)
+        except ValueError as exc:
+            violations.append(f"CONTEXT_{exc}")
     return violations
 
 
@@ -158,9 +162,12 @@ def eligibility_violations(node: dict[str, Any], context: dict[str, Any]) -> lis
         reasons.append("SCOPE_NOT_ALLOWED")
     if context["use_class"] not in node["allowed_use_classes"] and "*" not in node["allowed_use_classes"]:
         reasons.append("USE_CLASS_NOT_ALLOWED")
-    accepted = context["accepted_evidence_types"]
-    if node["evidence_type"] not in accepted and "*" not in accepted:
+    accepted_types = context["accepted_evidence_types"]
+    if node["evidence_type"] not in accepted_types and "*" not in accepted_types:
         reasons.append("EVIDENCE_TYPE_NOT_ACCEPTED")
+    accepted_domains = context["accepted_currentness_domains"]
+    if node["currentness_domain"] not in accepted_domains and "*" not in accepted_domains:
+        reasons.append("CURRENTNESS_DOMAIN_NOT_ACCEPTED")
     if not node["current"]:
         reasons.append("NOT_CURRENT")
     if not node["digest_verified"]:
@@ -191,7 +198,9 @@ def _relation(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any] | None:
         "reference_schemes_distinct": a["artifact_ref_scheme"] != b["artifact_ref_scheme"],
         "reference_values_equal": a["artifact_ref_value"] == b["artifact_ref_value"],
         "evidence_types_distinct": a["evidence_type"] != b["evidence_type"],
+        "currentness_domains_distinct": a["currentness_domain"] != b["currentness_domain"],
         "proof_artifacts_interchangeable": False,
+        "currentness_domains_interchangeable": False,
         "rank_transition_credit": False,
     }
 
@@ -260,10 +269,12 @@ def admit_evidence_nodes(nodes: list[dict[str, Any]], context: dict[str, Any]) -
             "eligible_artifact_refs": sorted(m["artifact_ref"] for m in members),
             "artifact_reference_schemes": sorted({m["artifact_ref_scheme"] for m in members}),
             "evidence_types": sorted({m["evidence_type"] for m in members}),
+            "currentness_domains": sorted({m["currentness_domain"] for m in members}),
             "dependency_class_refs": deps,
             "kappa": len(deps),
             "kappa_by_evidence_type": _type_partition(members),
             "cross_type_kappa_is_rank_neutral": True,
+            "cross_currentness_domain_kappa_is_rank_neutral": True,
             "corroboration_count_grants_host_rank": False,
         })
     contradictory = sorted({(r["claim_key"], r["world_ref"]) for r in relations if r["kind"] == "CONTRADICTS"})
@@ -282,6 +293,9 @@ def admit_evidence_nodes(nodes: list[dict[str, Any]], context: dict[str, Any]) -
         "reference_scheme_aliasing_performed": False,
         "typed_evidence_objects_preserved": True,
         "proof_type_cross_cast_performed": False,
+        "typed_currentness_domains_preserved": True,
+        "current_true_is_domain_scoped": True,
+        "currentness_domain_cross_cast_performed": False,
         "type_partitioned_corroboration_accounting": True,
         "corroboration_rank_transition_performed": False,
         "explicit_resolver_required_for_host_rank_transition": True,
