@@ -1,0 +1,77 @@
+name: K27 ASTGE Mmap Immutability Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27_astge_reference.py"
+      - "tools/k27_astge_mmap_lifecycle.py"
+      - "tools/k27_astge_mmap_admission.py"
+      - "tests/test_k27_astge_*.py"
+      - ".github/workflows/k27-astge-mmap-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  mmap-admission:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Run reference lifecycle and admission contracts
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools
+        run: |
+          python3 --version
+          python3 -m py_compile \
+            tools/k27_astge_reference.py \
+            tools/k27_astge_mmap_lifecycle.py \
+            tools/k27_astge_mmap_admission.py \
+            tests/test_k27_astge_reference.py \
+            tests/test_k27_astge_mmap_lifecycle.py \
+            tests/test_k27_astge_mmap_admission.py
+          python3 -m unittest discover -s tests -p "test_k27_astge_*.py" -v
+
+      - name: Emit production hold and claim ceiling
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools
+        run: |
+          python3 - <<'PY'
+          import k27_astge_mmap_admission as admission
+          receipt = admission.backing_immutability_capability_registry_receipt()
+          assert receipt.active_capability_count == 0
+          assert receipt.capability_digests == ()
+          assert receipt.authority is False
+          assert receipt.external_effect is False
+          params = set(admission.mmap_admission_parameter_names())
+          forbidden = {
+              "capability", "capabilities", "record", "records", "registry",
+              "registry_lookup", "trusted", "immutable", "authority",
+          }
+          assert forbidden.isdisjoint(params)
+          print("MMAP_IMMUTABILITY_CAPABILITY_ACTIVE_RECORDS=0")
+          print("CALLER_CAPABILITY_OVERRIDE_ACCEPTED=false")
+          print("MMAP_ELIGIBLE_IN_PRODUCTION=false")
+          print("SIGBUS_IMPOSSIBLE_PROVEN=false")
+          print("CONCURRENT_MUTATION_RACE_PROVEN_SAFE=false")
+          print("PHYSICAL_CRASH_DURABILITY_PROVEN=false")
+          print("NATIVE_ENGINE_SAFETY_PROVEN=false")
+          print("PERFORMANCE_SUPERIORITY_PROVEN=false")
+          print("EXTERNAL_EFFECT_AUTHORIZED=false")
+          PY
