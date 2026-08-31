@@ -1,0 +1,322 @@
+name: Aura WorkCapsule Current Recursive Target Raw Slice
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_scoped_portable_target_identity.py'
+      - 'scripts/aura_workcapsule_scoped_higher_owner_portable_continuity.py'
+      - 'scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py'
+      - 'tests/test_aura_workcapsule_recursive_portable_current_shared_owner.py'
+      - 'tests/test_aura_workcapsule_scoped_higher_owner_portable_continuity.py'
+      - 'tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py'
+      - '.github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR561_SHA: f0f3c18e281eaf8f634e54dd8b49dd7046c63c63
+  PR560_SHA: 22414a80710d695a53f96665991c003dd889eb2c
+  CONVERGENCE_SHA: 37eab5209f4f2e9ba527507e8db8dd1ac134265e
+
+jobs:
+  exact-cross-runtime-binding:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact child and prove true two-parent convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR561_SHA" "$PR560_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR561_SHA $PR560_SHA"
+          git merge-base --is-ancestor "$PR561_SHA" HEAD
+          git merge-base --is-ancestor "$PR560_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+
+      - name: Re-prove PR561 current recursive structural owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_scoped_portable_target_identity.py \
+            scripts/aura_workcapsule_scoped_higher_owner_portable_continuity.py \
+            scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_recursive_portable_current_shared_owner \
+            tests.test_aura_workcapsule_scoped_higher_owner_portable_continuity
+
+      - name: Fetch and re-prove exact PR560 Rust raw-slice owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr560
+          mkdir -p /tmp/pr560
+          git -C /tmp/pr560 init .
+          git -C /tmp/pr560 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr560 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR560_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr560 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr560 rev-parse HEAD)" = "$PR560_SHA"
+          test -z "$(git -C /tmp/pr560 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr560
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml --all-targets -- -D warnings
+
+      - name: Pass child unit and adversarial suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v tests.test_aura_workcapsule_current_recursive_target_raw_slice_binding
+
+      - name: Generate exact PR560 receipt from PR561 shared source vector
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pr560/crates/aura-k27-astge-portable-target-raw-slice/examples
+          cat >/tmp/pr560/crates/aura-k27-astge-portable-target-raw-slice/examples/o36_shared_probe.rs <<'RS'
+          use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, SourceLocatorV1};
+          use aura_k27_astge_portable_target_raw_slice::admit_portable_target_raw_slice;
+          use aura_k27_astge_post_edit_canonical_projection::{
+              canonical_payload_bytes, CanonicalDefinitionTargetPayloadV1,
+              CanonicalDefinitionTargetProjectionV1, CANONICALIZATION_PROFILE_V1,
+              PROJECTION_SCHEMA_V1,
+          };
+          use sha2::{Digest, Sha256};
+          use std::{fs, path::PathBuf};
+
+          fn hex(bytes: &[u8]) -> String {
+              bytes.iter().map(|byte| format!("{byte:02x}")).collect()
+          }
+
+          fn emit(key: &str, value: impl std::fmt::Display) {
+              println!("{key}={value}");
+          }
+
+          fn main() {
+              let source = b"def target(x):\n    return x + 3\n";
+              let root = PathBuf::from("/tmp/o36-shared-source");
+              let _ = fs::remove_dir_all(&root);
+              fs::create_dir_all(root.join("src")).unwrap();
+              fs::write(root.join("src/a.py"), source).unwrap();
+              let catalog = AdmittedSourceCatalogV1::admit(
+                  &root,
+                  [SourceLocatorV1::bind(17, "src/a.py", 43, source)],
+              ).unwrap();
+              let payload = CanonicalDefinitionTargetPayloadV1 {
+                  schema: PROJECTION_SCHEMA_V1.to_owned(),
+                  version: 1,
+                  canonicalization_profile: CANONICALIZATION_PROFILE_V1.to_owned(),
+                  source_generation_domain: "SOURCE".to_owned(),
+                  source_generation_value: 43,
+                  source_owner_ref: "source-owner://o28-fixture".to_owned(),
+                  relative_path: "src/a.py".to_owned(),
+                  file_id: 17,
+                  source_sha256_hex: hex(&Sha256::digest(source)),
+                  source_byte_len: source.len() as u64,
+                  selected_target_scope_local_id: 9001,
+                  selected_target_parent_scope_local_id: 8001,
+                  selected_target_syntax_ordinal: 1,
+                  selected_target_byte_start: 0,
+                  selected_target_byte_end: source.len() as u32,
+                  selected_target_semantic_handle_digest_hex: "ab".repeat(32),
+                  definition_name: "target".to_owned(),
+                  definition_owner_scope_local_id: 8001,
+                  definition_target_scope_local_id: 9001,
+                  selected_current_scope_is_binding_target: true,
+                  binding_owner_is_selected_parent: true,
+                  local_scope_id_is_semantic_identity: false,
+                  post_edit_profiled_scope_current: true,
+                  canonical_definition_target_current: true,
+                  runtime_name_resolution_proven: false,
+                  call_graph_proven: false,
+                  semantic_patch_correctness_proven: false,
+                  b_minus_approved: false,
+                  producer_authenticated: false,
+                  review_authorized: false,
+                  mutation_authorized: false,
+                  execution_authorized: false,
+                  commit_authorized: false,
+                  merge_authorized: false,
+                  promotion_authorized: false,
+                  provider_effect_authorized: false,
+                  public_effect_authorized: false,
+                  human_authority: false,
+              };
+              let projection = CanonicalDefinitionTargetProjectionV1 {
+                  payload_sha256: hex(&Sha256::digest(canonical_payload_bytes(&payload).unwrap())),
+                  payload,
+              };
+              let receipt = admit_portable_target_raw_slice(&catalog, &projection).unwrap();
+              emit("version", receipt.version);
+              emit("projection_payload_sha256", receipt.projection_payload_sha256);
+              emit("file_id", receipt.file_id);
+              emit("relative_path", receipt.relative_path);
+              emit("source_generation", receipt.source_generation);
+              emit("full_source_sha256_hex", receipt.full_source_sha256_hex);
+              emit("full_source_byte_len", receipt.full_source_byte_len);
+              emit("target_byte_start", receipt.target_byte_start);
+              emit("target_byte_end", receipt.target_byte_end);
+              emit("target_slice_byte_len", receipt.target_slice_byte_len);
+              emit("target_slice_sha256_hex", receipt.target_slice_sha256_hex);
+              emit("selected_target_semantic_handle_digest_hex", receipt.selected_target_semantic_handle_digest_hex);
+              emit("portable_target_bound_to_exact_current_raw_slice", receipt.portable_target_bound_to_exact_current_raw_slice);
+              emit("source_currentness_revalidated_at_materialization", receipt.source_currentness_revalidated_at_materialization);
+              emit("synthetic_record_is_materialization_coordinate_only", receipt.synthetic_record_is_materialization_coordinate_only);
+              emit("storage_node_identity_minted", receipt.storage_node_identity_minted);
+              emit("semantic_handle_carried_from_portable_owner", receipt.semantic_handle_carried_from_portable_owner);
+              emit("semantic_handle_derived_from_raw_slice", receipt.semantic_handle_derived_from_raw_slice);
+              emit("semantic_identity_proven_by_raw_slice", receipt.semantic_identity_proven_by_raw_slice);
+              emit("producer_authenticated", receipt.producer_authenticated);
+              emit("runtime_name_resolution_proven", receipt.runtime_name_resolution_proven);
+              emit("call_graph_proven", receipt.call_graph_proven);
+              emit("semantic_patch_correctness_proven", receipt.semantic_patch_correctness_proven);
+              emit("b_minus_approved", receipt.b_minus_approved);
+              emit("review_authorized", receipt.review_authorized);
+              emit("mutation_authorized", receipt.mutation_authorized);
+              emit("execution_authorized", receipt.execution_authorized);
+              emit("commit_authorized", receipt.commit_authorized);
+              emit("merge_authorized", receipt.merge_authorized);
+              emit("promotion_authorized", receipt.promotion_authorized);
+              emit("provider_effect_authorized", receipt.provider_effect_authorized);
+              emit("public_effect_authorized", receipt.public_effect_authorized);
+              emit("human_authority", receipt.human_authority);
+          }
+          RS
+          cd /tmp/pr560
+          cargo run --quiet \
+            --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml \
+            --example o36_shared_probe > /tmp/o36-raw-slice.env
+          cat /tmp/o36-raw-slice.env
+
+      - name: Prove one shared vector across exact PR561 Python and exact PR560 Rust
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_current_recursive_target_raw_slice_binding import (
+              admit_current_recursive_target_raw_slice_binding,
+              verify_current_recursive_target_raw_slice_binding,
+          )
+          from tests.test_aura_workcapsule_scoped_higher_owner_portable_continuity import (
+              WorkCapsuleScopedHigherOwnerPortableContinuityTests,
+          )
+
+          bool_fields = {
+              'portable_target_bound_to_exact_current_raw_slice',
+              'source_currentness_revalidated_at_materialization',
+              'synthetic_record_is_materialization_coordinate_only',
+              'storage_node_identity_minted',
+              'semantic_handle_carried_from_portable_owner',
+              'semantic_handle_derived_from_raw_slice',
+              'semantic_identity_proven_by_raw_slice',
+              'producer_authenticated',
+              'runtime_name_resolution_proven',
+              'call_graph_proven',
+              'semantic_patch_correctness_proven',
+              'b_minus_approved',
+              'review_authorized',
+              'mutation_authorized',
+              'execution_authorized',
+              'commit_authorized',
+              'merge_authorized',
+              'promotion_authorized',
+              'provider_effect_authorized',
+              'public_effect_authorized',
+              'human_authority',
+          }
+          int_fields = {
+              'file_id', 'source_generation', 'full_source_byte_len',
+              'target_byte_start', 'target_byte_end', 'target_slice_byte_len',
+          }
+          raw = {}
+          for line in open('/tmp/o36-raw-slice.env', encoding='utf-8'):
+              key, value = line.rstrip('\n').split('=', 1)
+              if key in bool_fields:
+                  raw[key] = value == 'true'
+              elif key in int_fields:
+                  raw[key] = int(value)
+              else:
+                  raw[key] = value
+
+          case = WorkCapsuleScopedHigherOwnerPortableContinuityTests(
+              methodName='test_exact_scoped_target_is_same_pr541_higher_owner_target'
+          )
+          case.setUp()
+          try:
+              parent = case.o29_kwargs()
+              kwargs = {
+                  'scoped_target_inputs': parent['scoped_target_inputs'],
+                  'higher_owner_projection': parent['higher_owner_projection'],
+                  'raw_slice_receipt': raw,
+              }
+              violations = verify_current_recursive_target_raw_slice_binding(**kwargs)
+              assert violations == [], violations
+              receipt = admit_current_recursive_target_raw_slice_binding(**kwargs)
+              assert receipt['same_portable_projection_payload_proven'] is True
+              assert receipt['same_source_instance_proven'] is True
+              assert receipt['same_exact_target_span_proven'] is True
+              assert receipt['opaque_semantic_handle_continuity_proven'] is True
+              assert receipt['semantic_handle_derived_from_raw_slice'] is False
+              assert receipt['semantic_identity_proven_by_raw_slice'] is False
+              assert receipt['raw_slice_receipt_producer_authenticated'] is False
+              assert receipt['semantic_repair_correctness_proven'] is False
+              assert not any(receipt['authority'].values())
+              print('PR561_PR560_SHARED_VECTOR_BOUND=true')
+              print('OPAQUE_HANDLE_DERIVED_FROM_RAW_BYTES=false')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert reduced public boundary and emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_current_recursive_target_raw_slice_binding import (
+              verify_current_recursive_target_raw_slice_binding,
+          )
+          assert set(inspect.signature(verify_current_recursive_target_raw_slice_binding).parameters) == {
+              'scoped_target_inputs', 'higher_owner_projection', 'raw_slice_receipt'
+          }
+          print('SECOND_RAW_BYTES_INPUT_ACCEPTED=false')
+          print('SOURCE_CATALOG_INPUT_ACCEPTED=false')
+          PY
+          cat <<'EOF'
+          CURRENT_RECURSIVE_TARGET_REPROVED=true
+          EXACT_CURRENT_RAW_SLICE_REPROVED=true
+          SAME_PORTABLE_PROJECTION_PAYLOAD=true
+          SAME_SOURCE_INSTANCE=true
+          SAME_EXACT_TARGET_SPAN=true
+          OPAQUE_SEMANTIC_HANDLE_CONTINUITY=true
+          RAW_SLICE_RECEIPT_PRODUCER_AUTHENTICATED=false
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false
+          REENTRY_CLOSED=false
+          REENTRY_SCOPE_NARROWED=false
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=false
+          RUNTIME_NAME_RESOLUTION_PROVEN=false
+          CALL_GRAPH_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
