@@ -1,0 +1,124 @@
+name: AWJ032 Storage Probe Currentness Domain
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR601_HEAD: 5244eaf015abf71293c4e5a92fd1f32c3c2824fb
+  PR601_RUN: '33363477131'
+  PR601_OWNER_BLOB: cdb1879e391b73883c4872c8019cb0cade5797f4
+  PR603_HEAD: 9b24b5b99901bdfb5406e0a28aeb8caa0fbf304a
+  PR603_RUN: '33363989076'
+  PR603_OWNER_BLOB: 2ae6e46430d5bfa638ba128dc1c16c7581a479f2
+  PR603_TEST_BLOB: 04a887880601a0414ef2deab3e6ec935569dc670
+
+jobs:
+  storage-probe-currentness-domain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact child and exact parent artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=280 origin "$TARGET_SHA" "$PR601_HEAD" "$PR603_HEAD"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git hash-object scripts/aura_awj032_lifecycle_return_currentness_domain.py)" = "$PR601_OWNER_BLOB"
+          test "$(git hash-object tools/awj032/thinkpad_bounded_storage_probe.py)" = "$PR603_OWNER_BLOB"
+          test "$(git hash-object tools/awj032/test_thinkpad_bounded_storage_probe.py)" = "$PR603_TEST_BLOB"
+          test "$(git rev-parse "$PR601_HEAD":scripts/aura_awj032_lifecycle_return_currentness_domain.py)" = "$PR601_OWNER_BLOB"
+          test "$(git rev-parse "$PR603_HEAD":tools/awj032/thinkpad_bounded_storage_probe.py)" = "$PR603_OWNER_BLOB"
+          test "$(git rev-parse "$PR603_HEAD":tools/awj032/test_thinkpad_bounded_storage_probe.py)" = "$PR603_TEST_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Pin exact successful parent runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR601_RUN}" --jq .head_sha)" = "$PR601_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR601_RUN}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR603_RUN}" --jq .head_sha)" = "$PR603_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR603_RUN}" --jq .conclusion)" = success
+          echo "PR601_EXACT_HOSTED=true"
+          echo "PR603_EXACT_HOSTED=true"
+
+      - name: Re-prove PR601 currentness-domain owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_awj032_lifecycle_return_currentness_domain.py
+          python3 -m unittest -v tests.test_aura_awj032_lifecycle_return_currentness_domain
+
+      - name: Re-prove PR603 bounded storage observation owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/thinkpad_bounded_storage_probe.py tools/awj032/test_thinkpad_bounded_storage_probe.py
+          python3 -m unittest -v tools.awj032.test_thinkpad_bounded_storage_probe
+
+      - name: Prove O51 storage-probe currentness adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_awj032_storage_probe_currentness_domain.py tests/test_aura_awj032_storage_probe_currentness_domain.py
+          python3 -m unittest -v tests.test_aura_awj032_storage_probe_currentness_domain
+
+      - name: Prove fixed public boundary and no authority escape hatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_awj032_storage_probe_currentness_domain import project_bounded_storage_probe_currentness
+          params = set(inspect.signature(project_bounded_storage_probe_currentness).parameters)
+          assert params == {'request', 'probe_receipt'}
+          forbidden = {
+              'evidence_type', 'currentness_domain', 'use_class', 'current',
+              'physical_nvme_currentness', 'host_observation_currentness',
+              'lifecycle_measurement_currentness', 'producer_authenticated',
+              'w4_admitted', 'g2_admitted', 'effect_authority',
+              'semantic_k27_authority', 'native_transformer_kv'
+          }
+          assert params.isdisjoint(forbidden)
+          print('PUBLIC_INPUTS=request,probe_receipt')
+          PY
+
+      - name: Emit exact consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'EOF'
+          STORAGE_PROBE_CURRENT_IN_OWN_GENERATION=true
+          LIFECYCLE_RETURN_CURRENTNESS_PROVEN=false
+          HOST_OBSERVATION_CURRENTNESS_PROVEN=false
+          W4_LIFECYCLE_MEASUREMENT_CURRENTNESS_PROVEN=false
+          PHYSICAL_NVME_CURRENTNESS_PROVEN=false
+          LOGICAL_BUFFERED_READ_EVIDENCE_IS_PHYSICAL_NVME=false
+          STORAGE_MEDIUM_NVME_PROVEN=false
+          PRODUCER_AUTHENTICATED=false
+          MODEL_EXECUTION_OBSERVED=false
+          LIFECYCLE_REGISTRY_ADMITTED=false
+          REAL_W4_POLICY_WINNER_PROVEN=false
+          G2_ADMITTED=false
+          HOST_RANK_TRANSITION_PERFORMED=false
+          EFFECT_AUTHORITY_PROVEN=false
+          SEMANTIC_TRUTH_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          EOF
