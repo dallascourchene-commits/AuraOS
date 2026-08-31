@@ -1,0 +1,144 @@
+name: GLM53 Remaining Official Payload Slices
+
+on:
+  pull_request:
+  push:
+    branches:
+      - arena/glm53-q12-remaining-four-payload-slices-v1-20260831
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q12-remaining-payload-slices:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q12 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Prove exact Q11 x A4 convergence and green generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONVERGENCE=2db0e70fdd4d8534d7f640a437b864ff97ccbae9
+          Q11=fe5fc943b950d7ba97808aca4886f3043518b3c8
+          A4=5cf5587945949ac2a0150fb0958ad937bd6d0434
+          git fetch --no-tags origin "$CONVERGENCE" "$Q11" "$A4"
+          test "$(git rev-list --parents -n 1 "$CONVERGENCE")" = "$CONVERGENCE $Q11 $A4"
+          python3 - <<'PY'
+          import json, os, urllib.request
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id, head in ((33395890155,'fe5fc943b950d7ba97808aca4886f3043518b3c8'),(33395920243,'5cf5587945949ac2a0150fb0958ad937bd6d0434')):
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+          print('Q12_EXACT_OTHER_AGENT_GENERATIONS_GREEN=true')
+          PY
+
+      - name: Reprove Q11 delta and A4 minimum-cover semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v tests.test_aura_glm53_live_payload_coverage_delta
+          git show 5cf5587945949ac2a0150fb0958ad937bd6d0434:tools/aura_hyperscale_work_admission.py > /tmp/a4.py
+          python3 /tmp/a4.py > /tmp/a4.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/a4.json',encoding='utf-8'))
+          assert r['semantic_disposition']=='SUPPORT_MERGE'
+          assert r['mode']=='VERIFICATION' and r['admitted'] is True
+          assert r['selected_observation_ids']==['down-pair','up-pair']
+          assert r['selected_byte_cost']==25_171_968
+          assert r['minimum_cover_complete'] is True
+          assert r['eligible_to_seek_new_sck'] is False
+          assert r['eligible_to_add_new_egk'] is True
+          assert r['counts_as_terminal_semantic_sibling_now'] is False
+          print('Q12_A4_MINIMUM_COVER_REPROVEN=true')
+          PY
+
+      - name: Run Q12 adversarial suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/quantization/aura_glm53_remaining_official_payload_slices.py tests/test_aura_glm53_remaining_official_payload_slices.py
+          python3 -m unittest -v tests.test_aura_glm53_remaining_official_payload_slices
+
+      - name: Observe only the four missing official payload slices
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.quantization.aura_glm53_remaining_official_payload_slices | tee /tmp/q12.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q12.json',encoding='utf-8'))
+          assert r['current_header_exactly_revalidated'] is True
+          assert r['strict_http_range_only'] is True
+          assert r['full_shard_fallback_accepted'] is False
+          assert r['newly_observed_slice_count']==4
+          assert r['newly_observed_payload_bytes']==25_171_968
+          assert r['inherited_slice_count']==2
+          assert r['combined_slice_count']==6
+          assert r['combined_representative_payload_bytes']==37_757_952
+          assert r['up_pair_observed'] is True and r['down_pair_observed'] is True
+          assert r['representative_expert_raw_payload_coverage_complete'] is True
+          assert len(r['observed_slices'])==4
+          for item in r['observed_slices']:
+              assert len(item['payload_sha256'])==64
+          print('Q12_REPRESENTATIVE_RAW_PAYLOAD_6_OF_6=true')
+          for item in r['observed_slices']:
+              print('Q12_PAYLOAD_SHA256='+item['tensor_key']+'='+item['payload_sha256'])
+          print('Q12_RECEIPT_SHA256='+r['receipt_digest'])
+          PY
+
+      - name: Independently refetch and reproduce all four new hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, urllib.request
+          r=json.load(open('/tmp/q12.json',encoding='utf-8'))
+          url='https://huggingface.co/zai-org/GLM-5.3/resolve/7cda81930d6e4cef42f48555de830aa32ecdde28/model-00038-of-00141.safetensors?download=true'
+          for item in r['observed_slices']:
+              start,end_exclusive=item['absolute_range']; end=end_exclusive-1; length=end_exclusive-start
+              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q12-IndependentReplay/1','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  status=getattr(response,'status',None) or response.getcode()
+                  assert status==206,status
+                  cr=str(response.headers.get('Content-Range',''))
+                  assert cr.startswith(f'bytes {start}-{end}/'),cr
+                  raw=response.read(length+1)
+              assert len(raw)==length,(item['tensor_key'],len(raw),length)
+              assert hashlib.sha256(raw).hexdigest()==item['payload_sha256'],item['tensor_key']
+          print('Q12_INDEPENDENT_FOUR_SLICE_HASH_REPLAY=true')
+          PY
+
+      - name: Enforce representation and authority ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q12.json',encoding='utf-8'))
+          for key in (
+              'full_shard_payload_observed','all_layers_experts_payload_coverage_proven',
+              'raw_fp8_payload_is_canonical_float32_source_identity','block_fp8_dequantization_semantics_bound',
+              'gate_up_source_layout_relation_bound','exact_official_tensor_to_pr628_source_tensor_relation_proven',
+              'candidate_page_materialization_owner_bound','baseline_same_official_source_tensor_set_proven',
+              'real_tensor_quantization_eligible','model_execution_observed','generalized_quality_proven',
+              'runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed',
+              'gate10_promoted','deployment_authorized'):
+              assert r[key] is False,key
+          assert r['representative_scope_only'] is True
+          print('Q12_NONPROMOTION_CEILING=true')
+          PY
