@@ -110,17 +110,27 @@ jobs:
               host_profile_generation="host::17",
           )
           proof = prove_finite_drift_lattice(plan)
-          if proof != {"states": 256, "unchanged": 1, "held": 255}:
+          expected = {
+              "states": 256,
+              "structural_matches": 1,
+              "held": 255,
+              "authenticated_reuse_authorizations": 0,
+          }
+          if proof != expected:
               raise SystemExit(f"G4_FINITE_PROOF_MISMATCH:{proof}")
           print(proof)
           PY
 
-      - name: Enforce nonpromotion ceiling in source
+      - name: Enforce structural-currentness and nonpromotion ceiling in source
         run: |
           python3 - <<'PY'
           from pathlib import Path
           text = Path("tools/awj032/glm53_g4_prefetch_plan_revalidation.py").read_text()
           required = (
+              'STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED = "STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED"',
+              "owner_currentness_authentication_required: bool = True",
+              "owner_currentness_authenticated_by_this_contract: bool = False",
+              "reuse_authorized_by_this_contract: bool = False",
               "plan_executed_by_this_contract: bool = False",
               "transfer_effect_authorized: bool = False",
               "native_route_mutated: bool = False",
@@ -132,4 +142,7 @@ jobs:
           for marker in required:
               if marker not in text:
                   raise SystemExit(f"G4_CLAIM_CEILING_MARKER_MISSING:{marker}")
+          forbidden = "reusable_without_recompute"
+          if forbidden in text:
+              raise SystemExit(f"G4_STALE_REUSE_CLAIM_PRESENT:{forbidden}")
           PY
