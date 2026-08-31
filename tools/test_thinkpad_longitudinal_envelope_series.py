@@ -118,10 +118,10 @@ class ThinkPadLongitudinalEnvelopeSeriesTests(unittest.TestCase):
         with self.assertRaisesRegex(LongitudinalEnvelopeError, "PHASE_TIMESTAMPS_NOT_STRICTLY_INCREASING"):
             self.build(process_cold=cold, process_warm=bad, restart=restart)
 
-    def test_duplicate_observation_identity_is_rejected(self):
+    def test_exact_repeated_observation_fails_at_chronology_gate(self):
         cold, _, restart = self.three()
         duplicate = replace(cold, observed_at_utc=cold.observed_at_utc)
-        with self.assertRaisesRegex(LongitudinalEnvelopeError, "DISTINCT_PHASE_OBSERVATIONS_REQUIRED"):
+        with self.assertRaisesRegex(LongitudinalEnvelopeError, "PHASE_TIMESTAMPS_NOT_STRICTLY_INCREASING"):
             self.build(process_cold=cold, process_warm=duplicate, restart=restart)
 
     def test_benchmark_and_query_bindings_require_exact_sha256(self):
