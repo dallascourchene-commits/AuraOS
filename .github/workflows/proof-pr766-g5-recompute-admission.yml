@@ -1,0 +1,70 @@
+name: Proof PR766 G5 Exact Semantic Surface
+
+on:
+  push:
+    branches:
+      - "arena/proof-pr766-g5-recompute-admission-20260831-sol"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-g5-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Authenticate unchanged PR766 semantic surface
+        run: |
+          test "$(git hash-object tools/awj032/glm53_g5_recompute_admission.py)" = "ae70cdfe60e20e544a9cbf0af3b4ac5bd365b205"
+          test "$(git hash-object tools/awj032/test_glm53_g5_recompute_admission.py)" = "e66980d879c1fe3d497c3a62a1fa75fb6ca83ccc"
+      - name: Compile exact G4 and G5 surfaces
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/glm53_g5_recompute_admission.py \
+            tools/awj032/test_glm53_g5_recompute_admission.py
+      - name: Reexecute inherited G4 adversarials
+        run: python -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
+      - name: Execute exact G5 adversarials
+        run: python -m unittest tools.awj032.test_glm53_g5_recompute_admission -v
+      - name: Exhaust exact 90-state G5 lattice
+        run: |
+          python - <<'PY'
+          from tools.awj032.glm53_g5_recompute_admission import prove_finite_recompute_lattice
+          proof = prove_finite_recompute_lattice()
+          assert proof.get("states") == 90, proof
+          required = (
+              "ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT",
+              "COLLAPSE_RECOMPUTE_CONE",
+              "HOLD_RETRIEVAL_AXIS_CHANGE_REQUIRED",
+              "HOLD_SOURCE_READ_CURRENTNESS_REQUIRED",
+              "HOLD_VERSION_TRANSITION_REQUIRED",
+              "NOT_APPLICABLE_RECOMPUTE",
+          )
+          for disposition in required:
+              assert proof.get(disposition, 0) > 0, (disposition, proof)
+          print("PR766_G5_90_STATE_PROOF=PASS")
+          PY
+      - name: Enforce nonpromotion markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("tools/awj032/glm53_g5_recompute_admission.py").read_text()
+          for marker in (
+              "recompute_executed_by_this_contract: bool = False",
+              "retrieval_or_provider_effect_authorized: bool = False",
+              "transfer_effect_authorized: bool = False",
+              "native_route_mutated: bool = False",
+              "physical_io_proven: bool = False",
+              "source_currentness_minted: bool = False",
+              "semantic_k27_authority_minted: bool = False",
+              "native_private_transformer_kv_accessed: bool = False",
+              "gate10_promoted: bool = False",
+          ):
+              assert marker in text, marker
+          print("PR766_G5_NONPROMOTION=PASS")
+          PY
