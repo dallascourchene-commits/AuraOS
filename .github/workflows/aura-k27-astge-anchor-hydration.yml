@@ -1,0 +1,67 @@
+name: Aura K27 ASTGE Anchor Hydration Admission
+
+on:
+  pull_request:
+    paths:
+      - "scripts/aura_astge_anchor_hydration.py"
+      - "tests/test_aura_astge_anchor_hydration.py"
+      - "crates/aura-k27-astge-materialize/**"
+      - ".aura/source_anchor_manifest.v1.json"
+      - ".aura/CODEMAP.json"
+      - "scripts/aura_source_anchor_map.py"
+      - ".github/workflows/aura-k27-astge-anchor-hydration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-k27-astge-anchor-hydration-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  anchor-hydration-admission:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Show toolchains
+        run: |
+          python --version
+          rustc --version
+          cargo --version
+
+      - name: Re-prove existing Aura source-anchor owner
+        run: |
+          python -m py_compile scripts/aura_source_anchor_map.py scripts/aura_astge_anchor_hydration.py
+          python scripts/aura_source_anchor_map.py --root . --check
+
+      - name: Test body-currentness hydration admission
+        run: python -m unittest -v tests.test_aura_astge_anchor_hydration
+
+      - name: Re-prove D9 exact-source materializer
+        run: cargo test --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'SOURCE_ANCHOR_OWNER_REUSED=true'
+          echo 'SOURCE_BODY_WITNESS_REQUIRED=true'
+          echo 'UNKNOWN_OR_STALE_HYDRATION_ADMITTED=false'
+          echo 'CODEMAP_DIGEST8_CURRENTNESS_AUTHORITY=false'
+          echo 'D9_LOCATOR_PROJECTION_EMITTED=true'
+          echo 'PROJECT007_RUNTIME_IMPLEMENTED=false'
+          echo 'SOURCE_AUTHORITY_MINTED=false'
+          echo 'MERGE_DEPLOY_EFFECT_AUTHORITY=false'
