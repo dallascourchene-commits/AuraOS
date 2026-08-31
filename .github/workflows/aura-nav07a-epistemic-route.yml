@@ -15,11 +15,11 @@ jobs:
   exact-epistemic-route-proof:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout exact source head with convergence history
+      - name: Checkout exact source head with bounded convergence cone
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 8
 
       - name: Verify exact source head
         shell: bash
@@ -29,13 +29,16 @@ jobs:
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$expected"
 
-      - name: Verify convergence parents remain in history
+      - name: Authenticate exact convergence commit and parents
         shell: bash
         run: |
           set -euo pipefail
-          git merge-base --is-ancestor e253c57dfa95f7655fbb4f9c560102413c183d4e HEAD
-          git merge-base --is-ancestor b13ba81aa671693828e4fd97bd5b222db5d49d94 HEAD
-          git merge-base --is-ancestor 55ae020ae1c06501935a45f3ade45eeff532d905 HEAD
+          convergence=928aed3ee1b093ba243511d311be4d609c8dd0d1
+          git cat-file -e "$convergence^{commit}"
+          git merge-base --is-ancestor "$convergence" HEAD
+          actual_parents="$(git show -s --format='%P' "$convergence")"
+          expected_parents="e253c57dfa95f7655fbb4f9c560102413c183d4e b13ba81aa671693828e4fd97bd5b222db5d49d94 55ae020ae1c06501935a45f3ade45eeff532d905"
+          test "$actual_parents" = "$expected_parents"
 
       - name: Compile NAV-07A surface
         run: python -m py_compile tools/aura_nav_epistemic_route.py tests/test_aura_nav_epistemic_route.py
