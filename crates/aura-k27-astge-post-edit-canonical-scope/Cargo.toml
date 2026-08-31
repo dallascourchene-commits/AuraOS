@@ -1,0 +1,21 @@
+[package]
+name = "aura-k27-astge-post-edit-canonical-scope"
+version = "0.1.0"
+edition = "2021"
+description = "Bind post-edit profiled-scope currentness to the canonical definition owner-to-target relation"
+license = "MIT"
+publish = false
+
+[dependencies]
+aura-k27-astge = { path = "../aura-k27-astge" }
+aura-k27-astge-generation-domain = { path = "../aura-k27-astge-generation-domain" }
+aura-k27-astge-materialize = { path = "../aura-k27-astge-materialize" }
+aura-k27-astge-scope = { path = "../aura-k27-astge-scope" }
+aura-k27-astge-scopes = { path = "../aura-k27-astge-scopes" }
+aura-k27-astge-post-edit-profiled-scope = { path = "../aura-k27-astge-post-edit-profiled-scope" }
+
+[dev-dependencies]
+aura-k27-astge-ingest = { path = "../aura-k27-astge-ingest" }
+aura-k27-astge-profiled-scopes = { path = "../aura-k27-astge-profiled-scopes" }
+serde_json = "1"
+sha2 = "0.10"
