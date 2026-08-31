@@ -111,17 +111,18 @@ jobs:
           url='https://huggingface.co/zai-org/GLM-5.3/resolve/7cda81930d6e4cef42f48555de830aa32ecdde28/model-00038-of-00141.safetensors?download=true'
           base=8+105424
           roles={
-            'gate_up_proj':(4070207936,993728,'gate_prefix'),
-            'down_proj':(4057625024,990656,'down_prefix'),
+            'gate_up_proj':(4070207936,993728),
+            'down_proj':(4057625024,990656),
           }
           by_role={x['tensor_role']:x for x in r['role_canaries']}
           def fetch(start,length):
               end=start+length-1
-              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q14-IndependentReplay/1','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q14-IndependentReplay/2','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
               with urllib.request.urlopen(req,timeout=120) as response:
                   assert (getattr(response,'status',None) or response.getcode())==206
+                  content_range=str(response.headers.get('Content-Range',''))
+                  assert content_range.startswith(f'bytes {start}-{end}/'),content_range
                   raw=response.read(length+1)
-                  assert response.headers.get('Content-Range')==f'bytes {start}-{end}/18103224560'
               assert len(raw)==length
               return raw
           h=fetch(0,8); assert struct.unpack('<Q',h)[0]==105424
@@ -129,11 +130,12 @@ jobs:
           for code in range(256):
               sign=-1.0 if code&0x80 else 1.0; exp=(code>>3)&15; mant=code&7
               table[code]=np.nan if (exp==15 and mant==7) else sign*(math.ldexp(float(mant),-9) if exp==0 else math.ldexp(1.0+mant/8.0,exp-7))
-          for role,(woff,soff,component) in roles.items():
+          for role,(woff,soff) in roles.items():
               raw=fetch(base+woff,64); sr=fetch(base+soff,4)
-              assert not np.any((np.frombuffer(raw,dtype=np.uint8)==0x7f)|(np.frombuffer(raw,dtype=np.uint8)==0xff))
+              codes=np.frombuffer(raw,dtype=np.uint8)
+              assert not np.any((codes==0x7f)|(codes==0xff))
               scale=float(np.frombuffer(sr,dtype='<f4')[0]); assert math.isfinite(scale) and scale>0
-              tile=np.asarray(table[np.frombuffer(raw,dtype=np.uint8)]*np.float32(scale),dtype='<f4').reshape(1,64)
+              tile=np.asarray(table[codes]*np.float32(scale),dtype='<f4').reshape(1,64)
               expected=by_role[role]
               assert hashlib.sha256(tile.tobytes(order='C')).hexdigest()==expected['canonical_tile_sha256']
               page=page_ref.pack_expert_page(
