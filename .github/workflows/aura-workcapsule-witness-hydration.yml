@@ -1,0 +1,60 @@
+name: Aura WorkCapsule Witness Hydration
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'tests/test_aura_workcapsule_context_binding.py'
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
+      - '.github/workflows/aura-workcapsule-witness-hydration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  witness-preserving-hydration:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove predecessor source-currentness owner
+        run: |
+          python3 -m py_compile scripts/aura_source_anchor_map.py scripts/aura_astge_anchor_hydration.py
+          python3 -m unittest -v tests.test_aura_astge_anchor_hydration
+
+      - name: Prove WorkCapsule witness-preserving context membrane
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_context_binding.py
+          python3 -m unittest -v tests.test_aura_workcapsule_context_binding
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'WORKCAPSULE_SCHEMA=WorkCapsuleV2@2.1.0'
+          echo 'CONTEXT_ADMISSION_REQUIRES_CURRENT_GRAPH=true'
+          echo 'ACTIVE_SOURCE_CURRENTNESS_PRESERVED=true'
+          echo 'STALE_OR_UNKNOWN_ACTIVE_SOURCE_ADMITTED=false'
+          echo 'COLD_FRONTIER_CURRENTNESS_PRESERVED=true'
+          echo 'GRAPH_SOURCE_GENERATIONS_COLLAPSED=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'RUNTIME_PROVIDER_DISPATCH_IMPLEMENTED=false'
