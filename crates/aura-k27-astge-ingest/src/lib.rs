@@ -7,8 +7,8 @@
 //! infer symbols/calls, or grant source/currentness/review/effect authority.
 
 use aura_k27_astge::{
-    NodeIndexRecordV1, PageRow, PageSource, PhysicalPageV1, StorageError, BLOCK_SIZE,
-    MAX_EDGES, MAX_ROWS,
+    BLOCK_SIZE, MAX_EDGES, MAX_ROWS, NodeIndexRecordV1, PageRow, PageSource, PhysicalPageV1,
+    StorageError,
 };
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::error::Error;
@@ -23,9 +23,15 @@ pub enum IngestError {
     ParseReturnedNone,
     ParseHasError,
     SourceTooLarge(usize),
-    NamedChildMissing { parent_kind: String, child_index: usize },
+    NamedChildMissing {
+        parent_kind: String,
+        child_index: usize,
+    },
     MissingSemanticHandle(u64),
-    NodeDegreeTooLarge { node_id: u64, degree: usize },
+    NodeDegreeTooLarge {
+        node_id: u64,
+        degree: usize,
+    },
     MissingAstTarget(u64),
     Storage(StorageError),
 }
@@ -82,13 +88,16 @@ pub struct EncodedSPlaneAstV1 {
 /// descendants receive IDs, preventing the prototype's preorder-ID/postorder-record
 /// mismatch. Only Tree-Sitter named syntax nodes are included.
 pub fn parse_python_named_ast(source: &str, file_id: u32) -> Result<ParsedAstGraphV1, IngestError> {
-    let source_len = u32::try_from(source.len()).map_err(|_| IngestError::SourceTooLarge(source.len()))?;
+    let source_len =
+        u32::try_from(source.len()).map_err(|_| IngestError::SourceTooLarge(source.len()))?;
     let mut parser = Parser::new();
     let language: tree_sitter::Language = tree_sitter_python::LANGUAGE.into();
     parser
         .set_language(&language)
         .map_err(|error| IngestError::ParserLanguage(error.to_string()))?;
-    let tree = parser.parse(source, None).ok_or(IngestError::ParseReturnedNone)?;
+    let tree = parser
+        .parse(source, None)
+        .ok_or(IngestError::ParseReturnedNone)?;
     let root = tree.root_node();
     if root.has_error() {
         return Err(IngestError::ParseHasError);
@@ -108,8 +117,8 @@ fn walk_named_preorder(node: Node<'_>, out: &mut Vec<AstNodeV1>) -> Result<u64, 
     let node_id = out.len() as u64;
     let byte_start = u32::try_from(node.start_byte())
         .map_err(|_| IngestError::SourceTooLarge(node.start_byte()))?;
-    let byte_end = u32::try_from(node.end_byte())
-        .map_err(|_| IngestError::SourceTooLarge(node.end_byte()))?;
+    let byte_end =
+        u32::try_from(node.end_byte()).map_err(|_| IngestError::SourceTooLarge(node.end_byte()))?;
     let slot = out.len();
     out.push(AstNodeV1 {
         node_id,
@@ -120,12 +129,12 @@ fn walk_named_preorder(node: Node<'_>, out: &mut Vec<AstNodeV1>) -> Result<u64, 
     });
 
     for child_index in 0..node.named_child_count() {
-        let child = node
-            .named_child(child_index as u32)
-            .ok_or_else(|| IngestError::NamedChildMissing {
-                parent_kind: node.kind().to_owned(),
-                child_index,
-            })?;
+        let child =
+            node.named_child(child_index as u32)
+                .ok_or_else(|| IngestError::NamedChildMissing {
+                    parent_kind: node.kind().to_owned(),
+                    child_index,
+                })?;
         let child_id = walk_named_preorder(child, out)?;
         out[slot].children.push(child_id);
     }
@@ -191,7 +200,10 @@ pub fn encode_ast_to_splane(
             degree: node.children.len() as u16,
         });
         targets.extend(node.children.iter().copied());
-        kinds.extend(std::iter::repeat_n(EDGE_KIND_AST_CHILD, node.children.len()));
+        kinds.extend(std::iter::repeat_n(
+            EDGE_KIND_AST_CHILD,
+            node.children.len(),
+        ));
         records.push(NodeIndexRecordV1 {
             node_id: node.node_id,
             semantic_handle_digest,
@@ -273,7 +285,11 @@ pub fn direct_ast_cone(
     root_id: u64,
     max_depth: usize,
 ) -> Result<(Vec<u64>, usize), IngestError> {
-    let by_id: HashMap<u64, &AstNodeV1> = graph.nodes.iter().map(|node| (node.node_id, node)).collect();
+    let by_id: HashMap<u64, &AstNodeV1> = graph
+        .nodes
+        .iter()
+        .map(|node| (node.node_id, node))
+        .collect();
     if !by_id.contains_key(&root_id) {
         return Err(IngestError::MissingAstTarget(root_id));
     }
@@ -302,7 +318,8 @@ mod tests {
     use super::*;
     use aura_k27_astge::{PhysicalPageV1, SPlaneGraphReader};
 
-    const FIXTURE: &str = "def add(a, b):\n    total = a + b\n    return total\n\nprint(add(1, 2))\n";
+    const FIXTURE: &str =
+        "def add(a, b):\n    total = a + b\n    return total\n\nprint(add(1, 2))\n";
 
     fn handles(graph: &ParsedAstGraphV1) -> HashMap<u64, [u8; 32]> {
         graph
@@ -347,9 +364,15 @@ mod tests {
         let source = MemoryPageSource::from_encoded(&encoded);
         let mut reader = SPlaneGraphReader::new(encoded.records.clone(), source).expect("reader");
         let observed = reader
-            .query_cone(graph.root_id, 3, graph.nodes.len() + 1, Some(EDGE_KIND_AST_CHILD))
+            .query_cone(
+                graph.root_id,
+                3,
+                graph.nodes.len() + 1,
+                Some(EDGE_KIND_AST_CHILD),
+            )
             .expect("query");
-        let (expected_nodes, expected_edges) = direct_ast_cone(&graph, graph.root_id, 3).expect("oracle");
+        let (expected_nodes, expected_edges) =
+            direct_ast_cone(&graph, graph.root_id, 3).expect("oracle");
         assert_eq!(observed.node_ids, expected_nodes);
         assert_eq!(observed.edges_traversed, expected_edges);
         assert!(observed.unique_pages >= 1);
