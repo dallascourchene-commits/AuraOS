@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788167423,
+  "generated_at_unix": 1788182355,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-hyperscale-work-admission-push-proof.yml",
       ".github/workflows/aura-hyperscale-work-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -1758,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26439501,
-      "tokens_est": 6600228,
+      "files": 1643,
+      "bytes": 26442804,
+      "tokens_est": 6601054,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 999,
-        "schema_or_lexicon": 272,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -158883,13 +158884,16 @@
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
     "python3 -m py_compile": [
+      ".github/workflows/aura-hyperscale-work-admission-push-proof.yml",
       ".github/workflows/aura-hyperscale-work-admission.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
+      ".github/workflows/aura-hyperscale-work-admission-push-proof.yml",
       ".github/workflows/aura-hyperscale-work-admission.yml"
     ],
     "python3 -m tools.aura_hyperscale_work_admission": [
+      ".github/workflows/aura-hyperscale-work-admission-push-proof.yml",
       ".github/workflows/aura-hyperscale-work-admission.yml"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
@@ -168041,6 +168045,67 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-hyperscale-work-admission-push-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3303,
+      "lines": 67,
+      "tokens_est": 826,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest",
+        "python3 -m tools.aura_hyperscale_work_admission"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          50
+        ],
+        "python3 -m unittest": [
+          51
+        ],
+        "python3 -m tools.aura_hyperscale_work_admission": [
+          52
+        ]
+      },
+      "topology": {},
+      "digest8": "0cdacfffb14258d4",
+      "vector": [
+        -0.167947,
+        -0.231367,
+        -0.26895,
+        -0.212576,
+        0.278345,
+        -0.264252,
+        0.113922,
+        0.062246,
+        -0.024664,
+        0.005872,
+        0.287741,
+        -0.104526,
+        0.240763,
+        -0.095131,
+        0.090433,
+        -0.271299,
+        0.137411,
+        -0.172645,
+        -0.299486,
+        -0.015268,
+        0.158551,
+        -0.012919,
+        0.078688,
+        -0.252507,
+        -0.116271,
+        -0.088084,
+        0.205529,
+        0.102177,
+        -0.01057,
+        0.196134,
+        0.174994,
+        0.128015
       ]
     },
     {
@@ -287105,16 +287170,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26439501,
-    "text_tokens_est": 6600228,
+    "file_count": 1643,
+    "total_bytes": 26442804,
+    "text_tokens_est": 6601054,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 999,
-      "schema_or_lexicon": 272,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287260,6 +287325,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-hyperscale-work-admission-push-proof.yml",
       ".github/workflows/aura-hyperscale-work-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -447647,6 +447713,6 @@
       }
     ],
     "record_fingerprint": "5e25375f8bc450df24136d4e66e7f273",
-    "payload_hash": "079f7f59bd76dbf832a27cfc496398e9"
+    "payload_hash": "752ca640e3913e067201218cf56b1771"
   }
 }
