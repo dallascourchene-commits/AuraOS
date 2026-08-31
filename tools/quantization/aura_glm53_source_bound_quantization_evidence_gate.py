@@ -8,34 +8,46 @@ Q7 is derived from exactly two fresh exact-green other-agent artifacts:
 The gate prevents either parent from laundering the other's missing evidence.
 A known official model/index object is not an observed source tensor, and valid
 quantization evidence is not transferable merely because two schemes share an
-E8-family label.  The current public path is intentionally zero-input and HOLD.
+E8-family label. The current public path is intentionally zero-input and HOLD.
+
+Q5's exact source owner is materialized byte-for-byte into this tree. Q7 calls
+that producer's ``current_public_state()`` instead of maintaining a parallel
+source-state schema, so producer drift cannot be hidden by a copied snapshot.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass
 import hashlib
 import json
 
+from tools.quantization.aura_glm53_official_source_admission import (
+    AdmissionState,
+    OFFICIAL_COMMIT,
+    OFFICIAL_INDEX_SHA256,
+    OFFICIAL_INDEX_SIZE,
+    OFFICIAL_INDEX_XET_HASH,
+    OFFICIAL_REPO,
+    PR628_E8_PAGE_ARTIFACT_SHA,
+    PR628_E8_PAGE_SCHEME,
+    current_public_state,
+)
 from tools.quantization.aura_glm53_quantization_evidence_transfer import (
     SYNTHETIC_DISTORTION_SCOPE,
     q4_to_q5_disposition,
 )
 
-VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V1"
+VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V2"
 
 Q5_EXACT_HEAD = "730426b82235b0ff4e75fef1cff00707877a84ad"
 Q5_EXACT_RUN = 33369967425
+Q5_OWNER_BLOB_SHA = "7ed09c57699fe303f555a3b6bdaadb791c64223f"
 Q6_EXACT_HEAD = "4137aabd972feff9c4412bb4786ef8fd4de207e0"
 Q6_EXACT_RUN = 33370305329
 
-OFFICIAL_REPOSITORY = "zai-org/GLM-5.3"
-OFFICIAL_REVISION = "7cda81930d6e4cef42f48555de830aa32ecdde28"
-OFFICIAL_INDEX_SHA256 = "e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf"
-OFFICIAL_INDEX_SIZE = 11_359_251
-OFFICIAL_INDEX_XET_HASH = "cc559a187bc99b20039b572a3161f394c51ad19eb2c8eed41371f54740af5f94"
-
-Q5_CANDIDATE_PARENT_SHA = "b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae"
-Q5_CANDIDATE_SCHEME = "AURA_E8_BALL10_16BIT_REF_V1"
+OFFICIAL_REPOSITORY = OFFICIAL_REPO
+OFFICIAL_REVISION = OFFICIAL_COMMIT
+Q5_CANDIDATE_PARENT_SHA = PR628_E8_PAGE_ARTIFACT_SHA
+Q5_CANDIDATE_SCHEME = PR628_E8_PAGE_SCHEME
 Q5_CURRENT_SOURCE_STATE_DIGEST = "583965be30974da13e1bc0cc895cdd2307afc3650fb34ea30e28c45c403094b0"
 Q5_CURRENT_BLOCKER = "OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED"
 
@@ -49,37 +61,11 @@ def _sha(value: object) -> str:
 
 
 @dataclass(frozen=True)
-class SourceAdmissionSnapshot:
-    schema: str
-    official_repository: str
-    official_revision: str
-    candidate_parent_sha: str
-    candidate_scheme: str
-    config_profile_bound: bool
-    index_object_identity_bound: bool
-    index_bytes_verified: bool
-    representative_key_to_shard_bound: bool
-    representative_headers_observed: bool
-    fp8_companions_bound: bool
-    candidate_representation_bound: bool
-    header_trial_eligible: bool
-    source_tensor_payload_bound: bool
-    real_tensor_quantization_eligible: bool
-    blocker: str
-    semantic_k27_authority: bool
-    native_transformer_kv_accessed: bool
-    gate10_promoted: bool
-
-    @property
-    def digest(self) -> str:
-        return _sha(asdict(self))
-
-
-@dataclass(frozen=True)
 class SourceBoundEvidenceGate:
     version: str
     q5_source_head: str
     q5_source_run: int
+    q5_source_owner_blob: str
     q6_evidence_head: str
     q6_evidence_run: int
     official_repository: str
@@ -112,31 +98,14 @@ class SourceBoundEvidenceGate:
         return _sha(asdict(self))
 
 
-def _current_q5_snapshot() -> SourceAdmissionSnapshot:
-    return SourceAdmissionSnapshot(
-        schema="AURA_GLM53_OFFICIAL_QUANTIZATION_SOURCE_ADMISSION_V1",
-        official_repository=OFFICIAL_REPOSITORY,
-        official_revision=OFFICIAL_REVISION,
-        candidate_parent_sha=Q5_CANDIDATE_PARENT_SHA,
-        candidate_scheme=Q5_CANDIDATE_SCHEME,
-        config_profile_bound=True,
-        index_object_identity_bound=True,
-        index_bytes_verified=False,
-        representative_key_to_shard_bound=False,
-        representative_headers_observed=False,
-        fp8_companions_bound=False,
-        candidate_representation_bound=True,
-        header_trial_eligible=False,
-        source_tensor_payload_bound=False,
-        real_tensor_quantization_eligible=False,
-        blocker=Q5_CURRENT_BLOCKER,
-        semantic_k27_authority=False,
-        native_transformer_kv_accessed=False,
-        gate10_promoted=False,
-    )
+def _current_q5_snapshot() -> AdmissionState:
+    """Traverse the materialized exact Q5 producer; do not reconstruct it."""
+    return current_public_state()
 
 
-def _validate_source_snapshot(source: SourceAdmissionSnapshot) -> None:
+def _validate_source_snapshot(source: AdmissionState) -> None:
+    if type(source) is not AdmissionState:
+        raise ValueError("Q5_TYPED_SOURCE_STATE_REQUIRED")
     if source.schema != "AURA_GLM53_OFFICIAL_QUANTIZATION_SOURCE_ADMISSION_V1":
         raise ValueError("Q5_SOURCE_SCHEMA_MISMATCH")
     if source.official_repository != OFFICIAL_REPOSITORY or source.official_revision != OFFICIAL_REVISION:
@@ -171,7 +140,7 @@ def _validate_source_snapshot(source: SourceAdmissionSnapshot) -> None:
         raise ValueError("Q5_REAL_TENSOR_PRECONDITIONS_MISSING")
 
 
-def _evaluate(source: SourceAdmissionSnapshot) -> SourceBoundEvidenceGate:
+def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
     _validate_source_snapshot(source)
     transfer = q4_to_q5_disposition()
 
@@ -198,6 +167,7 @@ def _evaluate(source: SourceAdmissionSnapshot) -> SourceBoundEvidenceGate:
         version=VERSION,
         q5_source_head=Q5_EXACT_HEAD,
         q5_source_run=Q5_EXACT_RUN,
+        q5_source_owner_blob=Q5_OWNER_BLOB_SHA,
         q6_evidence_head=Q6_EXACT_HEAD,
         q6_evidence_run=Q6_EXACT_RUN,
         official_repository=OFFICIAL_REPOSITORY,
@@ -205,7 +175,7 @@ def _evaluate(source: SourceAdmissionSnapshot) -> SourceBoundEvidenceGate:
         official_index_sha256=OFFICIAL_INDEX_SHA256,
         official_index_size=OFFICIAL_INDEX_SIZE,
         official_index_xet_hash=OFFICIAL_INDEX_XET_HASH,
-        source_state_digest=source.digest,
+        source_state_digest=source.digest(),
         source_index_bytes_verified=source.index_bytes_verified,
         source_headers_observed=source.representative_headers_observed,
         source_header_trial_eligible=source.header_trial_eligible,
@@ -230,8 +200,10 @@ def _evaluate(source: SourceAdmissionSnapshot) -> SourceBoundEvidenceGate:
 def current_source_bound_evidence_gate() -> SourceBoundEvidenceGate:
     """Return the exact current Q5 x Q6 consequence with no caller overrides."""
     source = _current_q5_snapshot()
-    if source.digest != Q5_CURRENT_SOURCE_STATE_DIGEST:
+    if source.digest() != Q5_CURRENT_SOURCE_STATE_DIGEST:
         raise AssertionError("Q5_CURRENT_SOURCE_STATE_DIGEST_DRIFT")
+    if source.blocker != Q5_CURRENT_BLOCKER:
+        raise AssertionError("Q5_CURRENT_BLOCKER_DRIFT")
     return _evaluate(source)
 
 
