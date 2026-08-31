@@ -40,10 +40,8 @@ impl From<GenerationStorageError> for DataServingExecutionErrorV1 {
 }
 
 /// Runtime reader selected only through the PR472 source-owned admission boundary.
-///
-/// There is intentionally no public constructor that accepts a capability record, a trusted
-/// boolean, a pre-opened File, or a pre-built admission enum. Production callers can only provide
-/// current storage paths/binding/manifest identity to `open_data_serving_reader`.
+/// No public constructor accepts a capability record, trusted bool, pre-opened File,
+/// or pre-built admission enum.
 pub enum DataServingReaderV1 {
     ReadSeek {
         receipt: MmapBackendAdmissionReceiptV1,
@@ -86,10 +84,11 @@ impl DataServingReaderV1 {
 
 /// Canonical execution boundary.
 ///
-/// PR472 decides eligibility from its source-owned capability registry. When capability state is
-/// absent/ambiguous/invalid, this function stays on the generation-bound Read+Seek baseline. Only a
-/// positive PR472 result reaches the unsafe sibling mapper, and the mapper consumes the exact File
-/// handles returned by that result. No positive path-based reopen exists here.
+/// PR472 decides eligibility from its source-owned capability registry. Missing,
+/// ambiguous, malformed, stale, or otherwise unmatched capability state remains
+/// on the generation-bound Read+Seek baseline. A positive admission transfers the
+/// exact already-opened handles directly into the mmap layer; no positive path
+/// reopen is represented here.
 pub fn open_data_serving_reader(
     storage_root: impl AsRef<Path>,
     node_index_path: impl AsRef<Path>,
@@ -173,7 +172,6 @@ impl ExactHandleMmapReaderV1 {
                 .cloned()
                 .ok_or(GenerationStorageError::MissingTarget(node_id))?;
             node_ids.push(node_id);
-
             if depth >= max_depth || record.out_degree == 0 {
                 continue;
             }
@@ -237,10 +235,11 @@ impl ExactHandleMmapReaderV1 {
         let end = offset
             .checked_add(BLOCK_SIZE)
             .ok_or(GenerationStorageError::LengthOverflow)?;
+        let expected = expected_len(self.binding.page_count, BLOCK_SIZE)?;
         let raw: [u8; BLOCK_SIZE] = self.pages_mmap[offset..end]
             .try_into()
             .map_err(|_| GenerationStorageError::PageFileLengthMismatch {
-                expected: expected_len(self.binding.page_count, BLOCK_SIZE)?,
+                expected,
                 actual: self.pages_mmap.len() as u64,
             })?;
         let page = PhysicalPageV1::decode(&raw).map_err(GenerationStorageError::from)?;
@@ -259,8 +258,14 @@ fn map_exact_admitted_handles(
 
     let expected_nodes = expected_len(binding.node_count, NODE_INDEX_RECORD_SIZE)?;
     let expected_pages = expected_len(binding.page_count, BLOCK_SIZE)?;
-    let node_len = node_file.metadata()?.len();
-    let page_len = page_file.metadata()?.len();
+    let node_len = node_file
+        .metadata()
+        .map_err(|error| GenerationStorageError::Io(error.to_string()))?
+        .len();
+    let page_len = page_file
+        .metadata()
+        .map_err(|error| GenerationStorageError::Io(error.to_string()))?
+        .len();
     if node_len != expected_nodes {
         return Err(GenerationStorageError::NodeIndexLengthMismatch {
             expected: expected_nodes,
@@ -279,17 +284,16 @@ fn map_exact_admitted_handles(
         return Err(DataServingExecutionErrorV1::ZeroLengthMmapUnsupported);
     }
 
-    // SAFETY: the only production caller is `open_data_serving_reader`, which reaches this helper
-    // only after PR472 has selected one exact source-owned capability and transferred the exact
-    // already-opened File handles whose identities it verified. The capability itself owns the
-    // replacement-only/no-in-place-mutation and bounded mapped-lifetime assertions. This crate does
-    // not claim that mmap is intrinsically safe outside that admitted lifetime.
+    // SAFETY: production reaches this helper only after PR472 selected one exact
+    // source-owned capability and transferred the same already-opened handles it
+    // verified. The capability owns replacement-only/no-in-place-mutation and
+    // bounded mapped-lifetime assertions. No intrinsic mmap safety claim is made.
     let node_mmap = unsafe {
         MmapOptions::new()
             .map(&node_file)
             .map_err(|error| GenerationStorageError::Io(error.to_string()))?
     };
-    // SAFETY: same exact-handle and externally owned lifetime invariant as the node mapping above.
+    // SAFETY: same exact-handle and externally owned lifetime invariant.
     let pages_mmap = unsafe {
         MmapOptions::new()
             .map(&page_file)
@@ -416,12 +420,11 @@ mod tests {
     }
 
     fn fixture_bytes() -> (StorageGenerationBindingV1, Vec<u8>, Vec<u8>) {
-        let scheme = [0x31_u8; 32];
         let binding = StorageGenerationBindingV1 {
             node_count: 3,
             page_count: 1,
             placement_generation: 7,
-            placement_scheme_digest: scheme,
+            placement_scheme_digest: [0x31; 32],
         };
         let records = [
             NodeIndexRecordV1 {
@@ -480,8 +483,7 @@ mod tests {
             targets: vec![1, 2],
             edge_kinds: vec![0, 0],
         };
-        let page_bytes = page.encode().expect("encode page").to_vec();
-        (binding, index_bytes, page_bytes)
+        (binding, index_bytes, page.encode().expect("encode page").to_vec())
     }
 
     fn write_fixture(root: &Path) -> (StorageGenerationBindingV1, PathBuf, PathBuf) {
@@ -558,15 +560,13 @@ mod tests {
 
     #[cfg(unix)]
     #[test]
-    fn path_removal_after_open_cannot_redirect_or_block_exact_handle_mapping() {
+    fn path_removal_after_open_cannot_block_exact_handle_mapping() {
         let root = temp_root("no-reopen");
         let (binding, node_path, page_path) = write_fixture(&root);
         let node_file = File::open(&node_path).expect("node handle");
         let page_file = File::open(&page_path).expect("page handle");
-        let old_node = root.join("node-index.old");
-        let old_page = root.join("pages.old");
-        fs::rename(&node_path, &old_node).expect("rename node after open");
-        fs::rename(&page_path, &old_page).expect("rename page after open");
+        fs::rename(&node_path, root.join("node-index.old")).expect("rename node");
+        fs::rename(&page_path, root.join("pages.old")).expect("rename page");
         assert!(!node_path.exists());
         assert!(!page_path.exists());
 
@@ -576,7 +576,7 @@ mod tests {
             page_file,
             binding,
         )
-        .expect("mapping consumes opened handles, not paths");
+        .expect("mapping consumes opened handles");
         let cone = mmap.query_cone(0, 1, 10, None).expect("query");
         assert_eq!(cone.node_ids, vec![0, 1, 2]);
         drop(mmap);
