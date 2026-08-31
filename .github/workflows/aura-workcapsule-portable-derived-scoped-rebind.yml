@@ -1,0 +1,94 @@
+name: Aura WorkCapsule Portable-Derived Scoped Rebind
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_*.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - '.github/workflows/aura-workcapsule-portable-derived-scoped-rebind.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Assert exact head and true-parent convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$expected"
+          echo "ACTUAL_HEAD=$actual"
+          test "$actual" = "$expected"
+          git merge-base --is-ancestor 4e2733b2b6600f74457850aaa45bfe399d7e8502 HEAD
+          git merge-base --is-ancestor 4cb7e5caa9aeb7c9049d9ec17ea521a7820f49af HEAD
+          parents="$(git cat-file -p 5b99729664caf91d613f230f4c50c203c9c1b9ec | grep '^parent ' || true)"
+          echo "$parents" | grep '4e2733b2b6600f74457850aaa45bfe399d7e8502'
+          echo "$parents" | grep '4cb7e5caa9aeb7c9049d9ec17ea521a7820f49af'
+
+      - name: Compile parent and child membranes
+        run: |
+          python -m py_compile \
+            scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py \
+            scripts/aura_workcapsule_post_world_bound_scoped_rebind.py \
+            scripts/aura_workcapsule_scoped_post_repair_rebind.py \
+            scripts/aura_workcapsule_portable_derived_scoped_rebind.py
+
+      - name: Re-prove PR542 portable higher-owner POST source owner
+        run: python -m unittest tests.test_aura_workcapsule_post_source_portable_higher_owner_continuity
+
+      - name: Re-prove PR540 exact POST-world scoped rebind owner
+        run: python -m unittest tests.test_aura_workcapsule_post_world_bound_scoped_rebind
+
+      - name: Prove portable-derived witness reduction
+        run: python -m unittest tests.test_aura_workcapsule_portable_derived_scoped_rebind
+
+      - name: Assert reduced public boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_portable_derived_scoped_rebind import verify_portable_derived_scoped_rebind
+          params = inspect.signature(verify_portable_derived_scoped_rebind).parameters
+          assert 'portable_higher_owner_projection' in params
+          assert 'post_edit_witness' not in params
+          assert 'astge_projection' not in params
+          assert 'canonical_target_projection' not in params
+          print('CALLER_POST_EDIT_WITNESS_ACCEPTED=FALSE')
+          print('ONE_PORTABLE_TARGET_PROJECTION=TRUE')
+          PY
+
+      - name: Emit D0 consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          PORTABLE_HIGHER_OWNER_POST_SOURCE_PARENT_CONSUMED=TRUE
+          POST_WORLD_SCOPED_REBIND_PARENT_CONSUMED=TRUE
+          POST_EDIT_WITNESS_DERIVED_FROM_PORTABLE_TARGET=TRUE
+          CALLER_POST_EDIT_WITNESS_ACCEPTED=FALSE
+          PORTABLE_PRODUCER_AUTHENTICATED=FALSE
+          PRE_REENTRY_PRODUCER_AUTHENTICATED=FALSE
+          POST_EDIT_SCOPE_HANDLE_BOUND_TO_RAW_BYTES=FALSE
+          REENTRY_CLOSED=FALSE
+          REENTRY_SCOPE_NARROWED=FALSE
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=FALSE
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=FALSE
+          SEMANTIC_PATCH_CORRECTNESS_PROVEN=FALSE
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=FALSE
+          GATE10_PROMOTION=FALSE
+          EOF
