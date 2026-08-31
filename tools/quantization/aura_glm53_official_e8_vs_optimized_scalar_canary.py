@@ -6,12 +6,15 @@ Exactly two derivation artifacts:
 - AGELF no-privilege research map: geometry must beat a serious matched baseline.
 
 The scalar lane is a real packed 2-bit representation: 64 labels are packed into
-16 bytes and one IEEE-754 binary16 scale adds 2 bytes, for exactly 18 bytes / 64
-weights = 2.25 bits/weight, matching PR628/Q14 codec accounting.  The scale is
-chosen deterministically by evaluating every sign-symmetric four-level assignment
-partition plus assignment-boundary candidates after actual binary16 rounding.
+16 bytes and one IEEE-754 binary16 scale adds 2 bytes, for exactly 18 codec bytes /
+64 weights = 2.25 bits/weight, matching PR628/Q14 *codec* accounting. PR628's
+ExpertPage also carries a self-describing container header; that serialized page
+rate is a separate domain and is never treated as equal to the scalar codec rate.
+The scale is chosen deterministically by evaluating every sign-symmetric four-level
+assignment partition plus assignment-boundary candidates after actual binary16
+rounding.
 
-E8 win, scalar win, and tie are all valid evidence.  This module measures only two
+E8 win, scalar win, and tie are all valid evidence. This module measures only two
 64-weight official-source canaries and grants no model-quality/runtime authority.
 """
 from __future__ import annotations
@@ -27,7 +30,7 @@ import numpy as np
 
 from tools.quantization import aura_glm53_official_source_e8_materialization_canary as q14
 
-SCHEMA = "AURA_GLM53_OFFICIAL_E8_VS_OPTIMIZED_SCALAR_CANARY_V1"
+SCHEMA = "AURA_GLM53_OFFICIAL_E8_VS_OPTIMIZED_SCALAR_CANARY_V2"
 Q14_HEAD = "ee70934e0c45572588829e742e512a897b23863f"
 Q14_RUN = 33399560819
 Q14_SOURCE_BLOB = "ef26cf18731b2f6dfc3c63d08260fb64aded96f6"
@@ -178,6 +181,14 @@ def _classify(e8_mse: float, scalar_mse: float) -> str:
     return "E8_WIN" if e8_mse < scalar_mse else "SCALAR_WIN"
 
 
+def _codec_payload_bytes(bits_per_weight: float) -> int:
+    exact = bits_per_weight * TILE_WEIGHTS / 8.0
+    rounded = round(exact)
+    if not math.isclose(exact, float(rounded), rel_tol=0.0, abs_tol=1e-12):
+        raise ScalarCanaryError("NONINTEGRAL_CODEC_PAYLOAD_BYTES")
+    return int(rounded)
+
+
 @dataclass(frozen=True)
 class RoleComparison:
     tensor_role: str
@@ -188,8 +199,14 @@ class RoleComparison:
     scalar_representation_digest: str
     scalar_payload_sha256: str
     q14_e8_codec_bits_per_weight: float
+    q14_e8_codec_payload_bytes: int
+    q14_e8_serialized_bits_per_weight: float
+    q14_e8_container_bytes: int
     scalar_codec_bits_per_weight: float
+    scalar_codec_payload_bytes: int
     equal_codec_rate: bool
+    equal_codec_payload_bytes: bool
+    container_rate_comparison_claimed: bool
     e8_mse: float
     scalar_mse: float
     e8_over_scalar: float
@@ -212,6 +229,8 @@ class OfficialE8VsScalarReceipt:
     scalar_scheme: str
     scalar_representation_digest: str
     exact_codec_rate_bpw: float
+    codec_rate_domain_only: bool
+    container_rate_comparison_claimed: bool
     roles: tuple[RoleComparison, ...]
     aggregate_e8_mse: float
     aggregate_scalar_mse: float
@@ -276,8 +295,13 @@ def current_official_e8_vs_scalar_canary() -> OfficialE8VsScalarReceipt:
         e8_reconstructed = tuple(float(x) for x in np.asarray(q14.page_ref.unpack_expert_page(page), dtype=np.float64).reshape(-1))
         scalar_payload = encode_optimized_scalar(tile_values)
         scalar_reconstructed = decode_optimized_scalar(scalar_payload)
-        if len(page.payload) != SCALAR_PAYLOAD_BYTES or page.codec_bits_per_weight != SCALAR_BITS_PER_WEIGHT:
+        e8_codec_bytes = _codec_payload_bytes(page.codec_bits_per_weight)
+        if not math.isclose(page.codec_bits_per_weight, SCALAR_BITS_PER_WEIGHT, rel_tol=0.0, abs_tol=1e-12):
             raise ScalarCanaryError("Q14_SCALAR_CODEC_RATE_MISMATCH")
+        if e8_codec_bytes != len(scalar_payload) or len(scalar_payload) != SCALAR_PAYLOAD_BYTES:
+            raise ScalarCanaryError("Q14_SCALAR_CODEC_PAYLOAD_BYTE_MISMATCH")
+        if not page.serialized_bits_per_weight > page.codec_bits_per_weight:
+            raise ScalarCanaryError("Q14_CONTAINER_RATE_DOMAIN_NOT_DISTINCT")
         e8_mse = _mse(tile_values, e8_reconstructed)
         scalar_mse = _mse(tile_values, scalar_reconstructed)
         e8_errors.append(e8_mse)
@@ -291,8 +315,14 @@ def current_official_e8_vs_scalar_canary() -> OfficialE8VsScalarReceipt:
             scalar_representation_digest=scalar_representation_digest(),
             scalar_payload_sha256=_sha(scalar_payload),
             q14_e8_codec_bits_per_weight=page.codec_bits_per_weight,
+            q14_e8_codec_payload_bytes=e8_codec_bytes,
+            q14_e8_serialized_bits_per_weight=page.serialized_bits_per_weight,
+            q14_e8_container_bytes=len(page.payload),
             scalar_codec_bits_per_weight=SCALAR_BITS_PER_WEIGHT,
+            scalar_codec_payload_bytes=len(scalar_payload),
             equal_codec_rate=True,
+            equal_codec_payload_bytes=True,
+            container_rate_comparison_claimed=False,
             e8_mse=e8_mse,
             scalar_mse=scalar_mse,
             e8_over_scalar=e8_mse / scalar_mse if scalar_mse else math.inf,
@@ -315,6 +345,8 @@ def current_official_e8_vs_scalar_canary() -> OfficialE8VsScalarReceipt:
         scalar_scheme=SCALAR_SCHEME,
         scalar_representation_digest=scalar_representation_digest(),
         exact_codec_rate_bpw=SCALAR_BITS_PER_WEIGHT,
+        codec_rate_domain_only=True,
+        container_rate_comparison_claimed=False,
         roles=tuple(results),
         aggregate_e8_mse=aggregate_e8,
         aggregate_scalar_mse=aggregate_scalar,
