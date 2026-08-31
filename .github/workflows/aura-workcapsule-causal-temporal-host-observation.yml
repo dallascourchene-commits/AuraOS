@@ -89,9 +89,16 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          import sys
+
           from scripts.aura_workcapsule_causal_temporal_host_observation_admission import (
               admit_causal_temporal_host_observation_admission,
           )
+
+          # The child tree intentionally follows PR559. Keep the fixture parent-owned:
+          # import the child membrane first, then resolve the exact PR556 fixture and
+          # its transitive test helpers from the isolated exact checkout.
+          sys.path.insert(0, "/tmp/pr556")
           from tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition import (
               WorkCapsuleRawOwnerDerivedPostClosureTransitionTests,
           )
