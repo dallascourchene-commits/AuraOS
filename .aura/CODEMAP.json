@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788212336,
+  "generated_at_unix": 1788247198,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1763,8 +1763,8 @@
     {
       "ring": "repo",
       "files": 1646,
-      "bytes": 26474703,
-      "tokens_est": 6609018,
+      "bytes": 26474738,
+      "tokens_est": 6609027,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
@@ -159086,11 +159086,9 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
-    "python tests/test_aura_glm53_current_generation_bounded_c2_proposal.py": [
-      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml"
-    ],
-    "python tests/test_aura_glm53_q20_official_source_revision_revalidation.py": [
-      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml"
+    "python -m unittest": [
+      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -159800,9 +159798,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168250,61 +168245,58 @@
       "path": ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 6904,
-      "lines": 142,
-      "tokens_est": 1726,
+      "bytes": 6939,
+      "lines": 141,
+      "tokens_est": 1735,
       "symbol_count": 0,
       "commands": [
-        "python tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
-        "python -m py_compile",
-        "python tests/test_aura_glm53_q20_official_source_revision_revalidation.py"
+        "python -m unittest",
+        "python -m py_compile"
       ],
       "command_lines": {
-        "python tests/test_aura_glm53_current_generation_bounded_c2_proposal.py": [
-          75
+        "python -m unittest": [
+          75,
+          110
         ],
         "python -m py_compile": [
           109
-        ],
-        "python tests/test_aura_glm53_q20_official_source_revision_revalidation.py": [
-          110
         ]
       },
       "topology": {},
-      "digest8": "29d6b4f02f49d307",
+      "digest8": "dcb23314f5614efc",
       "vector": [
-        -0.095579,
-        0.10943,
-        -0.297817,
-        0.10943,
-        0.101119,
-        -0.073415,
-        0.283965,
-        0.162068,
-        -0.090038,
-        0.25072,
-        -0.051252,
-        -0.259032,
-        -0.020778,
-        -0.353225,
-        -0.023548,
-        -0.281195,
-        0.203624,
-        -0.062334,
-        -0.223017,
-        -0.070645,
-        0.023548,
-        -0.10666,
-        -0.092808,
-        -0.112201,
-        0.31998,
-        -0.325521,
-        0.020778,
-        -0.150986,
-        -0.056793,
-        0.195313,
-        0.0374,
-        -0.051252
+        0.094684,
+        0.005993,
+        -0.101875,
+        -0.272066,
+        -0.015581,
+        -0.137831,
+        -0.157007,
+        0.003596,
+        0.274463,
+        -0.207345,
+        -0.171389,
+        -0.013184,
+        0.082698,
+        -0.219331,
+        0.075507,
+        -0.051537,
+        -0.022772,
+        -0.279257,
+        -0.044346,
+        0.255286,
+        0.087492,
+        -0.269669,
+        0.30083,
+        -0.245698,
+        -0.216933,
+        -0.296036,
+        -0.296036,
+        0.133037,
+        -0.133037,
+        -0.00839,
+        -0.121051,
+        0.046743
       ]
     },
     {
@@ -287503,8 +287495,8 @@
   },
   "summary": {
     "file_count": 1646,
-    "total_bytes": 26474703,
-    "text_tokens_est": 6609018,
+    "total_bytes": 26474738,
+    "text_tokens_est": 6609027,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
@@ -448248,6 +448240,6 @@
       }
     ],
     "record_fingerprint": "93cb76082f04ff7ff4c9cf189fcd24b9",
-    "payload_hash": "b2f34c3e2fba655f4cbbb528ea84305c"
+    "payload_hash": "e69b0ba4de40e9f45939a7fd1e56afb5"
   }
 }
