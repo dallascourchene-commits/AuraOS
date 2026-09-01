@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1660
-- **total_bytes**: 26582785
-- **text_tokens_est**: 6636035
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 276, 'support_file': 49}
+- **file_count**: 1663
+- **total_bytes**: 26604907
+- **text_tokens_est**: 6641566
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 277, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1660,
+  "repo_file_count": 1663,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-generation-bound-admission-reuse.yml",
     ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
     ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
+    ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml",
     ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
@@ -1654,6 +1655,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
+    "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1666,6 +1668,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_generation_bound_admission_reuse.py",
     "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
     "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+    "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
     "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
     "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
     "tools/construction_demo_assets/README.md",
@@ -1800,16 +1803,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1660,
-  "bytes": 26582785,
-  "tokens_est": 6636035,
+  "files": 1663,
+  "bytes": 26604907,
+  "tokens_est": 6641566,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1007,
-    "schema_or_lexicon": 276,
+    "python_module": 1009,
+    "schema_or_lexicon": 277,
     "support_file": 49
   }
 }

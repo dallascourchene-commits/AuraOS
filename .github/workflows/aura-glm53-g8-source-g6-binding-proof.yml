@@ -1,0 +1,85 @@
+name: Aura GLM53 G8 Source G6 Binding Proof
+
+on:
+  push:
+    branches:
+      - "arena/g8-source-g6-binding-proof-v1-20260901-gpt56sol"
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py"
+      - "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py"
+      - ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g8-source-g6-binding-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: .
+    steps:
+      - name: Checkout exact proof child
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate unchanged foreign semantic generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          SEMANTIC=0d2d5c9d2925d33e6e12cedec955437cdb1b2efc
+          BLOB=1acb9498ce0bcb3b2073d01502dd40d76bc6c81a
+          git merge-base --is-ancestor "$SEMANTIC" HEAD
+          test "$(git rev-parse "$SEMANTIC:tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py")" = "$BLOB"
+          test "$(git rev-parse HEAD:tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py)" = "$BLOB"
+
+      - name: Revalidate exact green parent runs and jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          repo=os.environ["GITHUB_REPOSITORY"]
+          headers={"Authorization":f"Bearer {os.environ['GH_TOKEN']}","Accept":"application/vnd.github+json"}
+          expected=(
+              (33480840778,99769880019,"28b5cca9d4b3eed93af21b631fb38fe9e19609e3"),
+              (33481589083,99772192034,"2c7f42adf18a7421d7d4d21fb78a37a88445f82f"),
+          )
+          for run_id, job_id, head in expected:
+              for kind, ident in (("runs",run_id),("jobs",job_id)):
+                  req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/{kind}/{ident}",headers=headers)
+                  with urllib.request.urlopen(req,timeout=30) as r: payload=json.load(r)
+                  assert payload["status"]=="completed",(kind,ident,payload["status"])
+                  assert payload["conclusion"]=="success",(kind,ident,payload["conclusion"])
+                  if kind=="runs": assert payload["head_sha"]==head,(run_id,payload["head_sha"],head)
+
+      - name: Reexecute canonical G6 adversarials
+        run: |
+          set -euo pipefail
+          python -m unittest -v tools.awj032.test_glm53_g6_gate10_owner_host_evidence_request
+
+      - name: Compile and run focused G8 adversarials
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py
+          python -m unittest -v tests.test_glm53_g8_source_revalidation_bound_owner_host_request_proof
+
+      - name: Exhaust 128-state classifier and enforce nonpromotion
+        shell: python
+        run: |
+          from tools.awj032 import glm53_g8_source_revalidation_bound_owner_host_request as g8
+          from tools.awj032 import test_glm53_g6_gate10_owner_host_evidence_request as g6t
+          receipt=g8.bind_source_revalidation_to_owner_host_request(
+              reuse=g6t.reuse(), provenance=g6t.provenance(), source=g6t.source(),
+              owner=g6t.owner(), evidence=g6t.evidence())
+          assert receipt.disposition==g8.CANDIDATE
+          assert g8.prove_different_j()==128
+          assert receipt.source_currentness_at_future_effect_proven is False
+          assert receipt.owner_host_execution_observed is False
+          assert receipt.gate10_promoted is False
+          assert receipt.native_private_transformer_kv_accessed is False
+          print(receipt.receipt_digest)

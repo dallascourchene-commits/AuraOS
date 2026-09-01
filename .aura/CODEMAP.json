@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788248926,
+  "generated_at_unix": 1788250606,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1660,
+    "repo_file_count": 1663,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -139,6 +139,7 @@
       ".github/workflows/aura-generation-bound-admission-reuse.yml",
       ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
       ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
+      ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml",
       ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -1636,6 +1637,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1648,6 +1650,7 @@
       "tools/aura_generation_bound_admission_reuse.py",
       "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
       "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+      "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
       "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
       "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/construction_demo_assets/README.md",
@@ -1776,16 +1779,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1660,
-      "bytes": 26582785,
-      "tokens_est": 6636035,
+      "files": 1663,
+      "bytes": 26604907,
+      "tokens_est": 6641566,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1007,
-        "schema_or_lexicon": 276,
+        "python_module": 1009,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -3947,6 +3950,14 @@
         "line": 105,
         "end_line": 112,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_canonical:14f01aa2116a15b2",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_canonical:e0e6caca258a6fec",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8151,6 +8162,14 @@
         "line": 115,
         "end_line": 116,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_sha:9ca7b2d5390b997a",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_sha:933ed31f7e041b22",
         "signature_hash": "e47bc2e8d0ade77b"
       },
       {
@@ -157354,6 +157373,96 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 67,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#class:G8SourceRevalidationBoundOwnerHostRequestProofTests:c3a7e43d94ac70d5",
+        "signature_hash": "f761a564c02f7765"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests._bind": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 18,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests._bind:88176d5dd5f704f8",
+        "signature_hash": "7d709c522d3836a1"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_positive_is_source_bound_request_candidate_only": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 41,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_positive_is_source_bound_request_candidate_only:bf84ecdb127bf179",
+        "signature_hash": "6e02ac2757455c32"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_receipt_is_deterministic:1d7540115c88a73f",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_wrong_repository_fails_closed_through_g6": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 49,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_wrong_repository_fails_closed_through_g6:56ccd9f6190a0646",
+        "signature_hash": "acbbfa9025997ae8"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_public_api_does_not_accept_parent_receipts": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 55,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_public_api_does_not_accept_parent_receipts:466f7e26ff77861a",
+        "signature_hash": "332d9e832f6e5d32"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_complete_different_j_lattice": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_complete_different_j_lattice:d35f7a0b1d7dc947",
+        "signature_hash": "4c615d9a385d1e2c"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_parent_q20_receipt_is_reconstructed_not_caller_supplied": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 63,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_parent_q20_receipt_is_reconstructed_not_caller_supplied:8a66c2709aa2d385",
+        "signature_hash": "717eef8df939cf54"
+      }
+    ],
+    "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_laws_preserve_currentness_and_kv_boundary": [
+      {
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_laws_preserve_currentness_and_kv_boundary:bb9d7ba8136fbceb",
+        "signature_hash": "adbc6d70d9a92517"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157790,6 +157899,14 @@
         "end_line": 527,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_different_j:ca88bf318d666903",
         "signature_hash": "545054efddc8fb30"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:prove_different_j:24d50e747c4a4267",
+        "signature_hash": "545054efddc8fb30"
       }
     ],
     "canonical_owner_status": [
@@ -157970,6 +158087,14 @@
         "end_line": 479,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:_Flags:ea511a704cf2cfde",
         "signature_hash": "6754dd6b70f543bc"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#class:_Flags:c4056129c0a598df",
+        "signature_hash": "6754dd6b70f543bc"
       }
     ],
     "_tree": [
@@ -157980,6 +158105,14 @@
         "end_line": 501,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_tree:455732fcaa06364a",
         "signature_hash": "ec5083699609d22f"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_tree:a4eee631b9269581",
+        "signature_hash": "ec5083699609d22f"
       }
     ],
     "_table": [
@@ -157989,6 +158122,14 @@
         "line": 504,
         "end_line": 517,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_table:426749d6aa8180c9",
+        "signature_hash": "10e38d69335fa384"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 107,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_table:a402de555a154ba5",
         "signature_hash": "10e38d69335fa384"
       }
     ],
@@ -158030,6 +158171,14 @@
         "end_line": 579,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:public_api_parameters:d1f3636b7906f4f1",
         "signature_hash": "16d2555d2aa837b5"
+      },
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 363,
+        "end_line": 364,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:public_api_parameters:15362d8cbb82834e",
+        "signature_hash": "16d2555d2aa837b5"
       }
     ],
     "compile_gate10_owner_host_evidence_request": [
@@ -158040,6 +158189,46 @@
         "end_line": 700,
         "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:compile_gate10_owner_host_evidence_request:af59d12d12ecd810",
         "signature_hash": "c5fff76dcc64ea93"
+      }
+    ],
+    "G8Receipt": [
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "class",
+        "line": 121,
+        "end_line": 191,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#class:G8Receipt:57c0eb7c9974818a",
+        "signature_hash": "8d1b3c234321cc12"
+      }
+    ],
+    "G8Receipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 191,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#method:G8Receipt.validate_claim_ceiling:b81baff58eed30e9",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "_q20_receipt": [
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 201,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_q20_receipt:53a34082f8aa3c5d",
+        "signature_hash": "740895f0f18685f4"
+      }
+    ],
+    "bind_source_revalidation_to_owner_host_request": [
+      {
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 360,
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:bind_source_revalidation_to_owner_host_request:57fec2121e50eafa",
+        "signature_hash": "1653589a82df78e2"
       }
     ],
     "AbsorbedG6IdentityAddendumTests": [
@@ -159604,6 +159793,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-generation-bound-admission-reuse.yml",
+      ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml",
       ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -159909,6 +160099,7 @@
       ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml"
     ],
     "python -m unittest": [
+      ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml",
       ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
@@ -169225,6 +169416,64 @@
         -0.178281,
         -0.221501,
         -0.042139
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3804,
+      "lines": 86,
+      "tokens_est": 951,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest",
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          63,
+          69
+        ],
+        "python -m py_compile": [
+          68
+        ]
+      },
+      "topology": {},
+      "digest8": "7416201fafc9a11b",
+      "vector": [
+        0.213568,
+        0.145132,
+        0.053097,
+        -0.279645,
+        0.225368,
+        -0.17817,
+        -0.119173,
+        0.112094,
+        0.293804,
+        0.024779,
+        0.00354,
+        0.128613,
+        0.256046,
+        0.062537,
+        -0.17345,
+        -0.164011,
+        0.284364,
+        0.048377,
+        0.194689,
+        -0.145132,
+        -0.296164,
+        0.069616,
+        0.095575,
+        -0.17581,
+        -0.093215,
+        -0.267845,
+        -0.135692,
+        0.107374,
+        -0.166371,
+        0.081415,
+        0.300883,
+        0.055457
       ]
     },
     {
@@ -264247,6 +264496,53 @@
       ]
     },
     {
+      "path": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2960,
+      "lines": 72,
+      "tokens_est": 740,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f589830404830336",
+      "vector": [
+        -0.04081,
+        -0.049634,
+        -0.045222,
+        0.201845,
+        -0.124636,
+        0.221698,
+        0.02978,
+        0.274641,
+        0.230522,
+        -0.195227,
+        0.137872,
+        -0.261405,
+        -0.038604,
+        -0.071693,
+        0.045222,
+        0.263611,
+        0.137872,
+        -0.065076,
+        0.159932,
+        0.082723,
+        0.239346,
+        -0.204051,
+        -0.027574,
+        -0.279053,
+        -0.15552,
+        0.038604,
+        0.186403,
+        -0.23714,
+        0.250376,
+        0.279053,
+        0.168755,
+        0.190815
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -264808,6 +265104,53 @@
         0.191325,
         -0.186118,
         -0.100218
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15358,
+      "lines": 381,
+      "tokens_est": 3840,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "023c1fea95bce6db",
+      "vector": [
+        -0.304618,
+        -0.097428,
+        -0.13196,
+        0.205956,
+        0.050564,
+        -0.304618,
+        0.129494,
+        -0.107295,
+        -0.304618,
+        0.062897,
+        0.302152,
+        -0.099895,
+        -0.129494,
+        -0.065363,
+        0.159092,
+        0.06783,
+        -0.107295,
+        0.048098,
+        -0.050564,
+        0.149226,
+        -0.181291,
+        -0.134427,
+        0.141826,
+        0.250354,
+        0.181291,
+        -0.149226,
+        -0.006166,
+        0.144293,
+        0.252821,
+        0.309551,
+        0.117161,
+        0.208423
       ]
     },
     {
@@ -288997,16 +289340,16 @@
     }
   },
   "summary": {
-    "file_count": 1660,
-    "total_bytes": 26582785,
-    "text_tokens_est": 6636035,
+    "file_count": 1663,
+    "total_bytes": 26604907,
+    "text_tokens_est": 6641566,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1007,
-      "schema_or_lexicon": 276,
+      "python_module": 1009,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289155,6 +289498,7 @@
       ".github/workflows/aura-generation-bound-admission-reuse.yml",
       ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
       ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
+      ".github/workflows/aura-glm53-g8-source-g6-binding-proof.yml",
       ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -290652,6 +290996,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -290664,6 +291009,7 @@
       "tools/aura_generation_bound_admission_reuse.py",
       "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
       "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+      "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
       "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
       "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/construction_demo_assets/README.md",
@@ -448026,6 +448372,96 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#class:G8SourceRevalidationBoundOwnerHostRequestProofTests:c3a7e43d94ac70d5",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests",
+        "kind": "class",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 8,
+        "end_line": 67,
+        "signature_hash": "f761a564c02f7765",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests._bind:88176d5dd5f704f8",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests._bind",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 9,
+        "end_line": 18,
+        "signature_hash": "7d709c522d3836a1",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_complete_different_j_lattice:d35f7a0b1d7dc947",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_complete_different_j_lattice",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "4c615d9a385d1e2c",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_laws_preserve_currentness_and_kv_boundary:bb9d7ba8136fbceb",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_laws_preserve_currentness_and_kv_boundary",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "adbc6d70d9a92517",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_parent_q20_receipt_is_reconstructed_not_caller_supplied:8a66c2709aa2d385",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_parent_q20_receipt_is_reconstructed_not_caller_supplied",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 60,
+        "end_line": 63,
+        "signature_hash": "717eef8df939cf54",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_positive_is_source_bound_request_candidate_only:bf84ecdb127bf179",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_positive_is_source_bound_request_candidate_only",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 20,
+        "end_line": 41,
+        "signature_hash": "6e02ac2757455c32",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_public_api_does_not_accept_parent_receipts:466f7e26ff77861a",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_public_api_does_not_accept_parent_receipts",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 51,
+        "end_line": 55,
+        "signature_hash": "332d9e832f6e5d32",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_receipt_is_deterministic:1d7540115c88a73f",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "f589830404830336"
+      },
+      {
+        "semantic_id": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py#method:G8SourceRevalidationBoundOwnerHostRequestProofTests.test_wrong_repository_fails_closed_through_g6:56ccd9f6190a0646",
+        "name": "G8SourceRevalidationBoundOwnerHostRequestProofTests.test_wrong_repository_fails_closed_through_g6",
+        "kind": "method",
+        "file": "tests/test_glm53_g8_source_revalidation_bound_owner_host_request_proof.py",
+        "line": 46,
+        "end_line": 49,
+        "signature_hash": "acbbfa9025997ae8",
+        "file_digest8": "f589830404830336"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -448824,6 +449260,116 @@
         "end_line": 303,
         "signature_hash": "99559e6add5bcf3e",
         "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#class:G8Receipt:57c0eb7c9974818a",
+        "name": "G8Receipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 121,
+        "end_line": 191,
+        "signature_hash": "8d1b3c234321cc12",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#class:_Flags:c4056129c0a598df",
+        "name": "_Flags",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "6754dd6b70f543bc",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_canonical:e0e6caca258a6fec",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_q20_receipt:53a34082f8aa3c5d",
+        "name": "_q20_receipt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 194,
+        "end_line": 201,
+        "signature_hash": "740895f0f18685f4",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_sha:933ed31f7e041b22",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_table:a402de555a154ba5",
+        "name": "_table",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 96,
+        "end_line": 107,
+        "signature_hash": "10e38d69335fa384",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:_tree:a4eee631b9269581",
+        "name": "_tree",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 78,
+        "end_line": 93,
+        "signature_hash": "ec5083699609d22f",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:bind_source_revalidation_to_owner_host_request:57fec2121e50eafa",
+        "name": "bind_source_revalidation_to_owner_host_request",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 204,
+        "end_line": 360,
+        "signature_hash": "1653589a82df78e2",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:prove_different_j:24d50e747c4a4267",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 110,
+        "end_line": 117,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#function:public_api_parameters:15362d8cbb82834e",
+        "name": "public_api_parameters",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 363,
+        "end_line": 364,
+        "signature_hash": "16d2555d2aa837b5",
+        "file_digest8": "023c1fea95bce6db"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py#method:G8Receipt.validate_claim_ceiling:b81baff58eed30e9",
+        "name": "G8Receipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g8_source_revalidation_bound_owner_host_request.py",
+        "line": 158,
+        "end_line": 191,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "023c1fea95bce6db"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#class:AbsorbedG6IdentityAddendumTests:adf00b3b721a931a",
@@ -450576,7 +451122,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e1874f9bef81463b6d964a2541145125",
-    "payload_hash": "2f279406321d56400e1d6d160d832c9d"
+    "record_fingerprint": "863b0122a339f8f194917ce5dd248d64",
+    "payload_hash": "4565d94ff95f2960ffb8d25f1b153d00"
   }
 }
