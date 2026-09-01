@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788265229,
+  "generated_at_unix": 1788265341,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1650,
+    "repo_file_count": 1652,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -143,6 +143,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-worldwiki-workcapsule-skill-router.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1099,6 +1100,7 @@
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
       "docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md",
+      "docs/arena/WORLD_WIKISKILL_WORKCAPSULE_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1766,16 +1768,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1650,
-      "bytes": 26523040,
-      "tokens_est": 6621115,
+      "files": 1652,
+      "bytes": 26538212,
+      "tokens_est": 6624903,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 238,
+        "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1006,
-        "schema_or_lexicon": 272,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -159730,6 +159732,7 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/aura-external-knowledge-ingress.yml",
+      ".github/workflows/aura-worldwiki-workcapsule-skill-router.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
@@ -169333,6 +169336,59 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-worldwiki-workcapsule-skill-router.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2459,
+      "lines": 64,
+      "tokens_est": 615,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          34
+        ]
+      },
+      "topology": {},
+      "digest8": "a0eee2692e19e66b",
+      "vector": [
+        -0.001093,
+        0.274419,
+        0.018586,
+        -0.130103,
+        -0.025146,
+        0.200075,
+        -0.23506,
+        0.184768,
+        0.071065,
+        -0.022959,
+        -0.24162,
+        -0.173835,
+        0.097304,
+        -0.2613,
+        0.042639,
+        -0.073251,
+        0.066692,
+        0.11261,
+        0.031706,
+        -0.232874,
+        -0.033892,
+        0.270046,
+        -0.278793,
+        0.134476,
+        -0.116984,
+        -0.191328,
+        -0.24818,
+        0.239434,
+        -0.195701,
+        -0.25474,
+        0.151969,
+        -0.245993
       ]
     },
     {
@@ -236071,6 +236127,53 @@
       ]
     },
     {
+      "path": "docs/arena/WORLD_WIKISKILL_WORKCAPSULE_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 12713,
+      "lines": 380,
+      "tokens_est": 3173,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2c719662a2907abc",
+      "vector": [
+        0.222786,
+        -0.209284,
+        0.295698,
+        0.041857,
+        0.166077,
+        0.031055,
+        -0.082363,
+        0.074262,
+        -0.068861,
+        -0.252491,
+        0.068861,
+        0.252491,
+        -0.06076,
+        -0.238989,
+        0.093165,
+        0.114768,
+        0.012152,
+        -0.076962,
+        0.336204,
+        -0.341605,
+        -0.06346,
+        0.211984,
+        -0.114768,
+        0.284896,
+        0.24709,
+        0.263292,
+        -0.025654,
+        0.179579,
+        0.114768,
+        0.004051,
+        -0.025654,
+        0.025654
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -288320,16 +288423,16 @@
     }
   },
   "summary": {
-    "file_count": 1650,
-    "total_bytes": 26523040,
-    "text_tokens_est": 6621115,
+    "file_count": 1652,
+    "total_bytes": 26538212,
+    "text_tokens_est": 6624903,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 238,
+      "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1006,
-      "schema_or_lexicon": 272,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288482,6 +288585,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-worldwiki-workcapsule-skill-router.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -289438,6 +289542,7 @@
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
       "docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md",
+      "docs/arena/WORLD_WIKISKILL_WORKCAPSULE_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -449730,6 +449835,6 @@
       }
     ],
     "record_fingerprint": "11e171dff8a59bb0c46709de192b9304",
-    "payload_hash": "fed3a8e1585b2343c09e1fe2efe057f5"
+    "payload_hash": "76399dc36245b9be69390bd31008e08e"
   }
 }
