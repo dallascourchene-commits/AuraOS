@@ -1,0 +1,55 @@
+name: AWJ001 GEN25 Head Promotion Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj001/awj001_gen25_head_promotion.py'
+      - 'tests/test_awj001_gen25_head_promotion.py'
+      - 'docs/arena/AWJ001_GEN25_HEAD_PROMOTION_V1.md'
+      - '.github/workflows/awj001-gen25-head-promotion-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  awj001-gen25-promotion-proof:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compile semantic surface
+        run: python -m py_compile tools/awj001/awj001_gen25_head_promotion.py
+      - name: Run adversarials and complete Different-J proof
+        run: python -m unittest -v tests.test_awj001_gen25_head_promotion
+      - name: Reproduce typed promotion receipt and ceilings
+        shell: python
+        run: |
+          from tools.awj001 import awj001_gen25_head_promotion as p
+          r = p.assess_and_promote()
+          assert isinstance(r, p.HeadPromotionReceipt)
+          assert r.event_type == p.PROMOTED
+          assert r.generation == 25
+          assert r.predecessor_head == '3aeb8f3db921201f'
+          assert r.candidate_predecessor_generation == 24
+          assert r.candidate_predecessor_head == '3aeb8f3db921201f'
+          assert r.candidate_predecessor_drive_id == p.PREDECESSOR_DRIVE_ID
+          assert len(r.candidate_predecessor_binding_digest) == 64
+          assert p.prove_different_j() == 256
+          assert r.current_at_promotion_cut is True
+          assert r.current_at_future_use_proven is False
+          assert r.queue_presence_treated_as_execution is False
+          assert r.public_effect_authorized is False
+          assert r.financial_effect_authorized is False
+          assert r.destructive_effect_authorized is False
+          assert r.main_merge_authorized is False
+          assert r.semantic_k27_authority_minted is False
+          assert r.native_private_transformer_kv_accessed is False
+          print('HEAD=' + r.head)
+          print('JOIN=' + r.join_address)
+          print('BINDING=' + r.candidate_predecessor_binding_digest)
+          print('RECEIPT=' + r.receipt_digest)
+          print('CURRENTNESS=' + r.currentness_observation_digest)
