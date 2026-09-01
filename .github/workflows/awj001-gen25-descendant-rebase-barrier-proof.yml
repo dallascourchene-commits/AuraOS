@@ -1,0 +1,59 @@
+name: AWJ001 GEN25 Descendant Rebase Barrier Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj001/awj001_gen25_descendant_rebase_barrier.py'
+      - 'tests/test_awj001_gen25_descendant_rebase_barrier.py'
+      - 'docs/arena/AWJ001_GEN25_DESCENDANT_REBASE_BARRIER_V1.md'
+      - '.github/workflows/awj001-gen25-descendant-rebase-barrier-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gen25-descendant-rebase-barrier:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Authenticate exact two-parent convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin \
+            cf9f66a7854b34111566c6f532ebf45af9a82343 \
+            26201c63c3531bbf631ef34803c6f01ccd7499d3 \
+            5fae4070f82a9b5882ae0f63877359bf6e5a9a2b
+          raw="$(git cat-file -p cf9f66a7854b34111566c6f532ebf45af9a82343)"
+          grep -F 'parent 26201c63c3531bbf631ef34803c6f01ccd7499d3' <<<"$raw"
+          grep -F 'parent 5fae4070f82a9b5882ae0f63877359bf6e5a9a2b' <<<"$raw"
+      - name: Compile semantic surface
+        run: python -m py_compile tools/awj001/awj001_gen25_descendant_rebase_barrier.py
+      - name: Run focused adversarials and complete Different-J proof
+        run: python -m unittest -v tests.test_awj001_gen25_descendant_rebase_barrier
+      - name: Reproduce stale and current-candidate receipts
+        shell: python
+        run: |
+          from tools.awj001 import awj001_gen25_descendant_rebase_barrier as p
+          old = p.assess_descendant(p.gen24_fixture())
+          new = p.assess_descendant(p.gen25_fixture())
+          assert old.disposition == p.REBASE_ROOT_GENERATION
+          assert old.rebase_required is True
+          assert old.effect_authorized is False
+          assert new.disposition == p.CURRENT_CANDIDATE
+          assert new.current_candidate is True
+          assert new.effect_authorized is False
+          assert new.host_effect_ready is False
+          assert new.inherited_root_authority is False
+          assert p.prove_different_j() == 256
+          print('GEN24_DISPOSITION=' + old.disposition)
+          print('GEN25_DISPOSITION=' + new.disposition)
+          print('GEN24_RECEIPT=' + old.receipt_digest)
+          print('GEN25_RECEIPT=' + new.receipt_digest)
