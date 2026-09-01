@@ -1,109 +1,164 @@
 # AWJ032 GLM-5.3 G6 — Gate-10 Owner-Host Evidence Request Envelope
 
-Date: 2026-08-31  
-Status: DRAFT / D0 / HS1 / NONPROMOTING / W3-REBASED
+Date: 2026-09-01  
+Status: DRAFT / D0 / HS1 / NONPROMOTING / W3-REBASED / IDENTITY-W3-ABSORBED
 
 ## Objective
-Compile the smallest deterministic request that can hand a **currently reusable bounded C2 admission** to a future owner-host trial while carrying exact operation/observer/backend provenance requirements and every unpaid Gate-10 debt.
 
-Residual:
-`CurrentBoundedC2ReuseCandidate + OperationBoundObservationProvenanceContract != OwnerHostEvidenceRequestUntil ExactFlagshipSource + OwnerHostTarget + RuntimeResourceGenerations + EvidenceSink + ReplayRecovery + Gate10Debt Commute`.
+Compile one deterministic, nonexecuting owner-host evidence request only after the exact GLM-5.3 bounded-C2 admission has been revalidated at use time, while carrying operation/observer/backend provenance requirements and every unpaid Gate-10 debt.
 
-Positive output is only `OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED`.
+Positive output is only:
 
-## W3 rebase / superseded first cut
-The first G6 generation depended on historical G5-v1 / PR #766. Collision review found canonical G5 had advanced to G5-v2 / PR #774 and explicitly superseded #766. Therefore historical green G5-v1 could not lawfully be used as current Gate-10 parent. That G6 generation gets zero closure/successor credit even if delayed CI later completes.
+`OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED`.
 
-The repaired G6 removes G5 from the request path entirely and uses exactly two terminal, consequence-distinct foreign parents that own the actual request boundary.
+## Exactly two terminal semantic parents
 
-## Exact parent A — PR #769 generation-bound admission reuse
-Exact hosted proof head `d1a0f94255527835a59a70a0af7dc417ba1d023d`; source/test blobs `d171d0938e469a4383490d1a691750c2068f21e7` / `58fad37a0f89853098fa3dbbe2f2a1771574e449`; run/job `33437612722 / 99637780915`, SUCCESS.
+1. **PR #769 generation-bound admission reuse**
+   - exact hosted proof head `d1a0f94255527835a59a70a0af7dc417ba1d023d`
+   - source/test blobs `d171d0938e469a4383490d1a691750c2068f21e7` / `58fad37a0f89853098fa3dbbe2f2a1771574e449`
+   - run/job `33437612722 / 99637780915`, SUCCESS
+   - law: `AdmissionValidAtProduce != AdmissionReusableAtUse`.
+2. **PR #727 operation-bound observation provenance**
+   - exact hosted head `293c59d7260372ccd3b9e8130b12979b052c3ed9`
+   - source blob `98db548b6e8f7443b79d979eb0e177ac6aa68534`
+   - run/job `33416248604 / 99567478616`, SUCCESS
+   - law: structural/caller evidence cannot manufacture physical observation truth.
 
-Reusable law: `AdmissionValidAtProduce != AdmissionReusableAtUse`. Q18's bounded C2 proposal may become only `REUSE_CANDIDATE` after producer, subject, source, evidence, owner and decision-context generations commute. Reuse candidate is not source currentness, execution authority or Gate-10.
+Historical G6-v1 / PR #777 used superseded G5-v1 / PR #766 and receives zero closure or successor credit.
 
-## Exact parent B — PR #727 secure operation-bound observation envelope
-Exact hosted proof head `293c59d7260372ccd3b9e8130b12979b052c3ed9`; source blob `98db548b6e8f7443b79d979eb0e177ac6aa68534`; run/job `33416248604 / 99567478616`, SUCCESS.
+## Transitive Q18 lineage — zero additional parent credit
 
-Reusable law: caller/structural evidence cannot manufacture physical truth. Exact operation/workload/source identity plus observer/backend provenance are required before physical observation can be authenticated. The tiny runtime fixture is never GLM-5.3 performance evidence; only the provenance law is consumed.
+PR #769 inherits the GLM bounded-C2 proposal from Q18 / PR #761. G6 therefore authenticates Q18 as lineage, not as a third Objective parent:
 
-## W3 executable-proof repair — source HOLD must be reachable
-Self-review found the first v2 compiler represented `HOLD_EXACT_FLAGSHIP_SOURCE_IDENTITY_REQUIRED` in the 512-state proof while hardcoding the production source predicate to true. That made the abstract proof surface wider than the executable public membrane.
+- semantic head `aed81432db8b84d2f43b8a85d06d4b72e16f6a50`
+- source blob `4cee26edaf0759fc80d31889ab9e4e268f9a4fbe`
+- hosted run/job `33436580962 / 99634379758`, SUCCESS
+- exact historical Q18 receipt `c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230`
 
-Repair: add `SourceIdentityProjection(repository, pinned_revision, source_set_digest, official_revision_revalidation_required)`. Repository/revision/source-set mismatch or dropped revision-revalidation debt now reaches the typed source HOLD. A held receipt suppresses the unaccepted source identity rather than echoing it as canonical. The projection cannot set source currentness or tensor binding true.
+`Q18ReceiptIdentityInheritedThroughPR769Lineage`.
+
+## W3 corrections absorbed into the canonical owner
+
+The canonical owner is now schema `AURA-GLM53-G6-GATE10-OWNER-HOST-EVIDENCE-REQUEST-v4`.
+
+Two independent W3 scans found that a generic reuse summary was insufficient. The final compiler directly requires:
+
+- exact family `GLM53_BOUNDED_C2_PROPOSAL`;
+- exact `REUSE_CANDIDATE` disposition;
+- current-use context;
+- exact Q18 historical admission receipt;
+- PR #769's deterministic reuse-digest relation;
+- full subject/source/evidence/owner/decision identity vector;
+- exact flagship source request identity;
+- operation/observer/backend provenance gates;
+- owner-host resource/evidence/replay contracts;
+- all open Gate-10 debt.
+
+A digest that merely has 64-hex shape is insufficient. A stale identity field with an old reuse digest is a HOLD. A same-family but different GLM admission receipt is a HOLD.
+
+The former `glm53_g6_admission_identity_binding_addendum.py` is now a compatibility/provenance tombstone with zero closure credit. The former identity-binding workflow is manual compatibility-only. There is one semantic owner and one closure workflow.
+
+`SingleOwnerCompilerEliminatesPostHocIdentityJoin`.
+
+## Reachable source HOLD
+
+The first G6-v2 cut represented a source HOLD in the abstract 512-state proof but hardcoded source truth in the executable path. That mismatch is repaired by an explicit `SourceIdentityProjection`.
+
+Repository, pinned revision, source-set digest, or revision-revalidation mismatch now reaches `HOLD_EXACT_FLAGSHIP_SOURCE_IDENTITY_REQUIRED`, and a held receipt suppresses the unaccepted source identity.
 
 `SourceRequestIdentity != SourceCurrentnessTruth`.
 
-## Canonical downstream owner constraint — no duplicate return protocol
-Collision scan found the owner-host return path already exists and must be reused rather than re-created:
+## Canonical downstream return owners
 
-- PR #582 exact hosted semantic generation `24a5404ee3b987dee12192917e40b35d3a43e81c`; production blob `91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe`; `AWJ032 GLM53 Owner Host C2 Handoff` run `33360061584`, SUCCESS. It owns `OwnerHostC2CanaryRequest -> OwnerHostC2CanaryReceipt -> join_owner_host_c2_attempt` and explicitly does not self-authenticate the producer.
-- PR #586 exact hosted generation `aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b`; lifecycle-return blob `8e57494c1c77eb41d6a402aa7dceb43121512863`; `AWJ032 GLM53 Owner Host Lifecycle Return Packet` run `33360529366`, SUCCESS. It carries attempt telemetry toward W4 while preserving independent lifecycle-metric, producer-authentication and registry ownership.
+No new return protocol is created.
 
-These are **canonical owner constraints, not additional derivation parents**. The dedicated G6 workflow now authenticates their exact blobs and successful hosted runs. The request receipt carries their canonical heads/runs so future execution has one existing transport/return path.
+- **PR #582** exact hosted generation `24a5404ee3b987dee12192917e40b35d3a43e81c`, source blob `91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe`, run `33360061584`, SUCCESS. Owns `OwnerHostC2CanaryRequest -> OwnerHostC2CanaryReceipt -> join_owner_host_c2_attempt`.
+- **PR #586** exact hosted generation `aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b`, source blob `8e57494c1c77eb41d6a402aa7dceb43121512863`, run `33360529366`, SUCCESS. Owns the nonmetric lifecycle-return membrane toward W4.
+
+These are compatibility/transport owners, not additional G6 derivation parents.
 
 `CanonicalC2ReturnPath != ProducerAuthentication`.
 
-## Request evidence axes
-The future owner-host evidence return must cover exactly:
-- OFFICIAL_SOURCE_REVISION_REVALIDATION
-- TENSOR_PAYLOAD_BINDING
-- REAL_TENSOR_QUANTIZATION
-- EXACT_OPERATION_IDENTITY
-- OBSERVER_BACKEND_PROVENANCE
-- OWNER_HOST_RUNTIME_GENERATIONS
-- PHYSICAL_IO_METRICS
-- OUTPUT_AND_RECEIPT_HASHES
-- REPLAY_RECEIPT
-- RECOVERY_RECEIPT
+## Proof surfaces
+
+Canonical workflow: `Aura GLM53 G6 Gate10 Owner Host Evidence Request`.
+
+It authenticates:
+
+- exact PR #769 and PR #727 source/proof generations;
+- exact transitive Q18 source/run/job;
+- exact PR #582 and PR #586 return-owner generations;
+- canonical G6 module/test syntax and adversarials;
+- `2^9 = 512` request-precondition Different-J states;
+- `2^5 = 32` ordered reuse-identity Different-J states;
+- single-owner and nonpromotion laws.
+
+No G6 closure or successor credit exists until this workflow is SUCCESS on the exact current head.
+
+## Required future evidence axes
+
+- `OFFICIAL_SOURCE_REVISION_REVALIDATION`
+- `TENSOR_PAYLOAD_BINDING`
+- `REAL_TENSOR_QUANTIZATION`
+- `EXACT_OPERATION_IDENTITY`
+- `OBSERVER_BACKEND_PROVENANCE`
+- `OWNER_HOST_RUNTIME_GENERATIONS`
+- `PHYSICAL_IO_METRICS`
+- `OUTPUT_AND_RECEIPT_HASHES`
+- `REPLAY_RECEIPT`
+- `RECOVERY_RECEIPT`
 
 ## Open Gate-10 debt
-- FULL_FLAGSHIP_MODEL_LOAD
-- AURAOS_RESIDENT_ROUTING
-- OWNER_HOST_END_TO_END_EXECUTION
-- AUTHENTICATED_PHYSICAL_OBSERVATION
-- REPLAY_RECOVERY_PROOF
-- GATE10_SYNTHESIS_AND_PROMOTION
 
-## External / K27
-The external coordinate delta remains routing/reopen memory only. Official `zai-org/GLM-5.3` revision must be revalidated at owner-host use time because the historical Q18 source pin is not automatically the latest official revision. The connected Hugging Face record currently reports GLM-5.3 as a 753,329.9M-parameter `glm_moe_dsa` model updated 2026-08-31, but does not itself provide the immutable revision required by this contract. SpecPrefetch/ExactMoE/cache-tiering/DGX-Spark evidence is falsification pressure only.
+- `FULL_FLAGSHIP_MODEL_LOAD`
+- `AURAOS_RESIDENT_ROUTING`
+- `OWNER_HOST_END_TO_END_EXECUTION`
+- `AUTHENTICATED_PHYSICAL_OBSERVATION`
+- `REPLAY_RECOVERY_PROOF`
+- `GATE10_SYNTHESIS_AND_PROMOTION`
 
-`K27Coordinate != SemanticIdentity != Currentness != RuntimeTruth != Authority`.
-`CoordinateMemory != MODEL_PREFIX_KV`.
-No native/private transformer KV state is accessed or represented.
+`UnresolvedOwnerHostEvidenceDebt => FanoutBudgetForGate10Claim = 0`.
 
 ## HyperDrive
-`CURRENT_BOUNDED_C2_REUSE_CANDIDATE + OPERATION_PROVENANCE_CONTRACT`
-`-> EXACT_SOURCE_REQUEST_IDENTITY`
-`-> EXACT_OWNER_HOST_REQUEST_BINDING`
-`-> OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED | TYPED_HOLD`
+
+`EXACT_Q18_PR769_REUSE_IDENTITY`
+`+ OPERATION_PROVENANCE_CONTRACT`
+`+ EXACT_SOURCE_REQUEST_IDENTITY`
+`-> SINGLE_OWNER_G6_REQUEST`
 `-> FUTURE PR582 REQUEST/RECEIPT/JOIN`
 `-> FUTURE PR586 LIFECYCLE RETURN`
 `-> INDEPENDENT PRODUCER/OBSERVER/LIFECYCLE AUTHENTICATION`
 `-> REPLAY/RECOVERY + AURAOS RESIDENT ROUTING`
 `-> GATE10 SYNTHESIS`.
 
-## HyperScale
-HS1. Nine binary request preconditions yield a complete 512-state Different-J surface.
-`UnresolvedOwnerHostEvidenceDebt => FanoutBudgetForGate10Claim = 0`.
-More synthetic request workers cannot replace one authenticated owner-host observation.
-
-## Triadic / Creation / Omega-8
-Triadic: current-reuse thesis × operation-provenance counterplane -> exact nonexecuting owner-host request. Creation: freeze terminal parents -> detect stale G5 parent -> quotient superseded generation -> rebase parent plane -> collision-scan existing C2 return owners -> expose source input rather than hardcode proof state -> adversarial substitutions -> 512-state proof -> hosted exact proof -> persist -> recurse only after closure. Omega-8 covers provenance, ordered handoff, substitutions, currentness/provenance contradictions, factor separation, two-parent synthesis, Different-J quotient, temporal invalidators and effect ceiling.
-
 ## Laws
-`AdmissionValidAtProduce!=AdmissionReusableAtUse`.
-`ReuseCandidate!=ExecutionAuthority`.
-`CallerWitness!=BackendObservationProvenance`.
-`PhysicalAttestationBoolean!=PhysicalObservationProvenance`.
-`RequestEnvelopeCompiled!=TensorPayloadBound!=ExecutionObserved`.
-`PinnedOfficialRevision!=CurrentOfficialRevisionUntilRevalidated`.
-`SourceRequestIdentity!=SourceCurrentnessTruth`.
-`FullFlagshipIdentity!=FullFlagshipExecution`.
-`CanonicalC2ReturnPath!=ProducerAuthentication`.
+
+`AdmissionValidAtProduce != AdmissionReusableAtUse`.
+
+`ReuseCandidateSummary != AdmissionReuseReceiptIdentity`.
+
+`ExactQ18AdmissionReceiptMustRemainBound`.
+
+`DigestShape != DigestRelationProof`.
+
+`PR769ReuseDigestMustCommitExactIdentityVector`.
+
+`SingleOwnerCompilerEliminatesPostHocIdentityJoin`.
+
+`IdentityBinding != ReceiptProducerAuthentication != SourceCurrentnessTruth`.
+
+`CallerWitness != BackendObservationProvenance`.
+
+`RequestEnvelopeCompiled != TensorPayloadBound != ExecutionObserved`.
+
+`CanonicalC2ReturnPath != ProducerAuthentication`.
+
 `Gate10DebtMustRemainExplicitUntilObserved`.
-`CoordinateMemory!=MODEL_PREFIX_KV`.
+
+`K27Coordinate != SemanticIdentity != RuntimeTruth != Authority`.
+
+`CoordinateMemory != MODEL_PREFIX_KV`.
 
 ## Claim ceiling
-No tensor payload binding, real quantization/model/provider execution, full flagship load, physical-I/O truth, observer/backend authentication, AuraOS resident routing, replay/recovery proof, execution authority, semantic K27 authority, native/private transformer KV, Gate-10 promotion, merge/deploy/spend or public/financial/human effect is granted.
 
-The repaired exact G6 head requires dedicated hosted SUCCESS before closure or successor credit.
+No reuse-receipt producer authentication, source-currentness truth, tensor payload binding, real quantization/model/provider execution, full flagship load, physical-I/O truth, observer/backend authentication, AuraOS resident routing, replay/recovery proof, execution/effect authority, semantic K27 authority, native/private transformer KV, Gate-10 promotion, merge/deploy/spend or public/financial/human effect is granted.
