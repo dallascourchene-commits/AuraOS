@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tests/test_aura_glm53_current_generation_bounded_c2_proposal.py
+          python -m unittest -v tests.test_aura_glm53_current_generation_bounded_c2_proposal
 
       - name: Reexecute NAV03B exact parent adversarials
         shell: bash
@@ -80,7 +80,7 @@ jobs:
           set -euo pipefail
           NAV=77e69373ea63288e64544861573ceeec51047154
           git worktree add --detach /tmp/nav03b "$NAV"
-          (cd /tmp/nav03b && python tests/test_aura_version_safe_fractal_k27_navigation.py)
+          (cd /tmp/nav03b && python -m unittest -v tests.test_aura_version_safe_fractal_k27_navigation)
 
       - name: Resolve live official GLM-5.3 head and exact pinned-to-current ancestry
         shell: bash
@@ -107,7 +107,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m py_compile tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py
-          python tests/test_aura_glm53_q20_official_source_revision_revalidation.py
+          python -m unittest -v tests.test_aura_glm53_q20_official_source_revision_revalidation
           python - <<'PY'
           from pathlib import Path
           from tools.quantization.aura_glm53_q20_official_source_revision_revalidation import (
