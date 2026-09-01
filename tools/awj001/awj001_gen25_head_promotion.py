@@ -2,19 +2,20 @@
 """AWJ-001 GEN25 deterministic typed head-promotion membrane.
 
 D0 / HS1 / fail-closed. This contract compiles the owner-authorized internal
-HEAD_PROMOTION effect only when the exact GEN24 predecessor, GEN25 candidate,
-source/currentness cut, and promotion authority all commute. A later use must
-re-resolve currentness; this receipt is not a timeless lease.
+HEAD_PROMOTION effect only when the exact GEN24 predecessor, the GEN25
+candidate's own predecessor declaration, source/currentness cut, and promotion
+authority all commute. A later use must re-resolve currentness; this receipt is
+not a timeless lease.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 import hashlib
 import itertools
 import json
 from typing import Any
 
-SCHEMA = "AURA-AWJ001-HEAD-PROMOTION-v1"
+SCHEMA = "AURA-AWJ001-HEAD-PROMOTION-v1.1"
 PREDECESSOR_GENERATION = 24
 PREDECESSOR_HEAD = "3aeb8f3db921201f"
 PREDECESSOR_DRIVE_ID = "1i_nHZHRhpi_kPqeRAEgAArH0ZC7xKWSOLcXWJ_yve7s"
@@ -27,7 +28,7 @@ OWNER_DISPOSITION_DRIVE_ID = "1SnLzRLRDGib2DltXNDKBkgfgI3PWayj6O6b5I8AkyP8"
 R8_CONTRACT_DRIVE_ID = "1KgxIM3-HPzfkp2oMU2fR6Mybw6dsZWUxW0Hlx0n-fAE"
 R8_WORK_ORDER_DRIVE_ID = "1-TPwoUaPLySw6CQPln_7anE8DlGQ6zcMX9hw7BPpjzA"
 R8_COMMAND_DRIVE_ID = "1NFWWcqdCQYSBrwpTIR5QoZCKlF0SNOZxs1NoMAMKD4w"
-CURRENTNESS_CUT = "2026-09-01T04:45:19-04:00"
+CURRENTNESS_CUT = "2026-09-01T05:01:41-04:00"
 CURRENTNESS_QUERIES = (
     "AWJ-001 HEAD_PROMOTION GEN25 GEN26 current head typed receipt event",
     "AWJ001 g=25 head= current root",
@@ -59,11 +60,22 @@ class PromotionCut:
     queries: tuple[str, ...] = CURRENTNESS_QUERIES
     authoritative_generation: int = PREDECESSOR_GENERATION
     authoritative_head: str = PREDECESSOR_HEAD
+    candidate_predecessor_generation: int = PREDECESSOR_GENERATION
+    candidate_predecessor_head: str = PREDECESSOR_HEAD
+    candidate_predecessor_drive_id: str = PREDECESSOR_DRIVE_ID
     newer_typed_head_observed: bool = False
     contradictory_later_owner_disposition_observed: bool = False
     exact_candidate_ref_observed: bool = True
     exact_owner_authority_observed: bool = True
     exact_r8_refs_observed: bool = True
+
+    @property
+    def predecessor_bound(self) -> bool:
+        return (
+            self.candidate_predecessor_generation == PREDECESSOR_GENERATION
+            and self.candidate_predecessor_head == PREDECESSOR_HEAD
+            and self.candidate_predecessor_drive_id == PREDECESSOR_DRIVE_ID
+        )
 
     @property
     def bound(self) -> bool:
@@ -140,6 +152,10 @@ class HeadPromotionReceipt:
     predecessor_drive_id: str
     candidate_drive_id: str
     candidate_modified_time: str
+    candidate_predecessor_generation: int
+    candidate_predecessor_head: str
+    candidate_predecessor_drive_id: str
+    candidate_predecessor_binding_digest: str
     command_drive_id: str
     owner_disposition_drive_id: str
     currentness_cut: str
@@ -165,6 +181,19 @@ class HeadPromotionReceipt:
             raise ValueError("AWJ001_GENERATION_MISMATCH")
         if self.predecessor_head != PREDECESSOR_HEAD or not self.immutable_predecessor_preserved:
             raise ValueError("AWJ001_PREDECESSOR_NOT_PRESERVED")
+        expected_binding = _sha({
+            "candidate_drive_id": self.candidate_drive_id,
+            "predecessor_generation": self.candidate_predecessor_generation,
+            "predecessor_head": self.candidate_predecessor_head,
+            "predecessor_drive_id": self.candidate_predecessor_drive_id,
+        })
+        if (
+            self.candidate_predecessor_generation != PREDECESSOR_GENERATION
+            or self.candidate_predecessor_head != PREDECESSOR_HEAD
+            or self.candidate_predecessor_drive_id != PREDECESSOR_DRIVE_ID
+            or self.candidate_predecessor_binding_digest != expected_binding
+        ):
+            raise ValueError("AWJ001_CANDIDATE_PREDECESSOR_BINDING_INVALID")
         if not self.current_at_promotion_cut or self.current_at_future_use_proven:
             raise ValueError("AWJ001_CURRENTNESS_SCOPE_COLLAPSE")
         if any((
@@ -180,6 +209,15 @@ class HeadPromotionReceipt:
             raise ValueError("AWJ001_EXCEEDED_CLAIM_CEILING")
 
 
+def _binding_digest(cut: PromotionCut) -> str:
+    return _sha({
+        "candidate_drive_id": CANDIDATE_DRIVE_ID,
+        "predecessor_generation": cut.candidate_predecessor_generation,
+        "predecessor_head": cut.candidate_predecessor_head,
+        "predecessor_drive_id": cut.candidate_predecessor_drive_id,
+    })
+
+
 def _head_body(cut: PromotionCut) -> dict[str, Any]:
     return {
         "schema": SCHEMA,
@@ -189,6 +227,10 @@ def _head_body(cut: PromotionCut) -> dict[str, Any]:
         "predecessor_drive_id": PREDECESSOR_DRIVE_ID,
         "candidate_drive_id": CANDIDATE_DRIVE_ID,
         "candidate_modified_time": CANDIDATE_MODIFIED_TIME,
+        "candidate_predecessor_generation": cut.candidate_predecessor_generation,
+        "candidate_predecessor_head": cut.candidate_predecessor_head,
+        "candidate_predecessor_drive_id": cut.candidate_predecessor_drive_id,
+        "candidate_predecessor_binding_digest": _binding_digest(cut),
         "command_drive_id": COMMAND_DRIVE_ID,
         "command_modified_time": COMMAND_MODIFIED_TIME,
         "owner_disposition_drive_id": OWNER_DISPOSITION_DRIVE_ID,
@@ -205,7 +247,7 @@ def assess_and_promote(*, cut: PromotionCut = PromotionCut(), promotion_authoriz
         predecessor_exact=cut.authoritative_generation == PREDECESSOR_GENERATION and cut.authoritative_head == PREDECESSOR_HEAD,
         candidate_valid=cut.exact_candidate_ref_observed,
         successor_exact=CANDIDATE_GENERATION == PREDECESSOR_GENERATION + 1,
-        predecessor_bound=True,
+        predecessor_bound=cut.predecessor_bound,
         currentness_bound=cut.bound,
         no_newer_head=not cut.newer_typed_head_observed,
         promotion_authorized=promotion_authorized,
@@ -220,8 +262,22 @@ def assess_and_promote(*, cut: PromotionCut = PromotionCut(), promotion_authoriz
     body = _head_body(cut)
     full = _sha(body)
     head = full[:16]
-    observation_digest = _sha({"observed_at": cut.observed_at, "queries": cut.queries, "authoritative_generation": cut.authoritative_generation, "authoritative_head": cut.authoritative_head, "newer_typed_head_observed": cut.newer_typed_head_observed, "contradictory_later_owner_disposition_observed": cut.contradictory_later_owner_disposition_observed})
-    receipt_body = {**body, "event_type": PROMOTED, "head": head, "join_address": f"awj://AWJ-001?g={CANDIDATE_GENERATION}&head={head}", "currentness_observation_digest": observation_digest}
+    observation_digest = _sha({
+        "observed_at": cut.observed_at,
+        "queries": cut.queries,
+        "authoritative_generation": cut.authoritative_generation,
+        "authoritative_head": cut.authoritative_head,
+        "candidate_predecessor_binding_digest": _binding_digest(cut),
+        "newer_typed_head_observed": cut.newer_typed_head_observed,
+        "contradictory_later_owner_disposition_observed": cut.contradictory_later_owner_disposition_observed,
+    })
+    receipt_body = {
+        **body,
+        "event_type": PROMOTED,
+        "head": head,
+        "join_address": f"awj://AWJ-001?g={CANDIDATE_GENERATION}&head={head}",
+        "currentness_observation_digest": observation_digest,
+    }
     receipt = HeadPromotionReceipt(
         event_type=PROMOTED,
         disposition=PROMOTED,
@@ -233,6 +289,10 @@ def assess_and_promote(*, cut: PromotionCut = PromotionCut(), promotion_authoriz
         predecessor_drive_id=PREDECESSOR_DRIVE_ID,
         candidate_drive_id=CANDIDATE_DRIVE_ID,
         candidate_modified_time=CANDIDATE_MODIFIED_TIME,
+        candidate_predecessor_generation=cut.candidate_predecessor_generation,
+        candidate_predecessor_head=cut.candidate_predecessor_head,
+        candidate_predecessor_drive_id=cut.candidate_predecessor_drive_id,
+        candidate_predecessor_binding_digest=_binding_digest(cut),
         command_drive_id=COMMAND_DRIVE_ID,
         owner_disposition_drive_id=OWNER_DISPOSITION_DRIVE_ID,
         currentness_cut=cut.observed_at,
@@ -250,6 +310,7 @@ LAWS = (
     "HeadCandidate!=CurrentHead",
     "QueuePresence!=Execution",
     "PromotionRequiresExpectedPredecessorGenerationAndHead",
+    "CandidateDeclaredPredecessorMustBindAuthoritativePredecessor",
     "NewerTypedHeadObserved=>NoForkHold",
     "CurrentAtPromotionCut!=CurrentAtFutureUse",
     "HeadPromotion!=PublicOrFinancialOrDestructiveAuthority",
