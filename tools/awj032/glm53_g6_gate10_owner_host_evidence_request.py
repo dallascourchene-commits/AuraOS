@@ -1,4 +1,4 @@
-"""G6: compile a current, identity-preserving owner-host Gate-10 evidence request.
+"""G6: compile one current, identity-preserving owner-host Gate-10 evidence request.
 
 D0 / HS1 / NONPROMOTING.
 
@@ -6,22 +6,28 @@ Exactly two terminal foreign semantic parents:
 - PR #769 generation-bound admission reuse.
 - PR #727 operation/observer/backend provenance contract.
 
-PR #582 and PR #586 remain canonical downstream transport/return owners. They are
-compatibility constraints, not additional derivation parents.
+Q18 / PR #761 is transitive lineage inherited through PR #769, not a third
+Objective parent. PR #582 and PR #586 remain canonical downstream transport/return
+owners and are compatibility constraints, not additional derivation parents.
 
-This module compiles a request only. It does not authenticate the projected PR #769
-receipt producer, prove source currentness, execute GLM-5.3, observe physical I/O,
-authorize effects, or promote Gate 10.
+This module is the single semantic owner for G6 request construction. It binds the
+exact Q18 historical admission receipt, the full PR #769 current-use identity vector,
+and the exact PR #769 reuse-digest relation directly into the request. There is no
+post-hoc join between a caller-supplied precompiled request and a separate identity.
+
+The module does not authenticate the projected PR #769 receipt producer, prove source
+currentness, execute GLM-5.3, observe physical I/O, authorize effects, or promote Gate 10.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
+import inspect
 import itertools
 import json
 from typing import Any
 
-SCHEMA = "AURA-GLM53-G6-GATE10-OWNER-HOST-EVIDENCE-REQUEST-v3"
+SCHEMA = "AURA-GLM53-G6-GATE10-OWNER-HOST-EVIDENCE-REQUEST-v4"
 
 REUSE_HEAD = "d1a0f94255527835a59a70a0af7dc417ba1d023d"
 REUSE_SOURCE_BLOB = "d171d0938e469a4383490d1a691750c2068f21e7"
@@ -30,6 +36,16 @@ REUSE_RUN = 33437612722
 REUSE_JOB = 99637780915
 REUSE_FAMILY = "GLM53_BOUNDED_C2_PROPOSAL"
 REUSE_DISPOSITION = "REUSE_CANDIDATE"
+
+PR769_SCHEMA = "AURA-GENERATION-BOUND-ADMISSION-REUSE-v1"
+PR769_REUSE_REASON = "all identity-bearing producer/source/evidence/owner/decision axes remain exact"
+
+# Q18 is transitive lineage carried through PR #769. Zero extra Objective-parent credit.
+Q18_HEAD = "aed81432db8b84d2f43b8a85d06d4b72e16f6a50"
+Q18_SOURCE_BLOB = "4cee26edaf0759fc80d31889ab9e4e268f9a4fbe"
+Q18_RUN = 33436580962
+Q18_JOB = 99634379758
+Q18_RECEIPT_DIGEST = "c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230"
 
 PROV_HEAD = "293c59d7260372ccd3b9e8130b12979b052c3ed9"
 PROV_SOURCE_BLOB = "98db548b6e8f7443b79d979eb0e177ac6aa68534"
@@ -56,6 +72,13 @@ HOLD_EVIDENCE = "HOLD_EVIDENCE_SINK_CONTRACT_REQUIRED"
 HOLD_REPLAY = "HOLD_REPLAY_RECOVERY_CONTRACT_REQUIRED"
 HOLD_DEBT = "HOLD_GATE10_DEBT_CARRY_REQUIRED"
 HOLD_CEILING = "HOLD_CLAIM_CEILING"
+
+REUSE_IDENTITY_OK = "EXACT_Q18_PR769_REUSE_IDENTITY_BOUND"
+REUSE_HOLD_FAMILY = "REUSE_HOLD_EXACT_GLM53_FAMILY_REQUIRED"
+REUSE_HOLD_DISPOSITION = "REUSE_HOLD_CANDIDATE_DISPOSITION_REQUIRED"
+REUSE_HOLD_CURRENT = "REUSE_HOLD_CURRENT_CONTEXT_REQUIRED"
+REUSE_HOLD_Q18_RECEIPT = "REUSE_HOLD_EXACT_Q18_ADMISSION_RECEIPT_REQUIRED"
+REUSE_HOLD_DIGEST_RELATION = "REUSE_HOLD_PR769_REUSE_DIGEST_RELATION_REQUIRED"
 
 REQUIRED_EVIDENCE_AXES = (
     "OFFICIAL_SOURCE_REVISION_REVALIDATION",
@@ -188,14 +211,54 @@ class AdmissionReuseProjection:
             }
         )
 
-    @property
-    def exact_glm53_candidate(self) -> bool:
-        self.validate_shape()
-        return (
-            self.admission_family == REUSE_FAMILY
-            and self.disposition == REUSE_DISPOSITION
-            and self.current_context_exact
-        )
+
+def expected_pr769_reuse_digest(reuse: AdmissionReuseProjection) -> str:
+    """Reproduce the exact PR #769 REUSE_CANDIDATE commitment.
+
+    This proves structural consistency of the projected receipt. It does not
+    authenticate the receipt producer or prove currentness by itself.
+    """
+    reuse.validate_shape()
+    return _sha(
+        {
+            "schema": PR769_SCHEMA,
+            "disposition": REUSE_DISPOSITION,
+            "reason": PR769_REUSE_REASON,
+            "family": reuse.admission_family,
+            "admission_receipt_digest": reuse.admission_receipt_digest,
+            "subject_identity": reuse.subject_identity,
+            "source_generation_key": reuse.source_generation_key,
+            "evidence_generation_key": reuse.evidence_generation_key,
+            "owner_context_key": reuse.owner_context_key,
+            "decision_context_key": reuse.decision_context_key,
+            "claim_ceiling": {
+                "candidate_only": True,
+                "admission_reused_as_authority": False,
+                "execution_authorized": False,
+                "effect_authorized": False,
+                "source_currentness_proven": False,
+                "semantic_truth_proven": False,
+                "semantic_k27_authority": False,
+                "native_private_transformer_kv_accessed": False,
+            },
+        }
+    )
+
+
+def classify_reuse_identity(reuse: AdmissionReuseProjection) -> str:
+    """Ordered current-use classification for the composite G6 reuse axis."""
+    reuse.validate_shape()
+    if reuse.admission_family != REUSE_FAMILY:
+        return REUSE_HOLD_FAMILY
+    if reuse.disposition != REUSE_DISPOSITION:
+        return REUSE_HOLD_DISPOSITION
+    if not reuse.current_context_exact:
+        return REUSE_HOLD_CURRENT
+    if reuse.admission_receipt_digest != Q18_RECEIPT_DIGEST:
+        return REUSE_HOLD_Q18_RECEIPT
+    if reuse.reuse_digest != expected_pr769_reuse_digest(reuse):
+        return REUSE_HOLD_DIGEST_RELATION
+    return REUSE_IDENTITY_OK
 
 
 @dataclass(frozen=True)
@@ -318,6 +381,7 @@ class EvidenceContractProjection:
 class G6RequestReceipt:
     disposition: str
     reason: str
+    reuse_identity_reason_code: str
     request_digest: str
     request_envelope_compiled: bool
     official_repository: str
@@ -328,6 +392,8 @@ class G6RequestReceipt:
     open_gate10_debt: tuple[str, ...]
     current_reuse_candidate_bound: bool
     exact_glm53_reuse_identity_bound: bool
+    exact_q18_admission_receipt_bound: bool
+    pr769_reuse_digest_structurally_verified: bool
     admission_reuse_identity_digest: str
     admission_receipt_digest: str
     reuse_digest: str
@@ -338,6 +404,8 @@ class G6RequestReceipt:
     decision_context_key: str
     operation_provenance_contract_bound: bool
     exact_source_request_identity_bound: bool
+    single_owner_request_constructed_by_this_contract: bool = True
+    caller_supplied_precompiled_request_accepted: bool = False
     official_revision_revalidation_required: bool = True
     canonical_c2_handoff_head: str = C2_HANDOFF_HEAD
     canonical_c2_handoff_run: int = C2_HANDOFF_RUN
@@ -362,11 +430,18 @@ class G6RequestReceipt:
     def validate_claim_ceiling(self) -> None:
         if (self.disposition == COMPILED) != self.request_envelope_compiled:
             raise ValueError("DISPOSITION_BOOLEAN_MISMATCH")
+        if self.caller_supplied_precompiled_request_accepted:
+            raise ValueError("CALLER_SUPPLIED_PRECOMPILED_REQUEST_FORBIDDEN")
         if self.request_envelope_compiled and not (
-            self.current_reuse_candidate_bound
+            self.single_owner_request_constructed_by_this_contract
+            and self.current_reuse_candidate_bound
             and self.exact_glm53_reuse_identity_bound
+            and self.exact_q18_admission_receipt_bound
+            and self.pr769_reuse_digest_structurally_verified
             and self.operation_provenance_contract_bound
             and self.exact_source_request_identity_bound
+            and self.reuse_identity_reason_code == REUSE_IDENTITY_OK
+            and self.admission_receipt_digest == Q18_RECEIPT_DIGEST
         ):
             raise ValueError("COMPILED_REQUEST_MISSING_REQUIRED_BINDING")
         if any(
@@ -452,6 +527,58 @@ def prove_different_j() -> int:
     return checked
 
 
+def _reuse_tree(
+    family_ok: bool,
+    disposition_ok: bool,
+    current_ok: bool,
+    q18_ok: bool,
+    digest_ok: bool,
+) -> str:
+    if not family_ok:
+        return REUSE_HOLD_FAMILY
+    if not disposition_ok:
+        return REUSE_HOLD_DISPOSITION
+    if not current_ok:
+        return REUSE_HOLD_CURRENT
+    if not q18_ok:
+        return REUSE_HOLD_Q18_RECEIPT
+    if not digest_ok:
+        return REUSE_HOLD_DIGEST_RELATION
+    return REUSE_IDENTITY_OK
+
+
+def _reuse_table(
+    family_ok: bool,
+    disposition_ok: bool,
+    current_ok: bool,
+    q18_ok: bool,
+    digest_ok: bool,
+) -> str:
+    rows = (
+        (not family_ok, REUSE_HOLD_FAMILY),
+        (not disposition_ok, REUSE_HOLD_DISPOSITION),
+        (not current_ok, REUSE_HOLD_CURRENT),
+        (not q18_ok, REUSE_HOLD_Q18_RECEIPT),
+        (not digest_ok, REUSE_HOLD_DIGEST_RELATION),
+        (True, REUSE_IDENTITY_OK),
+    )
+    return next(code for predicate, code in rows if predicate)
+
+
+def prove_reuse_identity_different_j() -> int:
+    checked = 0
+    for bits in itertools.product((False, True), repeat=5):
+        if _reuse_tree(*bits) != _reuse_table(*bits):
+            raise AssertionError("G6_REUSE_IDENTITY_DIFFERENT_J_DIVERGED")
+        checked += 1
+    return checked
+
+
+def public_api_parameters() -> tuple[str, ...]:
+    """Guard against reintroducing a caller-supplied precompiled request join."""
+    return tuple(inspect.signature(compile_gate10_owner_host_evidence_request).parameters)
+
+
 def compile_gate10_owner_host_evidence_request(
     *,
     reuse: AdmissionReuseProjection,
@@ -466,7 +593,8 @@ def compile_gate10_owner_host_evidence_request(
     owner.validate()
     evidence.validate()
 
-    reuse_ok = reuse.exact_glm53_candidate
+    reuse_reason = classify_reuse_identity(reuse)
+    reuse_ok = reuse_reason == REUSE_IDENTITY_OK
     provenance_ok = (
         provenance.exact_operation_binding_required
         and provenance.observer_backend_provenance_required
@@ -497,8 +625,8 @@ def compile_gate10_owner_host_evidence_request(
         raise RuntimeError("G6_DIFFERENT_J_RUNTIME_DIVERGED")
 
     reason = {
-        COMPILED: "exact PR769 GLM reuse identity, source request identity, operation provenance and owner-host evidence contracts commute into a nonexecuting request",
-        HOLD_REUSE: "exact current GLM-5.3 PR769 reuse identity required",
+        COMPILED: "exact Q18/PR769 reuse identity, source request identity, operation provenance and owner-host evidence contracts commute into one nonexecuting request",
+        HOLD_REUSE: f"exact current Q18/PR769 GLM-5.3 reuse identity required: {reuse_reason}",
         HOLD_PROVENANCE: "operation/observer/backend provenance contract missing",
         HOLD_SOURCE: "exact flagship source request identity missing",
         HOLD_OWNER: "owner-host target missing",
@@ -513,7 +641,15 @@ def compile_gate10_owner_host_evidence_request(
         "schema": SCHEMA,
         "disposition": disposition,
         "reuse": asdict(reuse),
+        "reuse_identity_reason_code": reuse_reason,
         "reuse_identity_digest": reuse.identity_digest,
+        "q18_transitive_lineage": {
+            "head": Q18_HEAD,
+            "source_blob": Q18_SOURCE_BLOB,
+            "run": Q18_RUN,
+            "job": Q18_JOB,
+            "receipt_digest": Q18_RECEIPT_DIGEST,
+        },
         "provenance": asdict(provenance),
         "source": asdict(source),
         "owner": asdict(owner),
@@ -526,12 +662,12 @@ def compile_gate10_owner_host_evidence_request(
         },
     }
 
-    # Invalid candidate/source identity is never echoed as accepted current identity.
     accepted_reuse = reuse if reuse_ok else None
     accepted_source = source if source_ok else None
     receipt = G6RequestReceipt(
         disposition=disposition,
         reason=reason,
+        reuse_identity_reason_code=reuse_reason,
         request_digest=_sha(body),
         request_envelope_compiled=disposition == COMPILED,
         official_repository=accepted_source.repository if accepted_source else "",
@@ -542,6 +678,12 @@ def compile_gate10_owner_host_evidence_request(
         open_gate10_debt=evidence.open_gate10_debt,
         current_reuse_candidate_bound=reuse_ok,
         exact_glm53_reuse_identity_bound=reuse_ok,
+        exact_q18_admission_receipt_bound=bool(
+            reuse_ok and accepted_reuse and accepted_reuse.admission_receipt_digest == Q18_RECEIPT_DIGEST
+        ),
+        pr769_reuse_digest_structurally_verified=bool(
+            reuse_ok and accepted_reuse and accepted_reuse.reuse_digest == expected_pr769_reuse_digest(accepted_reuse)
+        ),
         admission_reuse_identity_digest=accepted_reuse.identity_digest if accepted_reuse else "",
         admission_receipt_digest=accepted_reuse.admission_receipt_digest if accepted_reuse else "",
         reuse_digest=accepted_reuse.reuse_digest if accepted_reuse else "",
@@ -562,7 +704,13 @@ LAWS = (
     "AdmissionValidAtProduce!=AdmissionReusableAtUse",
     "ReuseCandidateSummary!=AdmissionReuseReceiptIdentity",
     "GLM53AdmissionFamilyMustRemainExact",
+    "ExactQ18AdmissionReceiptMustRemainBound",
+    "Q18ReceiptIdentityInheritedThroughPR769Lineage",
+    "PR769ReuseDigestMustCommitExactIdentityVector",
+    "DigestShape!=DigestRelationProof",
     "AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection",
+    "SingleOwnerCompilerEliminatesPostHocIdentityJoin",
+    "CallerSuppliedPrecompiledRequest!=IdentityBoundRequest",
     "IdentityBinding!=ReceiptProducerAuthentication",
     "IdentityBinding!=SourceCurrentnessTruth",
     "CallerWitness!=BackendObservationProvenance",
