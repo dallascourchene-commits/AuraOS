@@ -11,6 +11,10 @@ class AWJ001Gen25PromotionTests(unittest.TestCase):
         self.assertEqual(r.event_type, p.PROMOTED)
         self.assertEqual(r.generation, 25)
         self.assertEqual(r.predecessor_head, "3aeb8f3db921201f")
+        self.assertEqual(r.candidate_predecessor_generation, 24)
+        self.assertEqual(r.candidate_predecessor_head, "3aeb8f3db921201f")
+        self.assertEqual(r.candidate_predecessor_drive_id, p.PREDECESSOR_DRIVE_ID)
+        self.assertEqual(len(r.candidate_predecessor_binding_digest), 64)
         self.assertEqual(len(r.head), 16)
         self.assertEqual(r.join_address, f"awj://AWJ-001?g=25&head={r.head}")
         self.assertTrue(r.current_at_promotion_cut)
@@ -23,14 +27,27 @@ class AWJ001Gen25PromotionTests(unittest.TestCase):
         self.assertEqual(a.head, b.head)
         self.assertEqual(a.receipt_digest, b.receipt_digest)
         self.assertEqual(a.currentness_observation_digest, b.currentness_observation_digest)
+        self.assertEqual(a.candidate_predecessor_binding_digest, b.candidate_predecessor_binding_digest)
 
     def test_stale_predecessor_holds(self):
         cut = dataclasses.replace(p.PromotionCut(), authoritative_head="deadbeefdeadbeef")
         self.assertEqual(p.assess_and_promote(cut=cut), p.HOLD_PREDECESSOR)
 
+    def test_candidate_predecessor_head_mismatch_holds(self):
+        cut = dataclasses.replace(p.PromotionCut(), candidate_predecessor_head="deadbeefdeadbeef")
+        self.assertEqual(p.assess_and_promote(cut=cut), p.HOLD_BINDING)
+
+    def test_candidate_predecessor_generation_mismatch_holds(self):
+        cut = dataclasses.replace(p.PromotionCut(), candidate_predecessor_generation=23)
+        self.assertEqual(p.assess_and_promote(cut=cut), p.HOLD_BINDING)
+
+    def test_candidate_predecessor_drive_mismatch_holds(self):
+        cut = dataclasses.replace(p.PromotionCut(), candidate_predecessor_drive_id="wrong-drive")
+        self.assertEqual(p.assess_and_promote(cut=cut), p.HOLD_BINDING)
+
     def test_newer_typed_head_prevents_fork(self):
         cut = dataclasses.replace(p.PromotionCut(), newer_typed_head_observed=True)
-        self.assertEqual(p.assess_and_promote(cut=cut), p.HOLD_CURRENTNESS)
+        self.assertEqual(p.assess_and_promote(cut=cut), p.HOLD_NEWER)
 
     def test_contradictory_owner_disposition_holds(self):
         cut = dataclasses.replace(p.PromotionCut(), contradictory_later_owner_disposition_observed=True)
@@ -55,12 +72,19 @@ class AWJ001Gen25PromotionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             bad.validate_claim_ceiling()
 
+    def test_receipt_rejects_forged_binding_digest(self):
+        r = p.assess_and_promote()
+        bad = dataclasses.replace(r, candidate_predecessor_binding_digest="0" * 64)
+        with self.assertRaises(ValueError):
+            bad.validate_claim_ceiling()
+
     def test_complete_different_j(self):
         self.assertEqual(p.prove_different_j(), 256)
 
     def test_core_laws(self):
         self.assertIn("HeadCandidate!=CurrentHead", p.LAWS)
         self.assertIn("QueuePresence!=Execution", p.LAWS)
+        self.assertIn("CandidateDeclaredPredecessorMustBindAuthoritativePredecessor", p.LAWS)
         self.assertIn("NewerTypedHeadObserved=>NoForkHold", p.LAWS)
         self.assertIn("CurrentAtPromotionCut!=CurrentAtFutureUse", p.LAWS)
         self.assertIn("CoordinateMemory!=MODEL_PREFIX_KV", p.LAWS)
