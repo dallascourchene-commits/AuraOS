@@ -1,0 +1,63 @@
+name: Aura WorldWiki WorkCapsule Skill Router
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  worldwiki-workcapsule-skill-router:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch exact candidate without persisting credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin https://github.com/${{ github.repository }}.git
+          AUTH="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" fetch --no-tags --depth=1 origin "$EXPECTED_HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test "$(git remote get-url origin)" = "https://github.com/${{ github.repository }}.git"
+          if git config --local --get-regexp 'http\..*extraheader|credential\.'; then
+            echo 'persisted credential configuration detected' >&2
+            exit 1
+          fi
+
+      - name: Compile exact World/EKI and skill-router surfaces
+        run: |
+          python3 -m py_compile \
+            tools/aura_external_knowledge_ingress.py \
+            tools/aura_world_skill_workcapsule.py \
+            aura_skill_cockpit_adapter.py \
+            tests/test_aura_world_skill_workcapsule.py
+
+      - name: Prove EKI ingress regression surface
+        run: python3 -m unittest tests.test_aura_external_knowledge_ingress -v
+
+      - name: Prove WorldWiki WorkCapsule skill router
+        run: python3 -m unittest tests.test_aura_world_skill_workcapsule -v
+
+      - name: Enforce non-authorizing source laws
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          text = Path('tools/aura_world_skill_workcapsule.py').read_text(encoding='utf-8')
+          required = (
+              'SearchMiss != KnownAbsent',
+              'CacheHit != CurrentnessWitness',
+              'CoordinateMemory != MODEL_PREFIX_KV',
+              'WikiKnowledge != HotWorkCapsuleContext',
+              'SkillDiscovery != SkillAcceptance != SkillUseAuthority',
+              'LargeReconstructibleWorld + SmallActiveBoundary',
+          )
+          missing = [law for law in required if law not in text]
+          if missing:
+              raise SystemExit('MISSING_LAWS:' + ','.join(missing))
+          PY
