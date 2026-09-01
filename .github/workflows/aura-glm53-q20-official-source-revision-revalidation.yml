@@ -1,0 +1,141 @@
+name: Aura GLM53 Q20 Official Source Revision Revalidation
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py"
+      - "tests/test_aura_glm53_q20_official_source_revision_revalidation.py"
+      - "docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md"
+      - ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml"
+  push:
+    branches:
+      - "arena/glm53-q20-official-source-revision-revalidation-v1-20260831-gpt56sol"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-q20-source-revalidation-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact candidate with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Authenticate true Q18 x NAV03B convergence and semantic blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONV=ad010b1ab2bf852c2b07d91487f01f8f10d243b8
+          Q18=87fde6b21675c7876acc63f4ca30b2dda89970d0
+          NAV=77e69373ea63288e64544861573ceeec51047154
+          Q18_BLOB=4cee26edaf0759fc80d31889ab9e4e268f9a4fbe
+          NAV_BLOB=ef8c039a7a43ce92cb8ad29da5226101923d3056
+          test "$(git show -s --format=%P "$CONV")" = "$Q18 $NAV"
+          test "$(git rev-parse "$Q18:tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py")" = "$Q18_BLOB"
+          test "$(git rev-parse "$NAV:tools/aura_version_safe_fractal_k27_navigation.py")" = "$NAV_BLOB"
+          git merge-base --is-ancestor "$CONV" HEAD
+
+      - name: Revalidate exact hosted parent proof coordinates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          expected = [(33436970079, 99635635152), (33440093097, 99645898559)]
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for run_id, job_id in expected:
+              for kind, ident in (("runs", run_id), ("jobs", job_id)):
+                  url = f"https://api.github.com/repos/{repo}/actions/{kind}/{ident}"
+                  req = urllib.request.Request(url, headers=headers)
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      payload = json.load(response)
+                  assert payload["status"] == "completed", (kind, ident, payload["status"])
+                  assert payload["conclusion"] == "success", (kind, ident, payload["conclusion"])
+
+      - name: Reexecute Q18 parent adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest -v tests.test_aura_glm53_current_generation_bounded_c2_proposal
+
+      - name: Reexecute NAV03B exact parent adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          NAV=77e69373ea63288e64544861573ceeec51047154
+          git worktree add --detach /tmp/nav03b "$NAV"
+          (cd /tmp/nav03b && python -m unittest -v tests.test_aura_version_safe_fractal_k27_navigation)
+
+      - name: Resolve live official GLM-5.3 head and exact pinned-to-current ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          PINNED=7cda81930d6e4cef42f48555de830aa32ecdde28
+          CURRENT=187fb9fff6319062325ff825627ef6db084d9bc6
+          REMOTE=https://huggingface.co/zai-org/GLM-5.3
+          LIVE="$(git ls-remote "$REMOTE" refs/heads/main | awk '{print $1}')"
+          echo "live_head=$LIVE"
+          test "$LIVE" = "$CURRENT"
+          rm -rf /tmp/glm53-source
+          git init -q /tmp/glm53-source
+          git -C /tmp/glm53-source remote add origin "$REMOTE"
+          git -C /tmp/glm53-source fetch -q --filter=blob:none --no-tags origin refs/heads/main
+          git -C /tmp/glm53-source merge-base --is-ancestor "$PINNED" "$CURRENT"
+          { echo "$PINNED"; git -C /tmp/glm53-source rev-list --ancestry-path --reverse "$PINNED..$CURRENT"; } > /tmp/q20-chain.txt
+          git -C /tmp/glm53-source diff --name-only "$PINNED" "$CURRENT" | sort > /tmp/q20-paths.txt
+          cat /tmp/q20-chain.txt
+          cat /tmp/q20-paths.txt
+
+      - name: Verify exact live chain metadata-only diff Q20 tests and 64-state lattice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py
+          python -m unittest -v tests.test_aura_glm53_q20_official_source_revision_revalidation
+          python - <<'PY'
+          from pathlib import Path
+          from tools.quantization.aura_glm53_q20_official_source_revision_revalidation import (
+              OBSERVED_CHANGED_PATHS, OBSERVED_REVISION_CHAIN, assess_official_source_revision,
+              current_q18_projection, observed_current_source_fixture, prove_64_state_lattice,
+          )
+          chain = tuple(x.strip() for x in Path("/tmp/q20-chain.txt").read_text().splitlines() if x.strip())
+          paths = tuple(x.strip() for x in Path("/tmp/q20-paths.txt").read_text().splitlines() if x.strip())
+          assert chain == OBSERVED_REVISION_CHAIN, (chain, OBSERVED_REVISION_CHAIN)
+          assert paths == OBSERVED_CHANGED_PATHS, (paths, OBSERVED_CHANGED_PATHS)
+          receipt = assess_official_source_revision(q18=current_q18_projection(), observation=observed_current_source_fixture())
+          assert receipt["disposition"] == "GATE10_OFFICIAL_SOURCE_REVISION_REVALIDATION_CANDIDATE"
+          assert receipt["tracked_model_payload_generation_unchanged_across_observed_diff"] is True
+          assert receipt["source_currentness_at_future_effect_proven"] is False
+          assert receipt["tensor_payload_bound"] is False
+          assert receipt["model_execution_observed"] is False
+          assert receipt["gate10_promoted"] is False
+          counts = prove_64_state_lattice()
+          assert sum(counts.values()) == 64
+          assert counts["GATE10_OFFICIAL_SOURCE_REVISION_REVALIDATION_CANDIDATE"] == 1
+          print(receipt["receipt_digest"])
+          print(counts)
+          PY
+
+      - name: Enforce nonpromotion and KV boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'CoordinateMemory != MODEL_PREFIX_KV' docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md
+          grep -q 'No native/private transformer KV cache is accessed or mutated' docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md
+          ! grep -R 'gate10_promoted.*True' tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py

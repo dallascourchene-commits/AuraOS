@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1642
-- **total_bytes**: 26443479
-- **text_tokens_est**: 6601222
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1646
+- **total_bytes**: 26474738
+- **text_tokens_est**: 6609027
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1642,
+  "repo_file_count": 1646,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1116,6 +1117,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
     "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+    "docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
     "docs/aura_substrate_manifest.files.03.json",
@@ -1500,6 +1502,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_oidc.py",
     "tests/test_aura_gate_server.py",
     "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+    "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
     "tests/test_aura_human_agent_arena.py",
@@ -1654,6 +1657,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
+    "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1782,16 +1786,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1642,
-  "bytes": 26443479,
-  "tokens_est": 6601222,
+  "files": 1646,
+  "bytes": 26474738,
+  "tokens_est": 6609027,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
-    "schema_or_lexicon": 272,
+    "python_module": 1001,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }

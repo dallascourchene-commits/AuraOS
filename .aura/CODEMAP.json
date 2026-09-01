@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788208480,
+  "generated_at_unix": 1788247198,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1098,6 +1099,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1482,6 +1484,7 @@
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
       "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+      "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1636,6 +1639,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
+      "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1758,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26443479,
-      "tokens_est": 6601222,
+      "files": 1646,
+      "bytes": 26474738,
+      "tokens_est": 6609027,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3469,6 +3473,14 @@
         "line": 255,
         "end_line": 256,
         "semantic_id": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py#function:main:cf4e4069adbc36ab",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 297,
+        "end_line": 301,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:main:540b878388032eaf",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -8085,6 +8097,14 @@
         "line": 50,
         "end_line": 52,
         "semantic_id": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py#function:_sha:3900b1081f32afec",
+        "signature_hash": "3c3bc3c037860fe9"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:_sha:066c7f7ac175c91a",
         "signature_hash": "3c3bc3c037860fe9"
       }
     ],
@@ -138674,6 +138694,126 @@
         "signature_hash": "639470aaa690ac04"
       }
     ],
+    "Q20OfficialSourceRevisionRevalidationTests": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#class:Q20OfficialSourceRevisionRevalidationTests:8780db25a797b94f",
+        "signature_hash": "3032678953ddf940"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.setUp": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 16,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.setUp:0713d85b628975bd",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_exact_current_observation_yields_nonpromoting_candidate": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_exact_current_observation_yields_nonpromoting_candidate:7807b5b071910d71",
+        "signature_hash": "caf25edf3ea12d3e"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_current_and_pinned_k27_coordinates_are_deterministic_and_non_authoritative": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 36,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_current_and_pinned_k27_coordinates_are_deterministic_and_non_authoritative:4b4f2a78deb0a5f4",
+        "signature_hash": "5e909dd405d94806"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_q18_generation_or_receipt_substitution_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_q18_generation_or_receipt_substitution_fails_closed:846bf745cfd9e5dd",
+        "signature_hash": "dd83a4bad0863646"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_provider_head_advance_requires_reopen": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_provider_head_advance_requires_reopen:e14d75b1e516ffe8",
+        "signature_hash": "d2c0a6ae9ab93b18"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_ancestry_chain_substitution_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 65,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_ancestry_chain_substitution_fails_closed:0e293334b5398426",
+        "signature_hash": "f5c70aa5e82a1842"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_model_config_or_payload_path_change_cannot_be_laundered_as_metadata": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_model_config_or_payload_path_change_cannot_be_laundered_as_metadata:2b626e62253ae8a7",
+        "signature_hash": "621f18e886b0ea7f"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_only_exact_observed_metadata_path_set_is_accepted": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_only_exact_observed_metadata_path_set_is_accepted:7b1070dba1318719",
+        "signature_hash": "17c4fa86893cb189"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_repository_and_pinned_revision_identity_are_exact": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_repository_and_pinned_revision_identity_are_exact:8e94f42a97986c8a",
+        "signature_hash": "a958ebe73c45990c"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_receipt_is_deterministic:6cf66fb45fa8a356",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "Q20OfficialSourceRevisionRevalidationTests.test_complete_64_state_different_j_lattice": [
+      {
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_complete_64_state_different_j_lattice:335186e9aab38b27",
+        "signature_hash": "59e1c14103eb7acb"
+      }
+    ],
     "_write_minimal_codemap": [
       {
         "file": "tests/test_aura_harness_issue_capsules.py",
@@ -157400,6 +157540,146 @@
         "signature_hash": "1dae8aa8d592ef7b"
       }
     ],
+    "k27_b3mod27_xyz": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:k27_b3mod27_xyz:d139f18a86974e46",
+        "signature_hash": "d7c7d5b24ce4bb61"
+      }
+    ],
+    "_valid_sha40": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 81,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:_valid_sha40:38bf896382f9b128",
+        "signature_hash": "e26b16dc9b8615e8"
+      }
+    ],
+    "_valid_sha64": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:_valid_sha64:649ac429f1be2636",
+        "signature_hash": "90db500b78d28558"
+      }
+    ],
+    "is_metadata_only_path": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 91,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:is_metadata_only_path:4e1664ddbf6f8c7d",
+        "signature_hash": "deaf5f70e6a948a6"
+      }
+    ],
+    "Q18Projection": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 119,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#class:Q18Projection:d0d8266d10eda3b8",
+        "signature_hash": "9e8d511025f19efe"
+      }
+    ],
+    "Q18Projection.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 119,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#method:Q18Projection.validate:cc9b7db3107b0ac7",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "OfficialSourceRevisionObservation": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "class",
+        "line": 123,
+        "end_line": 154,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#class:OfficialSourceRevisionObservation:578190dfdf8453e2",
+        "signature_hash": "c9859c29d3e25435"
+      }
+    ],
+    "OfficialSourceRevisionObservation.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 154,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#method:OfficialSourceRevisionObservation.validate:8116628303ac897c",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "decision_tree": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 172,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:decision_tree:d408d2d572d6a2d5",
+        "signature_hash": "95a3171d126ca1cc"
+      }
+    ],
+    "decision_table": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 187,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:decision_table:2f7dc4981f21a324",
+        "signature_hash": "29ff335f0289ca5a"
+      }
+    ],
+    "assess_official_source_revision": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 264,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:assess_official_source_revision:105d434ca59b762e",
+        "signature_hash": "ca16673915d0c587"
+      }
+    ],
+    "current_q18_projection": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 267,
+        "end_line": 269,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:current_q18_projection:439e3f37a2ae9437",
+        "signature_hash": "8a4f8532a815fe78"
+      }
+    ],
+    "observed_current_source_fixture": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 272,
+        "end_line": 277,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:observed_current_source_fixture:bb1cfd7de14734cf",
+        "signature_hash": "4dbac477a7124fe0"
+      }
+    ],
+    "prove_64_state_lattice": [
+      {
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "kind": "function",
+        "line": 280,
+        "end_line": 294,
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:prove_64_state_lattice:39ba2fba0289a33c",
+        "signature_hash": "fc0bf266049b3668"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158511,6 +158791,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -158804,6 +159085,10 @@
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -159513,9 +159798,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -167957,6 +168239,64 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6939,
+      "lines": 141,
+      "tokens_est": 1735,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest",
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          75,
+          110
+        ],
+        "python -m py_compile": [
+          109
+        ]
+      },
+      "topology": {},
+      "digest8": "dcb23314f5614efc",
+      "vector": [
+        0.094684,
+        0.005993,
+        -0.101875,
+        -0.272066,
+        -0.015581,
+        -0.137831,
+        -0.157007,
+        0.003596,
+        0.274463,
+        -0.207345,
+        -0.171389,
+        -0.013184,
+        0.082698,
+        -0.219331,
+        0.075507,
+        -0.051537,
+        -0.022772,
+        -0.279257,
+        -0.044346,
+        0.255286,
+        0.087492,
+        -0.269669,
+        0.30083,
+        -0.245698,
+        -0.216933,
+        -0.296036,
+        -0.296036,
+        0.133037,
+        -0.133037,
+        -0.00839,
+        -0.121051,
+        0.046743
       ]
     },
     {
@@ -235093,6 +235433,53 @@
       ]
     },
     {
+      "path": "docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5619,
+      "lines": 133,
+      "tokens_est": 1394,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3de433767eb7b494",
+      "vector": [
+        -0.135155,
+        0.049262,
+        0.289258,
+        -0.135155,
+        -0.185681,
+        -0.089683,
+        -0.175576,
+        0.223575,
+        0.301889,
+        0.092209,
+        -0.021473,
+        0.137682,
+        0.061894,
+        -0.271574,
+        -0.190733,
+        -0.122524,
+        -0.082104,
+        0.114945,
+        0.281679,
+        0.208417,
+        0.210943,
+        0.12505,
+        -0.10484,
+        -0.029052,
+        -0.034105,
+        0.203365,
+        -0.077051,
+        0.215996,
+        0.107366,
+        0.08463,
+        0.322099,
+        -0.271574
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -255871,6 +256258,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5715,
+      "lines": 111,
+      "tokens_est": 1429,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c24ae4cb9e1c0a22",
+      "vector": [
+        -0.17057,
+        -0.018407,
+        0.148482,
+        -0.023315,
+        -0.231926,
+        0.222109,
+        -0.106759,
+        0.042949,
+        0.114122,
+        -0.077309,
+        0.106759,
+        -0.229472,
+        0.268739,
+        -0.079763,
+        0.312916,
+        -0.273648,
+        0.258922,
+        0.239288,
+        -0.08958,
+        0.256468,
+        0.077309,
+        -0.128848,
+        0.033132,
+        0.042949,
+        0.288373,
+        0.028224,
+        -0.033132,
+        0.249105,
+        0.266285,
+        0.187749,
+        0.05522,
+        0.131302
+      ]
+    },
+    {
       "path": "tests/test_aura_harness_issue_capsules.py",
       "role": "python_module",
       "binary": false,
@@ -263106,6 +263540,53 @@
         -0.213847,
         0.149821,
         -0.065307
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12986,
+      "lines": 306,
+      "tokens_est": 3247,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5ac464fffed07e3d",
+      "vector": [
+        0.320767,
+        -0.040921,
+        -0.323407,
+        -0.062041,
+        0.040921,
+        0.130683,
+        -0.117483,
+        0.215165,
+        -0.056761,
+        -0.273246,
+        0.241565,
+        0.302287,
+        -0.233645,
+        0.072602,
+        -0.146523,
+        -0.120123,
+        -0.135963,
+        -0.00396,
+        0.262686,
+        0.091082,
+        -0.135963,
+        -0.178204,
+        -0.225725,
+        0.194044,
+        -0.064681,
+        -0.194044,
+        -0.083162,
+        0.257406,
+        0.175564,
+        0.035641,
+        0.054121,
+        0.00924
       ]
     },
     {
@@ -287013,16 +287494,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26443479,
-    "text_tokens_est": 6601222,
+    "file_count": 1646,
+    "total_bytes": 26474738,
+    "text_tokens_est": 6609027,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287168,6 +287649,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-q20-official-source-revision-revalidation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288130,6 +288612,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AWJ032_Q20_OFFICIAL_SOURCE_REVISION_REVALIDATION_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -288514,6 +288997,7 @@
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
       "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py",
+      "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -288668,6 +289152,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
+      "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -426304,6 +426789,126 @@
         "file_digest8": "8b24529f46a53c54"
       },
       {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#class:Q20OfficialSourceRevisionRevalidationTests:8780db25a797b94f",
+        "name": "Q20OfficialSourceRevisionRevalidationTests",
+        "kind": "class",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 13,
+        "end_line": 106,
+        "signature_hash": "3032678953ddf940",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.setUp:0713d85b628975bd",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 14,
+        "end_line": 16,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_ancestry_chain_substitution_fails_closed:0e293334b5398426",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_ancestry_chain_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 59,
+        "end_line": 65,
+        "signature_hash": "f5c70aa5e82a1842",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_complete_64_state_different_j_lattice:335186e9aab38b27",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_complete_64_state_different_j_lattice",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 102,
+        "end_line": 106,
+        "signature_hash": "59e1c14103eb7acb",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_current_and_pinned_k27_coordinates_are_deterministic_and_non_authoritative:4b4f2a78deb0a5f4",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_current_and_pinned_k27_coordinates_are_deterministic_and_non_authoritative",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 30,
+        "end_line": 36,
+        "signature_hash": "5e909dd405d94806",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_exact_current_observation_yields_nonpromoting_candidate:7807b5b071910d71",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_exact_current_observation_yields_nonpromoting_candidate",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 18,
+        "end_line": 28,
+        "signature_hash": "caf25edf3ea12d3e",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_model_config_or_payload_path_change_cannot_be_laundered_as_metadata:2b626e62253ae8a7",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_model_config_or_payload_path_change_cannot_be_laundered_as_metadata",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 67,
+        "end_line": 77,
+        "signature_hash": "621f18e886b0ea7f",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_only_exact_observed_metadata_path_set_is_accepted:7b1070dba1318719",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_only_exact_observed_metadata_path_set_is_accepted",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "17c4fa86893cb189",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_provider_head_advance_requires_reopen:e14d75b1e516ffe8",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_provider_head_advance_requires_reopen",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 48,
+        "end_line": 57,
+        "signature_hash": "d2c0a6ae9ab93b18",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_q18_generation_or_receipt_substitution_fails_closed:846bf745cfd9e5dd",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_q18_generation_or_receipt_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 38,
+        "end_line": 46,
+        "signature_hash": "dd83a4bad0863646",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_receipt_is_deterministic:6cf66fb45fa8a356",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 97,
+        "end_line": 100,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py#method:Q20OfficialSourceRevisionRevalidationTests.test_repository_and_pinned_revision_identity_are_exact:8e94f42a97986c8a",
+        "name": "Q20OfficialSourceRevisionRevalidationTests.test_repository_and_pinned_revision_identity_are_exact",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 87,
+        "end_line": 95,
+        "signature_hash": "a958ebe73c45990c",
+        "file_digest8": "c24ae4cb9e1c0a22"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -446224,6 +446829,166 @@
         "file_digest8": "ae9a5961879df733"
       },
       {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#class:OfficialSourceRevisionObservation:578190dfdf8453e2",
+        "name": "OfficialSourceRevisionObservation",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 123,
+        "end_line": 154,
+        "signature_hash": "c9859c29d3e25435",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#class:Q18Projection:d0d8266d10eda3b8",
+        "name": "Q18Projection",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 95,
+        "end_line": 119,
+        "signature_hash": "9e8d511025f19efe",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:_sha:066c7f7ac175c91a",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:_valid_sha40:38bf896382f9b128",
+        "name": "_valid_sha40",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 80,
+        "end_line": 81,
+        "signature_hash": "e26b16dc9b8615e8",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:_valid_sha64:649ac429f1be2636",
+        "name": "_valid_sha64",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "90db500b78d28558",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:assess_official_source_revision:105d434ca59b762e",
+        "name": "assess_official_source_revision",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 190,
+        "end_line": 264,
+        "signature_hash": "ca16673915d0c587",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:current_q18_projection:439e3f37a2ae9437",
+        "name": "current_q18_projection",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 267,
+        "end_line": 269,
+        "signature_hash": "8a4f8532a815fe78",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:decision_table:2f7dc4981f21a324",
+        "name": "decision_table",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 175,
+        "end_line": 187,
+        "signature_hash": "29ff335f0289ca5a",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:decision_tree:d408d2d572d6a2d5",
+        "name": "decision_tree",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 157,
+        "end_line": 172,
+        "signature_hash": "95a3171d126ca1cc",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:is_metadata_only_path:4e1664ddbf6f8c7d",
+        "name": "is_metadata_only_path",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 88,
+        "end_line": 91,
+        "signature_hash": "deaf5f70e6a948a6",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:k27_b3mod27_xyz:d139f18a86974e46",
+        "name": "k27_b3mod27_xyz",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "d7c7d5b24ce4bb61",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:main:540b878388032eaf",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 297,
+        "end_line": 301,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:observed_current_source_fixture:bb1cfd7de14734cf",
+        "name": "observed_current_source_fixture",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 272,
+        "end_line": 277,
+        "signature_hash": "4dbac477a7124fe0",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#function:prove_64_state_lattice:39ba2fba0289a33c",
+        "name": "prove_64_state_lattice",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 280,
+        "end_line": 294,
+        "signature_hash": "fc0bf266049b3668",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#method:OfficialSourceRevisionObservation.validate:8116628303ac897c",
+        "name": "OfficialSourceRevisionObservation.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 134,
+        "end_line": 154,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py#method:Q18Projection.validate:cc9b7db3107b0ac7",
+        "name": "Q18Projection.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_q20_official_source_revision_revalidation.py",
+        "line": 105,
+        "end_line": 119,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5ac464fffed07e3d"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -447474,7 +448239,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "05548bed87f9d83dc5d55a5c64364692",
-    "payload_hash": "ac20d5264af293bf03f95498d54941b4"
+    "record_fingerprint": "93cb76082f04ff7ff4c9cf189fcd24b9",
+    "payload_hash": "e69b0ba4de40e9f45939a7fd1e56afb5"
   }
 }
