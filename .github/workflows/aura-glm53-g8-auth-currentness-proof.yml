@@ -1,0 +1,77 @@
+name: Aura GLM53 G8 Auth Currentness Proof
+
+on:
+  push:
+    branches:
+      - "arena/g8-auth-currentness-proof-v1-20260901-gpt56sol"
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g8_external_auth_currentness_preflight.py"
+      - "tests/test_glm53_g8_external_auth_currentness_preflight_proof.py"
+      - ".github/workflows/aura-glm53-g8-auth-currentness-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g8-auth-currentness-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact proof child
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate unchanged foreign semantic generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          SEMANTIC=f9729ab4b667e1457210da7d0dd91728c82e3f52
+          BLOB=4737a2bd7ff09b788720c96d3fc4ac8cf89b6c7f
+          git merge-base --is-ancestor "$SEMANTIC" HEAD
+          test "$(git rev-parse "$SEMANTIC:tools/awj032/glm53_g8_external_auth_currentness_preflight.py")" = "$BLOB"
+          test "$(git rev-parse HEAD:tools/awj032/glm53_g8_external_auth_currentness_preflight.py)" = "$BLOB"
+
+      - name: Revalidate exact green parent runs and jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          repo=os.environ["GITHUB_REPOSITORY"]
+          headers={"Authorization":f"Bearer {os.environ['GH_TOKEN']}","Accept":"application/vnd.github+json"}
+          expected=(
+              (33441379499,99650162512,"8a065ad2f017d1c44b0d0da98f59fe5ba5a00af3"),
+              (33481589083,99772192034,"2c7f42adf18a7421d7d4d21fb78a37a88445f82f"),
+          )
+          for run_id, job_id, head in expected:
+              for kind, ident in (("runs",run_id),("jobs",job_id)):
+                  req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/{kind}/{ident}",headers=headers)
+                  with urllib.request.urlopen(req,timeout=30) as r: payload=json.load(r)
+                  assert payload["status"]=="completed",(kind,ident,payload["status"])
+                  assert payload["conclusion"]=="success",(kind,ident,payload["conclusion"])
+                  if kind=="runs": assert payload["head_sha"]==head,(run_id,payload["head_sha"],head)
+
+      - name: Compile and run focused adversarials
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/awj032/glm53_g8_external_auth_currentness_preflight.py
+          python -m unittest -v tests.test_glm53_g8_external_auth_currentness_preflight_proof
+
+      - name: Exhaust 128-state classifier and enforce nonpromotion
+        shell: python
+        run: |
+          from tools.awj032 import glm53_g8_external_auth_currentness_preflight as g8
+          p,r,u,q18,obs,target=g8.fixture_inputs()
+          receipt=g8.compile_external_auth_currentness_preflight(progress=p,reuse=r,presented=u,q20_q18=q18,q20_observation=obs,target=target)
+          assert receipt.disposition==g8.COMPILED
+          assert g8.prove_different_j()==128
+          assert receipt.parent_producer_authenticated is False
+          assert receipt.effect_time_source_currentness_proven is False
+          assert receipt.owner_host_execution_observed is False
+          assert receipt.gate10_promoted is False
+          assert receipt.native_private_transformer_kv_accessed is False
+          print(receipt.request_digest)
