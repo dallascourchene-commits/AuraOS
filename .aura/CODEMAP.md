@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1646
-- **total_bytes**: 26478849
-- **text_tokens_est**: 6610064
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1656
+- **total_bytes**: 26551526
+- **text_tokens_est**: 6628230
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1646,
+  "repo_file_count": 1656,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -155,6 +155,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-generation-bound-admission-reuse.yml",
+    ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
+    ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1117,6 +1119,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
     "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+    "docs/arena/AWJ032_G6_ADMISSION_IDENTITY_BINDING_W3_20260831.md",
+    "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+    "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
+    "docs/arena/AWJ032_G6_INTERNAL_IDENTITY_JOIN_W3_CORRECTION_20260831.md",
     "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
@@ -1655,6 +1661,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
     "tools/aura_generation_bound_admission_reuse.py",
+    "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
+    "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+    "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+    "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -1786,16 +1796,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1646,
-  "bytes": 26478849,
-  "tokens_est": 6610064,
+  "files": 1656,
+  "bytes": 26551526,
+  "tokens_est": 6628230,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 238,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1001,
-    "schema_or_lexicon": 273,
+    "python_module": 1005,
+    "schema_or_lexicon": 275,
     "support_file": 49
   }
 }

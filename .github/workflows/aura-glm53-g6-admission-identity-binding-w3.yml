@@ -1,0 +1,24 @@
+name: Aura GLM53 G6 Admission Identity Binding W3 - Absorbed
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  absorbed-compatibility-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify identity W3 is absorbed by canonical G6 owner
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py \
+            tools/awj032/glm53_g6_admission_identity_binding_addendum.py \
+            tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py
+          python3 -m unittest -v tools.awj032.test_glm53_g6_admission_identity_binding_addendum
+          echo "G6_IDENTITY_ADDENDUM_INDEPENDENT_CLOSURE_CREDIT=0"
+          echo "G6_CANONICAL_CLOSURE_WORKFLOW=Aura GLM53 G6 Gate10 Owner Host Evidence Request"

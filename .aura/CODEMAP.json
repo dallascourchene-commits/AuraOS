@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788210238,
+  "generated_at_unix": 1788246700,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1646,
+    "repo_file_count": 1656,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,6 +137,8 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-generation-bound-admission-reuse.yml",
+      ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1099,6 +1101,10 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AWJ032_G6_ADMISSION_IDENTITY_BINDING_W3_20260831.md",
+      "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
+      "docs/arena/AWJ032_G6_INTERNAL_IDENTITY_JOIN_W3_CORRECTION_20260831.md",
       "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
@@ -1637,6 +1643,10 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_generation_bound_admission_reuse.py",
+      "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
+      "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+      "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+      "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -1762,16 +1772,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1646,
-      "bytes": 26478849,
-      "tokens_est": 6610064,
+      "files": 1656,
+      "bytes": 26551526,
+      "tokens_est": 6628230,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 238,
+        "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1001,
-        "schema_or_lexicon": 273,
+        "python_module": 1005,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -3918,6 +3928,14 @@
         "end_line": 70,
         "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_canonical:c3505d526fac8b72",
         "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_canonical:14f01aa2116a15b2",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4367,6 +4385,14 @@
         "line": 83,
         "end_line": 87,
         "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_digest:f3ba94d258ccc08c",
+        "signature_hash": "5880d7b3614e1b56"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_digest:39ec8cf729ffc690",
         "signature_hash": "5880d7b3614e1b56"
       }
     ],
@@ -8106,6 +8132,14 @@
         "end_line": 74,
         "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_sha:c532daf94ff906fd",
         "signature_hash": "3c3bc3c037860fe9"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_sha:9ca7b2d5390b997a",
+        "signature_hash": "e47bc2e8d0ade77b"
       },
       {
         "file": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -14707,6 +14741,14 @@
         "line": 77,
         "end_line": 80,
         "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:_text:711c12da2c4a3a49",
+        "signature_hash": "0f196e838c2631a3"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 119,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_text:ffb08ad7dea9ec75",
         "signature_hash": "0f196e838c2631a3"
       }
     ],
@@ -125822,6 +125864,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:evidence:362d60ff2dec9da2",
+        "signature_hash": "968bacd5cb8e70f6"
       }
     ],
     "claim": [
@@ -157592,6 +157642,494 @@
         "end_line": 349,
         "semantic_id": "tools/aura_generation_bound_admission_reuse.py#function:prove_different_j:ba5c9c0010771c37",
         "signature_hash": "545054efddc8fb30"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 520,
+        "end_line": 527,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_different_j:ca88bf318d666903",
+        "signature_hash": "545054efddc8fb30"
+      }
+    ],
+    "canonical_owner_status": [
+      {
+        "file": "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/glm53_g6_admission_identity_binding_addendum.py#function:canonical_owner_status:4cfee0dbb6fd42c5",
+        "signature_hash": "8fe41a49011c41e1"
+      }
+    ],
+    "AdmissionReuseProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 133,
+        "end_line": 212,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:AdmissionReuseProjection:5df8df9f92425297",
+        "signature_hash": "c475a0d20ae1d4de"
+      }
+    ],
+    "AdmissionReuseProjection.validate_shape": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 196,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:AdmissionReuseProjection.validate_shape:645376c7c78c9598",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "AdmissionReuseProjection.identity_digest": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 212,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:AdmissionReuseProjection.identity_digest:cdb26aeb6868c625",
+        "signature_hash": "c693ea685ee9d854"
+      }
+    ],
+    "expected_pr769_reuse_digest": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 215,
+        "end_line": 245,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:expected_pr769_reuse_digest:35065108cb2dba05",
+        "signature_hash": "e6e56fb60643a3f6"
+      }
+    ],
+    "classify_reuse_identity": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 248,
+        "end_line": 261,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:classify_reuse_identity:ce21529141bd04b4",
+        "signature_hash": "378d139640063c4b"
+      }
+    ],
+    "ObservationProvenanceContractProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 265,
+        "end_line": 286,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:ObservationProvenanceContractProjection:2fd3fa01ca7188e3",
+        "signature_hash": "517fdabb13a328d4"
+      }
+    ],
+    "ObservationProvenanceContractProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 277,
+        "end_line": 286,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:ObservationProvenanceContractProjection.validate:572ca8d851abd4fb",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SourceIdentityProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 290,
+        "end_line": 313,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:SourceIdentityProjection:177f2bc67b0f275d",
+        "signature_hash": "d078451618dd3692"
+      }
+    ],
+    "SourceIdentityProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 298,
+        "end_line": 303,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:SourceIdentityProjection.validate:ee2a98f77d60af41",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SourceIdentityProjection.exact_request_identity": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 306,
+        "end_line": 313,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:SourceIdentityProjection.exact_request_identity:c1d79524745a7dae",
+        "signature_hash": "4e085eb1d33c518f"
+      }
+    ],
+    "OwnerHostTargetProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 317,
+        "end_line": 342,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:OwnerHostTargetProjection:75f4ba1b37cf5ce4",
+        "signature_hash": "29b83ef6fc2ad20c"
+      }
+    ],
+    "OwnerHostTargetProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 329,
+        "end_line": 342,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:OwnerHostTargetProjection.validate:173071f6e92cfa04",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceContractProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 346,
+        "end_line": 377,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:EvidenceContractProjection:7756d45fb246ef46",
+        "signature_hash": "4d4b7ae1288f3b5f"
+      }
+    ],
+    "EvidenceContractProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 358,
+        "end_line": 377,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:EvidenceContractProjection.validate:f00148be7bdc8bdd",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "G6RequestReceipt": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 381,
+        "end_line": 466,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:G6RequestReceipt:b6638f43a15d06e5",
+        "signature_hash": "86675ba5a58ddff9"
+      }
+    ],
+    "G6RequestReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 430,
+        "end_line": 466,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:G6RequestReceipt.validate_claim_ceiling:51ace9404e5db458",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "_Flags": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 470,
+        "end_line": 479,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:_Flags:ea511a704cf2cfde",
+        "signature_hash": "6754dd6b70f543bc"
+      }
+    ],
+    "_tree": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 482,
+        "end_line": 501,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_tree:455732fcaa06364a",
+        "signature_hash": "ec5083699609d22f"
+      }
+    ],
+    "_table": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 504,
+        "end_line": 517,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_table:426749d6aa8180c9",
+        "signature_hash": "10e38d69335fa384"
+      }
+    ],
+    "_reuse_tree": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 530,
+        "end_line": 547,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_reuse_tree:9f9e61c9ecb4e55b",
+        "signature_hash": "311c742d491558f6"
+      }
+    ],
+    "_reuse_table": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 550,
+        "end_line": 565,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_reuse_table:4238e350b3980fce",
+        "signature_hash": "cdda3aa8408c15a9"
+      }
+    ],
+    "prove_reuse_identity_different_j": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 568,
+        "end_line": 574,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_reuse_identity_different_j:be46e72a2cfcaa81",
+        "signature_hash": "d6e705d71ea77139"
+      }
+    ],
+    "public_api_parameters": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 577,
+        "end_line": 579,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:public_api_parameters:d1f3636b7906f4f1",
+        "signature_hash": "16d2555d2aa837b5"
+      }
+    ],
+    "compile_gate10_owner_host_evidence_request": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 582,
+        "end_line": 700,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:compile_gate10_owner_host_evidence_request:af59d12d12ecd810",
+        "signature_hash": "c5fff76dcc64ea93"
+      }
+    ],
+    "AbsorbedG6IdentityAddendumTests": [
+      {
+        "file": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#class:AbsorbedG6IdentityAddendumTests:adf00b3b721a931a",
+        "signature_hash": "67ad48a14c6957bc"
+      }
+    ],
+    "AbsorbedG6IdentityAddendumTests.test_addendum_is_not_an_independent_semantic_owner": [
+      {
+        "file": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#method:AbsorbedG6IdentityAddendumTests.test_addendum_is_not_an_independent_semantic_owner:766f27941cad793d",
+        "signature_hash": "99bb1d8cfc46285f"
+      }
+    ],
+    "AbsorbedG6IdentityAddendumTests.test_all_w3_findings_live_in_canonical_owner": [
+      {
+        "file": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#method:AbsorbedG6IdentityAddendumTests.test_all_w3_findings_live_in_canonical_owner:6f047c219cda5d4d",
+        "signature_hash": "a735d9847001e125"
+      }
+    ],
+    "parent_receipt": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:parent_receipt:db854e8e9e5fc3a3",
+        "signature_hash": "0326fd43f0ccc357"
+      }
+    ],
+    "reuse": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:reuse:d0a7f46ce6c9cfeb",
+        "signature_hash": "9a108ec545d4c585"
+      }
+    ],
+    "provenance": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:provenance:db4a953df6190dd1",
+        "signature_hash": "d3b68f6ee2730b96"
+      }
+    ],
+    "source": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:source:68163e8a7a9abd96",
+        "signature_hash": "b452cafcee5e907d"
+      }
+    ],
+    "owner": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:owner:9c17350a4f73fdf6",
+        "signature_hash": "a36bb6a09d15f0af"
+      }
+    ],
+    "compile_": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:compile_:5c6dcee8395c3f14",
+        "signature_hash": "521cdbaec4fc6436"
+      }
+    ],
+    "G6Tests": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 172,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#class:G6Tests:5b7bf6d6ef639b34",
+        "signature_hash": "8277261bd2f7d703"
+      }
+    ],
+    "G6Tests.test_parent769_q18_digest_relation": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_parent769_q18_digest_relation:9ab82785309b0a65",
+        "signature_hash": "e059894f8c3e5339"
+      }
+    ],
+    "G6Tests.test_exact_inputs_compile_single_owner_request": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_inputs_compile_single_owner_request:5d316eb6198d53c4",
+        "signature_hash": "7713b44640ff25fb"
+      }
+    ],
+    "G6Tests.test_public_api_has_no_precompiled_request_join": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_public_api_has_no_precompiled_request_join:84adc48f66cc242d",
+        "signature_hash": "7dcaa4cdaec1f250"
+      }
+    ],
+    "G6Tests.test_family_disposition_and_currentness_cross_casts_hold": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_family_disposition_and_currentness_cross_casts_hold:20901d9e700418e2",
+        "signature_hash": "e44c97d48ada5cdc"
+      }
+    ],
+    "G6Tests.test_same_family_different_q18_receipt_holds": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_same_family_different_q18_receipt_holds:4f2211ce5657095b",
+        "signature_hash": "de864454652eef8a"
+      }
+    ],
+    "G6Tests.test_stale_or_forged_reuse_digest_holds": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_stale_or_forged_reuse_digest_holds:2b7cf865e64f1350",
+        "signature_hash": "9f5a990540be6a2a"
+      }
+    ],
+    "G6Tests.test_coherent_current_identity_changes_request_digest": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_coherent_current_identity_changes_request_digest:6645f8e50398e1fe",
+        "signature_hash": "266c8668b2c219ce"
+      }
+    ],
+    "G6Tests.test_parent_proof_coordinate_substitution_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 141,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_parent_proof_coordinate_substitution_rejected:4bc41ab93b345ffb",
+        "signature_hash": "c2dc60a0f569d3de"
+      }
+    ],
+    "G6Tests.test_source_mismatch_holds_without_echoing_identity": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_source_mismatch_holds_without_echoing_identity:2eb47c707a2c2d91",
+        "signature_hash": "960f33b6c3c686aa"
+      }
+    ],
+    "G6Tests.test_missing_provenance_holds": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 151,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_missing_provenance_holds:01265423725b1a96",
+        "signature_hash": "49aabbe9437318df"
+      }
+    ],
+    "G6Tests.test_request_digest_is_deterministic_and_runtime_sensitive": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_request_digest_is_deterministic_and_runtime_sensitive:5f863a72533d224e",
+        "signature_hash": "ac257ef08dee39e2"
+      }
+    ],
+    "G6Tests.test_different_j_surfaces": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 160,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_different_j_surfaces:85287a41e5e45a77",
+        "signature_hash": "292b2b0f31ea8589"
+      }
+    ],
+    "G6Tests.test_core_laws": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 172,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_core_laws:3e5b1ea8a2440fbd",
+        "signature_hash": "fcb4055ca53ca7eb"
       }
     ],
     "_require_sha": [
@@ -159080,6 +159618,15 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159642,9 +160189,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168285,6 +168829,120 @@
         0.021897,
         -0.320721,
         -0.070842
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 882,
+      "lines": 25,
+      "tokens_est": 221,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          18
+        ],
+        "python3 -m unittest": [
+          22
+        ]
+      },
+      "topology": {},
+      "digest8": "e95cec1a8edd448e",
+      "vector": [
+        -0.019853,
+        0.008175,
+        0.246411,
+        -0.050216,
+        0.159992,
+        -0.166999,
+        0.029196,
+        0.110943,
+        0.061895,
+        0.286117,
+        -0.138971,
+        -0.1343,
+        -0.197362,
+        0.124957,
+        -0.272103,
+        0.178677,
+        -0.024524,
+        0.211376,
+        0.141307,
+        -0.17167,
+        0.295459,
+        -0.218383,
+        0.293124,
+        -0.11795,
+        -0.15532,
+        -0.11795,
+        -0.237068,
+        -0.108608,
+        -0.199698,
+        0.057223,
+        0.297795,
+        -0.136635
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9125,
+      "lines": 159,
+      "tokens_est": 2282,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          123
+        ],
+        "python3 -m unittest": [
+          124
+        ]
+      },
+      "topology": {},
+      "digest8": "e26ebdd34538e7fe",
+      "vector": [
+        -0.143705,
+        -0.098325,
+        -0.072393,
+        0.052944,
+        0.24311,
+        -0.173959,
+        -0.247432,
+        0.271203,
+        0.158832,
+        -0.26472,
+        0.247432,
+        -0.158832,
+        -0.262559,
+        -0.182603,
+        -0.266881,
+        -0.195569,
+        0.059427,
+        -0.037817,
+        0.199891,
+        0.050783,
+        -0.011885,
+        -0.055105,
+        0.00108,
+        -0.063749,
+        0.204213,
+        0.221501,
+        0.21934,
+        0.253915,
+        -0.057266,
+        -0.178281,
+        -0.221501,
+        -0.042139
       ]
     },
     {
@@ -235421,6 +236079,194 @@
       ]
     },
     {
+      "path": "docs/arena/AWJ032_G6_ADMISSION_IDENTITY_BINDING_W3_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 8795,
+      "lines": 163,
+      "tokens_est": 2197,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a5086d7bf85578da",
+      "vector": [
+        0.165617,
+        0.157667,
+        -0.30076,
+        0.271611,
+        -0.027824,
+        -0.112619,
+        0.223914,
+        -0.070221,
+        0.131168,
+        0.266311,
+        -0.120569,
+        -0.208014,
+        0.247762,
+        -0.258362,
+        0.29281,
+        0.001325,
+        -0.139118,
+        0.072871,
+        0.327258,
+        -0.155017,
+        0.027824,
+        -0.078171,
+        -0.025174,
+        0.123219,
+        -0.276911,
+        0.123219,
+        -0.253062,
+        -0.10732,
+        0.041073,
+        -0.078171,
+        -0.022524,
+        0.030473
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4122,
+      "lines": 42,
+      "tokens_est": 1030,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "70ae8ee127f56305",
+      "vector": [
+        0.317803,
+        0.006433,
+        0.310083,
+        0.021873,
+        0.168552,
+        0.029593,
+        0.289497,
+        0.158258,
+        0.266337,
+        0.063046,
+        -0.050179,
+        -0.165978,
+        -0.055326,
+        -0.147965,
+        -0.014153,
+        0.225164,
+        0.194285,
+        0.081059,
+        -0.29207,
+        -0.142818,
+        0.001287,
+        0.317803,
+        -0.217444,
+        0.093926,
+        -0.117085,
+        0.0193,
+        0.302363,
+        -0.101646,
+        0.117085,
+        -0.037313,
+        0.168552,
+        -0.129952
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 6856,
+      "lines": 164,
+      "tokens_est": 1713,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d4fba8f0bd98939a",
+      "vector": [
+        0.25615,
+        0.21691,
+        -0.22999,
+        0.10355,
+        -0.25397,
+        0.13625,
+        0.24307,
+        -0.27359,
+        0.05559,
+        0.25833,
+        -0.12535,
+        0.13407,
+        0.03161,
+        0.00327,
+        -0.01635,
+        0.26269,
+        0.15587,
+        -0.04905,
+        0.19947,
+        0.24089,
+        0.20601,
+        0.16459,
+        0.13407,
+        0.02943,
+        -0.09701,
+        -0.17113,
+        -0.24089,
+        0.02943,
+        0.18421,
+        0.27577,
+        0.11009,
+        -0.01853
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G6_INTERNAL_IDENTITY_JOIN_W3_CORRECTION_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4624,
+      "lines": 97,
+      "tokens_est": 1154,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4abb3a6924c23839",
+      "vector": [
+        -0.31395,
+        0.071295,
+        0.126331,
+        0.061289,
+        0.123829,
+        -0.303944,
+        -0.043778,
+        0.091308,
+        0.303944,
+        0.176362,
+        0.091308,
+        0.098813,
+        0.308947,
+        -0.158851,
+        -0.213886,
+        0.033772,
+        -0.21889,
+        -0.03127,
+        0.038775,
+        -0.18887,
+        -0.173861,
+        -0.318953,
+        -0.151347,
+        -0.201378,
+        -0.208883,
+        -0.043778,
+        -0.143842,
+        0.026267,
+        0.003752,
+        -0.048781,
+        -0.273925,
+        -0.153848
+      ]
+    },
+    {
       "path": "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -263437,6 +264283,194 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1616,
+      "lines": 41,
+      "tokens_est": 404,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3f672c104e8e3c46",
+      "vector": [
+        -0.005997,
+        -0.241065,
+        0.075558,
+        -0.01799,
+        -0.190693,
+        0.14272,
+        -0.255457,
+        0.05397,
+        -0.176301,
+        0.272247,
+        -0.171504,
+        -0.125929,
+        -0.121132,
+        0.125929,
+        -0.116335,
+        -0.26745,
+        -0.123531,
+        -0.003598,
+        0.289038,
+        -0.058767,
+        0.286639,
+        -0.03478,
+        -0.226673,
+        0.277045,
+        -0.010794,
+        0.087551,
+        0.226673,
+        -0.097145,
+        -0.296234,
+        -0.262653,
+        -0.037179,
+        0.065963
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 28239,
+      "lines": 727,
+      "tokens_est": 7060,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "55db52d35ccac197",
+      "vector": [
+        -0.287638,
+        -0.287638,
+        0.272019,
+        -0.23037,
+        -0.011714,
+        0.266813,
+        -0.121042,
+        -0.061172,
+        0.141866,
+        0.055966,
+        0.071584,
+        -0.022126,
+        0.240783,
+        -0.081996,
+        0.066378,
+        0.024729,
+        -0.201737,
+        0.188721,
+        0.118439,
+        0.095011,
+        0.07679,
+        0.061172,
+        0.256401,
+        -0.173103,
+        -0.274622,
+        -0.23037,
+        0.089805,
+        0.240783,
+        -0.196531,
+        0.191325,
+        -0.186118,
+        -0.100218
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 774,
+      "lines": 24,
+      "tokens_est": 194,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4c0fdc028c436afb",
+      "vector": [
+        0.186719,
+        0.114607,
+        0.086277,
+        -0.117182,
+        -0.253681,
+        -0.227926,
+        0.003863,
+        0.178993,
+        0.24853,
+        -0.137786,
+        -0.019316,
+        0.04507,
+        0.235653,
+        0.150663,
+        0.001288,
+        0.153239,
+        -0.068249,
+        -0.052796,
+        -0.315491,
+        0.078551,
+        0.209898,
+        0.294888,
+        -0.300039,
+        0.168691,
+        -0.243379,
+        0.209898,
+        0.215049,
+        0.091428,
+        -0.039919,
+        0.194446,
+        0.052796,
+        0.186719
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7644,
+      "lines": 177,
+      "tokens_est": 1911,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "39bd8b9908132807",
+      "vector": [
+        -0.311798,
+        0.205709,
+        0.164308,
+        -0.234172,
+        0.306623,
+        0.027169,
+        -0.283335,
+        -0.112558,
+        0.07892,
+        -0.09962,
+        0.003881,
+        0.27816,
+        -0.021994,
+        -0.141021,
+        0.247109,
+        -0.138433,
+        0.104795,
+        -0.257459,
+        -0.014231,
+        0.141021,
+        0.316973,
+        -0.12032,
+        -0.28851,
+        0.08927,
+        0.234172,
+        -0.045282,
+        -0.021994,
+        0.10997,
+        0.001294,
+        -0.053044,
+        -0.143608,
+        0.019406
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -287482,16 +288516,16 @@
     }
   },
   "summary": {
-    "file_count": 1646,
-    "total_bytes": 26478849,
-    "text_tokens_est": 6610064,
+    "file_count": 1656,
+    "total_bytes": 26551526,
+    "text_tokens_est": 6628230,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 238,
+      "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1001,
-      "schema_or_lexicon": 273,
+      "python_module": 1005,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287638,6 +288672,8 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-generation-bound-admission-reuse.yml",
+      ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288600,6 +289636,10 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AWJ032_G6_ADMISSION_IDENTITY_BINDING_W3_20260831.md",
+      "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
+      "docs/arena/AWJ032_G6_INTERNAL_IDENTITY_JOIN_W3_CORRECTION_20260831.md",
       "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
@@ -289138,6 +290178,10 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_generation_bound_admission_reuse.py",
+      "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
+      "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+      "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+      "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py",
@@ -446877,6 +447921,546 @@
         "file_digest8": "5826cd4bbce15f19"
       },
       {
+        "semantic_id": "tools/awj032/glm53_g6_admission_identity_binding_addendum.py#function:canonical_owner_status:4cfee0dbb6fd42c5",
+        "name": "canonical_owner_status",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_admission_identity_binding_addendum.py",
+        "line": 30,
+        "end_line": 40,
+        "signature_hash": "8fe41a49011c41e1",
+        "file_digest8": "3f672c104e8e3c46"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:AdmissionReuseProjection:5df8df9f92425297",
+        "name": "AdmissionReuseProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 133,
+        "end_line": 212,
+        "signature_hash": "c475a0d20ae1d4de",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:EvidenceContractProjection:7756d45fb246ef46",
+        "name": "EvidenceContractProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 346,
+        "end_line": 377,
+        "signature_hash": "4d4b7ae1288f3b5f",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:G6RequestReceipt:b6638f43a15d06e5",
+        "name": "G6RequestReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 381,
+        "end_line": 466,
+        "signature_hash": "86675ba5a58ddff9",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:ObservationProvenanceContractProjection:2fd3fa01ca7188e3",
+        "name": "ObservationProvenanceContractProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 265,
+        "end_line": 286,
+        "signature_hash": "517fdabb13a328d4",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:OwnerHostTargetProjection:75f4ba1b37cf5ce4",
+        "name": "OwnerHostTargetProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 317,
+        "end_line": 342,
+        "signature_hash": "29b83ef6fc2ad20c",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:SourceIdentityProjection:177f2bc67b0f275d",
+        "name": "SourceIdentityProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 290,
+        "end_line": 313,
+        "signature_hash": "d078451618dd3692",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:_Flags:ea511a704cf2cfde",
+        "name": "_Flags",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 470,
+        "end_line": 479,
+        "signature_hash": "6754dd6b70f543bc",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_canonical:14f01aa2116a15b2",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 105,
+        "end_line": 112,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_digest:39ec8cf729ffc690",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 125,
+        "end_line": 129,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_reuse_table:4238e350b3980fce",
+        "name": "_reuse_table",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 550,
+        "end_line": 565,
+        "signature_hash": "cdda3aa8408c15a9",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_reuse_tree:9f9e61c9ecb4e55b",
+        "name": "_reuse_tree",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 530,
+        "end_line": 547,
+        "signature_hash": "311c742d491558f6",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_sha:9ca7b2d5390b997a",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_table:426749d6aa8180c9",
+        "name": "_table",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 504,
+        "end_line": 517,
+        "signature_hash": "10e38d69335fa384",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_text:ffb08ad7dea9ec75",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 119,
+        "end_line": 122,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_tree:455732fcaa06364a",
+        "name": "_tree",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 482,
+        "end_line": 501,
+        "signature_hash": "ec5083699609d22f",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:classify_reuse_identity:ce21529141bd04b4",
+        "name": "classify_reuse_identity",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 248,
+        "end_line": 261,
+        "signature_hash": "378d139640063c4b",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:compile_gate10_owner_host_evidence_request:af59d12d12ecd810",
+        "name": "compile_gate10_owner_host_evidence_request",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 582,
+        "end_line": 700,
+        "signature_hash": "c5fff76dcc64ea93",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:expected_pr769_reuse_digest:35065108cb2dba05",
+        "name": "expected_pr769_reuse_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 215,
+        "end_line": 245,
+        "signature_hash": "e6e56fb60643a3f6",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_different_j:ca88bf318d666903",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 520,
+        "end_line": 527,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_reuse_identity_different_j:be46e72a2cfcaa81",
+        "name": "prove_reuse_identity_different_j",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 568,
+        "end_line": 574,
+        "signature_hash": "d6e705d71ea77139",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:public_api_parameters:d1f3636b7906f4f1",
+        "name": "public_api_parameters",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 577,
+        "end_line": 579,
+        "signature_hash": "16d2555d2aa837b5",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:AdmissionReuseProjection.identity_digest:cdb26aeb6868c625",
+        "name": "AdmissionReuseProjection.identity_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 199,
+        "end_line": 212,
+        "signature_hash": "c693ea685ee9d854",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:AdmissionReuseProjection.validate_shape:645376c7c78c9598",
+        "name": "AdmissionReuseProjection.validate_shape",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 160,
+        "end_line": 196,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:EvidenceContractProjection.validate:f00148be7bdc8bdd",
+        "name": "EvidenceContractProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 358,
+        "end_line": 377,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:G6RequestReceipt.validate_claim_ceiling:51ace9404e5db458",
+        "name": "G6RequestReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 430,
+        "end_line": 466,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:ObservationProvenanceContractProjection.validate:572ca8d851abd4fb",
+        "name": "ObservationProvenanceContractProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 277,
+        "end_line": 286,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:OwnerHostTargetProjection.validate:173071f6e92cfa04",
+        "name": "OwnerHostTargetProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 329,
+        "end_line": 342,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:SourceIdentityProjection.exact_request_identity:c1d79524745a7dae",
+        "name": "SourceIdentityProjection.exact_request_identity",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 306,
+        "end_line": 313,
+        "signature_hash": "4e085eb1d33c518f",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:SourceIdentityProjection.validate:ee2a98f77d60af41",
+        "name": "SourceIdentityProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 298,
+        "end_line": 303,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "55db52d35ccac197"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#class:AbsorbedG6IdentityAddendumTests:adf00b3b721a931a",
+        "name": "AbsorbedG6IdentityAddendumTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+        "line": 9,
+        "end_line": 19,
+        "signature_hash": "67ad48a14c6957bc",
+        "file_digest8": "4c0fdc028c436afb"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#method:AbsorbedG6IdentityAddendumTests.test_addendum_is_not_an_independent_semantic_owner:766f27941cad793d",
+        "name": "AbsorbedG6IdentityAddendumTests.test_addendum_is_not_an_independent_semantic_owner",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+        "line": 10,
+        "end_line": 15,
+        "signature_hash": "99bb1d8cfc46285f",
+        "file_digest8": "4c0fdc028c436afb"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py#method:AbsorbedG6IdentityAddendumTests.test_all_w3_findings_live_in_canonical_owner:6f047c219cda5d4d",
+        "name": "AbsorbedG6IdentityAddendumTests.test_all_w3_findings_live_in_canonical_owner",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "a735d9847001e125",
+        "file_digest8": "4c0fdc028c436afb"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#class:G6Tests:5b7bf6d6ef639b34",
+        "name": "G6Tests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 80,
+        "end_line": 172,
+        "signature_hash": "8277261bd2f7d703",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:compile_:5c6dcee8395c3f14",
+        "name": "compile_",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "521cdbaec4fc6436",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:evidence:362d60ff2dec9da2",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "968bacd5cb8e70f6",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:owner:9c17350a4f73fdf6",
+        "name": "owner",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 61,
+        "end_line": 65,
+        "signature_hash": "a36bb6a09d15f0af",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:parent_receipt:db854e8e9e5fc3a3",
+        "name": "parent_receipt",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 12,
+        "end_line": 34,
+        "signature_hash": "0326fd43f0ccc357",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:provenance:db4a953df6190dd1",
+        "name": "provenance",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 49,
+        "end_line": 52,
+        "signature_hash": "d3b68f6ee2730b96",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:reuse:d0a7f46ce6c9cfeb",
+        "name": "reuse",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 37,
+        "end_line": 46,
+        "signature_hash": "9a108ec545d4c585",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:source:68163e8a7a9abd96",
+        "name": "source",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "b452cafcee5e907d",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_coherent_current_identity_changes_request_digest:6645f8e50398e1fe",
+        "name": "G6Tests.test_coherent_current_identity_changes_request_digest",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 129,
+        "end_line": 135,
+        "signature_hash": "266c8668b2c219ce",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_core_laws:3e5b1ea8a2440fbd",
+        "name": "G6Tests.test_core_laws",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 162,
+        "end_line": 172,
+        "signature_hash": "fcb4055ca53ca7eb",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_different_j_surfaces:85287a41e5e45a77",
+        "name": "G6Tests.test_different_j_surfaces",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 158,
+        "end_line": 160,
+        "signature_hash": "292b2b0f31ea8589",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_inputs_compile_single_owner_request:5d316eb6198d53c4",
+        "name": "G6Tests.test_exact_inputs_compile_single_owner_request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 88,
+        "end_line": 97,
+        "signature_hash": "7713b44640ff25fb",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_family_disposition_and_currentness_cross_casts_hold:20901d9e700418e2",
+        "name": "G6Tests.test_family_disposition_and_currentness_cross_casts_hold",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 103,
+        "end_line": 114,
+        "signature_hash": "e44c97d48ada5cdc",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_missing_provenance_holds:01265423725b1a96",
+        "name": "G6Tests.test_missing_provenance_holds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 149,
+        "end_line": 151,
+        "signature_hash": "49aabbe9437318df",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_parent769_q18_digest_relation:9ab82785309b0a65",
+        "name": "G6Tests.test_parent769_q18_digest_relation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 81,
+        "end_line": 86,
+        "signature_hash": "e059894f8c3e5339",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_parent_proof_coordinate_substitution_rejected:4bc41ab93b345ffb",
+        "name": "G6Tests.test_parent_proof_coordinate_substitution_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 137,
+        "end_line": 141,
+        "signature_hash": "c2dc60a0f569d3de",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_public_api_has_no_precompiled_request_join:84adc48f66cc242d",
+        "name": "G6Tests.test_public_api_has_no_precompiled_request_join",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 99,
+        "end_line": 101,
+        "signature_hash": "7dcaa4cdaec1f250",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_request_digest_is_deterministic_and_runtime_sensitive:5f863a72533d224e",
+        "name": "G6Tests.test_request_digest_is_deterministic_and_runtime_sensitive",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 153,
+        "end_line": 156,
+        "signature_hash": "ac257ef08dee39e2",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_same_family_different_q18_receipt_holds:4f2211ce5657095b",
+        "name": "G6Tests.test_same_family_different_q18_receipt_holds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 116,
+        "end_line": 119,
+        "signature_hash": "de864454652eef8a",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_source_mismatch_holds_without_echoing_identity:2eb47c707a2c2d91",
+        "name": "G6Tests.test_source_mismatch_holds_without_echoing_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "960f33b6c3c686aa",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_stale_or_forged_reuse_digest_holds:2b7cf865e64f1350",
+        "name": "G6Tests.test_stale_or_forged_reuse_digest_holds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 121,
+        "end_line": 127,
+        "signature_hash": "9f5a990540be6a2a",
+        "file_digest8": "39bd8b9908132807"
+      },
+      {
         "semantic_id": "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py#class:RepresentativeGeneration:ecd8b8d2427b7a28",
         "name": "RepresentativeGeneration",
         "kind": "class",
@@ -448227,7 +449811,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8c21cf1f9801133587cf81bf76685e94",
-    "payload_hash": "f56b83c277344d2828d67bca48809398"
+    "record_fingerprint": "72b0cfd34b5963e246160c4647cd33a3",
+    "payload_hash": "b15af1ed55d746e6191f8167b1329969"
   }
 }
