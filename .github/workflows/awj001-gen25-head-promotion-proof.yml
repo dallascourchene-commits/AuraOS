@@ -18,7 +18,7 @@ jobs:
     env:
       PYTHONPATH: .
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
       - name: Compile semantic surface
@@ -34,6 +34,10 @@ jobs:
           assert r.event_type == p.PROMOTED
           assert r.generation == 25
           assert r.predecessor_head == '3aeb8f3db921201f'
+          assert r.candidate_predecessor_generation == 24
+          assert r.candidate_predecessor_head == '3aeb8f3db921201f'
+          assert r.candidate_predecessor_drive_id == p.PREDECESSOR_DRIVE_ID
+          assert len(r.candidate_predecessor_binding_digest) == 64
           assert p.prove_different_j() == 256
           assert r.current_at_promotion_cut is True
           assert r.current_at_future_use_proven is False
@@ -46,5 +50,6 @@ jobs:
           assert r.native_private_transformer_kv_accessed is False
           print('HEAD=' + r.head)
           print('JOIN=' + r.join_address)
+          print('BINDING=' + r.candidate_predecessor_binding_digest)
           print('RECEIPT=' + r.receipt_digest)
           print('CURRENTNESS=' + r.currentness_observation_digest)
