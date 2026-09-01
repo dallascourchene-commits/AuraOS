@@ -1,89 +1,90 @@
-# AWJ032 GLM-5.3 G6 W3 — Internal Identity Join Correction
+# AWJ032 GLM-5.3 G6 W3 — Identity Join Correction and Absorption
 
-Date: 2026-08-31  
-Status: DRAFT / D0 / HS1 / NONPROMOTING / SUPERSEDES POST-HOC BINDING SHAPE
+Date: 2026-09-01  
+Status: DRAFT / D0 / HS1 / NONPROMOTING / ABSORBED INTO CANONICAL G6 OWNER
 
-## Correction
+## Result
 
-The first identity-binding addendum correctly preserved PR #769's seven consequence-bearing identity fields, but its API still accepted:
+The identity-binding W3 falsifier is no longer an independent semantic owner. Its consequence-changing findings were folded directly into:
 
-`base_request + reuse_identity`.
+`tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py`
 
-That is insufficient because the base G6 receipt does not carry the reuse identity needed to prove that the two independently supplied objects belong together.
+Canonical schema: `AURA-GLM53-G6-GATE10-OWNER-HOST-EVIDENCE-REQUEST-v4`.
 
-Therefore:
+The former addendum path remains only as a compatibility/provenance tombstone with zero closure or successor credit.
 
-`CallerSuppliedBaseRequest + IndependentExactIdentity != JoinedRequestIdentity`.
+## Falsifiers absorbed
 
-A later binding hash cannot manufacture a relation that the inputs did not establish.
+The earlier base request preserved too little of PR #769. The W3 line established four required constraints:
 
-## Current W3 API
+1. `ExactQ18AdmissionReceiptMustRemainBound` — the GLM bounded-C2 admission must be the exact Q18 historical receipt `c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230`, not merely the same family.
+2. `PR769ReuseDigestMustCommitExactIdentityVector` — a 64-hex digest shape is insufficient; the digest must equal PR #769's deterministic commitment over the Q18 admission receipt plus subject/source/evidence/owner/decision identity and the candidate-only claim ceiling.
+3. `AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection` — all consequence-bearing current-use identity fields remain inside the canonical request digest and receipt.
+4. `SingleOwnerCompilerEliminatesPostHocIdentityJoin` — no caller-supplied precompiled G6 request can later be paired with an independent identity object and treated as a proven relation.
 
-The only public construction path is:
+## Exact transitive Q18 lineage
 
-`compile_identity_bound_g6_request(reuse_identity, provenance, owner, evidence)`.
+Q18 / PR #761 is inherited through PR #769 and receives zero additional Objective-parent credit.
 
-Order:
+- semantic head: `aed81432db8b84d2f43b8a85d06d4b72e16f6a50`
+- source blob: `4cee26edaf0759fc80d31889ab9e4e268f9a4fbe`
+- hosted run/job: `33436580962 / 99634379758`, SUCCESS
+- exact receipt: `c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230`
 
-1. validate exact PR #769 proof coordinates;
-2. require exact family `GLM53_BOUNDED_C2_PROPOSAL`;
-3. require `REUSE_CANDIDATE` and candidate-only claim ceiling;
-4. validate the full identity vector:
-   - admission receipt digest;
-   - reuse digest;
-   - subject identity;
-   - source generation;
-   - evidence generation;
-   - owner context;
-   - decision context;
-5. construct the weaker PR #782 base reuse projection **inside** the membrane;
-6. compile the base G6 request internally from provenance/owner/evidence inputs;
-7. require the base request to be compiled and nonpromoting;
-8. bind the internally constructed base request digest to the exact PR #769 identity vector;
-9. return only `IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED`.
+This is lineage authentication, not a third G6 semantic parent.
 
-There is no public `base_request` parameter and no public `bind_g6_request_to_admission_identity` function.
+## Canonical construction path
 
-## Hosted invariant
+The only G6 request constructor is now:
 
-`Aura GLM53 G6 Admission Identity Binding W3` now asserts:
+`compile_gate10_owner_host_evidence_request(reuse, provenance, source, owner, evidence)`.
 
-- public parameters are exactly `reuse_identity, provenance, owner, evidence`;
-- `base_request` is absent;
-- the unsafe public precompiled binder is absent;
-- #782 base G6 source/test blobs remain pinned;
-- #769/#727 exact terminal proofs and blobs revalidate;
-- base G6 adversarials and W3 adversarials pass;
-- 512-state base + 16-state W3 summary lattices pass;
-- anti-cross-cast and nonpromotion laws remain present.
+It directly validates:
 
-Current correction commits:
+- exact PR #769 proof coordinates;
+- exact family `GLM53_BOUNDED_C2_PROPOSAL`;
+- exact `REUSE_CANDIDATE` disposition;
+- current-use context;
+- exact Q18 historical admission receipt;
+- exact PR #769 reuse-digest relation;
+- full subject/source/evidence/owner/decision identity vector;
+- exact flagship source request identity;
+- operation/observer/backend provenance requirements;
+- owner-host resource/evidence/replay contracts;
+- all unpaid Gate-10 debt.
 
-- module: `b9c84d3e9c8f90655c7814a79355b72e81d00caa`
-- tests: `b0162fb19b68f4b07e9bd0f4afbfedee5c543e57`
-- workflow: `87ddd289f6d4fe996ef61bce4c1667b87e9dfa4e`
+Positive output remains only `OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED`.
 
-Exact hosted SUCCESS on the current head is still required before Objective-2 closure.
+## Proof surfaces
 
-## Triadic / Omega-8 refinement
+Canonical hosted closure now owns:
 
-- **Thesis:** exact PR #769 identity can disambiguate the G6 reuse candidate.
-- **Counterplane:** post-hoc pairing of two caller-supplied objects does not prove their join.
-- **Synthesis:** validate exact identity first, construct base request internally, then bind one internally generated request to that identity.
-- **W3 contradiction:** `IndependentTruths != ProvenRelation`.
-- **W4 factorization:** identity preservation, producer authentication, source currentness, request construction, execution and physical observation remain distinct.
-- **W7:** any identity/generation change requires reconstruction; an old base request cannot be relabeled current by attaching a new identity.
-- **W8:** effect authority remains unearned.
+- `2^9 = 512` request-precondition Different-J states;
+- `2^5 = 32` ordered reuse-identity Different-J states;
+- exact PR #769 and PR #727 terminal hosted proof revalidation;
+- exact transitive Q18 source/run/job revalidation;
+- exact PR #582 C2 handoff and PR #586 lifecycle-return owner revalidation;
+- canonical adversarial tests for Q18 substitution, stale/forged reuse digests, family/disposition/currentness cross-casts, source/provenance substitutions, and request determinism.
+
+The former `Aura GLM53 G6 Admission Identity Binding W3` workflow has been retired from push/PR closure and remains manual compatibility-only. Canonical closure is owned solely by `Aura GLM53 G6 Gate10 Owner Host Evidence Request`.
 
 ## Laws
 
+`AdmissionValidAtProduce != AdmissionReusableAtUse`.
+
 `ReuseCandidateSummary != AdmissionReuseReceiptIdentity`.
 
-`CallerSuppliedBaseRequest + IndependentIdentity != JoinedRequestIdentity`.
+`ExactQ18AdmissionReceiptMustRemainBound`.
 
-`IdentityBoundWrapperMustConstructBaseRequest`.
+`DigestShape != DigestRelationProof`.
+
+`PR769ReuseDigestMustCommitExactIdentityVector`.
+
+`SingleOwnerCompilerEliminatesPostHocIdentityJoin`.
 
 `IdentityBinding != ReceiptProducerAuthentication != SourceCurrentnessTruth`.
+
+`CanonicalC2ReturnPath != ProducerAuthentication`.
 
 `RequestEnvelopeCompiled != TensorPayloadBound != ExecutionObserved`.
 
@@ -92,3 +93,5 @@ Exact hosted SUCCESS on the current head is still required before Objective-2 cl
 ## Claim ceiling
 
 No reuse-receipt producer authentication, source-currentness truth, owner authentication, tensor binding, model/provider execution, physical I/O, observer/backend authentication, AuraOS resident routing, replay/recovery proof, execution/effect authority, semantic K27 authority, native/private transformer KV state, Gate-10 promotion, merge/deploy/spend or public/financial/human effect is granted.
+
+G6 receives no closure/successor credit until the canonical exact-head hosted workflow is SUCCESS.
