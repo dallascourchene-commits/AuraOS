@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788196500,
+  "generated_at_unix": 1788265229,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1648,
+    "repo_file_count": 1650,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1626,6 +1626,7 @@
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
+      "tests/test_aura_world_skill_workcapsule.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -1640,6 +1641,7 @@
       "tools/aura_external_discovery_cli.py",
       "tools/aura_external_discovery_ingress_bridge.py",
       "tools/aura_external_knowledge_ingress.py",
+      "tools/aura_world_skill_workcapsule.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1764,15 +1766,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1648,
-      "bytes": 26495096,
-      "tokens_est": 6614128,
+      "files": 1650,
+      "bytes": 26523040,
+      "tokens_est": 6621115,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1004,
+        "python_module": 1006,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -3919,6 +3921,14 @@
         "line": 99,
         "end_line": 106,
         "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_canonical:af142ecd08e466a2",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_canonical:9552f188a60bc954",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8099,6 +8109,14 @@
         "line": 109,
         "end_line": 110,
         "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_sha:b4005b85f666993e",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_sha:9a39373123675d3b",
         "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
@@ -14702,6 +14720,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_text:0937ec3b59eafcd0",
+        "signature_hash": "6aabdab0e2d03513"
       }
     ],
     "_bounded": [
@@ -23146,6 +23172,14 @@
         "end_line": 57,
         "semantic_id": "tests/test_aura_emergent_evidence_spine_coderabbit.py#function:_node:c1c0f48d3ad2d930",
         "signature_hash": "1cea505fa93d4f85"
+      },
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 55,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#function:_node:a70e83cb64df41d4",
+        "signature_hash": "fdab6e58bdf5f725"
       }
     ],
     "_canonical_target_binding": [
@@ -26404,6 +26438,14 @@
         "end_line": 398,
         "semantic_id": "aura_cockpit_planner.py#function:_canonical_strings:fcf2cb493abce65e",
         "signature_hash": "86c1b85831fabbe1"
+      },
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_canonical_strings:becf0a5fa3b82392",
+        "signature_hash": "629599373578cec5"
       }
     ],
     "_canonical_repo_paths": [
@@ -83069,7 +83111,7 @@
         "file": "aura_skill_cockpit_adapter.py",
         "kind": "function",
         "line": 14,
-        "end_line": 40,
+        "end_line": 63,
         "semantic_id": "aura_skill_cockpit_adapter.py#function:discover_skills_for_objective:d661795d13504a8e",
         "signature_hash": "75ae78934294e67f"
       }
@@ -83078,8 +83120,8 @@
       {
         "file": "aura_skill_cockpit_adapter.py",
         "kind": "function",
-        "line": 43,
-        "end_line": 48,
+        "line": 66,
+        "end_line": 71,
         "semantic_id": "aura_skill_cockpit_adapter.py#function:weave_skills_for_intent:faedc2a48031dfd3",
         "signature_hash": "b550e397ee1dab5c"
       }
@@ -83088,8 +83130,8 @@
       {
         "file": "aura_skill_cockpit_adapter.py",
         "kind": "function",
-        "line": 51,
-        "end_line": 68,
+        "line": 74,
+        "end_line": 91,
         "semantic_id": "aura_skill_cockpit_adapter.py#function:skillweaver_to_affordance_cards:ef1c64edc14bcf44",
         "signature_hash": "a32dd65fcf1de9f2"
       }
@@ -83098,8 +83140,8 @@
       {
         "file": "aura_skill_cockpit_adapter.py",
         "kind": "function",
-        "line": 71,
-        "end_line": 90,
+        "line": 94,
+        "end_line": 112,
         "semantic_id": "aura_skill_cockpit_adapter.py#function:skillweaver_to_qdkt_feedback:71b1d4fc2b66de42",
         "signature_hash": "054b2a25afb58977"
       }
@@ -157192,6 +157234,176 @@
         "signature_hash": "55c463356493030d"
       }
     ],
+    "_objective": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#function:_objective:e986b8c2ffcc8761",
+        "signature_hash": "ec4e74a610137e42"
+      }
+    ],
+    "_skill": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 102,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#function:_skill:b91d21a89478104a",
+        "signature_hash": "3de3f9d705f69513"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "class",
+        "line": 105,
+        "end_line": 205,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:WorldSkillWorkCapsuleTests:563235a32b63f143",
+        "signature_hash": "0c7617550d93df65"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_minimal_skill_bundle_drives_demand_hydration": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 128,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_minimal_skill_bundle_drives_demand_hydration:c4000afd84e8b059",
+        "signature_hash": "e187e6f0809e9c13"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_model_specific_negative_transfer_fails_closed": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 144,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_model_specific_negative_transfer_fails_closed:c1fe28ceb2257d92",
+        "signature_hash": "3302c579534beb64"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_stale_skill_is_not_selected": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_stale_skill_is_not_selected:becd91a7ecd492fe",
+        "signature_hash": "e4286f2788eec323"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_noncurrent_world_node_requires_reverification_not_deeper_hydration": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 164,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_noncurrent_world_node_requires_reverification_not_deeper_hydration:027ab515093e63e7",
+        "signature_hash": "0349add4e6a130b5"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_cache_key_moves_with_source_generation": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 174,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_cache_key_moves_with_source_generation:994bdb93d521967b",
+        "signature_hash": "e52806e442f6b50b"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_cache_key_moves_with_skill_generation": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 186,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_cache_key_moves_with_skill_generation:ead0b0e10b9ce720",
+        "signature_hash": "905e9551821c7823"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_claim_ceiling_rejects_authority_widening": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 195,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_claim_ceiling_rejects_authority_widening:1816f4b6884f53dd",
+        "signature_hash": "bf0283d1042cc4bd"
+      }
+    ],
+    "WorldSkillWorkCapsuleTests.test_coordinate_and_cache_never_become_truth": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 205,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_coordinate_and_cache_never_become_truth:097d86e6bb222c98",
+        "signature_hash": "0865e4f8f2e03f8f"
+      }
+    ],
+    "SkillCockpitTargetingRegressionTests": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "class",
+        "line": 208,
+        "end_line": 238,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:SkillCockpitTargetingRegressionTests:f70732fee6a927fd",
+        "signature_hash": "5aeeb90a04c01c29"
+      }
+    ],
+    "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 238,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries:1ae025b69f997cb4",
+        "signature_hash": "5233472021e52951"
+      }
+    ],
+    "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "class",
+        "line": 212,
+        "end_line": 217,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill:209e5bd06e57d4b2",
+        "signature_hash": "0d052fdc6d2f4624"
+      }
+    ],
+    "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill.__init__": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 217,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill.__init__:70b2af7d563dbfc4",
+        "signature_hash": "716d131226ab451f"
+      }
+    ],
+    "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "class",
+        "line": 219,
+        "end_line": 221,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver:6fa0ebeff27f5561",
+        "signature_hash": "702b0a4f9ba56c18"
+      }
+    ],
+    "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver.__init__": [
+      {
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 221,
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver.__init__:6d4e9937d949c2b4",
+        "signature_hash": "1904154de2847073"
+      }
+    ],
     "_git_blob_sha": [
       {
         "file": "tests/test_bilateral_intent_pr1_evidence.py",
@@ -158000,6 +158212,116 @@
         "end_line": 524,
         "semantic_id": "tools/aura_external_knowledge_ingress.py#function:classify_refresh:5c3a79708f60ef5f",
         "signature_hash": "7a41eb5ea6947edd"
+      }
+    ],
+    "_level_index": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 79,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_level_index:da2e4491345fe19d",
+        "signature_hash": "a264eeb8393b729a"
+      }
+    ],
+    "ObjectiveRouteProfile": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 109,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#class:ObjectiveRouteProfile:bd315d3fe7e06a71",
+        "signature_hash": "78d052687343855f"
+      }
+    ],
+    "ObjectiveRouteProfile.validate": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 109,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#method:ObjectiveRouteProfile.validate:1f87b03a45210faf",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SkillRouteCard": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "class",
+        "line": 113,
+        "end_line": 181,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#class:SkillRouteCard:b715e2ad794aea1d",
+        "signature_hash": "294fc38ad0ebd64d"
+      }
+    ],
+    "SkillRouteCard.validate": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 169,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#method:SkillRouteCard.validate:1505f0d069812a89",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SkillRouteCard.identity": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 181,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#method:SkillRouteCard.identity:d68fc949acd38a38",
+        "signature_hash": "fcd7e6c74f7bc0d0"
+      }
+    ],
+    "_skill_rejection_reason": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 196,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_skill_rejection_reason:dbefbb2f529892ce",
+        "signature_hash": "0befa844b10a977e"
+      }
+    ],
+    "_minimal_cover": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 199,
+        "end_line": 226,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_minimal_cover:a55c7b5c84b380ad",
+        "signature_hash": "3d32fbc03f48be6c"
+      }
+    ],
+    "_world_route": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 229,
+        "end_line": 265,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_world_route:efeb9dd640851254",
+        "signature_hash": "685265ab7644211e"
+      }
+    ],
+    "compile_world_skill_workcapsule": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 425,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:compile_world_skill_workcapsule:d2aa789ed749bfda",
+        "signature_hash": "54e6f839fba37311"
+      }
+    ],
+    "verify_world_skill_workcapsule": [
+      {
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "kind": "function",
+        "line": 428,
+        "end_line": 455,
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:verify_world_skill_workcapsule:b418ab19900104cb",
+        "signature_hash": "f096ee67ac91b0de"
       }
     ],
     "_coordinates": [
@@ -217638,9 +217960,9 @@
       "path": "aura_skill_cockpit_adapter.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 3638,
-      "lines": 91,
-      "tokens_est": 909,
+      "bytes": 4352,
+      "lines": 113,
+      "tokens_est": 1088,
       "symbol_count": 4,
       "commands": [],
       "command_lines": {},
@@ -217669,40 +217991,40 @@
           "module": 1
         }
       },
-      "digest8": "a90a22d93dbdd408",
+      "digest8": "88104d3ea9a2e471",
       "vector": [
-        0.112168,
-        -0.177036,
-        0.179739,
-        -0.071625,
-        -0.28515,
-        -0.201362,
-        0.244607,
-        -0.020271,
-        0.204064,
-        0.214876,
-        0.179739,
-        -0.112168,
-        -0.182442,
-        0.031083,
-        -0.195956,
-        -0.120276,
-        -0.222984,
-        0.098654,
-        0.201362,
-        0.00946,
-        -0.025677,
-        -0.212173,
-        0.079734,
-        -0.128385,
-        -0.19055,
-        0.331098,
-        0.031083,
-        -0.236499,
-        -0.125682,
-        0.260824,
-        0.144602,
-        -0.201362
+        -0.064187,
+        0.195181,
+        -0.281638,
+        0.334035,
+        0.106105,
+        0.158503,
+        -0.051088,
+        0.100866,
+        -0.331415,
+        -0.155883,
+        0.239719,
+        -0.00917,
+        0.030129,
+        -0.140164,
+        -0.200421,
+        0.074667,
+        0.079906,
+        0.098246,
+        0.182082,
+        0.260679,
+        -0.056328,
+        -0.095626,
+        -0.040608,
+        -0.100866,
+        -0.21876,
+        0.134924,
+        -0.148023,
+        0.22138,
+        0.189942,
+        -0.315696,
+        -0.011789,
+        0.213521
       ]
     },
     {
@@ -263248,6 +263570,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_world_skill_workcapsule.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9636,
+      "lines": 243,
+      "tokens_est": 2409,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d1ae3a6b66c6b33b",
+      "vector": [
+        0.066586,
+        -0.229911,
+        -0.056536,
+        0.292728,
+        -0.054023,
+        0.096739,
+        0.159556,
+        -0.001256,
+        0.184683,
+        -0.167094,
+        0.066586,
+        -0.174632,
+        -0.121865,
+        0.257551,
+        -0.244987,
+        -0.033921,
+        -0.109302,
+        -0.091713,
+        0.20981,
+        -0.164581,
+        0.222373,
+        0.320368,
+        -0.01382,
+        -0.094226,
+        0.277652,
+        0.104277,
+        0.129404,
+        -0.031409,
+        0.199759,
+        -0.280165,
+        -0.297754,
+        -0.106789
+      ]
+    },
+    {
       "path": "tests/test_bilateral_intent_pr1_evidence.py",
       "role": "python_module",
       "binary": false,
@@ -263903,6 +264272,53 @@
         -0.02834,
         -0.243725,
         0.103158
+      ]
+    },
+    {
+      "path": "tools/aura_world_skill_workcapsule.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17594,
+      "lines": 456,
+      "tokens_est": 4399,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bb8596e77dfc2c07",
+      "vector": [
+        -0.220145,
+        0.026588,
+        0.207383,
+        0.224399,
+        -0.098906,
+        -0.015953,
+        -0.226526,
+        -0.084017,
+        0.1457,
+        -0.08189,
+        -0.245669,
+        0.175478,
+        0.096779,
+        -0.094652,
+        -0.237161,
+        -0.222272,
+        -0.075509,
+        -0.037223,
+        -0.245669,
+        -0.247796,
+        0.190367,
+        -0.005318,
+        -0.243542,
+        -0.132938,
+        -0.122303,
+        0.020207,
+        0.10316,
+        -0.260558,
+        0.226526,
+        0.241415,
+        0.241415,
+        0.205256
       ]
     },
     {
@@ -287904,15 +288320,15 @@
     }
   },
   "summary": {
-    "file_count": 1648,
-    "total_bytes": 26495096,
-    "text_tokens_est": 6614128,
+    "file_count": 1650,
+    "total_bytes": 26523040,
+    "text_tokens_est": 6621115,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1004,
+      "python_module": 1006,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -289549,6 +289965,7 @@
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
+      "tests/test_aura_world_skill_workcapsule.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -289563,6 +289980,7 @@
       "tools/aura_external_discovery_cli.py",
       "tools/aura_external_discovery_ingress_bridge.py",
       "tools/aura_external_knowledge_ingress.py",
+      "tools/aura_world_skill_workcapsule.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -368876,39 +369294,39 @@
         "kind": "function",
         "file": "aura_skill_cockpit_adapter.py",
         "line": 14,
-        "end_line": 40,
+        "end_line": 63,
         "signature_hash": "75ae78934294e67f",
-        "file_digest8": "a90a22d93dbdd408"
+        "file_digest8": "88104d3ea9a2e471"
       },
       {
         "semantic_id": "aura_skill_cockpit_adapter.py#function:skillweaver_to_affordance_cards:ef1c64edc14bcf44",
         "name": "skillweaver_to_affordance_cards",
         "kind": "function",
         "file": "aura_skill_cockpit_adapter.py",
-        "line": 51,
-        "end_line": 68,
+        "line": 74,
+        "end_line": 91,
         "signature_hash": "a32dd65fcf1de9f2",
-        "file_digest8": "a90a22d93dbdd408"
+        "file_digest8": "88104d3ea9a2e471"
       },
       {
         "semantic_id": "aura_skill_cockpit_adapter.py#function:skillweaver_to_qdkt_feedback:71b1d4fc2b66de42",
         "name": "skillweaver_to_qdkt_feedback",
         "kind": "function",
         "file": "aura_skill_cockpit_adapter.py",
-        "line": 71,
-        "end_line": 90,
+        "line": 94,
+        "end_line": 112,
         "signature_hash": "054b2a25afb58977",
-        "file_digest8": "a90a22d93dbdd408"
+        "file_digest8": "88104d3ea9a2e471"
       },
       {
         "semantic_id": "aura_skill_cockpit_adapter.py#function:weave_skills_for_intent:faedc2a48031dfd3",
         "name": "weave_skills_for_intent",
         "kind": "function",
         "file": "aura_skill_cockpit_adapter.py",
-        "line": 43,
-        "end_line": 48,
+        "line": 66,
+        "end_line": 71,
         "signature_hash": "b550e397ee1dab5c",
-        "file_digest8": "a90a22d93dbdd408"
+        "file_digest8": "88104d3ea9a2e471"
       },
       {
         "semantic_id": "aura_skillweaver.py#class:AuraSkill:e31387768bd7e8bb",
@@ -446801,6 +447219,186 @@
         "file_digest8": "c823f53498b3e858"
       },
       {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill:209e5bd06e57d4b2",
+        "name": "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill",
+        "kind": "class",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 212,
+        "end_line": 217,
+        "signature_hash": "0d052fdc6d2f4624",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver:6fa0ebeff27f5561",
+        "name": "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver",
+        "kind": "class",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 219,
+        "end_line": 221,
+        "signature_hash": "702b0a4f9ba56c18",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:SkillCockpitTargetingRegressionTests:f70732fee6a927fd",
+        "name": "SkillCockpitTargetingRegressionTests",
+        "kind": "class",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 208,
+        "end_line": 238,
+        "signature_hash": "5aeeb90a04c01c29",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#class:WorldSkillWorkCapsuleTests:563235a32b63f143",
+        "name": "WorldSkillWorkCapsuleTests",
+        "kind": "class",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 105,
+        "end_line": 205,
+        "signature_hash": "0c7617550d93df65",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#function:_node:a70e83cb64df41d4",
+        "name": "_node",
+        "kind": "function",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 24,
+        "end_line": 55,
+        "signature_hash": "fdab6e58bdf5f725",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#function:_objective:e986b8c2ffcc8761",
+        "name": "_objective",
+        "kind": "function",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 58,
+        "end_line": 69,
+        "signature_hash": "ec4e74a610137e42",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#function:_skill:b91d21a89478104a",
+        "name": "_skill",
+        "kind": "function",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 72,
+        "end_line": 102,
+        "signature_hash": "3de3f9d705f69513",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill.__init__:70b2af7d563dbfc4",
+        "name": "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Skill.__init__",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 213,
+        "end_line": 217,
+        "signature_hash": "716d131226ab451f",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver.__init__:6d4e9937d949c2b4",
+        "name": "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries.Weaver.__init__",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 220,
+        "end_line": 221,
+        "signature_hash": "1904154de2847073",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries:1ae025b69f997cb4",
+        "name": "SkillCockpitTargetingRegressionTests.test_adapter_returns_target_modules_not_first_ten_registry_entries",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 209,
+        "end_line": 238,
+        "signature_hash": "5233472021e52951",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_cache_key_moves_with_skill_generation:ead0b0e10b9ce720",
+        "name": "WorldSkillWorkCapsuleTests.test_cache_key_moves_with_skill_generation",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 176,
+        "end_line": 186,
+        "signature_hash": "905e9551821c7823",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_cache_key_moves_with_source_generation:994bdb93d521967b",
+        "name": "WorldSkillWorkCapsuleTests.test_cache_key_moves_with_source_generation",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 166,
+        "end_line": 174,
+        "signature_hash": "e52806e442f6b50b",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_claim_ceiling_rejects_authority_widening:1816f4b6884f53dd",
+        "name": "WorldSkillWorkCapsuleTests.test_claim_ceiling_rejects_authority_widening",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 188,
+        "end_line": 195,
+        "signature_hash": "bf0283d1042cc4bd",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_coordinate_and_cache_never_become_truth:097d86e6bb222c98",
+        "name": "WorldSkillWorkCapsuleTests.test_coordinate_and_cache_never_become_truth",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 197,
+        "end_line": 205,
+        "signature_hash": "0865e4f8f2e03f8f",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_minimal_skill_bundle_drives_demand_hydration:c4000afd84e8b059",
+        "name": "WorldSkillWorkCapsuleTests.test_minimal_skill_bundle_drives_demand_hydration",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 106,
+        "end_line": 128,
+        "signature_hash": "e187e6f0809e9c13",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_model_specific_negative_transfer_fails_closed:c1fe28ceb2257d92",
+        "name": "WorldSkillWorkCapsuleTests.test_model_specific_negative_transfer_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 130,
+        "end_line": 144,
+        "signature_hash": "3302c579534beb64",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_noncurrent_world_node_requires_reverification_not_deeper_hydration:027ab515093e63e7",
+        "name": "WorldSkillWorkCapsuleTests.test_noncurrent_world_node_requires_reverification_not_deeper_hydration",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 155,
+        "end_line": 164,
+        "signature_hash": "0349add4e6a130b5",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
+        "semantic_id": "tests/test_aura_world_skill_workcapsule.py#method:WorldSkillWorkCapsuleTests.test_stale_skill_is_not_selected:becd91a7ecd492fe",
+        "name": "WorldSkillWorkCapsuleTests.test_stale_skill_is_not_selected",
+        "kind": "method",
+        "file": "tests/test_aura_world_skill_workcapsule.py",
+        "line": 146,
+        "end_line": 153,
+        "signature_hash": "e4286f2788eec323",
+        "file_digest8": "d1ae3a6b66c6b33b"
+      },
+      {
         "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:_git_blob_sha:9438dd2bd66edc61",
         "name": "_git_blob_sha",
         "kind": "function",
@@ -447729,6 +448327,156 @@
         "end_line": 266,
         "signature_hash": "99559e6add5bcf3e",
         "file_digest8": "df000c6b4643eff2"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#class:ObjectiveRouteProfile:bd315d3fe7e06a71",
+        "name": "ObjectiveRouteProfile",
+        "kind": "class",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 83,
+        "end_line": 109,
+        "signature_hash": "78d052687343855f",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#class:SkillRouteCard:b715e2ad794aea1d",
+        "name": "SkillRouteCard",
+        "kind": "class",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 113,
+        "end_line": 181,
+        "signature_hash": "294fc38ad0ebd64d",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_canonical:9552f188a60bc954",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_canonical_strings:becf0a5fa3b82392",
+        "name": "_canonical_strings",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "629599373578cec5",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_level_index:da2e4491345fe19d",
+        "name": "_level_index",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 76,
+        "end_line": 79,
+        "signature_hash": "a264eeb8393b729a",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_minimal_cover:a55c7b5c84b380ad",
+        "name": "_minimal_cover",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 199,
+        "end_line": 226,
+        "signature_hash": "3d32fbc03f48be6c",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_sha:9a39373123675d3b",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_skill_rejection_reason:dbefbb2f529892ce",
+        "name": "_skill_rejection_reason",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 184,
+        "end_line": 196,
+        "signature_hash": "0befa844b10a977e",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_text:0937ec3b59eafcd0",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "6aabdab0e2d03513",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:_world_route:efeb9dd640851254",
+        "name": "_world_route",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 229,
+        "end_line": 265,
+        "signature_hash": "685265ab7644211e",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:compile_world_skill_workcapsule:d2aa789ed749bfda",
+        "name": "compile_world_skill_workcapsule",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 268,
+        "end_line": 425,
+        "signature_hash": "54e6f839fba37311",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#function:verify_world_skill_workcapsule:b418ab19900104cb",
+        "name": "verify_world_skill_workcapsule",
+        "kind": "function",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 428,
+        "end_line": 455,
+        "signature_hash": "f096ee67ac91b0de",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#method:ObjectiveRouteProfile.validate:1f87b03a45210faf",
+        "name": "ObjectiveRouteProfile.validate",
+        "kind": "method",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 94,
+        "end_line": 109,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#method:SkillRouteCard.identity:d68fc949acd38a38",
+        "name": "SkillRouteCard.identity",
+        "kind": "method",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 172,
+        "end_line": 181,
+        "signature_hash": "fcd7e6c74f7bc0d0",
+        "file_digest8": "bb8596e77dfc2c07"
+      },
+      {
+        "semantic_id": "tools/aura_world_skill_workcapsule.py#method:SkillRouteCard.validate:1505f0d069812a89",
+        "name": "SkillRouteCard.validate",
+        "kind": "method",
+        "file": "tools/aura_world_skill_workcapsule.py",
+        "line": 140,
+        "end_line": 169,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bb8596e77dfc2c07"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -448981,7 +449729,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ae721c94f2f0404bbd654f5ed63ec9ff",
-    "payload_hash": "899bdf976f4b1ef257d92e2ef14cf0fe"
+    "record_fingerprint": "11e171dff8a59bb0c46709de192b9304",
+    "payload_hash": "fed3a8e1585b2343c09e1fe2efe057f5"
   }
 }

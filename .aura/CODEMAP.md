@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1648
-- **total_bytes**: 26495096
-- **text_tokens_est**: 6614128
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1650
+- **total_bytes**: 26523040
+- **text_tokens_est**: 6621115
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1648,
+  "repo_file_count": 1650,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1644,6 +1644,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_work_splitter.py",
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
+    "tests/test_aura_world_skill_workcapsule.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1658,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_external_discovery_cli.py",
     "tools/aura_external_discovery_ingress_bridge.py",
     "tools/aura_external_knowledge_ingress.py",
+    "tools/aura_world_skill_workcapsule.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1788,15 +1790,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1648,
-  "bytes": 26495096,
-  "tokens_est": 6614128,
+  "files": 1650,
+  "bytes": 26523040,
+  "tokens_est": 6621115,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1004,
+    "python_module": 1006,
     "schema_or_lexicon": 272,
     "support_file": 49
   }
