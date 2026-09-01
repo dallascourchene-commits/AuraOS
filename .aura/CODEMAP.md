@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1713
-- **total_bytes**: 27007728
-- **text_tokens_est**: 6742305
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1038, 'schema_or_lexicon': 295, 'support_file': 49}
+- **file_count**: 1717
+- **total_bytes**: 27029139
+- **text_tokens_est**: 6747659
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1040, 'schema_or_lexicon': 296, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1713,
+  "repo_file_count": 1717,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -179,6 +179,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-workcapsule-temporal-host-observation-admission.yml",
     ".github/workflows/aura-workcapsule-two-phase-source-bound-closure.yml",
     ".github/workflows/aura-workcapsule-witness-hydration.yml",
+    ".github/workflows/awj001-gen25-descendant-rebase-barrier-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1148,6 +1149,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
     "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+    "docs/arena/AWJ001_GEN25_DESCENDANT_REBASE_BARRIER_V1.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
     "docs/aura_substrate_manifest.files.03.json",
@@ -1709,6 +1711,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workcapsule_two_phase_source_bound_closure.py",
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
+    "tests/test_awj001_gen25_descendant_rebase_barrier.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1723,6 +1726,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_review/aura_review_context_compiler.py",
     "tools/aura_review/test_aura_review_cache_policy.py",
     "tools/aura_review/test_aura_review_context_compiler.py",
+    "tools/awj001/awj001_gen25_descendant_rebase_barrier.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1853,16 +1857,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1713,
-  "bytes": 27007728,
-  "tokens_est": 6742305,
+  "files": 1717,
+  "bytes": 27029139,
+  "tokens_est": 6747659,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 19,
     "operator_script": 9,
-    "python_module": 1038,
-    "schema_or_lexicon": 295,
+    "python_module": 1040,
+    "schema_or_lexicon": 296,
     "support_file": 49
   }
 }
