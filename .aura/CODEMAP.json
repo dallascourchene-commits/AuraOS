@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788375241,
+  "generated_at_unix": 1788375770,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1659,
+    "repo_file_count": 1661,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1637,6 +1637,8 @@
       "tools/project006/drive_swarm_fanout.py",
       "tools/project006/drive_swarm_integrity.py",
       "tools/project006/drive_swarm_route_integrity.py",
+      "tools/project006/host_execution_bridge.py",
+      "tools/project006/host_swarm_reducer.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
@@ -1775,15 +1777,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1659,
-      "bytes": 26572881,
-      "tokens_est": 6633644,
+      "files": 1661,
+      "bytes": 26583547,
+      "tokens_est": 6636311,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1017,
+        "python_module": 1019,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -8127,6 +8129,22 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_sha:de707c923a73b50e",
+        "signature_hash": "8a912a7a0a99e116"
+      },
+      {
+        "file": "tools/project006/host_swarm_reducer.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/project006/host_swarm_reducer.py#function:_sha:eff68271058044df",
+        "signature_hash": "8a912a7a0a99e116"
       }
     ],
     "_repo": [
@@ -61935,6 +61953,14 @@
         "end_line": 15,
         "semantic_id": "test_travel_sidecar_stack.py#function:_now:c3b418b44275c500",
         "signature_hash": "2c72b9bcad25974e"
+      },
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_now:3bd68e24a1705b07",
+        "signature_hash": "2c72b9bcad25974e"
       }
     ],
     "_require_nonempty": [
@@ -68255,6 +68281,14 @@
         "end_line": 229,
         "semantic_id": "aura_pascal_spatial_presentation_part1.py#function:_hex64:aebaedfeb4247965",
         "signature_hash": "3956785c98c04eb6"
+      },
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 27,
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_hex64:a46b28b7df0d3242",
+        "signature_hash": "82727a978cc65878"
       }
     ],
     "_utc_timestamp": [
@@ -157735,6 +157769,76 @@
         "end_line": 70,
         "semantic_id": "tools/project006/drive_swarm_route_integrity.py#function:validate_route_bound_physical_swarm_receipts:97f8e2695753d971",
         "signature_hash": "c7bff1a33d9b98bd"
+      }
+    ],
+    "HostExecutionError": [
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 20,
+        "semantic_id": "tools/project006/host_execution_bridge.py#class:HostExecutionError:1dd3eb6ea3040b60",
+        "signature_hash": "83fdf9b1855fd603"
+      }
+    ],
+    "HostExecutionError.__init__": [
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "tools/project006/host_execution_bridge.py#method:HostExecutionError.__init__:f78885229923eeb1",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "_plan_child": [
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 44,
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_plan_child:046ec7f76066493f",
+        "signature_hash": "0977fe46d6bd403b"
+      }
+    ],
+    "execute_observed_child": [
+      {
+        "file": "tools/project006/host_execution_bridge.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 175,
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:execute_observed_child:3fac33cd0251a6dc",
+        "signature_hash": "98c8afc56f19e07f"
+      }
+    ],
+    "HostSwarmReductionError": [
+      {
+        "file": "tools/project006/host_swarm_reducer.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 14,
+        "semantic_id": "tools/project006/host_swarm_reducer.py#class:HostSwarmReductionError:e83536e2e8b390ad",
+        "signature_hash": "a02f826f64ca99dc"
+      }
+    ],
+    "HostSwarmReductionError.__init__": [
+      {
+        "file": "tools/project006/host_swarm_reducer.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tools/project006/host_swarm_reducer.py#method:HostSwarmReductionError.__init__:6e161a4437bc51b9",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "validate_registry_backed_physical_swarm": [
+      {
+        "file": "tools/project006/host_swarm_reducer.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 101,
+        "semantic_id": "tools/project006/host_swarm_reducer.py#function:validate_registry_backed_physical_swarm:21123a515f81a3de",
+        "signature_hash": "4fbc009f98178fcc"
       }
     ],
     "_file_identity": [
@@ -266366,6 +266470,100 @@
       ]
     },
     {
+      "path": "tools/project006/host_execution_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6502,
+      "lines": 176,
+      "tokens_est": 1626,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "af10ae5415dedc7c",
+      "vector": [
+        -0.264256,
+        -0.074975,
+        -0.158554,
+        0.092182,
+        0.269173,
+        0.242132,
+        0.038102,
+        -0.033186,
+        -0.028269,
+        0.028269,
+        -0.111848,
+        -0.106932,
+        0.202801,
+        0.242132,
+        -0.079891,
+        -0.020895,
+        0.2323,
+        -0.21755,
+        -0.047935,
+        0.247049,
+        -0.151179,
+        0.077433,
+        -0.146263,
+        -0.220009,
+        -0.188052,
+        0.106932,
+        -0.310962,
+        -0.08235,
+        0.279005,
+        -0.242132,
+        0.003687,
+        -0.274089
+      ]
+    },
+    {
+      "path": "tools/project006/host_swarm_reducer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4164,
+      "lines": 102,
+      "tokens_est": 1041,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f460b6dfc2b679af",
+      "vector": [
+        0.057727,
+        -0.071807,
+        0.18163,
+        0.083071,
+        0.350589,
+        -0.099967,
+        0.0352,
+        0.268926,
+        0.187262,
+        0.187262,
+        -0.353405,
+        0.108415,
+        0.057727,
+        0.198526,
+        0.097151,
+        0.125311,
+        -0.16755,
+        0.085887,
+        0.128127,
+        -0.136575,
+        0.23795,
+        0.040832,
+        0.128127,
+        0.128127,
+        -0.319613,
+        -0.105599,
+        0.147839,
+        0.294269,
+        0.240766,
+        0.085887,
+        0.108415,
+        -0.099967
+      ]
+    },
+    {
       "path": "tools/project006/local_runner_preflight.py",
       "role": "python_module",
       "binary": false,
@@ -291022,15 +291220,15 @@
     }
   },
   "summary": {
-    "file_count": 1659,
-    "total_bytes": 26572881,
-    "text_tokens_est": 6633644,
+    "file_count": 1661,
+    "total_bytes": 26583547,
+    "text_tokens_est": 6636311,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1017,
+      "python_module": 1019,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -292678,6 +292876,8 @@
       "tools/project006/drive_swarm_fanout.py",
       "tools/project006/drive_swarm_integrity.py",
       "tools/project006/drive_swarm_route_integrity.py",
+      "tools/project006/host_execution_bridge.py",
+      "tools/project006/host_swarm_reducer.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
@@ -450330,6 +450530,116 @@
         "file_digest8": "82d22e6d1dd0275b"
       },
       {
+        "semantic_id": "tools/project006/host_execution_bridge.py#class:HostExecutionError:1dd3eb6ea3040b60",
+        "name": "HostExecutionError",
+        "kind": "class",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 17,
+        "end_line": 20,
+        "signature_hash": "83fdf9b1855fd603",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_hex64:a46b28b7df0d3242",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 23,
+        "end_line": 27,
+        "signature_hash": "82727a978cc65878",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_now:3bd68e24a1705b07",
+        "name": "_now",
+        "kind": "function",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "2c72b9bcad25974e",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_plan_child:046ec7f76066493f",
+        "name": "_plan_child",
+        "kind": "function",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 38,
+        "end_line": 44,
+        "signature_hash": "0977fe46d6bd403b",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:_sha:de707c923a73b50e",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "8a912a7a0a99e116",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_execution_bridge.py#function:execute_observed_child:3fac33cd0251a6dc",
+        "name": "execute_observed_child",
+        "kind": "function",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 47,
+        "end_line": 175,
+        "signature_hash": "98c8afc56f19e07f",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_execution_bridge.py#method:HostExecutionError.__init__:f78885229923eeb1",
+        "name": "HostExecutionError.__init__",
+        "kind": "method",
+        "file": "tools/project006/host_execution_bridge.py",
+        "line": 18,
+        "end_line": 20,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "af10ae5415dedc7c"
+      },
+      {
+        "semantic_id": "tools/project006/host_swarm_reducer.py#class:HostSwarmReductionError:e83536e2e8b390ad",
+        "name": "HostSwarmReductionError",
+        "kind": "class",
+        "file": "tools/project006/host_swarm_reducer.py",
+        "line": 11,
+        "end_line": 14,
+        "signature_hash": "a02f826f64ca99dc",
+        "file_digest8": "f460b6dfc2b679af"
+      },
+      {
+        "semantic_id": "tools/project006/host_swarm_reducer.py#function:_sha:eff68271058044df",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/project006/host_swarm_reducer.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "8a912a7a0a99e116",
+        "file_digest8": "f460b6dfc2b679af"
+      },
+      {
+        "semantic_id": "tools/project006/host_swarm_reducer.py#function:validate_registry_backed_physical_swarm:21123a515f81a3de",
+        "name": "validate_registry_backed_physical_swarm",
+        "kind": "function",
+        "file": "tools/project006/host_swarm_reducer.py",
+        "line": 21,
+        "end_line": 101,
+        "signature_hash": "4fbc009f98178fcc",
+        "file_digest8": "f460b6dfc2b679af"
+      },
+      {
+        "semantic_id": "tools/project006/host_swarm_reducer.py#method:HostSwarmReductionError.__init__:6e161a4437bc51b9",
+        "name": "HostSwarmReductionError.__init__",
+        "kind": "method",
+        "file": "tools/project006/host_swarm_reducer.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "f460b6dfc2b679af"
+      },
+      {
         "semantic_id": "tools/project006/local_runner_preflight.py#function:_canonical_digest:a725766ed40de685",
         "name": "_canonical_digest",
         "kind": "function",
@@ -454790,7 +455100,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "58e74ae3d3b1cfa41efa86950d6362fd",
-    "payload_hash": "d4383b880f5eb41a54be6b8fc0975081"
+    "record_fingerprint": "add6a165cdd682246137cb037bcf19fa",
+    "payload_hash": "b7c048e9c9266d308b25e56e3b66d61a"
   }
 }
