@@ -194,12 +194,7 @@ def execute_integrity_checked_command(
     test_only_allow_executor_override: bool = False,
     **executor_kwargs: Any,
 ) -> dict[str, Any]:
-    """Admit exact route and resolved executor before any provider effect.
-
-    ``route_admission`` is a host-owned operand passed separately from the Drive
-    command.  Its provider/model/currentness/escalation and policy references are
-    checked before the underlying one-call hook is allowed to emit a provider call.
-    """
+    """Validate route/effect admission, ACK, then attest executor before generate()."""
     child_context = validate_single_call_route(
         raw,
         expected_child_context=expected_child_context,
@@ -241,16 +236,6 @@ def execute_integrity_checked_command(
     if effect_admission is None:
         raise CommandHookError("EFFECT_ADMISSION_REQUIRED")
 
-    # Construction is allowed because it has no provider effect.  The resolved
-    # provider/model are attested before the hook can reach generate().
-    try:
-        exact_executor = prepare_exact_executor(
-            route,
-            factory=route_executor_factory,
-        )
-    except RouteAdmissionError as exc:
-        raise _as_hook_error(exc) from exc
-
     def bound_effect_admission(command_arg, digest, executor_id, effect_class):
         admission = effect_admission(
             command_arg,
@@ -264,10 +249,19 @@ def execute_integrity_checked_command(
             raise _as_hook_error(exc) from exc
         return admission
 
+    # The one-call hook performs effect admission -> ACK -> executor_factory -> generate.
+    # This closure attests the exact resolved provider/model during executor_factory,
+    # so a mismatch fails after ACK but strictly before generate/provider effect.
+    def attested_executor_factory():
+        try:
+            return prepare_exact_executor(route, factory=route_executor_factory)
+        except RouteAdmissionError as exc:
+            raise _as_hook_error(exc) from exc
+
     result = dict(
         executor(
             raw,
-            executor_factory=lambda: exact_executor,
+            executor_factory=attested_executor_factory,
             effect_admission=bound_effect_admission,
             **executor_kwargs,
         )
