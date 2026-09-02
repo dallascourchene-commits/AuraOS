@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788375770,
+  "generated_at_unix": 1788376124,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1664,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1638,6 +1638,7 @@
       "tools/project006/drive_swarm_integrity.py",
       "tools/project006/drive_swarm_route_integrity.py",
       "tools/project006/host_execution_bridge.py",
+      "tools/project006/host_receipt_registry.py",
       "tools/project006/host_swarm_reducer.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
@@ -1654,6 +1655,8 @@
       "tools/project006/test_drive_route_admission.py",
       "tools/project006/test_drive_swarm_integrity.py",
       "tools/project006/test_drive_swarm_route_integrity.py",
+      "tools/project006/test_host_execution_h1.py",
+      "tools/project006/test_host_receipt_registry.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1777,15 +1780,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26583547,
-      "tokens_est": 6636311,
+      "files": 1664,
+      "bytes": 26612718,
+      "tokens_est": 6643606,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1019,
+        "python_module": 1022,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -4398,6 +4401,14 @@
         "line": 57,
         "end_line": 66,
         "semantic_id": "tools/project006/drive_swarm_integrity.py#function:_digest:cee509cc1b1574fb",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_digest:ddf9182be9e2d782",
         "signature_hash": "514f786724465716"
       }
     ],
@@ -14787,6 +14798,14 @@
         "end_line": 51,
         "semantic_id": "tools/project006/drive_swarm_fanout.py#function:_text:bdb2e7098d258e5b",
         "signature_hash": "0c921209123abf3d"
+      },
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_text:78697d2dafad18b4",
+        "signature_hash": "7c66637900aa94dc"
       }
     ],
     "_bounded": [
@@ -68289,6 +68308,14 @@
         "end_line": 27,
         "semantic_id": "tools/project006/host_execution_bridge.py#function:_hex64:a46b28b7df0d3242",
         "signature_hash": "82727a978cc65878"
+      },
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_hex64:d25a8cbeb6cbd243",
+        "signature_hash": "82727a978cc65878"
       }
     ],
     "_utc_timestamp": [
@@ -100411,6 +100438,14 @@
         "end_line": 49,
         "semantic_id": "tests/test_aura_substrate_verifier.py#function:_manifest:866f8a9ae050c306",
         "signature_hash": "236a0e7d81c2f527"
+      },
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 51,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_manifest:7cc8b6e8db5ed3b4",
+        "signature_hash": "8ab25afa0c33ab5e"
       }
     ],
     "_validate_existing": [
@@ -126760,6 +126795,14 @@
         "line": 19,
         "end_line": 29,
         "semantic_id": "tests/test_aura_construction_foundry_director.py#function:manifest:d6ed7030b322d620",
+        "signature_hash": "b72a8fc006689efa"
+      },
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 33,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:manifest:a4a6f1515a3b2c73",
         "signature_hash": "b72a8fc006689efa"
       }
     ],
@@ -157811,6 +157854,206 @@
         "signature_hash": "98c8afc56f19e07f"
       }
     ],
+    "HostReceiptError": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:HostReceiptError:83e28cb3d1545015",
+        "signature_hash": "e4395bf03ef8cd34"
+      }
+    ],
+    "HostReceiptError.__init__": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptError.__init__:3cf656842d7a35e2",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "_ordinal": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_ordinal:e44fac240cf3a029",
+        "signature_hash": "9d14355434670890"
+      }
+    ],
+    "normalize_child_identity": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 58,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:normalize_child_identity:5762cde8416c65fd",
+        "signature_hash": "3126a2301f21bb02"
+      }
+    ],
+    "_plan_canonical": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_plan_canonical:0377dc3bf13e6c2d",
+        "signature_hash": "50f7a942916498cd"
+      }
+    ],
+    "ExactReceiptSet": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:ExactReceiptSet:ebb4b48516d5d8f8",
+        "signature_hash": "5c9abe7f3f5fd4cf"
+      }
+    ],
+    "HostExecutionPlan": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:HostExecutionPlan:6d6b741ed436cddf",
+        "signature_hash": "b3982e03c00144f5"
+      }
+    ],
+    "HostReceiptRegistry": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 153,
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:HostReceiptRegistry:3534051d70f3a728",
+        "signature_hash": "fcfbbad56bdd301e"
+      }
+    ],
+    "HostReceiptRegistry.__init__": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.__init__:7eeacf7007a5cc87",
+        "signature_hash": "ed75fce393d341de"
+      }
+    ],
+    "HostReceiptRegistry._load_receipts": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 80,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._load_receipts:5994b39d79ac1ea1",
+        "signature_hash": "832b0b99d3122c6d"
+      }
+    ],
+    "HostReceiptRegistry._load_plans": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._load_plans:d306c972879f4429",
+        "signature_hash": "c3e10c6c11f77177"
+      }
+    ],
+    "HostReceiptRegistry._validate_plan_body": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 90,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._validate_plan_body:9ef58f7ad2257161",
+        "signature_hash": "449527196e3c8f21"
+      }
+    ],
+    "HostReceiptRegistry._plan": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 92,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._plan:d69f922d8fabc3ba",
+        "signature_hash": "26d8182eef4abc42"
+      }
+    ],
+    "HostReceiptRegistry.allocate_plan": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 108,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.allocate_plan:cd378ff84ea20b7e",
+        "signature_hash": "43c42ce7b5d48a51"
+      }
+    ],
+    "HostReceiptRegistry.get_plan": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 112,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.get_plan:557277d76f0ab9c4",
+        "signature_hash": "fb84d1a4c80e5fe7"
+      }
+    ],
+    "HostReceiptRegistry.assert_owned_plan": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 115,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.assert_owned_plan:bbb97d9c1bcecd3b",
+        "signature_hash": "691ba3ff76f2b62c"
+      }
+    ],
+    "HostReceiptRegistry._validate_record": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 128,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._validate_record:596ad499359165ad",
+        "signature_hash": "9b0ef308074436dd"
+      }
+    ],
+    "HostReceiptRegistry.record": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 140,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.record:411beddeaf4c92b7",
+        "signature_hash": "788b8afd6e8afa7d"
+      }
+    ],
+    "HostReceiptRegistry.resolve": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 151,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.resolve:c1c6811fa442175e",
+        "signature_hash": "1bc02518b4cb3ecf"
+      }
+    ],
+    "HostReceiptRegistry.assert_owned_projection": [
+      {
+        "file": "tools/project006/host_receipt_registry.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 153,
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.assert_owned_projection:6e7967225a8d0241",
+        "signature_hash": "6f0201b98202ac47"
+      }
+    ],
     "HostSwarmReductionError": [
       {
         "file": "tools/project006/host_swarm_reducer.py",
@@ -160102,7 +160345,7 @@
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "class",
         "line": 211,
-        "end_line": 322,
+        "end_line": 325,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:PreEffectRouteTests:8b02e589bc9eb099",
         "signature_hash": "4b507e01cdab9a95"
       }
@@ -160122,7 +160365,7 @@
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
         "line": 236,
-        "end_line": 251,
+        "end_line": 252,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_admitted_flash_executor_resolves_pro_zero_generate:fcb983e6ac98fe83",
         "signature_hash": "c6d988082e742d54"
       }
@@ -160131,8 +160374,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 253,
-        "end_line": 267,
+        "line": 254,
+        "end_line": 270,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_wrong_provider_zero_generate:dcaced10019ca416",
         "signature_hash": "ac66e126bd4da6a8"
       }
@@ -160141,8 +160384,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 269,
-        "end_line": 281,
+        "line": 272,
+        "end_line": 284,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate:3297d628b78c3ee5",
         "signature_hash": "ed6ab4032f034d76"
       }
@@ -160151,8 +160394,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 283,
-        "end_line": 294,
+        "line": 286,
+        "end_line": 297,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_retired_alias_fails_before_effect:0561addbf7e6664f",
         "signature_hash": "f95695f6672725e7"
       }
@@ -160161,8 +160404,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 296,
-        "end_line": 307,
+        "line": 299,
+        "end_line": 310,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate:30679dde4dfd1e53",
         "signature_hash": "dab9a7e31a8edd62"
       }
@@ -160171,8 +160414,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 309,
-        "end_line": 322,
+        "line": 312,
+        "end_line": 325,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect:6fe26eb46d24c5c1",
         "signature_hash": "0dc41d5aeca773bb"
       }
@@ -160645,6 +160888,376 @@
         "end_line": 160,
         "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_provider_request_identity_still_must_be_unique:b29e2aecd561bbba",
         "signature_hash": "7f58c4431d25e1cd"
+      }
+    ],
+    "FakeExecutor": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 24,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#class:FakeExecutor:44e996a3fd18c4e0",
+        "signature_hash": "b57ecce58fe3d521"
+      }
+    ],
+    "FakeExecutor.__init__": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 20,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:FakeExecutor.__init__:a967af2de9ffdb04",
+        "signature_hash": "f782118e6c524746"
+      }
+    ],
+    "FakeExecutor.generate": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:FakeExecutor.generate:30f6c26b9a836a3c",
+        "signature_hash": "3392f2e657858502"
+      }
+    ],
+    "target3_manifest": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 44,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#function:target3_manifest:3b197af34c679911",
+        "signature_hash": "59dec6f763e7b523"
+      }
+    ],
+    "fake_route_validator": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 54,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#function:fake_route_validator:7d188252308707c7",
+        "signature_hash": "77219a3f9be72b2f"
+      }
+    ],
+    "HostExecutionH1Tests": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 120,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#class:HostExecutionH1Tests:99eb68ca1b278447",
+        "signature_hash": "7169e40152f45111"
+      }
+    ],
+    "HostExecutionH1Tests.setUp": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 65,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.setUp:b51a1113df5ceb8d",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "HostExecutionH1Tests.tearDown": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 66,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.tearDown:6c501061fef0eb9f",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "HostExecutionH1Tests.test_fake_host_three_independent_calls_record_and_reduce": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 88,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_fake_host_three_independent_calls_record_and_reduce:b51d8bf9ec3c1619",
+        "signature_hash": "0e79868e99691bd0"
+      }
+    ],
+    "HostExecutionH1Tests.test_replay_same_attempt_fails_before_second_generate": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 97,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_replay_same_attempt_fails_before_second_generate:8cb83ea7d6e9a34a",
+        "signature_hash": "c8dd2d594766960f"
+      }
+    ],
+    "HostExecutionH1Tests.test_wrong_executor_model_fails_before_registry_and_generate": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 105,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_wrong_executor_model_fails_before_registry_and_generate:af8d2ffc5d5ec2b5",
+        "signature_hash": "a145c514ddaf6929"
+      }
+    ],
+    "HostExecutionH1Tests.test_caller_output_tamper_fails_digest_binding": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 114,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_caller_output_tamper_fails_digest_binding:ec99a6f2868f07f0",
+        "signature_hash": "78d8ab708b5c3f4d"
+      }
+    ],
+    "HostExecutionH1Tests.test_free_form_receipts_have_no_reducer_parameter": [
+      {
+        "file": "tools/project006/test_host_execution_h1.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 120,
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_free_form_receipts_have_no_reducer_parameter:19b40f984402c95d",
+        "signature_hash": "cdbce8e5d7b60327"
+      }
+    ],
+    "make_registry": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:make_registry:edfd4310eba2cbf8",
+        "signature_hash": "fcdfb1a805989888"
+      }
+    ],
+    "make_plan": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:make_plan:d05ea0cbc89ff159",
+        "signature_hash": "e0069b5359e712de"
+      }
+    ],
+    "receipt": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 88,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:receipt:88413b164639f8f2",
+        "signature_hash": "d6b412fbca867d1e"
+      }
+    ],
+    "HostReceiptRegistryTests": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 186,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#class:HostReceiptRegistryTests:b5485c04354ac823",
+        "signature_hash": "7d05cd802b876751"
+      }
+    ],
+    "HostReceiptRegistryTests.setUp": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 96,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.setUp:d60404964774bb03",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "HostReceiptRegistryTests.tearDown": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 99,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.tearDown:66b78030960551f6",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "HostReceiptRegistryTests.test_exact_current_receipt_resolves": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_exact_current_receipt_resolves:eba97d90b527526e",
+        "signature_hash": "7a1572aae9161b11"
+      }
+    ],
+    "HostReceiptRegistryTests.test_sibling_command_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 109,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_sibling_command_is_invisible:81e083b8f70a006e",
+        "signature_hash": "465cf00554627a51"
+      }
+    ],
+    "HostReceiptRegistryTests.test_previous_attempt_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 113,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_previous_attempt_is_invisible:dab0ef8fad2c2e89",
+        "signature_hash": "7ff53963acfe161c"
+      }
+    ],
+    "HostReceiptRegistryTests.test_wrong_fanout_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 117,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_fanout_is_invisible:e05922f1adedf730",
+        "signature_hash": "d58629afedef60b4"
+      }
+    ],
+    "HostReceiptRegistryTests.test_wrong_role_instance_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 121,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_role_instance_is_invisible:70413d6c1f0db366",
+        "signature_hash": "e4971e1a1139ed99"
+      }
+    ],
+    "HostReceiptRegistryTests.test_wrong_objective_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_objective_is_invisible:84773c9e2c902f09",
+        "signature_hash": "92ae965ae68f5167"
+      }
+    ],
+    "HostReceiptRegistryTests.test_wrong_source_generation_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 129,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_source_generation_is_invisible:8c03639c506ad679",
+        "signature_hash": "7e8aca88a975e8f6"
+      }
+    ],
+    "HostReceiptRegistryTests.test_wrong_command_digest_is_invisible": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 133,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_command_digest_is_invisible:7d670f6370833573",
+        "signature_hash": "76188c9fea58afb4"
+      }
+    ],
+    "HostReceiptRegistryTests.test_untrusted_free_form_projection_cannot_be_minted": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 141,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_untrusted_free_form_projection_cannot_be_minted:8190dbf93696685e",
+        "signature_hash": "adc276b4c63484b8"
+      }
+    ],
+    "HostReceiptRegistryTests.test_untrusted_execution_plan_rejected": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_untrusted_execution_plan_rejected:316a3d549295e0e0",
+        "signature_hash": "5fed51a5040e723b"
+      }
+    ],
+    "HostReceiptRegistryTests.test_duplicate_receipt_id_rejected": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 152,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_duplicate_receipt_id_rejected:681737218baee24b",
+        "signature_hash": "3b231592f6af7813"
+      }
+    ],
+    "HostReceiptRegistryTests.test_event_sequence_must_be_monotonic": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 156,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_event_sequence_must_be_monotonic:a3efc5e03b0f6f79",
+        "signature_hash": "136612e22a70c333"
+      }
+    ],
+    "HostReceiptRegistryTests.test_failed_receipt_does_not_authorize": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 161,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_failed_receipt_does_not_authorize:4444ba9cd6a79639",
+        "signature_hash": "0c846eed5b3947ca"
+      }
+    ],
+    "HostReceiptRegistryTests.test_stub_receipt_missing_substantive_digest_rejected_at_record": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 165,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_stub_receipt_missing_substantive_digest_rejected_at_record:5fad8512cee8acdf",
+        "signature_hash": "b47e0741646f87dc"
+      }
+    ],
+    "HostReceiptRegistryTests.test_host_instance_mismatch_rejected": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 169,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_host_instance_mismatch_rejected:3d15d5adc3778f6a",
+        "signature_hash": "c4d14021852de500"
+      }
+    ],
+    "HostReceiptRegistryTests.test_executor_identity_mismatch_rejected": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 173,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_executor_identity_mismatch_rejected:3c7ccc2d31cb3fd2",
+        "signature_hash": "88bfd9f2ecd8fddf"
+      }
+    ],
+    "HostReceiptRegistryTests.test_receipt_for_non_host_plan_is_rejected": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 178,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_receipt_for_non_host_plan_is_rejected:103ab2e42a6e9178",
+        "signature_hash": "329c4013fab4caba"
+      }
+    ],
+    "HostReceiptRegistryTests.test_restart_reloads_plan_and_receipt": [
+      {
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 186,
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_restart_reloads_plan_and_receipt:800ed56daf4129bb",
+        "signature_hash": "0f91d7f92aa18e52"
       }
     ],
     "LocalRunnerPreflightTests": [
@@ -266517,6 +267130,53 @@
       ]
     },
     {
+      "path": "tools/project006/host_receipt_registry.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14217,
+      "lines": 154,
+      "tokens_est": 3555,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b32366978cf9375e",
+      "vector": [
+        -0.319271,
+        -0.055135,
+        -0.265418,
+        -0.16797,
+        -0.267982,
+        -0.114117,
+        -0.234645,
+        0.160276,
+        -0.050006,
+        0.108988,
+        -0.252596,
+        0.044877,
+        0.309013,
+        0.285933,
+        -0.193614,
+        0.088473,
+        0.298755,
+        -0.214129,
+        0.001282,
+        0.134632,
+        -0.044877,
+        -0.12181,
+        -0.139761,
+        0.201307,
+        -0.065393,
+        -0.052571,
+        0.270547,
+        0.042313,
+        0.032055,
+        0.111552,
+        0.047442,
+        0.01154
+      ]
+    },
+    {
       "path": "tools/project006/host_swarm_reducer.py",
       "role": "python_module",
       "binary": false,
@@ -267084,47 +267744,47 @@
       "path": "tools/project006/test_drive_command_executor_integrity_adapter.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 13320,
-      "lines": 327,
-      "tokens_est": 3330,
+      "bytes": 13535,
+      "lines": 330,
+      "tokens_est": 3384,
       "symbol_count": 30,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "df52e054aaacc668",
+      "digest8": "c6337ab86a337690",
       "vector": [
-        0.225928,
-        -0.214099,
-        -0.020109,
-        0.223562,
-        -0.027206,
-        0.275609,
-        -0.190442,
-        0.185711,
-        -0.216465,
-        0.166785,
-        0.017743,
-        -0.204636,
-        0.048498,
-        -0.223562,
-        0.233025,
-        0.013012,
-        -0.24722,
-        0.202271,
-        -0.254317,
-        0.065058,
-        0.143127,
-        -0.003549,
-        0.124201,
-        0.065058,
-        -0.147859,
-        -0.197539,
-        -0.13603,
-        -0.285072,
-        -0.117104,
-        0.015377,
-        -0.183345,
-        -0.249585
+        -0.155853,
+        -0.188881,
+        0.205395,
+        -0.203331,
+        -0.238424,
+        -0.254938,
+        -0.240488,
+        -0.211588,
+        0.04851,
+        0.17856,
+        0.188881,
+        -0.263195,
+        0.06296,
+        -0.155853,
+        -0.238424,
+        -0.219845,
+        -0.003096,
+        0.197138,
+        0.145531,
+        0.259066,
+        -0.065025,
+        0.126953,
+        -0.184753,
+        -0.201267,
+        0.209524,
+        -0.095989,
+        0.005161,
+        -0.075346,
+        0.007225,
+        0.011354,
+        -0.162046,
+        0.228102
       ]
     },
     {
@@ -267266,6 +267926,100 @@
         0.052678,
         -0.275096,
         -0.172082
+      ]
+    },
+    {
+      "path": "tools/project006/test_host_execution_h1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6497,
+      "lines": 124,
+      "tokens_est": 1625,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b1def0076679c8e5",
+      "vector": [
+        0.263602,
+        0.214663,
+        0.181296,
+        -0.250255,
+        -0.199092,
+        0.036704,
+        -0.212438,
+        -0.065622,
+        -0.156826,
+        0.03448,
+        0.03448,
+        0.003337,
+        -0.214663,
+        0.156826,
+        -0.205765,
+        -0.067847,
+        -0.050051,
+        -0.279173,
+        -0.205765,
+        -0.105663,
+        0.147928,
+        0.014459,
+        -0.176847,
+        -0.176847,
+        -0.261377,
+        -0.270275,
+        0.185745,
+        0.254704,
+        0.076745,
+        0.207989,
+        -0.11901,
+        0.176847
+      ]
+    },
+    {
+      "path": "tools/project006/test_host_receipt_registry.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8242,
+      "lines": 191,
+      "tokens_est": 2061,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5c6e5c8bcd09a3f7",
+      "vector": [
+        -0.130371,
+        0.172587,
+        -0.070773,
+        -0.140304,
+        -0.254534,
+        -0.018624,
+        0.083189,
+        -0.130371,
+        0.207352,
+        0.202386,
+        0.18252,
+        -0.093122,
+        0.021108,
+        0.199903,
+        -0.06829,
+        0.314133,
+        -0.18252,
+        0.17507,
+        0.088156,
+        -0.31165,
+        0.16017,
+        -0.269434,
+        0.130371,
+        0.011175,
+        0.17507,
+        -0.105539,
+        -0.048424,
+        0.137821,
+        -0.234668,
+        0.314133,
+        0.261984,
+        0.006208
       ]
     },
     {
@@ -291220,15 +291974,15 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26583547,
-    "text_tokens_est": 6636311,
+    "file_count": 1664,
+    "total_bytes": 26612718,
+    "text_tokens_est": 6643606,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1019,
+      "python_module": 1022,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -292877,6 +293631,7 @@
       "tools/project006/drive_swarm_integrity.py",
       "tools/project006/drive_swarm_route_integrity.py",
       "tools/project006/host_execution_bridge.py",
+      "tools/project006/host_receipt_registry.py",
       "tools/project006/host_swarm_reducer.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
@@ -292893,6 +293648,8 @@
       "tools/project006/test_drive_route_admission.py",
       "tools/project006/test_drive_swarm_integrity.py",
       "tools/project006/test_drive_swarm_route_integrity.py",
+      "tools/project006/test_host_execution_h1.py",
+      "tools/project006/test_host_receipt_registry.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -450600,6 +451357,246 @@
         "file_digest8": "af10ae5415dedc7c"
       },
       {
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:ExactReceiptSet:ebb4b48516d5d8f8",
+        "name": "ExactReceiptSet",
+        "kind": "class",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "5c9abe7f3f5fd4cf",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:HostExecutionPlan:6d6b741ed436cddf",
+        "name": "HostExecutionPlan",
+        "kind": "class",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "b3982e03c00144f5",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:HostReceiptError:83e28cb3d1545015",
+        "name": "HostReceiptError",
+        "kind": "class",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "e4395bf03ef8cd34",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#class:HostReceiptRegistry:3534051d70f3a728",
+        "name": "HostReceiptRegistry",
+        "kind": "class",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 70,
+        "end_line": 153,
+        "signature_hash": "fcfbbad56bdd301e",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_digest:ddf9182be9e2d782",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_hex64:d25a8cbeb6cbd243",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "82727a978cc65878",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_manifest:7cc8b6e8db5ed3b4",
+        "name": "_manifest",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 33,
+        "end_line": 51,
+        "signature_hash": "8ab25afa0c33ab5e",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_ordinal:e44fac240cf3a029",
+        "name": "_ordinal",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 29,
+        "end_line": 31,
+        "signature_hash": "9d14355434670890",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_plan_canonical:0377dc3bf13e6c2d",
+        "name": "_plan_canonical",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "50f7a942916498cd",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:_text:78697d2dafad18b4",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "7c66637900aa94dc",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#function:normalize_child_identity:5762cde8416c65fd",
+        "name": "normalize_child_identity",
+        "kind": "function",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 53,
+        "end_line": 58,
+        "signature_hash": "3126a2301f21bb02",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptError.__init__:3cf656842d7a35e2",
+        "name": "HostReceiptError.__init__",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.__init__:7eeacf7007a5cc87",
+        "name": "HostReceiptRegistry.__init__",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "ed75fce393d341de",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._load_plans:d306c972879f4429",
+        "name": "HostReceiptRegistry._load_plans",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "c3e10c6c11f77177",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._load_receipts:5994b39d79ac1ea1",
+        "name": "HostReceiptRegistry._load_receipts",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 77,
+        "end_line": 80,
+        "signature_hash": "832b0b99d3122c6d",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._plan:d69f922d8fabc3ba",
+        "name": "HostReceiptRegistry._plan",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 91,
+        "end_line": 92,
+        "signature_hash": "26d8182eef4abc42",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._validate_plan_body:9ef58f7ad2257161",
+        "name": "HostReceiptRegistry._validate_plan_body",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 85,
+        "end_line": 90,
+        "signature_hash": "449527196e3c8f21",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry._validate_record:596ad499359165ad",
+        "name": "HostReceiptRegistry._validate_record",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 116,
+        "end_line": 128,
+        "signature_hash": "9b0ef308074436dd",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.allocate_plan:cd378ff84ea20b7e",
+        "name": "HostReceiptRegistry.allocate_plan",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 93,
+        "end_line": 108,
+        "signature_hash": "43c42ce7b5d48a51",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.assert_owned_plan:bbb97d9c1bcecd3b",
+        "name": "HostReceiptRegistry.assert_owned_plan",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 113,
+        "end_line": 115,
+        "signature_hash": "691ba3ff76f2b62c",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.assert_owned_projection:6e7967225a8d0241",
+        "name": "HostReceiptRegistry.assert_owned_projection",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 152,
+        "end_line": 153,
+        "signature_hash": "6f0201b98202ac47",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.get_plan:557277d76f0ab9c4",
+        "name": "HostReceiptRegistry.get_plan",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 109,
+        "end_line": 112,
+        "signature_hash": "fb84d1a4c80e5fe7",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.record:411beddeaf4c92b7",
+        "name": "HostReceiptRegistry.record",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 129,
+        "end_line": 140,
+        "signature_hash": "788b8afd6e8afa7d",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
+        "semantic_id": "tools/project006/host_receipt_registry.py#method:HostReceiptRegistry.resolve:c1c6811fa442175e",
+        "name": "HostReceiptRegistry.resolve",
+        "kind": "method",
+        "file": "tools/project006/host_receipt_registry.py",
+        "line": 141,
+        "end_line": 151,
+        "signature_hash": "1bc02518b4cb3ecf",
+        "file_digest8": "b32366978cf9375e"
+      },
+      {
         "semantic_id": "tools/project006/host_swarm_reducer.py#class:HostSwarmReductionError:e83536e2e8b390ad",
         "name": "HostSwarmReductionError",
         "kind": "class",
@@ -452997,7 +453994,7 @@
         "line": 159,
         "end_line": 208,
         "signature_hash": "6ccfbc5f5e4e7a3e",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:PreEffectRouteTests:8b02e589bc9eb099",
@@ -453005,9 +454002,9 @@
         "kind": "class",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "line": 211,
-        "end_line": 322,
+        "end_line": 325,
         "signature_hash": "4b507e01cdab9a95",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:RouteGuardTests:cdc9da1cb2df44dd",
@@ -453017,7 +454014,7 @@
         "line": 131,
         "end_line": 156,
         "signature_hash": "49aa41fdb728b1c9",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:_FakeExecutor:5d09e653691372d5",
@@ -453027,7 +454024,7 @@
         "line": 29,
         "end_line": 40,
         "signature_hash": "6d30a22a321aa2e5",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:command_digest:78199aa737411793",
@@ -453037,7 +454034,7 @@
         "line": 83,
         "end_line": 84,
         "signature_hash": "2e31449c16e7c572",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:compiled_child:6fcce826bf651896",
@@ -453047,7 +454044,7 @@
         "line": 43,
         "end_line": 76,
         "signature_hash": "cb55d06b2ab6dabc",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:effect_admission:ab3a3fb223b601fa",
@@ -453057,7 +454054,7 @@
         "line": 108,
         "end_line": 128,
         "signature_hash": "ad8eedcbccc43f70",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:expected_context:b9787ab7e640f2a1",
@@ -453067,7 +454064,7 @@
         "line": 79,
         "end_line": 80,
         "signature_hash": "415b827d33f0a862",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:route_admission:5dda17a2b5b02cc8",
@@ -453077,7 +454074,7 @@
         "line": 87,
         "end_line": 105,
         "signature_hash": "29e9ca228b12cf32",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined:5f65a212be63e9de",
@@ -453087,7 +454084,7 @@
         "line": 202,
         "end_line": 208,
         "signature_hash": "31792477896affe2",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_expected_model_is_mandatory:bb35deaf3d913b79",
@@ -453097,7 +454094,7 @@
         "line": 160,
         "end_line": 166,
         "signature_hash": "fb5de4e97d3067b0",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_flash_transport_is_partial_not_success:4996606ba3327b60",
@@ -453107,7 +454104,7 @@
         "line": 168,
         "end_line": 176,
         "signature_hash": "4828da13a3ad2bdf",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_missing_required_model_is_quarantined:7e511caa6f058a2d",
@@ -453117,7 +454114,7 @@
         "line": 186,
         "end_line": 192,
         "signature_hash": "5b9035850b9bbc48",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_missing_required_provider_is_quarantined:bf2d0fc7f5a6b1f7",
@@ -453127,7 +454124,7 @@
         "line": 178,
         "end_line": 184,
         "signature_hash": "b883a732dac6a160",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_refusal_is_quarantined:5a6cd7d74fa71d94",
@@ -453137,7 +454134,7 @@
         "line": 194,
         "end_line": 200,
         "signature_hash": "db5a960db824339d",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_admitted_flash_executor_resolves_pro_zero_generate:fcb983e6ac98fe83",
@@ -453145,19 +454142,19 @@
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "line": 236,
-        "end_line": 251,
+        "end_line": 252,
         "signature_hash": "c6d988082e742d54",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate:30679dde4dfd1e53",
         "name": "PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 296,
-        "end_line": 307,
+        "line": 299,
+        "end_line": 310,
         "signature_hash": "dab9a7e31a8edd62",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_exact_flash_order_is_admission_ack_attest_generate:280b7e88776644c9",
@@ -453167,47 +454164,47 @@
         "line": 212,
         "end_line": 234,
         "signature_hash": "423c7f41cbbe350f",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate:3297d628b78c3ee5",
         "name": "PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 269,
-        "end_line": 281,
+        "line": 272,
+        "end_line": 284,
         "signature_hash": "ed6ab4032f034d76",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect:6fe26eb46d24c5c1",
         "name": "PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 309,
-        "end_line": 322,
+        "line": 312,
+        "end_line": 325,
         "signature_hash": "0dc41d5aeca773bb",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_retired_alias_fails_before_effect:0561addbf7e6664f",
         "name": "PreEffectRouteTests.test_retired_alias_fails_before_effect",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 283,
-        "end_line": 294,
+        "line": 286,
+        "end_line": 297,
         "signature_hash": "f95695f6672725e7",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_wrong_provider_zero_generate:dcaced10019ca416",
         "name": "PreEffectRouteTests.test_wrong_provider_zero_generate",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 253,
-        "end_line": 267,
+        "line": 254,
+        "end_line": 270,
         "signature_hash": "ac66e126bd4da6a8",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_match_host_expected_child:3c31b17a3eff00c1",
@@ -453217,7 +454214,7 @@
         "line": 144,
         "end_line": 149,
         "signature_hash": "4f8e3ee5ab2a3434",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_requires_parent_payload_digest:a537f834ae677883",
@@ -453227,7 +454224,7 @@
         "line": 151,
         "end_line": 156,
         "signature_hash": "b12f8740123e7aeb",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_parent_swarm_schema_fails_before_single_call:d5aef2c370369df7",
@@ -453237,7 +454234,7 @@
         "line": 132,
         "end_line": 134,
         "signature_hash": "e742175dab16b7cd",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_self_asserted_child_context_is_not_authority:3bff3a114977b29e",
@@ -453247,7 +454244,7 @@
         "line": 140,
         "end_line": 142,
         "signature_hash": "05cbc89acdac0121",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target3_without_child_context_fails:898bf2f7037ee6fa",
@@ -453257,7 +454254,7 @@
         "line": 136,
         "end_line": 138,
         "signature_hash": "dd6bbf0238f557e8",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:_FakeExecutor.__init__:e68069c3f7712f4d",
@@ -453267,7 +454264,7 @@
         "line": 30,
         "end_line": 35,
         "signature_hash": "68475f0306603f9b",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:_FakeExecutor.generate:8fe444077ed5fa9c",
@@ -453277,7 +454274,7 @@
         "line": 37,
         "end_line": 40,
         "signature_hash": "3392f2e657858502",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:effect_admission.provider:ab68f846ce3b4525",
@@ -453287,7 +454284,7 @@
         "line": 109,
         "end_line": 127,
         "signature_hash": "1d7c56022e271318",
-        "file_digest8": "df52e054aaacc668"
+        "file_digest8": "c6337ab86a337690"
       },
       {
         "semantic_id": "tools/project006/test_drive_route_admission.py#class:RouteAdmissionTests:cb63bcdeeccdd0cc",
@@ -453788,6 +454785,386 @@
         "end_line": 121,
         "signature_hash": "b2511cc8bdba0772",
         "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#class:FakeExecutor:44e996a3fd18c4e0",
+        "name": "FakeExecutor",
+        "kind": "class",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 14,
+        "end_line": 24,
+        "signature_hash": "b57ecce58fe3d521",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#class:HostExecutionH1Tests:99eb68ca1b278447",
+        "name": "HostExecutionH1Tests",
+        "kind": "class",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 57,
+        "end_line": 120,
+        "signature_hash": "7169e40152f45111",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#function:fake_route_validator:7d188252308707c7",
+        "name": "fake_route_validator",
+        "kind": "function",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 47,
+        "end_line": 54,
+        "signature_hash": "77219a3f9be72b2f",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#function:target3_manifest:3b197af34c679911",
+        "name": "target3_manifest",
+        "kind": "function",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 27,
+        "end_line": 44,
+        "signature_hash": "59dec6f763e7b523",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:FakeExecutor.__init__:a967af2de9ffdb04",
+        "name": "FakeExecutor.__init__",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 15,
+        "end_line": 20,
+        "signature_hash": "f782118e6c524746",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:FakeExecutor.generate:30f6c26b9a836a3c",
+        "name": "FakeExecutor.generate",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "3392f2e657858502",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.setUp:b51a1113df5ceb8d",
+        "name": "HostExecutionH1Tests.setUp",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 58,
+        "end_line": 65,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.tearDown:6c501061fef0eb9f",
+        "name": "HostExecutionH1Tests.tearDown",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 66,
+        "end_line": 66,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_caller_output_tamper_fails_digest_binding:ec99a6f2868f07f0",
+        "name": "HostExecutionH1Tests.test_caller_output_tamper_fails_digest_binding",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 107,
+        "end_line": 114,
+        "signature_hash": "78d8ab708b5c3f4d",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_fake_host_three_independent_calls_record_and_reduce:b51d8bf9ec3c1619",
+        "name": "HostExecutionH1Tests.test_fake_host_three_independent_calls_record_and_reduce",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 68,
+        "end_line": 88,
+        "signature_hash": "0e79868e99691bd0",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_free_form_receipts_have_no_reducer_parameter:19b40f984402c95d",
+        "name": "HostExecutionH1Tests.test_free_form_receipts_have_no_reducer_parameter",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 116,
+        "end_line": 120,
+        "signature_hash": "cdbce8e5d7b60327",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_replay_same_attempt_fails_before_second_generate:8cb83ea7d6e9a34a",
+        "name": "HostExecutionH1Tests.test_replay_same_attempt_fails_before_second_generate",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 90,
+        "end_line": 97,
+        "signature_hash": "c8dd2d594766960f",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_execution_h1.py#method:HostExecutionH1Tests.test_wrong_executor_model_fails_before_registry_and_generate:af8d2ffc5d5ec2b5",
+        "name": "HostExecutionH1Tests.test_wrong_executor_model_fails_before_registry_and_generate",
+        "kind": "method",
+        "file": "tools/project006/test_host_execution_h1.py",
+        "line": 99,
+        "end_line": 105,
+        "signature_hash": "a145c514ddaf6929",
+        "file_digest8": "b1def0076679c8e5"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#class:HostReceiptRegistryTests:b5485c04354ac823",
+        "name": "HostReceiptRegistryTests",
+        "kind": "class",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 91,
+        "end_line": 186,
+        "signature_hash": "7d05cd802b876751",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:make_plan:d05ea0cbc89ff159",
+        "name": "make_plan",
+        "kind": "function",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "e0069b5359e712de",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:make_registry:edfd4310eba2cbf8",
+        "name": "make_registry",
+        "kind": "function",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "fcdfb1a805989888",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:manifest:a4a6f1515a3b2c73",
+        "name": "manifest",
+        "kind": "function",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 13,
+        "end_line": 33,
+        "signature_hash": "b72a8fc006689efa",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#function:receipt:88413b164639f8f2",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 50,
+        "end_line": 88,
+        "signature_hash": "d6b412fbca867d1e",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.setUp:d60404964774bb03",
+        "name": "HostReceiptRegistryTests.setUp",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 92,
+        "end_line": 96,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.tearDown:66b78030960551f6",
+        "name": "HostReceiptRegistryTests.tearDown",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 98,
+        "end_line": 99,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_duplicate_receipt_id_rejected:681737218baee24b",
+        "name": "HostReceiptRegistryTests.test_duplicate_receipt_id_rejected",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 149,
+        "end_line": 152,
+        "signature_hash": "3b231592f6af7813",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_event_sequence_must_be_monotonic:a3efc5e03b0f6f79",
+        "name": "HostReceiptRegistryTests.test_event_sequence_must_be_monotonic",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 154,
+        "end_line": 156,
+        "signature_hash": "136612e22a70c333",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_exact_current_receipt_resolves:eba97d90b527526e",
+        "name": "HostReceiptRegistryTests.test_exact_current_receipt_resolves",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "7a1572aae9161b11",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_executor_identity_mismatch_rejected:3c7ccc2d31cb3fd2",
+        "name": "HostReceiptRegistryTests.test_executor_identity_mismatch_rejected",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 171,
+        "end_line": 173,
+        "signature_hash": "88bfd9f2ecd8fddf",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_failed_receipt_does_not_authorize:4444ba9cd6a79639",
+        "name": "HostReceiptRegistryTests.test_failed_receipt_does_not_authorize",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 158,
+        "end_line": 161,
+        "signature_hash": "0c846eed5b3947ca",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_host_instance_mismatch_rejected:3d15d5adc3778f6a",
+        "name": "HostReceiptRegistryTests.test_host_instance_mismatch_rejected",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 167,
+        "end_line": 169,
+        "signature_hash": "c4d14021852de500",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_previous_attempt_is_invisible:dab0ef8fad2c2e89",
+        "name": "HostReceiptRegistryTests.test_previous_attempt_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 111,
+        "end_line": 113,
+        "signature_hash": "7ff53963acfe161c",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_receipt_for_non_host_plan_is_rejected:103ab2e42a6e9178",
+        "name": "HostReceiptRegistryTests.test_receipt_for_non_host_plan_is_rejected",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 175,
+        "end_line": 178,
+        "signature_hash": "329c4013fab4caba",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_restart_reloads_plan_and_receipt:800ed56daf4129bb",
+        "name": "HostReceiptRegistryTests.test_restart_reloads_plan_and_receipt",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 180,
+        "end_line": 186,
+        "signature_hash": "0f91d7f92aa18e52",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_sibling_command_is_invisible:81e083b8f70a006e",
+        "name": "HostReceiptRegistryTests.test_sibling_command_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 107,
+        "end_line": 109,
+        "signature_hash": "465cf00554627a51",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_stub_receipt_missing_substantive_digest_rejected_at_record:5fad8512cee8acdf",
+        "name": "HostReceiptRegistryTests.test_stub_receipt_missing_substantive_digest_rejected_at_record",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 163,
+        "end_line": 165,
+        "signature_hash": "b47e0741646f87dc",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_untrusted_execution_plan_rejected:316a3d549295e0e0",
+        "name": "HostReceiptRegistryTests.test_untrusted_execution_plan_rejected",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "5fed51a5040e723b",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_untrusted_free_form_projection_cannot_be_minted:8190dbf93696685e",
+        "name": "HostReceiptRegistryTests.test_untrusted_free_form_projection_cannot_be_minted",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 135,
+        "end_line": 141,
+        "signature_hash": "adc276b4c63484b8",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_command_digest_is_invisible:7d670f6370833573",
+        "name": "HostReceiptRegistryTests.test_wrong_command_digest_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 131,
+        "end_line": 133,
+        "signature_hash": "76188c9fea58afb4",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_fanout_is_invisible:e05922f1adedf730",
+        "name": "HostReceiptRegistryTests.test_wrong_fanout_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 115,
+        "end_line": 117,
+        "signature_hash": "d58629afedef60b4",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_objective_is_invisible:84773c9e2c902f09",
+        "name": "HostReceiptRegistryTests.test_wrong_objective_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "92ae965ae68f5167",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_role_instance_is_invisible:70413d6c1f0db366",
+        "name": "HostReceiptRegistryTests.test_wrong_role_instance_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 119,
+        "end_line": 121,
+        "signature_hash": "e4971e1a1139ed99",
+        "file_digest8": "5c6e5c8bcd09a3f7"
+      },
+      {
+        "semantic_id": "tools/project006/test_host_receipt_registry.py#method:HostReceiptRegistryTests.test_wrong_source_generation_is_invisible:8c03639c506ad679",
+        "name": "HostReceiptRegistryTests.test_wrong_source_generation_is_invisible",
+        "kind": "method",
+        "file": "tools/project006/test_host_receipt_registry.py",
+        "line": 127,
+        "end_line": 129,
+        "signature_hash": "7e8aca88a975e8f6",
+        "file_digest8": "5c6e5c8bcd09a3f7"
       },
       {
         "semantic_id": "tools/project006/test_local_runner_preflight.py#class:LocalRunnerPreflightTests:3efc565f71afeb08",
@@ -455100,7 +456477,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "add6a165cdd682246137cb037bcf19fa",
-    "payload_hash": "b7c048e9c9266d308b25e56e3b66d61a"
+    "record_fingerprint": "882c1f45d21e89da13da2d1ee8956ed1",
+    "payload_hash": "1f5627d75d3fab38c166738d8b34c877"
   }
 }
