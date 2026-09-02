@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1650
-- **total_bytes**: 26492015
-- **text_tokens_est**: 6613426
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1664
+- **total_bytes**: 26612718
+- **text_tokens_est**: 6643606
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1650,
+  "repo_file_count": 1664,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1650,6 +1650,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/drive_command_executor_hook.py",
+    "tools/project006/drive_command_executor_integrity_adapter.py",
+    "tools/project006/drive_route_admission.py",
+    "tools/project006/drive_swarm_fanout.py",
+    "tools/project006/drive_swarm_integrity.py",
+    "tools/project006/drive_swarm_route_integrity.py",
+    "tools/project006/host_execution_bridge.py",
+    "tools/project006/host_receipt_registry.py",
+    "tools/project006/host_swarm_reducer.py",
     "tools/project006/local_runner_preflight.py",
     "tools/project006/local_runner_preflight_v2.py",
     "tools/project006/provider_sidecar_reference/README.md",
@@ -1661,6 +1669,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
     "tools/project006/test_drive_command_executor_hook.py",
+    "tools/project006/test_drive_command_executor_integrity_adapter.py",
+    "tools/project006/test_drive_route_admission.py",
+    "tools/project006/test_drive_swarm_integrity.py",
+    "tools/project006/test_drive_swarm_route_integrity.py",
+    "tools/project006/test_host_execution_h1.py",
+    "tools/project006/test_host_receipt_registry.py",
     "tools/project006/test_local_runner_preflight.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1790,15 +1804,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1650,
-  "bytes": 26492015,
-  "tokens_est": 6613426,
+  "files": 1664,
+  "bytes": 26612718,
+  "tokens_est": 6643606,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
+    "python_module": 1022,
     "schema_or_lexicon": 273,
     "support_file": 49
   }

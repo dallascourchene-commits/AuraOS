@@ -1,0 +1,284 @@
+import copy
+import unittest
+
+from drive_swarm_fanout import (
+    ROLE_SCHEMA,
+    SWARM_SCHEMA,
+    SwarmFanoutError,
+    compile_role_distinct_children,
+    fanout_manifest,
+)
+from drive_swarm_integrity import (
+    SwarmIntegrityError,
+    classify_model_output,
+    validate_physical_swarm_receipts,
+)
+
+
+def base_command():
+    return {
+        "schema": "AuraCommandEnvelopeV1-candidate",
+        "queue_state": "AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND",
+        "message_authorized": True,
+        "execution_authorized": True,
+        "authority_ref": "owner",
+        "transport": {"type": "CHATGPT"},
+        "objective": {
+            "text": "Investigate the bounded task.",
+            "requested_effect": "D0",
+            "positive_intent": [],
+            "negative_intent": [],
+            "success_criteria": [],
+        },
+        "constraints": {"workspace_scope": "AURA_DRIVE_ONLY"},
+        "requested_capability": {"semantic_id_or_alias": "EXISTING_AURA_DEEPSEEK_EXECUTOR"},
+        "command_id": "parent",
+        "idempotency_key": "parent-key",
+    }
+
+
+def parent_swarm():
+    return {
+        "schema": SWARM_SCHEMA,
+        "parent_command_id": "swarm-1",
+        "parent_idempotency_key": "swarm-key",
+        "target_size": 3,
+        "base_command": base_command(),
+        "roles": [
+            {"schema": ROLE_SCHEMA, "role_id": "A+", "worker_id": "W-A", "objective_suffix": "Construct."},
+            {"schema": ROLE_SCHEMA, "role_id": "B-", "worker_id": "W-B", "objective_suffix": "Challenge."},
+            {"schema": ROLE_SCHEMA, "role_id": "C0", "worker_id": "W-C", "objective_suffix": "Verify."},
+        ],
+    }
+
+
+def physical_fixture(provider="deepseek", model="deepseek-chat"):
+    parent = parent_swarm()
+    children = compile_role_distinct_children(parent)
+    manifest = fanout_manifest(parent)
+    receipts = []
+    for i, child in enumerate(children):
+        ctx = child["_host_child_context"]
+        receipts.append(
+            {
+                "parent_command_id": ctx["parent_command_id"],
+                "parent_payload_digest": ctx["parent_payload_digest"],
+                "command_id": child["command_id"],
+                "idempotency_key": child["idempotency_key"],
+                "worker_id": ctx["worker_id"],
+                "role_id": ctx["role_id"],
+                "ordinal": ctx["ordinal"],
+                "attempt_id": f"A{i}",
+                "provider_request_id": f"R{i}",
+                "provider": provider,
+                "model": model,
+                "result": "Completed bounded analysis; evidence refs follow.",
+            }
+        )
+    return manifest, receipts
+
+
+class FanoutTests(unittest.TestCase):
+    def test_target3_compiles_three_distinct_children(self):
+        children = compile_role_distinct_children(parent_swarm())
+        self.assertEqual(3, len(children))
+        self.assertEqual(3, len({c["command_id"] for c in children}))
+        self.assertEqual(3, len({c["idempotency_key"] for c in children}))
+        self.assertEqual(
+            ["A+", "B-", "C0"],
+            [c["_host_child_context"]["role_id"] for c in children],
+        )
+
+    def test_role_count_mismatch_fails_closed(self):
+        raw = parent_swarm()
+        raw["target_size"] = 2
+        with self.assertRaisesRegex(SwarmFanoutError, "TARGET_SIZE_ROLE_COUNT_MISMATCH"):
+            compile_role_distinct_children(raw)
+
+    def test_manifest_starts_no_effect(self):
+        receipt = fanout_manifest(parent_swarm())
+        self.assertEqual(3, receipt["child_count"])
+        self.assertFalse(receipt["effect_started"])
+        self.assertTrue(receipt["parent_payload_digest"])
+        self.assertTrue(receipt["manifest_digest"])
+
+    def test_same_parent_key_semantic_mutation_changes_child_identity(self):
+        original = parent_swarm()
+        mutated = copy.deepcopy(original)
+        mutated["roles"][0]["objective_suffix"] = "Construct a materially different task."
+        a = compile_role_distinct_children(original)
+        b = compile_role_distinct_children(mutated)
+        self.assertNotEqual(a[0]["idempotency_key"], b[0]["idempotency_key"])
+        self.assertNotEqual(
+            a[0]["_host_child_context"]["parent_payload_digest"],
+            b[0]["_host_child_context"]["parent_payload_digest"],
+        )
+
+    def test_base_command_cannot_forge_child_context(self):
+        raw = parent_swarm()
+        raw["base_command"]["_host_child_context"] = {"worker_id": "FORGED"}
+        with self.assertRaisesRegex(SwarmFanoutError, "BASE_COMMAND_ALREADY_CHILD"):
+            compile_role_distinct_children(raw)
+
+
+class IntegrityTests(unittest.TestCase):
+    def test_claude_text_under_deepseek_is_quarantined(self):
+        result = classify_model_output(
+            {"provider": "deepseek", "result": "I'm Claude, an AI assistant created by Anthropic, not DeepSeek."},
+            expected_provider="deepseek",
+        )
+        self.assertEqual("PROVIDER_IDENTITY_MISMATCH", result["classification"])
+
+    def test_provider_metadata_mismatch_is_quarantined(self):
+        result = classify_model_output(
+            {"provider": "anthropic", "model": "claude-sonnet", "result": "Completed."},
+            expected_provider="deepseek",
+        )
+        self.assertEqual("PROVIDER_IDENTITY_MISMATCH", result["classification"])
+        self.assertIn("PROVIDER_METADATA_MISMATCH", result["reasons"])
+
+    def test_missing_provider_metadata_is_quarantined_when_expected(self):
+        result = classify_model_output(
+            {"model": "deepseek-chat", "result": "Completed."},
+            expected_provider="deepseek",
+            expected_model="deepseek-chat",
+        )
+        self.assertEqual("PROVIDER_IDENTITY_MISMATCH", result["classification"])
+        self.assertIn("PROVIDER_METADATA_MISSING", result["reasons"])
+
+    def test_model_metadata_mismatch_is_quarantined(self):
+        result = classify_model_output(
+            {"provider": "deepseek", "model": "unexpected-model", "result": "Completed."},
+            expected_provider="deepseek",
+            expected_model="deepseek-chat",
+        )
+        self.assertEqual("MODEL_IDENTITY_MISMATCH", result["classification"])
+
+    def test_missing_model_metadata_is_quarantined_when_expected(self):
+        result = classify_model_output(
+            {"provider": "deepseek", "result": "Completed."},
+            expected_provider="deepseek",
+            expected_model="deepseek-chat",
+        )
+        self.assertEqual("MODEL_IDENTITY_MISMATCH", result["classification"])
+        self.assertIn("MODEL_METADATA_MISSING", result["reasons"])
+
+    def test_refusal_is_not_success(self):
+        result = classify_model_output(
+            {"provider": "deepseek", "result": "I cannot execute that work order because I don't have access."},
+            expected_provider="deepseek",
+        )
+        self.assertEqual("MODEL_REFUSAL", result["classification"])
+
+    def test_single_response_simulating_roles_is_flagged(self):
+        result = classify_model_output(
+            {
+                "provider": "deepseek",
+                "result": "I'll execute three distinct identity roles. A+ CONSTRUCT ... B- CHALLENGE ... C0 VERIFY ...",
+            },
+            expected_provider="deepseek",
+            physical_swarm_expected=True,
+        )
+        self.assertEqual("ROLE_FANOUT_VIOLATION", result["classification"])
+
+    def test_valid_physical_three_requires_exact_manifest_bijection(self):
+        manifest, receipts = physical_fixture()
+        result = validate_physical_swarm_receipts(
+            parent_command_id="swarm-1",
+            target_size=3,
+            fanout_manifest=manifest,
+            child_receipts=receipts,
+            expected_provider="deepseek",
+            expected_model="deepseek-chat",
+        )
+        self.assertTrue(result["physical_fanout_proven"])
+        self.assertEqual(3, result["unique_provider_request_count"])
+        self.assertEqual(manifest["manifest_digest"], result["fanout_manifest_digest"])
+
+    def test_one_request_id_reused_fails(self):
+        manifest, receipts = physical_fixture()
+        for receipt in receipts:
+            receipt["provider_request_id"] = "SAME"
+        with self.assertRaisesRegex(
+            SwarmIntegrityError, "PROVIDER_REQUEST_ID_MISSING_OR_DUPLICATE"
+        ):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+            )
+
+    def test_unrelated_child_receipt_fails_manifest_binding(self):
+        manifest, receipts = physical_fixture()
+        receipts[1]["command_id"] = "unrelated-child"
+        with self.assertRaisesRegex(SwarmIntegrityError, "CHILD_NOT_IN_FANOUT_MANIFEST"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+            )
+
+    def test_swapped_ordinal_fails_manifest_binding(self):
+        manifest, receipts = physical_fixture()
+        receipts[0]["ordinal"], receipts[1]["ordinal"] = receipts[1]["ordinal"], receipts[0]["ordinal"]
+        with self.assertRaisesRegex(SwarmIntegrityError, "CHILD_MANIFEST_BINDING_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+            )
+
+    def test_mutated_parent_payload_digest_fails(self):
+        manifest, receipts = physical_fixture()
+        receipts[2]["parent_payload_digest"] = "0" * 64
+        with self.assertRaisesRegex(SwarmIntegrityError, "PARENT_PAYLOAD_DIGEST_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+            )
+
+    def test_tampered_manifest_child_ref_fails_digest(self):
+        manifest, receipts = physical_fixture()
+        manifest = copy.deepcopy(manifest)
+        manifest["child_refs"][0]["worker_id"] = "TAMPERED"
+        with self.assertRaisesRegex(SwarmIntegrityError, "FANOUT_MANIFEST_DIGEST_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+            )
+
+    def test_wrong_provider_child_fails_physical_validation(self):
+        manifest, receipts = physical_fixture()
+        receipts[1]["provider"] = "anthropic"
+        with self.assertRaisesRegex(SwarmIntegrityError, "PROVIDER_IDENTITY_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+                expected_provider="deepseek",
+            )
+
+    def test_wrong_model_child_fails_physical_validation(self):
+        manifest, receipts = physical_fixture()
+        receipts[2]["model"] = "deepseek-v4-pro"
+        with self.assertRaisesRegex(SwarmIntegrityError, "MODEL_IDENTITY_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                fanout_manifest=manifest,
+                child_receipts=receipts,
+                expected_provider="deepseek",
+                expected_model="deepseek-chat",
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()
