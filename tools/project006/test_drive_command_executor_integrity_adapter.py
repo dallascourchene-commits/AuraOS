@@ -247,8 +247,9 @@ class PreEffectRouteTests(unittest.TestCase):
         )
         self.assertEqual(["admission", "ack", "factory"], events)
         self.assertEqual(0, executor.generate_calls)
-        self.assertEqual("EXECUTOR_UNAVAILABLE", out["status"])
-        self.assertEqual("DEEPSEEK_EXECUTOR_UNAVAILABLE", out["error_code"])
+        self.assertEqual("EXECUTOR_MODEL_ROUTE_MISMATCH", out["status"])
+        self.assertEqual("EXECUTOR_MODEL_ROUTE_MISMATCH", out["error_code"])
+        self.assertTrue(out["pre_effect_route_failure"])
 
     def test_wrong_provider_zero_generate(self):
         raw = compiled_child()
@@ -264,7 +265,9 @@ class PreEffectRouteTests(unittest.TestCase):
         )
         self.assertEqual(["admission", "ack", "factory"], events)
         self.assertEqual(0, executor.generate_calls)
-        self.assertEqual("EXECUTOR_UNAVAILABLE", out["status"])
+        self.assertEqual("EXECUTOR_PROVIDER_ROUTE_MISMATCH", out["status"])
+        self.assertEqual("EXECUTOR_PROVIDER_ROUTE_MISMATCH", out["error_code"])
+        self.assertTrue(out["pre_effect_route_failure"])
 
     def test_pro_without_escalation_fails_before_admission_ack_factory_or_generate(self):
         raw = compiled_child()
