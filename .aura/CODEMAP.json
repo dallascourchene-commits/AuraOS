@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788072792,
+  "generated_at_unix": 1788375241,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1655,
+    "repo_file_count": 1659,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1633,8 +1633,10 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/drive_command_executor_hook.py",
       "tools/project006/drive_command_executor_integrity_adapter.py",
+      "tools/project006/drive_route_admission.py",
       "tools/project006/drive_swarm_fanout.py",
       "tools/project006/drive_swarm_integrity.py",
+      "tools/project006/drive_swarm_route_integrity.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
@@ -1647,7 +1649,9 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
       "tools/project006/test_drive_command_executor_hook.py",
       "tools/project006/test_drive_command_executor_integrity_adapter.py",
+      "tools/project006/test_drive_route_admission.py",
       "tools/project006/test_drive_swarm_integrity.py",
+      "tools/project006/test_drive_swarm_route_integrity.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1771,15 +1775,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1655,
-      "bytes": 26546207,
-      "tokens_est": 6626975,
+      "files": 1659,
+      "bytes": 26572881,
+      "tokens_est": 6633644,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1013,
+        "python_module": 1017,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -8379,6 +8383,14 @@
         "end_line": 54,
         "semantic_id": "tools/project006/drive_swarm_integrity.py#function:_identity:8297ed1951c8ede9",
         "signature_hash": "3718a7e3824d5c9a"
+      },
+      {
+        "file": "tools/project006/drive_swarm_route_integrity.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tools/project006/drive_swarm_route_integrity.py#function:_identity:7c7bf70dcc180ce1",
+        "signature_hash": "3718a7e3824d5c9a"
       }
     ],
     "_private_changes": [
@@ -11140,6 +11152,14 @@
         "line": 203,
         "end_line": 205,
         "semantic_id": "aura_crucible_types.py#function:canonical_digest:51a5b70d8537754d",
+        "signature_hash": "fd08555a00404e81"
+      },
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 36,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:canonical_digest:97263ff9493dd2be",
         "signature_hash": "fd08555a00404e81"
       }
     ],
@@ -14733,6 +14753,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:_text:b0036af5b165ebb4",
+        "signature_hash": "7c66637900aa94dc"
       },
       {
         "file": "tools/project006/drive_swarm_fanout.py",
@@ -28451,6 +28479,14 @@
         "end_line": 57,
         "semantic_id": "tests/test_aura_phase_c2_live_route_capsules.py#function:_route:711507f2ed08e8f4",
         "signature_hash": "7877a69ac9b690f1"
+      },
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 39,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#function:_route:4b0f8d655d59b1c8",
+        "signature_hash": "ae225bf367019893"
       }
     ],
     "_regions": [
@@ -157263,6 +157299,14 @@
         "end_line": 130,
         "semantic_id": "tools/project006/drive_command_executor_hook.py#class:_Executor:46051bacc6997a8c",
         "signature_hash": "85f8f8707ac25f56"
+      },
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 61,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#class:_Executor:20680d1c427d9db0",
+        "signature_hash": "5d96af579fb5328e"
       }
     ],
     "_Executor.generate": [
@@ -157273,6 +157317,14 @@
         "end_line": 130,
         "semantic_id": "tools/project006/drive_command_executor_hook.py#method:_Executor.generate:500a764f18733afe",
         "signature_hash": "6fe22113aec3ca69"
+      },
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:_Executor.generate:df9040b34efffdb3",
+        "signature_hash": "3bb493332297fa5a"
       }
     ],
     "_intent_list": [
@@ -157405,12 +157457,22 @@
         "signature_hash": "57197d63ed2eeeed"
       }
     ],
+    "_as_hook_error": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_as_hook_error:29551a7bb39f5fd7",
+        "signature_hash": "8ede85e8ba6bc0a1"
+      }
+    ],
     "_nonempty_text": [
       {
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 41,
-        "end_line": 42,
+        "line": 40,
+        "end_line": 41,
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_nonempty_text:a8905ae0767b8bd9",
         "signature_hash": "a15f95084039a78b"
       }
@@ -157419,8 +157481,8 @@
       {
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 45,
-        "end_line": 50,
+        "line": 44,
+        "end_line": 49,
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_sha256_hex:40f99f8c0ad73237",
         "signature_hash": "635cdca712c9c619"
       }
@@ -157429,8 +157491,8 @@
       {
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 53,
-        "end_line": 95,
+        "line": 52,
+        "end_line": 94,
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_normalize_child_context:1d264862210adaa3",
         "signature_hash": "946b61ebce8cb355"
       }
@@ -157439,8 +157501,8 @@
       {
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 98,
-        "end_line": 143,
+        "line": 97,
+        "end_line": 137,
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:validate_single_call_route:f6526c483ca9bacf",
         "signature_hash": "c79504e0a27a4f7d"
       }
@@ -157449,20 +157511,110 @@
       {
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 146,
-        "end_line": 186,
-        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:integrity_gate_result:30d17d0f327b4c19",
-        "signature_hash": "2b5e3fb9b996411d"
+        "line": 140,
+        "end_line": 182,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:integrity_gate_result:b1c683290b739bcd",
+        "signature_hash": "65d608c7974d2fee"
       }
     ],
     "execute_integrity_checked_command": [
       {
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 189,
-        "end_line": 224,
-        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:execute_integrity_checked_command:8d59a308f13a2f4f",
-        "signature_hash": "78994655b2c4e30f"
+        "line": 185,
+        "end_line": 309,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:execute_integrity_checked_command:86f643d9f9894f68",
+        "signature_hash": "ab5ac9cf1a233d70"
+      }
+    ],
+    "execute_integrity_checked_command.bound_effect_admission": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 239,
+        "end_line": 250,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#method:execute_integrity_checked_command.bound_effect_admission:1f7dcf676e142541",
+        "signature_hash": "861ca9684727ba67"
+      }
+    ],
+    "execute_integrity_checked_command.attested_executor_factory": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 257,
+        "end_line": 262,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#method:execute_integrity_checked_command.attested_executor_factory:f3ebc0d06e86cc55",
+        "signature_hash": "482dc32333110606"
+      }
+    ],
+    "RouteAdmissionError": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 18,
+        "semantic_id": "tools/project006/drive_route_admission.py#class:RouteAdmissionError:711d08aed3d3230b",
+        "signature_hash": "cb1a9e6b60a3f13f"
+      }
+    ],
+    "RouteAdmissionError.__init__": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "tools/project006/drive_route_admission.py#method:RouteAdmissionError.__init__:85d3e476e7c7c9d9",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "validate_route_admission": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 105,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:validate_route_admission:23f7362649ce88c8",
+        "signature_hash": "ce84ec576b6dadf3"
+      }
+    ],
+    "validate_effect_route_binding": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 120,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:validate_effect_route_binding:c50ea327681bddaa",
+        "signature_hash": "dfe8291c2985dbc6"
+      }
+    ],
+    "build_exact_executor": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 132,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:build_exact_executor:76d708c7d4e6d7de",
+        "signature_hash": "b6e265d3c970dd68"
+      }
+    ],
+    "attest_executor": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 146,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:attest_executor:689ccc4b6d3dce6d",
+        "signature_hash": "b83d1bf54385b82b"
+      }
+    ],
+    "prepare_exact_executor": [
+      {
+        "file": "tools/project006/drive_route_admission.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 155,
+        "semantic_id": "tools/project006/drive_route_admission.py#function:prepare_exact_executor:614bc643ad1d72e7",
+        "signature_hash": "bbf101ffc1140dfd"
       }
     ],
     "SwarmFanoutError": [
@@ -157573,6 +157725,16 @@
         "end_line": 347,
         "semantic_id": "tools/project006/drive_swarm_integrity.py#function:validate_physical_swarm_receipts:a29b43312aade524",
         "signature_hash": "ac4419adc56199b0"
+      }
+    ],
+    "validate_route_bound_physical_swarm_receipts": [
+      {
+        "file": "tools/project006/drive_swarm_route_integrity.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 70,
+        "semantic_id": "tools/project006/drive_swarm_route_integrity.py#function:validate_route_bound_physical_swarm_receipts:97f8e2695753d971",
+        "signature_hash": "c7bff1a33d9b98bd"
       }
     ],
     "_file_identity": [
@@ -159255,6 +159417,14 @@
         "end_line": 38,
         "semantic_id": "tools/project006/test_drive_command_executor_hook.py#class:_FakeExecutor:31f37948b18deef5",
         "signature_hash": "6d30a22a321aa2e5"
+      },
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 40,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:_FakeExecutor:5d09e653691372d5",
+        "signature_hash": "6d30a22a321aa2e5"
       }
     ],
     "_FakeExecutor.__init__": [
@@ -159265,6 +159435,14 @@
         "end_line": 32,
         "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_FakeExecutor.__init__:c2e304d8d005219d",
         "signature_hash": "197d26b54aee12c0"
+      },
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 35,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:_FakeExecutor.__init__:e68069c3f7712f4d",
+        "signature_hash": "68475f0306603f9b"
       }
     ],
     "_FakeExecutor.generate": [
@@ -159275,6 +159453,14 @@
         "end_line": 38,
         "semantic_id": "tools/project006/test_drive_command_executor_hook.py#method:_FakeExecutor.generate:39786f112d41287a",
         "signature_hash": "c4cc05be9b3515f6"
+      },
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:_FakeExecutor.generate:8fe444077ed5fa9c",
+        "signature_hash": "3392f2e657858502"
       }
     ],
     "_command": [
@@ -159621,8 +159807,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 17,
-        "end_line": 65,
+        "line": 43,
+        "end_line": 76,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:compiled_child:6fcce826bf651896",
         "signature_hash": "cb55d06b2ab6dabc"
       }
@@ -159631,18 +159817,58 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "function",
-        "line": 68,
-        "end_line": 69,
+        "line": 79,
+        "end_line": 80,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:expected_context:b9787ab7e640f2a1",
         "signature_hash": "415b827d33f0a862"
+      }
+    ],
+    "command_digest": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 84,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:command_digest:78199aa737411793",
+        "signature_hash": "2e31449c16e7c572"
+      }
+    ],
+    "route_admission": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 105,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:route_admission:5dda17a2b5b02cc8",
+        "signature_hash": "29e9ca228b12cf32"
+      }
+    ],
+    "effect_admission": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 128,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:effect_admission:ab3a3fb223b601fa",
+        "signature_hash": "ad8eedcbccc43f70"
+      }
+    ],
+    "effect_admission.provider": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 127,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:effect_admission.provider:ab68f846ce3b4525",
+        "signature_hash": "1d7c56022e271318"
       }
     ],
     "RouteGuardTests": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "class",
-        "line": 72,
-        "end_line": 145,
+        "line": 131,
+        "end_line": 156,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:RouteGuardTests:cdc9da1cb2df44dd",
         "signature_hash": "49aa41fdb728b1c9"
       }
@@ -159651,8 +159877,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 73,
-        "end_line": 77,
+        "line": 132,
+        "end_line": 134,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_parent_swarm_schema_fails_before_single_call:d5aef2c370369df7",
         "signature_hash": "e742175dab16b7cd"
       }
@@ -159661,8 +159887,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 79,
-        "end_line": 85,
+        "line": 136,
+        "end_line": 138,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target3_without_child_context_fails:898bf2f7037ee6fa",
         "signature_hash": "dd6bbf0238f557e8"
       }
@@ -159671,8 +159897,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 87,
-        "end_line": 92,
+        "line": 140,
+        "end_line": 142,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_self_asserted_child_context_is_not_authority:3bff3a114977b29e",
         "signature_hash": "05cbc89acdac0121"
       }
@@ -159681,78 +159907,58 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 94,
-        "end_line": 101,
+        "line": 144,
+        "end_line": 149,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_match_host_expected_child:3c31b17a3eff00c1",
         "signature_hash": "4f8e3ee5ab2a3434"
-      }
-    ],
-    "RouteGuardTests.test_forged_self_consistent_context_cannot_bypass_expected_child": [
-      {
-        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "kind": "method",
-        "line": 103,
-        "end_line": 117,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_forged_self_consistent_context_cannot_bypass_expected_child:9b333412092312e4",
-        "signature_hash": "3a7cd2b4e3a3cf69"
-      }
-    ],
-    "RouteGuardTests.test_child_context_must_bind_command_and_idempotency": [
-      {
-        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "kind": "method",
-        "line": 119,
-        "end_line": 127,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_bind_command_and_idempotency:450e7c7fb4e9744c",
-        "signature_hash": "980f093c68906d16"
       }
     ],
     "RouteGuardTests.test_child_context_requires_parent_payload_digest": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 129,
-        "end_line": 136,
+        "line": 151,
+        "end_line": 156,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_requires_parent_payload_digest:a537f834ae677883",
         "signature_hash": "b12f8740123e7aeb"
-      }
-    ],
-    "RouteGuardTests.test_top_level_target_must_match_child_context_when_present": [
-      {
-        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "kind": "method",
-        "line": 138,
-        "end_line": 145,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target_must_match_child_context_when_present:079028d05f3c63d5",
-        "signature_hash": "6f80e8ca5b4f64b2"
       }
     ],
     "IntegrityGateTests": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "class",
-        "line": 148,
-        "end_line": 275,
+        "line": 159,
+        "end_line": 208,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:IntegrityGateTests:831011c163b85808",
         "signature_hash": "6ccfbc5f5e4e7a3e"
       }
     ],
-    "IntegrityGateTests.test_good_transport_is_partial_not_success": [
+    "IntegrityGateTests.test_expected_model_is_mandatory": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 149,
-        "end_line": 162,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_transport_is_partial_not_success:bfbeb544eed3481f",
-        "signature_hash": "1e8dd6dd40bbe742"
+        "line": 160,
+        "end_line": 166,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_expected_model_is_mandatory:bb35deaf3d913b79",
+        "signature_hash": "fb5de4e97d3067b0"
+      }
+    ],
+    "IntegrityGateTests.test_good_flash_transport_is_partial_not_success": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 176,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_flash_transport_is_partial_not_success:4996606ba3327b60",
+        "signature_hash": "4828da13a3ad2bdf"
       }
     ],
     "IntegrityGateTests.test_missing_required_provider_is_quarantined": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 164,
-        "end_line": 176,
+        "line": 178,
+        "end_line": 184,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_missing_required_provider_is_quarantined:bf2d0fc7f5a6b1f7",
         "signature_hash": "b883a732dac6a160"
       }
@@ -159761,8 +159967,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 178,
-        "end_line": 190,
+        "line": 186,
+        "end_line": 192,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_missing_required_model_is_quarantined:7e511caa6f058a2d",
         "signature_hash": "5b9035850b9bbc48"
       }
@@ -159771,8 +159977,8 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 192,
-        "end_line": 202,
+        "line": 194,
+        "end_line": 200,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_refusal_is_quarantined:5a6cd7d74fa71d94",
         "signature_hash": "db5a960db824339d"
       }
@@ -159781,50 +159987,220 @@
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 204,
-        "end_line": 214,
+        "line": 202,
+        "end_line": 208,
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined:5f65a212be63e9de",
         "signature_hash": "31792477896affe2"
       }
     ],
-    "IntegrityGateTests.test_direct_provider_metadata_mismatch_is_quarantined": [
+    "PreEffectRouteTests": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "kind": "method",
-        "line": 216,
-        "end_line": 228,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_direct_provider_metadata_mismatch_is_quarantined:5a9eb2e127ecef37",
-        "signature_hash": "d0b4eb5e11038bbb"
+        "kind": "class",
+        "line": 211,
+        "end_line": 322,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:PreEffectRouteTests:8b02e589bc9eb099",
+        "signature_hash": "4b507e01cdab9a95"
       }
     ],
-    "IntegrityGateTests.test_direct_model_metadata_mismatch_is_quarantined": [
+    "PreEffectRouteTests.test_exact_flash_order_is_admission_ack_attest_generate": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 230,
-        "end_line": 243,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_direct_model_metadata_mismatch_is_quarantined:ef9c87c310f43042",
-        "signature_hash": "3de8370fecc45ea6"
+        "line": 212,
+        "end_line": 234,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_exact_flash_order_is_admission_ack_attest_generate:280b7e88776644c9",
+        "signature_hash": "423c7f41cbbe350f"
       }
     ],
-    "IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm": [
+    "PreEffectRouteTests.test_admitted_flash_executor_resolves_pro_zero_generate": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 245,
-        "end_line": 275,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm:420254d11b8bbafc",
-        "signature_hash": "d5cb71227fa46ccc"
+        "line": 236,
+        "end_line": 251,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_admitted_flash_executor_resolves_pro_zero_generate:fcb983e6ac98fe83",
+        "signature_hash": "c6d988082e742d54"
       }
     ],
-    "IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm.fake_executor": [
+    "PreEffectRouteTests.test_wrong_provider_zero_generate": [
       {
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
         "kind": "method",
-        "line": 249,
-        "end_line": 256,
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm.fake_executor:ef564bf00f2a4ecc",
-        "signature_hash": "09a7bbe82440eca5"
+        "line": 253,
+        "end_line": 267,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_wrong_provider_zero_generate:dcaced10019ca416",
+        "signature_hash": "ac66e126bd4da6a8"
+      }
+    ],
+    "PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 269,
+        "end_line": 281,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate:3297d628b78c3ee5",
+        "signature_hash": "ed6ab4032f034d76"
+      }
+    ],
+    "PreEffectRouteTests.test_retired_alias_fails_before_effect": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 283,
+        "end_line": 294,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_retired_alias_fails_before_effect:0561addbf7e6664f",
+        "signature_hash": "f95695f6672725e7"
+      }
+    ],
+    "PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 296,
+        "end_line": 307,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate:30679dde4dfd1e53",
+        "signature_hash": "dab9a7e31a8edd62"
+      }
+    ],
+    "PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 309,
+        "end_line": 322,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect:6fe26eb46d24c5c1",
+        "signature_hash": "0dc41d5aeca773bb"
+      }
+    ],
+    "_admission": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 50,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#function:_admission:b33df637289e8754",
+        "signature_hash": "045c9b4bbf6b4ba9"
+      }
+    ],
+    "_Executor.__init__": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:_Executor.__init__:072f88139e2fe7ee",
+        "signature_hash": "5984c67d42a7400c"
+      }
+    ],
+    "RouteAdmissionTests": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 178,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#class:RouteAdmissionTests:cb63bcdeeccdd0cc",
+        "signature_hash": "0c3ea46d98d138db"
+      }
+    ],
+    "RouteAdmissionTests._validate": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 73,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests._validate:0da040eed10ce268",
+        "signature_hash": "51039efa86d298f0"
+      }
+    ],
+    "RouteAdmissionTests.test_standard_route_is_exact_flash": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_standard_route_is_exact_flash:6cd38b83215dcc19",
+        "signature_hash": "56d6f08974c17ba2"
+      }
+    ],
+    "RouteAdmissionTests.test_missing_route_admission_fails_closed": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 89,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_missing_route_admission_fails_closed:2cb5a3b55dfa7ad7",
+        "signature_hash": "95f25b0c05d088d7"
+      }
+    ],
+    "RouteAdmissionTests.test_retired_alias_fails_currentness_gate": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_retired_alias_fails_currentness_gate:59c00a38524f033e",
+        "signature_hash": "91c4ebaeaeba3a1e"
+      }
+    ],
+    "RouteAdmissionTests.test_non_escalated_pro_fails": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_non_escalated_pro_fails:bbe48209c34ffa86",
+        "signature_hash": "874cfa43c69e1a3b"
+      }
+    ],
+    "RouteAdmissionTests.test_pro_requires_typed_allow_and_ref": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 133,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_pro_requires_typed_allow_and_ref:030cb29bbfa7b24a",
+        "signature_hash": "3e0ea885121adce0"
+      }
+    ],
+    "RouteAdmissionTests.test_route_is_bound_to_effect_admission_refs": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 149,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_route_is_bound_to_effect_admission_refs:0575b578913d298c",
+        "signature_hash": "e72bed0a290f1a1f"
+      }
+    ],
+    "RouteAdmissionTests.test_executor_provider_mismatch_is_pre_effect_failure": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 158,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_executor_provider_mismatch_is_pre_effect_failure:89b46edb9494a4a5",
+        "signature_hash": "593a34bd9dbc4282"
+      }
+    ],
+    "RouteAdmissionTests.test_executor_model_mismatch_is_pre_effect_failure": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 167,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_executor_model_mismatch_is_pre_effect_failure:722909f441f88560",
+        "signature_hash": "d974c6cad4b4642a"
+      }
+    ],
+    "RouteAdmissionTests.test_route_replay_after_command_mutation_fails": [
+      {
+        "file": "tools/project006/test_drive_route_admission.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 178,
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_route_replay_after_command_mutation_fails:b192d99877c528c6",
+        "signature_hash": "4f71bce2c2c65797"
       }
     ],
     "base_command": [
@@ -160075,6 +160451,96 @@
         "end_line": 280,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_wrong_model_child_fails_physical_validation:10bfe8a200a7460c",
         "signature_hash": "e8531f08d071ad7e"
+      }
+    ],
+    "_parent": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 48,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#function:_parent:59d7cdeea74eee5b",
+        "signature_hash": "46b0367238e0efac"
+      }
+    ],
+    "_fixtures": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 79,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#function:_fixtures:c43e88958ea91d1d",
+        "signature_hash": "1f9404c14ebca607"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "class",
+        "line": 82,
+        "end_line": 160,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#class:RouteBoundPhysicalReducerTests:8b855482477bc2c9",
+        "signature_hash": "55138d1a4d784ab4"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests.test_exact_target3_proves_three_route_bound_leaves": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 97,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_exact_target3_proves_three_route_bound_leaves:08a219913188f976",
+        "signature_hash": "47e8d0d000bd813e"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests.test_missing_expected_model_fails_closed": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 109,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_missing_expected_model_fails_closed:38d84e3b714a93ab",
+        "signature_hash": "349092be854ec119"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests.test_retired_expected_model_fails_closed": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 121,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_retired_expected_model_fails_closed:26f64eccb94c4c61",
+        "signature_hash": "b2511cc8bdba0772"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests.test_one_wrong_leaf_route_model_fails": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 134,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_one_wrong_leaf_route_model_fails:522c8dc69709df5b",
+        "signature_hash": "5f87e1ff96764ff7"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests.test_duplicate_route_admission_digest_fails": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 147,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_duplicate_route_admission_digest_fails:f407f5e152934c9b",
+        "signature_hash": "d09d72937d70b236"
+      }
+    ],
+    "RouteBoundPhysicalReducerTests.test_provider_request_identity_still_must_be_unique": [
+      {
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 160,
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_provider_request_identity_still_must_be_unique:b29e2aecd561bbba",
+        "signature_hash": "7f58c4431d25e1cd"
       }
     ],
     "LocalRunnerPreflightTests": [
@@ -265668,47 +266134,94 @@
       "path": "tools/project006/drive_command_executor_integrity_adapter.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 8559,
-      "lines": 225,
-      "tokens_est": 2140,
-      "symbol_count": 6,
+      "bytes": 11275,
+      "lines": 310,
+      "tokens_est": 2819,
+      "symbol_count": 9,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "38cd23defa9996ee",
+      "digest8": "72a94e4883aad1f4",
       "vector": [
-        0.30398,
-        0.14901,
-        -0.253913,
-        -0.008345,
-        -0.241992,
-        0.180004,
-        -0.029802,
-        0.115632,
-        0.008345,
-        0.301596,
-        0.098943,
-        0.072717,
-        0.182388,
-        0.156162,
-        -0.00596,
-        0.23484,
-        0.032186,
-        0.24676,
-        0.237224,
-        -0.265834,
-        -0.253913,
-        -0.165699,
-        0.210998,
-        0.051259,
-        -0.141857,
-        -0.029802,
-        -0.101327,
-        -0.096558,
-        0.270602,
-        0.077485,
-        -0.20623,
-        0.079869
+        -0.039446,
+        -0.175714,
+        -0.060962,
+        0.249824,
+        -0.09204,
+        -0.202011,
+        -0.147026,
+        -0.096822,
+        0.245043,
+        0.025102,
+        0.23309,
+        0.23548,
+        0.027493,
+        -0.063353,
+        0.144635,
+        0.278512,
+        0.218746,
+        -0.283293,
+        -0.060962,
+        -0.111166,
+        -0.206792,
+        0.297637,
+        0.065743,
+        -0.044227,
+        -0.106384,
+        -0.087259,
+        -0.204402,
+        0.12551,
+        -0.283293,
+        0.266559,
+        -0.190058,
+        0.041837
+      ]
+    },
+    {
+      "path": "tools/project006/drive_route_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5518,
+      "lines": 156,
+      "tokens_est": 1380,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4cf98652e4b30805",
+      "vector": [
+        0.086115,
+        0.248361,
+        -0.273322,
+        -0.008736,
+        0.12106,
+        -0.001248,
+        -0.093603,
+        -0.05117,
+        -0.17847,
+        -0.2234,
+        0.238376,
+        -0.068642,
+        -0.233384,
+        -0.303275,
+        -0.275818,
+        0.116068,
+        -0.126052,
+        -0.043682,
+        -0.168486,
+        0.195943,
+        0.298282,
+        -0.06365,
+        0.318251,
+        0.141029,
+        0.203431,
+        -0.163494,
+        0.111076,
+        0.06365,
+        -0.091107,
+        -0.180966,
+        -0.156005,
+        -0.046178
       ]
     },
     {
@@ -265803,6 +266316,53 @@
         0.166599,
         0.276112,
         -0.045436
+      ]
+    },
+    {
+      "path": "tools/project006/drive_swarm_route_integrity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2747,
+      "lines": 71,
+      "tokens_est": 687,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "82d22e6d1dd0275b",
+      "vector": [
+        -0.011972,
+        -0.192638,
+        0.242702,
+        -0.088156,
+        -0.236172,
+        -0.266646,
+        -0.140397,
+        0.131691,
+        0.083803,
+        -0.142574,
+        0.142574,
+        0.247056,
+        0.212229,
+        -0.051153,
+        0.216582,
+        0.214405,
+        -0.188285,
+        0.275353,
+        -0.168694,
+        0.253586,
+        0.003265,
+        0.214405,
+        0.225289,
+        -0.088156,
+        -0.253586,
+        0.114277,
+        -0.094687,
+        -0.07945,
+        0.109923,
+        0.183931,
+        -0.149104,
+        0.116454
       ]
     },
     {
@@ -266326,47 +266886,94 @@
       "path": "tools/project006/test_drive_command_executor_integrity_adapter.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 10434,
-      "lines": 280,
-      "tokens_est": 2609,
-      "symbol_count": 21,
+      "bytes": 13320,
+      "lines": 327,
+      "tokens_est": 3330,
+      "symbol_count": 30,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "1fd5e19213359cb5",
+      "digest8": "df52e054aaacc668",
       "vector": [
-        0.007999,
-        -0.078844,
-        0.250244,
-        -0.023996,
-        -0.135977,
-        -0.286809,
-        -0.270812,
-        0.286809,
-        -0.266241,
-        0.090271,
-        -0.033137,
-        -0.149689,
-        0.124551,
-        0.268527,
-        0.165687,
-        0.133692,
-        0.245673,
-        0.076559,
-        -0.138263,
-        -0.279953,
-        0.110839,
-        -0.197681,
-        -0.229676,
-        -0.078844,
-        0.023996,
-        -0.069703,
-        0.122265,
-        0.179399,
-        -0.003428,
-        0.18854,
-        0.275383,
-        -0.026281
+        0.225928,
+        -0.214099,
+        -0.020109,
+        0.223562,
+        -0.027206,
+        0.275609,
+        -0.190442,
+        0.185711,
+        -0.216465,
+        0.166785,
+        0.017743,
+        -0.204636,
+        0.048498,
+        -0.223562,
+        0.233025,
+        0.013012,
+        -0.24722,
+        0.202271,
+        -0.254317,
+        0.065058,
+        0.143127,
+        -0.003549,
+        0.124201,
+        0.065058,
+        -0.147859,
+        -0.197539,
+        -0.13603,
+        -0.285072,
+        -0.117104,
+        0.015377,
+        -0.183345,
+        -0.249585
+      ]
+    },
+    {
+      "path": "tools/project006/test_drive_route_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6220,
+      "lines": 183,
+      "tokens_est": 1555,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "764ac1e585fdb8c1",
+      "vector": [
+        -0.188758,
+        -0.069783,
+        -0.275701,
+        0.284853,
+        -0.014872,
+        -0.126983,
+        0.033176,
+        0.245957,
+        0.083511,
+        0.133847,
+        -0.243669,
+        -0.17503,
+        -0.193334,
+        -0.252821,
+        -0.069783,
+        0.211638,
+        0.20935,
+        -0.234518,
+        -0.133847,
+        -0.195622,
+        0.191046,
+        0.225366,
+        0.266549,
+        0.282565,
+        -0.170454,
+        -0.024024,
+        -0.044616,
+        0.001144,
+        -0.065207,
+        -0.010296,
+        0.168166,
+        -0.033176
       ]
     },
     {
@@ -266414,6 +267021,53 @@
         -0.255853,
         -0.283581,
         -0.10461
+      ]
+    },
+    {
+      "path": "tools/project006/test_drive_swarm_route_integrity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6587,
+      "lines": 165,
+      "tokens_est": 1647,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ff612b01c553772f",
+      "vector": [
+        0.218907,
+        0.099503,
+        0.228272,
+        -0.298509,
+        0.043313,
+        -0.026924,
+        0.172082,
+        -0.211883,
+        0.073749,
+        0.066726,
+        0.050337,
+        -0.204859,
+        0.029266,
+        -0.092479,
+        0.239978,
+        -0.251684,
+        -0.010536,
+        -0.146328,
+        -0.148669,
+        -0.071408,
+        -0.099503,
+        0.286803,
+        0.293826,
+        -0.279779,
+        -0.101844,
+        -0.055019,
+        -0.148669,
+        0.291485,
+        0.071408,
+        0.052678,
+        -0.275096,
+        -0.172082
       ]
     },
     {
@@ -290368,15 +291022,15 @@
     }
   },
   "summary": {
-    "file_count": 1655,
-    "total_bytes": 26546207,
-    "text_tokens_est": 6626975,
+    "file_count": 1659,
+    "total_bytes": 26572881,
+    "text_tokens_est": 6633644,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1013,
+      "python_module": 1017,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -292020,8 +292674,10 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/drive_command_executor_hook.py",
       "tools/project006/drive_command_executor_integrity_adapter.py",
+      "tools/project006/drive_route_admission.py",
       "tools/project006/drive_swarm_fanout.py",
       "tools/project006/drive_swarm_integrity.py",
+      "tools/project006/drive_swarm_route_integrity.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
       "tools/project006/provider_sidecar_reference/README.md",
@@ -292034,7 +292690,9 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
       "tools/project006/test_drive_command_executor_hook.py",
       "tools/project006/test_drive_command_executor_integrity_adapter.py",
+      "tools/project006/test_drive_route_admission.py",
       "tools/project006/test_drive_swarm_integrity.py",
+      "tools/project006/test_drive_swarm_route_integrity.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -449312,64 +449970,184 @@
         "file_digest8": "736d11ba2dde41d7"
       },
       {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_as_hook_error:29551a7bb39f5fd7",
+        "name": "_as_hook_error",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "8ede85e8ba6bc0a1",
+        "file_digest8": "72a94e4883aad1f4"
+      },
+      {
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_nonempty_text:a8905ae0767b8bd9",
         "name": "_nonempty_text",
         "kind": "function",
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
-        "line": 41,
-        "end_line": 42,
+        "line": 40,
+        "end_line": 41,
         "signature_hash": "a15f95084039a78b",
-        "file_digest8": "38cd23defa9996ee"
+        "file_digest8": "72a94e4883aad1f4"
       },
       {
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_normalize_child_context:1d264862210adaa3",
         "name": "_normalize_child_context",
         "kind": "function",
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
-        "line": 53,
-        "end_line": 95,
+        "line": 52,
+        "end_line": 94,
         "signature_hash": "946b61ebce8cb355",
-        "file_digest8": "38cd23defa9996ee"
+        "file_digest8": "72a94e4883aad1f4"
       },
       {
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_sha256_hex:40f99f8c0ad73237",
         "name": "_sha256_hex",
         "kind": "function",
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
-        "line": 45,
-        "end_line": 50,
+        "line": 44,
+        "end_line": 49,
         "signature_hash": "635cdca712c9c619",
-        "file_digest8": "38cd23defa9996ee"
+        "file_digest8": "72a94e4883aad1f4"
       },
       {
-        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:execute_integrity_checked_command:8d59a308f13a2f4f",
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:execute_integrity_checked_command:86f643d9f9894f68",
         "name": "execute_integrity_checked_command",
         "kind": "function",
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
-        "line": 189,
-        "end_line": 224,
-        "signature_hash": "78994655b2c4e30f",
-        "file_digest8": "38cd23defa9996ee"
+        "line": 185,
+        "end_line": 309,
+        "signature_hash": "ab5ac9cf1a233d70",
+        "file_digest8": "72a94e4883aad1f4"
       },
       {
-        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:integrity_gate_result:30d17d0f327b4c19",
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:integrity_gate_result:b1c683290b739bcd",
         "name": "integrity_gate_result",
         "kind": "function",
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
-        "line": 146,
-        "end_line": 186,
-        "signature_hash": "2b5e3fb9b996411d",
-        "file_digest8": "38cd23defa9996ee"
+        "line": 140,
+        "end_line": 182,
+        "signature_hash": "65d608c7974d2fee",
+        "file_digest8": "72a94e4883aad1f4"
       },
       {
         "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:validate_single_call_route:f6526c483ca9bacf",
         "name": "validate_single_call_route",
         "kind": "function",
         "file": "tools/project006/drive_command_executor_integrity_adapter.py",
-        "line": 98,
-        "end_line": 143,
+        "line": 97,
+        "end_line": 137,
         "signature_hash": "c79504e0a27a4f7d",
-        "file_digest8": "38cd23defa9996ee"
+        "file_digest8": "72a94e4883aad1f4"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#method:execute_integrity_checked_command.attested_executor_factory:f3ebc0d06e86cc55",
+        "name": "execute_integrity_checked_command.attested_executor_factory",
+        "kind": "method",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 257,
+        "end_line": 262,
+        "signature_hash": "482dc32333110606",
+        "file_digest8": "72a94e4883aad1f4"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#method:execute_integrity_checked_command.bound_effect_admission:1f7dcf676e142541",
+        "name": "execute_integrity_checked_command.bound_effect_admission",
+        "kind": "method",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 239,
+        "end_line": 250,
+        "signature_hash": "861ca9684727ba67",
+        "file_digest8": "72a94e4883aad1f4"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#class:RouteAdmissionError:711d08aed3d3230b",
+        "name": "RouteAdmissionError",
+        "kind": "class",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 15,
+        "end_line": 18,
+        "signature_hash": "cb1a9e6b60a3f13f",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:_text:b0036af5b165ebb4",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "7c66637900aa94dc",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:attest_executor:689ccc4b6d3dce6d",
+        "name": "attest_executor",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 135,
+        "end_line": 146,
+        "signature_hash": "b83d1bf54385b82b",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:build_exact_executor:76d708c7d4e6d7de",
+        "name": "build_exact_executor",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 123,
+        "end_line": 132,
+        "signature_hash": "b6e265d3c970dd68",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:canonical_digest:97263ff9493dd2be",
+        "name": "canonical_digest",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 27,
+        "end_line": 36,
+        "signature_hash": "fd08555a00404e81",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:prepare_exact_executor:614bc643ad1d72e7",
+        "name": "prepare_exact_executor",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 149,
+        "end_line": 155,
+        "signature_hash": "bbf101ffc1140dfd",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:validate_effect_route_binding:c50ea327681bddaa",
+        "name": "validate_effect_route_binding",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 108,
+        "end_line": 120,
+        "signature_hash": "dfe8291c2985dbc6",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#function:validate_route_admission:23f7362649ce88c8",
+        "name": "validate_route_admission",
+        "kind": "function",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 39,
+        "end_line": 105,
+        "signature_hash": "ce84ec576b6dadf3",
+        "file_digest8": "4cf98652e4b30805"
+      },
+      {
+        "semantic_id": "tools/project006/drive_route_admission.py#method:RouteAdmissionError.__init__:85d3e476e7c7c9d9",
+        "name": "RouteAdmissionError.__init__",
+        "kind": "method",
+        "file": "tools/project006/drive_route_admission.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "4cf98652e4b30805"
       },
       {
         "semantic_id": "tools/project006/drive_swarm_fanout.py#class:SwarmFanoutError:86ad3ec280c23856",
@@ -449530,6 +450308,26 @@
         "end_line": 49,
         "signature_hash": "025780840ff5ba63",
         "file_digest8": "d266b75c88d61dc7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_swarm_route_integrity.py#function:_identity:7c7bf70dcc180ce1",
+        "name": "_identity",
+        "kind": "function",
+        "file": "tools/project006/drive_swarm_route_integrity.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "3718a7e3824d5c9a",
+        "file_digest8": "82d22e6d1dd0275b"
+      },
+      {
+        "semantic_id": "tools/project006/drive_swarm_route_integrity.py#function:validate_route_bound_physical_swarm_receipts:97f8e2695753d971",
+        "name": "validate_route_bound_physical_swarm_receipts",
+        "kind": "function",
+        "file": "tools/project006/drive_swarm_route_integrity.py",
+        "line": 22,
+        "end_line": 70,
+        "signature_hash": "c7bff1a33d9b98bd",
+        "file_digest8": "82d22e6d1dd0275b"
       },
       {
         "semantic_id": "tools/project006/local_runner_preflight.py#function:_canonical_digest:a725766ed40de685",
@@ -451886,210 +452684,460 @@
         "name": "IntegrityGateTests",
         "kind": "class",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 148,
-        "end_line": 275,
+        "line": 159,
+        "end_line": 208,
         "signature_hash": "6ccfbc5f5e4e7a3e",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:PreEffectRouteTests:8b02e589bc9eb099",
+        "name": "PreEffectRouteTests",
+        "kind": "class",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 211,
+        "end_line": 322,
+        "signature_hash": "4b507e01cdab9a95",
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:RouteGuardTests:cdc9da1cb2df44dd",
         "name": "RouteGuardTests",
         "kind": "class",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 72,
-        "end_line": 145,
+        "line": 131,
+        "end_line": 156,
         "signature_hash": "49aa41fdb728b1c9",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:_FakeExecutor:5d09e653691372d5",
+        "name": "_FakeExecutor",
+        "kind": "class",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 29,
+        "end_line": 40,
+        "signature_hash": "6d30a22a321aa2e5",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:command_digest:78199aa737411793",
+        "name": "command_digest",
+        "kind": "function",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 83,
+        "end_line": 84,
+        "signature_hash": "2e31449c16e7c572",
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:compiled_child:6fcce826bf651896",
         "name": "compiled_child",
         "kind": "function",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 17,
-        "end_line": 65,
+        "line": 43,
+        "end_line": 76,
         "signature_hash": "cb55d06b2ab6dabc",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:effect_admission:ab3a3fb223b601fa",
+        "name": "effect_admission",
+        "kind": "function",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 108,
+        "end_line": 128,
+        "signature_hash": "ad8eedcbccc43f70",
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:expected_context:b9787ab7e640f2a1",
         "name": "expected_context",
         "kind": "function",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 68,
-        "end_line": 69,
+        "line": 79,
+        "end_line": 80,
         "signature_hash": "415b827d33f0a862",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#function:route_admission:5dda17a2b5b02cc8",
+        "name": "route_admission",
+        "kind": "function",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 87,
+        "end_line": 105,
+        "signature_hash": "29e9ca228b12cf32",
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined:5f65a212be63e9de",
         "name": "IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 204,
-        "end_line": 214,
+        "line": 202,
+        "end_line": 208,
         "signature_hash": "31792477896affe2",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_direct_model_metadata_mismatch_is_quarantined:ef9c87c310f43042",
-        "name": "IntegrityGateTests.test_direct_model_metadata_mismatch_is_quarantined",
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_expected_model_is_mandatory:bb35deaf3d913b79",
+        "name": "IntegrityGateTests.test_expected_model_is_mandatory",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 230,
-        "end_line": 243,
-        "signature_hash": "3de8370fecc45ea6",
-        "file_digest8": "1fd5e19213359cb5"
+        "line": 160,
+        "end_line": 166,
+        "signature_hash": "fb5de4e97d3067b0",
+        "file_digest8": "df52e054aaacc668"
       },
       {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_direct_provider_metadata_mismatch_is_quarantined:5a9eb2e127ecef37",
-        "name": "IntegrityGateTests.test_direct_provider_metadata_mismatch_is_quarantined",
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_flash_transport_is_partial_not_success:4996606ba3327b60",
+        "name": "IntegrityGateTests.test_good_flash_transport_is_partial_not_success",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 216,
-        "end_line": 228,
-        "signature_hash": "d0b4eb5e11038bbb",
-        "file_digest8": "1fd5e19213359cb5"
-      },
-      {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_transport_is_partial_not_success:bfbeb544eed3481f",
-        "name": "IntegrityGateTests.test_good_transport_is_partial_not_success",
-        "kind": "method",
-        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 149,
-        "end_line": 162,
-        "signature_hash": "1e8dd6dd40bbe742",
-        "file_digest8": "1fd5e19213359cb5"
+        "line": 168,
+        "end_line": 176,
+        "signature_hash": "4828da13a3ad2bdf",
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_missing_required_model_is_quarantined:7e511caa6f058a2d",
         "name": "IntegrityGateTests.test_missing_required_model_is_quarantined",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 178,
-        "end_line": 190,
+        "line": 186,
+        "end_line": 192,
         "signature_hash": "5b9035850b9bbc48",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_missing_required_provider_is_quarantined:bf2d0fc7f5a6b1f7",
         "name": "IntegrityGateTests.test_missing_required_provider_is_quarantined",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 164,
-        "end_line": 176,
+        "line": 178,
+        "end_line": 184,
         "signature_hash": "b883a732dac6a160",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_refusal_is_quarantined:5a6cd7d74fa71d94",
         "name": "IntegrityGateTests.test_refusal_is_quarantined",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 192,
-        "end_line": 202,
+        "line": 194,
+        "end_line": 200,
         "signature_hash": "db5a960db824339d",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm.fake_executor:ef564bf00f2a4ecc",
-        "name": "IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm.fake_executor",
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_admitted_flash_executor_resolves_pro_zero_generate:fcb983e6ac98fe83",
+        "name": "PreEffectRouteTests.test_admitted_flash_executor_resolves_pro_zero_generate",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 249,
-        "end_line": 256,
-        "signature_hash": "09a7bbe82440eca5",
-        "file_digest8": "1fd5e19213359cb5"
+        "line": 236,
+        "end_line": 251,
+        "signature_hash": "c6d988082e742d54",
+        "file_digest8": "df52e054aaacc668"
       },
       {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm:420254d11b8bbafc",
-        "name": "IntegrityGateTests.test_wrapper_preserves_payload_bound_child_lineage_and_does_not_claim_swarm",
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate:30679dde4dfd1e53",
+        "name": "PreEffectRouteTests.test_effect_route_ref_mismatch_fails_before_ack_factory_generate",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 245,
-        "end_line": 275,
-        "signature_hash": "d5cb71227fa46ccc",
-        "file_digest8": "1fd5e19213359cb5"
+        "line": 296,
+        "end_line": 307,
+        "signature_hash": "dab9a7e31a8edd62",
+        "file_digest8": "df52e054aaacc668"
       },
       {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_bind_command_and_idempotency:450e7c7fb4e9744c",
-        "name": "RouteGuardTests.test_child_context_must_bind_command_and_idempotency",
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_exact_flash_order_is_admission_ack_attest_generate:280b7e88776644c9",
+        "name": "PreEffectRouteTests.test_exact_flash_order_is_admission_ack_attest_generate",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 119,
-        "end_line": 127,
-        "signature_hash": "980f093c68906d16",
-        "file_digest8": "1fd5e19213359cb5"
+        "line": 212,
+        "end_line": 234,
+        "signature_hash": "423c7f41cbbe350f",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate:3297d628b78c3ee5",
+        "name": "PreEffectRouteTests.test_pro_without_escalation_fails_before_admission_ack_factory_or_generate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 269,
+        "end_line": 281,
+        "signature_hash": "ed6ab4032f034d76",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect:6fe26eb46d24c5c1",
+        "name": "PreEffectRouteTests.test_replay_after_command_mutation_fails_before_effect",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 309,
+        "end_line": 322,
+        "signature_hash": "0dc41d5aeca773bb",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_retired_alias_fails_before_effect:0561addbf7e6664f",
+        "name": "PreEffectRouteTests.test_retired_alias_fails_before_effect",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 283,
+        "end_line": 294,
+        "signature_hash": "f95695f6672725e7",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:PreEffectRouteTests.test_wrong_provider_zero_generate:dcaced10019ca416",
+        "name": "PreEffectRouteTests.test_wrong_provider_zero_generate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 253,
+        "end_line": 267,
+        "signature_hash": "ac66e126bd4da6a8",
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_match_host_expected_child:3c31b17a3eff00c1",
         "name": "RouteGuardTests.test_child_context_must_match_host_expected_child",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 94,
-        "end_line": 101,
+        "line": 144,
+        "end_line": 149,
         "signature_hash": "4f8e3ee5ab2a3434",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_requires_parent_payload_digest:a537f834ae677883",
         "name": "RouteGuardTests.test_child_context_requires_parent_payload_digest",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 129,
-        "end_line": 136,
+        "line": 151,
+        "end_line": 156,
         "signature_hash": "b12f8740123e7aeb",
-        "file_digest8": "1fd5e19213359cb5"
-      },
-      {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_forged_self_consistent_context_cannot_bypass_expected_child:9b333412092312e4",
-        "name": "RouteGuardTests.test_forged_self_consistent_context_cannot_bypass_expected_child",
-        "kind": "method",
-        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 103,
-        "end_line": 117,
-        "signature_hash": "3a7cd2b4e3a3cf69",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_parent_swarm_schema_fails_before_single_call:d5aef2c370369df7",
         "name": "RouteGuardTests.test_parent_swarm_schema_fails_before_single_call",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 73,
-        "end_line": 77,
+        "line": 132,
+        "end_line": 134,
         "signature_hash": "e742175dab16b7cd",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_self_asserted_child_context_is_not_authority:3bff3a114977b29e",
         "name": "RouteGuardTests.test_self_asserted_child_context_is_not_authority",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 87,
-        "end_line": 92,
+        "line": 140,
+        "end_line": 142,
         "signature_hash": "05cbc89acdac0121",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
         "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target3_without_child_context_fails:898bf2f7037ee6fa",
         "name": "RouteGuardTests.test_top_level_target3_without_child_context_fails",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 79,
-        "end_line": 85,
+        "line": 136,
+        "end_line": 138,
         "signature_hash": "dd6bbf0238f557e8",
-        "file_digest8": "1fd5e19213359cb5"
+        "file_digest8": "df52e054aaacc668"
       },
       {
-        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target_must_match_child_context_when_present:079028d05f3c63d5",
-        "name": "RouteGuardTests.test_top_level_target_must_match_child_context_when_present",
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:_FakeExecutor.__init__:e68069c3f7712f4d",
+        "name": "_FakeExecutor.__init__",
         "kind": "method",
         "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
-        "line": 138,
-        "end_line": 145,
-        "signature_hash": "6f80e8ca5b4f64b2",
-        "file_digest8": "1fd5e19213359cb5"
+        "line": 30,
+        "end_line": 35,
+        "signature_hash": "68475f0306603f9b",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:_FakeExecutor.generate:8fe444077ed5fa9c",
+        "name": "_FakeExecutor.generate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "3392f2e657858502",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:effect_admission.provider:ab68f846ce3b4525",
+        "name": "effect_admission.provider",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 109,
+        "end_line": 127,
+        "signature_hash": "1d7c56022e271318",
+        "file_digest8": "df52e054aaacc668"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#class:RouteAdmissionTests:cb63bcdeeccdd0cc",
+        "name": "RouteAdmissionTests",
+        "kind": "class",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 64,
+        "end_line": 178,
+        "signature_hash": "0c3ea46d98d138db",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#class:_Executor:20680d1c427d9db0",
+        "name": "_Executor",
+        "kind": "class",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 53,
+        "end_line": 61,
+        "signature_hash": "5d96af579fb5328e",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#function:_admission:b33df637289e8754",
+        "name": "_admission",
+        "kind": "function",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 42,
+        "end_line": 50,
+        "signature_hash": "045c9b4bbf6b4ba9",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#function:_route:4b0f8d655d59b1c8",
+        "name": "_route",
+        "kind": "function",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 21,
+        "end_line": 39,
+        "signature_hash": "ae225bf367019893",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests._validate:0da040eed10ce268",
+        "name": "RouteAdmissionTests._validate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 65,
+        "end_line": 73,
+        "signature_hash": "51039efa86d298f0",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_executor_model_mismatch_is_pre_effect_failure:722909f441f88560",
+        "name": "RouteAdmissionTests.test_executor_model_mismatch_is_pre_effect_failure",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 160,
+        "end_line": 167,
+        "signature_hash": "d974c6cad4b4642a",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_executor_provider_mismatch_is_pre_effect_failure:89b46edb9494a4a5",
+        "name": "RouteAdmissionTests.test_executor_provider_mismatch_is_pre_effect_failure",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 151,
+        "end_line": 158,
+        "signature_hash": "593a34bd9dbc4282",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_missing_route_admission_fails_closed:2cb5a3b55dfa7ad7",
+        "name": "RouteAdmissionTests.test_missing_route_admission_fails_closed",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 80,
+        "end_line": 89,
+        "signature_hash": "95f25b0c05d088d7",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_non_escalated_pro_fails:bbe48209c34ffa86",
+        "name": "RouteAdmissionTests.test_non_escalated_pro_fails",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "874cfa43c69e1a3b",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_pro_requires_typed_allow_and_ref:030cb29bbfa7b24a",
+        "name": "RouteAdmissionTests.test_pro_requires_typed_allow_and_ref",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 106,
+        "end_line": 133,
+        "signature_hash": "3e0ea885121adce0",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_retired_alias_fails_currentness_gate:59c00a38524f033e",
+        "name": "RouteAdmissionTests.test_retired_alias_fails_currentness_gate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 91,
+        "end_line": 100,
+        "signature_hash": "91c4ebaeaeba3a1e",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_route_is_bound_to_effect_admission_refs:0575b578913d298c",
+        "name": "RouteAdmissionTests.test_route_is_bound_to_effect_admission_refs",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 135,
+        "end_line": 149,
+        "signature_hash": "e72bed0a290f1a1f",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_route_replay_after_command_mutation_fails:b192d99877c528c6",
+        "name": "RouteAdmissionTests.test_route_replay_after_command_mutation_fails",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 169,
+        "end_line": 178,
+        "signature_hash": "4f71bce2c2c65797",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:RouteAdmissionTests.test_standard_route_is_exact_flash:6cd38b83215dcc19",
+        "name": "RouteAdmissionTests.test_standard_route_is_exact_flash",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "56d6f08974c17ba2",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:_Executor.__init__:072f88139e2fe7ee",
+        "name": "_Executor.__init__",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "5984c67d42a7400c",
+        "file_digest8": "764ac1e585fdb8c1"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_route_admission.py#method:_Executor.generate:df9040b34efffdb3",
+        "name": "_Executor.generate",
+        "kind": "method",
+        "file": "tools/project006/test_drive_route_admission.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "3bb493332297fa5a",
+        "file_digest8": "764ac1e585fdb8c1"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#class:FanoutTests:db69c6d3deac20fc",
@@ -452340,6 +453388,96 @@
         "end_line": 267,
         "signature_hash": "a12b6b67090c40b9",
         "file_digest8": "fc8a9402dd781554"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#class:RouteBoundPhysicalReducerTests:8b855482477bc2c9",
+        "name": "RouteBoundPhysicalReducerTests",
+        "kind": "class",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 82,
+        "end_line": 160,
+        "signature_hash": "55138d1a4d784ab4",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#function:_fixtures:c43e88958ea91d1d",
+        "name": "_fixtures",
+        "kind": "function",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 51,
+        "end_line": 79,
+        "signature_hash": "1f9404c14ebca607",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#function:_parent:59d7cdeea74eee5b",
+        "name": "_parent",
+        "kind": "function",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 16,
+        "end_line": 48,
+        "signature_hash": "46b0367238e0efac",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_duplicate_route_admission_digest_fails:f407f5e152934c9b",
+        "name": "RouteBoundPhysicalReducerTests.test_duplicate_route_admission_digest_fails",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 136,
+        "end_line": 147,
+        "signature_hash": "d09d72937d70b236",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_exact_target3_proves_three_route_bound_leaves:08a219913188f976",
+        "name": "RouteBoundPhysicalReducerTests.test_exact_target3_proves_three_route_bound_leaves",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 83,
+        "end_line": 97,
+        "signature_hash": "47e8d0d000bd813e",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_missing_expected_model_fails_closed:38d84e3b714a93ab",
+        "name": "RouteBoundPhysicalReducerTests.test_missing_expected_model_fails_closed",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 99,
+        "end_line": 109,
+        "signature_hash": "349092be854ec119",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_one_wrong_leaf_route_model_fails:522c8dc69709df5b",
+        "name": "RouteBoundPhysicalReducerTests.test_one_wrong_leaf_route_model_fails",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 123,
+        "end_line": 134,
+        "signature_hash": "5f87e1ff96764ff7",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_provider_request_identity_still_must_be_unique:b29e2aecd561bbba",
+        "name": "RouteBoundPhysicalReducerTests.test_provider_request_identity_still_must_be_unique",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 149,
+        "end_line": 160,
+        "signature_hash": "7f58c4431d25e1cd",
+        "file_digest8": "ff612b01c553772f"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_route_integrity.py#method:RouteBoundPhysicalReducerTests.test_retired_expected_model_fails_closed:26f64eccb94c4c61",
+        "name": "RouteBoundPhysicalReducerTests.test_retired_expected_model_fails_closed",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_route_integrity.py",
+        "line": 111,
+        "end_line": 121,
+        "signature_hash": "b2511cc8bdba0772",
+        "file_digest8": "ff612b01c553772f"
       },
       {
         "semantic_id": "tools/project006/test_local_runner_preflight.py#class:LocalRunnerPreflightTests:3efc565f71afeb08",
@@ -453652,7 +454790,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d36522c404b1452c4355141d92d49581",
-    "payload_hash": "48237e4735298e1c6f0dcccc8d0afb67"
+    "record_fingerprint": "58e74ae3d3b1cfa41efa86950d6362fd",
+    "payload_hash": "d4383b880f5eb41a54be6b8fc0975081"
   }
 }
