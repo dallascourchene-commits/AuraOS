@@ -1,21 +1,5 @@
 #!/usr/bin/env python3
-"""Integrity wrapper for the minimal Aura Drive -> DeepSeek D0 executor.
-
-AWJ-033 repair target:
-- a parent swarm request must never reach the one-call hook directly;
-- only a role-distinct child produced by the fanout coordinator may carry physical
-  swarm context into the single-call executor;
-- child context must match a host-owned expected-child record, not merely self-assert
-  a syntactically valid digest/identity;
-- transport success is never promoted directly to objective success;
-- refusal/provider/model identity contradictions are quarantined fail-closed.
-
-This module deliberately does not own durable replay, Drive I/O, provider routing,
-heartbeats, leases, or objective-specific verification. Those remain host/scheduler
-responsibilities. The host MUST reject caller-supplied reserved `_host_*` fields before
-fanout compilation and pass the persisted expected child separately at execution time.
-Deterministic digests are integrity evidence, not an authentication substitute.
-"""
+"""Fail-closed AWJ-033 integrity wrapper with pre-effect exact route admission."""
 from __future__ import annotations
 
 import string
@@ -24,7 +8,18 @@ from typing import Any
 
 from drive_command_executor_hook import (
     CommandHookError,
+    EFFECT_CLASS,
+    EXECUTOR_ID,
+    _canonical_digest,
     execute_admitted_command,
+    validate_admitted_command,
+)
+from drive_route_admission import (
+    RouteAdmissionError,
+    build_exact_executor,
+    prepare_exact_executor,
+    validate_effect_route_binding,
+    validate_route_admission,
 )
 from drive_swarm_fanout import CHILD_CONTEXT_SCHEMA, SWARM_SCHEMA
 from drive_swarm_integrity import classify_model_output
@@ -36,6 +31,10 @@ _BAD_TERMINAL = {
     "MODEL_IDENTITY_MISMATCH",
     "ROLE_FANOUT_VIOLATION",
 }
+
+
+def _as_hook_error(exc: RouteAdmissionError) -> CommandHookError:
+    return CommandHookError(exc.code)
 
 
 def _nonempty_text(value: Any) -> bool:
@@ -100,12 +99,7 @@ def validate_single_call_route(
     *,
     expected_child_context: Mapping[str, Any] | None = None,
 ) -> dict[str, Any] | None:
-    """Fail closed on parent-swarm misuse and authenticate compiled child context.
-
-    ``expected_child_context`` must come from the host-persisted fanout transaction.
-    Supplying a second copy taken from ``raw`` does not create authority; the installed
-    scheduler owns this trust boundary and must keep caller-authored reserved fields out.
-    """
+    """Reject parent swarm routing and bind child context to host expectations."""
     if not isinstance(raw, Mapping):
         raise CommandHookError("COMMAND_NOT_OBJECT")
 
@@ -146,10 +140,14 @@ def validate_single_call_route(
 def integrity_gate_result(
     result: Mapping[str, Any],
     *,
-    expected_provider: str = "deepseek",
-    expected_model: str | None = None,
+    expected_provider: str,
+    expected_model: str,
 ) -> dict[str, Any]:
-    """Convert raw transport RESULT into a fail-closed adequacy state."""
+    """Convert transport output into a fail-closed adequacy state."""
+    if not _nonempty_text(expected_provider):
+        raise CommandHookError("EXPECTED_PROVIDER_REQUIRED")
+    if not _nonempty_text(expected_model):
+        raise CommandHookError("EXPECTED_MODEL_REQUIRED")
     if not isinstance(result, Mapping):
         raise CommandHookError("EXECUTOR_RESULT_NOT_OBJECT")
 
@@ -177,8 +175,6 @@ def integrity_gate_result(
         out["reduction_allowed"] = False
         return out
 
-    # Transport succeeded, but objective completion/effect claims still need an
-    # independent source/effect-aware validator.
     out["status"] = "RESULT_PARTIAL"
     out["objective_adequacy"] = "EVIDENCE_REQUIRED"
     out["reduction_allowed"] = False
@@ -191,21 +187,104 @@ def execute_integrity_checked_command(
     *,
     executor: Callable[..., Mapping[str, Any]] = execute_admitted_command,
     expected_child_context: Mapping[str, Any] | None = None,
-    expected_provider: str = "deepseek",
+    route_admission: Mapping[str, Any] | None = None,
+    route_executor_factory: Callable[[str, str], Any] = build_exact_executor,
+    expected_provider: str | None = None,
     expected_model: str | None = None,
+    test_only_allow_executor_override: bool = False,
     **executor_kwargs: Any,
 ) -> dict[str, Any]:
-    """Guard route shape, execute one admitted child/single command, gate result."""
+    """Admit exact route and resolved executor before any provider effect.
+
+    ``route_admission`` is a host-owned operand passed separately from the Drive
+    command.  Its provider/model/currentness/escalation and policy references are
+    checked before the underlying one-call hook is allowed to emit a provider call.
+    """
     child_context = validate_single_call_route(
         raw,
         expected_child_context=expected_child_context,
     )
-    result = dict(executor(raw, **executor_kwargs))
+    command = validate_admitted_command(raw)
+    command_digest = _canonical_digest(command)
+
+    route_provider = str((route_admission or {}).get("provider") or "")
+    route_model = str((route_admission or {}).get("model") or "")
+    if (
+        expected_provider is not None
+        and route_provider.casefold() != str(expected_provider).strip().casefold()
+    ):
+        raise CommandHookError("EXPECTED_PROVIDER_ROUTE_MISMATCH")
+    if (
+        expected_model is not None
+        and route_model.casefold() != str(expected_model).strip().casefold()
+    ):
+        raise CommandHookError("EXPECTED_MODEL_ROUTE_MISMATCH")
+
+    try:
+        route = validate_route_admission(
+            route_admission,
+            command_digest=command_digest,
+            executor_id=EXECUTOR_ID,
+            effect_class=EFFECT_CLASS,
+            expected_provider=route_provider,
+            expected_model=route_model,
+        )
+    except RouteAdmissionError as exc:
+        raise _as_hook_error(exc) from exc
+
+    if executor is not execute_admitted_command and not test_only_allow_executor_override:
+        raise CommandHookError("UNVERIFIED_EXECUTOR_OVERRIDE_FORBIDDEN")
+    if "executor_factory" in executor_kwargs:
+        raise CommandHookError("ROUTE_EXECUTOR_FACTORY_OVERRIDE_FORBIDDEN")
+
+    effect_admission = executor_kwargs.pop("effect_admission", None)
+    if effect_admission is None:
+        raise CommandHookError("EFFECT_ADMISSION_REQUIRED")
+
+    # Construction is allowed because it has no provider effect.  The resolved
+    # provider/model are attested before the hook can reach generate().
+    try:
+        exact_executor = prepare_exact_executor(
+            route,
+            factory=route_executor_factory,
+        )
+    except RouteAdmissionError as exc:
+        raise _as_hook_error(exc) from exc
+
+    def bound_effect_admission(command_arg, digest, executor_id, effect_class):
+        admission = effect_admission(
+            command_arg,
+            digest,
+            executor_id,
+            effect_class,
+        )
+        try:
+            validate_effect_route_binding(route, admission)
+        except RouteAdmissionError as exc:
+            raise _as_hook_error(exc) from exc
+        return admission
+
+    result = dict(
+        executor(
+            raw,
+            executor_factory=lambda: exact_executor,
+            effect_admission=bound_effect_admission,
+            **executor_kwargs,
+        )
+    )
     gated = integrity_gate_result(
         result,
-        expected_provider=expected_provider,
-        expected_model=expected_model,
+        expected_provider=route["provider"],
+        expected_model=route["model"],
     )
+
+    gated["route_admission_digest"] = _canonical_digest(route)
+    gated["route_provider"] = route["provider"]
+    gated["route_model"] = route["model"]
+    gated["route_class"] = route["route_class"]
+    gated["route_generation"] = route["route_generation"]
+    gated["route_escalation_decision"] = route["escalation_decision"]
+    gated["route_escalation_ref"] = route["escalation_ref"]
 
     if child_context is not None:
         gated["physical_child_context"] = child_context
@@ -217,8 +296,6 @@ def execute_integrity_checked_command(
         gated["worker_id"] = child_context["worker_id"]
         gated["child_command_id"] = child_context["child_command_id"]
         gated["child_idempotency_key"] = child_context["child_idempotency_key"]
-        # One child attempt is not a physical-swarm proof. The reducer must gather
-        # the exact host-persisted expected child set before claiming fanout.
         gated["physical_swarm_proven"] = False
 
     return gated
