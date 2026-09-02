@@ -249,6 +249,8 @@ def execute_integrity_checked_command(
             raise _as_hook_error(exc) from exc
         return admission
 
+    route_factory_error: list[str] = []
+
     # The one-call hook performs effect admission -> ACK -> executor_factory -> generate.
     # This closure attests the exact resolved provider/model during executor_factory,
     # so a mismatch fails after ACK but strictly before generate/provider effect.
@@ -256,6 +258,7 @@ def execute_integrity_checked_command(
         try:
             return prepare_exact_executor(route, factory=route_executor_factory)
         except RouteAdmissionError as exc:
+            route_factory_error.append(exc.code)
             raise _as_hook_error(exc) from exc
 
     result = dict(
@@ -266,6 +269,17 @@ def execute_integrity_checked_command(
             **executor_kwargs,
         )
     )
+    if route_factory_error:
+        # The lower hook conservatively converts factory exceptions to
+        # EXECUTOR_UNAVAILABLE. Preserve the exact pre-effect route failure here;
+        # generate() was never reached.
+        code = route_factory_error[0]
+        result["record_type"] = "ERROR"
+        result["status"] = code
+        result["error_code"] = code
+        result["pre_effect_route_failure"] = True
+        result["reduction_allowed"] = False
+
     gated = integrity_gate_result(
         result,
         expected_provider=route["provider"],
