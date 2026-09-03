@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788411009,
+  "generated_at_unix": 1788411092,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1640,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -209,6 +209,8 @@
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
       "05_staging/auraos796_reference_kernel/README.md",
+      "05_staging/auraos796_reference_kernel/reference_kernel.py",
+      "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -1650,6 +1652,8 @@
     ],
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
+      "05_staging/auraos796_reference_kernel/reference_kernel.py",
+      "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
@@ -1746,9 +1750,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1756,15 +1758,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1640,
-      "bytes": 26417038,
-      "tokens_est": 6594610,
+      "files": 1642,
+      "bytes": 26443992,
+      "tokens_est": 6601349,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 999,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2047,6 +2049,8 @@
       "ring": "code",
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
         "06_refactor/aura_os_minimal.py",
@@ -2443,9 +2447,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3468,6 +3470,728 @@
         "end_line": 250,
         "semantic_id": "unreal_bridge.py#function:main:a13e03774ee52e6e",
         "signature_hash": "621c1ef8c88e571d"
+      }
+    ],
+    "digest": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#function:digest:137b60ac138a94f5",
+        "signature_hash": "1191bf18035c2e8c"
+      },
+      {
+        "file": "aura_bilateral_live_repair_foundry_contracts.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 151,
+        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_construction_foundry_director.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 96,
+        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
+        "signature_hash": "cb7986ce5e23d90c"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
+        "signature_hash": "bd189b17ea870e50"
+      }
+    ],
+    "OwnerRef": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 43,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:OwnerRef:915435456aa3514c",
+        "signature_hash": "8a85de7e49383e53"
+      }
+    ],
+    "OwnerRef.validate": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 38,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:OwnerRef.validate:f9d428fc138005ab",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "OwnerRef.canonical": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:OwnerRef.canonical:c4b6952238ef2c47",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "EvidenceLease": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:EvidenceLease:eccf223922f383af",
+        "signature_hash": "340c5dee5a2c33b6"
+      }
+    ],
+    "EvidenceLease.validate": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 55,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLease.validate:ac362e9ebee0b134",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceLease.identity": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLease.identity:901f6bd2dd2f532d",
+        "signature_hash": "fcd7e6c74f7bc0d0"
+      }
+    ],
+    "JSpaceEvent": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 93,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JSpaceEvent:b37c0f8f1c4c6ab2",
+        "signature_hash": "62f5a3ae4e00fe4f"
+      }
+    ],
+    "JSpaceEvent.validate": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 89,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceEvent.validate:2a9600e94d551ab2",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "JSpaceEvent.payload_digest": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 93,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceEvent.payload_digest:44558e895941c18f",
+        "signature_hash": "340980449eabbd7a"
+      }
+    ],
+    "JSpaceStore": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 228,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JSpaceStore:a6b0224bb5efcb66",
+        "signature_hash": "c76fc37807e0e43b"
+      }
+    ],
+    "JSpaceStore.__init__": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 99,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.__init__:e8e5dbec8d61586b",
+        "signature_hash": "cf93319cd87db237"
+      }
+    ],
+    "JSpaceStore.connect": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.connect:7dca42d11e1e21a8",
+        "signature_hash": "e1b0ced341aa1a68"
+      }
+    ],
+    "JSpaceStore._init": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 120,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore._init:2ba160d0464de2d6",
+        "signature_hash": "f65517c32f72a9a0"
+      }
+    ],
+    "JSpaceStore.allocate_jid": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 134,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.allocate_jid:94604ce79a172126",
+        "signature_hash": "fc8c95a18b1f7027"
+      }
+    ],
+    "JSpaceStore.append": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 162,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.append:5f743f20aa8047e8",
+        "signature_hash": "1c61951c2adcb28f"
+      }
+    ],
+    "JSpaceStore.add_dep": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 167,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.add_dep:d5b0e1609c4a4f1d",
+        "signature_hash": "a3112b9c8bc2bab5"
+      }
+    ],
+    "JSpaceStore.affected_cone": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 183,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.affected_cone:bfa40ee90c1c6434",
+        "signature_hash": "1745d404c1aea656"
+      }
+    ],
+    "JSpaceStore.events": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 191,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.events:32ca316cda5858fe",
+        "signature_hash": "f313fb85cbb4b333"
+      }
+    ],
+    "JSpaceStore.project": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 228,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.project:e40d6cc1270c0125",
+        "signature_hash": "bc80cf734b274889"
+      }
+    ],
+    "FrontierDecision": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 232,
+        "end_line": 238,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:FrontierDecision:739abba830397dfd",
+        "signature_hash": "723feac4b559ca4f"
+      }
+    ],
+    "WakeReducer": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 241,
+        "end_line": 253,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:WakeReducer:fde05ae95fcccc19",
+        "signature_hash": "f7503ca6f7c02c38"
+      }
+    ],
+    "WakeReducer.__init__": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 242,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:WakeReducer.__init__:dc3221a6042fc77f",
+        "signature_hash": "0c14fd512976e06e"
+      }
+    ],
+    "WakeReducer.decide": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 253,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:WakeReducer.decide:85fe3e13e0f9269d",
+        "signature_hash": "3e34af895288829a"
+      }
+    ],
+    "LeaseDecision": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 257,
+        "end_line": 262,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:LeaseDecision:e95466be5bcc3701",
+        "signature_hash": "6f5aecb53a1160c2"
+      }
+    ],
+    "EvidenceLeaseGate": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 265,
+        "end_line": 283,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:EvidenceLeaseGate:7286eb63d7661820",
+        "signature_hash": "0f2fd55beb9cd385"
+      }
+    ],
+    "EvidenceLeaseGate.__init__": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 266,
+        "end_line": 269,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLeaseGate.__init__:68c2716b9c9517df",
+        "signature_hash": "69ba5e6874490198"
+      }
+    ],
+    "EvidenceLeaseGate.compare": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 283,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLeaseGate.compare:eefd6ff0101e3768",
+        "signature_hash": "3d973e220b89569c"
+      }
+    ],
+    "SourceState": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 287,
+        "end_line": 291,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:SourceState:ff758c171d3a9c39",
+        "signature_hash": "49a74d2e59fb4b0f"
+      }
+    ],
+    "ReconcileReceipt": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 295,
+        "end_line": 303,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:ReconcileReceipt:fde7a11757ec7d0d",
+        "signature_hash": "86e53d6f651564c3"
+      }
+    ],
+    "ReconcileEngine": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 306,
+        "end_line": 342,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:ReconcileEngine:c5a2e3c56bccbe0a",
+        "signature_hash": "db6821078464fead"
+      }
+    ],
+    "ReconcileEngine.__init__": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 308,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:ReconcileEngine.__init__:0c4f2faebdf19c50",
+        "signature_hash": "a1abd6c0fa4effed"
+      }
+    ],
+    "ReconcileEngine._projected_streams": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 310,
+        "end_line": 314,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:ReconcileEngine._projected_streams:cdf843da9bbf3354",
+        "signature_hash": "216e7080d2700991"
+      }
+    ],
+    "ReconcileEngine.reconcile": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 316,
+        "end_line": 342,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:ReconcileEngine.reconcile:f085301797a2e869",
+        "signature_hash": "713dfbbf9d71ae85"
+      }
+    ],
+    "WorkflowObservation": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 346,
+        "end_line": 354,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:WorkflowObservation:c885bb3a5e5a9dab",
+        "signature_hash": "9b9c92cb86f65135"
+      }
+    ],
+    "GitHubObservationNormalizer": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 357,
+        "end_line": 369,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:GitHubObservationNormalizer:4c8e2272001f1c99",
+        "signature_hash": "b4d0b190de9662bb"
+      }
+    ],
+    "GitHubObservationNormalizer.workflow": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 358,
+        "end_line": 369,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:GitHubObservationNormalizer.workflow:74c005337238faa7",
+        "signature_hash": "ccfe8731c9f78135"
+      }
+    ],
+    "JoinContext": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 373,
+        "end_line": 382,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JoinContext:34448c2cd76e48ac",
+        "signature_hash": "04395732ac0a5be3"
+      }
+    ],
+    "JoinContextCompiler": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "class",
+        "line": 385,
+        "end_line": 393,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JoinContextCompiler:893928c359956677",
+        "signature_hash": "7508a37b1f78f8e1"
+      }
+    ],
+    "JoinContextCompiler.compile": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "kind": "method",
+        "line": 386,
+        "end_line": 393,
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JoinContextCompiler.compile:cb9e31afac307179",
+        "signature_hash": "8e5bf105341aef98"
+      }
+    ],
+    "KernelTests": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 146,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#class:KernelTests:7fc01c8904d8d93b",
+        "signature_hash": "98de350e5fd7beda"
+      }
+    ],
+    "KernelTests.setUp": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.setUp:e3960b5c87f05eb2",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "KernelTests.tearDown": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.tearDown:4fde67072a27b094",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "KernelTests.event": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.event:e1ceb6828143802f",
+        "signature_hash": "b6e407c937d5a546"
+      }
+    ],
+    "KernelTests.test_jid_monotonic": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_jid_monotonic:790a92a07bd0eea1",
+        "signature_hash": "62110f8b4fec7c6b"
+      }
+    ],
+    "KernelTests.test_jid_concurrent_unique": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_jid_concurrent_unique:fdf3c814d69982af",
+        "signature_hash": "4b4420bfc8e25c32"
+      }
+    ],
+    "KernelTests.test_jid_concurrent_unique.allocate": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_jid_concurrent_unique.allocate:f666935f4edf2c73",
+        "signature_hash": "63412e3057a0eb7d"
+      }
+    ],
+    "KernelTests.test_event_duplicate_idempotent": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_event_duplicate_idempotent:af58d47fd3c915f0",
+        "signature_hash": "482be08451c76535"
+      }
+    ],
+    "KernelTests.test_conflicting_replay_fails": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_conflicting_replay_fails:6c6131bb811fd88a",
+        "signature_hash": "0f2f32a2f6f016e8"
+      }
+    ],
+    "KernelTests.test_authority_widening_fails": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_authority_widening_fails:e731a64de0ff6b22",
+        "signature_hash": "a6acc2d6c3a175cf"
+      }
+    ],
+    "KernelTests.test_lower_sequence_does_not_regress": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 49,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lower_sequence_does_not_regress:5eb98077b308cabf",
+        "signature_hash": "7c45a63fe0cd5638"
+      }
+    ],
+    "KernelTests.test_equal_sequence_same_generation_is_replay": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_equal_sequence_same_generation_is_replay:9d8336386dc4d362",
+        "signature_hash": "17711e3754c082f5"
+      }
+    ],
+    "KernelTests.test_equal_sequence_conflicting_generation_fails_closed": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_equal_sequence_conflicting_generation_fails_closed:15c81cd912104387",
+        "signature_hash": "23d2cfe19deb2955"
+      }
+    ],
+    "KernelTests.test_higher_sequence_advances": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 65,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_higher_sequence_advances:ad4dfc16f0804982",
+        "signature_hash": "49e738285e4fdcac"
+      }
+    ],
+    "KernelTests.test_owner_ref_requires_repository_qualification": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_owner_ref_requires_repository_qualification:5ef3caecb256530f",
+        "signature_hash": "a007a3da3ebc59f6"
+      }
+    ],
+    "KernelTests.test_owner_ref_issue_pr_are_distinct": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_owner_ref_issue_pr_are_distinct:3d6d93453abd6a6c",
+        "signature_hash": "cc46a8786c7b3582"
+      }
+    ],
+    "KernelTests.test_same_ordinal_other_repo_is_distinct": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_same_ordinal_other_repo_is_distinct:8c6a43821339f5ed",
+        "signature_hash": "a6d32361abc1193f"
+      }
+    ],
+    "KernelTests.test_lease_exact_reuse": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 84,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lease_exact_reuse:1bdebc2298306785",
+        "signature_hash": "b467603fcf7993c1"
+      }
+    ],
+    "KernelTests.test_lease_revision_drift_selective": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 91,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lease_revision_drift_selective:d2a545b3623ba243",
+        "signature_hash": "acb33696ed9e1437"
+      }
+    ],
+    "KernelTests.test_lease_semantic_root_drift_selective": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 98,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lease_semantic_root_drift_selective:bfa9a1f27e64c954",
+        "signature_hash": "98a34e888c487755"
+      }
+    ],
+    "KernelTests.test_missing_lease_holds": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 102,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_missing_lease_holds:1b2168e3ad38bf50",
+        "signature_hash": "6a79bc589bf4b40f"
+      }
+    ],
+    "KernelTests.test_reconcile_older_sequence_is_noop": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 107,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_reconcile_older_sequence_is_noop:c770fb54260cf020",
+        "signature_hash": "9f1d93c000bccf28"
+      }
+    ],
+    "KernelTests.test_reconcile_equal_sequence_conflict_fails": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 113,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_reconcile_equal_sequence_conflict_fails:ec410fc01c005539",
+        "signature_hash": "480a1c3f4a4958ac"
+      }
+    ],
+    "KernelTests.test_reconcile_higher_sequence_selective_wake": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 119,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_reconcile_higher_sequence_selective_wake:3fbd8ab6209556c2",
+        "signature_hash": "b50e9e134d1d2eab"
+      }
+    ],
+    "KernelTests.test_github_prejob_action_required_not_test_failure": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 124,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_github_prejob_action_required_not_test_failure:ac6e1ab64ba16245",
+        "signature_hash": "83410b985ac8790c"
+      }
+    ],
+    "KernelTests.test_joincontext_bounded": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 129,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_joincontext_bounded:618c3b1b9db07734",
+        "signature_hash": "2598a4bd686b1a6f"
+      }
+    ],
+    "KernelTests.test_joincontext_rejects_broad_hydration": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 133,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_joincontext_rejects_broad_hydration:4de926445e9ea155",
+        "signature_hash": "9221f7e208dfcbd0"
+      }
+    ],
+    "KernelTests.test_random_selective_cones": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 140,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_random_selective_cones:41285450d7891b72",
+        "signature_hash": "c44f9925f3c8553d"
+      }
+    ],
+    "KernelTests.test_no_owner_or_lease_mints_effect": [
+      {
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 146,
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_no_owner_or_lease_mints_effect:3e77a8a3b27a5d1c",
+        "signature_hash": "f3f729530bd2136d"
       }
     ],
     "IngressPacket": [
@@ -20090,40 +20814,6 @@
         "end_line": 58,
         "semantic_id": "aura_construction_foundry_director.py#function:canonical_bytes:7fd9402c68df2247",
         "signature_hash": "b8735a6f3e386d20"
-      }
-    ],
-    "digest": [
-      {
-        "file": "aura_bilateral_live_repair_foundry_contracts.py",
-        "kind": "function",
-        "line": 150,
-        "end_line": 151,
-        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_construction_foundry_director.py",
-        "kind": "function",
-        "line": 61,
-        "end_line": 62,
-        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_refactor_state_identity.py",
-        "kind": "function",
-        "line": 95,
-        "end_line": 96,
-        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
-        "signature_hash": "cb7986ce5e23d90c"
-      },
-      {
-        "file": "scripts/aura_blind_gate10_benchmark.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
-        "signature_hash": "bd189b17ea870e50"
       }
     ],
     "_runtime_binding_digest": [
@@ -172458,6 +173148,100 @@
       ]
     },
     {
+      "path": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 18216,
+      "lines": 394,
+      "tokens_est": 4554,
+      "symbol_count": 40,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7ac5d0cd49957f8e",
+      "vector": [
+        0.20381,
+        -0.043091,
+        0.08036,
+        -0.07803,
+        0.068713,
+        -0.071043,
+        0.098994,
+        0.289993,
+        -0.024457,
+        -0.259713,
+        0.103652,
+        -0.036104,
+        -0.229432,
+        0.255054,
+        0.066384,
+        0.273688,
+        0.271359,
+        0.01514,
+        0.066384,
+        -0.124616,
+        -0.250396,
+        0.045421,
+        0.194493,
+        0.210798,
+        -0.278347,
+        0.292322,
+        0.105981,
+        -0.166542,
+        0.14092,
+        0.105981,
+        0.073372,
+        0.289993
+      ]
+    },
+    {
+      "path": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8738,
+      "lines": 150,
+      "tokens_est": 2185,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fac24e4ed1840b35",
+      "vector": [
+        -0.082381,
+        -0.183946,
+        -0.260684,
+        0.086895,
+        -0.07561,
+        -0.091409,
+        -0.197488,
+        0.262942,
+        0.037241,
+        -0.050783,
+        0.247142,
+        0.253913,
+        -0.253913,
+        -0.14332,
+        -0.278741,
+        0.048526,
+        -0.100437,
+        0.224572,
+        0.134292,
+        -0.154605,
+        0.27197,
+        -0.192974,
+        0.235857,
+        -0.095923,
+        0.159119,
+        -0.278741,
+        0.215544,
+        -0.016928,
+        0.147834,
+        0.089152,
+        -0.032727,
+        0.089152
+      ]
+    },
+    {
       "path": "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -286701,15 +287485,15 @@
     }
   },
   "summary": {
-    "file_count": 1640,
-    "total_bytes": 26417038,
-    "text_tokens_est": 6594610,
+    "file_count": 1642,
+    "total_bytes": 26443992,
+    "text_tokens_est": 6601349,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 999,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -286929,6 +287713,8 @@
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
       "05_staging/auraos796_reference_kernel/README.md",
+      "05_staging/auraos796_reference_kernel/reference_kernel.py",
+      "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -288388,6 +289174,696 @@
         "end_line": 13,
         "signature_hash": "41fb393f9ea07f89",
         "file_digest8": "6ca398b6bf7056e4"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:EvidenceLease:eccf223922f383af",
+        "name": "EvidenceLease",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "340c5dee5a2c33b6",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:EvidenceLeaseGate:7286eb63d7661820",
+        "name": "EvidenceLeaseGate",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 265,
+        "end_line": 283,
+        "signature_hash": "0f2fd55beb9cd385",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:FrontierDecision:739abba830397dfd",
+        "name": "FrontierDecision",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 232,
+        "end_line": 238,
+        "signature_hash": "723feac4b559ca4f",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:GitHubObservationNormalizer:4c8e2272001f1c99",
+        "name": "GitHubObservationNormalizer",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 357,
+        "end_line": 369,
+        "signature_hash": "b4d0b190de9662bb",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JSpaceEvent:b37c0f8f1c4c6ab2",
+        "name": "JSpaceEvent",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 64,
+        "end_line": 93,
+        "signature_hash": "62f5a3ae4e00fe4f",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JSpaceStore:a6b0224bb5efcb66",
+        "name": "JSpaceStore",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 96,
+        "end_line": 228,
+        "signature_hash": "c76fc37807e0e43b",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JoinContext:34448c2cd76e48ac",
+        "name": "JoinContext",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 373,
+        "end_line": 382,
+        "signature_hash": "04395732ac0a5be3",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:JoinContextCompiler:893928c359956677",
+        "name": "JoinContextCompiler",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 385,
+        "end_line": 393,
+        "signature_hash": "7508a37b1f78f8e1",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:LeaseDecision:e95466be5bcc3701",
+        "name": "LeaseDecision",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 257,
+        "end_line": 262,
+        "signature_hash": "6f5aecb53a1160c2",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:OwnerRef:915435456aa3514c",
+        "name": "OwnerRef",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 24,
+        "end_line": 43,
+        "signature_hash": "8a85de7e49383e53",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:ReconcileEngine:c5a2e3c56bccbe0a",
+        "name": "ReconcileEngine",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 306,
+        "end_line": 342,
+        "signature_hash": "db6821078464fead",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:ReconcileReceipt:fde7a11757ec7d0d",
+        "name": "ReconcileReceipt",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 295,
+        "end_line": 303,
+        "signature_hash": "86e53d6f651564c3",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:SourceState:ff758c171d3a9c39",
+        "name": "SourceState",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 287,
+        "end_line": 291,
+        "signature_hash": "49a74d2e59fb4b0f",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:WakeReducer:fde05ae95fcccc19",
+        "name": "WakeReducer",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 241,
+        "end_line": 253,
+        "signature_hash": "f7503ca6f7c02c38",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#class:WorkflowObservation:c885bb3a5e5a9dab",
+        "name": "WorkflowObservation",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 346,
+        "end_line": 354,
+        "signature_hash": "9b9c92cb86f65135",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#function:digest:137b60ac138a94f5",
+        "name": "digest",
+        "kind": "function",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLease.identity:901f6bd2dd2f532d",
+        "name": "EvidenceLease.identity",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "fcd7e6c74f7bc0d0",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLease.validate:ac362e9ebee0b134",
+        "name": "EvidenceLease.validate",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 53,
+        "end_line": 55,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLeaseGate.__init__:68c2716b9c9517df",
+        "name": "EvidenceLeaseGate.__init__",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 266,
+        "end_line": 269,
+        "signature_hash": "69ba5e6874490198",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:EvidenceLeaseGate.compare:eefd6ff0101e3768",
+        "name": "EvidenceLeaseGate.compare",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 271,
+        "end_line": 283,
+        "signature_hash": "3d973e220b89569c",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:GitHubObservationNormalizer.workflow:74c005337238faa7",
+        "name": "GitHubObservationNormalizer.workflow",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 358,
+        "end_line": 369,
+        "signature_hash": "ccfe8731c9f78135",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceEvent.payload_digest:44558e895941c18f",
+        "name": "JSpaceEvent.payload_digest",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 92,
+        "end_line": 93,
+        "signature_hash": "340980449eabbd7a",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceEvent.validate:2a9600e94d551ab2",
+        "name": "JSpaceEvent.validate",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 78,
+        "end_line": 89,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.__init__:e8e5dbec8d61586b",
+        "name": "JSpaceStore.__init__",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 97,
+        "end_line": 99,
+        "signature_hash": "cf93319cd87db237",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore._init:2ba160d0464de2d6",
+        "name": "JSpaceStore._init",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 107,
+        "end_line": 120,
+        "signature_hash": "f65517c32f72a9a0",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.add_dep:d5b0e1609c4a4f1d",
+        "name": "JSpaceStore.add_dep",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 164,
+        "end_line": 167,
+        "signature_hash": "a3112b9c8bc2bab5",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.affected_cone:bfa40ee90c1c6434",
+        "name": "JSpaceStore.affected_cone",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 169,
+        "end_line": 183,
+        "signature_hash": "1745d404c1aea656",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.allocate_jid:94604ce79a172126",
+        "name": "JSpaceStore.allocate_jid",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 122,
+        "end_line": 134,
+        "signature_hash": "fc8c95a18b1f7027",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.append:5f743f20aa8047e8",
+        "name": "JSpaceStore.append",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 136,
+        "end_line": 162,
+        "signature_hash": "1c61951c2adcb28f",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.connect:7dca42d11e1e21a8",
+        "name": "JSpaceStore.connect",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "e1b0ced341aa1a68",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.events:32ca316cda5858fe",
+        "name": "JSpaceStore.events",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 185,
+        "end_line": 191,
+        "signature_hash": "f313fb85cbb4b333",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JSpaceStore.project:e40d6cc1270c0125",
+        "name": "JSpaceStore.project",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 193,
+        "end_line": 228,
+        "signature_hash": "bc80cf734b274889",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:JoinContextCompiler.compile:cb9e31afac307179",
+        "name": "JoinContextCompiler.compile",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 386,
+        "end_line": 393,
+        "signature_hash": "8e5bf105341aef98",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:OwnerRef.canonical:c4b6952238ef2c47",
+        "name": "OwnerRef.canonical",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:OwnerRef.validate:f9d428fc138005ab",
+        "name": "OwnerRef.validate",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 30,
+        "end_line": 38,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:ReconcileEngine.__init__:0c4f2faebdf19c50",
+        "name": "ReconcileEngine.__init__",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 307,
+        "end_line": 308,
+        "signature_hash": "a1abd6c0fa4effed",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:ReconcileEngine._projected_streams:cdf843da9bbf3354",
+        "name": "ReconcileEngine._projected_streams",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 310,
+        "end_line": 314,
+        "signature_hash": "216e7080d2700991",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:ReconcileEngine.reconcile:f085301797a2e869",
+        "name": "ReconcileEngine.reconcile",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 316,
+        "end_line": 342,
+        "signature_hash": "713dfbbf9d71ae85",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:WakeReducer.__init__:dc3221a6042fc77f",
+        "name": "WakeReducer.__init__",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 242,
+        "end_line": 242,
+        "signature_hash": "0c14fd512976e06e",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/reference_kernel.py#method:WakeReducer.decide:85fe3e13e0f9269d",
+        "name": "WakeReducer.decide",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/reference_kernel.py",
+        "line": 244,
+        "end_line": 253,
+        "signature_hash": "3e34af895288829a",
+        "file_digest8": "7ac5d0cd49957f8e"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#class:KernelTests:7fc01c8904d8d93b",
+        "name": "KernelTests",
+        "kind": "class",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 11,
+        "end_line": 146,
+        "signature_hash": "98de350e5fd7beda",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.event:e1ceb6828143802f",
+        "name": "KernelTests.event",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "b6e407c937d5a546",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.setUp:e3960b5c87f05eb2",
+        "name": "KernelTests.setUp",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.tearDown:4fde67072a27b094",
+        "name": "KernelTests.tearDown",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_authority_widening_fails:e731a64de0ff6b22",
+        "name": "KernelTests.test_authority_widening_fails",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "a6acc2d6c3a175cf",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_conflicting_replay_fails:6c6131bb811fd88a",
+        "name": "KernelTests.test_conflicting_replay_fails",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "0f2f32a2f6f016e8",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_equal_sequence_conflicting_generation_fails_closed:15c81cd912104387",
+        "name": "KernelTests.test_equal_sequence_conflicting_generation_fails_closed",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 56,
+        "end_line": 59,
+        "signature_hash": "23d2cfe19deb2955",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_equal_sequence_same_generation_is_replay:9d8336386dc4d362",
+        "name": "KernelTests.test_equal_sequence_same_generation_is_replay",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "17711e3754c082f5",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_event_duplicate_idempotent:af58d47fd3c915f0",
+        "name": "KernelTests.test_event_duplicate_idempotent",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "482be08451c76535",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_github_prejob_action_required_not_test_failure:ac6e1ab64ba16245",
+        "name": "KernelTests.test_github_prejob_action_required_not_test_failure",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 121,
+        "end_line": 124,
+        "signature_hash": "83410b985ac8790c",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_higher_sequence_advances:ad4dfc16f0804982",
+        "name": "KernelTests.test_higher_sequence_advances",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 61,
+        "end_line": 65,
+        "signature_hash": "49e738285e4fdcac",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_jid_concurrent_unique.allocate:f666935f4edf2c73",
+        "name": "KernelTests.test_jid_concurrent_unique.allocate",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "63412e3057a0eb7d",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_jid_concurrent_unique:fdf3c814d69982af",
+        "name": "KernelTests.test_jid_concurrent_unique",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "4b4420bfc8e25c32",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_jid_monotonic:790a92a07bd0eea1",
+        "name": "KernelTests.test_jid_monotonic",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "62110f8b4fec7c6b",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_joincontext_bounded:618c3b1b9db07734",
+        "name": "KernelTests.test_joincontext_bounded",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 126,
+        "end_line": 129,
+        "signature_hash": "2598a4bd686b1a6f",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_joincontext_rejects_broad_hydration:4de926445e9ea155",
+        "name": "KernelTests.test_joincontext_rejects_broad_hydration",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 131,
+        "end_line": 133,
+        "signature_hash": "9221f7e208dfcbd0",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lease_exact_reuse:1bdebc2298306785",
+        "name": "KernelTests.test_lease_exact_reuse",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 80,
+        "end_line": 84,
+        "signature_hash": "b467603fcf7993c1",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lease_revision_drift_selective:d2a545b3623ba243",
+        "name": "KernelTests.test_lease_revision_drift_selective",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 86,
+        "end_line": 91,
+        "signature_hash": "acb33696ed9e1437",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lease_semantic_root_drift_selective:bfa9a1f27e64c954",
+        "name": "KernelTests.test_lease_semantic_root_drift_selective",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 93,
+        "end_line": 98,
+        "signature_hash": "98a34e888c487755",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_lower_sequence_does_not_regress:5eb98077b308cabf",
+        "name": "KernelTests.test_lower_sequence_does_not_regress",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 46,
+        "end_line": 49,
+        "signature_hash": "7c45a63fe0cd5638",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_missing_lease_holds:1b2168e3ad38bf50",
+        "name": "KernelTests.test_missing_lease_holds",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 100,
+        "end_line": 102,
+        "signature_hash": "6a79bc589bf4b40f",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_no_owner_or_lease_mints_effect:3e77a8a3b27a5d1c",
+        "name": "KernelTests.test_no_owner_or_lease_mints_effect",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 142,
+        "end_line": 146,
+        "signature_hash": "f3f729530bd2136d",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_owner_ref_issue_pr_are_distinct:3d6d93453abd6a6c",
+        "name": "KernelTests.test_owner_ref_issue_pr_are_distinct",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "cc46a8786c7b3582",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_owner_ref_requires_repository_qualification:5ef3caecb256530f",
+        "name": "KernelTests.test_owner_ref_requires_repository_qualification",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "a007a3da3ebc59f6",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_random_selective_cones:41285450d7891b72",
+        "name": "KernelTests.test_random_selective_cones",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 135,
+        "end_line": 140,
+        "signature_hash": "c44f9925f3c8553d",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_reconcile_equal_sequence_conflict_fails:ec410fc01c005539",
+        "name": "KernelTests.test_reconcile_equal_sequence_conflict_fails",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 109,
+        "end_line": 113,
+        "signature_hash": "480a1c3f4a4958ac",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_reconcile_higher_sequence_selective_wake:3fbd8ab6209556c2",
+        "name": "KernelTests.test_reconcile_higher_sequence_selective_wake",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 115,
+        "end_line": 119,
+        "signature_hash": "b50e9e134d1d2eab",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_reconcile_older_sequence_is_noop:c770fb54260cf020",
+        "name": "KernelTests.test_reconcile_older_sequence_is_noop",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 104,
+        "end_line": 107,
+        "signature_hash": "9f1d93c000bccf28",
+        "file_digest8": "fac24e4ed1840b35"
+      },
+      {
+        "semantic_id": "05_staging/auraos796_reference_kernel/test_reference_kernel.py#method:KernelTests.test_same_ordinal_other_repo_is_distinct:8c6a43821339f5ed",
+        "name": "KernelTests.test_same_ordinal_other_repo_is_distinct",
+        "kind": "method",
+        "file": "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "a6d32361abc1193f",
+        "file_digest8": "fac24e4ed1840b35"
       },
       {
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
@@ -446940,7 +448416,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "fbee9be66971454a84b5b67f955e6cba"
+    "record_fingerprint": "32e745133ec07ded2881bfe32e65d433",
+    "payload_hash": "e57e00dc6a6e83cf60d7a7b28a062d4a"
   }
 }
