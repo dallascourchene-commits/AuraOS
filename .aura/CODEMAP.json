@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788444732,
+  "generated_at_unix": 1788444879,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1660,
+    "repo_file_count": 1663,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1110,6 +1110,8 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
+      "docs/bughound/O10_K27_EXTERNAL.json",
       "docs/bughound/hard-case-precision-router-o9.md",
       "docs/bughound/real-corpus-hydration-o8.md",
       "docs/bughound/real-corpus-k27-o8.json",
@@ -1631,6 +1633,7 @@
       "tests/test_bughound_blind_score_admission.py",
       "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_historical_blind_cut.py",
       "tests/test_bughound_precision_router.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -1776,16 +1779,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1660,
-      "bytes": 26584110,
-      "tokens_est": 6636376,
+      "files": 1663,
+      "bytes": 26601807,
+      "tokens_est": 6640800,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1014,
-        "schema_or_lexicon": 273,
+        "python_module": 1015,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -158092,6 +158095,276 @@
         "signature_hash": "49954c66936facb3"
       }
     ],
+    "real_case": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 75,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#function:real_case:c046ae73157bcc65",
+        "signature_hash": "4b26c5481be6e3cf"
+      }
+    ],
+    "HistoricalCutTests": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 365,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#class:HistoricalCutTests:8a9ae0e8ed4cd6d9",
+        "signature_hash": "8f7eab9e28e259eb"
+      }
+    ],
+    "HistoricalCutTests.test_real_vulngym_example_is_historical_blind_before_disclosure": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_real_vulngym_example_is_historical_blind_before_disclosure:3e41491a713273f6",
+        "signature_hash": "d002d31f8ee37897"
+      }
+    ],
+    "HistoricalCutTests.test_same_case_is_post_disclosure_after_publication": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 92,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_same_case_is_post_disclosure_after_publication:503550c2531f7d14",
+        "signature_hash": "f7bf5a33eb581c06"
+      }
+    ],
+    "HistoricalCutTests.test_equal_publication_time_is_not_blind": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 98,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_equal_publication_time_is_not_blind:18014527a453f49c",
+        "signature_hash": "647ea3276d16fd9e"
+      }
+    ],
+    "HistoricalCutTests.test_unknown_publication_holds": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 106,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_unknown_publication_holds:136ac41cb0350eac",
+        "signature_hash": "36c82bfc0fd1c145"
+      }
+    ],
+    "HistoricalCutTests.test_source_after_cut_fails": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 113,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_source_after_cut_fails:199a66f952d40dd9",
+        "signature_hash": "a7b48264bd571288"
+      }
+    ],
+    "HistoricalCutTests.test_solver_packet_contains_no_gold_fields_or_ids": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_solver_packet_contains_no_gold_fields_or_ids:23fe148cb0b82ebb",
+        "signature_hash": "86a9a53ce3aabf72"
+      }
+    ],
+    "HistoricalCutTests.test_evaluator_seal_retains_gold_without_exposing_payload": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 138,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_evaluator_seal_retains_gold_without_exposing_payload:092efde6951ea7db",
+        "signature_hash": "5944bd838e0bc431"
+      }
+    ],
+    "HistoricalCutTests.test_evaluator_only_evidence_never_visible_even_after_cut": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 148,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_evaluator_only_evidence_never_visible_even_after_cut:f76d4b2bcf3d6794",
+        "signature_hash": "9c61e5fadcd879d2"
+      }
+    ],
+    "HistoricalCutTests.test_future_public_nongold_evidence_not_visible": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 165,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_future_public_nongold_evidence_not_visible:253e8b305339cf3a",
+        "signature_hash": "61d8ca94e768ebc2"
+      }
+    ],
+    "HistoricalCutTests.test_past_public_nongold_evidence_visible": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 182,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_past_public_nongold_evidence_visible:ad5e115721a953ac",
+        "signature_hash": "3ff2c70cb8109720"
+      }
+    ],
+    "HistoricalCutTests.test_later_recording_cannot_retroactively_change_old_cut": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 202,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_later_recording_cannot_retroactively_change_old_cut:c5be0c36b6fa36e4",
+        "signature_hash": "5085e9b617d9bf79"
+      }
+    ],
+    "HistoricalCutTests.test_cut_is_part_of_target_identity": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 211,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_cut_is_part_of_target_identity:fe31c22b3e9b2d6a",
+        "signature_hash": "8c40de8c17039858"
+      }
+    ],
+    "HistoricalCutTests.test_same_cut_is_deterministic": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 221,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_same_cut_is_deterministic:4ec4555fe0590dd8",
+        "signature_hash": "b8f83b398e9bf2c0"
+      }
+    ],
+    "HistoricalCutTests.test_source_generation_changes_target_identity": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 232,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_source_generation_changes_target_identity:af82c0fd5edc1661",
+        "signature_hash": "160505179c880926"
+      }
+    ],
+    "HistoricalCutTests.test_group_key_same_for_same_repo": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 242,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_group_key_same_for_same_repo:d9af6b87ccefd48a",
+        "signature_hash": "ce0337beab38ec13"
+      }
+    ],
+    "HistoricalCutTests.test_repo_group_cannot_cross_train_and_test": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 254,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_repo_group_cannot_cross_train_and_test:ae6c33d25e42e00f",
+        "signature_hash": "d427f5b0e6a5936f"
+      }
+    ],
+    "HistoricalCutTests.test_different_repo_groups_may_train_test": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 256,
+        "end_line": 270,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_different_repo_groups_may_train_test:7963cb3e5c2200cc",
+        "signature_hash": "c1d4a78496dedb0f"
+      }
+    ],
+    "HistoricalCutTests.test_target_cannot_cross_partitions": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 272,
+        "end_line": 280,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_target_cannot_cross_partitions:56370dc1b664aaef",
+        "signature_hash": "81bced9915766c3e"
+      }
+    ],
+    "HistoricalCutTests.test_no_packet_mints_authority": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 282,
+        "end_line": 287,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_no_packet_mints_authority:a3cb1360c623f102",
+        "signature_hash": "ee9d1806359011ee"
+      }
+    ],
+    "HistoricalCutTests.test_authority_in_case_fails": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 289,
+        "end_line": 295,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_authority_in_case_fails:15bd5f2bb96b3506",
+        "signature_hash": "2cead14e934826f3"
+      }
+    ],
+    "HistoricalCutTests.test_authority_in_evidence_fails": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 297,
+        "end_line": 305,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_authority_in_evidence_fails:d721f5ae7bde8605",
+        "signature_hash": "baf79c01ddfea11d"
+      }
+    ],
+    "HistoricalCutTests.test_hyper1000_exact": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 310,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_hyper1000_exact:528d60a4d0a6ab97",
+        "signature_hash": "df1ac10fc3bd05af"
+      }
+    ],
+    "HistoricalCutTests.test_short_salt_fails": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 312,
+        "end_line": 316,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_short_salt_fails:ceb45558f8642c39",
+        "signature_hash": "77678e7bc05d2e28"
+      }
+    ],
+    "HistoricalCutTests.test_bad_commit_fails": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 318,
+        "end_line": 324,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_bad_commit_fails:e38de8f49966e8ed",
+        "signature_hash": "6a34a721ca701eaf"
+      }
+    ],
+    "HistoricalCutTests.test_randomized_bitemporal_reference_equivalence": [
+      {
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 365,
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_randomized_bitemporal_reference_equivalence:be086b7ae290f682",
+        "signature_hash": "4bac3de193c9ad60"
+      }
+    ],
     "RouterTests": [
       {
         "file": "tests/test_bughound_precision_router.py",
@@ -238362,6 +238635,100 @@
       ]
     },
     {
+      "path": "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 2158,
+      "lines": 29,
+      "tokens_est": 539,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f37a3bf2ef3c4c2a",
+      "vector": [
+        -0.226911,
+        -0.300567,
+        -0.245919,
+        0.105733,
+        0.231663,
+        0.198398,
+        -0.212654,
+        0.20315,
+        -0.174638,
+        -0.051085,
+        -0.136622,
+        0.072469,
+        0.158006,
+        -0.008316,
+        0.084349,
+        -0.267303,
+        -0.117613,
+        0.070093,
+        -0.072469,
+        -0.148502,
+        -0.158006,
+        0.298191,
+        -0.141374,
+        -0.160382,
+        -0.070093,
+        -0.15563,
+        -0.089101,
+        -0.283935,
+        -0.300567,
+        -0.001188,
+        -0.022572,
+        -0.17939
+      ]
+    },
+    {
+      "path": "docs/bughound/O10_K27_EXTERNAL.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2020,
+      "lines": 51,
+      "tokens_est": 505,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "763fd0d55746e8e3",
+      "vector": [
+        -0.150988,
+        0.273162,
+        0.192481,
+        0.134852,
+        0.201702,
+        0.192481,
+        0.008068,
+        -0.008068,
+        -0.261636,
+        -0.049561,
+        -0.254721,
+        -0.005763,
+        0.095664,
+        -0.130242,
+        -0.072613,
+        0.217838,
+        0.261636,
+        -0.10258,
+        -0.167124,
+        0.033425,
+        -0.047256,
+        -0.263941,
+        0.153293,
+        0.227059,
+        0.042646,
+        -0.238584,
+        0.146378,
+        0.208617,
+        0.282383,
+        -0.192481,
+        0.185566,
+        0.157904
+      ]
+    },
+    {
       "path": "docs/bughound/hard-case-precision-router-o9.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -265579,6 +265946,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_historical_blind_cut.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13519,
+      "lines": 370,
+      "tokens_est": 3380,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "433babea52bb1bf5",
+      "vector": [
+        -0.16471,
+        -0.151942,
+        0.006384,
+        0.014045,
+        0.154496,
+        -0.075333,
+        -0.274517,
+        0.026813,
+        -0.100869,
+        -0.039582,
+        -0.060011,
+        -0.21323,
+        -0.162157,
+        0.24132,
+        0.187693,
+        0.16471,
+        0.180032,
+        -0.284732,
+        -0.266856,
+        -0.042135,
+        0.271963,
+        -0.287285,
+        0.185139,
+        0.047242,
+        0.02426,
+        -0.085547,
+        0.060011,
+        -0.24132,
+        -0.271963,
+        0.200461,
+        -0.075333,
+        0.259195
+      ]
+    },
+    {
       "path": "tests/test_bughound_precision_router.py",
       "role": "python_module",
       "binary": false,
@@ -290564,16 +290978,16 @@
     }
   },
   "summary": {
-    "file_count": 1660,
-    "total_bytes": 26584110,
-    "text_tokens_est": 6636376,
+    "file_count": 1663,
+    "total_bytes": 26601807,
+    "text_tokens_est": 6640800,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1014,
-      "schema_or_lexicon": 273,
+      "python_module": 1015,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -291693,6 +292107,8 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
+      "docs/bughound/O10_K27_EXTERNAL.json",
       "docs/bughound/hard-case-precision-router-o9.md",
       "docs/bughound/real-corpus-hydration-o8.md",
       "docs/bughound/real-corpus-k27-o8.json",
@@ -292214,6 +292630,7 @@
       "tests/test_bughound_blind_score_admission.py",
       "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_historical_blind_cut.py",
       "tests/test_bughound_precision_router.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -450323,6 +450740,276 @@
         "file_digest8": "16ed168936bc6c3c"
       },
       {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#class:HistoricalCutTests:8a9ae0e8ed4cd6d9",
+        "name": "HistoricalCutTests",
+        "kind": "class",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 78,
+        "end_line": 365,
+        "signature_hash": "8f7eab9e28e259eb",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#function:real_case:c046ae73157bcc65",
+        "name": "real_case",
+        "kind": "function",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 25,
+        "end_line": 75,
+        "signature_hash": "4b26c5481be6e3cf",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_authority_in_case_fails:15bd5f2bb96b3506",
+        "name": "HistoricalCutTests.test_authority_in_case_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 289,
+        "end_line": 295,
+        "signature_hash": "2cead14e934826f3",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_authority_in_evidence_fails:d721f5ae7bde8605",
+        "name": "HistoricalCutTests.test_authority_in_evidence_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 297,
+        "end_line": 305,
+        "signature_hash": "baf79c01ddfea11d",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_bad_commit_fails:e38de8f49966e8ed",
+        "name": "HistoricalCutTests.test_bad_commit_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 318,
+        "end_line": 324,
+        "signature_hash": "6a34a721ca701eaf",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_cut_is_part_of_target_identity:fe31c22b3e9b2d6a",
+        "name": "HistoricalCutTests.test_cut_is_part_of_target_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 204,
+        "end_line": 211,
+        "signature_hash": "8c40de8c17039858",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_different_repo_groups_may_train_test:7963cb3e5c2200cc",
+        "name": "HistoricalCutTests.test_different_repo_groups_may_train_test",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 256,
+        "end_line": 270,
+        "signature_hash": "c1d4a78496dedb0f",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_equal_publication_time_is_not_blind:18014527a453f49c",
+        "name": "HistoricalCutTests.test_equal_publication_time_is_not_blind",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 94,
+        "end_line": 98,
+        "signature_hash": "647ea3276d16fd9e",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_evaluator_only_evidence_never_visible_even_after_cut:f76d4b2bcf3d6794",
+        "name": "HistoricalCutTests.test_evaluator_only_evidence_never_visible_even_after_cut",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 140,
+        "end_line": 148,
+        "signature_hash": "9c61e5fadcd879d2",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_evaluator_seal_retains_gold_without_exposing_payload:092efde6951ea7db",
+        "name": "HistoricalCutTests.test_evaluator_seal_retains_gold_without_exposing_payload",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 133,
+        "end_line": 138,
+        "signature_hash": "5944bd838e0bc431",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_future_public_nongold_evidence_not_visible:253e8b305339cf3a",
+        "name": "HistoricalCutTests.test_future_public_nongold_evidence_not_visible",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 150,
+        "end_line": 165,
+        "signature_hash": "61d8ca94e768ebc2",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_group_key_same_for_same_repo:d9af6b87ccefd48a",
+        "name": "HistoricalCutTests.test_group_key_same_for_same_repo",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 234,
+        "end_line": 242,
+        "signature_hash": "ce0337beab38ec13",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_hyper1000_exact:528d60a4d0a6ab97",
+        "name": "HistoricalCutTests.test_hyper1000_exact",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 307,
+        "end_line": 310,
+        "signature_hash": "df1ac10fc3bd05af",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_later_recording_cannot_retroactively_change_old_cut:c5be0c36b6fa36e4",
+        "name": "HistoricalCutTests.test_later_recording_cannot_retroactively_change_old_cut",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 184,
+        "end_line": 202,
+        "signature_hash": "5085e9b617d9bf79",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_no_packet_mints_authority:a3cb1360c623f102",
+        "name": "HistoricalCutTests.test_no_packet_mints_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 282,
+        "end_line": 287,
+        "signature_hash": "ee9d1806359011ee",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_past_public_nongold_evidence_visible:ad5e115721a953ac",
+        "name": "HistoricalCutTests.test_past_public_nongold_evidence_visible",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 167,
+        "end_line": 182,
+        "signature_hash": "3ff2c70cb8109720",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_randomized_bitemporal_reference_equivalence:be086b7ae290f682",
+        "name": "HistoricalCutTests.test_randomized_bitemporal_reference_equivalence",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 326,
+        "end_line": 365,
+        "signature_hash": "4bac3de193c9ad60",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_real_vulngym_example_is_historical_blind_before_disclosure:3e41491a713273f6",
+        "name": "HistoricalCutTests.test_real_vulngym_example_is_historical_blind_before_disclosure",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "d002d31f8ee37897",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_repo_group_cannot_cross_train_and_test:ae6c33d25e42e00f",
+        "name": "HistoricalCutTests.test_repo_group_cannot_cross_train_and_test",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 244,
+        "end_line": 254,
+        "signature_hash": "d427f5b0e6a5936f",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_same_case_is_post_disclosure_after_publication:503550c2531f7d14",
+        "name": "HistoricalCutTests.test_same_case_is_post_disclosure_after_publication",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 87,
+        "end_line": 92,
+        "signature_hash": "f7bf5a33eb581c06",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_same_cut_is_deterministic:4ec4555fe0590dd8",
+        "name": "HistoricalCutTests.test_same_cut_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 213,
+        "end_line": 221,
+        "signature_hash": "b8f83b398e9bf2c0",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_short_salt_fails:ceb45558f8642c39",
+        "name": "HistoricalCutTests.test_short_salt_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 312,
+        "end_line": 316,
+        "signature_hash": "77678e7bc05d2e28",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_solver_packet_contains_no_gold_fields_or_ids:23fe148cb0b82ebb",
+        "name": "HistoricalCutTests.test_solver_packet_contains_no_gold_fields_or_ids",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 115,
+        "end_line": 131,
+        "signature_hash": "86a9a53ce3aabf72",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_source_after_cut_fails:199a66f952d40dd9",
+        "name": "HistoricalCutTests.test_source_after_cut_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 108,
+        "end_line": 113,
+        "signature_hash": "a7b48264bd571288",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_source_generation_changes_target_identity:af82c0fd5edc1661",
+        "name": "HistoricalCutTests.test_source_generation_changes_target_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 223,
+        "end_line": 232,
+        "signature_hash": "160505179c880926",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_target_cannot_cross_partitions:56370dc1b664aaef",
+        "name": "HistoricalCutTests.test_target_cannot_cross_partitions",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 272,
+        "end_line": 280,
+        "signature_hash": "81bced9915766c3e",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
+        "semantic_id": "tests/test_bughound_historical_blind_cut.py#method:HistoricalCutTests.test_unknown_publication_holds:136ac41cb0350eac",
+        "name": "HistoricalCutTests.test_unknown_publication_holds",
+        "kind": "method",
+        "file": "tests/test_bughound_historical_blind_cut.py",
+        "line": 100,
+        "end_line": 106,
+        "signature_hash": "36c82bfc0fd1c145",
+        "file_digest8": "433babea52bb1bf5"
+      },
+      {
         "semantic_id": "tests/test_bughound_precision_router.py#class:RouterTests:17897889f90d2f5e",
         "name": "RouterTests",
         "kind": "class",
@@ -453753,7 +454440,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1407e7fd2d1d42508446a6a761a13cb1",
-    "payload_hash": "e12aa4290f3ab6eb0460a600a17672a5"
+    "record_fingerprint": "b2ed46d1a9921e4a190e3fb72917e4b3",
+    "payload_hash": "3ba8fba6f90c711dd4a2e6401743c173"
   }
 }
