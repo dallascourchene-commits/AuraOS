@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788444879,
+  "generated_at_unix": 1788445550,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1663,
+    "repo_file_count": 1666,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1110,6 +1110,7 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/BENCHMARK_CLAIM_CAPSULE_O11.md",
       "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
       "docs/bughound/O10_K27_EXTERNAL.json",
       "docs/bughound/hard-case-precision-router-o9.md",
@@ -1628,6 +1629,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_benchmark_claim_capsule.py",
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_blind_oracle_provenance.py",
       "tests/test_bughound_blind_score_admission.py",
@@ -1646,6 +1648,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/benchmark_claim_capsule.py",
       "tools/bughound/blind_discovery.py",
       "tools/bughound/blind_oracle_provenance.py",
       "tools/bughound/blind_score_admission.py",
@@ -1779,15 +1782,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1663,
-      "bytes": 26601807,
-      "tokens_est": 6640800,
+      "files": 1666,
+      "bytes": 26615993,
+      "tokens_est": 6644347,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 240,
+        "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1015,
+        "python_module": 1017,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3677,6 +3680,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 10,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#function:run:2c51cfe95e05ce90",
+        "signature_hash": "f6c248c29f43ee48"
       }
     ],
     "run.record": [
@@ -157025,6 +157036,246 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "iv": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#function:iv:7cfaaba0d6a2ec8d",
+        "signature_hash": "292f99e736aaf0af"
+      }
+    ],
+    "cv": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#function:cv:0e09bba6f86f630e",
+        "signature_hash": "71d79c57ec2c62cc"
+      }
+    ],
+    "ClaimCapsuleTests": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 79,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#class:ClaimCapsuleTests:9be5dab5e8f41a84",
+        "signature_hash": "dfca801884b017ec"
+      }
+    ],
+    "ClaimCapsuleTests.test_valid_run": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_valid_run:d02cc63c8c6a7ad6",
+        "signature_hash": "c430a3a9e2570d77"
+      }
+    ],
+    "ClaimCapsuleTests.test_effect_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_effect_fails:05fb5d88205f6e14",
+        "signature_hash": "c2ef7d72e2e4ab56"
+      }
+    ],
+    "ClaimCapsuleTests.test_incomplete_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_incomplete_fails:c599fa4d41fdabae",
+        "signature_hash": "65daefabf10fe8d0"
+      }
+    ],
+    "ClaimCapsuleTests.test_exact_head_required": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_exact_head_required:9d1e225fb0c530c8",
+        "signature_hash": "d301436c7c92513d"
+      }
+    ],
+    "ClaimCapsuleTests.test_historical_blind_required": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_historical_blind_required:206f7b140b640ec2",
+        "signature_hash": "0842cf91d35eeac0"
+      }
+    ],
+    "ClaimCapsuleTests.test_repo_disjoint_required": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_repo_disjoint_required:d8c4de4a0adc29b5",
+        "signature_hash": "af8effe091fc80a3"
+      }
+    ],
+    "ClaimCapsuleTests.test_contamination_free_required": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_contamination_free_required:37559d5d219c8b80",
+        "signature_hash": "9c0954db8175ccb4"
+      }
+    ],
+    "ClaimCapsuleTests.test_missing_axis_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_missing_axis_fails:3ad8c26d1d63e055",
+        "signature_hash": "0eae4567d48c1659"
+      }
+    ],
+    "ClaimCapsuleTests.test_unmatched_cut_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_unmatched_cut_fails:d730a7fe46c1e6cf",
+        "signature_hash": "ddc28f73543c4210"
+      }
+    ],
+    "ClaimCapsuleTests.test_unmatched_budget_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_unmatched_budget_fails:edd739d88d6b0725",
+        "signature_hash": "05355a1b432f4036"
+      }
+    ],
+    "ClaimCapsuleTests.test_unmatched_cases_fail": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_unmatched_cases_fail:db820811046614aa",
+        "signature_hash": "82d2bd4c1210fe01"
+      }
+    ],
+    "ClaimCapsuleTests.test_same_observer_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_same_observer_fails:39245c298c402894",
+        "signature_hash": "d52fac7e4938e3c1"
+      }
+    ],
+    "ClaimCapsuleTests.test_self_comparison_fails": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_self_comparison_fails:da84199cf50586e8",
+        "signature_hash": "13d5b32f222a5c71"
+      }
+    ],
+    "ClaimCapsuleTests.test_strict_dominance_supports_scoped_superiority": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 44,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_strict_dominance_supports_scoped_superiority:22cf828344fffdf8",
+        "signature_hash": "b30c336dea03ed64"
+      }
+    ],
+    "ClaimCapsuleTests.test_one_overlapping_quality_interval_holds": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_one_overlapping_quality_interval_holds:20fdd6c60d2a88b7",
+        "signature_hash": "5c101c9a790cba24"
+      }
+    ],
+    "ClaimCapsuleTests.test_worse_cost_holds": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 53,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_worse_cost_holds:e1a4d5871cb17159",
+        "signature_hash": "140914bb1d87ad90"
+      }
+    ],
+    "ClaimCapsuleTests.test_multiple_baselines_all_must_be_dominated": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_multiple_baselines_all_must_be_dominated:a8b02d54cc3c93a9",
+        "signature_hash": "e14b5b60badcc213"
+      }
+    ],
+    "ClaimCapsuleTests.test_receipt_deterministic": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_receipt_deterministic:e0cdf9f14d1ab331",
+        "signature_hash": "ff051a5e75eb3a94"
+      }
+    ],
+    "ClaimCapsuleTests.test_basis_changes_change_receipt": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_basis_changes_change_receipt:94dcd61920bd2b1e",
+        "signature_hash": "bdbbd9edd4f10741"
+      }
+    ],
+    "ClaimCapsuleTests.test_hyper1000": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 68,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_hyper1000:be058717de3a0806",
+        "signature_hash": "99ea9283aaae140d"
+      }
+    ],
+    "ClaimCapsuleTests.test_randomized_reference_policy": [
+      {
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 79,
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_randomized_reference_policy:35b6561e63927322",
+        "signature_hash": "331494c5b1fc8897"
+      }
+    ],
     "BlindDiscoveryTests": [
       {
         "file": "tests/test_bughound_blind_discovery.py",
@@ -159155,6 +159406,174 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ClaimCapsuleError": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 17,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:ClaimCapsuleError:70b63a25af140a55",
+        "signature_hash": "6f9e5502cd2bbf9a"
+      }
+    ],
+    "ClaimCapsuleError.__init__": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:ClaimCapsuleError.__init__:636d184e040b102c",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_canon": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_canon:cc083cc9f7cdd2d6",
+        "signature_hash": "3973a7eaf2bd7224"
+      }
+    ],
+    "_dig": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_dig:d89bba93241ccfc6",
+        "signature_hash": "a8f2dca07c403f7b"
+      }
+    ],
+    "_need": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_need:7697d05e713c300b",
+        "signature_hash": "225d5a959d2c25f9"
+      }
+    ],
+    "IntervalV1": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 38,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:IntervalV1:c4a15800993f09d3",
+        "signature_hash": "74fda8264ff87e2f"
+      }
+    ],
+    "IntervalV1.validate": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:IntervalV1.validate:15a049427ceff3ea",
+        "signature_hash": "cd71991657d925a1"
+      }
+    ],
+    "BenchmarkRunReceiptV1": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 67,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:BenchmarkRunReceiptV1:465d143ccbe622e7",
+        "signature_hash": "306f43240a229018"
+      }
+    ],
+    "BenchmarkRunReceiptV1.run_digest": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 67,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:BenchmarkRunReceiptV1.run_digest:3f95f1ae553887e2",
+        "signature_hash": "f0a525366b868cec"
+      }
+    ],
+    "ComparisonReceiptV1": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 83,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:ComparisonReceiptV1:704934c4dd6c32f2",
+        "signature_hash": "8d0069a2fa247b78"
+      }
+    ],
+    "ComparisonReceiptV1.receipt_digest": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 83,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:ComparisonReceiptV1.receipt_digest:2ca838e4ea3287d1",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_maps": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 93,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_maps:7a82e998ec633557",
+        "signature_hash": "e1a5e0c05bd8ea68"
+      }
+    ],
+    "validate_run": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 105,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:validate_run:b9b79dfbebeacb22",
+        "signature_hash": "9ad8762284d31f76"
+      }
+    ],
+    "_basis_tuple": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 108,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_basis_tuple:57f2c1ab4527a669",
+        "signature_hash": "d80e01679126a89a"
+      }
+    ],
+    "compare": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 144,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:compare:cce7a6620451d742",
+        "signature_hash": "37baf1cd37e33de4"
+      }
+    ],
+    "hyper1000": [
+      {
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 147,
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:hyper1000:410f846a44428b39",
+        "signature_hash": "c1a48e1fda3f6477"
+      },
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 287,
+        "end_line": 288,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:hyper1000:983f09d3d1778462",
+        "signature_hash": "c1a48e1fda3f6477"
+      }
+    ],
     "BlindDiscoveryError": [
       {
         "file": "tools/bughound/blind_discovery.py",
@@ -159961,16 +160380,6 @@
         "end_line": 284,
         "semantic_id": "tools/bughound/historical_blind_cut.py#function:historical_blind_eligible:5e5428678178a7ce",
         "signature_hash": "51f24691f8ba0f21"
-      }
-    ],
-    "hyper1000": [
-      {
-        "file": "tools/bughound/historical_blind_cut.py",
-        "kind": "function",
-        "line": 287,
-        "end_line": 288,
-        "semantic_id": "tools/bughound/historical_blind_cut.py#function:hyper1000:983f09d3d1778462",
-        "signature_hash": "c1a48e1fda3f6477"
       }
     ],
     "PrecisionTier": [
@@ -238635,6 +239044,53 @@
       ]
     },
     {
+      "path": "docs/bughound/BENCHMARK_CLAIM_CAPSULE_O11.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1520,
+      "lines": 19,
+      "tokens_est": 380,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4733536c0ecac1c1",
+      "vector": [
+        0.075681,
+        -0.04308,
+        -0.252658,
+        -0.227043,
+        0.115268,
+        -0.257315,
+        0.259644,
+        0.19677,
+        0.124582,
+        -0.071024,
+        -0.271287,
+        0.103625,
+        0.075681,
+        -0.18047,
+        0.161841,
+        0.194442,
+        -0.071024,
+        0.00815,
+        0.18047,
+        -0.017465,
+        -0.159512,
+        0.036094,
+        -0.029108,
+        0.292245,
+        0.152526,
+        -0.285259,
+        -0.157183,
+        0.289916,
+        0.241015,
+        0.003493,
+        0.105953,
+        -0.224714
+      ]
+    },
+    {
       "path": "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -265711,6 +266167,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_benchmark_claim_capsule.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5540,
+      "lines": 82,
+      "tokens_est": 1385,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed5de57a503a7bba",
+      "vector": [
+        0.026561,
+        0.062684,
+        -0.188053,
+        0.134931,
+        -0.190178,
+        0.060559,
+        0.264549,
+        -0.168929,
+        -0.115807,
+        -0.241175,
+        -0.026561,
+        -0.215676,
+        -0.096683,
+        0.2348,
+        -0.194428,
+        -0.258174,
+        0.005312,
+        0.224176,
+        0.009562,
+        0.177428,
+        -0.160429,
+        0.041435,
+        0.092433,
+        0.245425,
+        0.2433,
+        -0.266674,
+        -0.105182,
+        0.190178,
+        0.2518,
+        -0.215676,
+        0.209302,
+        -0.079683
+      ]
+    },
+    {
       "path": "tests/test_bughound_blind_discovery.py",
       "role": "python_module",
       "binary": false,
@@ -266554,6 +267057,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/bughound/benchmark_claim_capsule.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7126,
+      "lines": 148,
+      "tokens_est": 1782,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9f015c477286414f",
+      "vector": [
+        0.026825,
+        0.258365,
+        -0.007059,
+        -0.35437,
+        0.097416,
+        0.111535,
+        0.139771,
+        -0.007059,
+        0.179303,
+        -0.018354,
+        0.162361,
+        -0.057885,
+        -0.309191,
+        0.145419,
+        0.063532,
+        0.343075,
+        0.264013,
+        0.159537,
+        0.170832,
+        -0.232952,
+        -0.278131,
+        -0.007059,
+        -0.029648,
+        -0.10024,
+        0.340252,
+        -0.018354,
+        0.043767,
+        -0.049414,
+        -0.038119,
+        -0.063532,
+        0.162361,
+        0.213187
       ]
     },
     {
@@ -290978,15 +291528,15 @@
     }
   },
   "summary": {
-    "file_count": 1663,
-    "total_bytes": 26601807,
-    "text_tokens_est": 6640800,
+    "file_count": 1666,
+    "total_bytes": 26615993,
+    "text_tokens_est": 6644347,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 240,
+      "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1015,
+      "python_module": 1017,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -292107,6 +292657,7 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/BENCHMARK_CLAIM_CAPSULE_O11.md",
       "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
       "docs/bughound/O10_K27_EXTERNAL.json",
       "docs/bughound/hard-case-precision-router-o9.md",
@@ -292625,6 +293176,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_benchmark_claim_capsule.py",
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_blind_oracle_provenance.py",
       "tests/test_bughound_blind_score_admission.py",
@@ -292643,6 +293195,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/benchmark_claim_capsule.py",
       "tools/bughound/blind_discovery.py",
       "tools/bughound/blind_oracle_provenance.py",
       "tools/bughound/blind_score_admission.py",
@@ -449670,6 +450223,256 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#class:ClaimCapsuleTests:9be5dab5e8f41a84",
+        "name": "ClaimCapsuleTests",
+        "kind": "class",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 12,
+        "end_line": 79,
+        "signature_hash": "dfca801884b017ec",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#function:cv:0e09bba6f86f630e",
+        "name": "cv",
+        "kind": "function",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "71d79c57ec2c62cc",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#function:iv:7cfaaba0d6a2ec8d",
+        "name": "iv",
+        "kind": "function",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "292f99e736aaf0af",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#function:run:2c51cfe95e05ce90",
+        "name": "run",
+        "kind": "function",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 7,
+        "end_line": 10,
+        "signature_hash": "f6c248c29f43ee48",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_basis_changes_change_receipt:94dcd61920bd2b1e",
+        "name": "ClaimCapsuleTests.test_basis_changes_change_receipt",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "bdbbd9edd4f10741",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_contamination_free_required:37559d5d219c8b80",
+        "name": "ClaimCapsuleTests.test_contamination_free_required",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "9c0954db8175ccb4",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_effect_fails:05fb5d88205f6e14",
+        "name": "ClaimCapsuleTests.test_effect_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "c2ef7d72e2e4ab56",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_exact_head_required:9d1e225fb0c530c8",
+        "name": "ClaimCapsuleTests.test_exact_head_required",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "d301436c7c92513d",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_historical_blind_required:206f7b140b640ec2",
+        "name": "ClaimCapsuleTests.test_historical_blind_required",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "0842cf91d35eeac0",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_hyper1000:be058717de3a0806",
+        "name": "ClaimCapsuleTests.test_hyper1000",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 68,
+        "end_line": 68,
+        "signature_hash": "99ea9283aaae140d",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_incomplete_fails:c599fa4d41fdabae",
+        "name": "ClaimCapsuleTests.test_incomplete_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "65daefabf10fe8d0",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_missing_axis_fails:3ad8c26d1d63e055",
+        "name": "ClaimCapsuleTests.test_missing_axis_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "0eae4567d48c1659",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_multiple_baselines_all_must_be_dominated:a8b02d54cc3c93a9",
+        "name": "ClaimCapsuleTests.test_multiple_baselines_all_must_be_dominated",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "e14b5b60badcc213",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_one_overlapping_quality_interval_holds:20fdd6c60d2a88b7",
+        "name": "ClaimCapsuleTests.test_one_overlapping_quality_interval_holds",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "5c101c9a790cba24",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_randomized_reference_policy:35b6561e63927322",
+        "name": "ClaimCapsuleTests.test_randomized_reference_policy",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 69,
+        "end_line": 79,
+        "signature_hash": "331494c5b1fc8897",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_receipt_deterministic:e0cdf9f14d1ab331",
+        "name": "ClaimCapsuleTests.test_receipt_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "ff051a5e75eb3a94",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_repo_disjoint_required:d8c4de4a0adc29b5",
+        "name": "ClaimCapsuleTests.test_repo_disjoint_required",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "af8effe091fc80a3",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_same_observer_fails:39245c298c402894",
+        "name": "ClaimCapsuleTests.test_same_observer_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "d52fac7e4938e3c1",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_self_comparison_fails:da84199cf50586e8",
+        "name": "ClaimCapsuleTests.test_self_comparison_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "13d5b32f222a5c71",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_strict_dominance_supports_scoped_superiority:22cf828344fffdf8",
+        "name": "ClaimCapsuleTests.test_strict_dominance_supports_scoped_superiority",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 38,
+        "end_line": 44,
+        "signature_hash": "b30c336dea03ed64",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_unmatched_budget_fails:edd739d88d6b0725",
+        "name": "ClaimCapsuleTests.test_unmatched_budget_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "05355a1b432f4036",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_unmatched_cases_fail:db820811046614aa",
+        "name": "ClaimCapsuleTests.test_unmatched_cases_fail",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "82d2bd4c1210fe01",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_unmatched_cut_fails:d730a7fe46c1e6cf",
+        "name": "ClaimCapsuleTests.test_unmatched_cut_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "ddc28f73543c4210",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_valid_run:d02cc63c8c6a7ad6",
+        "name": "ClaimCapsuleTests.test_valid_run",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "c430a3a9e2570d77",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
+        "semantic_id": "tests/test_bughound_benchmark_claim_capsule.py#method:ClaimCapsuleTests.test_worse_cost_holds:e1a4d5871cb17159",
+        "name": "ClaimCapsuleTests.test_worse_cost_holds",
+        "kind": "method",
+        "file": "tests/test_bughound_benchmark_claim_capsule.py",
+        "line": 51,
+        "end_line": 53,
+        "signature_hash": "140914bb1d87ad90",
+        "file_digest8": "ed5de57a503a7bba"
+      },
+      {
         "semantic_id": "tests/test_bughound_blind_discovery.py#class:BlindDiscoveryTests:f44104ab7c3c376c",
         "name": "BlindDiscoveryTests",
         "kind": "class",
@@ -451828,6 +452631,166 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:BenchmarkRunReceiptV1:465d143ccbe622e7",
+        "name": "BenchmarkRunReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 41,
+        "end_line": 67,
+        "signature_hash": "306f43240a229018",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:ClaimCapsuleError:70b63a25af140a55",
+        "name": "ClaimCapsuleError",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 14,
+        "end_line": 17,
+        "signature_hash": "6f9e5502cd2bbf9a",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:ComparisonReceiptV1:704934c4dd6c32f2",
+        "name": "ComparisonReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 70,
+        "end_line": 83,
+        "signature_hash": "8d0069a2fa247b78",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#class:IntervalV1:c4a15800993f09d3",
+        "name": "IntervalV1",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 30,
+        "end_line": 38,
+        "signature_hash": "74fda8264ff87e2f",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_basis_tuple:57f2c1ab4527a669",
+        "name": "_basis_tuple",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 107,
+        "end_line": 108,
+        "signature_hash": "d80e01679126a89a",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_canon:cc083cc9f7cdd2d6",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "3973a7eaf2bd7224",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_dig:d89bba93241ccfc6",
+        "name": "_dig",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "a8f2dca07c403f7b",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_maps:7a82e998ec633557",
+        "name": "_maps",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 85,
+        "end_line": 93,
+        "signature_hash": "e1a5e0c05bd8ea68",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:_need:7697d05e713c300b",
+        "name": "_need",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "225d5a959d2c25f9",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:compare:cce7a6620451d742",
+        "name": "compare",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 110,
+        "end_line": 144,
+        "signature_hash": "37baf1cd37e33de4",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:hyper1000:410f846a44428b39",
+        "name": "hyper1000",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 146,
+        "end_line": 147,
+        "signature_hash": "c1a48e1fda3f6477",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#function:validate_run:b9b79dfbebeacb22",
+        "name": "validate_run",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 95,
+        "end_line": 105,
+        "signature_hash": "9ad8762284d31f76",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:BenchmarkRunReceiptV1.run_digest:3f95f1ae553887e2",
+        "name": "BenchmarkRunReceiptV1.run_digest",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 67,
+        "end_line": 67,
+        "signature_hash": "f0a525366b868cec",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:ClaimCapsuleError.__init__:636d184e040b102c",
+        "name": "ClaimCapsuleError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 15,
+        "end_line": 17,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:ComparisonReceiptV1.receipt_digest:2ca838e4ea3287d1",
+        "name": "ComparisonReceiptV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 83,
+        "end_line": 83,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "9f015c477286414f"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_claim_capsule.py#method:IntervalV1.validate:15a049427ceff3ea",
+        "name": "IntervalV1.validate",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_claim_capsule.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "cd71991657d925a1",
+        "file_digest8": "9f015c477286414f"
       },
       {
         "semantic_id": "tools/bughound/blind_discovery.py#class:BlindAdjudicationV1:cdfd4ea2d3dccc30",
@@ -454440,7 +455403,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b2ed46d1a9921e4a190e3fb72917e4b3",
-    "payload_hash": "3ba8fba6f90c711dd4a2e6401743c173"
+    "record_fingerprint": "acd883e62d5b9e3cb8c333b5bf360fb9",
+    "payload_hash": "36befda5caf88358e24874fb2fe6190f"
   }
 }
