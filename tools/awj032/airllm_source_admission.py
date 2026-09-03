@@ -84,24 +84,53 @@ def _trust_finding(state: str, rel: str, line: int, detail: str) -> Finding | No
 
 
 def _static_bindings(tree: ast.AST) -> dict[str, ast.AST]:
-    """Collect only unambiguous name bindings for conservative static folding.
+    """Collect only unambiguous, mutation-free bindings for static folding.
 
-    A name is foldable only when every syntactic assignment has the same AST
-    value. Conflicting assignments are intentionally omitted so computed keys
-    become unresolved and protected loader expansions fail closed.
+    Simple single-name Assign/AnnAssign statements are the only writes whose
+    values this gate models. A name is foldable only when every such assignment
+    has the same structural AST value *and* no other Python binding site can
+    write, delete, shadow, or rebind that name. Unknown writes therefore erase
+    static knowledge rather than inheriting a stale safe value.
     """
     candidates: dict[str, list[ast.AST]] = {}
+    modeled_targets: set[int] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign) and len(node.targets) == 1:
             target = node.targets[0]
             if isinstance(target, ast.Name):
                 candidates.setdefault(target.id, []).append(node.value)
+                modeled_targets.add(id(target))
         elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             if node.value is not None:
                 candidates.setdefault(node.target.id, []).append(node.value)
+                modeled_targets.add(id(node.target))
+
+    invalidated: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)):
+            if id(node) not in modeled_targets:
+                invalidated.add(node.id)
+        elif isinstance(node, ast.arg):
+            invalidated.add(node.arg)
+        elif isinstance(node, ast.alias):
+            invalidated.add(node.asname or node.name.split(".", 1)[0])
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            invalidated.add(node.name)
+        elif isinstance(node, ast.ExceptHandler) and isinstance(node.name, str):
+            invalidated.add(node.name)
+        elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and isinstance(
+            getattr(node, "name", None), str
+        ):
+            invalidated.add(node.name)
+        elif isinstance(node, ast.MatchMapping) and isinstance(
+            getattr(node, "rest", None), str
+        ):
+            invalidated.add(node.rest)
 
     bindings: dict[str, ast.AST] = {}
     for name, values in candidates.items():
+        if name in invalidated:
+            continue
         shapes = {
             ast.dump(value, annotate_fields=True, include_attributes=False)
             for value in values
