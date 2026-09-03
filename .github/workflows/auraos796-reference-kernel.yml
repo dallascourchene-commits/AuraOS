@@ -20,4 +20,4 @@ jobs:
           python-version: '3.12'
       - name: Run focused reference-kernel tests
         working-directory: 05_staging/auraos796_reference_kernel
-        run: python -m unittest -v test_reference_kernel.py
+        run: python -m unittest -v test_reference_kernel.py test_currentness_idempotency.py
