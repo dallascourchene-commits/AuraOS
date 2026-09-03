@@ -173,6 +173,7 @@ class HardnessFrontierTests(unittest.TestCase):
             t = f"easy-{i}"
             seals.append(seal(t, facts(), p))
             outs.append(M.CaseOutcomeV1(t, True))
+        # Hard cases cover every high axis and all fail.
         hard_facts = facts(interprocedural_hops=8, cross_file_span=5, trace_depth=8,
                            statefulness=2, control_flow_ambiguity=2,
                            historical_signal_scarcity=2, oracle_cost=2, patch_distance=2)
@@ -193,6 +194,7 @@ class HardnessFrontierTests(unittest.TestCase):
         p = M.HardnessPolicyV1(min_slice_cases=2, hard_tail_recall_floor=0.1, per_axis_high_recall_floor=0.1)
         seals = []
         outs = []
+        # Only interprocedural high is populated; every other axis must remain a debt.
         for i in range(4):
             t = f"c-{i}"
             seals.append(seal(t, facts(interprocedural_hops=8), p))
@@ -261,6 +263,7 @@ class HardnessFrontierTests(unittest.TestCase):
                 patch_distance=rng.randrange(3),
             )
             got = M.vectorize(f, p).levels
+            # Independent declarative reference: no calls to module bin/stratum helpers.
             ref = (
                 2 if f.interprocedural_hops >= p.interproc_high else 1 if f.interprocedural_hops >= p.interproc_medium else 0,
                 2 if f.cross_file_span >= p.files_high else 1 if f.cross_file_span >= p.files_medium else 0,
