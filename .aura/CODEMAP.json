@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788129882,
+  "generated_at_unix": 1788443128,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1656,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1110,6 +1110,8 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/real-corpus-hydration-o8.md",
+      "docs/bughound/real-corpus-k27-o8.json",
       "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
       "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -1626,6 +1628,7 @@
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_blind_oracle_provenance.py",
       "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -1641,6 +1644,7 @@
       "tools/bughound/blind_discovery.py",
       "tools/bughound/blind_oracle_provenance.py",
       "tools/bughound/blind_score_admission.py",
+      "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -1768,16 +1772,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26518240,
-      "tokens_est": 6619913,
+      "files": 1656,
+      "bytes": 26555088,
+      "tokens_est": 6629124,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1009,
-        "schema_or_lexicon": 272,
+        "python_module": 1011,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -157592,6 +157596,326 @@
         "signature_hash": "165eff4d3f7abf22"
       }
     ],
+    "CorpusHydrationTests": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 209,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#class:CorpusHydrationTests:bbd778d8cbb04f37",
+        "signature_hash": "78fea46d27bd289e"
+      }
+    ],
+    "CorpusHydrationTests.test_registry_has_distinct_ids": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_registry_has_distinct_ids:a4c49c20ad4b0f34",
+        "signature_hash": "1a29e5bb5f096271"
+      }
+    ],
+    "CorpusHydrationTests.test_manifest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_manifest_is_deterministic:22d2214f38d54037",
+        "signature_hash": "b175c411a6a96b00"
+      }
+    ],
+    "CorpusHydrationTests.test_k27_is_deterministic_but_not_identity": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_k27_is_deterministic_but_not_identity:1aefdb56dcfee4cb",
+        "signature_hash": "9ce868fab71cdd87"
+      }
+    ],
+    "CorpusHydrationTests.test_arvo_earns_l4_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_arvo_earns_l4_blind_eval:aaffc31764a9e225",
+        "signature_hash": "936374df095c584a"
+      }
+    ],
+    "CorpusHydrationTests.test_magma_earns_l4_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_magma_earns_l4_blind_eval:de95b1652d7c1668",
+        "signature_hash": "0a416ba621b695df"
+      }
+    ],
+    "CorpusHydrationTests.test_vul4j_earns_l4_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vul4j_earns_l4_blind_eval:a7ce78be2c76e747",
+        "signature_hash": "0aa8630b96f3d3c2"
+      }
+    ],
+    "CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 52,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority:f0f4bff353ab26f6",
+        "signature_hash": "f2f812bfac67f831"
+      }
+    ],
+    "CorpusHydrationTests.test_vulngym_stops_at_l3": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vulngym_stops_at_l3:192910d2be792cec",
+        "signature_hash": "f328a7e97b290253"
+      }
+    ],
+    "CorpusHydrationTests.test_cisco_stops_at_l3": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cisco_stops_at_l3:eab0435d952e5d57",
+        "signature_hash": "0d14ea0471cbd81e"
+      }
+    ],
+    "CorpusHydrationTests.test_cvefixes_not_l4": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cvefixes_not_l4:cbd65a9e255d100e",
+        "signature_hash": "7175b954290037d5"
+      }
+    ],
+    "CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 66,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth:3a87e91a150d6fff",
+        "signature_hash": "1e78192b6ca14e02"
+      }
+    ],
+    "CorpusHydrationTests.test_train_cannot_consume_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 69,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_train_cannot_consume_blind_eval:437b9858ed623b72",
+        "signature_hash": "58f46ab9f18c47a3"
+      }
+    ],
+    "CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval:d11ea7f112d73020",
+        "signature_hash": "cc3bfd2c39a9aa50"
+      }
+    ],
+    "CorpusHydrationTests.test_solver_never_sees_arvo_gold": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 79,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_arvo_gold:0161402c05bd0b66",
+        "signature_hash": "f28069af2f945e6a"
+      }
+    ],
+    "CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold:ece1e3cd725045ea",
+        "signature_hash": "085d672f3efccbe0"
+      }
+    ],
+    "CorpusHydrationTests.test_evaluator_may_hold_gold": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 89,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_evaluator_may_hold_gold:6e91b2d55cf1f0a6",
+        "signature_hash": "da924e143ab4b241"
+      }
+    ],
+    "CorpusHydrationTests.test_good_train_eval_split": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 96,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_good_train_eval_split:99420fef2a15f96b",
+        "signature_hash": "d96669c7198b2ee1"
+      }
+    ],
+    "CorpusHydrationTests.test_same_corpus_split_fails": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 101,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_same_corpus_split_fails:3d15689d57771e16",
+        "signature_hash": "9e93c5307c238902"
+      }
+    ],
+    "CorpusHydrationTests.test_blind_eval_in_training_split_fails": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_blind_eval_in_training_split_fails:4321460b2025f718",
+        "signature_hash": "f5a80c09fc454041"
+      }
+    ],
+    "CorpusHydrationTests.test_diagnostic_not_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 111,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_diagnostic_not_blind_eval:23e11b49ed478db5",
+        "signature_hash": "1bfc15922decd8e9"
+      }
+    ],
+    "CorpusHydrationTests.test_score_requires_independent_support": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 120,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_score_requires_independent_support:60521b7c59816125",
+        "signature_hash": "002f811d2025c5ae"
+      }
+    ],
+    "CorpusHydrationTests.test_patched_false_positive_counts": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 128,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_patched_false_positive_counts:fb037c03f45bbc50",
+        "signature_hash": "ad76f61170c836ce"
+      }
+    ],
+    "CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 135,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual:fa9c7be6246cf1c3",
+        "signature_hash": "afe6a6eb5ac01877"
+      }
+    ],
+    "CorpusHydrationTests.test_file_localization_f1": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 141,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_file_localization_f1:fcfd7580bea1ce93",
+        "signature_hash": "bfca5ced31e41640"
+      }
+    ],
+    "CorpusHydrationTests.test_trace_coverage": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 145,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trace_coverage:d99aea2fec4d504d",
+        "signature_hash": "611ad2434e4597ce"
+      }
+    ],
+    "CorpusHydrationTests.test_repeatability": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 149,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_repeatability:b81f022f69c1a74c",
+        "signature_hash": "03cce0dd5ba05530"
+      }
+    ],
+    "CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 153,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions:99950a1a4e922e77",
+        "signature_hash": "ba6f78c3e8e76321"
+      }
+    ],
+    "CorpusHydrationTests.test_hyper1000_exact": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_hyper1000_exact:9b1a7fe7af9b4245",
+        "signature_hash": "df1ac10fc3bd05af"
+      }
+    ],
+    "CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 166,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash:bab2f1a4992ef105",
+        "signature_hash": "f1a05befd5c96b37"
+      }
+    ],
+    "CorpusHydrationTests.test_no_admission_mints_authority": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 178,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_no_admission_mints_authority:746e66f7f87a4282",
+        "signature_hash": "74be7b99a35e3c2a"
+      }
+    ],
+    "CorpusHydrationTests.test_randomized_contamination_reference_equivalence": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 209,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_randomized_contamination_reference_equivalence:b649c67a54da4a70",
+        "signature_hash": "8b4e58c0a38c729e"
+      }
+    ],
     "BugHoundEnvelopeLintTests": [
       {
         "file": "tests/test_bughound_envelope_lint.py",
@@ -158600,6 +158924,206 @@
         "end_line": 112,
         "semantic_id": "tools/bughound/blind_score_admission.py#function:score_producer_bound_blind_finding:f61c6ceaecfc8340",
         "signature_hash": "d7db1b3f2c1d989c"
+      }
+    ],
+    "HydrationLevel": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:HydrationLevel:d50c428cc7739c16",
+        "signature_hash": "8c8cdf2689268914"
+      }
+    ],
+    "CorpusRole": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 22,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:CorpusRole:fb45436657aab66f",
+        "signature_hash": "9f1fc364b1abc4de"
+      }
+    ],
+    "Audience": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:Audience:84ee0a17dd201d37",
+        "signature_hash": "05ace6fbf3f49f32"
+      }
+    ],
+    "Purpose": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:Purpose:6deb350fb4ac252a",
+        "signature_hash": "4ac4a3fdd4aa0aa6"
+      }
+    ],
+    "OracleClass": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 43,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:OracleClass:8c2be8fea81da739",
+        "signature_hash": "a40493e65a423bd2"
+      }
+    ],
+    "CorpusDescriptor": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:CorpusDescriptor:a6f2146e4d2ce438",
+        "signature_hash": "b9d4b41fc37e9b6f"
+      }
+    ],
+    "CorpusDescriptor.url_sha256": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/corpus_hydration.py#method:CorpusDescriptor.url_sha256:18d890d3858a9c6f",
+        "signature_hash": "52600b0b3558befd"
+      }
+    ],
+    "CorpusDescriptor.k27_xyz": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/corpus_hydration.py#method:CorpusDescriptor.k27_xyz:f138c7a9562784fe",
+        "signature_hash": "84afafddc274baf2"
+      }
+    ],
+    "ToolCapability": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 89,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:ToolCapability:73f8a8fea6483056",
+        "signature_hash": "91fb855af8c286b2"
+      }
+    ],
+    "Admission": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 93,
+        "end_line": 104,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:Admission:bcfe762e30b01e32",
+        "signature_hash": "16722db4e4454171"
+      }
+    ],
+    "HydrationView": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 108,
+        "end_line": 116,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:HydrationView:f42119212953c4b6",
+        "signature_hash": "fdb614648d5069d8"
+      }
+    ],
+    "BenchmarkObservation": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "class",
+        "line": 120,
+        "end_line": 135,
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:BenchmarkObservation:62de60c76200adf6",
+        "signature_hash": "789955af455040ce"
+      }
+    ],
+    "descriptor": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 342,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:descriptor:35d6598e31ca3c69",
+        "signature_hash": "617f2ab0e42750e2"
+      }
+    ],
+    "admit_dataset": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 345,
+        "end_line": 365,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:admit_dataset:5e61d3d215ea5403",
+        "signature_hash": "15dd415c8cb04f99"
+      }
+    ],
+    "hydration_view": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 368,
+        "end_line": 381,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:hydration_view:6b33e70732c82c50",
+        "signature_hash": "801a4b6d2c4be3f5"
+      }
+    ],
+    "validate_split": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 384,
+        "end_line": 402,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:validate_split:7af0efc91fc5b20e",
+        "signature_hash": "51d01c24ec47a17b"
+      }
+    ],
+    "compute_scores": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 405,
+        "end_line": 448,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:compute_scores:1c70f3ebd57beb02",
+        "signature_hash": "af82b68ca6a6e6be"
+      }
+    ],
+    "k27_manifest": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 451,
+        "end_line": 462,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:k27_manifest:e90a7f2bfdcb6bf0",
+        "signature_hash": "6f1a8873fc01db65"
+      }
+    ],
+    "corpus_manifest_digest": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 465,
+        "end_line": 474,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:corpus_manifest_digest:390852b7a50dbe56",
+        "signature_hash": "996965d287b1871d"
+      }
+    ],
+    "hyper1000_cells": [
+      {
+        "file": "tools/bughound/corpus_hydration.py",
+        "kind": "function",
+        "line": 477,
+        "end_line": 487,
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:hyper1000_cells:6444f336f0004eb2",
+        "signature_hash": "d9db242ce45aec7b"
       }
     ],
     "LintDisposition": [
@@ -237254,6 +237778,100 @@
       ]
     },
     {
+      "path": "docs/bughound/real-corpus-hydration-o8.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3534,
+      "lines": 56,
+      "tokens_est": 882,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d035527165e56af7",
+      "vector": [
+        0.092956,
+        0.120498,
+        0.228373,
+        0.008033,
+        0.058528,
+        -0.053937,
+        0.051642,
+        -0.056233,
+        -0.271982,
+        0.221488,
+        -0.205421,
+        0.003443,
+        -0.267392,
+        0.02869,
+        0.145746,
+        0.136565,
+        0.230668,
+        0.271982,
+        -0.030985,
+        -0.08148,
+        0.173288,
+        0.24444,
+        0.19624,
+        0.166403,
+        0.159517,
+        0.13427,
+        0.136565,
+        -0.200831,
+        0.283458,
+        0.056233,
+        0.271982,
+        -0.290344
+      ]
+    },
+    {
+      "path": "docs/bughound/real-corpus-k27-o8.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2679,
+      "lines": 13,
+      "tokens_est": 670,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b1aadf6410e5974c",
+      "vector": [
+        0.246644,
+        0.070635,
+        0.091478,
+        0.075267,
+        -0.283699,
+        -0.267487,
+        0.151692,
+        -0.003474,
+        0.015053,
+        0.267487,
+        0.112321,
+        -0.221169,
+        -0.170219,
+        -0.228117,
+        0.165587,
+        0.003474,
+        -0.10769,
+        0.049792,
+        0.181799,
+        -0.214221,
+        -0.026633,
+        0.135481,
+        -0.001158,
+        -0.214221,
+        -0.084531,
+        -0.283699,
+        -0.292962,
+        0.09611,
+        0.028949,
+        0.26054,
+        -0.225801,
+        0.207274
+      ]
+    },
+    {
       "path": "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -264236,6 +264854,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_corpus_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9552,
+      "lines": 214,
+      "tokens_est": 2388,
+      "symbol_count": 32,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "13527fad69786973",
+      "vector": [
+        0.257405,
+        -0.077559,
+        -0.070815,
+        -0.237173,
+        0.178723,
+        -0.176474,
+        -0.243917,
+        0.223684,
+        0.04159,
+        -0.241669,
+        0.133761,
+        -0.273142,
+        -0.174226,
+        -0.239421,
+        -0.075311,
+        -0.10004,
+        -0.21694,
+        0.007868,
+        -0.16973,
+        -0.185467,
+        0.156242,
+        -0.118024,
+        -0.225932,
+        -0.115776,
+        -0.023605,
+        0.055078,
+        -0.138257,
+        0.210196,
+        0.055078,
+        -0.223684,
+        0.246165,
+        -0.210196
+      ]
+    },
+    {
       "path": "tests/test_bughound_envelope_lint.py",
       "role": "python_module",
       "binary": false,
@@ -264938,6 +265603,53 @@
         0.096209,
         0.163679,
         -0.25614
+      ]
+    },
+    {
+      "path": "tools/bughound/corpus_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 21083,
+      "lines": 502,
+      "tokens_est": 5271,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "86bb3ce03350dd33",
+      "vector": [
+        0.207562,
+        0.056009,
+        -0.229526,
+        -0.141669,
+        0.236115,
+        0.113116,
+        -0.110919,
+        0.277847,
+        0.066991,
+        0.154847,
+        -0.249293,
+        0.075776,
+        -0.271258,
+        0.209758,
+        0.18999,
+        -0.227329,
+        0.225133,
+        -0.023062,
+        0.264668,
+        0.207562,
+        0.053812,
+        0.161437,
+        0.18999,
+        0.062598,
+        0.249293,
+        0.106526,
+        0.034044,
+        0.095544,
+        -0.148258,
+        -0.183401,
+        -0.179008,
+        0.12849
       ]
     },
     {
@@ -289080,16 +289792,16 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26518240,
-    "text_tokens_est": 6619913,
+    "file_count": 1656,
+    "total_bytes": 26555088,
+    "text_tokens_est": 6629124,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1009,
-      "schema_or_lexicon": 272,
+      "python_module": 1011,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290209,6 +290921,8 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/real-corpus-hydration-o8.md",
+      "docs/bughound/real-corpus-k27-o8.json",
       "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
       "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -290725,6 +291439,7 @@
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_blind_oracle_provenance.py",
       "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -290740,6 +291455,7 @@
       "tools/bughound/blind_discovery.py",
       "tools/bughound/blind_oracle_provenance.py",
       "tools/bughound/blind_score_admission.py",
+      "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -448371,6 +449087,326 @@
         "file_digest8": "c98f5ca4a8c58d82"
       },
       {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#class:CorpusHydrationTests:bbd778d8cbb04f37",
+        "name": "CorpusHydrationTests",
+        "kind": "class",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 22,
+        "end_line": 209,
+        "signature_hash": "78fea46d27bd289e",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash:bab2f1a4992ef105",
+        "name": "CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 160,
+        "end_line": 166,
+        "signature_hash": "f1a05befd5c96b37",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_arvo_earns_l4_blind_eval:aaffc31764a9e225",
+        "name": "CorpusHydrationTests.test_arvo_earns_l4_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "936374df095c584a",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_blind_eval_in_training_split_fails:4321460b2025f718",
+        "name": "CorpusHydrationTests.test_blind_eval_in_training_split_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "f5a80c09fc454041",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cisco_stops_at_l3:eab0435d952e5d57",
+        "name": "CorpusHydrationTests.test_cisco_stops_at_l3",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "0d14ea0471cbd81e",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cvefixes_not_l4:cbd65a9e255d100e",
+        "name": "CorpusHydrationTests.test_cvefixes_not_l4",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "7175b954290037d5",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_diagnostic_not_blind_eval:23e11b49ed478db5",
+        "name": "CorpusHydrationTests.test_diagnostic_not_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 108,
+        "end_line": 111,
+        "signature_hash": "1bfc15922decd8e9",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_evaluator_may_hold_gold:6e91b2d55cf1f0a6",
+        "name": "CorpusHydrationTests.test_evaluator_may_hold_gold",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 86,
+        "end_line": 89,
+        "signature_hash": "da924e143ab4b241",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_file_localization_f1:fcfd7580bea1ce93",
+        "name": "CorpusHydrationTests.test_file_localization_f1",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 137,
+        "end_line": 141,
+        "signature_hash": "bfca5ced31e41640",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_good_train_eval_split:99420fef2a15f96b",
+        "name": "CorpusHydrationTests.test_good_train_eval_split",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 91,
+        "end_line": 96,
+        "signature_hash": "d96669c7198b2ee1",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_hyper1000_exact:9b1a7fe7af9b4245",
+        "name": "CorpusHydrationTests.test_hyper1000_exact",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 155,
+        "end_line": 158,
+        "signature_hash": "df1ac10fc3bd05af",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_k27_is_deterministic_but_not_identity:1aefdb56dcfee4cb",
+        "name": "CorpusHydrationTests.test_k27_is_deterministic_but_not_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "9ce868fab71cdd87",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual:fa9c7be6246cf1c3",
+        "name": "CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 130,
+        "end_line": 135,
+        "signature_hash": "afe6a6eb5ac01877",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_magma_earns_l4_blind_eval:de95b1652d7c1668",
+        "name": "CorpusHydrationTests.test_magma_earns_l4_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "0a416ba621b695df",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_manifest_is_deterministic:22d2214f38d54037",
+        "name": "CorpusHydrationTests.test_manifest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "b175c411a6a96b00",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_no_admission_mints_authority:746e66f7f87a4282",
+        "name": "CorpusHydrationTests.test_no_admission_mints_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 168,
+        "end_line": 178,
+        "signature_hash": "74be7b99a35e3c2a",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_patched_false_positive_counts:fb037c03f45bbc50",
+        "name": "CorpusHydrationTests.test_patched_false_positive_counts",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 122,
+        "end_line": 128,
+        "signature_hash": "ad76f61170c836ce",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions:99950a1a4e922e77",
+        "name": "CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 151,
+        "end_line": 153,
+        "signature_hash": "ba6f78c3e8e76321",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_randomized_contamination_reference_equivalence:b649c67a54da4a70",
+        "name": "CorpusHydrationTests.test_randomized_contamination_reference_equivalence",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 180,
+        "end_line": 209,
+        "signature_hash": "8b4e58c0a38c729e",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_registry_has_distinct_ids:a4c49c20ad4b0f34",
+        "name": "CorpusHydrationTests.test_registry_has_distinct_ids",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "1a29e5bb5f096271",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_repeatability:b81f022f69c1a74c",
+        "name": "CorpusHydrationTests.test_repeatability",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 147,
+        "end_line": 149,
+        "signature_hash": "03cce0dd5ba05530",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_same_corpus_split_fails:3d15689d57771e16",
+        "name": "CorpusHydrationTests.test_same_corpus_split_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 98,
+        "end_line": 101,
+        "signature_hash": "9e93c5307c238902",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_score_requires_independent_support:60521b7c59816125",
+        "name": "CorpusHydrationTests.test_score_requires_independent_support",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 113,
+        "end_line": 120,
+        "signature_hash": "002f811d2025c5ae",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority:f0f4bff353ab26f6",
+        "name": "CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 47,
+        "end_line": 52,
+        "signature_hash": "f2f812bfac67f831",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth:3a87e91a150d6fff",
+        "name": "CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 64,
+        "end_line": 66,
+        "signature_hash": "1e78192b6ca14e02",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_arvo_gold:0161402c05bd0b66",
+        "name": "CorpusHydrationTests.test_solver_never_sees_arvo_gold",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 75,
+        "end_line": 79,
+        "signature_hash": "f28069af2f945e6a",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold:ece1e3cd725045ea",
+        "name": "CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "085d672f3efccbe0",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trace_coverage:d99aea2fec4d504d",
+        "name": "CorpusHydrationTests.test_trace_coverage",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 143,
+        "end_line": 145,
+        "signature_hash": "611ad2434e4597ce",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_train_cannot_consume_blind_eval:437b9858ed623b72",
+        "name": "CorpusHydrationTests.test_train_cannot_consume_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 68,
+        "end_line": 69,
+        "signature_hash": "58f46ab9f18c47a3",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval:d11ea7f112d73020",
+        "name": "CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 71,
+        "end_line": 73,
+        "signature_hash": "cc3bfd2c39a9aa50",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vul4j_earns_l4_blind_eval:a7ce78be2c76e747",
+        "name": "CorpusHydrationTests.test_vul4j_earns_l4_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "0aa8630b96f3d3c2",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vulngym_stops_at_l3:192910d2be792cec",
+        "name": "CorpusHydrationTests.test_vulngym_stops_at_l3",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "f328a7e97b290253",
+        "file_digest8": "13527fad69786973"
+      },
+      {
         "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
         "name": "BugHoundEnvelopeLintTests",
         "kind": "class",
@@ -449489,6 +450525,206 @@
         "end_line": 65,
         "signature_hash": "abf64ef935250496",
         "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:Admission:bcfe762e30b01e32",
+        "name": "Admission",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 93,
+        "end_line": 104,
+        "signature_hash": "16722db4e4454171",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:Audience:84ee0a17dd201d37",
+        "name": "Audience",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "05ace6fbf3f49f32",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:BenchmarkObservation:62de60c76200adf6",
+        "name": "BenchmarkObservation",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 120,
+        "end_line": 135,
+        "signature_hash": "789955af455040ce",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:CorpusDescriptor:a6f2146e4d2ce438",
+        "name": "CorpusDescriptor",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 47,
+        "end_line": 76,
+        "signature_hash": "b9d4b41fc37e9b6f",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:CorpusRole:fb45436657aab66f",
+        "name": "CorpusRole",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 18,
+        "end_line": 22,
+        "signature_hash": "9f1fc364b1abc4de",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:HydrationLevel:d50c428cc7739c16",
+        "name": "HydrationLevel",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 10,
+        "end_line": 15,
+        "signature_hash": "8c8cdf2689268914",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:HydrationView:f42119212953c4b6",
+        "name": "HydrationView",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 108,
+        "end_line": 116,
+        "signature_hash": "fdb614648d5069d8",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:OracleClass:8c2be8fea81da739",
+        "name": "OracleClass",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 37,
+        "end_line": 43,
+        "signature_hash": "a40493e65a423bd2",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:Purpose:6deb350fb4ac252a",
+        "name": "Purpose",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "4ac4a3fdd4aa0aa6",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#class:ToolCapability:73f8a8fea6483056",
+        "name": "ToolCapability",
+        "kind": "class",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 80,
+        "end_line": 89,
+        "signature_hash": "91fb855af8c286b2",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:admit_dataset:5e61d3d215ea5403",
+        "name": "admit_dataset",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 345,
+        "end_line": 365,
+        "signature_hash": "15dd415c8cb04f99",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:compute_scores:1c70f3ebd57beb02",
+        "name": "compute_scores",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 405,
+        "end_line": 448,
+        "signature_hash": "af82b68ca6a6e6be",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:corpus_manifest_digest:390852b7a50dbe56",
+        "name": "corpus_manifest_digest",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 465,
+        "end_line": 474,
+        "signature_hash": "996965d287b1871d",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:descriptor:35d6598e31ca3c69",
+        "name": "descriptor",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 338,
+        "end_line": 342,
+        "signature_hash": "617f2ab0e42750e2",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:hydration_view:6b33e70732c82c50",
+        "name": "hydration_view",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 368,
+        "end_line": 381,
+        "signature_hash": "801a4b6d2c4be3f5",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:hyper1000_cells:6444f336f0004eb2",
+        "name": "hyper1000_cells",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 477,
+        "end_line": 487,
+        "signature_hash": "d9db242ce45aec7b",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:k27_manifest:e90a7f2bfdcb6bf0",
+        "name": "k27_manifest",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 451,
+        "end_line": 462,
+        "signature_hash": "6f1a8873fc01db65",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#function:validate_split:7af0efc91fc5b20e",
+        "name": "validate_split",
+        "kind": "function",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 384,
+        "end_line": 402,
+        "signature_hash": "51d01c24ec47a17b",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#method:CorpusDescriptor.k27_xyz:f138c7a9562784fe",
+        "name": "CorpusDescriptor.k27_xyz",
+        "kind": "method",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 74,
+        "end_line": 76,
+        "signature_hash": "84afafddc274baf2",
+        "file_digest8": "86bb3ce03350dd33"
+      },
+      {
+        "semantic_id": "tools/bughound/corpus_hydration.py#method:CorpusDescriptor.url_sha256:18d890d3858a9c6f",
+        "name": "CorpusDescriptor.url_sha256",
+        "kind": "method",
+        "file": "tools/bughound/corpus_hydration.py",
+        "line": 70,
+        "end_line": 71,
+        "signature_hash": "52600b0b3558befd",
+        "file_digest8": "86bb3ce03350dd33"
       },
       {
         "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
@@ -451151,7 +452387,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b409baa0336de9f813f710838e12bf21",
-    "payload_hash": "45d3ce26dc43eca5b504f218afd8afe9"
+    "record_fingerprint": "8b25ccb1b0e09bb7f4154665b6e3c26f",
+    "payload_hash": "e444e96cc2eda39a9fd124c67721e124"
   }
 }
