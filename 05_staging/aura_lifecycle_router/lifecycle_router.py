@@ -139,6 +139,24 @@ class LifecycleAtlas:
 
 
 @dataclass(frozen=True)
+class CurrentnessWitness:
+    source_ref: str
+    provider_generation: str
+    semantic_root: str
+    current: bool
+    observed_at_ref: str
+    producer: str
+    effect_authority: bool = False
+    def validate(self):
+        if not all((self.source_ref,self.provider_generation,self.semantic_root,self.observed_at_ref,self.producer)):
+            raise ValueError("CURRENTNESS_WITNESS_BINDING_REQUIRED")
+        if self.effect_authority: raise ValueError("CURRENTNESS_WITNESS_CANNOT_MINT_EFFECT")
+    @property
+    def identity(self) -> str:
+        self.validate(); return dg(asdict(self))
+
+
+@dataclass(frozen=True)
 class TransitionIntent:
     objective: str
     source_artifact: str
@@ -148,6 +166,7 @@ class TransitionIntent:
     currentness: str
     destination_consequence: str
     bridge_ref: str | None = None
+    currentness_witness: CurrentnessWitness | None = None
     effect_claim: str = "NONE"
 
 
@@ -160,11 +179,17 @@ class TransitionRouter:
         source=self.atlas.get(t.source_artifact)
         if source.lifecycle not in {Lifecycle.CURRENT_HOT,Lifecycle.ABSORBED_CANONICAL}: return {"status":"HOLD_SOURCE_NOT_HOT","effect_authority":False}
         if t.currentness!="CURRENT": return {"status":"HOLD_CURRENTNESS","effect_authority":False}
+        witness=t.currentness_witness
+        if witness is None: return {"status":"HOLD_CURRENTNESS_WITNESS_REQUIRED","effect_authority":False}
+        witness.validate()
+        if not witness.current: return {"status":"HOLD_CURRENTNESS","effect_authority":False}
+        if witness.source_ref!=source.source_ref: return {"status":"HOLD_CURRENTNESS_SOURCE_MISMATCH","effect_authority":False}
+        if witness.semantic_root!=source.semantic_root: return {"status":"HOLD_CURRENTNESS_SEMANTIC_MISMATCH","effect_authority":False}
         if source.frame_cut!=t.frame_cut: return {"status":"HOLD_INCOHERENT_CUT","effect_authority":False}
         if source.jurisdiction!=t.jurisdiction and not t.bridge_ref: return {"status":"HOLD_JURISDICTION_BRIDGE_REQUIRED","effect_authority":False}
         if t.effect_claim!="NONE": return {"status":"HOLD_EFFECT_OWNER_REQUIRED","effect_authority":False}
-        body={"objective":t.objective,"source_artifact":t.source_artifact,"destination_project":t.destination_project,"destination_consequence":t.destination_consequence,"frame_cut":t.frame_cut,"jurisdiction":t.jurisdiction,"bridge_ref":t.bridge_ref}
-        return {"status":"ROUTED_DERIVED_NO_AUTHORITY_PROMOTION","transition_digest":dg(body),"source_owner_ref":source.owner_ref,"effect_authority":False,"new_owner_count":0}
+        body={"objective":t.objective,"source_artifact":t.source_artifact,"destination_project":t.destination_project,"destination_consequence":t.destination_consequence,"frame_cut":t.frame_cut,"jurisdiction":t.jurisdiction,"bridge_ref":t.bridge_ref,"currentness_witness":witness.identity}
+        return {"status":"ROUTED_DERIVED_NO_AUTHORITY_PROMOTION","transition_digest":dg(body),"source_owner_ref":source.owner_ref,"currentness_witness_digest":witness.identity,"effect_authority":False,"new_owner_count":0}
 
 
 def portfolio_fixture() -> LifecycleAtlas:
