@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1667
-- **total_bytes**: 26634853
-- **text_tokens_est**: 6649062
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1018, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1670
+- **total_bytes**: 26655032
+- **text_tokens_est**: 6654106
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1667,
+  "repo_file_count": 1670,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1134,6 +1134,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/bughound/hard-case-precision-router-o9.md",
     "docs/bughound/real-corpus-hydration-o8.md",
     "docs/bughound/real-corpus-k27-o8.json",
+    "docs/bughound_hardness_frontier.md",
+    "docs/bughound_hardness_frontier_external_k27.json",
     "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
     "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
     "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -1653,6 +1655,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_bughound_blind_score_admission.py",
     "tests/test_bughound_corpus_hydration.py",
     "tests/test_bughound_envelope_lint.py",
+    "tests/test_bughound_hardness_frontier.py",
     "tests/test_bughound_historical_blind_cut.py",
     "tests/test_bughound_precision_router.py",
     "tests/test_bughound_seedlab_benchmark.py",
@@ -1807,16 +1810,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1667,
-  "bytes": 26634853,
-  "tokens_est": 6649062,
+  "files": 1670,
+  "bytes": 26655032,
+  "tokens_est": 6654106,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 241,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1018,
-    "schema_or_lexicon": 274,
+    "python_module": 1019,
+    "schema_or_lexicon": 275,
     "support_file": 49
   }
 }

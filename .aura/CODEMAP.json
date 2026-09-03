@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788447057,
+  "generated_at_unix": 1788447313,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1667,
+    "repo_file_count": 1670,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1116,6 +1116,8 @@
       "docs/bughound/hard-case-precision-router-o9.md",
       "docs/bughound/real-corpus-hydration-o8.md",
       "docs/bughound/real-corpus-k27-o8.json",
+      "docs/bughound_hardness_frontier.md",
+      "docs/bughound_hardness_frontier_external_k27.json",
       "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
       "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -1635,6 +1637,7 @@
       "tests/test_bughound_blind_score_admission.py",
       "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_hardness_frontier.py",
       "tests/test_bughound_historical_blind_cut.py",
       "tests/test_bughound_precision_router.py",
       "tests/test_bughound_seedlab_benchmark.py",
@@ -1783,16 +1786,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1667,
-      "bytes": 26634853,
-      "tokens_est": 6649062,
+      "files": 1670,
+      "bytes": 26655032,
+      "tokens_est": 6654106,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 241,
+        "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
-        "schema_or_lexicon": 274,
+        "python_module": 1019,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -158363,6 +158366,266 @@
         "signature_hash": "49954c66936facb3"
       }
     ],
+    "facts": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 32,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#function:facts:3cbeefcb77a367dc",
+        "signature_hash": "8ae893511c53da11"
+      }
+    ],
+    "seal": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#function:seal:2ef3158286242cb0",
+        "signature_hash": "b85912957fedd20f"
+      }
+    ],
+    "HardnessFrontierTests": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 277,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#class:HardnessFrontierTests:1c6bdd9398a6b9a4",
+        "signature_hash": "b461f41c6252b6d1"
+      }
+    ],
+    "HardnessFrontierTests.test_axis_contract_exact": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_axis_contract_exact:8c225124f67d9365",
+        "signature_hash": "065893df882f371c"
+      }
+    ],
+    "HardnessFrontierTests.test_omega8_is_exact_3_pow_8": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_omega8_is_exact_3_pow_8:e8178a6f7c7315e7",
+        "signature_hash": "d6d200b98ab5cc1e"
+      }
+    ],
+    "HardnessFrontierTests.test_realistic_34_hop_case_bins_high": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_realistic_34_hop_case_bins_high:a23235bc558e8460",
+        "signature_hash": "adb76241fc995279"
+      }
+    ],
+    "HardnessFrontierTests.test_vector_thresholds": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_vector_thresholds:ff2e4eb3eb75d7fb",
+        "signature_hash": "e5b1319ae55c8df1"
+      }
+    ],
+    "HardnessFrontierTests.test_extreme_stratum": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_extreme_stratum:6808f9c2180fbf82",
+        "signature_hash": "a4cf1ca7f5a9df51"
+      }
+    ],
+    "HardnessFrontierTests.test_two_high_axes_are_hard_tail": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_two_high_axes_are_hard_tail:f9a72f7f7f9c47b5",
+        "signature_hash": "6a8691b80433da4f"
+      }
+    ],
+    "HardnessFrontierTests.test_policy_changes_identity": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 81,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_policy_changes_identity:b6dad321f969dd70",
+        "signature_hash": "7f301dc811fc34bf"
+      }
+    ],
+    "HardnessFrontierTests.test_facts_change_seal_identity": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_facts_change_seal_identity:d036b120f93d3e87",
+        "signature_hash": "094357f0ffe7255c"
+      }
+    ],
+    "HardnessFrontierTests.test_forged_seal_digest_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 109,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_forged_seal_digest_fails:abb5c752485d0e31",
+        "signature_hash": "b67da300ff13b4c3"
+      }
+    ],
+    "HardnessFrontierTests.test_solver_projection_contains_no_hardness": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 118,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_solver_projection_contains_no_hardness:fe4c4904ff9c5de7",
+        "signature_hash": "f1eedfa521001cbf"
+      }
+    ],
+    "HardnessFrontierTests.test_solver_projection_injected_hardness_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 122,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_solver_projection_injected_hardness_fails:4cb0fb47ca863ba7",
+        "signature_hash": "117b159f30a8d15c"
+      }
+    ],
+    "HardnessFrontierTests.test_solver_projection_vulnerability_label_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 126,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_solver_projection_vulnerability_label_fails:b1780f1b9e6b47cf",
+        "signature_hash": "8eaeea9eb3c2cdd8"
+      }
+    ],
+    "HardnessFrontierTests.test_empty_report_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 133,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_empty_report_fails:66f0227ae3e6ac92",
+        "signature_hash": "015663945e163c48"
+      }
+    ],
+    "HardnessFrontierTests.test_case_set_mismatch_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 142,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_case_set_mismatch_fails:79b39a1e7841592f",
+        "signature_hash": "82c11268a91129fe"
+      }
+    ],
+    "HardnessFrontierTests.test_evaluator_generation_drift_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 151,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_evaluator_generation_drift_fails:161fdc005a75824e",
+        "signature_hash": "167617c1863bf1ab"
+      }
+    ],
+    "HardnessFrontierTests.test_semantic_root_drift_fails": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 160,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_semantic_root_drift_fails:9fcf6c93c083a62b",
+        "signature_hash": "8c94e9d7eaed0ada"
+      }
+    ],
+    "HardnessFrontierTests.test_wilson_empty_is_undefined": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 166,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_wilson_empty_is_undefined:de7a1a9fdd0943e0",
+        "signature_hash": "7ba2756879c85d6b"
+      }
+    ],
+    "HardnessFrontierTests.test_easy_bulk_cannot_hide_hard_failures": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 191,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_easy_bulk_cannot_hide_hard_failures:26a3be4de0a58aa1",
+        "signature_hash": "d965ff452ebda916"
+      }
+    ],
+    "HardnessFrontierTests.test_all_hard_slices_must_be_supported": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 207,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_all_hard_slices_must_be_supported:58cb80f2a61e3652",
+        "signature_hash": "cfbb0ed27e2ec219"
+      }
+    ],
+    "HardnessFrontierTests.test_supported_when_every_high_slice_and_hard_tail_clear": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 226,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_supported_when_every_high_slice_and_hard_tail_clear:20d2392dbc41b0ce",
+        "signature_hash": "5e1d74253e6fe43b"
+      }
+    ],
+    "HardnessFrontierTests.test_report_digest_deterministic_under_input_order": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 228,
+        "end_line": 242,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_report_digest_deterministic_under_input_order:ae67f1bc67dd780e",
+        "signature_hash": "aed4a3d9f731ce1b"
+      }
+    ],
+    "HardnessFrontierTests.test_k27_preserves_full_source_identity": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 249,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_k27_preserves_full_source_identity:5d1a8d7c756e064e",
+        "signature_hash": "94e59ff0b487b0e4"
+      }
+    ],
+    "HardnessFrontierTests.test_randomized_reference_policy": [
+      {
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 277,
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_randomized_reference_policy:afa15467cfb3deac",
+        "signature_hash": "331494c5b1fc8897"
+      }
+    ],
     "real_case": [
       {
         "file": "tests/test_bughound_historical_blind_cut.py",
@@ -239623,6 +239886,100 @@
       ]
     },
     {
+      "path": "docs/bughound_hardness_frontier.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5177,
+      "lines": 75,
+      "tokens_est": 1293,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7da9b8819c8d9d77",
+      "vector": [
+        -0.102185,
+        -0.189771,
+        0.174051,
+        0.284095,
+        0.189771,
+        -0.189771,
+        0.257146,
+        0.196509,
+        0.279604,
+        -0.077481,
+        -0.120151,
+        0.099939,
+        0.252654,
+        -0.261637,
+        0.22795,
+        0.126888,
+        -0.15833,
+        0.090955,
+        0.111168,
+        0.03481,
+        -0.225704,
+        -0.081972,
+        0.13138,
+        0.144855,
+        0.10443,
+        -0.072989,
+        -0.180788,
+        0.165067,
+        -0.270621,
+        0.218967,
+        -0.057268,
+        0.115659
+      ]
+    },
+    {
+      "path": "docs/bughound_hardness_frontier_external_k27.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1752,
+      "lines": 67,
+      "tokens_est": 438,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "42bd7840e4db447d",
+      "vector": [
+        -0.025271,
+        -0.191339,
+        -0.080627,
+        0.302051,
+        0.104695,
+        0.196153,
+        0.111915,
+        -0.111915,
+        -0.244288,
+        -0.155237,
+        -0.044525,
+        0.184119,
+        -0.193746,
+        -0.121543,
+        0.073407,
+        0.222627,
+        -0.042119,
+        -0.102288,
+        0.00361,
+        0.102288,
+        -0.186526,
+        -0.054153,
+        0.217814,
+        -0.249102,
+        0.114322,
+        -0.275577,
+        0.297238,
+        -0.176899,
+        -0.225034,
+        -0.061373,
+        0.282797,
+        -0.225034
+      ]
+    },
+    {
       "path": "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -266746,6 +267103,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_hardness_frontier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13250,
+      "lines": 282,
+      "tokens_est": 3313,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7afc88719102e98e",
+      "vector": [
+        -0.084096,
+        -0.065983,
+        -0.26005,
+        -0.23935,
+        0.236762,
+        0.32474,
+        0.068571,
+        -0.014232,
+        -0.003881,
+        -0.200536,
+        -0.009056,
+        0.319565,
+        0.115147,
+        -0.135847,
+        -0.236762,
+        -0.241937,
+        0.034932,
+        -0.316977,
+        -0.208299,
+        0.099621,
+        -0.011644,
+        0.034932,
+        -0.159135,
+        0.169486,
+        -0.182423,
+        0.172073,
+        -0.172073,
+        -0.148785,
+        0.241937,
+        0.045282,
+        -0.027169,
+        -0.148785
+      ]
+    },
+    {
       "path": "tests/test_bughound_historical_blind_cut.py",
       "role": "python_module",
       "binary": false,
@@ -291872,16 +292276,16 @@
     }
   },
   "summary": {
-    "file_count": 1667,
-    "total_bytes": 26634853,
-    "text_tokens_est": 6649062,
+    "file_count": 1670,
+    "total_bytes": 26655032,
+    "text_tokens_est": 6654106,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 241,
+      "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
-      "schema_or_lexicon": 274,
+      "python_module": 1019,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293007,6 +293411,8 @@
       "docs/bughound/hard-case-precision-router-o9.md",
       "docs/bughound/real-corpus-hydration-o8.md",
       "docs/bughound/real-corpus-k27-o8.json",
+      "docs/bughound_hardness_frontier.md",
+      "docs/bughound_hardness_frontier_external_k27.json",
       "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
       "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -293526,6 +293932,7 @@
       "tests/test_bughound_blind_score_admission.py",
       "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_hardness_frontier.py",
       "tests/test_bughound_historical_blind_cut.py",
       "tests/test_bughound_precision_router.py",
       "tests/test_bughound_seedlab_benchmark.py",
@@ -451888,6 +452295,266 @@
         "file_digest8": "16ed168936bc6c3c"
       },
       {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#class:HardnessFrontierTests:1c6bdd9398a6b9a4",
+        "name": "HardnessFrontierTests",
+        "kind": "class",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 48,
+        "end_line": 277,
+        "signature_hash": "b461f41c6252b6d1",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#function:facts:3cbeefcb77a367dc",
+        "name": "facts",
+        "kind": "function",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 20,
+        "end_line": 32,
+        "signature_hash": "8ae893511c53da11",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#function:seal:2ef3158286242cb0",
+        "name": "seal",
+        "kind": "function",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 35,
+        "end_line": 45,
+        "signature_hash": "b85912957fedd20f",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_all_hard_slices_must_be_supported:58cb80f2a61e3652",
+        "name": "HardnessFrontierTests.test_all_hard_slices_must_be_supported",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 193,
+        "end_line": 207,
+        "signature_hash": "cfbb0ed27e2ec219",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_axis_contract_exact:8c225124f67d9365",
+        "name": "HardnessFrontierTests.test_axis_contract_exact",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "065893df882f371c",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_case_set_mismatch_fails:79b39a1e7841592f",
+        "name": "HardnessFrontierTests.test_case_set_mismatch_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 135,
+        "end_line": 142,
+        "signature_hash": "82c11268a91129fe",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_easy_bulk_cannot_hide_hard_failures:26a3be4de0a58aa1",
+        "name": "HardnessFrontierTests.test_easy_bulk_cannot_hide_hard_failures",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 168,
+        "end_line": 191,
+        "signature_hash": "d965ff452ebda916",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_empty_report_fails:66f0227ae3e6ac92",
+        "name": "HardnessFrontierTests.test_empty_report_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 128,
+        "end_line": 133,
+        "signature_hash": "015663945e163c48",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_evaluator_generation_drift_fails:161fdc005a75824e",
+        "name": "HardnessFrontierTests.test_evaluator_generation_drift_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 144,
+        "end_line": 151,
+        "signature_hash": "167617c1863bf1ab",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_extreme_stratum:6808f9c2180fbf82",
+        "name": "HardnessFrontierTests.test_extreme_stratum",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "a4cf1ca7f5a9df51",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_facts_change_seal_identity:d036b120f93d3e87",
+        "name": "HardnessFrontierTests.test_facts_change_seal_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "094357f0ffe7255c",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_forged_seal_digest_fails:abb5c752485d0e31",
+        "name": "HardnessFrontierTests.test_forged_seal_digest_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 90,
+        "end_line": 109,
+        "signature_hash": "b67da300ff13b4c3",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_k27_preserves_full_source_identity:5d1a8d7c756e064e",
+        "name": "HardnessFrontierTests.test_k27_preserves_full_source_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 244,
+        "end_line": 249,
+        "signature_hash": "94e59ff0b487b0e4",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_omega8_is_exact_3_pow_8:e8178a6f7c7315e7",
+        "name": "HardnessFrontierTests.test_omega8_is_exact_3_pow_8",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "d6d200b98ab5cc1e",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_policy_changes_identity:b6dad321f969dd70",
+        "name": "HardnessFrontierTests.test_policy_changes_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 78,
+        "end_line": 81,
+        "signature_hash": "7f301dc811fc34bf",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_randomized_reference_policy:afa15467cfb3deac",
+        "name": "HardnessFrontierTests.test_randomized_reference_policy",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 251,
+        "end_line": 277,
+        "signature_hash": "331494c5b1fc8897",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_realistic_34_hop_case_bins_high:a23235bc558e8460",
+        "name": "HardnessFrontierTests.test_realistic_34_hop_case_bins_high",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "adb76241fc995279",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_report_digest_deterministic_under_input_order:ae67f1bc67dd780e",
+        "name": "HardnessFrontierTests.test_report_digest_deterministic_under_input_order",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 228,
+        "end_line": 242,
+        "signature_hash": "aed4a3d9f731ce1b",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_semantic_root_drift_fails:9fcf6c93c083a62b",
+        "name": "HardnessFrontierTests.test_semantic_root_drift_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 153,
+        "end_line": 160,
+        "signature_hash": "8c94e9d7eaed0ada",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_solver_projection_contains_no_hardness:fe4c4904ff9c5de7",
+        "name": "HardnessFrontierTests.test_solver_projection_contains_no_hardness",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 111,
+        "end_line": 118,
+        "signature_hash": "f1eedfa521001cbf",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_solver_projection_injected_hardness_fails:4cb0fb47ca863ba7",
+        "name": "HardnessFrontierTests.test_solver_projection_injected_hardness_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 120,
+        "end_line": 122,
+        "signature_hash": "117b159f30a8d15c",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_solver_projection_vulnerability_label_fails:b1780f1b9e6b47cf",
+        "name": "HardnessFrontierTests.test_solver_projection_vulnerability_label_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 124,
+        "end_line": 126,
+        "signature_hash": "8eaeea9eb3c2cdd8",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_supported_when_every_high_slice_and_hard_tail_clear:20d2392dbc41b0ce",
+        "name": "HardnessFrontierTests.test_supported_when_every_high_slice_and_hard_tail_clear",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 209,
+        "end_line": 226,
+        "signature_hash": "5e1d74253e6fe43b",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_two_high_axes_are_hard_tail:f9a72f7f7f9c47b5",
+        "name": "HardnessFrontierTests.test_two_high_axes_are_hard_tail",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "6a8691b80433da4f",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_vector_thresholds:ff2e4eb3eb75d7fb",
+        "name": "HardnessFrontierTests.test_vector_thresholds",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "e5b1319ae55c8df1",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
+        "semantic_id": "tests/test_bughound_hardness_frontier.py#method:HardnessFrontierTests.test_wilson_empty_is_undefined:de7a1a9fdd0943e0",
+        "name": "HardnessFrontierTests.test_wilson_empty_is_undefined",
+        "kind": "method",
+        "file": "tests/test_bughound_hardness_frontier.py",
+        "line": 162,
+        "end_line": 166,
+        "signature_hash": "7ba2756879c85d6b",
+        "file_digest8": "7afc88719102e98e"
+      },
+      {
         "semantic_id": "tests/test_bughound_historical_blind_cut.py#class:HistoricalCutTests:8a9ae0e8ed4cd6d9",
         "name": "HistoricalCutTests",
         "kind": "class",
@@ -456048,7 +456715,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0798c1dd5d0d93b02c5ea06daf13d731",
-    "payload_hash": "502c955ccdd28c3708cd1875bf62e575"
+    "record_fingerprint": "b993e539dd6f15c02db8689bce2845b9",
+    "payload_hash": "69aa6ca34527aae940b8021c86ed1254"
   }
 }
