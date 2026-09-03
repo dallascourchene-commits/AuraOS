@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788435566,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-physical-evidence-scheduler.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -208,6 +209,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_physical_evidence_scheduler/README.md",
+      "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+      "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -1649,6 +1653,8 @@
     ],
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
+      "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+      "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
@@ -1745,9 +1751,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26430450,
+      "tokens_est": 6597965,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -1851,6 +1855,7 @@
         ".aura/intents/example.aura.md",
         ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
         ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
+        "05_staging/aura_physical_evidence_scheduler/README.md",
         "AMD_HACKATHON_SUBMISSION.md",
         "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
         "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -2038,14 +2043,15 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
       "ring": "code",
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
         "06_refactor/aura_os_minimal.py",
@@ -2442,9 +2448,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3467,6 +3471,386 @@
         "end_line": 250,
         "semantic_id": "unreal_bridge.py#function:main:a13e03774ee52e6e",
         "signature_hash": "621c1ef8c88e571d"
+      }
+    ],
+    "dg": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#function:dg:4bb13f5c152f937e",
+        "signature_hash": "d84e5aaed95896c7"
+      }
+    ],
+    "NegativeKnowledge": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 20,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:NegativeKnowledge:965a0f43d4030b6a",
+        "signature_hash": "79cfa585e462b476"
+      }
+    ],
+    "NegativeKnowledge.validate": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledge.validate:b6a759ce546ac191",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "NegativeKnowledgeCache": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 34,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:NegativeKnowledgeCache:7f28dde9fa639b8c",
+        "signature_hash": "54548421d443f6f3"
+      }
+    ],
+    "NegativeKnowledgeCache.__init__": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 24,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledgeCache.__init__:1fa8e3d563e61f1d",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "NegativeKnowledgeCache.record": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 30,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledgeCache.record:b1e71be360712606",
+        "signature_hash": "eef51696517d1e2a"
+      }
+    ],
+    "NegativeKnowledgeCache.reusable": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledgeCache.reusable:a095ea5328b43c43",
+        "signature_hash": "8a622bc78a067696"
+      }
+    ],
+    "ExperimentCandidate": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 59,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:ExperimentCandidate:00a7a6b6a23e4a7f",
+        "signature_hash": "4f7075346b6b8d96"
+      }
+    ],
+    "ExperimentCandidate.validate": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:ExperimentCandidate.validate:90e1d9af8f9fb40b",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "CandidateDecision": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 70,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:CandidateDecision:09ece586f52c0cca",
+        "signature_hash": "043c1a2b20aa94d5"
+      }
+    ],
+    "PhysicalEvidenceScheduler": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 89,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:PhysicalEvidenceScheduler:19d376d16e10854a",
+        "signature_hash": "a45122f383ef8984"
+      }
+    ],
+    "PhysicalEvidenceScheduler.__init__": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 75,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.__init__:f1231c7baf3645c4",
+        "signature_hash": "5f619e9acc6248d0"
+      }
+    ],
+    "PhysicalEvidenceScheduler.assess": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 84,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.assess:e66ff2d0546beeb9",
+        "signature_hash": "dedb7eaf59f3a415"
+      }
+    ],
+    "PhysicalEvidenceScheduler.rank": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.rank:49ff34b5bfeda4cd",
+        "signature_hash": "b26699bcc5b70e3e"
+      }
+    ],
+    "PhysicalEvidenceScheduler.select": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 89,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.select:99ad2cb147c56e55",
+        "signature_hash": "0fce7149cb56f10d"
+      }
+    ],
+    "portfolio_fixture": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 103,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#function:portfolio_fixture:d910eed9855b2702",
+        "signature_hash": "c4c36496fab391ea"
+      }
+    ],
+    "evidence_commitments": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 108,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#function:evidence_commitments:705a82f803253b37",
+        "signature_hash": "cceab11967701656"
+      }
+    ],
+    "T": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 59,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#class:T:18348740fc63f47e",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.setUp": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.setUp:321b7a99ad2369ec",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.test_glm_hard_predecessor_zero": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_glm_hard_predecessor_zero:8f1961bf6ae8cfe0",
+        "signature_hash": "c6d25459d435dd2f"
+      }
+    ],
+    "T.test_glm_training_zero_before_p1": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_glm_training_zero_before_p1:419cb0e2eeb00861",
+        "signature_hash": "f8af8fc0e6bf555e"
+      }
+    ],
+    "T.test_bug_physical_requires_authority": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_bug_physical_requires_authority:de38c7caa90923c9",
+        "signature_hash": "221910d381af1dd5"
+      }
+    ],
+    "T.test_no_material_delta_zero": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_no_material_delta_zero:af446935eb9cd95d",
+        "signature_hash": "f85baca8c9eb15a8"
+      }
+    ],
+    "T.test_closed_provider_replay_zero": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_closed_provider_replay_zero:bb0b164238b2858c",
+        "signature_hash": "5e4ac574ee0924f3"
+      }
+    ],
+    "T.test_admissible_after_hard_gates": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_admissible_after_hard_gates:7b95cbaa2214cb19",
+        "signature_hash": "ecc327fa80170e28"
+      }
+    ],
+    "T.test_one_operation_multiplexes_typed_leaves": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_one_operation_multiplexes_typed_leaves:cda616ed0cfe00ea",
+        "signature_hash": "bc3bf636ee489a60"
+      }
+    ],
+    "T.test_no_unresolved_domain_zero": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_no_unresolved_domain_zero:d624ff2eecabb0be",
+        "signature_hash": "92d6bdbb39892033"
+      }
+    ],
+    "T.test_negative_knowledge_exact_generation_reuse": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_negative_knowledge_exact_generation_reuse:3fb166d8094a8f2c",
+        "signature_hash": "e5ebd9f47788c0d8"
+      }
+    ],
+    "T.test_negative_knowledge_reopens_on_invalidator": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_negative_knowledge_reopens_on_invalidator:16f2ed511f67f827",
+        "signature_hash": "96f6931d8df31077"
+      }
+    ],
+    "T.test_negative_knowledge_new_generation_not_reused": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 30,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_negative_knowledge_new_generation_not_reused:66f568c59d0b7de4",
+        "signature_hash": "8208af611eb35230"
+      }
+    ],
+    "T.test_rank_prefers_information_per_cost_after_gates": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_rank_prefers_information_per_cost_after_gates:7b3a2422a44da23b",
+        "signature_hash": "4ff03f817c20f8a4"
+      }
+    ],
+    "T.test_multi_domain_can_outscore_single_domain": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 36,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_multi_domain_can_outscore_single_domain:6e467a3f6584aec1",
+        "signature_hash": "4de0ac0dcfb435f1"
+      }
+    ],
+    "T.test_score_is_not_authority": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_score_is_not_authority:12404ecf92b014be",
+        "signature_hash": "32e3eb9947a35d38"
+      }
+    ],
+    "T.test_physical_high_score_still_blocked_without_authority": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_physical_high_score_still_blocked_without_authority:6c680a2950290f67",
+        "signature_hash": "2459d00dd6d12c8d"
+      }
+    ],
+    "T.test_10000_exact_generation_negative_reuse": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_10000_exact_generation_negative_reuse:31abd20adf395b24",
+        "signature_hash": "ab91136b4d45e0cc"
+      }
+    ],
+    "T.test_100000_hard_gate_mutations": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 54,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_100000_hard_gate_mutations:dd4daab16cf87c6d",
+        "signature_hash": "fd3bebcf2346ae66"
+      }
+    ],
+    "T.test_portfolio_all_current_blocked_or_closed": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_portfolio_all_current_blocked_or_closed:ebd2fcd6078ebee4",
+        "signature_hash": "605869b1e788a249"
+      }
+    ],
+    "T.test_cache_conflict_fails": [
+      {
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_cache_conflict_fails:a3ed1904dcd344f6",
+        "signature_hash": "66a43c18265ae26e"
       }
     ],
     "IngressPacket": [
@@ -167740,6 +168124,53 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-physical-evidence-scheduler.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 593,
+      "lines": 23,
+      "tokens_est": 149,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "66c6ca972cab0988",
+      "vector": [
+        -0.265887,
+        -0.251047,
+        -0.090278,
+        -0.213946,
+        0.075438,
+        0.174373,
+        0.2461,
+        0.095225,
+        0.236207,
+        0.053177,
+        -0.206526,
+        0.087805,
+        -0.22384,
+        0.112538,
+        -0.117485,
+        0.102645,
+        0.075438,
+        -0.013604,
+        -0.302988,
+        -0.285674,
+        0.305461,
+        -0.043284,
+        -0.053177,
+        -0.124905,
+        -0.149639,
+        -0.137272,
+        -0.119958,
+        -0.100171,
+        -0.050704,
+        -0.26094,
+        0.248574,
+        0.139745
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-learning.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -172400,6 +172831,147 @@
         -0.08314,
         -0.037353,
         -0.210862
+      ]
+    },
+    {
+      "path": "05_staging/aura_physical_evidence_scheduler/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1071,
+      "lines": 12,
+      "tokens_est": 268,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d35ca299d9d2b452",
+      "vector": [
+        -0.224819,
+        0.130504,
+        0.148051,
+        -0.04277,
+        -0.259912,
+        0.141471,
+        0.104184,
+        -0.270879,
+        -0.134891,
+        -0.229205,
+        0.033997,
+        0.001097,
+        -0.185338,
+        -0.216045,
+        -0.02303,
+        -0.095411,
+        0.161211,
+        -0.235785,
+        -0.227012,
+        0.060317,
+        -0.033997,
+        0.266492,
+        -0.123924,
+        -0.257719,
+        -0.018643,
+        -0.00987,
+        -0.169985,
+        0.224819,
+        0.198498,
+        -0.268686,
+        -0.156825,
+        -0.259912
+      ]
+    },
+    {
+      "path": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7140,
+      "lines": 109,
+      "tokens_est": 1785,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b5f8dfc1bed8f854",
+      "vector": [
+        0.183703,
+        0.11622,
+        -0.166207,
+        0.301173,
+        0.241188,
+        -0.11872,
+        -0.11872,
+        -0.261183,
+        0.006248,
+        -0.251186,
+        -0.051237,
+        -0.018745,
+        0.218694,
+        -0.066233,
+        0.171206,
+        -0.066233,
+        0.108722,
+        -0.068732,
+        0.1937,
+        0.256184,
+        -0.098725,
+        0.11872,
+        -0.108722,
+        -0.036241,
+        -0.236189,
+        -0.153711,
+        -0.308671,
+        0.03874,
+        -0.1962,
+        -0.158709,
+        -0.208697,
+        0.296174
+      ]
+    },
+    {
+      "path": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6598,
+      "lines": 62,
+      "tokens_est": 1650,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d9d0685a70c237ed",
+      "vector": [
+        0.176728,
+        -0.28481,
+        0.252678,
+        -0.092016,
+        0.048199,
+        -0.092016,
+        -0.100779,
+        0.167965,
+        -0.162123,
+        0.261441,
+        0.016066,
+        -0.20594,
+        -0.229309,
+        -0.074489,
+        0.030672,
+        0.287731,
+        0.007303,
+        0.278968,
+        -0.316943,
+        0.240993,
+        -0.056962,
+        -0.162123,
+        0.094937,
+        -0.018987,
+        -0.007303,
+        0.1037,
+        0.203019,
+        0.12999,
+        0.188413,
+        -0.217624,
+        -0.188413,
+        0.156281
       ]
     },
     {
@@ -286646,16 +287218,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26430450,
+    "text_tokens_est": 6597965,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287373,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-physical-evidence-scheduler.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -286873,6 +287446,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_physical_evidence_scheduler/README.md",
+      "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+      "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -288332,6 +288908,386 @@
         "end_line": 13,
         "signature_hash": "41fb393f9ea07f89",
         "file_digest8": "6ca398b6bf7056e4"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:CandidateDecision:09ece586f52c0cca",
+        "name": "CandidateDecision",
+        "kind": "class",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 63,
+        "end_line": 70,
+        "signature_hash": "043c1a2b20aa94d5",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:ExperimentCandidate:00a7a6b6a23e4a7f",
+        "name": "ExperimentCandidate",
+        "kind": "class",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 38,
+        "end_line": 59,
+        "signature_hash": "4f7075346b6b8d96",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:NegativeKnowledge:965a0f43d4030b6a",
+        "name": "NegativeKnowledge",
+        "kind": "class",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 12,
+        "end_line": 20,
+        "signature_hash": "79cfa585e462b476",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:NegativeKnowledgeCache:7f28dde9fa639b8c",
+        "name": "NegativeKnowledgeCache",
+        "kind": "class",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 23,
+        "end_line": 34,
+        "signature_hash": "54548421d443f6f3",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#class:PhysicalEvidenceScheduler:19d376d16e10854a",
+        "name": "PhysicalEvidenceScheduler",
+        "kind": "class",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 73,
+        "end_line": 89,
+        "signature_hash": "a45122f383ef8984",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#function:dg:4bb13f5c152f937e",
+        "name": "dg",
+        "kind": "function",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 7,
+        "end_line": 8,
+        "signature_hash": "d84e5aaed95896c7",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#function:evidence_commitments:705a82f803253b37",
+        "name": "evidence_commitments",
+        "kind": "function",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 106,
+        "end_line": 108,
+        "signature_hash": "cceab11967701656",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#function:portfolio_fixture:d910eed9855b2702",
+        "name": "portfolio_fixture",
+        "kind": "function",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 95,
+        "end_line": 103,
+        "signature_hash": "c4c36496fab391ea",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:ExperimentCandidate.validate:90e1d9af8f9fb40b",
+        "name": "ExperimentCandidate.validate",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledge.validate:b6a759ce546ac191",
+        "name": "NegativeKnowledge.validate",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 18,
+        "end_line": 20,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledgeCache.__init__:1fa8e3d563e61f1d",
+        "name": "NegativeKnowledgeCache.__init__",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 24,
+        "end_line": 24,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledgeCache.record:b1e71be360712606",
+        "name": "NegativeKnowledgeCache.record",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 25,
+        "end_line": 30,
+        "signature_hash": "eef51696517d1e2a",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:NegativeKnowledgeCache.reusable:a095ea5328b43c43",
+        "name": "NegativeKnowledgeCache.reusable",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "8a622bc78a067696",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.__init__:f1231c7baf3645c4",
+        "name": "PhysicalEvidenceScheduler.__init__",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 75,
+        "end_line": 75,
+        "signature_hash": "5f619e9acc6248d0",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.assess:e66ff2d0546beeb9",
+        "name": "PhysicalEvidenceScheduler.assess",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 76,
+        "end_line": 84,
+        "signature_hash": "dedb7eaf59f3a415",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.rank:49ff34b5bfeda4cd",
+        "name": "PhysicalEvidenceScheduler.rank",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "b26699bcc5b70e3e",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py#method:PhysicalEvidenceScheduler.select:99ad2cb147c56e55",
+        "name": "PhysicalEvidenceScheduler.select",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/physical_evidence_scheduler.py",
+        "line": 88,
+        "end_line": 89,
+        "signature_hash": "0fce7149cb56f10d",
+        "file_digest8": "b5f8dfc1bed8f854"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#class:T:18348740fc63f47e",
+        "name": "T",
+        "kind": "class",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 5,
+        "end_line": 59,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.setUp:321b7a99ad2369ec",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_100000_hard_gate_mutations:dd4daab16cf87c6d",
+        "name": "T.test_100000_hard_gate_mutations",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 47,
+        "end_line": 54,
+        "signature_hash": "fd3bebcf2346ae66",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_10000_exact_generation_negative_reuse:31abd20adf395b24",
+        "name": "T.test_10000_exact_generation_negative_reuse",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "ab91136b4d45e0cc",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_admissible_after_hard_gates:7b95cbaa2214cb19",
+        "name": "T.test_admissible_after_hard_gates",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "ecc327fa80170e28",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_bug_physical_requires_authority:de38c7caa90923c9",
+        "name": "T.test_bug_physical_requires_authority",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "221910d381af1dd5",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_cache_conflict_fails:a3ed1904dcd344f6",
+        "name": "T.test_cache_conflict_fails",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "66a43c18265ae26e",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_closed_provider_replay_zero:bb0b164238b2858c",
+        "name": "T.test_closed_provider_replay_zero",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "5e4ac574ee0924f3",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_glm_hard_predecessor_zero:8f1961bf6ae8cfe0",
+        "name": "T.test_glm_hard_predecessor_zero",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 7,
+        "end_line": 8,
+        "signature_hash": "c6d25459d435dd2f",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_glm_training_zero_before_p1:419cb0e2eeb00861",
+        "name": "T.test_glm_training_zero_before_p1",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "f8af8fc0e6bf555e",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_multi_domain_can_outscore_single_domain:6e467a3f6584aec1",
+        "name": "T.test_multi_domain_can_outscore_single_domain",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 34,
+        "end_line": 36,
+        "signature_hash": "4de0ac0dcfb435f1",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_negative_knowledge_exact_generation_reuse:3fb166d8094a8f2c",
+        "name": "T.test_negative_knowledge_exact_generation_reuse",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "e5ebd9f47788c0d8",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_negative_knowledge_new_generation_not_reused:66f568c59d0b7de4",
+        "name": "T.test_negative_knowledge_new_generation_not_reused",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 28,
+        "end_line": 30,
+        "signature_hash": "8208af611eb35230",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_negative_knowledge_reopens_on_invalidator:16f2ed511f67f827",
+        "name": "T.test_negative_knowledge_reopens_on_invalidator",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "96f6931d8df31077",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_no_material_delta_zero:af446935eb9cd95d",
+        "name": "T.test_no_material_delta_zero",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "f85baca8c9eb15a8",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_no_unresolved_domain_zero:d624ff2eecabb0be",
+        "name": "T.test_no_unresolved_domain_zero",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "92d6bdbb39892033",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_one_operation_multiplexes_typed_leaves:cda616ed0cfe00ea",
+        "name": "T.test_one_operation_multiplexes_typed_leaves",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "bc3bf636ee489a60",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_physical_high_score_still_blocked_without_authority:6c680a2950290f67",
+        "name": "T.test_physical_high_score_still_blocked_without_authority",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "2459d00dd6d12c8d",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_portfolio_all_current_blocked_or_closed:ebd2fcd6078ebee4",
+        "name": "T.test_portfolio_all_current_blocked_or_closed",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "605869b1e788a249",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_rank_prefers_information_per_cost_after_gates:7b3a2422a44da23b",
+        "name": "T.test_rank_prefers_information_per_cost_after_gates",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "4ff03f817c20f8a4",
+        "file_digest8": "d9d0685a70c237ed"
+      },
+      {
+        "semantic_id": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py#method:T.test_score_is_not_authority:12404ecf92b014be",
+        "name": "T.test_score_is_not_authority",
+        "kind": "method",
+        "file": "05_staging/aura_physical_evidence_scheduler/test_physical_evidence_scheduler.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "32e3eb9947a35d38",
+        "file_digest8": "d9d0685a70c237ed"
       },
       {
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
@@ -446884,7 +447840,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "9d9d247957d81f6b9cd11e303be64f56",
+    "payload_hash": "29fe68644ef70fa27c1dc05ee47e7da4"
   }
 }
