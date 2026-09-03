@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788443529,
+  "generated_at_unix": 1788444732,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1659,
+    "repo_file_count": 1660,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1648,6 +1648,7 @@
       "tools/bughound/blind_score_admission.py",
       "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/historical_blind_cut.py",
       "tools/bughound/precision_router.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -1775,15 +1776,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1659,
-      "bytes": 26573712,
-      "tokens_est": 6633776,
+      "files": 1660,
+      "bytes": 26584110,
+      "tokens_est": 6636376,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1013,
+        "python_module": 1014,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -3941,6 +3942,14 @@
         "signature_hash": "707d518dafca1a42"
       },
       {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_canonical:089f00150f0f2619",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
         "file": "tools/bughound/seedlab_benchmark.py",
         "kind": "function",
         "line": 48,
@@ -4412,6 +4421,14 @@
         "line": 45,
         "end_line": 46,
         "semantic_id": "tools/bughound/blind_score_admission.py#function:_digest:7fef87314c452ec0",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_digest:35ee013ad3237809",
         "signature_hash": "c978f5ef05fda5cb"
       },
       {
@@ -159483,6 +159500,206 @@
         "signature_hash": "8d871b696a6b8aaa"
       }
     ],
+    "HistoricalBlindError": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:HistoricalBlindError:edcde221297b49dc",
+        "signature_hash": "02c38e6417c04eef"
+      }
+    ],
+    "HistoricalBlindError.__init__": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalBlindError.__init__:bc529cd6ed6a1b88",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_dt": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 43,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_dt:6148b2152f1e1f66",
+        "signature_hash": "340e7bac994a265f"
+      }
+    ],
+    "_nonempty": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_nonempty:e05bf4ec0ddfc44c",
+        "signature_hash": "f1d13921b672fa44"
+      }
+    ],
+    "TimedEvidenceV1": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 73,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:TimedEvidenceV1:de57edbf9984cd86",
+        "signature_hash": "a86d644a0eb0e9cd"
+      }
+    ],
+    "TimedEvidenceV1.evidence_digest": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 73,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:TimedEvidenceV1.evidence_digest:013079344fa6102c",
+        "signature_hash": "2cce340cce928105"
+      }
+    ],
+    "HistoricalCaseV1": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 103,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:HistoricalCaseV1:4c597110179045e2",
+        "signature_hash": "344a9762d1eadba8"
+      }
+    ],
+    "HistoricalCaseV1.case_digest": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 103,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalCaseV1.case_digest:00cb4085bc33fbbb",
+        "signature_hash": "ad2e340dedb0a4a4"
+      }
+    ],
+    "HistoricalBlindPacketV1": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 127,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:HistoricalBlindPacketV1:a3c8b7cfe299e963",
+        "signature_hash": "de21e2a8f2e758f1"
+      }
+    ],
+    "HistoricalBlindPacketV1.packet_digest": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 124,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalBlindPacketV1.packet_digest:3fe6fbecdb63e539",
+        "signature_hash": "9bc5db86166c6b2f"
+      }
+    ],
+    "HistoricalBlindPacketV1.to_solver_dict": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 127,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalBlindPacketV1.to_solver_dict:58ac285f5ea0ad8a",
+        "signature_hash": "fc7930d8544a4a98"
+      }
+    ],
+    "EvaluatorSealV1": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "class",
+        "line": 131,
+        "end_line": 143,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:EvaluatorSealV1:298f5fad77314e13",
+        "signature_hash": "901bad83bfbd6c56"
+      }
+    ],
+    "EvaluatorSealV1.seal_digest": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 143,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:EvaluatorSealV1.seal_digest:66357f4fc3421a03",
+        "signature_hash": "6041268fabba6aab"
+      }
+    ],
+    "SplitMemberV1": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "class",
+        "line": 147,
+        "end_line": 151,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:SplitMemberV1:f699229084b4d9ed",
+        "signature_hash": "b9176025e7e71a23"
+      }
+    ],
+    "_gold_payload": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 154,
+        "end_line": 167,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_gold_payload:353f47bd864dd491",
+        "signature_hash": "b77fa5d3ba54c785"
+      }
+    ],
+    "compile_historical_cut": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 249,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:compile_historical_cut:53ef1d9a307a496f",
+        "signature_hash": "2a3045150b682604"
+      }
+    ],
+    "validate_solver_packet": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 252,
+        "end_line": 264,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:validate_solver_packet:f6ee03d2546a224c",
+        "signature_hash": "8bfa8c6052d1822e"
+      }
+    ],
+    "validate_group_disjoint_split": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 267,
+        "end_line": 279,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:validate_group_disjoint_split:573fc91ebca38e2d",
+        "signature_hash": "7cebaa5ed75d5deb"
+      }
+    ],
+    "historical_blind_eligible": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 282,
+        "end_line": 284,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:historical_blind_eligible:5e5428678178a7ce",
+        "signature_hash": "51f24691f8ba0f21"
+      }
+    ],
+    "hyper1000": [
+      {
+        "file": "tools/bughound/historical_blind_cut.py",
+        "kind": "function",
+        "line": 287,
+        "end_line": 288,
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:hyper1000:983f09d3d1778462",
+        "signature_hash": "c1a48e1fda3f6477"
+      }
+    ],
     "PrecisionTier": [
       {
         "file": "tools/bughound/precision_router.py",
@@ -266161,6 +266378,53 @@
       ]
     },
     {
+      "path": "tools/bughound/historical_blind_cut.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10398,
+      "lines": 289,
+      "tokens_est": 2600,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e1037a4b8944003c",
+      "vector": [
+        -0.304278,
+        -0.203262,
+        -0.237755,
+        -0.070218,
+        0.02587,
+        0.040652,
+        0.198335,
+        -0.04558,
+        0.267321,
+        0.112102,
+        -0.033261,
+        0.028334,
+        0.06529,
+        -0.171233,
+        -0.129349,
+        0.107175,
+        0.245147,
+        -0.220509,
+        0.089928,
+        0.013551,
+        -0.107175,
+        0.092392,
+        -0.15645,
+        -0.306741,
+        0.250074,
+        -0.287031,
+        0.085001,
+        0.144132,
+        0.314133,
+        0.163842,
+        -0.070218,
+        0.232828
+      ]
+    },
+    {
       "path": "tools/bughound/precision_router.py",
       "role": "python_module",
       "binary": false,
@@ -290300,15 +290564,15 @@
     }
   },
   "summary": {
-    "file_count": 1659,
-    "total_bytes": 26573712,
-    "text_tokens_est": 6633776,
+    "file_count": 1660,
+    "total_bytes": 26584110,
+    "text_tokens_est": 6636376,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1013,
+      "python_module": 1014,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -291967,6 +292231,7 @@
       "tools/bughound/blind_score_admission.py",
       "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/historical_blind_cut.py",
       "tools/bughound/precision_router.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -451578,6 +451843,226 @@
         "file_digest8": "2d0f6c622209ff06"
       },
       {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:EvaluatorSealV1:298f5fad77314e13",
+        "name": "EvaluatorSealV1",
+        "kind": "class",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 131,
+        "end_line": 143,
+        "signature_hash": "901bad83bfbd6c56",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:HistoricalBlindError:edcde221297b49dc",
+        "name": "HistoricalBlindError",
+        "kind": "class",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "02c38e6417c04eef",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:HistoricalBlindPacketV1:a3c8b7cfe299e963",
+        "name": "HistoricalBlindPacketV1",
+        "kind": "class",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 107,
+        "end_line": 127,
+        "signature_hash": "de21e2a8f2e758f1",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:HistoricalCaseV1:4c597110179045e2",
+        "name": "HistoricalCaseV1",
+        "kind": "class",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 77,
+        "end_line": 103,
+        "signature_hash": "344a9762d1eadba8",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:SplitMemberV1:f699229084b4d9ed",
+        "name": "SplitMemberV1",
+        "kind": "class",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 147,
+        "end_line": 151,
+        "signature_hash": "b9176025e7e71a23",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#class:TimedEvidenceV1:de57edbf9984cd86",
+        "name": "TimedEvidenceV1",
+        "kind": "class",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 61,
+        "end_line": 73,
+        "signature_hash": "a86d644a0eb0e9cd",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_canonical:089f00150f0f2619",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_digest:35ee013ad3237809",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_dt:6148b2152f1e1f66",
+        "name": "_dt",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 33,
+        "end_line": 43,
+        "signature_hash": "340e7bac994a265f",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_gold_payload:353f47bd864dd491",
+        "name": "_gold_payload",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 154,
+        "end_line": 167,
+        "signature_hash": "b77fa5d3ba54c785",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:_nonempty:e05bf4ec0ddfc44c",
+        "name": "_nonempty",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "f1d13921b672fa44",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:compile_historical_cut:53ef1d9a307a496f",
+        "name": "compile_historical_cut",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 170,
+        "end_line": 249,
+        "signature_hash": "2a3045150b682604",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:historical_blind_eligible:5e5428678178a7ce",
+        "name": "historical_blind_eligible",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 282,
+        "end_line": 284,
+        "signature_hash": "51f24691f8ba0f21",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:hyper1000:983f09d3d1778462",
+        "name": "hyper1000",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 287,
+        "end_line": 288,
+        "signature_hash": "c1a48e1fda3f6477",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:validate_group_disjoint_split:573fc91ebca38e2d",
+        "name": "validate_group_disjoint_split",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 267,
+        "end_line": 279,
+        "signature_hash": "7cebaa5ed75d5deb",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#function:validate_solver_packet:f6ee03d2546a224c",
+        "name": "validate_solver_packet",
+        "kind": "function",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 252,
+        "end_line": 264,
+        "signature_hash": "8bfa8c6052d1822e",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:EvaluatorSealV1.seal_digest:66357f4fc3421a03",
+        "name": "EvaluatorSealV1.seal_digest",
+        "kind": "method",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 142,
+        "end_line": 143,
+        "signature_hash": "6041268fabba6aab",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalBlindError.__init__:bc529cd6ed6a1b88",
+        "name": "HistoricalBlindError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalBlindPacketV1.packet_digest:3fe6fbecdb63e539",
+        "name": "HistoricalBlindPacketV1.packet_digest",
+        "kind": "method",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 123,
+        "end_line": 124,
+        "signature_hash": "9bc5db86166c6b2f",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalBlindPacketV1.to_solver_dict:58ac285f5ea0ad8a",
+        "name": "HistoricalBlindPacketV1.to_solver_dict",
+        "kind": "method",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 126,
+        "end_line": 127,
+        "signature_hash": "fc7930d8544a4a98",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:HistoricalCaseV1.case_digest:00cb4085bc33fbbb",
+        "name": "HistoricalCaseV1.case_digest",
+        "kind": "method",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 102,
+        "end_line": 103,
+        "signature_hash": "ad2e340dedb0a4a4",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
+        "semantic_id": "tools/bughound/historical_blind_cut.py#method:TimedEvidenceV1.evidence_digest:013079344fa6102c",
+        "name": "TimedEvidenceV1.evidence_digest",
+        "kind": "method",
+        "file": "tools/bughound/historical_blind_cut.py",
+        "line": 72,
+        "end_line": 73,
+        "signature_hash": "2cce340cce928105",
+        "file_digest8": "e1037a4b8944003c"
+      },
+      {
         "semantic_id": "tools/bughound/precision_router.py#class:CaseState:2c363a291fa117e4",
         "name": "CaseState",
         "kind": "class",
@@ -453268,7 +453753,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "2f8c171d120edee7244e5faae2bbac38",
-    "payload_hash": "83ebe8611993d430f77a90bbe9c1ebb7"
+    "record_fingerprint": "1407e7fd2d1d42508446a6a761a13cb1",
+    "payload_hash": "e12aa4290f3ab6eb0460a600a17672a5"
   }
 }
