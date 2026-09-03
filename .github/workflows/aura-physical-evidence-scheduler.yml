@@ -1,0 +1,22 @@
+name: Aura Physical Evidence Scheduler
+
+on:
+  pull_request:
+    paths:
+      - '05_staging/aura_physical_evidence_scheduler/**'
+      - '.github/workflows/aura-physical-evidence-scheduler.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run physical evidence scheduler tests
+        working-directory: 05_staging/aura_physical_evidence_scheduler
+        run: python -m unittest -v test_physical_evidence_scheduler.py
