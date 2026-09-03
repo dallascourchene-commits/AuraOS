@@ -1,0 +1,22 @@
+name: Aura Lifecycle Router
+
+on:
+  pull_request:
+    paths:
+      - '05_staging/aura_lifecycle_router/**'
+      - '.github/workflows/aura-lifecycle-router.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run lifecycle router tests
+        working-directory: 05_staging/aura_lifecycle_router
+        run: python -m unittest -v test_lifecycle_router.py
