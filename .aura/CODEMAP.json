@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788438538,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -133,6 +133,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-constitutional-invariants.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -208,6 +209,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_constitutional_invariants/README.md",
+      "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+      "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -1649,6 +1653,8 @@
     ],
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
+      "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+      "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
@@ -1745,9 +1751,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26437765,
+      "tokens_est": 6599792,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -1851,6 +1855,7 @@
         ".aura/intents/example.aura.md",
         ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
         ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
+        "05_staging/aura_constitutional_invariants/README.md",
         "AMD_HACKATHON_SUBMISSION.md",
         "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
         "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -2038,14 +2043,15 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
       "ring": "code",
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
         "06_refactor/aura_os_minimal.py",
@@ -2442,9 +2448,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3467,6 +3471,616 @@
         "end_line": 250,
         "semantic_id": "unreal_bridge.py#function:main:a13e03774ee52e6e",
         "signature_hash": "621c1ef8c88e571d"
+      }
+    ],
+    "digest": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#function:digest:74d623d5df0ce5c8",
+        "signature_hash": "1191bf18035c2e8c"
+      },
+      {
+        "file": "aura_bilateral_live_repair_foundry_contracts.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 151,
+        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_construction_foundry_director.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 96,
+        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
+        "signature_hash": "cb7986ce5e23d90c"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
+        "signature_hash": "bd189b17ea870e50"
+      }
+    ],
+    "EvidencePayment": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:EvidencePayment:77ad473b67a012f2",
+        "signature_hash": "c3df28aed87d734d"
+      }
+    ],
+    "ProjectionClaim": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 37,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:ProjectionClaim:1c95725c78a64d10",
+        "signature_hash": "cc04d7df143371d5"
+      }
+    ],
+    "SourceTransition": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:SourceTransition:7aca5bc46b10b772",
+        "signature_hash": "a1e3cbb85ba8188d"
+      }
+    ],
+    "SupersessionEdge": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:SupersessionEdge:d7baa43417bb1a4d",
+        "signature_hash": "579d8c9b90775bee"
+      }
+    ],
+    "WakeClaim": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:WakeClaim:d6734ed3372e99b5",
+        "signature_hash": "fdc82f175e016554"
+      }
+    ],
+    "CrossJurisdictionClaim": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 69,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:CrossJurisdictionClaim:0b0cfe151342ba25",
+        "signature_hash": "423b427acd00ddbd"
+      }
+    ],
+    "Gate10Claim": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 75,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:Gate10Claim:2a8f923c6ef86100",
+        "signature_hash": "1fa708a1065d4b4b"
+      }
+    ],
+    "DependencyClaim": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 84,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:DependencyClaim:bee5b87559abd797",
+        "signature_hash": "0495723be8cd2deb"
+      }
+    ],
+    "ConstitutionalSnapshot": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 96,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:ConstitutionalSnapshot:68b22ee2fc3adcd3",
+        "signature_hash": "dfe52b5372aa3675"
+      }
+    ],
+    "Violation": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 103,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:Violation:f49242283f3b68c9",
+        "signature_hash": "f9cce226bca80485"
+      },
+      {
+        "file": "pvm_arch_checker.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "pvm_arch_checker.py#class:Violation:42014448b25ac819",
+        "signature_hash": "e9b2b68303bd8a12"
+      }
+    ],
+    "VerificationReceipt": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 114,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:VerificationReceipt:33b916d104b57962",
+        "signature_hash": "e4660c04e883c696"
+      }
+    ],
+    "ConstitutionalInvariantChecker": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "class",
+        "line": 129,
+        "end_line": 254,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:ConstitutionalInvariantChecker:6eaf15cc382313ff",
+        "signature_hash": "7165b9d5dfb16fe3"
+      }
+    ],
+    "ConstitutionalInvariantChecker.check": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 147,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker.check:c42158508f4cf859",
+        "signature_hash": "4e84ba7c9514530f"
+      }
+    ],
+    "ConstitutionalInvariantChecker.assert_lawful": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 153,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker.assert_lawful:bd4702e5e1388c43",
+        "signature_hash": "1ce31d601395e0da"
+      }
+    ],
+    "ConstitutionalInvariantChecker._v": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 157,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._v:4168fe7c0ffec625",
+        "signature_hash": "dd01678893b89ac7"
+      }
+    ],
+    "ConstitutionalInvariantChecker._evidence_domain": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 166,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._evidence_domain:6d1499fd2e438082",
+        "signature_hash": "6727a8599c04cd86"
+      }
+    ],
+    "ConstitutionalInvariantChecker._projection": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 175,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._projection:41dfc421c71d7286",
+        "signature_hash": "785b7020b11d5412"
+      }
+    ],
+    "ConstitutionalInvariantChecker._source_transition": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 185,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._source_transition:c1c2df4211f40fdd",
+        "signature_hash": "f6bfafaa76612305"
+      }
+    ],
+    "ConstitutionalInvariantChecker._supersession": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 214,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._supersession:5c1ff02b13aea479",
+        "signature_hash": "489fcc3a748d97c9"
+      }
+    ],
+    "ConstitutionalInvariantChecker._supersession.dfs": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 209,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._supersession.dfs:9355d32fc1e00c52",
+        "signature_hash": "ed7c5ce048bd5665"
+      }
+    ],
+    "ConstitutionalInvariantChecker._wake": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 216,
+        "end_line": 222,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._wake:ab153eb72f8080dd",
+        "signature_hash": "b703dc0d6dbe36c7"
+      }
+    ],
+    "ConstitutionalInvariantChecker._cross_jurisdiction": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 224,
+        "end_line": 233,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._cross_jurisdiction:710ffce002464100",
+        "signature_hash": "81c0af01b6cee83f"
+      }
+    ],
+    "ConstitutionalInvariantChecker._gate10": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 239,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._gate10:12dc0a6afea11510",
+        "signature_hash": "874b3f01a477a85e"
+      }
+    ],
+    "ConstitutionalInvariantChecker._dependency": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 241,
+        "end_line": 254,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._dependency:d854614598ee9226",
+        "signature_hash": "3d6e3284e4ffa957"
+      }
+    ],
+    "normalize_mapping": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "function",
+        "line": 257,
+        "end_line": 272,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#function:normalize_mapping:2f44877c1482af20",
+        "signature_hash": "1020eb2f159397ae"
+      }
+    ],
+    "normalize_mapping.rows": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 262,
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:normalize_mapping.rows:d7074145a4e01d0c",
+        "signature_hash": "009cb3f36b183956"
+      }
+    ],
+    "ConstitutionalTests": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 149,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#class:ConstitutionalTests:1f03f656a2d2eb22",
+        "signature_hash": "6e7fc44bbbd7158d"
+      }
+    ],
+    "ConstitutionalTests.checker": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.checker:1d9809b374a7fa8d",
+        "signature_hash": "ac50c6b2b5dce524"
+      }
+    ],
+    "ConstitutionalTests.test_empty_snapshot_is_lawful": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 14,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_empty_snapshot_is_lawful:f397c59ee47eea66",
+        "signature_hash": "b830242ff02c7c10"
+      }
+    ],
+    "ConstitutionalTests.test_cross_domain_evidence_payment_fails": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cross_domain_evidence_payment_fails:405b465c8dfcd16f",
+        "signature_hash": "425ef9e98317f98c"
+      }
+    ],
+    "ConstitutionalTests.test_same_domain_evidence_payment_passes": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_same_domain_evidence_payment_passes:bffea6c4faa72a66",
+        "signature_hash": "889c4de73d7d0c54"
+      }
+    ],
+    "ConstitutionalTests.test_projection_cannot_mint_owner_authority": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_projection_cannot_mint_owner_authority:c2e2586c91a4de8a",
+        "signature_hash": "f88d33e7d6adecc6"
+      }
+    ],
+    "ConstitutionalTests.test_projection_cannot_mint_effect_authority": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_projection_cannot_mint_effect_authority:a2bf6d94705c579e",
+        "signature_hash": "dfef66edd72d849c"
+      }
+    ],
+    "ConstitutionalTests.test_provider_only_movement_cannot_mint_semantic_movement": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 32,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_provider_only_movement_cannot_mint_semantic_movement:9c6dcbd2e6cc3bf6",
+        "signature_hash": "15fcec08ddd4db8a"
+      }
+    ],
+    "ConstitutionalTests.test_semantic_root_change_may_claim_semantic_movement": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 36,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_semantic_root_change_may_claim_semantic_movement:6cca4bd95c091986",
+        "signature_hash": "523d908729c64797"
+      }
+    ],
+    "ConstitutionalTests.test_supersession_cycle_fails": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_supersession_cycle_fails:01e937a7bb7c1d32",
+        "signature_hash": "af05fffc3a56c869"
+      }
+    ],
+    "ConstitutionalTests.test_supersession_dag_passes": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_supersession_dag_passes:de55e036e50dae13",
+        "signature_hash": "a25946b70d61c1ef"
+      }
+    ],
+    "ConstitutionalTests.test_cold_work_cannot_self_wake": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 48,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cold_work_cannot_self_wake:30530bd1e5eb838d",
+        "signature_hash": "b635662c393b0eb9"
+      }
+    ],
+    "ConstitutionalTests.test_matching_invalidator_may_wake_cold_work": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_matching_invalidator_may_wake_cold_work:fc32a3b011811fc9",
+        "signature_hash": "d30e4ad90dc87243"
+      }
+    ],
+    "ConstitutionalTests.test_cross_city_cannot_mint_owner_authority": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cross_city_cannot_mint_owner_authority:82268aac7602515d",
+        "signature_hash": "7896ab1f9ea2a305"
+      }
+    ],
+    "ConstitutionalTests.test_cross_city_authority_requires_destination_revalidation": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cross_city_authority_requires_destination_revalidation:05b812e08f315999",
+        "signature_hash": "ec1a6d63afa7dffb"
+      }
+    ],
+    "ConstitutionalTests.test_gate10_crossing_requires_human": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 64,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_gate10_crossing_requires_human:72b27f36ee8daa6f",
+        "signature_hash": "92a906a2373c7ee2"
+      }
+    ],
+    "ConstitutionalTests.test_human_gate10_crossing_is_structurally_allowed": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_human_gate10_crossing_is_structurally_allowed:9a06ac433c9399a5",
+        "signature_hash": "7ceac287592f02a3"
+      }
+    ],
+    "ConstitutionalTests.test_unknown_dependencies_cannot_use_selective_revalidation": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_unknown_dependencies_cannot_use_selective_revalidation:4660e5b134c168a9",
+        "signature_hash": "497df903a96f9b6d"
+      }
+    ],
+    "ConstitutionalTests.test_incomplete_local_dependencies_widen_without_owner_authority": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 76,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_incomplete_local_dependencies_widen_without_owner_authority:648cef88b7fb26ee",
+        "signature_hash": "58add168abe501e6"
+      }
+    ],
+    "ConstitutionalTests.test_incomplete_owner_effect_without_authority_holds": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_incomplete_owner_effect_without_authority_holds:35d41715bacbf8bc",
+        "signature_hash": "c8146e67e35e64e3"
+      }
+    ],
+    "ConstitutionalTests.test_incomplete_owner_effect_without_hold_fails": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 84,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_incomplete_owner_effect_without_hold_fails:ddbd4d956e3908e7",
+        "signature_hash": "45b31e271541a015"
+      }
+    ],
+    "ConstitutionalTests.test_complete_dependencies_may_selectively_revalidate": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 88,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_complete_dependencies_may_selectively_revalidate:0f6bfa4f46d3c865",
+        "signature_hash": "79cb83729a45a068"
+      }
+    ],
+    "ConstitutionalTests.test_pr798_provider_rebind_fixture": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 92,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr798_provider_rebind_fixture:76cc28e526a05e15",
+        "signature_hash": "cb997f862105f214"
+      }
+    ],
+    "ConstitutionalTests.test_pr800_cold_lifecycle_fixture": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 96,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr800_cold_lifecycle_fixture:e608b4b3dbe70627",
+        "signature_hash": "2873abe436ffadd2"
+      }
+    ],
+    "ConstitutionalTests.test_pr802_portable_evidence_fixture": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 100,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr802_portable_evidence_fixture:c4cc673706431082",
+        "signature_hash": "66f69a373cb8c6a0"
+      }
+    ],
+    "ConstitutionalTests.test_pr311_local_wider_validation_does_not_need_owner_authority": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr311_local_wider_validation_does_not_need_owner_authority:ad7674591bbed39c",
+        "signature_hash": "182b0b5f1de5463a"
+      }
+    ],
+    "ConstitutionalTests.test_assert_lawful_fails_closed": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 108,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_assert_lawful_fails_closed:800d1eb014eac989",
+        "signature_hash": "8fd35fabc1ff648f"
+      }
+    ],
+    "ConstitutionalTests.test_normalize_mapping_roundtrip": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_normalize_mapping_roundtrip:4e518d44d74cffde",
+        "signature_hash": "8282408a4720f53c"
+      }
+    ],
+    "ConstitutionalTests.test_1000_hyperscale_constitutional_cells": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 135,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_1000_hyperscale_constitutional_cells:d6d7115030c54daa",
+        "signature_hash": "58b51a14c223c0c2"
+      }
+    ],
+    "ConstitutionalTests.test_200000_random_mutations_match_reference_policy": [
+      {
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 149,
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_200000_random_mutations_match_reference_policy:5e2ec67f2ff83057",
+        "signature_hash": "3d638d7bc9635964"
       }
     ],
     "IngressPacket": [
@@ -20089,40 +20703,6 @@
         "end_line": 58,
         "semantic_id": "aura_construction_foundry_director.py#function:canonical_bytes:7fd9402c68df2247",
         "signature_hash": "b8735a6f3e386d20"
-      }
-    ],
-    "digest": [
-      {
-        "file": "aura_bilateral_live_repair_foundry_contracts.py",
-        "kind": "function",
-        "line": 150,
-        "end_line": 151,
-        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_construction_foundry_director.py",
-        "kind": "function",
-        "line": 61,
-        "end_line": 62,
-        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_refactor_state_identity.py",
-        "kind": "function",
-        "line": 95,
-        "end_line": 96,
-        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
-        "signature_hash": "cb7986ce5e23d90c"
-      },
-      {
-        "file": "scripts/aura_blind_gate10_benchmark.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
-        "signature_hash": "bd189b17ea870e50"
       }
     ],
     "_runtime_binding_digest": [
@@ -98571,16 +99151,6 @@
         "signature_hash": "a8b655278747be0a"
       }
     ],
-    "Violation": [
-      {
-        "file": "pvm_arch_checker.py",
-        "kind": "class",
-        "line": 48,
-        "end_line": 52,
-        "semantic_id": "pvm_arch_checker.py#class:Violation:42014448b25ac819",
-        "signature_hash": "e9b2b68303bd8a12"
-      }
-    ],
     "DepGraph": [
       {
         "file": "pvm_arch_checker.py",
@@ -158289,6 +158859,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-constitutional-invariants.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -158574,6 +159145,10 @@
     ],
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-constitutional-invariants.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
@@ -159293,9 +159868,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -167551,6 +168123,63 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-constitutional-invariants.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 788,
+      "lines": 29,
+      "tokens_est": 197,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          27
+        ],
+        "python -m unittest": [
+          28
+        ]
+      },
+      "topology": {},
+      "digest8": "1ee3bb41b989e58f",
+      "vector": [
+        -0.119057,
+        -0.183066,
+        0.170264,
+        -0.096014,
+        0.126738,
+        -0.078091,
+        -0.090893,
+        -0.037125,
+        0.272679,
+        -0.098574,
+        0.157463,
+        0.213791,
+        0.07041,
+        0.300843,
+        -0.093453,
+        -0.080652,
+        -0.267558,
+        0.285481,
+        -0.032005,
+        0.108816,
+        0.20867,
+        -0.078091,
+        0.124178,
+        0.27524,
+        -0.167704,
+        0.267558,
+        0.011522,
+        -0.193308,
+        0.108816,
+        0.200989,
+        0.313645,
+        -0.149782
+      ]
+    },
+    {
       "path": ".github/workflows/aura-construction-demo-g4-g6.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -172400,6 +173029,147 @@
         -0.08314,
         -0.037353,
         -0.210862
+      ]
+    },
+    {
+      "path": "05_staging/aura_constitutional_invariants/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1528,
+      "lines": 23,
+      "tokens_est": 381,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f97efc7df04119e3",
+      "vector": [
+        -0.187461,
+        0.021075,
+        0.112033,
+        -0.147528,
+        0.147528,
+        0.242922,
+        0.136436,
+        0.052134,
+        0.258451,
+        -0.187461,
+        -0.005546,
+        0.114251,
+        0.096503,
+        -0.009983,
+        0.278418,
+        -0.280636,
+        -0.183024,
+        -0.222956,
+        0.063226,
+        -0.080974,
+        -0.171931,
+        -0.198553,
+        -0.278418,
+        -0.140873,
+        -0.200771,
+        0.227393,
+        0.280636,
+        -0.136436,
+        0.222956,
+        0.205208,
+        -0.0721,
+        0.027731
+      ]
+    },
+    {
+      "path": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10866,
+      "lines": 273,
+      "tokens_est": 2717,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "686f012bbe9c8b0a",
+      "vector": [
+        -0.195407,
+        -0.146892,
+        -0.101073,
+        -0.012129,
+        -0.235836,
+        0.289742,
+        0.02291,
+        -0.146892,
+        0.152283,
+        0.198102,
+        0.071425,
+        0.200798,
+        0.198102,
+        0.106463,
+        -0.322085,
+        0.208883,
+        0.106463,
+        0.047167,
+        -0.163064,
+        0.181931,
+        -0.025605,
+        -0.297827,
+        -0.214274,
+        -0.122635,
+        0.02291,
+        -0.103768,
+        0.025605,
+        -0.128025,
+        -0.17115,
+        0.289742,
+        -0.305913,
+        0.060644
+      ]
+    },
+    {
+      "path": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9535,
+      "lines": 153,
+      "tokens_est": 2384,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9bb242638ddc989d",
+      "vector": [
+        0.064202,
+        0.023653,
+        0.260188,
+        0.25343,
+        -0.064202,
+        0.030412,
+        0.28722,
+        -0.192607,
+        0.088982,
+        0.023653,
+        0.257935,
+        -0.237661,
+        0.176838,
+        -0.221892,
+        -0.156563,
+        0.001126,
+        -0.116015,
+        0.28722,
+        -0.023653,
+        -0.088982,
+        0.215134,
+        0.282715,
+        -0.079971,
+        0.273704,
+        0.073213,
+        0.014643,
+        0.09574,
+        0.282715,
+        -0.192607,
+        -0.215134,
+        0.028159,
+        -0.107004
       ]
     },
     {
@@ -286646,16 +287416,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26437765,
+    "text_tokens_est": 6599792,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286798,6 +287568,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-constitutional-invariants.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -286873,6 +287644,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_constitutional_invariants/README.md",
+      "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+      "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -288332,6 +289106,576 @@
         "end_line": 13,
         "signature_hash": "41fb393f9ea07f89",
         "file_digest8": "6ca398b6bf7056e4"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:ConstitutionalInvariantChecker:6eaf15cc382313ff",
+        "name": "ConstitutionalInvariantChecker",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 129,
+        "end_line": 254,
+        "signature_hash": "7165b9d5dfb16fe3",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:ConstitutionalSnapshot:68b22ee2fc3adcd3",
+        "name": "ConstitutionalSnapshot",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 88,
+        "end_line": 96,
+        "signature_hash": "dfe52b5372aa3675",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:CrossJurisdictionClaim:0b0cfe151342ba25",
+        "name": "CrossJurisdictionClaim",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 64,
+        "end_line": 69,
+        "signature_hash": "423b427acd00ddbd",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:DependencyClaim:bee5b87559abd797",
+        "name": "DependencyClaim",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 79,
+        "end_line": 84,
+        "signature_hash": "0495723be8cd2deb",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:EvidencePayment:77ad473b67a012f2",
+        "name": "EvidencePayment",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "c3df28aed87d734d",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:Gate10Claim:2a8f923c6ef86100",
+        "name": "Gate10Claim",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 73,
+        "end_line": 75,
+        "signature_hash": "1fa708a1065d4b4b",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:ProjectionClaim:1c95725c78a64d10",
+        "name": "ProjectionClaim",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 33,
+        "end_line": 37,
+        "signature_hash": "cc04d7df143371d5",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:SourceTransition:7aca5bc46b10b772",
+        "name": "SourceTransition",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "a1e3cbb85ba8188d",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:SupersessionEdge:d7baa43417bb1a4d",
+        "name": "SupersessionEdge",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "579d8c9b90775bee",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:VerificationReceipt:33b916d104b57962",
+        "name": "VerificationReceipt",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 107,
+        "end_line": 114,
+        "signature_hash": "e4660c04e883c696",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:Violation:f49242283f3b68c9",
+        "name": "Violation",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 100,
+        "end_line": 103,
+        "signature_hash": "f9cce226bca80485",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#class:WakeClaim:d6734ed3372e99b5",
+        "name": "WakeClaim",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "fdc82f175e016554",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#function:digest:74d623d5df0ce5c8",
+        "name": "digest",
+        "kind": "function",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#function:normalize_mapping:2f44877c1482af20",
+        "name": "normalize_mapping",
+        "kind": "function",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 257,
+        "end_line": 272,
+        "signature_hash": "1020eb2f159397ae",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._cross_jurisdiction:710ffce002464100",
+        "name": "ConstitutionalInvariantChecker._cross_jurisdiction",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 224,
+        "end_line": 233,
+        "signature_hash": "81c0af01b6cee83f",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._dependency:d854614598ee9226",
+        "name": "ConstitutionalInvariantChecker._dependency",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 241,
+        "end_line": 254,
+        "signature_hash": "3d6e3284e4ffa957",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._evidence_domain:6d1499fd2e438082",
+        "name": "ConstitutionalInvariantChecker._evidence_domain",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 159,
+        "end_line": 166,
+        "signature_hash": "6727a8599c04cd86",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._gate10:12dc0a6afea11510",
+        "name": "ConstitutionalInvariantChecker._gate10",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 235,
+        "end_line": 239,
+        "signature_hash": "874b3f01a477a85e",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._projection:41dfc421c71d7286",
+        "name": "ConstitutionalInvariantChecker._projection",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 168,
+        "end_line": 175,
+        "signature_hash": "785b7020b11d5412",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._source_transition:c1c2df4211f40fdd",
+        "name": "ConstitutionalInvariantChecker._source_transition",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 177,
+        "end_line": 185,
+        "signature_hash": "f6bfafaa76612305",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._supersession.dfs:9355d32fc1e00c52",
+        "name": "ConstitutionalInvariantChecker._supersession.dfs",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 198,
+        "end_line": 209,
+        "signature_hash": "ed7c5ce048bd5665",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._supersession:5c1ff02b13aea479",
+        "name": "ConstitutionalInvariantChecker._supersession",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 187,
+        "end_line": 214,
+        "signature_hash": "489fcc3a748d97c9",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._v:4168fe7c0ffec625",
+        "name": "ConstitutionalInvariantChecker._v",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 156,
+        "end_line": 157,
+        "signature_hash": "dd01678893b89ac7",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker._wake:ab153eb72f8080dd",
+        "name": "ConstitutionalInvariantChecker._wake",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 216,
+        "end_line": 222,
+        "signature_hash": "b703dc0d6dbe36c7",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker.assert_lawful:bd4702e5e1388c43",
+        "name": "ConstitutionalInvariantChecker.assert_lawful",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 149,
+        "end_line": 153,
+        "signature_hash": "1ce31d601395e0da",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:ConstitutionalInvariantChecker.check:c42158508f4cf859",
+        "name": "ConstitutionalInvariantChecker.check",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 135,
+        "end_line": 147,
+        "signature_hash": "4e84ba7c9514530f",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/constitutional_invariants.py#method:normalize_mapping.rows:d7074145a4e01d0c",
+        "name": "normalize_mapping.rows",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/constitutional_invariants.py",
+        "line": 258,
+        "end_line": 262,
+        "signature_hash": "009cb3f36b183956",
+        "file_digest8": "686f012bbe9c8b0a"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#class:ConstitutionalTests:1f03f656a2d2eb22",
+        "name": "ConstitutionalTests",
+        "kind": "class",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 8,
+        "end_line": 149,
+        "signature_hash": "6e7fc44bbbd7158d",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.checker:1d9809b374a7fa8d",
+        "name": "ConstitutionalTests.checker",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "ac50c6b2b5dce524",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_1000_hyperscale_constitutional_cells:d6d7115030c54daa",
+        "name": "ConstitutionalTests.test_1000_hyperscale_constitutional_cells",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 115,
+        "end_line": 135,
+        "signature_hash": "58b51a14c223c0c2",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_200000_random_mutations_match_reference_policy:5e2ec67f2ff83057",
+        "name": "ConstitutionalTests.test_200000_random_mutations_match_reference_policy",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 137,
+        "end_line": 149,
+        "signature_hash": "3d638d7bc9635964",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_assert_lawful_fails_closed:800d1eb014eac989",
+        "name": "ConstitutionalTests.test_assert_lawful_fails_closed",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 106,
+        "end_line": 108,
+        "signature_hash": "8fd35fabc1ff648f",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cold_work_cannot_self_wake:30530bd1e5eb838d",
+        "name": "ConstitutionalTests.test_cold_work_cannot_self_wake",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 46,
+        "end_line": 48,
+        "signature_hash": "b635662c393b0eb9",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_complete_dependencies_may_selectively_revalidate:0f6bfa4f46d3c865",
+        "name": "ConstitutionalTests.test_complete_dependencies_may_selectively_revalidate",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 86,
+        "end_line": 88,
+        "signature_hash": "79cb83729a45a068",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cross_city_authority_requires_destination_revalidation:05b812e08f315999",
+        "name": "ConstitutionalTests.test_cross_city_authority_requires_destination_revalidation",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "ec1a6d63afa7dffb",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cross_city_cannot_mint_owner_authority:82268aac7602515d",
+        "name": "ConstitutionalTests.test_cross_city_cannot_mint_owner_authority",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "7896ab1f9ea2a305",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_cross_domain_evidence_payment_fails:405b465c8dfcd16f",
+        "name": "ConstitutionalTests.test_cross_domain_evidence_payment_fails",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "425ef9e98317f98c",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_empty_snapshot_is_lawful:f397c59ee47eea66",
+        "name": "ConstitutionalTests.test_empty_snapshot_is_lawful",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 11,
+        "end_line": 14,
+        "signature_hash": "b830242ff02c7c10",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_gate10_crossing_requires_human:72b27f36ee8daa6f",
+        "name": "ConstitutionalTests.test_gate10_crossing_requires_human",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 62,
+        "end_line": 64,
+        "signature_hash": "92a906a2373c7ee2",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_human_gate10_crossing_is_structurally_allowed:9a06ac433c9399a5",
+        "name": "ConstitutionalTests.test_human_gate10_crossing_is_structurally_allowed",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "7ceac287592f02a3",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_incomplete_local_dependencies_widen_without_owner_authority:648cef88b7fb26ee",
+        "name": "ConstitutionalTests.test_incomplete_local_dependencies_widen_without_owner_authority",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 74,
+        "end_line": 76,
+        "signature_hash": "58add168abe501e6",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_incomplete_owner_effect_without_authority_holds:35d41715bacbf8bc",
+        "name": "ConstitutionalTests.test_incomplete_owner_effect_without_authority_holds",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "c8146e67e35e64e3",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_incomplete_owner_effect_without_hold_fails:ddbd4d956e3908e7",
+        "name": "ConstitutionalTests.test_incomplete_owner_effect_without_hold_fails",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 82,
+        "end_line": 84,
+        "signature_hash": "45b31e271541a015",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_matching_invalidator_may_wake_cold_work:fc32a3b011811fc9",
+        "name": "ConstitutionalTests.test_matching_invalidator_may_wake_cold_work",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "d30e4ad90dc87243",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_normalize_mapping_roundtrip:4e518d44d74cffde",
+        "name": "ConstitutionalTests.test_normalize_mapping_roundtrip",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 110,
+        "end_line": 113,
+        "signature_hash": "8282408a4720f53c",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr311_local_wider_validation_does_not_need_owner_authority:ad7674591bbed39c",
+        "name": "ConstitutionalTests.test_pr311_local_wider_validation_does_not_need_owner_authority",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "182b0b5f1de5463a",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr798_provider_rebind_fixture:76cc28e526a05e15",
+        "name": "ConstitutionalTests.test_pr798_provider_rebind_fixture",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 90,
+        "end_line": 92,
+        "signature_hash": "cb997f862105f214",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr800_cold_lifecycle_fixture:e608b4b3dbe70627",
+        "name": "ConstitutionalTests.test_pr800_cold_lifecycle_fixture",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 94,
+        "end_line": 96,
+        "signature_hash": "2873abe436ffadd2",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_pr802_portable_evidence_fixture:c4cc673706431082",
+        "name": "ConstitutionalTests.test_pr802_portable_evidence_fixture",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 98,
+        "end_line": 100,
+        "signature_hash": "66f69a373cb8c6a0",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_projection_cannot_mint_effect_authority:a2bf6d94705c579e",
+        "name": "ConstitutionalTests.test_projection_cannot_mint_effect_authority",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "dfef66edd72d849c",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_projection_cannot_mint_owner_authority:c2e2586c91a4de8a",
+        "name": "ConstitutionalTests.test_projection_cannot_mint_owner_authority",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "f88d33e7d6adecc6",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_provider_only_movement_cannot_mint_semantic_movement:9c6dcbd2e6cc3bf6",
+        "name": "ConstitutionalTests.test_provider_only_movement_cannot_mint_semantic_movement",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 30,
+        "end_line": 32,
+        "signature_hash": "15fcec08ddd4db8a",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_same_domain_evidence_payment_passes:bffea6c4faa72a66",
+        "name": "ConstitutionalTests.test_same_domain_evidence_payment_passes",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "889c4de73d7d0c54",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_semantic_root_change_may_claim_semantic_movement:6cca4bd95c091986",
+        "name": "ConstitutionalTests.test_semantic_root_change_may_claim_semantic_movement",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 34,
+        "end_line": 36,
+        "signature_hash": "523d908729c64797",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_supersession_cycle_fails:01e937a7bb7c1d32",
+        "name": "ConstitutionalTests.test_supersession_cycle_fails",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "af05fffc3a56c869",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_supersession_dag_passes:de55e036e50dae13",
+        "name": "ConstitutionalTests.test_supersession_dag_passes",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "a25946b70d61c1ef",
+        "file_digest8": "9bb242638ddc989d"
+      },
+      {
+        "semantic_id": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py#method:ConstitutionalTests.test_unknown_dependencies_cannot_use_selective_revalidation:4660e5b134c168a9",
+        "name": "ConstitutionalTests.test_unknown_dependencies_cannot_use_selective_revalidation",
+        "kind": "method",
+        "file": "05_staging/aura_constitutional_invariants/test_constitutional_invariants.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "497df903a96f9b6d",
+        "file_digest8": "9bb242638ddc989d"
       },
       {
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
@@ -446884,7 +448228,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "61286adc1d336a3da88e4ba6abf2d963",
+    "payload_hash": "364ac405b66e2c070eebb14897af3a00"
   }
 }
