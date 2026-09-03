@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1652
-- **total_bytes**: 26518240
-- **text_tokens_est**: 6619913
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1653
+- **total_bytes**: 26539323
+- **text_tokens_est**: 6625184
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1652,
+  "repo_file_count": 1653,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1659,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/bughound/blind_discovery.py",
     "tools/bughound/blind_oracle_provenance.py",
     "tools/bughound/blind_score_admission.py",
+    "tools/bughound/corpus_hydration.py",
     "tools/bughound/envelope_lint.py",
     "tools/bughound/seedlab_benchmark.py",
     "tools/bughound/trust_boundary_seed.py",
@@ -1792,15 +1793,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1652,
-  "bytes": 26518240,
-  "tokens_est": 6619913,
+  "files": 1653,
+  "bytes": 26539323,
+  "tokens_est": 6625184,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1009,
+    "python_module": 1010,
     "schema_or_lexicon": 272,
     "support_file": 49
   }
