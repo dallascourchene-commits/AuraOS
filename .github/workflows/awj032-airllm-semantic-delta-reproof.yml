@@ -1,0 +1,53 @@
+name: AWJ032 AirLLM Semantic Delta Reproof
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/airllm_semantic_delta_reproof.py"
+      - "tools/awj032/test_airllm_semantic_delta_reproof.py"
+      - ".github/workflows/awj032-airllm-semantic-delta-reproof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-delta-reproof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Fetch exact PR head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - name: Compile and run stdlib contract
+        run: |
+          python -m py_compile tools/awj032/airllm_semantic_delta_reproof.py
+          cd tools/awj032
+          python -m unittest -v test_airllm_semantic_delta_reproof.py
+          python airllm_semantic_delta_reproof.py > /tmp/semantic-delta-plan.json
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/semantic-delta-plan.json'))
+          by={x['leaf_id']:x for x in p['decisions']}
+          assert by['G1_SOURCE_ADMISSION']['disposition']=='REPROOF_REQUIRED'
+          assert by['HARD_FALSE_REMEDIATION']['disposition']=='HISTORICAL_COMPATIBLE_SUPPORT'
+          assert by['RUNTIME_HARD_FALSE_GUARD']['disposition']=='HISTORICAL_COMPATIBLE_SUPPORT'
+          assert by['TINY_SPLIT_GENERATE_REOPEN']['disposition']=='HISTORICAL_COMPATIBLE_SUPPORT'
+          assert p['authority_ceiling']=='D0_NONPROMOTING_NO_EXECUTION_AUTHORITY'
+          PY

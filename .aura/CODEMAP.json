@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788437948,
+  "generated_at_unix": 1788438460,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1672,
+    "repo_file_count": 1675,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
+      ".github/workflows/awj032-airllm-semantic-delta-reproof.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -1657,12 +1658,14 @@
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
       "tools/awj032/airllm_runtime_hard_false.py",
+      "tools/awj032/airllm_semantic_delta_reproof.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
       "tools/awj032/test_airllm_runtime_hard_false.py",
+      "tools/awj032/test_airllm_semantic_delta_reproof.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1788,16 +1791,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1672,
-      "bytes": 26530442,
-      "tokens_est": 6623006,
+      "files": 1675,
+      "bytes": 26541877,
+      "tokens_est": 6625865,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
-        "schema_or_lexicon": 277,
+        "python_module": 1020,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -4418,6 +4421,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#function:_digest:7f10a0c680bad0e6",
+        "signature_hash": "d4a8cba568e54ac5"
       }
     ],
     "_token_proxy": [
@@ -158482,6 +158493,56 @@
         "signature_hash": "6d3bf55244b424d5"
       }
     ],
+    "EvidenceLeaf": [
+      {
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 26,
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#class:EvidenceLeaf:33b0b8e9d2de0b64",
+        "signature_hash": "6c4b8b707153ede8"
+      }
+    ],
+    "GenerationDelta": [
+      {
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#class:GenerationDelta:6588026b724a77a7",
+        "signature_hash": "209c4a358fdbb8c7"
+      }
+    ],
+    "ReproofDecision": [
+      {
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#class:ReproofDecision:a5dac1b042a16110",
+        "signature_hash": "ee6798efe62b22e3"
+      }
+    ],
+    "compile_reproof": [
+      {
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#function:compile_reproof:bc856b621bd40891",
+        "signature_hash": "4f34f54f02ccbd80"
+      }
+    ],
+    "pr311_current_fixture": [
+      {
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 151,
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#function:pr311_current_fixture:35166813a17c240a",
+        "signature_hash": "d591457b6a53e5da"
+      }
+    ],
     "Finding": [
       {
         "file": "tools/awj032/airllm_source_admission.py",
@@ -159260,6 +159321,96 @@
         "end_line": 196,
         "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_second_install_fails_closed:ecf8001c82da93f7",
         "signature_hash": "30028f528eda8243"
+      }
+    ],
+    "by_id": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#function:by_id:d4705e43e529b0de",
+        "signature_hash": "4d8af8cf8a8ba6fd"
+      }
+    ],
+    "SemanticDeltaReproofTests": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#class:SemanticDeltaReproofTests:e5dba266f4ebc6ce",
+        "signature_hash": "1518851ebb4c4535"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_current_pr311_delta_reopens_only_source_admission": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_current_pr311_delta_reopens_only_source_admission:b43a7dfdc950d084",
+        "signature_hash": "402df915a33d0f40"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_owner_host_current_claim_requires_physical_reproof": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_owner_host_current_claim_requires_physical_reproof:650448f25a867576",
+        "signature_hash": "5bc0b14d6f7fa693"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_runtime_delta_does_not_reopen_unrelated_tiny_leaf": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_runtime_delta_does_not_reopen_unrelated_tiny_leaf:1e9ad1884c5efff3",
+        "signature_hash": "1bc3b867d1b02e45"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_fixture_revision_delta_reopens_tiny_only": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_fixture_revision_delta_reopens_tiny_only:d0e80560de72a526",
+        "signature_hash": "620fe3b07e9817e8"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_equal_generation_is_not_an_invalidator": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_equal_generation_is_not_an_invalidator:0409f4ef66374043",
+        "signature_hash": "00a051fbf7db8d67"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_plan_root_is_deterministic": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_plan_root_is_deterministic:78855d1ecad19461",
+        "signature_hash": "9664ea9273c1a23e"
+      }
+    ],
+    "SemanticDeltaReproofTests.test_random_selective_invalidation": [
+      {
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_random_selective_invalidation:6ff9f1c3ac0a239c",
+        "signature_hash": "3597e65b773e318e"
       }
     ],
     "make_tree": [
@@ -160711,6 +160862,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
+      ".github/workflows/awj032-airllm-semantic-delta-reproof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -161021,6 +161173,14 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/awj032-airllm-semantic-delta-reproof.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md"
+    ],
+    "python airllm_semantic_delta_reproof.py > /tmp/semantic-delta-plan.json": [
+      ".github/workflows/awj032-airllm-semantic-delta-reproof.yml"
     ],
     "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
@@ -161718,10 +161878,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
-      "tools/awj032/README.md"
     ],
     "python aura_daemon.py": [
       "docs/staging/ready_review/README_STAGED.md"
@@ -170825,6 +170981,67 @@
         -0.221459,
         -0.218869,
         0.283624
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-airllm-semantic-delta-reproof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2284,
+      "lines": 54,
+      "tokens_est": 571,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python airllm_semantic_delta_reproof.py > /tmp/semantic-delta-plan.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          40
+        ],
+        "python -m unittest": [
+          42
+        ],
+        "python airllm_semantic_delta_reproof.py > /tmp/semantic-delta-plan.json": [
+          43
+        ]
+      },
+      "topology": {},
+      "digest8": "9b89d5175ea732b5",
+      "vector": [
+        0.139453,
+        0.003984,
+        0.325391,
+        -0.168672,
+        0.104922,
+        0.081016,
+        0.290859,
+        -0.192578,
+        -0.059766,
+        0.179297,
+        0.317422,
+        -0.330703,
+        0.030547,
+        0.035859,
+        0.078359,
+        0.176641,
+        -0.041172,
+        -0.073047,
+        0.290859,
+        0.187266,
+        0.322734,
+        0.038516,
+        -0.065078,
+        -0.274922,
+        0.112891,
+        0.091641,
+        -0.070391,
+        0.006641,
+        -0.144766,
+        0.152734,
+        -0.187266,
+        -0.062422
       ]
     },
     {
@@ -266384,6 +266601,53 @@
       ]
     },
     {
+      "path": "tools/awj032/airllm_semantic_delta_reproof.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5248,
+      "lines": 157,
+      "tokens_est": 1312,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "363b0c9eef02093a",
+      "vector": [
+        -0.070004,
+        0.097023,
+        -0.180537,
+        -0.217381,
+        0.195275,
+        0.229662,
+        -0.227206,
+        0.170712,
+        -0.239488,
+        -0.038072,
+        0.202643,
+        0.143693,
+        -0.207556,
+        0.273876,
+        -0.131411,
+        -0.065092,
+        0.266507,
+        -0.254225,
+        -0.178081,
+        -0.092111,
+        -0.261594,
+        -0.082285,
+        -0.092111,
+        -0.104392,
+        0.190362,
+        -0.047898,
+        0.168255,
+        -0.079829,
+        0.15843,
+        0.195275,
+        0.141236,
+        0.217381
+      ]
+    },
+    {
       "path": "tools/awj032/airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -266663,6 +266927,53 @@
         -0.02995,
         -0.037138,
         0.212044
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3903,
+      "lines": 86,
+      "tokens_est": 976,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "529afef2aa883465",
+      "vector": [
+        -0.202736,
+        0.00607,
+        -0.21002,
+        -0.214875,
+        -0.239155,
+        0.156604,
+        -0.020638,
+        -0.168744,
+        0.086193,
+        0.078909,
+        -0.01821,
+        0.057057,
+        -0.078909,
+        -0.236727,
+        -0.020638,
+        -0.30471,
+        0.052201,
+        -0.132324,
+        -0.049773,
+        -0.19788,
+        0.248867,
+        0.256151,
+        -0.180884,
+        -0.217303,
+        0.015782,
+        0.307138,
+        -0.278003,
+        -0.193024,
+        0.03035,
+        -0.120185,
+        0.037634,
+        -0.299854
       ]
     },
     {
@@ -290711,16 +291022,16 @@
     }
   },
   "summary": {
-    "file_count": 1672,
-    "total_bytes": 26530442,
-    "text_tokens_est": 6623006,
+    "file_count": 1675,
+    "total_bytes": 26541877,
+    "text_tokens_est": 6625865,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
-      "schema_or_lexicon": 277,
+      "python_module": 1020,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290877,6 +291188,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
+      ".github/workflows/awj032-airllm-semantic-delta-reproof.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -292387,12 +292699,14 @@
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
       "tools/awj032/airllm_runtime_hard_false.py",
+      "tools/awj032/airllm_semantic_delta_reproof.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
       "tools/awj032/test_airllm_runtime_hard_false.py",
+      "tools/awj032/test_airllm_semantic_delta_reproof.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -450942,6 +451256,66 @@
         "file_digest8": "64cb0100e324d7d7"
       },
       {
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#class:EvidenceLeaf:33b0b8e9d2de0b64",
+        "name": "EvidenceLeaf",
+        "kind": "class",
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "line": 22,
+        "end_line": 26,
+        "signature_hash": "6c4b8b707153ede8",
+        "file_digest8": "363b0c9eef02093a"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#class:GenerationDelta:6588026b724a77a7",
+        "name": "GenerationDelta",
+        "kind": "class",
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "209c4a358fdbb8c7",
+        "file_digest8": "363b0c9eef02093a"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#class:ReproofDecision:a5dac1b042a16110",
+        "name": "ReproofDecision",
+        "kind": "class",
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "ee6798efe62b22e3",
+        "file_digest8": "363b0c9eef02093a"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#function:_digest:7f10a0c680bad0e6",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "line": 43,
+        "end_line": 45,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "363b0c9eef02093a"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#function:compile_reproof:bc856b621bd40891",
+        "name": "compile_reproof",
+        "kind": "function",
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "line": 48,
+        "end_line": 84,
+        "signature_hash": "4f34f54f02ccbd80",
+        "file_digest8": "363b0c9eef02093a"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_semantic_delta_reproof.py#function:pr311_current_fixture:35166813a17c240a",
+        "name": "pr311_current_fixture",
+        "kind": "function",
+        "file": "tools/awj032/airllm_semantic_delta_reproof.py",
+        "line": 87,
+        "end_line": 151,
+        "signature_hash": "d591457b6a53e5da",
+        "file_digest8": "363b0c9eef02093a"
+      },
+      {
         "semantic_id": "tools/awj032/airllm_source_admission.py#class:Finding:bf46a0e466c67b5f",
         "name": "Finding",
         "kind": "class",
@@ -451820,6 +452194,96 @@
         "end_line": 23,
         "signature_hash": "8601faf30a49dc2b",
         "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#class:SemanticDeltaReproofTests:e5dba266f4ebc6ce",
+        "name": "SemanticDeltaReproofTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 11,
+        "end_line": 81,
+        "signature_hash": "1518851ebb4c4535",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#function:by_id:d4705e43e529b0de",
+        "name": "by_id",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 7,
+        "end_line": 8,
+        "signature_hash": "4d8af8cf8a8ba6fd",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_current_pr311_delta_reopens_only_source_admission:b43a7dfdc950d084",
+        "name": "SemanticDeltaReproofTests.test_current_pr311_delta_reopens_only_source_admission",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 12,
+        "end_line": 22,
+        "signature_hash": "402df915a33d0f40",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_equal_generation_is_not_an_invalidator:0409f4ef66374043",
+        "name": "SemanticDeltaReproofTests.test_equal_generation_is_not_an_invalidator",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 54,
+        "end_line": 60,
+        "signature_hash": "00a051fbf7db8d67",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_fixture_revision_delta_reopens_tiny_only:d0e80560de72a526",
+        "name": "SemanticDeltaReproofTests.test_fixture_revision_delta_reopens_tiny_only",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 43,
+        "end_line": 52,
+        "signature_hash": "620fe3b07e9817e8",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_owner_host_current_claim_requires_physical_reproof:650448f25a867576",
+        "name": "SemanticDeltaReproofTests.test_owner_host_current_claim_requires_physical_reproof",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 24,
+        "end_line": 30,
+        "signature_hash": "5bc0b14d6f7fa693",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_plan_root_is_deterministic:78855d1ecad19461",
+        "name": "SemanticDeltaReproofTests.test_plan_root_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "9664ea9273c1a23e",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_random_selective_invalidation:6ff9f1c3ac0a239c",
+        "name": "SemanticDeltaReproofTests.test_random_selective_invalidation",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 69,
+        "end_line": 81,
+        "signature_hash": "3597e65b773e318e",
+        "file_digest8": "529afef2aa883465"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_semantic_delta_reproof.py#method:SemanticDeltaReproofTests.test_runtime_delta_does_not_reopen_unrelated_tiny_leaf:1e9ad1884c5efff3",
+        "name": "SemanticDeltaReproofTests.test_runtime_delta_does_not_reopen_unrelated_tiny_leaf",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_semantic_delta_reproof.py",
+        "line": 32,
+        "end_line": 41,
+        "signature_hash": "1bc3b867d1b02e45",
+        "file_digest8": "529afef2aa883465"
       },
       {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
@@ -453402,7 +453866,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "609c2a6ac903e5399260fd842c0a70d9",
-    "payload_hash": "c28bdc85a0828d5ce9e654dc00c60d71"
+    "record_fingerprint": "ef01d33a299b0ffaca6638347af1be76",
+    "payload_hash": "cd21a0392771299ea315a93a53476cf9"
   }
 }
