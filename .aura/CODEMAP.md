@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1643
+- **total_bytes**: 26431588
+- **text_tokens_est**: 6598249
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1643,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -197,6 +197,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
+    ".github/workflows/research-owner-p0-admission.yml",
     ".github/workflows/sco-construction-e9-e14-completion.yml",
     ".github/workflows/sco-phase2-finalize.yml",
     ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -230,6 +231,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
     "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json",
+    "05_staging/research_owner_p0_admission/README.md",
+    "05_staging/research_owner_p0_admission/research_owner_p0.py",
+    "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/D0_MUTANT_RESULTS.json",
     "06_refactor/W4_CYCLE_RECEIPT.json",
@@ -1668,6 +1672,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "source_paths_without_topology": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "05_staging/research_owner_p0_admission/research_owner_p0.py",
+    "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
     "aura_blockchain/__init__.py",
@@ -1763,9 +1769,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_planning_enforcement.py",
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_connectome_v2.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1779,16 +1783,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1643,
+  "bytes": 26431588,
+  "tokens_est": 6598249,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 999,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
@@ -1885,6 +1889,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/intents/example.aura.md",
     ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
     ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
+    "05_staging/research_owner_p0_admission/README.md",
     "AMD_HACKATHON_SUBMISSION.md",
     "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
     "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -2072,8 +2077,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
   ]
 }
 ```
@@ -2086,6 +2090,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "paths": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "05_staging/research_owner_p0_admission/research_owner_p0.py",
+    "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
     "20_REFACTOR_ROOM/bench_recursive_crypto.c",
@@ -2481,9 +2487,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_board.py",
     "aura_planning_events.py",
     "aura_planning_frontier.py",
-    "aura_planning_projector.py",
-    "aura_planning_regression.py",
-    "aura_plugin_registry.py"
+    "aura_planning_projector.py"
   ]
 }
 ```
