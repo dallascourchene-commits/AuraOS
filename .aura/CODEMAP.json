@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788438078,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-cross-city-bridge.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -208,6 +209,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_cross_city_bridge/README.md",
+      "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+      "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -1649,6 +1653,8 @@
     ],
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
+      "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+      "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
@@ -1745,9 +1751,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26437933,
+      "tokens_est": 6599835,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -1851,6 +1855,7 @@
         ".aura/intents/example.aura.md",
         ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
         ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
+        "05_staging/aura_cross_city_bridge/README.md",
         "AMD_HACKATHON_SUBMISSION.md",
         "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
         "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -2038,14 +2043,15 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
       "ring": "code",
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
         "06_refactor/aura_os_minimal.py",
@@ -2442,9 +2448,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3467,6 +3471,488 @@
         "end_line": 250,
         "semantic_id": "unreal_bridge.py#function:main:a13e03774ee52e6e",
         "signature_hash": "621c1ef8c88e571d"
+      }
+    ],
+    "digest": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#function:digest:b4723355a7f041ab",
+        "signature_hash": "1191bf18035c2e8c"
+      },
+      {
+        "file": "aura_bilateral_live_repair_foundry_contracts.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 151,
+        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_construction_foundry_director.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 96,
+        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
+        "signature_hash": "cb7986ce5e23d90c"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
+        "signature_hash": "bd189b17ea870e50"
+      }
+    ],
+    "EvidenceLeaf": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:EvidenceLeaf:295dfc40a36075fc",
+        "signature_hash": "6c4b8b707153ede8"
+      }
+    ],
+    "EvidenceLeaf.validate": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 60,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:EvidenceLeaf.validate:cb6d7e2f5f138f5b",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "WalletItem": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 82,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:WalletItem:3ddda22e3a59f2d9",
+        "signature_hash": "a144368c72903d01"
+      }
+    ],
+    "WalletItem.validate": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 82,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:WalletItem.validate:69c0a669b0539050",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BridgeContract": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 140,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeContract:727685f1a816a377",
+        "signature_hash": "d2ed0d62b6473b77"
+      }
+    ],
+    "BridgeContract.validate": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 135,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeContract.validate:544b4dccd0f0f9e4",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BridgeContract.contract_digest": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 140,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeContract.contract_digest:1acad1b4ea0ac243",
+        "signature_hash": "3445486f5adf0559"
+      }
+    ],
+    "BridgeEnvelope": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 177,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeEnvelope:c5a05b3b3808535a",
+        "signature_hash": "2ad9bf95c90f9cb5"
+      }
+    ],
+    "BridgeEnvelope.validate": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 172,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeEnvelope.validate:7ca2f9d3a72a352b",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BridgeEnvelope.envelope_digest": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 177,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeEnvelope.envelope_digest:ba2a0083a9d7b7fd",
+        "signature_hash": "beacbb57b980cab6"
+      }
+    ],
+    "BridgeAdmissionReceipt": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 181,
+        "end_line": 191,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeAdmissionReceipt:dd408f4962f3940a",
+        "signature_hash": "60e8a45cb016a217"
+      }
+    ],
+    "CrossCityBridgeCompiler": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 194,
+        "end_line": 238,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:CrossCityBridgeCompiler:6dc4536d7fdb2be4",
+        "signature_hash": "87d133f47c1c3485"
+      }
+    ],
+    "CrossCityBridgeCompiler.admit": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 229,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:CrossCityBridgeCompiler.admit:bf72cd1e925f486f",
+        "signature_hash": "f147e9de19b7f08a"
+      }
+    ],
+    "CrossCityBridgeCompiler.compose": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 231,
+        "end_line": 238,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:CrossCityBridgeCompiler.compose:466cbc7a9019873d",
+        "signature_hash": "50cbca8f8c1e8909"
+      }
+    ],
+    "BridgeDependencyIndex": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "class",
+        "line": 241,
+        "end_line": 256,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeDependencyIndex:a9e991afcaa15ecb",
+        "signature_hash": "e7fa1d725cc7b8de"
+      }
+    ],
+    "BridgeDependencyIndex.__init__": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 248,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeDependencyIndex.__init__:df7ec883aae3dc1e",
+        "signature_hash": "4640d4506d538317"
+      }
+    ],
+    "BridgeDependencyIndex.affected": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 256,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeDependencyIndex.affected:ed12a20bcf2443de",
+        "signature_hash": "8f0c8ce7824ae6ce"
+      }
+    ],
+    "contract_from_mapping": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "function",
+        "line": 259,
+        "end_line": 285,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#function:contract_from_mapping:06f7aa3e9f9c7fb1",
+        "signature_hash": "523ef2656764149d"
+      }
+    ],
+    "contract_from_mapping.tup": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "kind": "method",
+        "line": 261,
+        "end_line": 265,
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:contract_from_mapping.tup:34f819f76e1763bd",
+        "signature_hash": "a678effd13836c2d"
+      }
+    ],
+    "BridgeTests": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 231,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#class:BridgeTests:ec3c1923baa2c921",
+        "signature_hash": "f9a151d2cbcaaa4a"
+      }
+    ],
+    "BridgeTests.contract": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 26,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.contract:4edf37050d0d115f",
+        "signature_hash": "93afe7188482e008"
+      }
+    ],
+    "BridgeTests.envelope": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 46,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.envelope:8884587ce1624ed0",
+        "signature_hash": "55d7ddfda0e01b51"
+      }
+    ],
+    "BridgeTests.test_portable_evidence_requires_destination_local_gate": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 53,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_portable_evidence_requires_destination_local_gate:c0dd331821b866fe",
+        "signature_hash": "1a77ecb15ddd0b4d"
+      }
+    ],
+    "BridgeTests.test_effect_permit_never_crosses": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 60,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_effect_permit_never_crosses:ca1e5fd4fad54b75",
+        "signature_hash": "3cdf8374ff1232fb"
+      }
+    ],
+    "BridgeTests.test_membership_never_crosses": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 64,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_membership_never_crosses:a1a2f1de2c6aad69",
+        "signature_hash": "f5b9e9f5db563fb7"
+      }
+    ],
+    "BridgeTests.test_authority_evidence_cannot_be_portable_leaf": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_authority_evidence_cannot_be_portable_leaf:3b1477ccb26c676c",
+        "signature_hash": "988b16fc59cba793"
+      }
+    ],
+    "BridgeTests.test_local_gate_cannot_be_compiled_as_portable_requirement": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_local_gate_cannot_be_compiled_as_portable_requirement:5da920153c88d73d",
+        "signature_hash": "41584fffd509ed38"
+      }
+    ],
+    "BridgeTests.test_stale_evidence_fails_closed": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 82,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_stale_evidence_fails_closed:367db10bba7f66c2",
+        "signature_hash": "61679f64d1706f52"
+      }
+    ],
+    "BridgeTests.test_privacy_customs_precedes_admission": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 88,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_privacy_customs_precedes_admission:38fcf8c54f4be0ed",
+        "signature_hash": "b7fc69ee25e3f138"
+      }
+    ],
+    "BridgeTests.test_forbidden_cast_fails_closed": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 94,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_forbidden_cast_fails_closed:de050bdc976be3e3",
+        "signature_hash": "0c9642319b73490f"
+      }
+    ],
+    "BridgeTests.test_unlisted_transform_fails_closed": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 98,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_unlisted_transform_fails_closed:7b92085cf07e0969",
+        "signature_hash": "95be0814c21ef2ba"
+      }
+    ],
+    "BridgeTests.test_cost_cap_is_hard": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 102,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_cost_cap_is_hard:7d06cf9d2dc35ba5",
+        "signature_hash": "13d9649a8ed6b279"
+      }
+    ],
+    "BridgeTests.test_semantic_type_mismatch_fails": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 106,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_semantic_type_mismatch_fails:db7619ed8781d504",
+        "signature_hash": "1fc0eb9429f4b8bc"
+      }
+    ],
+    "BridgeTests.test_missing_required_evidence_fails": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 113,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_missing_required_evidence_fails:32407a5bddb7d223",
+        "signature_hash": "4f652b59b1f94b22"
+      }
+    ],
+    "BridgeTests.test_destination_owner_is_not_exporting_owner": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 119,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_destination_owner_is_not_exporting_owner:3315828f27ffc70c",
+        "signature_hash": "6a91874ef5de100a"
+      }
+    ],
+    "BridgeTests.test_replay_digest_is_stable": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 122,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_replay_digest_is_stable:b43d3775e9242a43",
+        "signature_hash": "7ab5aa8f255d49d7"
+      }
+    ],
+    "BridgeTests.test_semantic_root_changes_replay_identity": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 128,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_semantic_root_changes_replay_identity:d3db0d381fd5e625",
+        "signature_hash": "3c9d7e2a78396f6c"
+      }
+    ],
+    "BridgeTests.test_contract_compiles_from_declarative_mapping": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 133,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_contract_compiles_from_declarative_mapping:eb569ae386d1f308",
+        "signature_hash": "f1f1e49670f01f6a"
+      }
+    ],
+    "BridgeTests.test_contract_policy_conflict_fails": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 140,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_contract_policy_conflict_fails:bfebe956dc82261d",
+        "signature_hash": "00d37d3d92b0e4c9"
+      }
+    ],
+    "BridgeTests.test_bridge_chain_revalidates_at_each_destination": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 154,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_bridge_chain_revalidates_at_each_destination:ae20f81ce9e00107",
+        "signature_hash": "718bc5076018f2cb"
+      }
+    ],
+    "BridgeTests.test_chain_mismatch_holds": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 165,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_chain_mismatch_holds:ad022616dc21be9b",
+        "signature_hash": "1fcbb8405c474e3d"
+      }
+    ],
+    "BridgeTests.test_dependency_delta_is_selective": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 177,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_dependency_delta_is_selective:027802a659a1b4ac",
+        "signature_hash": "300106e01a10cdfa"
+      }
+    ],
+    "BridgeTests.test_1000_challenge_lattice_never_mints_local_authority": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 213,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_1000_challenge_lattice_never_mints_local_authority:03244c46834509d0",
+        "signature_hash": "004e97b7cd5a3449"
+      }
+    ],
+    "BridgeTests.test_100000_random_authority_crosscasts_fail_closed": [
+      {
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 231,
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_100000_random_authority_crosscasts_fail_closed:590afeb4e7aebe10",
+        "signature_hash": "c7b5ce81c57f3896"
       }
     ],
     "IngressPacket": [
@@ -20089,40 +20575,6 @@
         "end_line": 58,
         "semantic_id": "aura_construction_foundry_director.py#function:canonical_bytes:7fd9402c68df2247",
         "signature_hash": "b8735a6f3e386d20"
-      }
-    ],
-    "digest": [
-      {
-        "file": "aura_bilateral_live_repair_foundry_contracts.py",
-        "kind": "function",
-        "line": 150,
-        "end_line": 151,
-        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_construction_foundry_director.py",
-        "kind": "function",
-        "line": 61,
-        "end_line": 62,
-        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_refactor_state_identity.py",
-        "kind": "function",
-        "line": 95,
-        "end_line": 96,
-        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
-        "signature_hash": "cb7986ce5e23d90c"
-      },
-      {
-        "file": "scripts/aura_blind_gate10_benchmark.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
-        "signature_hash": "bd189b17ea870e50"
       }
     ],
     "_runtime_binding_digest": [
@@ -158292,6 +158744,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-cross-city-bridge.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -158584,6 +159037,10 @@
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-cross-city-bridge.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -159293,9 +159750,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -167740,6 +168194,63 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-cross-city-bridge.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 721,
+      "lines": 29,
+      "tokens_est": 181,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          27
+        ],
+        "python -m unittest": [
+          28
+        ]
+      },
+      "topology": {},
+      "digest8": "9f1eede724dea9b6",
+      "vector": [
+        0.12248,
+        0.001145,
+        0.266708,
+        -0.280444,
+        -0.207186,
+        -0.252972,
+        0.182003,
+        -0.266708,
+        -0.124769,
+        0.001145,
+        0.042353,
+        0.019459,
+        -0.030906,
+        0.214054,
+        -0.280444,
+        0.001145,
+        0.257551,
+        -0.177424,
+        0.090429,
+        0.046932,
+        0.124769,
+        -0.223211,
+        0.170556,
+        0.08585,
+        -0.26213,
+        -0.248394,
+        -0.058378,
+        -0.037774,
+        0.01717,
+        0.170556,
+        -0.280444,
+        0.165977
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-learning.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -172400,6 +172911,147 @@
         -0.08314,
         -0.037353,
         -0.210862
+      ]
+    },
+    {
+      "path": "05_staging/aura_cross_city_bridge/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1432,
+      "lines": 24,
+      "tokens_est": 357,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0092fdf6b7b96c72",
+      "vector": [
+        -0.120458,
+        0.181295,
+        0.178861,
+        0.266467,
+        -0.008517,
+        -0.047453,
+        -0.001217,
+        0.217797,
+        -0.130192,
+        0.283501,
+        0.305403,
+        0.032852,
+        0.047453,
+        0.298102,
+        -0.076655,
+        0.05962,
+        -0.130192,
+        -0.030419,
+        0.290802,
+        0.178861,
+        -0.300536,
+        -0.020685,
+        0.246999,
+        -0.125325,
+        0.171561,
+        -0.10829,
+        0.210497,
+        -0.229964,
+        0.188595,
+        0.127758,
+        -0.103423,
+        0.069354
+      ]
+    },
+    {
+      "path": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10341,
+      "lines": 286,
+      "tokens_est": 2586,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "45e01e5dd049a8b3",
+      "vector": [
+        0.276966,
+        0.237575,
+        -0.296661,
+        -0.151408,
+        0.306509,
+        -0.311433,
+        0.247423,
+        -0.072627,
+        -0.023388,
+        0.057855,
+        0.070165,
+        -0.232651,
+        0.26958,
+        -0.15387,
+        -0.257271,
+        0.235113,
+        0.148946,
+        -0.08986,
+        -0.043084,
+        -0.001231,
+        0.028312,
+        0.035698,
+        0.235113,
+        -0.198185,
+        -0.163718,
+        0.119403,
+        -0.072627,
+        -0.148946,
+        -0.080012,
+        0.040622,
+        0.03816,
+        -0.104632
+      ]
+    },
+    {
+      "path": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10391,
+      "lines": 236,
+      "tokens_est": 2598,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0cc81dc862e73b38",
+      "vector": [
+        0.188814,
+        0.200258,
+        0.284938,
+        -0.239165,
+        -0.037763,
+        -0.202546,
+        -0.186526,
+        0.014876,
+        0.003433,
+        0.16135,
+        -0.085825,
+        -0.074381,
+        -0.259763,
+        0.186526,
+        0.188814,
+        0.143041,
+        0.028608,
+        0.003433,
+        0.028608,
+        0.278072,
+        0.24832,
+        0.216278,
+        0.097268,
+        -0.014876,
+        -0.083536,
+        -0.246031,
+        0.291804,
+        -0.278072,
+        -0.07667,
+        0.021742,
+        0.26434,
+        0.088113
       ]
     },
     {
@@ -286646,16 +287298,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26437933,
+    "text_tokens_est": 6599835,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287453,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-cross-city-bridge.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -286873,6 +287526,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_cross_city_bridge/README.md",
+      "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+      "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -288332,6 +288988,456 @@
         "end_line": 13,
         "signature_hash": "41fb393f9ea07f89",
         "file_digest8": "6ca398b6bf7056e4"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeAdmissionReceipt:dd408f4962f3940a",
+        "name": "BridgeAdmissionReceipt",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 181,
+        "end_line": 191,
+        "signature_hash": "60e8a45cb016a217",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeContract:727685f1a816a377",
+        "name": "BridgeContract",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 86,
+        "end_line": 140,
+        "signature_hash": "d2ed0d62b6473b77",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeDependencyIndex:a9e991afcaa15ecb",
+        "name": "BridgeDependencyIndex",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 241,
+        "end_line": 256,
+        "signature_hash": "e7fa1d725cc7b8de",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:BridgeEnvelope:c5a05b3b3808535a",
+        "name": "BridgeEnvelope",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 144,
+        "end_line": 177,
+        "signature_hash": "2ad9bf95c90f9cb5",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:CrossCityBridgeCompiler:6dc4536d7fdb2be4",
+        "name": "CrossCityBridgeCompiler",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 194,
+        "end_line": 238,
+        "signature_hash": "87d133f47c1c3485",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:EvidenceLeaf:295dfc40a36075fc",
+        "name": "EvidenceLeaf",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "6c4b8b707153ede8",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#class:WalletItem:3ddda22e3a59f2d9",
+        "name": "WalletItem",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 64,
+        "end_line": 82,
+        "signature_hash": "a144368c72903d01",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#function:contract_from_mapping:06f7aa3e9f9c7fb1",
+        "name": "contract_from_mapping",
+        "kind": "function",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 259,
+        "end_line": 285,
+        "signature_hash": "523ef2656764149d",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#function:digest:b4723355a7f041ab",
+        "name": "digest",
+        "kind": "function",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeContract.contract_digest:1acad1b4ea0ac243",
+        "name": "BridgeContract.contract_digest",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 138,
+        "end_line": 140,
+        "signature_hash": "3445486f5adf0559",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeContract.validate:544b4dccd0f0f9e4",
+        "name": "BridgeContract.validate",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 103,
+        "end_line": 135,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeDependencyIndex.__init__:df7ec883aae3dc1e",
+        "name": "BridgeDependencyIndex.__init__",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 242,
+        "end_line": 248,
+        "signature_hash": "4640d4506d538317",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeDependencyIndex.affected:ed12a20bcf2443de",
+        "name": "BridgeDependencyIndex.affected",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 250,
+        "end_line": 256,
+        "signature_hash": "8f0c8ce7824ae6ce",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeEnvelope.envelope_digest:ba2a0083a9d7b7fd",
+        "name": "BridgeEnvelope.envelope_digest",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 175,
+        "end_line": 177,
+        "signature_hash": "beacbb57b980cab6",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:BridgeEnvelope.validate:7ca2f9d3a72a352b",
+        "name": "BridgeEnvelope.validate",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 155,
+        "end_line": 172,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:CrossCityBridgeCompiler.admit:bf72cd1e925f486f",
+        "name": "CrossCityBridgeCompiler.admit",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 197,
+        "end_line": 229,
+        "signature_hash": "f147e9de19b7f08a",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:CrossCityBridgeCompiler.compose:466cbc7a9019873d",
+        "name": "CrossCityBridgeCompiler.compose",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 231,
+        "end_line": 238,
+        "signature_hash": "50cbca8f8c1e8909",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:EvidenceLeaf.validate:cb6d7e2f5f138f5b",
+        "name": "EvidenceLeaf.validate",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 54,
+        "end_line": 60,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:WalletItem.validate:69c0a669b0539050",
+        "name": "WalletItem.validate",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 72,
+        "end_line": 82,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/cross_city_bridge.py#method:contract_from_mapping.tup:34f819f76e1763bd",
+        "name": "contract_from_mapping.tup",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/cross_city_bridge.py",
+        "line": 261,
+        "end_line": 265,
+        "signature_hash": "a678effd13836c2d",
+        "file_digest8": "45e01e5dd049a8b3"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#class:BridgeTests:ec3c1923baa2c921",
+        "name": "BridgeTests",
+        "kind": "class",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 8,
+        "end_line": 231,
+        "signature_hash": "f9a151d2cbcaaa4a",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.contract:4edf37050d0d115f",
+        "name": "BridgeTests.contract",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 9,
+        "end_line": 26,
+        "signature_hash": "93afe7188482e008",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.envelope:8884587ce1624ed0",
+        "name": "BridgeTests.envelope",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 28,
+        "end_line": 46,
+        "signature_hash": "55d7ddfda0e01b51",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_100000_random_authority_crosscasts_fail_closed:590afeb4e7aebe10",
+        "name": "BridgeTests.test_100000_random_authority_crosscasts_fail_closed",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 215,
+        "end_line": 231,
+        "signature_hash": "c7b5ce81c57f3896",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_1000_challenge_lattice_never_mints_local_authority:03244c46834509d0",
+        "name": "BridgeTests.test_1000_challenge_lattice_never_mints_local_authority",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 179,
+        "end_line": 213,
+        "signature_hash": "004e97b7cd5a3449",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_authority_evidence_cannot_be_portable_leaf:3b1477ccb26c676c",
+        "name": "BridgeTests.test_authority_evidence_cannot_be_portable_leaf",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "988b16fc59cba793",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_bridge_chain_revalidates_at_each_destination:ae20f81ce9e00107",
+        "name": "BridgeTests.test_bridge_chain_revalidates_at_each_destination",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 142,
+        "end_line": 154,
+        "signature_hash": "718bc5076018f2cb",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_chain_mismatch_holds:ad022616dc21be9b",
+        "name": "BridgeTests.test_chain_mismatch_holds",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 156,
+        "end_line": 165,
+        "signature_hash": "1fcbb8405c474e3d",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_contract_compiles_from_declarative_mapping:eb569ae386d1f308",
+        "name": "BridgeTests.test_contract_compiles_from_declarative_mapping",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 130,
+        "end_line": 133,
+        "signature_hash": "f1f1e49670f01f6a",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_contract_policy_conflict_fails:bfebe956dc82261d",
+        "name": "BridgeTests.test_contract_policy_conflict_fails",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 135,
+        "end_line": 140,
+        "signature_hash": "00d37d3d92b0e4c9",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_cost_cap_is_hard:7d06cf9d2dc35ba5",
+        "name": "BridgeTests.test_cost_cap_is_hard",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 100,
+        "end_line": 102,
+        "signature_hash": "13d9649a8ed6b279",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_dependency_delta_is_selective:027802a659a1b4ac",
+        "name": "BridgeTests.test_dependency_delta_is_selective",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 167,
+        "end_line": 177,
+        "signature_hash": "300106e01a10cdfa",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_destination_owner_is_not_exporting_owner:3315828f27ffc70c",
+        "name": "BridgeTests.test_destination_owner_is_not_exporting_owner",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 115,
+        "end_line": 119,
+        "signature_hash": "6a91874ef5de100a",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_effect_permit_never_crosses:ca1e5fd4fad54b75",
+        "name": "BridgeTests.test_effect_permit_never_crosses",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 55,
+        "end_line": 60,
+        "signature_hash": "3cdf8374ff1232fb",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_forbidden_cast_fails_closed:de050bdc976be3e3",
+        "name": "BridgeTests.test_forbidden_cast_fails_closed",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 90,
+        "end_line": 94,
+        "signature_hash": "0c9642319b73490f",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_local_gate_cannot_be_compiled_as_portable_requirement:5da920153c88d73d",
+        "name": "BridgeTests.test_local_gate_cannot_be_compiled_as_portable_requirement",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "41584fffd509ed38",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_membership_never_crosses:a1a2f1de2c6aad69",
+        "name": "BridgeTests.test_membership_never_crosses",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 62,
+        "end_line": 64,
+        "signature_hash": "f5b9e9f5db563fb7",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_missing_required_evidence_fails:32407a5bddb7d223",
+        "name": "BridgeTests.test_missing_required_evidence_fails",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 108,
+        "end_line": 113,
+        "signature_hash": "4f652b59b1f94b22",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_portable_evidence_requires_destination_local_gate:c0dd331821b866fe",
+        "name": "BridgeTests.test_portable_evidence_requires_destination_local_gate",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 48,
+        "end_line": 53,
+        "signature_hash": "1a77ecb15ddd0b4d",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_privacy_customs_precedes_admission:38fcf8c54f4be0ed",
+        "name": "BridgeTests.test_privacy_customs_precedes_admission",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 84,
+        "end_line": 88,
+        "signature_hash": "b7fc69ee25e3f138",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_replay_digest_is_stable:b43d3775e9242a43",
+        "name": "BridgeTests.test_replay_digest_is_stable",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 121,
+        "end_line": 122,
+        "signature_hash": "7ab5aa8f255d49d7",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_semantic_root_changes_replay_identity:d3db0d381fd5e625",
+        "name": "BridgeTests.test_semantic_root_changes_replay_identity",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 124,
+        "end_line": 128,
+        "signature_hash": "3c9d7e2a78396f6c",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_semantic_type_mismatch_fails:db7619ed8781d504",
+        "name": "BridgeTests.test_semantic_type_mismatch_fails",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 104,
+        "end_line": 106,
+        "signature_hash": "1fc0eb9429f4b8bc",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_stale_evidence_fails_closed:367db10bba7f66c2",
+        "name": "BridgeTests.test_stale_evidence_fails_closed",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 74,
+        "end_line": 82,
+        "signature_hash": "61679f64d1706f52",
+        "file_digest8": "0cc81dc862e73b38"
+      },
+      {
+        "semantic_id": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py#method:BridgeTests.test_unlisted_transform_fails_closed:7b92085cf07e0969",
+        "name": "BridgeTests.test_unlisted_transform_fails_closed",
+        "kind": "method",
+        "file": "05_staging/aura_cross_city_bridge/test_cross_city_bridge.py",
+        "line": 96,
+        "end_line": 98,
+        "signature_hash": "95be0814c21ef2ba",
+        "file_digest8": "0cc81dc862e73b38"
       },
       {
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
@@ -446884,7 +447990,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "5e126668949e0916c64000de47a27ab1",
+    "payload_hash": "869450cfa28ed999b9f07bf5964f2732"
   }
 }
