@@ -1,0 +1,28 @@
+name: Aura Constitutional Invariants
+
+on:
+  push:
+    paths:
+      - '05_staging/aura_constitutional_invariants/**'
+      - '.github/workflows/aura-constitutional-invariants.yml'
+  pull_request:
+    paths:
+      - '05_staging/aura_constitutional_invariants/**'
+      - '.github/workflows/aura-constitutional-invariants.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run constitutional invariant tests
+        working-directory: 05_staging/aura_constitutional_invariants
+        run: |
+          python -m py_compile constitutional_invariants.py
+          python -m unittest -q test_constitutional_invariants.py
