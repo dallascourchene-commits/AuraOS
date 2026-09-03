@@ -1,0 +1,23 @@
+name: Research Owner P0 Admission
+
+on:
+  pull_request:
+    paths:
+      - '05_staging/research_owner_p0_admission/**'
+      - '.github/workflows/research-owner-p0-admission.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run focused admission tests
+        working-directory: 05_staging/research_owner_p0_admission
+        run: python -m unittest -v test_research_owner_p0.py
