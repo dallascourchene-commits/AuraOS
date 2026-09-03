@@ -8,6 +8,7 @@ on:
       - "tools/awj032/airllm_hard_false_inspected_tree.py"
       - "tools/awj032/airllm_runtime_hard_false.py"
       - "tools/awj032/test_airllm_source_admission.py"
+      - "tools/awj032/test_airllm_binding_mutation_soundness.py"
       - "tools/awj032/test_airllm_hard_false_remediation.py"
       - "tools/awj032/test_airllm_hard_false_inspected_tree.py"
       - "tools/awj032/test_airllm_runtime_hard_false.py"
@@ -54,6 +55,7 @@ jobs:
             tools/awj032/airllm_runtime_hard_false.py
           python -m pytest -q \
             tools/awj032/test_airllm_source_admission.py \
+            tools/awj032/test_airllm_binding_mutation_soundness.py \
             tools/awj032/test_airllm_hard_false_remediation.py \
             tools/awj032/test_airllm_hard_false_inspected_tree.py \
             tools/awj032/test_airllm_runtime_hard_false.py
