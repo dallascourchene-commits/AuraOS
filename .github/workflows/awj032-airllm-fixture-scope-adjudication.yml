@@ -1,0 +1,26 @@
+name: AWJ032 AirLLM Fixture Scope Adjudication
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/airllm_fixture_scope_adjudication.py"
+      - "tools/awj032/test_airllm_fixture_scope_adjudication.py"
+      - ".github/workflows/awj032-airllm-tiny-runtime.yml"
+      - ".github/workflows/awj032-airllm-fixture-scope-adjudication.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-scope-adjudication:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused lexical-scope proof tests
+        working-directory: tools/awj032
+        run: python -m unittest -v test_airllm_fixture_scope_adjudication.py

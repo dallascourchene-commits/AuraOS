@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1672
-- **total_bytes**: 26530442
-- **text_tokens_est**: 6623006
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1018, 'schema_or_lexicon': 277, 'support_file': 49}
+- **file_count**: 1675
+- **total_bytes**: 26546457
+- **text_tokens_est**: 6627011
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1020, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1672,
+  "repo_file_count": 1675,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -164,6 +164,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
     ".github/workflows/awj032-airllm-exact-head-verify.yml",
+    ".github/workflows/awj032-airllm-fixture-scope-adjudication.yml",
     ".github/workflows/awj032-airllm-g1-source-contract.yml",
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
     ".github/workflows/ci.yml",
@@ -1672,12 +1673,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
     "tools/awj032/README.md",
+    "tools/awj032/airllm_fixture_scope_adjudication.py",
     "tools/awj032/airllm_hard_false_inspected_tree.py",
     "tools/awj032/airllm_hard_false_remediation.py",
     "tools/awj032/airllm_runtime_hard_false.py",
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/airllm_tiny_fixture_probe.py",
     "tools/awj032/test_airllm_binding_mutation_soundness.py",
+    "tools/awj032/test_airllm_fixture_scope_adjudication.py",
     "tools/awj032/test_airllm_hard_false_inspected_tree.py",
     "tools/awj032/test_airllm_hard_false_remediation.py",
     "tools/awj032/test_airllm_runtime_hard_false.py",
@@ -1812,16 +1815,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1672,
-  "bytes": 26530442,
-  "tokens_est": 6623006,
+  "files": 1675,
+  "bytes": 26546457,
+  "tokens_est": 6627011,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1018,
-    "schema_or_lexicon": 277,
+    "python_module": 1020,
+    "schema_or_lexicon": 278,
     "support_file": 49
   }
 }
