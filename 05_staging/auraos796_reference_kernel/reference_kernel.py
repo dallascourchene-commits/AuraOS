@@ -118,6 +118,9 @@ class JSpaceEvent:
         source_sequence = self.payload.get("source_sequence")
         if source_sequence is not None and (not isinstance(source_sequence, int) or source_sequence < 0):
             raise ValueError("INVALID_SOURCE_SEQUENCE")
+        current = self.payload.get("current")
+        if current is not None and not isinstance(current, bool):
+            raise ValueError("INVALID_SOURCE_CURRENTNESS")
         semantic_payload_root(self.payload)
 
     @property
@@ -204,9 +207,10 @@ class JSpaceStore:
         applied: dict[tuple[int,str,str],SourceCursor3D] = {}
         for seq,_,event_type,jid,visit,source,generation,_,subject,payload_json,_ in self.events():
             state=projection.setdefault(jid,{"jid":jid,"visit_id":visit,"status":"UNKNOWN","objective":None,"last_seq":0,
-                "sources":{},"authority_effect":False,"runtime_liveness":"UNKNOWN","source_sequences":{},"source_cursors":{}})
+                "sources":{},"authority_effect":False,"runtime_liveness":"UNKNOWN","source_sequences":{},"source_cursors":{},"source_currentness":{}})
             payload=json.loads(payload_json); stream=(jid,source,subject); source_sequence=payload.get("source_sequence")
             apply_semantics=True
+            key=f"{source}|{subject}"
             if source_sequence is not None:
                 observed=SourceCursor3D(source_sequence,generation,semantic_payload_root(payload)); observed.validate()
                 prior=applied.get(stream)
@@ -215,14 +219,13 @@ class JSpaceStore:
                     if transition=="SOURCE_POSITION_SEMANTIC_CONFLICT": raise ValueError("SOURCE_SEQUENCE_CONFLICT")
                     if transition=="HISTORICAL_RECEIPT_ONLY":
                         state["last_seq"]=max(state["last_seq"],seq); continue
-                    if transition=="EXACT_REPLAY_NOOP":
-                        state["last_seq"]=max(state["last_seq"],seq); continue
-                    if transition in {"CURRENTNESS_REBIND_ONLY","CURSOR_ADVANCE_NO_SEMANTIC_WAKE"}:
+                    if transition in {"EXACT_REPLAY_NOOP","CURRENTNESS_REBIND_ONLY","CURSOR_ADVANCE_NO_SEMANTIC_WAKE"}:
                         apply_semantics=False
                 applied[stream]=observed
-                key=f"{source}|{subject}"
                 state["source_sequences"][key]=source_sequence
                 state["source_cursors"][key]={"source_sequence":source_sequence,"provider_generation":generation,"semantic_root":observed.semantic_root}
+            if "current" in payload:
+                state["source_currentness"][key]=payload["current"]
             state["visit_id"]=visit; state["last_seq"]=max(state["last_seq"],seq); state["sources"][source]=generation
             if apply_semantics:
                 if event_type=="CHECKIN": state["status"]="READY"
@@ -293,44 +296,52 @@ class ReconcileReceipt:
 class ReconcileEngine:
     def __init__(self,store:JSpaceStore,*,jid:int,visit_id:str,owner_epoch:str): self.store,self.jid,self.visit_id,self.owner_epoch=store,jid,visit_id,owner_epoch
 
-    def _projected_streams(self)->dict[str,SourceCursor3D]:
+    def _projected_source_state(self)->tuple[dict[str,SourceCursor3D],dict[str,bool],int]:
         projected=self.store.project().get(self.jid,{})
-        out={}
+        cursors:dict[str,SourceCursor3D]={}; currentness:dict[str,bool]={}
         for key,cursor in projected.get("source_cursors",{}).items():
             source,subject=key.split("|",1)
             if source==subject:
-                out[source]=SourceCursor3D(cursor["source_sequence"],cursor["provider_generation"],cursor["semantic_root"])
-        return out
+                cursors[source]=SourceCursor3D(cursor["source_sequence"],cursor["provider_generation"],cursor["semantic_root"])
+        for key,current in projected.get("source_currentness",{}).items():
+            source,subject=key.split("|",1)
+            if source==subject:
+                currentness[source]=bool(current)
+        return cursors,currentness,int(projected.get("last_seq",0))
 
     def reconcile(self,snapshots:Iterable[SourceState],*,all_nodes:set[str],capability_nodes:set[str],deterministic_closed:set[str]=frozenset())->ReconcileReceipt:
-        prior=self._projected_streams(); changed=[]; appended=[]; rebound=[]; cursor_advanced=[]
+        prior,prior_currentness,event_epoch=self._projected_source_state(); changed=[]; appended=[]; rebound=[]; cursor_advanced=[]
         for snapshot in sorted(snapshots,key=lambda item:item.source_ref):
             if not snapshot.source_ref or not snapshot.generation: raise ValueError("SOURCE_BINDING_REQUIRED")
-            root=snapshot.resolved_semantic_root(); before=prior.get(snapshot.source_ref)
+            root=snapshot.resolved_semantic_root(); before=prior.get(snapshot.source_ref); currentness_known=snapshot.source_ref in prior_currentness; before_current=prior_currentness.get(snapshot.source_ref)
             transition="SEMANTIC_ADVANCE"
             if before is not None and snapshot.source_sequence is not None:
                 observed=SourceCursor3D(snapshot.source_sequence,snapshot.generation,root)
                 transition=classify_source_cursor_transition(before,observed)
                 if transition=="HISTORICAL_RECEIPT_ONLY": continue
                 if transition=="SOURCE_POSITION_SEMANTIC_CONFLICT": raise ValueError("SOURCE_SEQUENCE_CONFLICT")
-                if transition=="EXACT_REPLAY_NOOP" and snapshot.current: continue
+                if transition=="EXACT_REPLAY_NOOP" and currentness_known and snapshot.current==before_current: continue
             elif before is not None and snapshot.source_sequence is None:
-                if before.provider_generation==snapshot.generation and before.semantic_root==root and snapshot.current: continue
+                same_cursor_identity=before.provider_generation==snapshot.generation and before.semantic_root==root
+                if same_cursor_identity and currentness_known and snapshot.current==before_current: continue
                 transition="SEMANTIC_ADVANCE" if before.semantic_root!=root else "CURRENTNESS_REBIND_ONLY"
 
-            semantic_changed=transition=="SEMANTIC_ADVANCE" or not snapshot.current
+            currentness_changed=(currentness_known and snapshot.current!=before_current) or (before is not None and not currentness_known and not snapshot.current)
+            material_changed=transition=="SEMANTIC_ADVANCE" or currentness_changed
             if transition=="CURRENTNESS_REBIND_ONLY" and snapshot.current: rebound.append(snapshot.source_ref)
             if transition=="CURSOR_ADVANCE_NO_SEMANTIC_WAKE" and snapshot.current: cursor_advanced.append(snapshot.source_ref)
-            if semantic_changed: changed.append(snapshot.source_ref)
+            if material_changed: changed.append(snapshot.source_ref)
             payload={"observed_generation":snapshot.generation,"current":snapshot.current,"semantic_root":root}
             if snapshot.source_sequence is not None: payload["source_sequence"]=snapshot.source_sequence
             event_type="RECONCILIATION" if snapshot.current else "CURRENTNESS_INVALIDATION"
-            event_id="reconcile:"+hashlib.sha256(f"{self.jid}|{snapshot.source_ref}|{snapshot.generation}|{snapshot.current}|{snapshot.source_sequence}|{root}".encode()).hexdigest()
+            event_id="reconcile:"+hashlib.sha256(f"{self.jid}|{snapshot.source_ref}|{snapshot.generation}|{snapshot.current}|{snapshot.source_sequence}|{root}|{event_epoch}".encode()).hexdigest()
             event=JSpaceEvent(event_id,event_type,self.jid,self.visit_id,snapshot.source_ref,snapshot.generation,self.owner_epoch,snapshot.source_ref,payload,time.time_ns())
-            disposition,_=self.store.append(event)
-            if disposition=="APPENDED": appended.append(event_id)
+            disposition,event_seq=self.store.append(event)
+            if disposition=="APPENDED":
+                appended.append(event_id); event_epoch=max(event_epoch,event_seq)
             if snapshot.source_sequence is not None:
                 prior[snapshot.source_ref]=SourceCursor3D(snapshot.source_sequence,snapshot.generation,root)
+            prior_currentness[snapshot.source_ref]=snapshot.current
 
         decision=WakeReducer(self.store).decide(set(changed),capability_nodes,set(deterministic_closed),set(all_nodes))
         if changed:
@@ -368,6 +379,10 @@ class JoinContextCompiler:
         if not protocol_root or not intent_root: raise ValueError("ROOT_BINDING_REQUIRED")
         affected_sorted=tuple(sorted(set(affected)))
         if len(affected_sorted)>max_affected: raise ValueError("AFFECTED_NEIGHBORHOOD_TOO_BROAD")
-        sources=store.project().get(jid,{}).get("sources",{}); current=tuple(sorted((source,sources[source]) for source in set(required_sources) if source in sources))
+        projected=store.project().get(jid,{}); sources=projected.get("sources",{}); inactive=set()
+        for key,currentness in projected.get("source_currentness",{}).items():
+            source,subject=key.split("|",1)
+            if source==subject and currentness is False: inactive.add(source)
+        current=tuple(sorted((source,sources[source]) for source in set(required_sources) if source in sources and source not in inactive))
         body={"protocol_root":protocol_root,"intent_root":intent_root,"current_branch_head":current_branch_head,"active_residual":active_residual,"affected_neighborhood":affected_sorted,"current_sources":current,"next_obligation":next_obligation}
         return JoinContext(protocol_root,intent_root,current_branch_head,active_residual,affected_sorted,current,next_obligation,digest(body))
