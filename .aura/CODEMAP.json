@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788445550,
+  "generated_at_unix": 1788447057,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1666,
+    "repo_file_count": 1667,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1654,6 +1654,7 @@
       "tools/bughound/blind_score_admission.py",
       "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/hardness_frontier.py",
       "tools/bughound/historical_blind_cut.py",
       "tools/bughound/precision_router.py",
       "tools/bughound/seedlab_benchmark.py",
@@ -1782,15 +1783,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1666,
-      "bytes": 26615993,
-      "tokens_est": 6644347,
+      "files": 1667,
+      "bytes": 26634853,
+      "tokens_est": 6649062,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1017,
+        "python_module": 1018,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3956,6 +3957,14 @@
         "signature_hash": "707d518dafca1a42"
       },
       {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_canonical:e16307a498012eeb",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
         "file": "tools/bughound/historical_blind_cut.py",
         "kind": "function",
         "line": 46,
@@ -4436,6 +4445,14 @@
         "end_line": 46,
         "semantic_id": "tools/bughound/blind_score_admission.py#function:_digest:7fef87314c452ec0",
         "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_digest:4ec3886005f637da",
+        "signature_hash": "d4a8cba568e54ac5"
       },
       {
         "file": "tools/bughound/historical_blind_cut.py",
@@ -160192,6 +160209,286 @@
         "signature_hash": "8d871b696a6b8aaa"
       }
     ],
+    "_require_digest": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_require_digest:ce4e6cf103a41c0f",
+        "signature_hash": "2ad8c8980548dae9"
+      }
+    ],
+    "RawHardnessFactsV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 77,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:RawHardnessFactsV1:4ab2fe92b62e45c5",
+        "signature_hash": "40f3c1c36925e417"
+      }
+    ],
+    "RawHardnessFactsV1.validate": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 77,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:RawHardnessFactsV1.validate:bcd1a927318eb196",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HardnessPolicyV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 120,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:HardnessPolicyV1:19f6ff20227bd7a6",
+        "signature_hash": "597a5cfd9fd23478"
+      }
+    ],
+    "HardnessPolicyV1.validate": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 115,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessPolicyV1.validate:2831c09719c335c0",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HardnessPolicyV1.digest": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessPolicyV1.digest:7e974dd421462636",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "HardnessVectorV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:HardnessVectorV1:5cd5c4445a907c42",
+        "signature_hash": "8851ab11755e359a"
+      }
+    ],
+    "HardnessVectorV1.validate": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 129,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessVectorV1.validate:3194d790a9b22da3",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HardnessVectorV1.as_map": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 133,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessVectorV1.as_map:6cdafe22a3ac0d49",
+        "signature_hash": "f26d064ee93dc1c4"
+      }
+    ],
+    "HardnessVectorV1.high_axis_count": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessVectorV1.high_axis_count:302d68f30fd3f116",
+        "signature_hash": "7953b46047b623d3"
+      }
+    ],
+    "EvaluatorHardnessSealV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 161,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:EvaluatorHardnessSealV1:66b38e729b1da082",
+        "signature_hash": "6f3925feb7b6ff42"
+      }
+    ],
+    "EvaluatorHardnessSealV1.solver_projection": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 161,
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:EvaluatorHardnessSealV1.solver_projection:922cf42c0e69a305",
+        "signature_hash": "a794934e6909201b"
+      }
+    ],
+    "CaseOutcomeV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 165,
+        "end_line": 167,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:CaseOutcomeV1:0217d178a410b6d0",
+        "signature_hash": "e75d22db30107fbd"
+      }
+    ],
+    "BinomialIntervalV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 171,
+        "end_line": 176,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:BinomialIntervalV1:2220acf457b31108",
+        "signature_hash": "bf5ff862fa32ded8"
+      }
+    ],
+    "HardnessFrontierReportV1": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "class",
+        "line": 180,
+        "end_line": 195,
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:HardnessFrontierReportV1:aa94001d04edabb0",
+        "signature_hash": "a738ed32b116f70c"
+      }
+    ],
+    "_bin_level": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 198,
+        "end_line": 203,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_bin_level:e0634ec96c22fd25",
+        "signature_hash": "83692b0886bc3d83"
+      }
+    ],
+    "vectorize": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 222,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:vectorize:986dd8f482cbf197",
+        "signature_hash": "3a99d8204aedef12"
+      }
+    ],
+    "stratum_for": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 235,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:stratum_for:757c3674233a88f4",
+        "signature_hash": "c5f1adc127728da5"
+      }
+    ],
+    "_evaluator_seal_body": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 238,
+        "end_line": 265,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_evaluator_seal_body:6a66bd839b95f3fe",
+        "signature_hash": "53e05c329e887992"
+      }
+    ],
+    "validate_evaluator_seal": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 297,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:validate_evaluator_seal:8aa24bd425a54b3b",
+        "signature_hash": "857177004b3d3d11"
+      }
+    ],
+    "compile_evaluator_seal": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 300,
+        "end_line": 341,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:compile_evaluator_seal:1446dab184539bca",
+        "signature_hash": "8d8503e99633710c"
+      }
+    ],
+    "validate_solver_projection": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 344,
+        "end_line": 362,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:validate_solver_projection:92d31a4e56fbff92",
+        "signature_hash": "df40b9a74d7795c8"
+      }
+    ],
+    "wilson_interval": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 365,
+        "end_line": 383,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:wilson_interval:f00d0f4148be1eb3",
+        "signature_hash": "a79c4b84377ada4c"
+      }
+    ],
+    "_slice_interval": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 386,
+        "end_line": 388,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_slice_interval:8ac15f1dcfea5f52",
+        "signature_hash": "eb4ff42e992364c0"
+      }
+    ],
+    "_case_set_digest": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 391,
+        "end_line": 397,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_case_set_digest:da8c6e39dc6e730e",
+        "signature_hash": "989c70f5e6e6b436"
+      }
+    ],
+    "build_frontier_report": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 400,
+        "end_line": 493,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:build_frontier_report:8774c89cac06019d",
+        "signature_hash": "162770e806b413b3"
+      }
+    ],
+    "omega8_lattice": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 496,
+        "end_line": 498,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:omega8_lattice:d57c0428011889cc",
+        "signature_hash": "cf85cdd7d9b7399b"
+      }
+    ],
+    "k27_coordinate": [
+      {
+        "file": "tools/bughound/hardness_frontier.py",
+        "kind": "function",
+        "line": 501,
+        "end_line": 507,
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:k27_coordinate:b4de59121d174a71",
+        "signature_hash": "ab0ee6601c32bc28"
+      }
+    ],
     "HistoricalBlindError": [
       {
         "file": "tools/bughound/historical_blind_cut.py",
@@ -267342,6 +267639,53 @@
       ]
     },
     {
+      "path": "tools/bughound/hardness_frontier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 18860,
+      "lines": 508,
+      "tokens_est": 4715,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bd43f68e50dd3bbc",
+      "vector": [
+        -0.07647,
+        -0.241945,
+        0.126614,
+        0.131628,
+        0.03134,
+        0.176758,
+        -0.274539,
+        -0.006268,
+        -0.174251,
+        -0.179265,
+        0.144164,
+        -0.111571,
+        0.058919,
+        -0.287075,
+        -0.317161,
+        -0.131628,
+        0.028833,
+        0.116585,
+        -0.061426,
+        0.314654,
+        0.191801,
+        -0.116585,
+        0.226902,
+        -0.136643,
+        0.061426,
+        -0.297104,
+        0.289582,
+        0.016297,
+        -0.046383,
+        0.277046,
+        -0.043876,
+        0.018804
+      ]
+    },
+    {
       "path": "tools/bughound/historical_blind_cut.py",
       "role": "python_module",
       "binary": false,
@@ -291528,15 +291872,15 @@
     }
   },
   "summary": {
-    "file_count": 1666,
-    "total_bytes": 26615993,
-    "text_tokens_est": 6644347,
+    "file_count": 1667,
+    "total_bytes": 26634853,
+    "text_tokens_est": 6649062,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1017,
+      "python_module": 1018,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -293201,6 +293545,7 @@
       "tools/bughound/blind_score_admission.py",
       "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/hardness_frontier.py",
       "tools/bughound/historical_blind_cut.py",
       "tools/bughound/precision_router.py",
       "tools/bughound/seedlab_benchmark.py",
@@ -453493,6 +453838,306 @@
         "file_digest8": "2d0f6c622209ff06"
       },
       {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:BinomialIntervalV1:2220acf457b31108",
+        "name": "BinomialIntervalV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 171,
+        "end_line": 176,
+        "signature_hash": "bf5ff862fa32ded8",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:CaseOutcomeV1:0217d178a410b6d0",
+        "name": "CaseOutcomeV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 165,
+        "end_line": 167,
+        "signature_hash": "e75d22db30107fbd",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:EvaluatorHardnessSealV1:66b38e729b1da082",
+        "name": "EvaluatorHardnessSealV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 142,
+        "end_line": 161,
+        "signature_hash": "6f3925feb7b6ff42",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:HardnessFrontierReportV1:aa94001d04edabb0",
+        "name": "HardnessFrontierReportV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 180,
+        "end_line": 195,
+        "signature_hash": "a738ed32b116f70c",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:HardnessPolicyV1:19f6ff20227bd7a6",
+        "name": "HardnessPolicyV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 81,
+        "end_line": 120,
+        "signature_hash": "597a5cfd9fd23478",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:HardnessVectorV1:5cd5c4445a907c42",
+        "name": "HardnessVectorV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 124,
+        "end_line": 138,
+        "signature_hash": "8851ab11755e359a",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#class:RawHardnessFactsV1:4ab2fe92b62e45c5",
+        "name": "RawHardnessFactsV1",
+        "kind": "class",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 45,
+        "end_line": 77,
+        "signature_hash": "40f3c1c36925e417",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_bin_level:e0634ec96c22fd25",
+        "name": "_bin_level",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 198,
+        "end_line": 203,
+        "signature_hash": "83692b0886bc3d83",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_canonical:e16307a498012eeb",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_case_set_digest:da8c6e39dc6e730e",
+        "name": "_case_set_digest",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 391,
+        "end_line": 397,
+        "signature_hash": "989c70f5e6e6b436",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_digest:4ec3886005f637da",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_evaluator_seal_body:6a66bd839b95f3fe",
+        "name": "_evaluator_seal_body",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 238,
+        "end_line": 265,
+        "signature_hash": "53e05c329e887992",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_require_digest:ce4e6cf103a41c0f",
+        "name": "_require_digest",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "2ad8c8980548dae9",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:_slice_interval:8ac15f1dcfea5f52",
+        "name": "_slice_interval",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 386,
+        "end_line": 388,
+        "signature_hash": "eb4ff42e992364c0",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:build_frontier_report:8774c89cac06019d",
+        "name": "build_frontier_report",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 400,
+        "end_line": 493,
+        "signature_hash": "162770e806b413b3",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:compile_evaluator_seal:1446dab184539bca",
+        "name": "compile_evaluator_seal",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 300,
+        "end_line": 341,
+        "signature_hash": "8d8503e99633710c",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:k27_coordinate:b4de59121d174a71",
+        "name": "k27_coordinate",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 501,
+        "end_line": 507,
+        "signature_hash": "ab0ee6601c32bc28",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:omega8_lattice:d57c0428011889cc",
+        "name": "omega8_lattice",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 496,
+        "end_line": 498,
+        "signature_hash": "cf85cdd7d9b7399b",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:stratum_for:757c3674233a88f4",
+        "name": "stratum_for",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 225,
+        "end_line": 235,
+        "signature_hash": "c5f1adc127728da5",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:validate_evaluator_seal:8aa24bd425a54b3b",
+        "name": "validate_evaluator_seal",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 268,
+        "end_line": 297,
+        "signature_hash": "857177004b3d3d11",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:validate_solver_projection:92d31a4e56fbff92",
+        "name": "validate_solver_projection",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 344,
+        "end_line": 362,
+        "signature_hash": "df40b9a74d7795c8",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:vectorize:986dd8f482cbf197",
+        "name": "vectorize",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 206,
+        "end_line": 222,
+        "signature_hash": "3a99d8204aedef12",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#function:wilson_interval:f00d0f4148be1eb3",
+        "name": "wilson_interval",
+        "kind": "function",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 365,
+        "end_line": 383,
+        "signature_hash": "a79c4b84377ada4c",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:EvaluatorHardnessSealV1.solver_projection:922cf42c0e69a305",
+        "name": "EvaluatorHardnessSealV1.solver_projection",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 156,
+        "end_line": 161,
+        "signature_hash": "a794934e6909201b",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessPolicyV1.digest:7e974dd421462636",
+        "name": "HardnessPolicyV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessPolicyV1.validate:2831c09719c335c0",
+        "name": "HardnessPolicyV1.validate",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 97,
+        "end_line": 115,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessVectorV1.as_map:6cdafe22a3ac0d49",
+        "name": "HardnessVectorV1.as_map",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 131,
+        "end_line": 133,
+        "signature_hash": "f26d064ee93dc1c4",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessVectorV1.high_axis_count:302d68f30fd3f116",
+        "name": "HardnessVectorV1.high_axis_count",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "7953b46047b623d3",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:HardnessVectorV1.validate:3194d790a9b22da3",
+        "name": "HardnessVectorV1.validate",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 127,
+        "end_line": 129,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
+        "semantic_id": "tools/bughound/hardness_frontier.py#method:RawHardnessFactsV1.validate:bcd1a927318eb196",
+        "name": "RawHardnessFactsV1.validate",
+        "kind": "method",
+        "file": "tools/bughound/hardness_frontier.py",
+        "line": 62,
+        "end_line": 77,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd43f68e50dd3bbc"
+      },
+      {
         "semantic_id": "tools/bughound/historical_blind_cut.py#class:EvaluatorSealV1:298f5fad77314e13",
         "name": "EvaluatorSealV1",
         "kind": "class",
@@ -455403,7 +456048,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "acd883e62d5b9e3cb8c333b5bf360fb9",
-    "payload_hash": "36befda5caf88358e24874fb2fe6190f"
+    "record_fingerprint": "0798c1dd5d0d93b02c5ea06daf13d731",
+    "payload_hash": "502c955ccdd28c3708cd1875bf62e575"
   }
 }
