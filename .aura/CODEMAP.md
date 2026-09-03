@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1643
-- **total_bytes**: 26451400
-- **text_tokens_est**: 6603201
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1644
+- **total_bytes**: 26458837
+- **text_tokens_est**: 6605061
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1000, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1643,
+  "repo_file_count": 1644,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -229,6 +229,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".vscode/settings.json",
     "05_staging/auraos796_reference_kernel/README.md",
     "05_staging/auraos796_reference_kernel/reference_kernel.py",
+    "05_staging/auraos796_reference_kernel/test_currentness_idempotency.py",
     "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
     "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
@@ -1672,6 +1673,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "source_paths_without_topology": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/auraos796_reference_kernel/reference_kernel.py",
+    "05_staging/auraos796_reference_kernel/test_currentness_idempotency.py",
     "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
@@ -1768,8 +1770,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
     "tests/test_aura_bilateral_planning_enforcement.py",
     "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_capability_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1783,15 +1784,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1643,
-  "bytes": 26451400,
-  "tokens_est": 6603201,
+  "files": 1644,
+  "bytes": 26458837,
+  "tokens_est": 6605061,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
+    "python_module": 1000,
     "schema_or_lexicon": 272,
     "support_file": 49
   }
@@ -2090,6 +2091,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "paths": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/auraos796_reference_kernel/reference_kernel.py",
+    "05_staging/auraos796_reference_kernel/test_currentness_idempotency.py",
     "05_staging/auraos796_reference_kernel/test_reference_kernel.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
@@ -2486,8 +2488,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_phase_capsule.py",
     "aura_planning_board.py",
     "aura_planning_events.py",
-    "aura_planning_frontier.py",
-    "aura_planning_projector.py"
+    "aura_planning_frontier.py"
   ]
 }
 ```
