@@ -218,6 +218,34 @@ class GateTests(unittest.TestCase):
             )
             self.assertEqual("PASS", a.audit_airllm_source(d).status)
 
+    def test_loader_conflicting_computed_key_assignments_fail_closed(self):
+        self.assertIn(
+            "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+            self._codes(
+                "KEY = 'trust_remote_code'\n"
+                "if feature_flag:\n"
+                "    KEY = 'revision'\n"
+                "opts = {KEY: True}\n"
+                "def load(model):\n"
+                "    return model.from_pretrained('x', **opts)\n"
+            ),
+        )
+
+    def test_loader_identical_computed_key_rebinding_remains_foldable(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(
+                Path(d),
+                auto=(
+                    "KEY = 'revision'\n"
+                    "if feature_flag:\n"
+                    "    KEY = 'revision'\n"
+                    "opts = {KEY: True}\n"
+                    "def load(model):\n"
+                    "    return model.from_pretrained('x', **opts)\n"
+                ),
+            )
+            self.assertEqual("PASS", a.audit_airllm_source(d).status)
+
     def test_dict_constructor_pair_blocks(self):
         self.assertIn(
             "REMOTE_CODE_TRUE",
