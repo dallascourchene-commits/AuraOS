@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1643
-- **total_bytes**: 26431588
-- **text_tokens_est**: 6598249
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1646
+- **total_bytes**: 26445436
+- **text_tokens_est**: 6601712
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1643,
+  "repo_file_count": 1646,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -198,6 +198,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
     ".github/workflows/research-owner-p0-admission.yml",
+    ".github/workflows/research-owner-p0-effect-time-permit.yml",
     ".github/workflows/sco-construction-e9-e14-completion.yml",
     ".github/workflows/sco-phase2-finalize.yml",
     ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -232,7 +233,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
     "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json",
     "05_staging/research_owner_p0_admission/README.md",
+    "05_staging/research_owner_p0_admission/effect_time_permit.py",
     "05_staging/research_owner_p0_admission/research_owner_p0.py",
+    "05_staging/research_owner_p0_admission/test_effect_time_permit.py",
     "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/D0_MUTANT_RESULTS.json",
@@ -1672,7 +1675,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "source_paths_without_topology": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "05_staging/research_owner_p0_admission/effect_time_permit.py",
     "05_staging/research_owner_p0_admission/research_owner_p0.py",
+    "05_staging/research_owner_p0_admission/test_effect_time_permit.py",
     "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
@@ -1767,9 +1772,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
     "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_blind_gate10_benchmark.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1783,16 +1786,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1643,
-  "bytes": 26431588,
-  "tokens_est": 6598249,
+  "files": 1646,
+  "bytes": 26445436,
+  "tokens_est": 6601712,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
-    "schema_or_lexicon": 272,
+    "python_module": 1001,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
@@ -2090,7 +2093,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   "paths": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+    "05_staging/research_owner_p0_admission/effect_time_permit.py",
     "05_staging/research_owner_p0_admission/research_owner_p0.py",
+    "05_staging/research_owner_p0_admission/test_effect_time_permit.py",
     "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
@@ -2485,9 +2490,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_phase_c3_trial_crucible.py",
     "aura_phase_capsule.py",
     "aura_planning_board.py",
-    "aura_planning_events.py",
-    "aura_planning_frontier.py",
-    "aura_planning_projector.py"
+    "aura_planning_events.py"
   ]
 }
 ```
