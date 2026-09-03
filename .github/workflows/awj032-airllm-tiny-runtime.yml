@@ -96,7 +96,26 @@ jobs:
           print('REMEDIATION_EDITS', receipt['total_edits'])
           PY
 
-      - name: Re-audit remediated source and admit only exact known scanner residuals
+      - name: Prove exact lexical scope of remediated from_config kwargs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/awj032/airllm_fixture_scope_adjudication.py \
+            airllm-upstream \
+            --remediation-receipt .awj032/remediation_receipt.json \
+            --output .awj032/remediated_scope_adjudication.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('.awj032/remediated_scope_adjudication.json').read_text())
+          assert r['status'] == 'PASS', r
+          assert r['trust_remote_code_state'] == 'FALSE', r
+          assert r['primary_from_config_lines'], r
+          assert r['explicit_fallback_lines'], r
+          print('REMEDIATED_SCOPE_HARD_FALSE_PROVEN', r['remediated_git_blob_sha1'])
+          PY
+
+      - name: Re-audit remediated source and admit only proof-bound scanner residuals
         shell: bash
         run: |
           set -euo pipefail
@@ -110,12 +129,20 @@ jobs:
           from pathlib import Path
 
           r = json.loads(Path('.awj032/remediated_source_admission.json').read_text())
+          scope = json.loads(Path('.awj032/remediated_scope_adjudication.json').read_text())
+          assert scope['status'] == 'PASS', scope
+          assert scope['trust_remote_code_state'] == 'FALSE', scope
+          primary_lines = scope['primary_from_config_lines']
+          assert len(primary_lines) == 1, scope
+
           findings = r['findings']
           allowed = {
               ('NESTED_PIP_MUTATION', 'air_llm/setup.py', 29, 'pip install'),
               ('NESTED_PIP_MUTATION', 'air_llm/airllm/airllm_base.py', 124, 'pip install'),
               ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/auto_model.py', 60,
                'get_module_class receives opaque **kwargs without explicit trust_remote_code=False'),
+              ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', scope['path'], primary_lines[0],
+               'from_config receives opaque **kwargs without explicit trust_remote_code=False'),
           }
           observed = {(f['code'], f['path'], f['line'], f['detail']) for f in findings}
           unexpected = observed - allowed
@@ -123,16 +150,21 @@ jobs:
           assert observed <= allowed, findings
 
           adjudication = {
-              'schema': 'AWJ032_FIXTURE_SOURCE_ADJUDICATION_V1',
+              'schema': 'AWJ032_FIXTURE_SOURCE_ADJUDICATION_V2',
               'base_source_gate_status': r['status'],
               'source_digest': r['source_digest'],
+              'scope_adjudication_schema': scope['schema'],
+              'scope_adjudication_blob': scope['remediated_git_blob_sha1'],
               'known_scanner_residuals': findings,
               'unexpected_findings': [],
               'fixture_path_admitted': True,
               'reason': (
                   'two NESTED_PIP matches are non-executing text in the exact pinned source; '
-                  'get_module_class is an internal AirLLM routing method, while actual Transformers '
-                  'loader boundaries are independently enforced by RuntimeHardFalseGuard'
+                  'get_module_class is an internal AirLLM routing method whose actual Transformers '
+                  'loader boundaries are independently enforced by RuntimeHardFalseGuard; '
+                  'the remediated from_config **kwargs residual is admitted only because an exact '
+                  'remediated-blob lexical-scope proof establishes one mutation-free mapping with '
+                  'literal trust_remote_code=False plus an explicit-False fallback'
               ),
               'claim_ceiling': 'PINNED_TINY_FIXTURE_PATH_ONLY_NOT_GENERAL_SOURCE_GATE_PASS',
           }
