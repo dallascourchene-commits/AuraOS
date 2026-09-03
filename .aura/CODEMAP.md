@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26539323
-- **text_tokens_est**: 6625184
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1656
+- **total_bytes**: 26555088
+- **text_tokens_est**: 6629124
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1656,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1128,6 +1128,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/aura_substrate_manifest.phases.05.json",
     "docs/aura_substrate_manifest.v1.json",
     "docs/aura_substrate_release_index.v1.json",
+    "docs/bughound/real-corpus-hydration-o8.md",
+    "docs/bughound/real-corpus-k27-o8.json",
     "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
     "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
     "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -1644,6 +1646,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_bughound_blind_discovery.py",
     "tests/test_bughound_blind_oracle_provenance.py",
     "tests/test_bughound_blind_score_admission.py",
+    "tests/test_bughound_corpus_hydration.py",
     "tests/test_bughound_envelope_lint.py",
     "tests/test_bughound_seedlab_benchmark.py",
     "tests/test_bughound_trust_boundary_seed.py",
@@ -1793,16 +1796,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26539323,
-  "tokens_est": 6625184,
+  "files": 1656,
+  "bytes": 26555088,
+  "tokens_est": 6629124,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1010,
-    "schema_or_lexicon": 272,
+    "python_module": 1011,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
