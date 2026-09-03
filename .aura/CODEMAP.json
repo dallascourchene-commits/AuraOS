@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788437948,
+  "generated_at_unix": 1788444810,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1672,
+    "repo_file_count": 1675,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      ".github/workflows/awj032-airllm-fixture-scope-adjudication.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
@@ -1654,12 +1655,14 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
+      "tools/awj032/airllm_fixture_scope_adjudication.py",
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
+      "tools/awj032/test_airllm_fixture_scope_adjudication.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
       "tools/awj032/test_airllm_runtime_hard_false.py",
@@ -1788,16 +1791,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1672,
-      "bytes": 26530442,
-      "tokens_est": 6623006,
+      "files": 1675,
+      "bytes": 26546457,
+      "tokens_est": 6627011,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
-        "schema_or_lexicon": 277,
+        "python_module": 1020,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -3499,6 +3502,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 264,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:main:b75b83545cd288e7",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -101208,6 +101219,14 @@
         "signature_hash": "8095b1b695aeff1f"
       },
       {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:git_blob_sha1:6eccd351fcde48d8",
+        "signature_hash": "5bc298414085387a"
+      },
+      {
         "file": "tools/awj032/airllm_hard_false_remediation.py",
         "kind": "function",
         "line": 75,
@@ -113836,6 +113855,14 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#function:fixture:b9d81e5ab9c9ed8a",
+        "signature_hash": "9f966626bfa01512"
       }
     ],
     "session": [
@@ -158074,6 +158101,86 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ScopeAdjudicationError": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#class:ScopeAdjudicationError:e1d78ac8d74b24bf",
+        "signature_hash": "ffc55a65f757826b"
+      }
+    ],
+    "ScopeAdjudicationReceipt": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#class:ScopeAdjudicationReceipt:5da31157f5446aaf",
+        "signature_hash": "8206d1a5037ef942"
+      }
+    ],
+    "ScopeAdjudicationReceipt.to_dict": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationReceipt.to_dict:9fd0dfaba60dddcc",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_find_method": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_find_method:0fa1883986f206df",
+        "signature_hash": "1ca48d503de61c9e"
+      }
+    ],
+    "_current_scope_nodes": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_current_scope_nodes:b71f292db3ef9256",
+        "signature_hash": "61050447fbf80f26"
+      }
+    ],
+    "_mapping_assignment": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 146,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_mapping_assignment:6eadd1cb441c952d",
+        "signature_hash": "d7c11879f3197159"
+      }
+    ],
+    "_dict_trust_state": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 164,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_dict_trust_state:89f311663a9bba1e",
+        "signature_hash": "e4ed7c8e655f484b"
+      }
+    ],
+    "adjudicate": [
+      {
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 239,
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:adjudicate:7ff99884001ca9f4",
+        "signature_hash": "d30fffc628869a19"
+      }
+    ],
     "InspectedTreeRemediationReceipt": [
       {
         "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
@@ -158802,6 +158909,154 @@
         "signature_hash": "b69864198b5f23ad"
       }
     ],
+    "make_tree": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 26,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#function:make_tree:68bb6ed31718f0b1",
+        "signature_hash": "8983e751788fd8a8"
+      },
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#function:make_tree:42bbbeee2e1240a1",
+        "signature_hash": "258e8fddc4e5cf01"
+      }
+    ],
+    "ScopeAdjudicationTests": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#class:ScopeAdjudicationTests:2e94fd8ee1c81a59",
+        "signature_hash": "e698549596792d47"
+      }
+    ],
+    "ScopeAdjudicationTests._adjudicate": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests._adjudicate:edd51f32bc8208c8",
+        "signature_hash": "5f2be312acb6028f"
+      }
+    ],
+    "ScopeAdjudicationTests._blocked": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests._blocked:627cdab6810cffc8",
+        "signature_hash": "68ba5a5503837f05"
+      }
+    ],
+    "ScopeAdjudicationTests.test_literal_hard_false_mapping_passes": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_literal_hard_false_mapping_passes:7b0ebfb2fae2ad77",
+        "signature_hash": "dc7f34e7f2dca26c"
+      }
+    ],
+    "ScopeAdjudicationTests.test_sibling_kwargs_binding_does_not_pollute_target_scope": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_sibling_kwargs_binding_does_not_pollute_target_scope:ed25b2d2f7eddac9",
+        "signature_hash": "8eb4ff3f787934d2"
+      }
+    ],
+    "ScopeAdjudicationTests.test_true_mapping_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_true_mapping_blocks:ce24265a283a191c",
+        "signature_hash": "97168ea27dbc5af8"
+      }
+    ],
+    "ScopeAdjudicationTests.test_dynamic_mapping_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_dynamic_mapping_blocks:a9047c3d27cb3fb5",
+        "signature_hash": "3ea1c61663d34b38"
+      }
+    ],
+    "ScopeAdjudicationTests.test_second_mapping_assignment_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_second_mapping_assignment_blocks:5bf4fe4783a3cca0",
+        "signature_hash": "de82ef8498c110c7"
+      }
+    ],
+    "ScopeAdjudicationTests.test_subscript_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_subscript_mutation_blocks:804ad6b06a602f14",
+        "signature_hash": "0ce982c62f607f75"
+      }
+    ],
+    "ScopeAdjudicationTests.test_update_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_update_mutation_blocks:3c445fd529c40ba3",
+        "signature_hash": "edbdb732978e9f28"
+      }
+    ],
+    "ScopeAdjudicationTests.test_fallback_without_explicit_false_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_fallback_without_explicit_false_blocks:374c313d3e15905c",
+        "signature_hash": "01adbb67770b5f68"
+      }
+    ],
+    "ScopeAdjudicationTests.test_other_expansion_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_other_expansion_blocks:7e55948ac1ef0bbc",
+        "signature_hash": "3f56bce2689dcbcf"
+      }
+    ],
+    "ScopeAdjudicationTests.test_remediated_blob_drift_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_remediated_blob_drift_blocks:86fab55c1d9d3db3",
+        "signature_hash": "54f9ea686149222e"
+      }
+    ],
     "make_files": [
       {
         "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
@@ -159260,16 +159515,6 @@
         "end_line": 196,
         "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_second_install_fails_closed:ecf8001c82da93f7",
         "signature_hash": "30028f528eda8243"
-      }
-    ],
-    "make_tree": [
-      {
-        "file": "tools/awj032/test_airllm_source_admission.py",
-        "kind": "function",
-        "line": 8,
-        "end_line": 21,
-        "semantic_id": "tools/awj032/test_airllm_source_admission.py#function:make_tree:42bbbeee2e1240a1",
-        "signature_hash": "258e8fddc4e5cf01"
       }
     ],
     "GateTests": [
@@ -161023,6 +161268,9 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
     ],
     "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
+      ".github/workflows/awj032-airllm-tiny-runtime.yml"
+    ],
+    "python tools/awj032/airllm_fixture_scope_adjudication.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
     "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
@@ -170771,6 +171019,53 @@
       ]
     },
     {
+      "path": ".github/workflows/awj032-airllm-fixture-scope-adjudication.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 774,
+      "lines": 27,
+      "tokens_est": 194,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "903de6e433885a89",
+      "vector": [
+        -0.274165,
+        -0.064108,
+        -0.045012,
+        0.132308,
+        -0.025916,
+        0.325997,
+        -0.02046,
+        -0.342365,
+        0.287805,
+        -0.08866,
+        0.255069,
+        0.184141,
+        -0.121396,
+        -0.069564,
+        0.015004,
+        0.045012,
+        0.347821,
+        -0.113212,
+        -0.135036,
+        -0.1023,
+        -0.159588,
+        0.238701,
+        0.028644,
+        0.004092,
+        0.216877,
+        0.298717,
+        -0.023188,
+        0.135036,
+        -0.186869,
+        -0.118668,
+        0.069564,
+        -0.1023
+      ]
+    },
+    {
       "path": ".github/workflows/awj032-airllm-g1-source-contract.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -170831,12 +171126,13 @@
       "path": ".github/workflows/awj032-airllm-tiny-runtime.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 8065,
-      "lines": 203,
-      "tokens_est": 2017,
+      "bytes": 9829,
+      "lines": 235,
+      "tokens_est": 2458,
       "symbol_count": 0,
       "commands": [
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json",
+        "python tools/awj032/airllm_fixture_scope_adjudication.py \\",
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json",
         "python -m pip",
         "python tools/awj032/airllm_tiny_fixture_probe.py \\"
@@ -170845,54 +171141,57 @@
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
           63
         ],
+        "python tools/awj032/airllm_fixture_scope_adjudication.py \\": [
+          103
+        ],
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
-          104
+          123
         ],
         "python -m pip": [
-          149,
-          150,
-          159,
-          160
+          181,
+          182,
+          191,
+          192
         ],
         "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
-          166
+          198
         ]
       },
       "topology": {},
-      "digest8": "5eb8ed253fb26d63",
+      "digest8": "637bc2eb3c8913f3",
       "vector": [
-        -0.082232,
-        -0.246695,
-        0.160548,
-        0.176211,
-        -0.011747,
-        -0.330232,
-        -0.155327,
-        -0.087453,
-        0.152716,
-        -0.014358,
-        -0.233642,
-        0.116169,
-        -0.194484,
-        -0.176211,
-        -0.131832,
-        -0.07179,
-        -0.02219,
-        -0.030021,
-        -0.264969,
-        -0.053516,
-        -0.139663,
-        -0.139663,
-        0.058737,
-        -0.103116,
-        0.283243,
-        -0.267579,
-        -0.001305,
-        0.194484,
-        -0.144884,
-        -0.31979,
-        -0.298906,
-        -0.147495
+        0.176202,
+        0.25226,
+        -0.100144,
+        -0.051973,
+        0.280148,
+        0.016479,
+        -0.029156,
+        -0.095073,
+        0.257331,
+        -0.072255,
+        -0.267472,
+        -0.176202,
+        -0.150849,
+        0.264937,
+        -0.206625,
+        -0.209161,
+        0.082397,
+        0.310572,
+        0.097608,
+        0.105214,
+        -0.15592,
+        -0.06972,
+        0.272543,
+        0.090002,
+        -0.130567,
+        0.039297,
+        -0.031691,
+        0.034226,
+        0.308037,
+        0.034226,
+        0.282684,
+        0.135637
       ]
     },
     {
@@ -266243,6 +266542,53 @@
       ]
     },
     {
+      "path": "tools/awj032/airllm_fixture_scope_adjudication.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9711,
+      "lines": 269,
+      "tokens_est": 2428,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "762002ede01c0f99",
+      "vector": [
+        -0.182106,
+        -0.035926,
+        -0.068135,
+        -0.070613,
+        0.105299,
+        -0.100344,
+        -0.229181,
+        -0.164763,
+        0.001239,
+        -0.045836,
+        -0.271301,
+        0.26139,
+        -0.12512,
+        0.006194,
+        0.149897,
+        -0.117688,
+        -0.21927,
+        -0.301032,
+        0.214315,
+        -0.268823,
+        -0.105299,
+        -0.11521,
+        -0.244047,
+        -0.144941,
+        -0.130076,
+        -0.206882,
+        -0.06318,
+        -0.058224,
+        0.246524,
+        -0.278734,
+        0.06318,
+        0.296077
+      ]
+    },
+    {
       "path": "tools/awj032/airllm_hard_false_inspected_tree.py",
       "role": "python_module",
       "binary": false,
@@ -266522,6 +266868,53 @@
         0.074791,
         -0.140397,
         0.145646
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3766,
+      "lines": 107,
+      "tokens_est": 942,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "aaa01bae9199a1c7",
+      "vector": [
+        0.146672,
+        0.159885,
+        -0.014535,
+        -0.080603,
+        0.220668,
+        0.228596,
+        -0.175742,
+        0.117601,
+        -0.006607,
+        0.136101,
+        -0.220668,
+        -0.18367,
+        0.101745,
+        0.204812,
+        0.022463,
+        -0.120244,
+        -0.218025,
+        0.017178,
+        -0.062104,
+        -0.315806,
+        -0.249738,
+        0.093817,
+        -0.207454,
+        -0.273523,
+        -0.220668,
+        0.228596,
+        0.017178,
+        0.138743,
+        -0.006607,
+        -0.191598,
+        0.307878,
+        -0.199526
       ]
     },
     {
@@ -290711,16 +291104,16 @@
     }
   },
   "summary": {
-    "file_count": 1672,
-    "total_bytes": 26530442,
-    "text_tokens_est": 6623006,
+    "file_count": 1675,
+    "total_bytes": 26546457,
+    "text_tokens_est": 6627011,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
-      "schema_or_lexicon": 277,
+      "python_module": 1020,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290876,6 +291269,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      ".github/workflows/awj032-airllm-fixture-scope-adjudication.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
@@ -292384,12 +292778,14 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
+      "tools/awj032/airllm_fixture_scope_adjudication.py",
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
+      "tools/awj032/test_airllm_fixture_scope_adjudication.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
       "tools/awj032/test_airllm_runtime_hard_false.py",
@@ -450482,6 +450878,106 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#class:ScopeAdjudicationError:e1d78ac8d74b24bf",
+        "name": "ScopeAdjudicationError",
+        "kind": "class",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "ffc55a65f757826b",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#class:ScopeAdjudicationReceipt:5da31157f5446aaf",
+        "name": "ScopeAdjudicationReceipt",
+        "kind": "class",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 35,
+        "end_line": 51,
+        "signature_hash": "8206d1a5037ef942",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_current_scope_nodes:b71f292db3ef9256",
+        "name": "_current_scope_nodes",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 78,
+        "end_line": 86,
+        "signature_hash": "61050447fbf80f26",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_dict_trust_state:89f311663a9bba1e",
+        "name": "_dict_trust_state",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 149,
+        "end_line": 164,
+        "signature_hash": "e4ed7c8e655f484b",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_find_method:0fa1883986f206df",
+        "name": "_find_method",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 59,
+        "end_line": 75,
+        "signature_hash": "1ca48d503de61c9e",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:_mapping_assignment:6eadd1cb441c952d",
+        "name": "_mapping_assignment",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 89,
+        "end_line": 146,
+        "signature_hash": "d7c11879f3197159",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:adjudicate:7ff99884001ca9f4",
+        "name": "adjudicate",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 167,
+        "end_line": 239,
+        "signature_hash": "d30fffc628869a19",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:git_blob_sha1:6eccd351fcde48d8",
+        "name": "git_blob_sha1",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "5bc298414085387a",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#function:main:b75b83545cd288e7",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 242,
+        "end_line": 264,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationReceipt.to_dict:9fd0dfaba60dddcc",
+        "name": "ScopeAdjudicationReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/airllm_fixture_scope_adjudication.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "762002ede01c0f99"
+      },
+      {
         "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#class:InspectedTreeRemediationReceipt:844e8fce144c81b7",
         "name": "InspectedTreeRemediationReceipt",
         "kind": "class",
@@ -451340,6 +451836,156 @@
         "end_line": 55,
         "signature_hash": "c6ce152f41eb4f78",
         "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#class:ScopeAdjudicationTests:2e94fd8ee1c81a59",
+        "name": "ScopeAdjudicationTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 46,
+        "end_line": 102,
+        "signature_hash": "e698549596792d47",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#function:fixture:b9d81e5ab9c9ed8a",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 29,
+        "end_line": 43,
+        "signature_hash": "9f966626bfa01512",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#function:make_tree:68bb6ed31718f0b1",
+        "name": "make_tree",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 9,
+        "end_line": 26,
+        "signature_hash": "8983e751788fd8a8",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests._adjudicate:edd51f32bc8208c8",
+        "name": "ScopeAdjudicationTests._adjudicate",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 47,
+        "end_line": 50,
+        "signature_hash": "5f2be312acb6028f",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests._blocked:627cdab6810cffc8",
+        "name": "ScopeAdjudicationTests._blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 52,
+        "end_line": 56,
+        "signature_hash": "68ba5a5503837f05",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_dynamic_mapping_blocks:a9047c3d27cb3fb5",
+        "name": "ScopeAdjudicationTests.test_dynamic_mapping_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 72,
+        "end_line": 73,
+        "signature_hash": "3ea1c61663d34b38",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_fallback_without_explicit_false_blocks:374c313d3e15905c",
+        "name": "ScopeAdjudicationTests.test_fallback_without_explicit_false_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 87,
+        "end_line": 88,
+        "signature_hash": "01adbb67770b5f68",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_literal_hard_false_mapping_passes:7b0ebfb2fae2ad77",
+        "name": "ScopeAdjudicationTests.test_literal_hard_false_mapping_passes",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "dc7f34e7f2dca26c",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_other_expansion_blocks:7e55948ac1ef0bbc",
+        "name": "ScopeAdjudicationTests.test_other_expansion_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 90,
+        "end_line": 94,
+        "signature_hash": "3f56bce2689dcbcf",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_remediated_blob_drift_blocks:86fab55c1d9d3db3",
+        "name": "ScopeAdjudicationTests.test_remediated_blob_drift_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 96,
+        "end_line": 102,
+        "signature_hash": "54f9ea686149222e",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_second_mapping_assignment_blocks:5bf4fe4783a3cca0",
+        "name": "ScopeAdjudicationTests.test_second_mapping_assignment_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 75,
+        "end_line": 79,
+        "signature_hash": "de82ef8498c110c7",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_sibling_kwargs_binding_does_not_pollute_target_scope:ed25b2d2f7eddac9",
+        "name": "ScopeAdjudicationTests.test_sibling_kwargs_binding_does_not_pollute_target_scope",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 61,
+        "end_line": 67,
+        "signature_hash": "8eb4ff3f787934d2",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_subscript_mutation_blocks:804ad6b06a602f14",
+        "name": "ScopeAdjudicationTests.test_subscript_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 81,
+        "end_line": 82,
+        "signature_hash": "0ce982c62f607f75",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_true_mapping_blocks:ce24265a283a191c",
+        "name": "ScopeAdjudicationTests.test_true_mapping_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 69,
+        "end_line": 70,
+        "signature_hash": "97168ea27dbc5af8",
+        "file_digest8": "aaa01bae9199a1c7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_fixture_scope_adjudication.py#method:ScopeAdjudicationTests.test_update_mutation_blocks:3c445fd529c40ba3",
+        "name": "ScopeAdjudicationTests.test_update_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_fixture_scope_adjudication.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "edbdb732978e9f28",
+        "file_digest8": "aaa01bae9199a1c7"
       },
       {
         "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#class:InspectedTreeTests:28098940ccea427d",
@@ -453402,7 +454048,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "609c2a6ac903e5399260fd842c0a70d9",
-    "payload_hash": "c28bdc85a0828d5ce9e654dc00c60d71"
+    "record_fingerprint": "1729bbe519656f08507f800f73eae4f1",
+    "payload_hash": "988947934b647141384b194da6b5d530"
   }
 }
