@@ -1,0 +1,23 @@
+name: AuraOS796 Reference Kernel
+
+on:
+  pull_request:
+    paths:
+      - '05_staging/auraos796_reference_kernel/**'
+      - '.github/workflows/auraos796-reference-kernel.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run focused reference-kernel tests
+        working-directory: 05_staging/auraos796_reference_kernel
+        run: python -m unittest -v test_reference_kernel.py
