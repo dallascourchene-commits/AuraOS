@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788442915,
+  "generated_at_unix": 1788443529,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1653,
+    "repo_file_count": 1659,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1110,6 +1110,9 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/hard-case-precision-router-o9.md",
+      "docs/bughound/real-corpus-hydration-o8.md",
+      "docs/bughound/real-corpus-k27-o8.json",
       "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
       "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -1626,7 +1629,9 @@
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_blind_oracle_provenance.py",
       "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_precision_router.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
@@ -1643,6 +1648,7 @@
       "tools/bughound/blind_score_admission.py",
       "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/precision_router.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
@@ -1769,16 +1775,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1653,
-      "bytes": 26539323,
-      "tokens_est": 6625184,
+      "files": 1659,
+      "bytes": 26573712,
+      "tokens_est": 6633776,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1010,
-        "schema_or_lexicon": 272,
+        "python_module": 1013,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -27542,6 +27548,14 @@
         "line": 297,
         "end_line": 363,
         "semantic_id": "aura_model_cognome.py#class:RouteDecision:d26c6cc738041af5",
+        "signature_hash": "2f7b1f26be2473f0"
+      },
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 111,
+        "semantic_id": "tools/bughound/precision_router.py#class:RouteDecision:285d5b279e4898dc",
         "signature_hash": "2f7b1f26be2473f0"
       }
     ],
@@ -127995,6 +128009,14 @@
         "end_line": 43,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:state:f36d665e567b7907",
         "signature_hash": "4f98deada91b795f"
+      },
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 28,
+        "semantic_id": "tests/test_bughound_precision_router.py#function:state:44c1a33fa964f03b",
+        "signature_hash": "28b13c214ec72514"
       }
     ],
     "decoded": [
@@ -157593,6 +157615,326 @@
         "signature_hash": "165eff4d3f7abf22"
       }
     ],
+    "CorpusHydrationTests": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 209,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#class:CorpusHydrationTests:bbd778d8cbb04f37",
+        "signature_hash": "78fea46d27bd289e"
+      }
+    ],
+    "CorpusHydrationTests.test_registry_has_distinct_ids": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_registry_has_distinct_ids:a4c49c20ad4b0f34",
+        "signature_hash": "1a29e5bb5f096271"
+      }
+    ],
+    "CorpusHydrationTests.test_manifest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_manifest_is_deterministic:22d2214f38d54037",
+        "signature_hash": "b175c411a6a96b00"
+      }
+    ],
+    "CorpusHydrationTests.test_k27_is_deterministic_but_not_identity": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_k27_is_deterministic_but_not_identity:1aefdb56dcfee4cb",
+        "signature_hash": "9ce868fab71cdd87"
+      }
+    ],
+    "CorpusHydrationTests.test_arvo_earns_l4_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_arvo_earns_l4_blind_eval:aaffc31764a9e225",
+        "signature_hash": "936374df095c584a"
+      }
+    ],
+    "CorpusHydrationTests.test_magma_earns_l4_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_magma_earns_l4_blind_eval:de95b1652d7c1668",
+        "signature_hash": "0a416ba621b695df"
+      }
+    ],
+    "CorpusHydrationTests.test_vul4j_earns_l4_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vul4j_earns_l4_blind_eval:a7ce78be2c76e747",
+        "signature_hash": "0aa8630b96f3d3c2"
+      }
+    ],
+    "CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 52,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority:f0f4bff353ab26f6",
+        "signature_hash": "f2f812bfac67f831"
+      }
+    ],
+    "CorpusHydrationTests.test_vulngym_stops_at_l3": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vulngym_stops_at_l3:192910d2be792cec",
+        "signature_hash": "f328a7e97b290253"
+      }
+    ],
+    "CorpusHydrationTests.test_cisco_stops_at_l3": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cisco_stops_at_l3:eab0435d952e5d57",
+        "signature_hash": "0d14ea0471cbd81e"
+      }
+    ],
+    "CorpusHydrationTests.test_cvefixes_not_l4": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cvefixes_not_l4:cbd65a9e255d100e",
+        "signature_hash": "7175b954290037d5"
+      }
+    ],
+    "CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 66,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth:3a87e91a150d6fff",
+        "signature_hash": "1e78192b6ca14e02"
+      }
+    ],
+    "CorpusHydrationTests.test_train_cannot_consume_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 69,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_train_cannot_consume_blind_eval:437b9858ed623b72",
+        "signature_hash": "58f46ab9f18c47a3"
+      }
+    ],
+    "CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval:d11ea7f112d73020",
+        "signature_hash": "cc3bfd2c39a9aa50"
+      }
+    ],
+    "CorpusHydrationTests.test_solver_never_sees_arvo_gold": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 79,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_arvo_gold:0161402c05bd0b66",
+        "signature_hash": "f28069af2f945e6a"
+      }
+    ],
+    "CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold:ece1e3cd725045ea",
+        "signature_hash": "085d672f3efccbe0"
+      }
+    ],
+    "CorpusHydrationTests.test_evaluator_may_hold_gold": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 89,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_evaluator_may_hold_gold:6e91b2d55cf1f0a6",
+        "signature_hash": "da924e143ab4b241"
+      }
+    ],
+    "CorpusHydrationTests.test_good_train_eval_split": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 96,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_good_train_eval_split:99420fef2a15f96b",
+        "signature_hash": "d96669c7198b2ee1"
+      }
+    ],
+    "CorpusHydrationTests.test_same_corpus_split_fails": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 101,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_same_corpus_split_fails:3d15689d57771e16",
+        "signature_hash": "9e93c5307c238902"
+      }
+    ],
+    "CorpusHydrationTests.test_blind_eval_in_training_split_fails": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_blind_eval_in_training_split_fails:4321460b2025f718",
+        "signature_hash": "f5a80c09fc454041"
+      }
+    ],
+    "CorpusHydrationTests.test_diagnostic_not_blind_eval": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 111,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_diagnostic_not_blind_eval:23e11b49ed478db5",
+        "signature_hash": "1bfc15922decd8e9"
+      }
+    ],
+    "CorpusHydrationTests.test_score_requires_independent_support": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 120,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_score_requires_independent_support:60521b7c59816125",
+        "signature_hash": "002f811d2025c5ae"
+      }
+    ],
+    "CorpusHydrationTests.test_patched_false_positive_counts": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 128,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_patched_false_positive_counts:fb037c03f45bbc50",
+        "signature_hash": "ad76f61170c836ce"
+      }
+    ],
+    "CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 135,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual:fa9c7be6246cf1c3",
+        "signature_hash": "afe6a6eb5ac01877"
+      }
+    ],
+    "CorpusHydrationTests.test_file_localization_f1": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 141,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_file_localization_f1:fcfd7580bea1ce93",
+        "signature_hash": "bfca5ced31e41640"
+      }
+    ],
+    "CorpusHydrationTests.test_trace_coverage": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 145,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trace_coverage:d99aea2fec4d504d",
+        "signature_hash": "611ad2434e4597ce"
+      }
+    ],
+    "CorpusHydrationTests.test_repeatability": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 149,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_repeatability:b81f022f69c1a74c",
+        "signature_hash": "03cce0dd5ba05530"
+      }
+    ],
+    "CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 153,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions:99950a1a4e922e77",
+        "signature_hash": "ba6f78c3e8e76321"
+      }
+    ],
+    "CorpusHydrationTests.test_hyper1000_exact": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_hyper1000_exact:9b1a7fe7af9b4245",
+        "signature_hash": "df1ac10fc3bd05af"
+      }
+    ],
+    "CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 166,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash:bab2f1a4992ef105",
+        "signature_hash": "f1a05befd5c96b37"
+      }
+    ],
+    "CorpusHydrationTests.test_no_admission_mints_authority": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 178,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_no_admission_mints_authority:746e66f7f87a4282",
+        "signature_hash": "74be7b99a35e3c2a"
+      }
+    ],
+    "CorpusHydrationTests.test_randomized_contamination_reference_equivalence": [
+      {
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 209,
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_randomized_contamination_reference_equivalence:b649c67a54da4a70",
+        "signature_hash": "8b4e58c0a38c729e"
+      }
+    ],
     "BugHoundEnvelopeLintTests": [
       {
         "file": "tests/test_bughound_envelope_lint.py",
@@ -157731,6 +158073,266 @@
         "end_line": 103,
         "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic:a037c082fa510554",
         "signature_hash": "49954c66936facb3"
+      }
+    ],
+    "RouterTests": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 200,
+        "semantic_id": "tests/test_bughound_precision_router.py#class:RouterTests:17897889f90d2f5e",
+        "signature_hash": "065d17aaa90883f2"
+      }
+    ],
+    "RouterTests.test_stale_source_rehydrates_from_l0": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_stale_source_rehydrates_from_l0:69f69a2aa9286af9",
+        "signature_hash": "b7021c8af3159369"
+      }
+    ],
+    "RouterTests.test_oracle_generation_drift_reopens_l4": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_oracle_generation_drift_reopens_l4:673d38cbbc67213f",
+        "signature_hash": "9d0dfcf5d1e2ab2c"
+      }
+    ],
+    "RouterTests.test_structural": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_structural:31ee8bb090f1bc85",
+        "signature_hash": "65d8a80c7fc8b426"
+      }
+    ],
+    "RouterTests.test_path": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_path:b66c1113ae0e0165",
+        "signature_hash": "b9ff10dcab51075a"
+      }
+    ],
+    "RouterTests.test_interproc": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_interproc:65b11db4c3bf4833",
+        "signature_hash": "bfc233b6e2f0cb23"
+      }
+    ],
+    "RouterTests.test_stateful": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_stateful:416fb46820f8c46c",
+        "signature_hash": "3cef82fab84fdc80"
+      }
+    ],
+    "RouterTests.test_dynamic": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_dynamic:6b72cba0dcbffd33",
+        "signature_hash": "19c67e551aa70699"
+      }
+    ],
+    "RouterTests.test_counterfactual": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_counterfactual:46b06fbf9e9c2de0",
+        "signature_hash": "9b98446356a87d87"
+      }
+    ],
+    "RouterTests.test_no_residual": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_no_residual:35be8acbaf886726",
+        "signature_hash": "0ac9741c2a204fc4"
+      }
+    ],
+    "RouterTests.test_dependency_unknown_widens_to_l7_when_oracle_available": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_dependency_unknown_widens_to_l7_when_oracle_available:4577cc6d427c06c8",
+        "signature_hash": "3fe66f681851b8c9"
+      }
+    ],
+    "RouterTests.test_dependency_unknown_widens_to_dynamic_without_oracle": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_dependency_unknown_widens_to_dynamic_without_oracle:a769451d69472c0d",
+        "signature_hash": "16f631a9dbed34c9"
+      }
+    ],
+    "RouterTests.test_l4_without_oracle_holds": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_l4_without_oracle_holds:b489f0f4dd7962c8",
+        "signature_hash": "a9559834b26a0b94"
+      }
+    ],
+    "RouterTests.test_budget_stop": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 78,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_budget_stop:b07ee18013767669",
+        "signature_hash": "21696d4f1ccd5f09"
+      }
+    ],
+    "RouterTests.test_network_requirement_holds": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 81,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_network_requirement_holds:26e17112d4d32019",
+        "signature_hash": "a1e3bec5fb9baea2"
+      }
+    ],
+    "RouterTests.test_credentials_requirement_holds": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 84,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_credentials_requirement_holds:cae741d95e274a1d",
+        "signature_hash": "5fc51f59882dffa0"
+      }
+    ],
+    "RouterTests.test_no_route_mints_authority": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 104,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_no_route_mints_authority:c410d129a83c9d9b",
+        "signature_hash": "8d87e17855549efa"
+      }
+    ],
+    "RouterTests.test_decision_digest_deterministic": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 110,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_decision_digest_deterministic:cdf0541f3a9993f4",
+        "signature_hash": "89215c31b34426ff"
+      }
+    ],
+    "RouterTests.test_difficulty_vector_separate_axes": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 116,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_difficulty_vector_separate_axes:90750767511ee2e2",
+        "signature_hash": "67a597a734c35caf"
+      }
+    ],
+    "RouterTests.test_hyper1000": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 119,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_hyper1000:7ea9c728aaee436a",
+        "signature_hash": "99ea9283aaae140d"
+      }
+    ],
+    "RouterTests.test_routing_cheaper_than_naive_on_mixed_local_cases": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_routing_cheaper_than_naive_on_mixed_local_cases:834eb2cb5e1e5323",
+        "signature_hash": "799088c76a2c9ab6"
+      }
+    ],
+    "RouterTests.test_tier_priority_deepest_required": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_tier_priority_deepest_required:31a0cc449246801b",
+        "signature_hash": "7de718b06891130c"
+      }
+    ],
+    "RouterTests.test_empty_case_fails": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 141,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_empty_case_fails:d83d33c8bc2a6dda",
+        "signature_hash": "b3a5d9c9a0960097"
+      }
+    ],
+    "RouterTests.test_cost_zero_on_hold": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 144,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_cost_zero_on_hold:01af00c54f3ed815",
+        "signature_hash": "a1eff2751f6d32cd"
+      }
+    ],
+    "RouterTests.test_stale_source_precedes_deep_work": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 150,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_stale_source_precedes_deep_work:8aaef8c15273adc2",
+        "signature_hash": "3de52f2b1d6ef13b"
+      }
+    ],
+    "RouterTests.test_randomized_reference_equivalence": [
+      {
+        "file": "tests/test_bughound_precision_router.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 200,
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_randomized_reference_equivalence:55093d22a801a8c9",
+        "signature_hash": "285aa76e06c2acf6"
       }
     ],
     "BugHoundSeedLabTests": [
@@ -158801,6 +159403,14 @@
         "end_line": 487,
         "semantic_id": "tools/bughound/corpus_hydration.py#function:hyper1000_cells:6444f336f0004eb2",
         "signature_hash": "d9db242ce45aec7b"
+      },
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "function",
+        "line": 229,
+        "end_line": 239,
+        "semantic_id": "tools/bughound/precision_router.py#function:hyper1000_cells:399cbfa1392d568e",
+        "signature_hash": "d9db242ce45aec7b"
       }
     ],
     "LintDisposition": [
@@ -158871,6 +159481,86 @@
         "end_line": 208,
         "semantic_id": "tools/bughound/envelope_lint.py#function:lint_envelope:72a9c9fcfb3c121a",
         "signature_hash": "8d871b696a6b8aaa"
+      }
+    ],
+    "PrecisionTier": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/bughound/precision_router.py#class:PrecisionTier:fac731e3c004ba60",
+        "signature_hash": "59df55d12ad2745d"
+      }
+    ],
+    "CaseState": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/precision_router.py#class:CaseState:2c363a291fa117e4",
+        "signature_hash": "9784df32d243ce46"
+      }
+    ],
+    "RouteDecision.decision_digest": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 111,
+        "semantic_id": "tools/bughound/precision_router.py#method:RouteDecision.decision_digest:810e223c02149c4f",
+        "signature_hash": "af940db68c44de13"
+      }
+    ],
+    "_required_tier": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 131,
+        "semantic_id": "tools/bughound/precision_router.py#function:_required_tier:489742ffb0a0d434",
+        "signature_hash": "0268b0d3c3311ac3"
+      }
+    ],
+    "route_case": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 206,
+        "semantic_id": "tools/bughound/precision_router.py#function:route_case:6534633870c37198",
+        "signature_hash": "d2c44c5f93b86db7"
+      }
+    ],
+    "naive_full_cost": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "function",
+        "line": 209,
+        "end_line": 210,
+        "semantic_id": "tools/bughound/precision_router.py#function:naive_full_cost:3e9316d1b166f7ed",
+        "signature_hash": "29f44f06fea0ecd4"
+      }
+    ],
+    "routed_cost": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "function",
+        "line": 213,
+        "end_line": 214,
+        "semantic_id": "tools/bughound/precision_router.py#function:routed_cost:15141f0f3533bde2",
+        "signature_hash": "240df3dcf133cee7"
+      }
+    ],
+    "difficulty_vector": [
+      {
+        "file": "tools/bughound/precision_router.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 226,
+        "semantic_id": "tools/bughound/precision_router.py#function:difficulty_vector:bb7f2f558de6f51e",
+        "signature_hash": "335cff3f813bd5d8"
       }
     ],
     "BenchmarkError": [
@@ -237455,6 +238145,147 @@
       ]
     },
     {
+      "path": "docs/bughound/hard-case-precision-router-o9.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1589,
+      "lines": 29,
+      "tokens_est": 393,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "64f9065dd834eeb4",
+      "vector": [
+        0.233285,
+        -0.029287,
+        -0.198949,
+        0.124217,
+        0.18683,
+        0.067663,
+        -0.18885,
+        0.174711,
+        -0.073722,
+        0.158553,
+        0.255503,
+        -0.237325,
+        0.144415,
+        -0.211068,
+        -0.174711,
+        -0.170672,
+        -0.08988,
+        0.033326,
+        -0.18885,
+        -0.209048,
+        0.059584,
+        0.219147,
+        0.205008,
+        -0.198949,
+        0.055544,
+        0.209048,
+        0.19087,
+        -0.132296,
+        -0.235305,
+        -0.255503,
+        0.211068,
+        -0.138355
+      ]
+    },
+    {
+      "path": "docs/bughound/real-corpus-hydration-o8.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3534,
+      "lines": 56,
+      "tokens_est": 882,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d035527165e56af7",
+      "vector": [
+        0.092956,
+        0.120498,
+        0.228373,
+        0.008033,
+        0.058528,
+        -0.053937,
+        0.051642,
+        -0.056233,
+        -0.271982,
+        0.221488,
+        -0.205421,
+        0.003443,
+        -0.267392,
+        0.02869,
+        0.145746,
+        0.136565,
+        0.230668,
+        0.271982,
+        -0.030985,
+        -0.08148,
+        0.173288,
+        0.24444,
+        0.19624,
+        0.166403,
+        0.159517,
+        0.13427,
+        0.136565,
+        -0.200831,
+        0.283458,
+        0.056233,
+        0.271982,
+        -0.290344
+      ]
+    },
+    {
+      "path": "docs/bughound/real-corpus-k27-o8.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2679,
+      "lines": 13,
+      "tokens_est": 670,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b1aadf6410e5974c",
+      "vector": [
+        0.246644,
+        0.070635,
+        0.091478,
+        0.075267,
+        -0.283699,
+        -0.267487,
+        0.151692,
+        -0.003474,
+        0.015053,
+        0.267487,
+        0.112321,
+        -0.221169,
+        -0.170219,
+        -0.228117,
+        0.165587,
+        0.003474,
+        -0.10769,
+        0.049792,
+        0.181799,
+        -0.214221,
+        -0.026633,
+        0.135481,
+        -0.001158,
+        -0.214221,
+        -0.084531,
+        -0.283699,
+        -0.292962,
+        0.09611,
+        0.028949,
+        0.26054,
+        -0.225801,
+        0.207274
+      ]
+    },
+    {
       "path": "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -264437,6 +265268,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_corpus_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9552,
+      "lines": 214,
+      "tokens_est": 2388,
+      "symbol_count": 32,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "13527fad69786973",
+      "vector": [
+        0.257405,
+        -0.077559,
+        -0.070815,
+        -0.237173,
+        0.178723,
+        -0.176474,
+        -0.243917,
+        0.223684,
+        0.04159,
+        -0.241669,
+        0.133761,
+        -0.273142,
+        -0.174226,
+        -0.239421,
+        -0.075311,
+        -0.10004,
+        -0.21694,
+        0.007868,
+        -0.16973,
+        -0.185467,
+        0.156242,
+        -0.118024,
+        -0.225932,
+        -0.115776,
+        -0.023605,
+        0.055078,
+        -0.138257,
+        0.210196,
+        0.055078,
+        -0.223684,
+        0.246165,
+        -0.210196
+      ]
+    },
+    {
       "path": "tests/test_bughound_envelope_lint.py",
       "role": "python_module",
       "binary": false,
@@ -264481,6 +265359,53 @@
         0.079602,
         -0.229009,
         0.182472
+      ]
+    },
+    {
+      "path": "tests/test_bughound_precision_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8424,
+      "lines": 205,
+      "tokens_est": 2106,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "af18baf94a8c3725",
+      "vector": [
+        -0.1669,
+        0.069258,
+        0.144192,
+        0.139651,
+        0.189607,
+        -0.071528,
+        -0.262271,
+        0.210044,
+        0.255459,
+        0.162358,
+        0.225939,
+        -0.130568,
+        0.071528,
+        0.237293,
+        0.189607,
+        0.221398,
+        -0.287249,
+        -0.123756,
+        0.187337,
+        0.130568,
+        0.153275,
+        -0.048821,
+        0.250917,
+        0.003406,
+        0.048821,
+        -0.098777,
+        -0.180524,
+        -0.178254,
+        0.110131,
+        -0.262271,
+        0.10559,
+        0.244105
       ]
     },
     {
@@ -265233,6 +266158,53 @@
         -0.204037,
         0.153361,
         0.20137
+      ]
+    },
+    {
+      "path": "tools/bughound/precision_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8611,
+      "lines": 254,
+      "tokens_est": 2153,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ae640f57543f4f92",
+      "vector": [
+        -0.070719,
+        0.260848,
+        0.168102,
+        -0.079993,
+        0.054488,
+        0.121729,
+        0.084631,
+        -0.117092,
+        -0.135641,
+        -0.209837,
+        -0.281715,
+        -0.098542,
+        -0.151871,
+        -0.089268,
+        0.18897,
+        -0.040576,
+        0.216793,
+        0.186651,
+        0.059125,
+        -0.193607,
+        -0.279397,
+        -0.284034,
+        -0.212156,
+        -0.182014,
+        0.23998,
+        -0.277078,
+        0.15419,
+        -0.124047,
+        0.156509,
+        0.077675,
+        -0.161146,
+        -0.209837
       ]
     },
     {
@@ -289328,16 +290300,16 @@
     }
   },
   "summary": {
-    "file_count": 1653,
-    "total_bytes": 26539323,
-    "text_tokens_est": 6625184,
+    "file_count": 1659,
+    "total_bytes": 26573712,
+    "text_tokens_est": 6633776,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1010,
-      "schema_or_lexicon": 272,
+      "python_module": 1013,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290457,6 +291429,9 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/bughound/hard-case-precision-router-o9.md",
+      "docs/bughound/real-corpus-hydration-o8.md",
+      "docs/bughound/real-corpus-k27-o8.json",
       "docs/evidence/AURA_GATE_PHASE2_AGENT_BRIDGE_COUNCIL_V3_BENCHMARK_2026-07-18.json",
       "docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json",
       "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
@@ -290973,7 +291948,9 @@
       "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_blind_oracle_provenance.py",
       "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_corpus_hydration.py",
       "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_precision_router.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
@@ -290990,6 +291967,7 @@
       "tools/bughound/blind_score_admission.py",
       "tools/bughound/corpus_hydration.py",
       "tools/bughound/envelope_lint.py",
+      "tools/bughound/precision_router.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
@@ -448620,6 +449598,326 @@
         "file_digest8": "c98f5ca4a8c58d82"
       },
       {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#class:CorpusHydrationTests:bbd778d8cbb04f37",
+        "name": "CorpusHydrationTests",
+        "kind": "class",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 22,
+        "end_line": 209,
+        "signature_hash": "78fea46d27bd289e",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash:bab2f1a4992ef105",
+        "name": "CorpusHydrationTests.test_all_k27_entries_keep_full_url_hash",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 160,
+        "end_line": 166,
+        "signature_hash": "f1a05befd5c96b37",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_arvo_earns_l4_blind_eval:aaffc31764a9e225",
+        "name": "CorpusHydrationTests.test_arvo_earns_l4_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "936374df095c584a",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_blind_eval_in_training_split_fails:4321460b2025f718",
+        "name": "CorpusHydrationTests.test_blind_eval_in_training_split_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "f5a80c09fc454041",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cisco_stops_at_l3:eab0435d952e5d57",
+        "name": "CorpusHydrationTests.test_cisco_stops_at_l3",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "0d14ea0471cbd81e",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_cvefixes_not_l4:cbd65a9e255d100e",
+        "name": "CorpusHydrationTests.test_cvefixes_not_l4",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "7175b954290037d5",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_diagnostic_not_blind_eval:23e11b49ed478db5",
+        "name": "CorpusHydrationTests.test_diagnostic_not_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 108,
+        "end_line": 111,
+        "signature_hash": "1bfc15922decd8e9",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_evaluator_may_hold_gold:6e91b2d55cf1f0a6",
+        "name": "CorpusHydrationTests.test_evaluator_may_hold_gold",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 86,
+        "end_line": 89,
+        "signature_hash": "da924e143ab4b241",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_file_localization_f1:fcfd7580bea1ce93",
+        "name": "CorpusHydrationTests.test_file_localization_f1",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 137,
+        "end_line": 141,
+        "signature_hash": "bfca5ced31e41640",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_good_train_eval_split:99420fef2a15f96b",
+        "name": "CorpusHydrationTests.test_good_train_eval_split",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 91,
+        "end_line": 96,
+        "signature_hash": "d96669c7198b2ee1",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_hyper1000_exact:9b1a7fe7af9b4245",
+        "name": "CorpusHydrationTests.test_hyper1000_exact",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 155,
+        "end_line": 158,
+        "signature_hash": "df1ac10fc3bd05af",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_k27_is_deterministic_but_not_identity:1aefdb56dcfee4cb",
+        "name": "CorpusHydrationTests.test_k27_is_deterministic_but_not_identity",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "9ce868fab71cdd87",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual:fa9c7be6246cf1c3",
+        "name": "CorpusHydrationTests.test_l4_credit_requires_repro_and_clean_counterfactual",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 130,
+        "end_line": 135,
+        "signature_hash": "afe6a6eb5ac01877",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_magma_earns_l4_blind_eval:de95b1652d7c1668",
+        "name": "CorpusHydrationTests.test_magma_earns_l4_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "0a416ba621b695df",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_manifest_is_deterministic:22d2214f38d54037",
+        "name": "CorpusHydrationTests.test_manifest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "b175c411a6a96b00",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_no_admission_mints_authority:746e66f7f87a4282",
+        "name": "CorpusHydrationTests.test_no_admission_mints_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 168,
+        "end_line": 178,
+        "signature_hash": "74be7b99a35e3c2a",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_patched_false_positive_counts:fb037c03f45bbc50",
+        "name": "CorpusHydrationTests.test_patched_false_positive_counts",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 122,
+        "end_line": 128,
+        "signature_hash": "ad76f61170c836ce",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions:99950a1a4e922e77",
+        "name": "CorpusHydrationTests.test_precision_undefined_with_no_positive_predictions",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 151,
+        "end_line": 153,
+        "signature_hash": "ba6f78c3e8e76321",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_randomized_contamination_reference_equivalence:b649c67a54da4a70",
+        "name": "CorpusHydrationTests.test_randomized_contamination_reference_equivalence",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 180,
+        "end_line": 209,
+        "signature_hash": "8b4e58c0a38c729e",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_registry_has_distinct_ids:a4c49c20ad4b0f34",
+        "name": "CorpusHydrationTests.test_registry_has_distinct_ids",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "1a29e5bb5f096271",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_repeatability:b81f022f69c1a74c",
+        "name": "CorpusHydrationTests.test_repeatability",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 147,
+        "end_line": 149,
+        "signature_hash": "03cce0dd5ba05530",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_same_corpus_split_fails:3d15689d57771e16",
+        "name": "CorpusHydrationTests.test_same_corpus_split_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 98,
+        "end_line": 101,
+        "signature_hash": "9e93c5307c238902",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_score_requires_independent_support:60521b7c59816125",
+        "name": "CorpusHydrationTests.test_score_requires_independent_support",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 113,
+        "end_line": 120,
+        "signature_hash": "002f811d2025c5ae",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority:f0f4bff353ab26f6",
+        "name": "CorpusHydrationTests.test_secbench_earns_l4_but_no_external_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 47,
+        "end_line": 52,
+        "signature_hash": "f2f812bfac67f831",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth:3a87e91a150d6fff",
+        "name": "CorpusHydrationTests.test_snyk_reference_not_independent_ground_truth",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 64,
+        "end_line": 66,
+        "signature_hash": "1e78192b6ca14e02",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_arvo_gold:0161402c05bd0b66",
+        "name": "CorpusHydrationTests.test_solver_never_sees_arvo_gold",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 75,
+        "end_line": 79,
+        "signature_hash": "f28069af2f945e6a",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold:ece1e3cd725045ea",
+        "name": "CorpusHydrationTests.test_solver_never_sees_vulngym_trace_gold",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "085d672f3efccbe0",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trace_coverage:d99aea2fec4d504d",
+        "name": "CorpusHydrationTests.test_trace_coverage",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 143,
+        "end_line": 145,
+        "signature_hash": "611ad2434e4597ce",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_train_cannot_consume_blind_eval:437b9858ed623b72",
+        "name": "CorpusHydrationTests.test_train_cannot_consume_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 68,
+        "end_line": 69,
+        "signature_hash": "58f46ab9f18c47a3",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval:d11ea7f112d73020",
+        "name": "CorpusHydrationTests.test_trainer_cannot_hydrate_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 71,
+        "end_line": 73,
+        "signature_hash": "cc3bfd2c39a9aa50",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vul4j_earns_l4_blind_eval:a7ce78be2c76e747",
+        "name": "CorpusHydrationTests.test_vul4j_earns_l4_blind_eval",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "0aa8630b96f3d3c2",
+        "file_digest8": "13527fad69786973"
+      },
+      {
+        "semantic_id": "tests/test_bughound_corpus_hydration.py#method:CorpusHydrationTests.test_vulngym_stops_at_l3:192910d2be792cec",
+        "name": "CorpusHydrationTests.test_vulngym_stops_at_l3",
+        "kind": "method",
+        "file": "tests/test_bughound_corpus_hydration.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "f328a7e97b290253",
+        "file_digest8": "13527fad69786973"
+      },
+      {
         "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
         "name": "BugHoundEnvelopeLintTests",
         "kind": "class",
@@ -448758,6 +450056,276 @@
         "end_line": 103,
         "signature_hash": "49954c66936facb3",
         "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#class:RouterTests:17897889f90d2f5e",
+        "name": "RouterTests",
+        "kind": "class",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 31,
+        "end_line": 200,
+        "signature_hash": "065d17aaa90883f2",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#function:state:44c1a33fa964f03b",
+        "name": "state",
+        "kind": "function",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 16,
+        "end_line": 28,
+        "signature_hash": "28b13c214ec72514",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_budget_stop:b07ee18013767669",
+        "name": "RouterTests.test_budget_stop",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 77,
+        "end_line": 78,
+        "signature_hash": "21696d4f1ccd5f09",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_cost_zero_on_hold:01af00c54f3ed815",
+        "name": "RouterTests.test_cost_zero_on_hold",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 143,
+        "end_line": 144,
+        "signature_hash": "a1eff2751f6d32cd",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_counterfactual:46b06fbf9e9c2de0",
+        "name": "RouterTests.test_counterfactual",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "9b98446356a87d87",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_credentials_requirement_holds:cae741d95e274a1d",
+        "name": "RouterTests.test_credentials_requirement_holds",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 83,
+        "end_line": 84,
+        "signature_hash": "5fc51f59882dffa0",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_decision_digest_deterministic:cdf0541f3a9993f4",
+        "name": "RouterTests.test_decision_digest_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 106,
+        "end_line": 110,
+        "signature_hash": "89215c31b34426ff",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_dependency_unknown_widens_to_dynamic_without_oracle:a769451d69472c0d",
+        "name": "RouterTests.test_dependency_unknown_widens_to_dynamic_without_oracle",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "16f631a9dbed34c9",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_dependency_unknown_widens_to_l7_when_oracle_available:4577cc6d427c06c8",
+        "name": "RouterTests.test_dependency_unknown_widens_to_l7_when_oracle_available",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "3fe66f681851b8c9",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_difficulty_vector_separate_axes:90750767511ee2e2",
+        "name": "RouterTests.test_difficulty_vector_separate_axes",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 112,
+        "end_line": 116,
+        "signature_hash": "67a597a734c35caf",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_dynamic:6b72cba0dcbffd33",
+        "name": "RouterTests.test_dynamic",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "19c67e551aa70699",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_empty_case_fails:d83d33c8bc2a6dda",
+        "name": "RouterTests.test_empty_case_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 139,
+        "end_line": 141,
+        "signature_hash": "b3a5d9c9a0960097",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_hyper1000:7ea9c728aaee436a",
+        "name": "RouterTests.test_hyper1000",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 118,
+        "end_line": 119,
+        "signature_hash": "99ea9283aaae140d",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_interproc:65b11db4c3bf4833",
+        "name": "RouterTests.test_interproc",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "bfc233b6e2f0cb23",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_l4_without_oracle_holds:b489f0f4dd7962c8",
+        "name": "RouterTests.test_l4_without_oracle_holds",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "a9559834b26a0b94",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_network_requirement_holds:26e17112d4d32019",
+        "name": "RouterTests.test_network_requirement_holds",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 80,
+        "end_line": 81,
+        "signature_hash": "a1e3bec5fb9baea2",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_no_residual:35be8acbaf886726",
+        "name": "RouterTests.test_no_residual",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "0ac9741c2a204fc4",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_no_route_mints_authority:c410d129a83c9d9b",
+        "name": "RouterTests.test_no_route_mints_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 86,
+        "end_line": 104,
+        "signature_hash": "8d87e17855549efa",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_oracle_generation_drift_reopens_l4:673d38cbbc67213f",
+        "name": "RouterTests.test_oracle_generation_drift_reopens_l4",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 37,
+        "end_line": 39,
+        "signature_hash": "9d0dfcf5d1e2ab2c",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_path:b66c1113ae0e0165",
+        "name": "RouterTests.test_path",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "b9ff10dcab51075a",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_randomized_reference_equivalence:55093d22a801a8c9",
+        "name": "RouterTests.test_randomized_reference_equivalence",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 152,
+        "end_line": 200,
+        "signature_hash": "285aa76e06c2acf6",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_routing_cheaper_than_naive_on_mixed_local_cases:834eb2cb5e1e5323",
+        "name": "RouterTests.test_routing_cheaper_than_naive_on_mixed_local_cases",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 121,
+        "end_line": 131,
+        "signature_hash": "799088c76a2c9ab6",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_stale_source_precedes_deep_work:8aaef8c15273adc2",
+        "name": "RouterTests.test_stale_source_precedes_deep_work",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 146,
+        "end_line": 150,
+        "signature_hash": "3de52f2b1d6ef13b",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_stale_source_rehydrates_from_l0:69f69a2aa9286af9",
+        "name": "RouterTests.test_stale_source_rehydrates_from_l0",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "b7021c8af3159369",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_stateful:416fb46820f8c46c",
+        "name": "RouterTests.test_stateful",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "3cef82fab84fdc80",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_structural:31ee8bb090f1bc85",
+        "name": "RouterTests.test_structural",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "65d8a80c7fc8b426",
+        "file_digest8": "af18baf94a8c3725"
+      },
+      {
+        "semantic_id": "tests/test_bughound_precision_router.py#method:RouterTests.test_tier_priority_deepest_required:31a0cc449246801b",
+        "name": "RouterTests.test_tier_priority_deepest_required",
+        "kind": "method",
+        "file": "tests/test_bughound_precision_router.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "7de718b06891130c",
+        "file_digest8": "af18baf94a8c3725"
       },
       {
         "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
@@ -450008,6 +451576,106 @@
         "end_line": 71,
         "signature_hash": "1a6a05eb2610184a",
         "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#class:CaseState:2c363a291fa117e4",
+        "name": "CaseState",
+        "kind": "class",
+        "file": "tools/bughound/precision_router.py",
+        "line": 52,
+        "end_line": 71,
+        "signature_hash": "9784df32d243ce46",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#class:PrecisionTier:fac731e3c004ba60",
+        "name": "PrecisionTier",
+        "kind": "class",
+        "file": "tools/bughound/precision_router.py",
+        "line": 10,
+        "end_line": 17,
+        "signature_hash": "59df55d12ad2745d",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#class:RouteDecision:285d5b279e4898dc",
+        "name": "RouteDecision",
+        "kind": "class",
+        "file": "tools/bughound/precision_router.py",
+        "line": 75,
+        "end_line": 111,
+        "signature_hash": "2f7b1f26be2473f0",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#function:_required_tier:489742ffb0a0d434",
+        "name": "_required_tier",
+        "kind": "function",
+        "file": "tools/bughound/precision_router.py",
+        "line": 114,
+        "end_line": 131,
+        "signature_hash": "0268b0d3c3311ac3",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#function:difficulty_vector:bb7f2f558de6f51e",
+        "name": "difficulty_vector",
+        "kind": "function",
+        "file": "tools/bughound/precision_router.py",
+        "line": 217,
+        "end_line": 226,
+        "signature_hash": "335cff3f813bd5d8",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#function:hyper1000_cells:399cbfa1392d568e",
+        "name": "hyper1000_cells",
+        "kind": "function",
+        "file": "tools/bughound/precision_router.py",
+        "line": 229,
+        "end_line": 239,
+        "signature_hash": "d9db242ce45aec7b",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#function:naive_full_cost:3e9316d1b166f7ed",
+        "name": "naive_full_cost",
+        "kind": "function",
+        "file": "tools/bughound/precision_router.py",
+        "line": 209,
+        "end_line": 210,
+        "signature_hash": "29f44f06fea0ecd4",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#function:route_case:6534633870c37198",
+        "name": "route_case",
+        "kind": "function",
+        "file": "tools/bughound/precision_router.py",
+        "line": 134,
+        "end_line": 206,
+        "signature_hash": "d2c44c5f93b86db7",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#function:routed_cost:15141f0f3533bde2",
+        "name": "routed_cost",
+        "kind": "function",
+        "file": "tools/bughound/precision_router.py",
+        "line": 213,
+        "end_line": 214,
+        "signature_hash": "240df3dcf133cee7",
+        "file_digest8": "ae640f57543f4f92"
+      },
+      {
+        "semantic_id": "tools/bughound/precision_router.py#method:RouteDecision.decision_digest:810e223c02149c4f",
+        "name": "RouteDecision.decision_digest",
+        "kind": "method",
+        "file": "tools/bughound/precision_router.py",
+        "line": 92,
+        "end_line": 111,
+        "signature_hash": "af940db68c44de13",
+        "file_digest8": "ae640f57543f4f92"
       },
       {
         "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
@@ -451600,7 +453268,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "08b5fcbf218e896c7fd8c91067615ae0",
-    "payload_hash": "c24ea0950cd9fc62afb419054d0a5277"
+    "record_fingerprint": "2f8c171d120edee7244e5faae2bbac38",
+    "payload_hash": "83ebe8611993d430f77a90bbe9c1ebb7"
   }
 }
