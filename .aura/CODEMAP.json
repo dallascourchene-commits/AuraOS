@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788411839,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -179,6 +179,7 @@
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
+      ".github/workflows/research-owner-p0-admission.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -212,6 +213,9 @@
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
       "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json",
+      "05_staging/research_owner_p0_admission/README.md",
+      "05_staging/research_owner_p0_admission/research_owner_p0.py",
+      "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/D0_MUTANT_RESULTS.json",
       "06_refactor/W4_CYCLE_RECEIPT.json",
@@ -1650,6 +1654,8 @@
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+      "05_staging/research_owner_p0_admission/research_owner_p0.py",
+      "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
       "aura_blockchain/__init__.py",
@@ -1745,9 +1751,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26431588,
+      "tokens_est": 6598249,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -1851,6 +1855,7 @@
         ".aura/intents/example.aura.md",
         ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
         ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
+        "05_staging/research_owner_p0_admission/README.md",
         "AMD_HACKATHON_SUBMISSION.md",
         "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
         "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -2038,8 +2043,7 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
@@ -2047,6 +2051,8 @@
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
+        "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
         "06_refactor/aura_os_minimal.py",
         "20_REFACTOR_ROOM/bench_recursive_crypto.c",
@@ -2442,9 +2448,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3539,6 +3543,438 @@
         "end_line": 68,
         "semantic_id": "06_refactor/aura_os_minimal.py#class:ResidualBuffer:2105760a08e09396",
         "signature_hash": "0a6686287444b7d3"
+      }
+    ],
+    "digest": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 12,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#function:digest:768aa06fc3125beb",
+        "signature_hash": "1bf51a95f0ff4a9d"
+      },
+      {
+        "file": "aura_bilateral_live_repair_foundry_contracts.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 151,
+        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_construction_foundry_director.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 96,
+        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
+        "signature_hash": "cb7986ce5e23d90c"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
+        "signature_hash": "bd189b17ea870e50"
+      }
+    ],
+    "ResearchLead": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 62,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:ResearchLead:a1ee964a91b30992",
+        "signature_hash": "04bf7cb4680c4b64"
+      }
+    ],
+    "ResearchLead.validate": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 50,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchLead.validate:67df042a70d4b8f2",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ResearchLead.lease_root": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 62,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchLead.lease_root:630bb5c7909a65b2",
+        "signature_hash": "7b3359d389d99ecd"
+      }
+    ],
+    "OwnerTarget": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 91,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:OwnerTarget:addaebda0fdab5d2",
+        "signature_hash": "3b4b4acacb0392c1"
+      }
+    ],
+    "OwnerTarget.validate": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 86,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:OwnerTarget.validate:339d5c01efe43b39",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "OwnerTarget.owner_ref": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 91,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:OwnerTarget.owner_ref:acf8f22f6a92be6f",
+        "signature_hash": "0b3d86dca9802f74"
+      }
+    ],
+    "P0Policy": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 107,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:P0Policy:955aaa133b747efc",
+        "signature_hash": "f27dad9234e8e12d"
+      }
+    ],
+    "P0Command": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 126,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:P0Command:71012b604ad00101",
+        "signature_hash": "39bcb6f79fa56625"
+      }
+    ],
+    "CommandObservation": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 137,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:CommandObservation:526f67d600c9c909",
+        "signature_hash": "06cf2170897134e0"
+      }
+    ],
+    "AdmissionReceipt": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 141,
+        "end_line": 147,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:AdmissionReceipt:b4823027659b917b",
+        "signature_hash": "cdf4b6f2ba88559d"
+      }
+    ],
+    "ResearchOwnerP0Admission": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "class",
+        "line": 150,
+        "end_line": 255,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:ResearchOwnerP0Admission:f87a5c92e0fae4f0",
+        "signature_hash": "f0c471183ad4f49f"
+      }
+    ],
+    "ResearchOwnerP0Admission.__init__": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 152,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchOwnerP0Admission.__init__:0f0bbc94e164c79f",
+        "signature_hash": "d4f18e2b310cb6d4"
+      }
+    ],
+    "ResearchOwnerP0Admission.compile": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 195,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchOwnerP0Admission.compile:93e6f79f27534ee5",
+        "signature_hash": "487be5522cda6a27"
+      }
+    ],
+    "ResearchOwnerP0Admission.observe": [
+      {
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 255,
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchOwnerP0Admission.observe:a3345bba6ebab1ec",
+        "signature_hash": "0b4cf202c532e321"
+      }
+    ],
+    "Tests": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 155,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#class:Tests:7f8fa57b5111ba33",
+        "signature_hash": "53e678e6ff418c3d"
+      }
+    ],
+    "Tests.lead": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 20,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.lead:586efb5e47932c50",
+        "signature_hash": "8346e7f059cd5eae"
+      }
+    ],
+    "Tests.target": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 31,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.target:ea6fce1abdd0c6d0",
+        "signature_hash": "1fe6574122a89c04"
+      }
+    ],
+    "Tests.compiler": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.compiler:ea5336015f35b182",
+        "signature_hash": "e0670b7b498aeb05"
+      }
+    ],
+    "Tests.cmd": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.cmd:ad45d1ec95e798ad",
+        "signature_hash": "fe4340ef6435264c"
+      }
+    ],
+    "Tests.test_compile_binds_owner_and_head": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_compile_binds_owner_and_head:91d3d7bb698356a1",
+        "signature_hash": "55ffaf2184992123"
+      }
+    ],
+    "Tests.test_k27_does_not_authorize_target": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_k27_does_not_authorize_target:0cd4c9f0da33e0df",
+        "signature_hash": "773f7d44a07841d6"
+      }
+    ],
+    "Tests.test_source_currentness_independent": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_source_currentness_independent:f945ac56c551b86c",
+        "signature_hash": "f82c479718007dbc"
+      }
+    ],
+    "Tests.test_target_currentness_independent": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_target_currentness_independent:2103006a8988bda5",
+        "signature_hash": "7bb62fe05a1d782d"
+      }
+    ],
+    "Tests.test_source_access_denied": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_source_access_denied:d472a5c0e2d46e88",
+        "signature_hash": "10776cd3905d62b5"
+      }
+    ],
+    "Tests.test_bare_repo_rejected": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 72,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_bare_repo_rejected:07c2388fcf9f140e",
+        "signature_hash": "dae13d2670b631d7"
+      }
+    ],
+    "Tests.test_missing_command_id": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 76,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_missing_command_id:ca2689b7ccdfd0f5",
+        "signature_hash": "b70042f2a343d162"
+      }
+    ],
+    "Tests.test_p0_negative_intents": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 82,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_p0_negative_intents:1e1504010d1171f6",
+        "signature_hash": "2420e530113fb6b0"
+      }
+    ],
+    "Tests.test_command_root_stable": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_command_root_stable:bdcc7a8be491f72d",
+        "signature_hash": "0f7e217b717c6a05"
+      }
+    ],
+    "Tests.test_k27_change_changes_root_not_authority": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 93,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_k27_change_changes_root_not_authority:57c57f0d37a5fe49",
+        "signature_hash": "b1515a752affaa44"
+      }
+    ],
+    "Tests.test_no_observation_waits": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 99,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_no_observation_waits:8b73b44235703a94",
+        "signature_hash": "d04fc9a937eb7149"
+      }
+    ],
+    "Tests.test_materialized_not_execution": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 104,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_materialized_not_execution:1163f07b30b5b657",
+        "signature_hash": "a0fdbf5663d912f4"
+      }
+    ],
+    "Tests.test_ack_not_result": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 109,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_ack_not_result:a8d66856b89995ae",
+        "signature_hash": "ec6f7c5382019717"
+      }
+    ],
+    "Tests.test_result_requires_lease": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 114,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_result_requires_lease:e9dd1da900187eaa",
+        "signature_hash": "acebe25ec82778f8"
+      }
+    ],
+    "Tests.test_bound_result_admissible": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 119,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_bound_result_admissible:3bb94a0591e0d9d6",
+        "signature_hash": "1027509d63f81a2a"
+      }
+    ],
+    "Tests.test_observation_head_drift_fails": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_observation_head_drift_fails:f37ac195baf15b66",
+        "signature_hash": "627bdac05d7cd84b"
+      }
+    ],
+    "Tests.test_observation_owner_drift_fails": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_observation_owner_drift_fails:482e3a70f94d6e20",
+        "signature_hash": "3a9e33b0a608334a"
+      }
+    ],
+    "Tests.test_observation_effect_widening_fails": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_observation_effect_widening_fails:3929a5f7361f0548",
+        "signature_hash": "b7d40d855acd9084"
+      }
+    ],
+    "Tests.test_actual_command_state_fixture_is_materialized_only": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 143,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_actual_command_state_fixture_is_materialized_only:0c2f40ab4a5e5505",
+        "signature_hash": "b30b0ad58ceecf37"
+      }
+    ],
+    "Tests.test_random_authority_laundering": [
+      {
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 155,
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_random_authority_laundering:d564c60ad930247f",
+        "signature_hash": "395811c2120d0391"
       }
     ],
     "base_packet": [
@@ -20089,40 +20525,6 @@
         "end_line": 58,
         "semantic_id": "aura_construction_foundry_director.py#function:canonical_bytes:7fd9402c68df2247",
         "signature_hash": "b8735a6f3e386d20"
-      }
-    ],
-    "digest": [
-      {
-        "file": "aura_bilateral_live_repair_foundry_contracts.py",
-        "kind": "function",
-        "line": 150,
-        "end_line": 151,
-        "semantic_id": "aura_bilateral_live_repair_foundry_contracts.py#function:digest:6475f61281b5e429",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_construction_foundry_director.py",
-        "kind": "function",
-        "line": 61,
-        "end_line": 62,
-        "semantic_id": "aura_construction_foundry_director.py#function:digest:4febb660ebf9ab5a",
-        "signature_hash": "3c60ab9e6d97eef8"
-      },
-      {
-        "file": "aura_refactor_state_identity.py",
-        "kind": "function",
-        "line": 95,
-        "end_line": 96,
-        "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
-        "signature_hash": "cb7986ce5e23d90c"
-      },
-      {
-        "file": "scripts/aura_blind_gate10_benchmark.py",
-        "kind": "function",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
-        "signature_hash": "bd189b17ea870e50"
       }
     ],
     "_runtime_binding_digest": [
@@ -158822,6 +159224,10 @@
       ".github/workflows/wo-phase4-synthesis-fixture-fix.yml",
       "test_synthesis_upgrades.py"
     ],
+    "python -m unittest": [
+      "05_staging/research_owner_p0_admission/README.md",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
     "python aura_coding_arena_server.py --host 127.0.0.1 --port 8080": [
       "AURA_CODING_ARENA_README.md"
     ],
@@ -159293,9 +159699,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -170373,6 +170776,53 @@
       ]
     },
     {
+      "path": ".github/workflows/research-owner-p0-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 576,
+      "lines": 24,
+      "tokens_est": 144,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5728feb345f0826f",
+      "vector": [
+        -0.283018,
+        -0.256381,
+        -0.069922,
+        -0.098779,
+        0.061043,
+        0.231963,
+        -0.129855,
+        -0.136514,
+        -0.078801,
+        -0.274139,
+        -0.207546,
+        -0.17203,
+        0.185349,
+        0.274139,
+        -0.267479,
+        -0.063263,
+        -0.112097,
+        -0.183129,
+        -0.043285,
+        0.225304,
+        -0.163151,
+        -0.17425,
+        0.112097,
+        -0.116537,
+        -0.238623,
+        -0.092119,
+        0.207546,
+        0.183129,
+        0.114317,
+        -0.054384,
+        -0.063263,
+        0.251941
+      ]
+    },
+    {
       "path": ".github/workflows/sco-construction-e9-e14-completion.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -172588,6 +173038,153 @@
         -0.229818,
         -0.033831,
         0.271815
+      ]
+    },
+    {
+      "path": "05_staging/research_owner_p0_admission/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1852,
+      "lines": 29,
+      "tokens_est": 463,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          24
+        ]
+      },
+      "topology": {},
+      "digest8": "2dec8a946252bb1a",
+      "vector": [
+        0.303606,
+        -0.27265,
+        -0.303606,
+        -0.284556,
+        -0.13692,
+        0.098821,
+        -0.082152,
+        -0.236932,
+        -0.134539,
+        -0.201213,
+        0.279794,
+        -0.260744,
+        -0.072627,
+        -0.003572,
+        -0.008334,
+        0.139302,
+        0.179782,
+        -0.101202,
+        0.029765,
+        -0.072627,
+        0.144064,
+        -0.198832,
+        -0.182164,
+        -0.2536,
+        0.065484,
+        -0.013097,
+        -0.244075,
+        0.163114,
+        0.029765,
+        0.134539,
+        -0.125014,
+        0.086915
+      ]
+    },
+    {
+      "path": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7837,
+      "lines": 256,
+      "tokens_est": 1960,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "54a70f549a9d1de5",
+      "vector": [
+        0.228459,
+        0.17912,
+        0.24562,
+        -0.134072,
+        0.24133,
+        0.043976,
+        0.11262,
+        -0.016089,
+        -0.239184,
+        0.209152,
+        -0.082588,
+        0.131927,
+        -0.24991,
+        0.058992,
+        0.269217,
+        0.091169,
+        -0.134072,
+        -0.271362,
+        0.119056,
+        0.10833,
+        -0.03325,
+        0.142653,
+        0.269217,
+        0.207007,
+        -0.256346,
+        0.013943,
+        0.183411,
+        -0.125491,
+        -0.256346,
+        -0.018234,
+        0.234894,
+        0.039685
+      ]
+    },
+    {
+      "path": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6275,
+      "lines": 160,
+      "tokens_est": 1569,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6765b585dff3d74d",
+      "vector": [
+        -0.199275,
+        0.044923,
+        0.148592,
+        0.187756,
+        -0.095606,
+        -0.137073,
+        0.019582,
+        -0.157807,
+        0.206186,
+        -0.054138,
+        -0.275299,
+        -0.196971,
+        0.240743,
+        -0.26378,
+        -0.178541,
+        0.199275,
+        0.293729,
+        -0.268388,
+        0.049531,
+        -0.019582,
+        0.256869,
+        0.081783,
+        -0.173934,
+        0.127858,
+        0.13477,
+        -0.010367,
+        0.254565,
+        0.010367,
+        0.199275,
+        0.254565,
+        -0.123251,
+        0.072568
       ]
     },
     {
@@ -286646,16 +287243,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26431588,
+    "text_tokens_est": 6598249,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286844,6 +287441,7 @@
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
+      ".github/workflows/research-owner-p0-admission.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
@@ -286877,6 +287475,9 @@
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
       "05_staging/ledgers/SUBSTRATE_OS_COUPLING_GRAPH.json",
+      "05_staging/research_owner_p0_admission/README.md",
+      "05_staging/research_owner_p0_admission/research_owner_p0.py",
+      "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/D0_MUTANT_RESULTS.json",
       "06_refactor/W4_CYCLE_RECEIPT.json",
@@ -288372,6 +288973,406 @@
         "end_line": 39,
         "signature_hash": "e1efa1dc497cdd5f",
         "file_digest8": "9e5805ad7e79d82a"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:AdmissionReceipt:b4823027659b917b",
+        "name": "AdmissionReceipt",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 141,
+        "end_line": 147,
+        "signature_hash": "cdf4b6f2ba88559d",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:CommandObservation:526f67d600c9c909",
+        "name": "CommandObservation",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 130,
+        "end_line": 137,
+        "signature_hash": "06cf2170897134e0",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:OwnerTarget:addaebda0fdab5d2",
+        "name": "OwnerTarget",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 66,
+        "end_line": 91,
+        "signature_hash": "3b4b4acacb0392c1",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:P0Command:71012b604ad00101",
+        "name": "P0Command",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 111,
+        "end_line": 126,
+        "signature_hash": "39bcb6f79fa56625",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:P0Policy:955aaa133b747efc",
+        "name": "P0Policy",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 95,
+        "end_line": 107,
+        "signature_hash": "f27dad9234e8e12d",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:ResearchLead:a1ee964a91b30992",
+        "name": "ResearchLead",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 16,
+        "end_line": 62,
+        "signature_hash": "04bf7cb4680c4b64",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#class:ResearchOwnerP0Admission:f87a5c92e0fae4f0",
+        "name": "ResearchOwnerP0Admission",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 150,
+        "end_line": 255,
+        "signature_hash": "f0c471183ad4f49f",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#function:digest:768aa06fc3125beb",
+        "name": "digest",
+        "kind": "function",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 9,
+        "end_line": 12,
+        "signature_hash": "1bf51a95f0ff4a9d",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:OwnerTarget.owner_ref:acf8f22f6a92be6f",
+        "name": "OwnerTarget.owner_ref",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 89,
+        "end_line": 91,
+        "signature_hash": "0b3d86dca9802f74",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:OwnerTarget.validate:339d5c01efe43b39",
+        "name": "OwnerTarget.validate",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 76,
+        "end_line": 86,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchLead.lease_root:630bb5c7909a65b2",
+        "name": "ResearchLead.lease_root",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 53,
+        "end_line": 62,
+        "signature_hash": "7b3359d389d99ecd",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchLead.validate:67df042a70d4b8f2",
+        "name": "ResearchLead.validate",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 29,
+        "end_line": 50,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchOwnerP0Admission.__init__:0f0bbc94e164c79f",
+        "name": "ResearchOwnerP0Admission.__init__",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 151,
+        "end_line": 152,
+        "signature_hash": "d4f18e2b310cb6d4",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchOwnerP0Admission.compile:93e6f79f27534ee5",
+        "name": "ResearchOwnerP0Admission.compile",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 154,
+        "end_line": 195,
+        "signature_hash": "487be5522cda6a27",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/research_owner_p0.py#method:ResearchOwnerP0Admission.observe:a3345bba6ebab1ec",
+        "name": "ResearchOwnerP0Admission.observe",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/research_owner_p0.py",
+        "line": 197,
+        "end_line": 255,
+        "signature_hash": "0b4cf202c532e321",
+        "file_digest8": "54a70f549a9d1de5"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#class:Tests:7f8fa57b5111ba33",
+        "name": "Tests",
+        "kind": "class",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 8,
+        "end_line": 155,
+        "signature_hash": "53e678e6ff418c3d",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.cmd:ad45d1ec95e798ad",
+        "name": "Tests.cmd",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "fe4340ef6435264c",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.compiler:ea5336015f35b182",
+        "name": "Tests.compiler",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "e0670b7b498aeb05",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.lead:586efb5e47932c50",
+        "name": "Tests.lead",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 9,
+        "end_line": 20,
+        "signature_hash": "8346e7f059cd5eae",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.target:ea6fce1abdd0c6d0",
+        "name": "Tests.target",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 22,
+        "end_line": 31,
+        "signature_hash": "1fe6574122a89c04",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_ack_not_result:a8d66856b89995ae",
+        "name": "Tests.test_ack_not_result",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 106,
+        "end_line": 109,
+        "signature_hash": "ec6f7c5382019717",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_actual_command_state_fixture_is_materialized_only:0c2f40ab4a5e5505",
+        "name": "Tests.test_actual_command_state_fixture_is_materialized_only",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 139,
+        "end_line": 143,
+        "signature_hash": "b30b0ad58ceecf37",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_bare_repo_rejected:07c2388fcf9f140e",
+        "name": "Tests.test_bare_repo_rejected",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 68,
+        "end_line": 72,
+        "signature_hash": "dae13d2670b631d7",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_bound_result_admissible:3bb94a0591e0d9d6",
+        "name": "Tests.test_bound_result_admissible",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 116,
+        "end_line": 119,
+        "signature_hash": "1027509d63f81a2a",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_command_root_stable:bdcc7a8be491f72d",
+        "name": "Tests.test_command_root_stable",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "0f7e217b717c6a05",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_compile_binds_owner_and_head:91d3d7bb698356a1",
+        "name": "Tests.test_compile_binds_owner_and_head",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "55ffaf2184992123",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_k27_change_changes_root_not_authority:57c57f0d37a5fe49",
+        "name": "Tests.test_k27_change_changes_root_not_authority",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 87,
+        "end_line": 93,
+        "signature_hash": "b1515a752affaa44",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_k27_does_not_authorize_target:0cd4c9f0da33e0df",
+        "name": "Tests.test_k27_does_not_authorize_target",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "773f7d44a07841d6",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_materialized_not_execution:1163f07b30b5b657",
+        "name": "Tests.test_materialized_not_execution",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 101,
+        "end_line": 104,
+        "signature_hash": "a0fdbf5663d912f4",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_missing_command_id:ca2689b7ccdfd0f5",
+        "name": "Tests.test_missing_command_id",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 74,
+        "end_line": 76,
+        "signature_hash": "b70042f2a343d162",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_no_observation_waits:8b73b44235703a94",
+        "name": "Tests.test_no_observation_waits",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 95,
+        "end_line": 99,
+        "signature_hash": "d04fc9a937eb7149",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_observation_effect_widening_fails:3929a5f7361f0548",
+        "name": "Tests.test_observation_effect_widening_fails",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "b7d40d855acd9084",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_observation_head_drift_fails:f37ac195baf15b66",
+        "name": "Tests.test_observation_head_drift_fails",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "627bdac05d7cd84b",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_observation_owner_drift_fails:482e3a70f94d6e20",
+        "name": "Tests.test_observation_owner_drift_fails",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "3a9e33b0a608334a",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_p0_negative_intents:1e1504010d1171f6",
+        "name": "Tests.test_p0_negative_intents",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 78,
+        "end_line": 82,
+        "signature_hash": "2420e530113fb6b0",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_random_authority_laundering:d564c60ad930247f",
+        "name": "Tests.test_random_authority_laundering",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 145,
+        "end_line": 155,
+        "signature_hash": "395811c2120d0391",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_result_requires_lease:e9dd1da900187eaa",
+        "name": "Tests.test_result_requires_lease",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 111,
+        "end_line": 114,
+        "signature_hash": "acebe25ec82778f8",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_source_access_denied:d472a5c0e2d46e88",
+        "name": "Tests.test_source_access_denied",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "10776cd3905d62b5",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_source_currentness_independent:f945ac56c551b86c",
+        "name": "Tests.test_source_currentness_independent",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "f82c479718007dbc",
+        "file_digest8": "6765b585dff3d74d"
+      },
+      {
+        "semantic_id": "05_staging/research_owner_p0_admission/test_research_owner_p0.py#method:Tests.test_target_currentness_independent:2103006a8988bda5",
+        "name": "Tests.test_target_currentness_independent",
+        "kind": "method",
+        "file": "05_staging/research_owner_p0_admission/test_research_owner_p0.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "7bb62fe05a1d782d",
+        "file_digest8": "6765b585dff3d74d"
       },
       {
         "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:base_bundle:09961d5acdbee3a0",
@@ -446884,7 +447885,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "1aaee0e3f36bba5f72ce517e630b05e6",
+    "payload_hash": "1e01aadafbc93ebcfaa292eb6cfa2d79"
   }
 }
