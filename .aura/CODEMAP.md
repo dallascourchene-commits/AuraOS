@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1663
-- **total_bytes**: 26601807
-- **text_tokens_est**: 6640800
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1015, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1666
+- **total_bytes**: 26615993
+- **text_tokens_est**: 6644347
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1017, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1663,
+  "repo_file_count": 1666,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1128,6 +1128,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/aura_substrate_manifest.phases.05.json",
     "docs/aura_substrate_manifest.v1.json",
     "docs/aura_substrate_release_index.v1.json",
+    "docs/bughound/BENCHMARK_CLAIM_CAPSULE_O11.md",
     "docs/bughound/HISTORICAL_BLIND_CUT_O10.md",
     "docs/bughound/O10_K27_EXTERNAL.json",
     "docs/bughound/hard-case-precision-router-o9.md",
@@ -1646,6 +1647,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
+    "tests/test_bughound_benchmark_claim_capsule.py",
     "tests/test_bughound_blind_discovery.py",
     "tests/test_bughound_blind_oracle_provenance.py",
     "tests/test_bughound_blind_score_admission.py",
@@ -1664,6 +1666,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/bughound/benchmark_claim_capsule.py",
     "tools/bughound/blind_discovery.py",
     "tools/bughound/blind_oracle_provenance.py",
     "tools/bughound/blind_score_admission.py",
@@ -1803,15 +1806,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1663,
-  "bytes": 26601807,
-  "tokens_est": 6640800,
+  "files": 1666,
+  "bytes": 26615993,
+  "tokens_est": 6644347,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1015,
+    "python_module": 1017,
     "schema_or_lexicon": 274,
     "support_file": 49
   }
