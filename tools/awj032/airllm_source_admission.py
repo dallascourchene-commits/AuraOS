@@ -84,16 +84,30 @@ def _trust_finding(state: str, rel: str, line: int, detail: str) -> Finding | No
 
 
 def _static_bindings(tree: ast.AST) -> dict[str, ast.AST]:
-    """Collect simple name bindings used only for conservative static folding."""
-    bindings: dict[str, ast.AST] = {}
+    """Collect only unambiguous name bindings for conservative static folding.
+
+    A name is foldable only when every syntactic assignment has the same AST
+    value. Conflicting assignments are intentionally omitted so computed keys
+    become unresolved and protected loader expansions fail closed.
+    """
+    candidates: dict[str, list[ast.AST]] = {}
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign) and len(node.targets) == 1:
             target = node.targets[0]
             if isinstance(target, ast.Name):
-                bindings[target.id] = node.value
+                candidates.setdefault(target.id, []).append(node.value)
         elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             if node.value is not None:
-                bindings[node.target.id] = node.value
+                candidates.setdefault(node.target.id, []).append(node.value)
+
+    bindings: dict[str, ast.AST] = {}
+    for name, values in candidates.items():
+        shapes = {
+            ast.dump(value, annotate_fields=True, include_attributes=False)
+            for value in values
+        }
+        if len(shapes) == 1:
+            bindings[name] = values[0]
     return bindings
 
 
@@ -146,23 +160,13 @@ def _mapping_trust_state(
         value = bindings.get(node.id)
         if value is None:
             return "UNKNOWN", False
-        return _mapping_trust_state(
-            value,
-            bindings,
-            opaque_names,
-            seen | {node.id},
-        )
+        return _mapping_trust_state(value, bindings, opaque_names, seen | {node.id})
 
     if isinstance(node, ast.Dict):
         state = "ABSENT"
         for key, value in zip(node.keys, node.values):
             if key is None:
-                nested_state, known = _mapping_trust_state(
-                    value,
-                    bindings,
-                    opaque_names,
-                    seen,
-                )
+                nested_state, known = _mapping_trust_state(value, bindings, opaque_names, seen)
                 if not known:
                     return "UNKNOWN", False
                 if nested_state != "ABSENT":
@@ -181,12 +185,7 @@ def _mapping_trust_state(
             if kw.arg == "trust_remote_code":
                 state = _trust_value(kw.value)
             elif kw.arg is None:
-                nested_state, known = _mapping_trust_state(
-                    kw.value,
-                    bindings,
-                    opaque_names,
-                    seen,
-                )
+                nested_state, known = _mapping_trust_state(kw.value, bindings, opaque_names, seen)
                 if not known:
                     return "UNKNOWN", False
                 if nested_state != "ABSENT":
@@ -211,10 +210,7 @@ def _mapping_trust_state(
     return "UNKNOWN", False
 
 
-def _mapping_opaque_mutation_names(
-    tree: ast.AST,
-    bindings: dict[str, ast.AST],
-) -> frozenset[str]:
+def _mapping_opaque_mutation_names(tree: ast.AST, bindings: dict[str, ast.AST]) -> frozenset[str]:
     """Track aliases of mappings whose later mutation cannot be statically bounded.
 
     This is intentionally conservative only for mappings that may later cross a
@@ -237,19 +233,11 @@ def _mapping_opaque_mutation_names(
             target = node.target
             if isinstance(target, ast.Name) and isinstance(node.value, ast.Name):
                 aliases.add((target.id, node.value.id))
-            if (
-                node.value is not None
-                and isinstance(target, ast.Subscript)
-                and isinstance(target.value, ast.Name)
-            ):
+            if node.value is not None and isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name):
                 resolved_key = _const_string(target.slice, bindings)
                 if resolved_key is None and _trust_value(node.value) != "FALSE":
                     opaque.add(target.value.id)
-        elif (
-            isinstance(node, ast.AugAssign)
-            and isinstance(node.target, ast.Name)
-            and isinstance(node.op, ast.BitOr)
-        ):
+        elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and isinstance(node.op, ast.BitOr):
             _, known = _mapping_trust_state(node.value, bindings)
             if not known:
                 opaque.add(node.target.id)
@@ -280,11 +268,9 @@ def _mapping_opaque_mutation_names(
         changed = False
         for left, right in aliases:
             if left in opaque and right not in opaque:
-                opaque.add(right)
-                changed = True
+                opaque.add(right); changed = True
             if right in opaque and left not in opaque:
-                opaque.add(left)
-                changed = True
+                opaque.add(left); changed = True
     return frozenset(opaque)
 
 
@@ -311,70 +297,30 @@ def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
             for kw in node.keywords:
                 if kw.arg == "trust_remote_code":
                     explicit_state = _trust_value(kw.value)
-                    finding = _trust_finding(
-                        explicit_state,
-                        rel,
-                        int(getattr(node, "lineno", 0)),
-                        "trust_remote_code keyword is not literal False",
-                    )
+                    finding = _trust_finding(explicit_state, rel, int(getattr(node, "lineno", 0)), "trust_remote_code keyword is not literal False")
                     if finding is not None:
                         findings.append(finding)
                 elif kw.arg is None:
-                    state, known = _mapping_trust_state(
-                        kw.value,
-                        bindings,
-                        opaque_names,
-                    )
+                    state, known = _mapping_trust_state(kw.value, bindings, opaque_names)
                     if state in {"TRUE", "DYNAMIC"}:
-                        finding = _trust_finding(
-                            state,
-                            rel,
-                            int(getattr(node, "lineno", 0)),
-                            "expanded trust_remote_code mapping is not literal False",
-                        )
+                        finding = _trust_finding(state, rel, int(getattr(node, "lineno", 0)), "expanded trust_remote_code mapping is not literal False")
                         if finding is not None:
                             findings.append(finding)
                     elif not known:
                         opaque_expansions.append(kw.value)
 
-            if (
-                call_name in _LOADER_BOUNDARIES
-                and opaque_expansions
-                and explicit_state != "FALSE"
-            ):
-                findings.append(
-                    Finding(
-                        "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
-                        rel,
-                        int(getattr(node, "lineno", 0)),
-                        f"{call_name} receives opaque **kwargs without explicit trust_remote_code=False",
-                    )
-                )
+            if call_name in _LOADER_BOUNDARIES and opaque_expansions and explicit_state != "FALSE":
+                findings.append(Finding("REMOTE_CODE_OPAQUE_LOADER_KWARGS", rel, int(getattr(node, "lineno", 0)), f"{call_name} receives opaque **kwargs without explicit trust_remote_code=False"))
 
             if isinstance(node.func, ast.Attribute) and node.func.attr == "setdefault":
                 if node.args and _const_string(node.args[0], bindings) == "trust_remote_code":
                     value = node.args[1] if len(node.args) >= 2 else None
-                    finding = _trust_finding(
-                        _trust_value(value),
-                        rel,
-                        int(getattr(node, "lineno", 0)),
-                        "trust_remote_code setdefault value is not literal False",
-                    )
+                    finding = _trust_finding(_trust_value(value), rel, int(getattr(node, "lineno", 0)), "trust_remote_code setdefault value is not literal False")
                     if finding is not None:
                         findings.append(finding)
 
-            if (
-                isinstance(node.func, ast.Name)
-                and node.func.id == "setattr"
-                and len(node.args) >= 3
-                and _const_string(node.args[1], bindings) == "trust_remote_code"
-            ):
-                finding = _trust_finding(
-                    _trust_value(node.args[2]),
-                    rel,
-                    int(getattr(node, "lineno", 0)),
-                    "trust_remote_code setattr value is not literal False",
-                )
+            if isinstance(node.func, ast.Name) and node.func.id == "setattr" and len(node.args) >= 3 and _const_string(node.args[1], bindings) == "trust_remote_code":
+                finding = _trust_finding(_trust_value(node.args[2]), rel, int(getattr(node, "lineno", 0)), "trust_remote_code setattr value is not literal False")
                 if finding is not None:
                     findings.append(finding)
 
@@ -382,46 +328,25 @@ def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
             for key, value in zip(node.keys, node.values):
                 if key is None or _const_string(key, bindings) != "trust_remote_code":
                     continue
-                finding = _trust_finding(
-                    _trust_value(value),
-                    rel,
-                    int(getattr(node, "lineno", 0)),
-                    "trust_remote_code mapping value is not literal False",
-                )
+                finding = _trust_finding(_trust_value(value), rel, int(getattr(node, "lineno", 0)), "trust_remote_code mapping value is not literal False")
                 if finding is not None:
                     findings.append(finding)
 
         value_node: ast.AST | None = None
         target: ast.AST | None = None
         if isinstance(node, ast.Assign) and len(node.targets) == 1:
-            target = node.targets[0]
-            value_node = node.value
+            target = node.targets[0]; value_node = node.value
         elif isinstance(node, ast.AnnAssign):
-            target = node.target
-            value_node = node.value
+            target = node.target; value_node = node.value
 
         if value_node is not None and isinstance(target, ast.Subscript):
             if _const_string(target.slice, bindings) == "trust_remote_code":
-                finding = _trust_finding(
-                    _trust_value(value_node),
-                    rel,
-                    int(getattr(node, "lineno", 0)),
-                    "trust_remote_code subscript assignment is not literal False",
-                )
+                finding = _trust_finding(_trust_value(value_node), rel, int(getattr(node, "lineno", 0)), "trust_remote_code subscript assignment is not literal False")
                 if finding is not None:
                     findings.append(finding)
 
-        if (
-            value_node is not None
-            and isinstance(target, ast.Attribute)
-            and target.attr == "trust_remote_code"
-        ):
-            finding = _trust_finding(
-                _trust_value(value_node),
-                rel,
-                int(getattr(node, "lineno", 0)),
-                "trust_remote_code attribute assignment is not literal False",
-            )
+        if value_node is not None and isinstance(target, ast.Attribute) and target.attr == "trust_remote_code":
+            finding = _trust_finding(_trust_value(value_node), rel, int(getattr(node, "lineno", 0)), "trust_remote_code attribute assignment is not literal False")
             if finding is not None:
                 findings.append(finding)
 
@@ -435,46 +360,22 @@ def _safe_source_file(path: Path, root: Path, findings: list[Finding]) -> bool:
     except ValueError:
         rel_hint = path.as_posix()
     if path.is_symlink():
-        findings.append(
-            Finding(
-                "SOURCE_SYMLINK_FORBIDDEN",
-                rel_hint,
-                0,
-                "audited AirLLM source must not be supplied through a symlink",
-            )
-        )
+        findings.append(Finding("SOURCE_SYMLINK_FORBIDDEN", rel_hint, 0, "audited AirLLM source must not be supplied through a symlink"))
         return False
     try:
         resolved = path.resolve(strict=True)
         resolved.relative_to(root)
     except (OSError, ValueError):
-        findings.append(
-            Finding(
-                "SOURCE_PATH_ESCAPE_OR_UNRESOLVED",
-                rel_hint,
-                0,
-                "source path does not resolve strictly inside the pinned root",
-            )
-        )
+        findings.append(Finding("SOURCE_PATH_ESCAPE_OR_UNRESOLVED", rel_hint, 0, "source path does not resolve strictly inside the pinned root"))
         return False
     return resolved.is_file()
 
 
-def audit_airllm_source(
-    root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION
-) -> SourceAdmissionReceipt:
+def audit_airllm_source(root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION) -> SourceAdmissionReceipt:
     root = Path(root).resolve()
     findings: list[Finding] = []
     if not root.is_dir():
-        return SourceAdmissionReceipt(
-            SCHEMA,
-            "BLOCKED",
-            expected_version,
-            None,
-            "",
-            (),
-            (Finding("SOURCE_ROOT_MISSING", ".", 0, "source root is not a directory"),),
-        )
+        return SourceAdmissionReceipt(SCHEMA, "BLOCKED", expected_version, None, "", (), (Finding("SOURCE_ROOT_MISSING", ".", 0, "source root is not a directory"),))
 
     setup = root / "air_llm" / "setup.py"
     package = root / "air_llm" / "airllm"
@@ -483,57 +384,35 @@ def audit_airllm_source(
         if _safe_source_file(setup, root, findings):
             files.append(setup)
     else:
-        findings.append(
-            Finding("SETUP_MISSING", "air_llm/setup.py", 0, "pinned package metadata missing")
-        )
+        findings.append(Finding("SETUP_MISSING", "air_llm/setup.py", 0, "pinned package metadata missing"))
     if package.is_dir():
         for path in package.rglob("*.py"):
             if _safe_source_file(path, root, findings):
                 files.append(path)
     else:
-        findings.append(
-            Finding("PACKAGE_MISSING", "air_llm/airllm", 0, "AirLLM package directory missing")
-        )
+        findings.append(Finding("PACKAGE_MISSING", "air_llm/airllm", 0, "AirLLM package directory missing"))
 
     observed_version = None
     if setup in files:
         try:
             setup_text = setup.read_text(encoding="utf-8", errors="strict")
         except (OSError, UnicodeError) as exc:
-            findings.append(
-                Finding("SOURCE_READ_ERROR", _rel(setup, root), 0, type(exc).__name__)
-            )
+            findings.append(Finding("SOURCE_READ_ERROR", _rel(setup, root), 0, type(exc).__name__))
         else:
             match = _VERSION_RE.search(setup_text)
             if match:
                 observed_version = match.group(1)
             else:
-                findings.append(
-                    Finding(
-                        "VERSION_UNRESOLVED",
-                        _rel(setup, root),
-                        0,
-                        "literal package version not found",
-                    )
-                )
+                findings.append(Finding("VERSION_UNRESOLVED", _rel(setup, root), 0, "literal package version not found"))
             if observed_version != expected_version:
-                findings.append(
-                    Finding(
-                        "VERSION_MISMATCH",
-                        _rel(setup, root),
-                        0,
-                        f"expected {expected_version!r}, observed {observed_version!r}",
-                    )
-                )
+                findings.append(Finding("VERSION_MISMATCH", _rel(setup, root), 0, f"expected {expected_version!r}, observed {observed_version!r}"))
 
     readable_files: list[Path] = []
     for path in files:
         try:
             text = path.read_text(encoding="utf-8", errors="strict")
         except (OSError, UnicodeError) as exc:
-            findings.append(
-                Finding("SOURCE_READ_ERROR", _rel(path, root), 0, type(exc).__name__)
-            )
+            findings.append(Finding("SOURCE_READ_ERROR", _rel(path, root), 0, type(exc).__name__))
             continue
         readable_files.append(path)
         rel = _rel(path, root)
@@ -545,29 +424,17 @@ def audit_airllm_source(
         try:
             tree = ast.parse(text, filename=rel)
         except SyntaxError as exc:
-            findings.append(
-                Finding("PYTHON_PARSE_ERROR", rel, int(exc.lineno or 0), str(exc.msg))
-            )
+            findings.append(Finding("PYTHON_PARSE_ERROR", rel, int(exc.lineno or 0), str(exc.msg)))
             continue
         findings.extend(_scan_trust_remote_code(tree, rel))
 
     inspected = tuple(sorted(_rel(p, root) for p in files))
     digest = _file_digest(readable_files, root) if readable_files else ""
     status = "PASS" if not findings else "BLOCKED"
-    return SourceAdmissionReceipt(
-        schema=SCHEMA,
-        status=status,
-        expected_version=expected_version,
-        observed_version=observed_version,
-        source_digest=digest,
-        inspected_files=inspected,
-        findings=tuple(findings),
-    )
+    return SourceAdmissionReceipt(schema=SCHEMA,status=status,expected_version=expected_version,observed_version=observed_version,source_digest=digest,inspected_files=inspected,findings=tuple(findings))
 
 
-def require_admitted(
-    root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION
-) -> SourceAdmissionReceipt:
+def require_admitted(root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION) -> SourceAdmissionReceipt:
     receipt = audit_airllm_source(root, expected_version)
     if receipt.status != "PASS":
         codes = ",".join(sorted({f.code for f in receipt.findings}))
@@ -577,7 +444,6 @@ def require_admitted(
 
 def main() -> int:
     import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("source_root")
     parser.add_argument("--expected-version", default=DEFAULT_EXPECTED_VERSION)
