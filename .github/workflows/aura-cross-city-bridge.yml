@@ -1,0 +1,28 @@
+name: Aura Cross-City Bridge ABI
+
+on:
+  push:
+    paths:
+      - '05_staging/aura_cross_city_bridge/**'
+      - '.github/workflows/aura-cross-city-bridge.yml'
+  pull_request:
+    paths:
+      - '05_staging/aura_cross_city_bridge/**'
+      - '.github/workflows/aura-cross-city-bridge.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run cross-city bridge tests
+        working-directory: 05_staging/aura_cross_city_bridge
+        run: |
+          python -m py_compile cross_city_bridge.py
+          python -m unittest -q test_cross_city_bridge.py
