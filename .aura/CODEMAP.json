@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788435301,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-lifecycle-router.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -208,6 +209,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_lifecycle_router/README.md",
+      "05_staging/aura_lifecycle_router/lifecycle_router.py",
+      "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -1649,6 +1653,8 @@
     ],
     "source_paths_without_topology": [
       ".github/phase4/wc02_phase4_current_generation_patch.py",
+      "05_staging/aura_lifecycle_router/lifecycle_router.py",
+      "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
@@ -1745,9 +1751,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26434468,
+      "tokens_est": 6598968,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -1851,6 +1855,7 @@
         ".aura/intents/example.aura.md",
         ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
         ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
+        "05_staging/aura_lifecycle_router/README.md",
         "AMD_HACKATHON_SUBMISSION.md",
         "AURAOS_COMPLETE_CLAIMS_ANALYSIS.md",
         "AURAOS_IMPLEMENTATION_SUMMARY.md",
@@ -2038,14 +2043,15 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
       "ring": "code",
       "paths": [
         ".github/phase4/wc02_phase4_current_generation_patch.py",
+        "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
         "06_refactor/aura_os_minimal.py",
@@ -2442,9 +2448,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3467,6 +3471,534 @@
         "end_line": 250,
         "semantic_id": "unreal_bridge.py#function:main:a13e03774ee52e6e",
         "signature_hash": "621c1ef8c88e571d"
+      }
+    ],
+    "dg": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#function:dg:5d7f24a87be41d2a",
+        "signature_hash": "d84e5aaed95896c7"
+      }
+    ],
+    "Lifecycle": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 19,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:Lifecycle:611272366dd3e8de",
+        "signature_hash": "d5b1b530b21c939c"
+      },
+      {
+        "file": "aura_relationship_atlas.py",
+        "kind": "class",
+        "line": 98,
+        "end_line": 105,
+        "semantic_id": "aura_relationship_atlas.py#class:Lifecycle:20c588db86405678",
+        "signature_hash": "d5b1b530b21c939c"
+      }
+    ],
+    "WakeCondition": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:WakeCondition:36de9e4ceab322ff",
+        "signature_hash": "34638e230fc6e96a"
+      }
+    ],
+    "WakeCondition.validate": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:WakeCondition.validate:37c955892a8580b3",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ArtifactState": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 59,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:ArtifactState:84d2140507680f1d",
+        "signature_hash": "a351788cae0db2e2"
+      }
+    ],
+    "ArtifactState.validate": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 59,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:ArtifactState.validate:8010fcaf80a56204",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceLeaf": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 76,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:EvidenceLeaf:3c1d209942fc470d",
+        "signature_hash": "6c4b8b707153ede8"
+      }
+    ],
+    "EvidenceLeaf.validate": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:EvidenceLeaf.validate:44cf9a1a142b163e",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ClaimContract": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 87,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:ClaimContract:d274d591234e2496",
+        "signature_hash": "2dd96086172abfd8"
+      }
+    ],
+    "ClaimContract.validate": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:ClaimContract.validate:6194acf7a38e11f3",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceDomainFirewall": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 90,
+        "end_line": 99,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:EvidenceDomainFirewall:022c68b662c6fb4a",
+        "signature_hash": "926890d5dc41283d"
+      }
+    ],
+    "EvidenceDomainFirewall.admit": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 99,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:EvidenceDomainFirewall.admit:d86ada9ea51b36af",
+        "signature_hash": "4fbd5a72d63124c8"
+      }
+    ],
+    "LifecycleAtlas": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 102,
+        "end_line": 138,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:LifecycleAtlas:1e29d101a2533ae1",
+        "signature_hash": "8fbc094d4dc8f179"
+      }
+    ],
+    "LifecycleAtlas.__init__": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 103,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.__init__:7f80e7697317dc3c",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "LifecycleAtlas.register": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 109,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.register:454726c5ca085d4d",
+        "signature_hash": "e8ab7c6ad14ce71d"
+      }
+    ],
+    "LifecycleAtlas.get": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 110,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.get:7157a5d8a783ee71",
+        "signature_hash": "bec8a434fae44686"
+      }
+    ],
+    "LifecycleAtlas.transition": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 116,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.transition:6962e0cd8c363af7",
+        "signature_hash": "39a763f032823b70"
+      }
+    ],
+    "LifecycleAtlas.supersede": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 122,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.supersede:1319c4b9150e6046",
+        "signature_hash": "2193947f33dae7f4"
+      }
+    ],
+    "LifecycleAtlas.active": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 126,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.active:f3a4c3314b1adcde",
+        "signature_hash": "74a6b30e33c1bb4d"
+      }
+    ],
+    "LifecycleAtlas.provenance": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 130,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.provenance:f38a97915d515207",
+        "signature_hash": "bdef113e4b534657"
+      }
+    ],
+    "LifecycleAtlas.wake": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 134,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.wake:51e21da73ca8bdb6",
+        "signature_hash": "e479c7a6527c8ff6"
+      }
+    ],
+    "LifecycleAtlas.manifest": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 138,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.manifest:2cd0c45b5bd56d72",
+        "signature_hash": "9f618a7bf8bd5e87"
+      }
+    ],
+    "TransitionIntent": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 151,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:TransitionIntent:95e9d28fc4866e7a",
+        "signature_hash": "1f8b2ea7e85bd0d5"
+      }
+    ],
+    "TransitionRouter": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "class",
+        "line": 154,
+        "end_line": 167,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:TransitionRouter:a5237eea75a74ef0",
+        "signature_hash": "ec5b907851cd7e8c"
+      }
+    ],
+    "TransitionRouter.__init__": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 156,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:TransitionRouter.__init__:74ff0f8af08884fc",
+        "signature_hash": "e2ff03ac3b938276"
+      }
+    ],
+    "TransitionRouter.compile": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 167,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:TransitionRouter.compile:be55f1492b831b8c",
+        "signature_hash": "b23ce043a6f686d0"
+      }
+    ],
+    "portfolio_fixture": [
+      {
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 178,
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#function:portfolio_fixture:80a1a4a3cec94035",
+        "signature_hash": "c4c36496fab391ea"
+      }
+    ],
+    "T": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 72,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#class:T:8e0f12b0375a1d8c",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.setUp": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.setUp:bdbed940b22d74a7",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.test_portfolio_projects": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_portfolio_projects:b54b9a171b3a777b",
+        "signature_hash": "579da1ed8e0678ae"
+      }
+    ],
+    "T.test_active_excludes_hold": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_active_excludes_hold:79ab4af976a9854d",
+        "signature_hash": "6aad063899f3bb63"
+      }
+    ],
+    "T.test_searchability_not_hotness": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_searchability_not_hotness:6c57a1e4b7e1c584",
+        "signature_hash": "aaf5a965ab84db1e"
+      }
+    ],
+    "T.test_exact_wake": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_exact_wake:4849a537850bff59",
+        "signature_hash": "e2eac565c503917b"
+      }
+    ],
+    "T.test_wrong_wake_noop": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_wrong_wake_noop:724d8bccb8b39165",
+        "signature_hash": "d01bee4edea58e40"
+      }
+    ],
+    "T.test_retired_requires_invalidator": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_retired_requires_invalidator:7fdfa526146d32f7",
+        "signature_hash": "e84fd316bf29dae2"
+      }
+    ],
+    "T.test_supersession_retains_old": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_supersession_retains_old:fbda732b40825379",
+        "signature_hash": "7de60437289b1c44"
+      }
+    ],
+    "T.test_cross_project_supersession_rejected": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_cross_project_supersession_rejected:0d0339ef8c653631",
+        "signature_hash": "f9ef785b0739d1e8"
+      }
+    ],
+    "T.test_k27_is_routing_only": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_k27_is_routing_only:84a15227302293b8",
+        "signature_hash": "faf150964369068e"
+      }
+    ],
+    "T.test_invalid_k27_rejected": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_invalid_k27_rejected:08f7bfbe58b2dd73",
+        "signature_hash": "22b6e1fce3ba710b"
+      }
+    ],
+    "T.test_firewall_complete": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_firewall_complete:1a94e306596f6059",
+        "signature_hash": "b6a7dcded6eb1530"
+      }
+    ],
+    "T.test_firewall_no_cross_domain_payment": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_firewall_no_cross_domain_payment:56711c725656db46",
+        "signature_hash": "225f521db2091cf2"
+      }
+    ],
+    "T.test_stale_leaf_cannot_pay_domain": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_stale_leaf_cannot_pay_domain:f683753e55254452",
+        "signature_hash": "411fd13bbb46ecc4"
+      }
+    ],
+    "T.test_multiplex_operation_keeps_domains_typed": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_multiplex_operation_keeps_domains_typed:9c58bda85138a6f0",
+        "signature_hash": "509cff059d164633"
+      }
+    ],
+    "T.test_router_current_same_jurisdiction": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_current_same_jurisdiction:09c6f4b3d2e92c8f",
+        "signature_hash": "2e55a3684b6349b7"
+      }
+    ],
+    "T.test_router_hold_source_not_hot": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_hold_source_not_hot:b7c70398f29631da",
+        "signature_hash": "f41e63a7612c76df"
+      }
+    ],
+    "T.test_router_frame_cut": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 49,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_frame_cut:a21f3a48622eeaa5",
+        "signature_hash": "23bfb92e2f3e6a18"
+      }
+    ],
+    "T.test_router_jurisdiction_bridge": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_jurisdiction_bridge:e09efab62f567ed0",
+        "signature_hash": "0bb824f3475a4bd1"
+      }
+    ],
+    "T.test_router_effect_never_promoted": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_effect_never_promoted:6de42ec6ef60558d",
+        "signature_hash": "2f63a544a8f16702"
+      }
+    ],
+    "T.test_manifest_order_stable": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 58,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_manifest_order_stable:132f2077bde2bb25",
+        "signature_hash": "94f279b2324fc6d0"
+      }
+    ],
+    "T.test_hyperscale1000_hot_frontier": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 64,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_hyperscale1000_hot_frontier:d15173185a4ce29f",
+        "signature_hash": "19e05947cbfff8e5"
+      }
+    ],
+    "T.test_100000_domain_laundering_fails_closed": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_100000_domain_laundering_fails_closed:0b0b01d0aa90eef7",
+        "signature_hash": "724723b6594c5427"
+      }
+    ],
+    "T.test_no_artifact_mints_effect": [
+      {
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 72,
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_no_artifact_mints_effect:9bc208296886cf4a",
+        "signature_hash": "92d3fe28b10aa654"
       }
     ],
     "IngressPacket": [
@@ -76805,16 +77337,6 @@
         "end_line": 95,
         "semantic_id": "aura_relationship_atlas.py#class:Readiness:d62b757e679ac2cc",
         "signature_hash": "8625350cb5e4562d"
-      }
-    ],
-    "Lifecycle": [
-      {
-        "file": "aura_relationship_atlas.py",
-        "kind": "class",
-        "line": 98,
-        "end_line": 105,
-        "semantic_id": "aura_relationship_atlas.py#class:Lifecycle:20c588db86405678",
-        "signature_hash": "d5b1b530b21c939c"
       }
     ],
     "AuthorityPosture": [
@@ -167740,6 +168262,53 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-lifecycle-router.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 527,
+      "lines": 23,
+      "tokens_est": 132,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "40092ca113bf6c37",
+      "vector": [
+        -0.151653,
+        -0.173164,
+        -0.272114,
+        0.190372,
+        0.119386,
+        -0.190372,
+        -0.246301,
+        -0.231243,
+        -0.108631,
+        -0.091422,
+        0.181768,
+        -0.222639,
+        0.252754,
+        0.074213,
+        -0.145199,
+        -0.095724,
+        -0.237697,
+        0.125839,
+        0.153804,
+        0.065609,
+        0.100026,
+        0.239848,
+        -0.145199,
+        0.091422,
+        -0.164559,
+        0.173164,
+        -0.06776,
+        0.149501,
+        -0.265661,
+        -0.117235,
+        -0.220488,
+        0.235545
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-learning.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -172400,6 +172969,147 @@
         -0.08314,
         -0.037353,
         -0.210862
+      ]
+    },
+    {
+      "path": "05_staging/aura_lifecycle_router/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1029,
+      "lines": 19,
+      "tokens_est": 257,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "335c72fcb1a86cc3",
+      "vector": [
+        0.282157,
+        0.118395,
+        -0.277731,
+        0.158229,
+        -0.131673,
+        -0.211341,
+        0.156016,
+        0.19585,
+        0.140525,
+        -0.231258,
+        -0.24011,
+        0.164868,
+        0.266666,
+        0.264453,
+        -0.215767,
+        -0.056431,
+        0.098478,
+        0.202489,
+        -0.003319,
+        0.098478,
+        -0.260027,
+        0.211341,
+        0.06307,
+        0.17372,
+        -0.206915,
+        -0.012171,
+        0.220193,
+        -0.027662,
+        0.167081,
+        -0.034301,
+        -0.021023,
+        0.045366
+      ]
+    },
+    {
+      "path": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10792,
+      "lines": 179,
+      "tokens_est": 2698,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "488375f92c67835c",
+      "vector": [
+        0.003592,
+        -0.051483,
+        -0.252624,
+        -0.290936,
+        0.032326,
+        0.235862,
+        0.202338,
+        0.147264,
+        0.247835,
+        0.06585,
+        -0.243046,
+        0.017959,
+        0.286147,
+        -0.049088,
+        -0.075428,
+        0.089795,
+        -0.046693,
+        0.221495,
+        -0.209522,
+        0.085006,
+        -0.231073,
+        -0.104162,
+        0.14487,
+        0.238257,
+        -0.293331,
+        -0.116135,
+        -0.211917,
+        0.142475,
+        0.221495,
+        -0.187971,
+        -0.082612,
+        -0.077822
+      ]
+    },
+    {
+      "path": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7072,
+      "lines": 75,
+      "tokens_est": 1768,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0dffeb9c40348cdf",
+      "vector": [
+        0.243949,
+        0.233827,
+        0.179166,
+        0.191313,
+        0.16297,
+        -0.191313,
+        0.08604,
+        -0.158921,
+        0.252047,
+        -0.169044,
+        -0.057698,
+        -0.16297,
+        0.217631,
+        0.25812,
+        -0.069844,
+        -0.171068,
+        -0.077942,
+        -0.250023,
+        0.233827,
+        -0.219655,
+        -0.017208,
+        -0.207509,
+        -0.158921,
+        -0.037453,
+        0.003037,
+        0.14475,
+        -0.10426,
+        -0.18119,
+        -0.25812,
+        -0.136652,
+        0.055673,
+        0.237876
       ]
     },
     {
@@ -286646,16 +287356,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26434468,
+    "text_tokens_est": 6598968,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287511,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-lifecycle-router.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -286873,6 +287584,9 @@
       ".mempalace/nexus.json",
       ".mempalace/temp_prompt.txt",
       ".vscode/settings.json",
+      "05_staging/aura_lifecycle_router/README.md",
+      "05_staging/aura_lifecycle_router/lifecycle_router.py",
+      "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
       "05_staging/ledgers/AURA_OS_BLOAT_INVENTORY.json",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "05_staging/ledgers/GATE_A_TRANSITION_RECEIPT_W2.json",
@@ -288332,6 +289046,526 @@
         "end_line": 13,
         "signature_hash": "41fb393f9ea07f89",
         "file_digest8": "6ca398b6bf7056e4"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:ArtifactState:84d2140507680f1d",
+        "name": "ArtifactState",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 37,
+        "end_line": 59,
+        "signature_hash": "a351788cae0db2e2",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:ClaimContract:d274d591234e2496",
+        "name": "ClaimContract",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 80,
+        "end_line": 87,
+        "signature_hash": "2dd96086172abfd8",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:EvidenceDomainFirewall:022c68b662c6fb4a",
+        "name": "EvidenceDomainFirewall",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 90,
+        "end_line": 99,
+        "signature_hash": "926890d5dc41283d",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:EvidenceLeaf:3c1d209942fc470d",
+        "name": "EvidenceLeaf",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 63,
+        "end_line": 76,
+        "signature_hash": "6c4b8b707153ede8",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:Lifecycle:611272366dd3e8de",
+        "name": "Lifecycle",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 12,
+        "end_line": 19,
+        "signature_hash": "d5b1b530b21c939c",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:LifecycleAtlas:1e29d101a2533ae1",
+        "name": "LifecycleAtlas",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 102,
+        "end_line": 138,
+        "signature_hash": "8fbc094d4dc8f179",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:TransitionIntent:95e9d28fc4866e7a",
+        "name": "TransitionIntent",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 142,
+        "end_line": 151,
+        "signature_hash": "1f8b2ea7e85bd0d5",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:TransitionRouter:a5237eea75a74ef0",
+        "name": "TransitionRouter",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 154,
+        "end_line": 167,
+        "signature_hash": "ec5b907851cd7e8c",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#class:WakeCondition:36de9e4ceab322ff",
+        "name": "WakeCondition",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "34638e230fc6e96a",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#function:dg:5d7f24a87be41d2a",
+        "name": "dg",
+        "kind": "function",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "d84e5aaed95896c7",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#function:portfolio_fixture:80a1a4a3cec94035",
+        "name": "portfolio_fixture",
+        "kind": "function",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 170,
+        "end_line": 178,
+        "signature_hash": "c4c36496fab391ea",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:ArtifactState.validate:8010fcaf80a56204",
+        "name": "ArtifactState.validate",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 52,
+        "end_line": 59,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:ClaimContract.validate:6194acf7a38e11f3",
+        "name": "ClaimContract.validate",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:EvidenceDomainFirewall.admit:d86ada9ea51b36af",
+        "name": "EvidenceDomainFirewall.admit",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 91,
+        "end_line": 99,
+        "signature_hash": "4fbd5a72d63124c8",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:EvidenceLeaf.validate:44cf9a1a142b163e",
+        "name": "EvidenceLeaf.validate",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.__init__:7f80e7697317dc3c",
+        "name": "LifecycleAtlas.__init__",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 103,
+        "end_line": 103,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.active:f3a4c3314b1adcde",
+        "name": "LifecycleAtlas.active",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 123,
+        "end_line": 126,
+        "signature_hash": "74a6b30e33c1bb4d",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.get:7157a5d8a783ee71",
+        "name": "LifecycleAtlas.get",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 110,
+        "end_line": 110,
+        "signature_hash": "bec8a434fae44686",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.manifest:2cd0c45b5bd56d72",
+        "name": "LifecycleAtlas.manifest",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 135,
+        "end_line": 138,
+        "signature_hash": "9f618a7bf8bd5e87",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.provenance:f38a97915d515207",
+        "name": "LifecycleAtlas.provenance",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 127,
+        "end_line": 130,
+        "signature_hash": "bdef113e4b534657",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.register:454726c5ca085d4d",
+        "name": "LifecycleAtlas.register",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 104,
+        "end_line": 109,
+        "signature_hash": "e8ab7c6ad14ce71d",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.supersede:1319c4b9150e6046",
+        "name": "LifecycleAtlas.supersede",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 117,
+        "end_line": 122,
+        "signature_hash": "2193947f33dae7f4",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.transition:6962e0cd8c363af7",
+        "name": "LifecycleAtlas.transition",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 111,
+        "end_line": 116,
+        "signature_hash": "39a763f032823b70",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:LifecycleAtlas.wake:51e21da73ca8bdb6",
+        "name": "LifecycleAtlas.wake",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 131,
+        "end_line": 134,
+        "signature_hash": "e479c7a6527c8ff6",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:TransitionRouter.__init__:74ff0f8af08884fc",
+        "name": "TransitionRouter.__init__",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 156,
+        "end_line": 156,
+        "signature_hash": "e2ff03ac3b938276",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:TransitionRouter.compile:be55f1492b831b8c",
+        "name": "TransitionRouter.compile",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 157,
+        "end_line": 167,
+        "signature_hash": "b23ce043a6f686d0",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/lifecycle_router.py#method:WakeCondition.validate:37c955892a8580b3",
+        "name": "WakeCondition.validate",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/lifecycle_router.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "488375f92c67835c"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#class:T:8e0f12b0375a1d8c",
+        "name": "T",
+        "kind": "class",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 5,
+        "end_line": 72,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.setUp:bdbed940b22d74a7",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_100000_domain_laundering_fails_closed:0b0b01d0aa90eef7",
+        "name": "T.test_100000_domain_laundering_fails_closed",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 65,
+        "end_line": 71,
+        "signature_hash": "724723b6594c5427",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_active_excludes_hold:79ab4af976a9854d",
+        "name": "T.test_active_excludes_hold",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "6aad063899f3bb63",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_cross_project_supersession_rejected:0d0339ef8c653631",
+        "name": "T.test_cross_project_supersession_rejected",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "f9ef785b0739d1e8",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_exact_wake:4849a537850bff59",
+        "name": "T.test_exact_wake",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "e2eac565c503917b",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_firewall_complete:1a94e306596f6059",
+        "name": "T.test_firewall_complete",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "b6a7dcded6eb1530",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_firewall_no_cross_domain_payment:56711c725656db46",
+        "name": "T.test_firewall_no_cross_domain_payment",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "225f521db2091cf2",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_hyperscale1000_hot_frontier:d15173185a4ce29f",
+        "name": "T.test_hyperscale1000_hot_frontier",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 59,
+        "end_line": 64,
+        "signature_hash": "19e05947cbfff8e5",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_invalid_k27_rejected:08f7bfbe58b2dd73",
+        "name": "T.test_invalid_k27_rejected",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "22b6e1fce3ba710b",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_k27_is_routing_only:84a15227302293b8",
+        "name": "T.test_k27_is_routing_only",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "faf150964369068e",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_manifest_order_stable:132f2077bde2bb25",
+        "name": "T.test_manifest_order_stable",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 58,
+        "end_line": 58,
+        "signature_hash": "94f279b2324fc6d0",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_multiplex_operation_keeps_domains_typed:9c58bda85138a6f0",
+        "name": "T.test_multiplex_operation_keeps_domains_typed",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "509cff059d164633",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_no_artifact_mints_effect:9bc208296886cf4a",
+        "name": "T.test_no_artifact_mints_effect",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 72,
+        "end_line": 72,
+        "signature_hash": "92d3fe28b10aa654",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_portfolio_projects:b54b9a171b3a777b",
+        "name": "T.test_portfolio_projects",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "579da1ed8e0678ae",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_retired_requires_invalidator:7fdfa526146d32f7",
+        "name": "T.test_retired_requires_invalidator",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "e84fd316bf29dae2",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_current_same_jurisdiction:09c6f4b3d2e92c8f",
+        "name": "T.test_router_current_same_jurisdiction",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "2e55a3684b6349b7",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_effect_never_promoted:6de42ec6ef60558d",
+        "name": "T.test_router_effect_never_promoted",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "2f63a544a8f16702",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_frame_cut:a21f3a48622eeaa5",
+        "name": "T.test_router_frame_cut",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 47,
+        "end_line": 49,
+        "signature_hash": "23bfb92e2f3e6a18",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_hold_source_not_hot:b7c70398f29631da",
+        "name": "T.test_router_hold_source_not_hot",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "f41e63a7612c76df",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_router_jurisdiction_bridge:e09efab62f567ed0",
+        "name": "T.test_router_jurisdiction_bridge",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "0bb824f3475a4bd1",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_searchability_not_hotness:6c57a1e4b7e1c584",
+        "name": "T.test_searchability_not_hotness",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "aaf5a965ab84db1e",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_stale_leaf_cannot_pay_domain:f683753e55254452",
+        "name": "T.test_stale_leaf_cannot_pay_domain",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "411fd13bbb46ecc4",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_supersession_retains_old:fbda732b40825379",
+        "name": "T.test_supersession_retains_old",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "7de60437289b1c44",
+        "file_digest8": "0dffeb9c40348cdf"
+      },
+      {
+        "semantic_id": "05_staging/aura_lifecycle_router/test_lifecycle_router.py#method:T.test_wrong_wake_noop:724d8bccb8b39165",
+        "name": "T.test_wrong_wake_noop",
+        "kind": "method",
+        "file": "05_staging/aura_lifecycle_router/test_lifecycle_router.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "d01bee4edea58e40",
+        "file_digest8": "0dffeb9c40348cdf"
       },
       {
         "semantic_id": "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py#class:CausalFence:f777f1ca0ceae082",
@@ -446884,7 +448118,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "6d425959588c0ba675c02f6b24c87dc4",
+    "payload_hash": "39a030086a678b3af499bec46fd86897"
   }
 }
