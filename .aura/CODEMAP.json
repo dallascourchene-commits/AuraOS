@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788052534,
+  "generated_at_unix": 1788437948,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1658,
+    "repo_file_count": 1672,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -145,6 +145,9 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      ".github/workflows/awj032-airllm-g1-source-contract.yml",
+      ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1650,6 +1653,17 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/README.md",
+      "tools/awj032/airllm_hard_false_inspected_tree.py",
+      "tools/awj032/airllm_hard_false_remediation.py",
+      "tools/awj032/airllm_runtime_hard_false.py",
+      "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/test_airllm_binding_mutation_soundness.py",
+      "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+      "tools/awj032/test_airllm_hard_false_remediation.py",
+      "tools/awj032/test_airllm_runtime_hard_false.py",
+      "tools/awj032/test_airllm_source_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1774,16 +1788,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1658,
-      "bytes": 26418741,
-      "tokens_est": 6595075,
+      "files": 1672,
+      "bytes": 26530442,
+      "tokens_est": 6623006,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 242,
+        "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1008,
-        "schema_or_lexicon": 274,
+        "python_module": 1018,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -3488,6 +3502,22 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 474,
+        "end_line": 482,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:main:5ff011d87b934cf0",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "kind": "function",
+        "line": 221,
+        "end_line": 255,
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:main:cf9f070d0bfcf82c",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3688,6 +3718,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 218,
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:run:039d5dc30f81c899",
+        "signature_hash": "3b05aa323d68dd37"
       }
     ],
     "run.record": [
@@ -3930,6 +3968,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_canonical:821e364e91f48755",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -13240,6 +13286,14 @@
         "end_line": 32,
         "semantic_id": "scripts/aura_source_anchor_map.py#function:_file_digest:ead76cea3e7a6ac5",
         "signature_hash": "ff73f1a4aa6e1fdd"
+      },
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_file_digest:100515a11a0a2976",
+        "signature_hash": "b327dcad24095fd0"
       }
     ],
     "_runner_status": [
@@ -13741,6 +13795,22 @@
         "line": 67,
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
+        "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_sha256:393eb347f3216e71",
+        "signature_hash": "f9c2d48c5f8c2866"
+      },
+      {
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_sha256:97aa3104e68cb69a",
         "signature_hash": "8b2fe119650f5918"
       }
     ],
@@ -27144,6 +27214,14 @@
         "end_line": 139,
         "semantic_id": "aura_construction_architect_refactor.py#function:_canonical_digest:be0ef5279214bc45",
         "signature_hash": "0513d5eea6b714f2"
+      },
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 106,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_canonical_digest:7dc2f6a3b19ee189",
+        "signature_hash": "0513d5eea6b714f2"
       }
     ],
     "_markdown_integer": [
@@ -30250,6 +30328,14 @@
         "end_line": 64,
         "semantic_id": "aura_waboose_semantic_rules.py#function:_call_name:a50b6928dab800a5",
         "signature_hash": "e1e3124f72172452"
+      },
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 306,
+        "end_line": 311,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_call_name:22bf32ab791dd9f2",
+        "signature_hash": "466dadabbeddd3b1"
       }
     ],
     "_literal_value": [
@@ -100804,6 +100890,22 @@
         "end_line": 49,
         "semantic_id": "tests/test_aura_substrate_verifier.py#function:_manifest:866f8a9ae050c306",
         "signature_hash": "236a0e7d81c2f527"
+      },
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_manifest:3ba599a6aa8ada2c",
+        "signature_hash": "8f38248d52f36e9f"
+      },
+      {
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_manifest:dcb91f4ec83965f1",
+        "signature_hash": "3f782e49116f8aca"
       }
     ],
     "_validate_existing": [
@@ -101104,6 +101206,14 @@
         "end_line": 40,
         "semantic_id": "scripts/aura_industry_benchmark_validation.py#function:git_blob_sha1:0beab13b840627f4",
         "signature_hash": "8095b1b695aeff1f"
+      },
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:git_blob_sha1:f08d965c402515a3",
+        "signature_hash": "5bc298414085387a"
       }
     ],
     "clean_db": [
@@ -113774,6 +113884,14 @@
         "end_line": 120,
         "semantic_id": "tests/pascal_spatial_presentation_test_support.py#function:load:509d7da1c5b4b2d8",
         "signature_hash": "901e6f55c33cb73f"
+      },
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#function:load:34cc7d21bcd5c50c",
+        "signature_hash": "b4f83327c4948cf9"
       }
     ],
     "Store": [
@@ -117505,6 +117623,14 @@
         "line": 75,
         "end_line": 79,
         "semantic_id": "tests/test_aura_arena_persistence_adapters.py#class:_Patch:fcb3f5bf569e206d",
+        "signature_hash": "036f7de88e6e8872"
+      },
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:_Patch:604150a6d32bd45d",
         "signature_hash": "036f7de88e6e8872"
       }
     ],
@@ -127154,6 +127280,14 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_construction_foundry_director.py#function:manifest:d6ed7030b322d620",
         "signature_hash": "b72a8fc006689efa"
+      },
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#function:manifest:1cb1bfc9a5dd5c96",
+        "signature_hash": "7081e25b32ab809f"
       }
     ],
     "initial_evidence": [
@@ -157940,6 +158074,1524 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "InspectedTreeRemediationReceipt": [
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#class:InspectedTreeRemediationReceipt:844e8fce144c81b7",
+        "signature_hash": "3d82a34b3b443625"
+      }
+    ],
+    "InspectedTreeRemediationReceipt.to_dict": [
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#method:InspectedTreeRemediationReceipt.to_dict:956420beb1dd79b1",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_verify_exact_manifest": [
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 141,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_verify_exact_manifest:655aebd435821ed3",
+        "signature_hash": "23cb4a6995da68ce"
+      }
+    ],
+    "_audit_mapping": [
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 144,
+        "end_line": 152,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_audit_mapping:8e289877fdcc118b",
+        "signature_hash": "3f507823b7f70aa6"
+      }
+    ],
+    "_remediate_inspected_tree": [
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 247,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_remediate_inspected_tree:c7f9e3f682ffb2f2",
+        "signature_hash": "cf564554f696100a"
+      }
+    ],
+    "remediate_pinned_inspected_tree": [
+      {
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 260,
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:remediate_pinned_inspected_tree:032b6b1fb8918d48",
+        "signature_hash": "58601f4db67ede8f"
+      }
+    ],
+    "RemediationError": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#class:RemediationError:d7c0e5776645e72c",
+        "signature_hash": "ce34c118db551fc2"
+      }
+    ],
+    "RemediationError.__init__": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#method:RemediationError.__init__:48f1ba74b393a0a8",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "FileRemediationReceipt": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#class:FileRemediationReceipt:fd6257311865ad95",
+        "signature_hash": "12f800ba409c587d"
+      }
+    ],
+    "FileRemediationReceipt.to_dict": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#method:FileRemediationReceipt.to_dict:401200aa428fc844",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_is_false": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_is_false:fe505ce65451bbee",
+        "signature_hash": "c6c9402d15bc85de"
+      }
+    ],
+    "_const_string": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 103,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_const_string:2c7f2779d0f28317",
+        "signature_hash": "1397f9aad009be1d"
+      },
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 176,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_const_string:5ef1be862c5910fb",
+        "signature_hash": "a3ef75506619ad0c"
+      }
+    ],
+    "_target_is_trust_remote_code": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 113,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_target_is_trust_remote_code:d282a648a5a0d419",
+        "signature_hash": "a5615e31b9c500c4"
+      }
+    ],
+    "_add_edit": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_add_edit:41aec5b6f0939bcc",
+        "signature_hash": "f2c36135efa0f041"
+      }
+    ],
+    "_collect_policy_edits": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_collect_policy_edits:67a647429393bd39",
+        "signature_hash": "20d1624d8ed92b0b"
+      }
+    ],
+    "_line_starts": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 171,
+        "end_line": 176,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_line_starts:d13d2c34571ed5f1",
+        "signature_hash": "3b04c7136319969a"
+      }
+    ],
+    "_absolute_offset": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 182,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_absolute_offset:37c3baf5ad711a4d",
+        "signature_hash": "03a9595a609f859f"
+      }
+    ],
+    "_apply_false_edits": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 203,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_apply_false_edits:8b2431ebe792e98f",
+        "signature_hash": "c111404555939280"
+      }
+    ],
+    "remediate_bytes": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 248,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:remediate_bytes:3586ad4ca7621018",
+        "signature_hash": "337398d35e71e282"
+      }
+    ],
+    "remediate_pinned_policy_files": [
+      {
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "kind": "function",
+        "line": 251,
+        "end_line": 288,
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:remediate_pinned_policy_files:449944c1a8dca942",
+        "signature_hash": "5df958e1d311654f"
+      }
+    ],
+    "AirLLMRemoteCodeWideningRejected": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:AirLLMRemoteCodeWideningRejected:d021ed5392d600bb",
+        "signature_hash": "3d14aa9527494d0a"
+      }
+    ],
+    "AirLLMRemoteCodeWideningRejected.__init__": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:AirLLMRemoteCodeWideningRejected.__init__:9b8bf7e231d197fd",
+        "signature_hash": "6267215f19208019"
+      }
+    ],
+    "AirLLMRuntimeGuardError": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:AirLLMRuntimeGuardError:d61785bf7a652f7f",
+        "signature_hash": "1ff56e1712863c87"
+      }
+    ],
+    "BoundarySpec": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:BoundarySpec:861de24a0bf0a278",
+        "signature_hash": "90eeeb3d88af9dcb"
+      }
+    ],
+    "BoundarySpec.boundary": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:BoundarySpec.boundary:db65b4113cf9efad",
+        "signature_hash": "9ea98c34f43747e5"
+      }
+    ],
+    "RuntimeHardFalseReceipt": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:RuntimeHardFalseReceipt:c424f8bc584fa421",
+        "signature_hash": "2b49b88403f5a1ea"
+      }
+    ],
+    "RuntimeHardFalseReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseReceipt.receipt_digest:46aa9421cc3e29ce",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "RuntimeHardFalseGuard": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 103,
+        "end_line": 218,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:RuntimeHardFalseGuard:411f181a812b926e",
+        "signature_hash": "571ff7cb22d6f227"
+      }
+    ],
+    "RuntimeHardFalseGuard.__init__": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.__init__:a6011ff7399fde53",
+        "signature_hash": "f52179d988cd4919"
+      }
+    ],
+    "RuntimeHardFalseGuard._guarded_classmethod": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 136,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard._guarded_classmethod:8579ea3b601f18ee",
+        "signature_hash": "7e64816129762365"
+      }
+    ],
+    "RuntimeHardFalseGuard._guarded_classmethod.guarded": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard._guarded_classmethod.guarded:6199d7bac4a629fa",
+        "signature_hash": "dc449ac861dbcacd"
+      }
+    ],
+    "RuntimeHardFalseGuard.install": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 183,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.install:695a558c88a11100",
+        "signature_hash": "af68cf1aaaca52b6"
+      }
+    ],
+    "RuntimeHardFalseGuard._restore_patches": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 197,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard._restore_patches:a0a08974b5ccbc15",
+        "signature_hash": "e4ac435c3ac6505c"
+      }
+    ],
+    "RuntimeHardFalseGuard.restore": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.restore:38fa54b26d92f618",
+        "signature_hash": "4f95f30ac7abb461"
+      }
+    ],
+    "RuntimeHardFalseGuard.receipt": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 211,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.receipt:1a34a2127fd91279",
+        "signature_hash": "c724ebd1d568bc4d"
+      }
+    ],
+    "RuntimeHardFalseGuard.__enter__": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 214,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.__enter__:3ede4453c1042850",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "RuntimeHardFalseGuard.__exit__": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 216,
+        "end_line": 218,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.__exit__:db31406494ee975c",
+        "signature_hash": "c1ffe2d5c68b9bfc"
+      }
+    ],
+    "install_transformers_hard_false_guard": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "function",
+        "line": 221,
+        "end_line": 232,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#function:install_transformers_hard_false_guard:a44e44d2e42a052f",
+        "signature_hash": "ae0b7e44b9e938bc"
+      }
+    ],
+    "transformers_hard_false_guard": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "function",
+        "line": 236,
+        "end_line": 249,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#function:transformers_hard_false_guard:e781d62565bab4d4",
+        "signature_hash": "8bfa67f9cf5169f6"
+      }
+    ],
+    "_import_transformers": [
+      {
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "kind": "function",
+        "line": 252,
+        "end_line": 255,
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#function:_import_transformers:c7222af1970b8a30",
+        "signature_hash": "6d3bf55244b424d5"
+      }
+    ],
+    "Finding": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#class:Finding:bf46a0e466c67b5f",
+        "signature_hash": "dcd7516b5d2a8d5d"
+      }
+    ],
+    "SourceAdmissionReceipt": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#class:SourceAdmissionReceipt:710384a1c44229be",
+        "signature_hash": "b96ddce77aa3fa61"
+      }
+    ],
+    "SourceAdmissionReceipt.to_dict": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#method:SourceAdmissionReceipt.to_dict:ba60a317abd23fef",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_rel": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_rel:2ef7fa041898ab58",
+        "signature_hash": "772ed34bfc48a266"
+      }
+    ],
+    "_trust_value": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_trust_value:267a9e24ceff6b6d",
+        "signature_hash": "e90ea397e7f40e63"
+      }
+    ],
+    "_trust_finding": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_trust_finding:dbecac3ad8f5a6e6",
+        "signature_hash": "8c2713617c73bfd4"
+      }
+    ],
+    "_static_bindings": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_static_bindings:c6b1ea39ad66ec49",
+        "signature_hash": "b295a7e4f9b836d4"
+      }
+    ],
+    "_mapping_trust_state": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 239,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_mapping_trust_state:d6403c8f70bfabd7",
+        "signature_hash": "97129397edd3712c"
+      }
+    ],
+    "_mapping_opaque_mutation_names": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 303,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_mapping_opaque_mutation_names:c559d867fc3871b3",
+        "signature_hash": "4e90e8147a74b542"
+      }
+    ],
+    "_scan_trust_remote_code": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 314,
+        "end_line": 382,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_scan_trust_remote_code:5e2ffdbe6e178a77",
+        "signature_hash": "e2a77e2590f24536"
+      }
+    ],
+    "_safe_source_file": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 385,
+        "end_line": 400,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_safe_source_file:a3d5eb9d77967c48",
+        "signature_hash": "0d3bfb8f2a947d11"
+      }
+    ],
+    "audit_airllm_source": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 403,
+        "end_line": 463,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:audit_airllm_source:81f138e057323380",
+        "signature_hash": "d633a6e011cb4876"
+      }
+    ],
+    "require_admitted": [
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 466,
+        "end_line": 471,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:require_admitted:ba38ad2827581a4a",
+        "signature_hash": "46b37ab1f36534cb"
+      }
+    ],
+    "_versions": [
+      {
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_versions:bf5f309859de5a34",
+        "signature_hash": "d86b850b710e8295"
+      }
+    ],
+    "_one_generation": [
+      {
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_one_generation:6e7e55222d80bf39",
+        "signature_hash": "8da6b94eb23fc2af"
+      }
+    ],
+    "BindingMutationSoundnessTests": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 178,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#class:BindingMutationSoundnessTests:7ab077d5ce2a6ac6",
+        "signature_hash": "6d1052599952b889"
+      }
+    ],
+    "BindingMutationSoundnessTests._codes": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 16,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests._codes:8dcc7daf41014b8f",
+        "signature_hash": "d2893ffe4d6bb0bf"
+      }
+    ],
+    "BindingMutationSoundnessTests.assert_loader_fails_closed": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.assert_loader_fails_closed:2ea001c321e81e0f",
+        "signature_hash": "8538266d82b01ef7"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_augassign_invalidates_stale_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_augassign_invalidates_stale_static_key:3dd171c61db80e77",
+        "signature_hash": "1a8238d344e9e81d"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_namedexpr_invalidates_stale_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_namedexpr_invalidates_stale_static_key:3a41ee442cd69947",
+        "signature_hash": "3749892653d68bed"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_loop_target_invalidates_stale_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_loop_target_invalidates_stale_static_key:b194321672fa5769",
+        "signature_hash": "9ed912db9c06baa3"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_with_target_invalidates_stale_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_with_target_invalidates_stale_static_key:b5d64ed4573d8dc7",
+        "signature_hash": "c6ce152f41eb4f78"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_comprehension_target_invalidates_static_key_conservatively": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_comprehension_target_invalidates_static_key_conservatively:a891d42c2a9534b1",
+        "signature_hash": "89cc8a5c7e3a880d"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_destructuring_assignment_invalidates_stale_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_destructuring_assignment_invalidates_stale_static_key:4a3eff93799f7a1d",
+        "signature_hash": "eb7738e377756d06"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_multi_target_assignment_invalidates_stale_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_multi_target_assignment_invalidates_stale_static_key:0dd28bf326a02ceb",
+        "signature_hash": "2fc7d34535baa993"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_function_parameter_shadow_invalidates_outer_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_function_parameter_shadow_invalidates_outer_static_key:6fb62856e76639f3",
+        "signature_hash": "57bdc6c9a62e7829"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_import_alias_rebind_invalidates_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_import_alias_rebind_invalidates_static_key:750dd4a4c96cffe7",
+        "signature_hash": "f6635a4093217517"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_definition_rebind_invalidates_static_key": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_definition_rebind_invalidates_static_key:c5316319eceaab06",
+        "signature_hash": "0571cf4c84203221"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_identical_modeled_rebinding_remains_foldable": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_identical_modeled_rebinding_remains_foldable:8becf3cde7492cbd",
+        "signature_hash": "0a421d8ac8bedc36"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_stable_unrelated_key_remains_admitted_by_this_scanner": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 123,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_stable_unrelated_key_remains_admitted_by_this_scanner:72f2d2b478eb7a6f",
+        "signature_hash": "5595bedd36b24535"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_explicit_false_still_dominates_opaque_mapping": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_explicit_false_still_dominates_opaque_mapping:df4fb62567f548df",
+        "signature_hash": "427c58fdf6807e40"
+      }
+    ],
+    "BindingMutationSoundnessTests.test_randomized_unmodeled_binding_forms_never_fail_open": [
+      {
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 178,
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_randomized_unmodeled_binding_forms_never_fail_open:df1fc09d96ec235e",
+        "signature_hash": "b69864198b5f23ad"
+      }
+    ],
+    "make_files": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#function:make_files:94df354773d1c20b",
+        "signature_hash": "fa5cb7381a26989f"
+      }
+    ],
+    "specs": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#function:specs:0879afef680a65ad",
+        "signature_hash": "5b7f3dd0b75e49a5"
+      }
+    ],
+    "InspectedTreeTests": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#class:InspectedTreeTests:28098940ccea427d",
+        "signature_hash": "f557887839870c61"
+      }
+    ],
+    "InspectedTreeTests._run": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests._run:0240136059446aa5",
+        "signature_hash": "dabc4d3f1feb9f53"
+      }
+    ],
+    "InspectedTreeTests.test_full_manifest_candidate_passes_existing_gate": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_full_manifest_candidate_passes_existing_gate:f56593a52fc4dd45",
+        "signature_hash": "d1466fe30fd4d78c"
+      }
+    ],
+    "InspectedTreeTests.test_missing_unaffected_file_refuses_commit_identity": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_missing_unaffected_file_refuses_commit_identity:106f2c1f480a955f",
+        "signature_hash": "143266c41ffc0450"
+      }
+    ],
+    "InspectedTreeTests.test_extra_file_refuses_commit_identity": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_extra_file_refuses_commit_identity:0305a6b96448a2aa",
+        "signature_hash": "31a0848b396b21b0"
+      }
+    ],
+    "InspectedTreeTests.test_unaffected_blob_drift_refuses": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_unaffected_blob_drift_refuses:aa1b1363a787057e",
+        "signature_hash": "d66f62e905a5806f"
+      }
+    ],
+    "InspectedTreeTests.test_nonremote_blocker_is_not_repaired": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_nonremote_blocker_is_not_repaired:1b07810daf23b4f4",
+        "signature_hash": "478c8f0e8fd42a63"
+      }
+    ],
+    "InspectedTreeTests.test_change_set_is_exactly_mutation_specs": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 146,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_change_set_is_exactly_mutation_specs:c06b67c56c87a6e1",
+        "signature_hash": "f373f64c81ddb035"
+      }
+    ],
+    "InspectedTreeTests.test_post_audit_is_authoritative": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_post_audit_is_authoritative:4935c577cb10c864",
+        "signature_hash": "d83c335f1a4995ee"
+      }
+    ],
+    "HardFalseRemediationTests": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 158,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#class:HardFalseRemediationTests:ad7a2afc87ce1e23",
+        "signature_hash": "8db8d0f15f57a736"
+      }
+    ],
+    "HardFalseRemediationTests.remediate": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.remediate:79a53ff1900c8a96",
+        "signature_hash": "ef680fbdbf513c5f"
+      }
+    ],
+    "HardFalseRemediationTests.assert_gate_clean": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.assert_gate_clean:c72d992255ef270b",
+        "signature_hash": "430d991f1b66261a"
+      }
+    ],
+    "HardFalseRemediationTests.test_pinned_production_spec_is_exact_and_totals_thirteen_edits": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_pinned_production_spec_is_exact_and_totals_thirteen_edits:e173d69c0bf89436",
+        "signature_hash": "876885897eefec87"
+      }
+    ],
+    "HardFalseRemediationTests.test_true_dynamic_mapping_and_assignment_forms_become_hard_false": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_true_dynamic_mapping_and_assignment_forms_become_hard_false:ffd6e33dd641d33f",
+        "signature_hash": "4e4b719bb2ae4a7b"
+      }
+    ],
+    "HardFalseRemediationTests.test_dynamic_factory_mapping_and_direct_keyword_are_closed": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_dynamic_factory_mapping_and_direct_keyword_are_closed:f87de46b21809055",
+        "signature_hash": "ab9dfe539ed13e30"
+      }
+    ],
+    "HardFalseRemediationTests.test_only_expression_bytes_change_and_comment_survives": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_only_expression_bytes_change_and_comment_survives:16b7d7f9df5201db",
+        "signature_hash": "041b6bb8fdc96695"
+      }
+    ],
+    "HardFalseRemediationTests.test_blob_drift_fails_before_transformation": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 121,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_blob_drift_fails_before_transformation:c72d4661daeecf1b",
+        "signature_hash": "b2c34a1f294a725d"
+      }
+    ],
+    "HardFalseRemediationTests.test_edit_count_drift_fails_closed": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_edit_count_drift_fails_closed:fab189f50c880599",
+        "signature_hash": "f903a287ecdc804e"
+      }
+    ],
+    "HardFalseRemediationTests.test_opaque_loader_kwargs_are_not_laundered_by_transformer": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_opaque_loader_kwargs_are_not_laundered_by_transformer:87cb9a5e7e106916",
+        "signature_hash": "fad46c52eea82475"
+      }
+    ],
+    "HardFalseRemediationTests.test_missing_production_file_fails_closed": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 152,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_missing_production_file_fails_closed:c904f31c40ba9881",
+        "signature_hash": "9fc98beb8f1aa464"
+      }
+    ],
+    "HardFalseRemediationTests.test_git_blob_identity_matches_git_object_encoding": [
+      {
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 158,
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_git_blob_identity_matches_git_object_encoding:ffac59a7ebc5e7cc",
+        "signature_hash": "7ab7dd8992520fc1"
+      }
+    ],
+    "fake_transformers": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#function:fake_transformers:2ea47380ce2d3dc3",
+        "signature_hash": "544e6edffdb42ca1"
+      }
+    ],
+    "fake_transformers.AutoConfig": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoConfig:b057c6aa0a70355e",
+        "signature_hash": "1d8612cbdaffabce"
+      }
+    ],
+    "fake_transformers.AutoConfig.from_pretrained": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:fake_transformers.AutoConfig.from_pretrained:227b4d511773354b",
+        "signature_hash": "8601faf30a49dc2b"
+      }
+    ],
+    "fake_transformers.AutoTokenizer": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoTokenizer:3a714b02ba4cbca4",
+        "signature_hash": "da2959e853cf0ab2"
+      }
+    ],
+    "fake_transformers.AutoTokenizer.from_pretrained": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:fake_transformers.AutoTokenizer.from_pretrained:4e7d7732a625705f",
+        "signature_hash": "8601faf30a49dc2b"
+      }
+    ],
+    "fake_transformers.AutoModelBase": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelBase:a91c1cace0ea6daf",
+        "signature_hash": "4149b840980396ae"
+      }
+    ],
+    "fake_transformers.AutoModelBase.from_config": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:fake_transformers.AutoModelBase.from_config:ee2b88ca032a2a19",
+        "signature_hash": "746bcb37e72d2fdf"
+      }
+    ],
+    "fake_transformers.AutoModelForCausalLM": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelForCausalLM:f9799ada51fa40b7",
+        "signature_hash": "9613ac449a31d09e"
+      }
+    ],
+    "fake_transformers.AutoModel": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModel:decde944a10d6de0",
+        "signature_hash": "c31a566acb1b3823"
+      }
+    ],
+    "fake_transformers.AutoModelForImageTextToText": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelForImageTextToText:3fa760834e2af650",
+        "signature_hash": "fc327faf1d39003f"
+      }
+    ],
+    "fake_transformers.AutoModelForMultimodalLM": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelForMultimodalLM:e41b41b3a8ef3d93",
+        "signature_hash": "8e70abfe93d5da68"
+      }
+    ],
+    "RuntimeHardFalseGuardTests": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 196,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:RuntimeHardFalseGuardTests:54d0c1becfa7bf6c",
+        "signature_hash": "76eece63ccdc12cc"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_omitted_flag_is_injected_false_at_all_required_boundaries": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_omitted_flag_is_injected_false_at_all_required_boundaries:dc2a369368f16e2a",
+        "signature_hash": "7f7093beb6a65590"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_literal_false_passes_through_as_false": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_literal_false_passes_through_as_false:687ec6603bf8caa5",
+        "signature_hash": "3de8a14c26fb6de7"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_true_is_rejected_before_underlying_loader_runs": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 103,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_true_is_rejected_before_underlying_loader_runs:c85a22fe9697ceeb",
+        "signature_hash": "a1069bf8717cc070"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_nonliteral_values_are_rejected": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_nonliteral_values_are_rejected:7e3d8ba1da6ad0c1",
+        "signature_hash": "17b3f05aaf50639a"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_optional_absent_factories_are_skipped_not_inferred": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_optional_absent_factories_are_skipped_not_inferred:b31cc55181405689",
+        "signature_hash": "ba3f899db5e6dc35"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_optional_present_factories_are_guarded": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_optional_present_factories_are_guarded:a153786a2222cadf",
+        "signature_hash": "e937577510d2103d"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_missing_required_boundary_fails_closed_and_rolls_back": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_missing_required_boundary_fails_closed_and_rolls_back:18874e37f9c13b0c",
+        "signature_hash": "04b5c4a408e64043"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_context_manager_restores_exact_own_and_inherited_descriptors": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_context_manager_restores_exact_own_and_inherited_descriptors:1c0290800da80b57",
+        "signature_hash": "730caa78d32a5f13"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_context_manager_restores_after_exception": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 173,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_context_manager_restores_after_exception:ce970aac3cf91a9e",
+        "signature_hash": "61b8ecd2edb5b64b"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_receipt_contains_no_loader_arguments": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_receipt_contains_no_loader_arguments:35e07c43111328a5",
+        "signature_hash": "f9cd08ae4afb1a44"
+      }
+    ],
+    "RuntimeHardFalseGuardTests.test_second_install_fails_closed": [
+      {
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "kind": "method",
+        "line": 186,
+        "end_line": 196,
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_second_install_fails_closed:ecf8001c82da93f7",
+        "signature_hash": "30028f528eda8243"
+      }
+    ],
+    "make_tree": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#function:make_tree:42bbbeee2e1240a1",
+        "signature_hash": "258e8fddc4e5cf01"
+      }
+    ],
+    "GateTests": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 337,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
+        "signature_hash": "db2f5c3e40d3dde2"
+      }
+    ],
+    "GateTests._codes": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests._codes:ba49b2e034da97b3",
+        "signature_hash": "9aca514d85d2eb70"
+      }
+    ],
+    "GateTests.test_hard_false_source_passes": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_hard_false_source_passes:c37e73263b5ee095",
+        "signature_hash": "cd7e361422dd14e5"
+      }
+    ],
+    "GateTests.test_explicit_true_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_explicit_true_blocks:c0af7bb8e53e0509",
+        "signature_hash": "7ba58e1f4a9a9c55"
+      }
+    ],
+    "GateTests.test_dynamic_policy_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_dynamic_policy_blocks:339637e4d3d648d4",
+        "signature_hash": "777824ad663447f0"
+      }
+    ],
+    "GateTests.test_mapping_true_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_mapping_true_blocks:286a7321aaace33d",
+        "signature_hash": "13ba3dacf9420fc2"
+      }
+    ],
+    "GateTests.test_mapping_dynamic_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 68,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_mapping_dynamic_blocks:98487ea9d8187d9b",
+        "signature_hash": "d133152bd720df98"
+      }
+    ],
+    "GateTests.test_subscript_assignment_true_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_subscript_assignment_true_blocks:4acee2df4e499697",
+        "signature_hash": "65667898ea0151fa"
+      }
+    ],
+    "GateTests.test_version_drift_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_version_drift_blocks:a301ecc4a087cdd9",
+        "signature_hash": "e53ec68793bba4bf"
+      }
+    ],
+    "GateTests.test_nested_pip_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_nested_pip_mutation_blocks:2006d7c5370c8f36",
+        "signature_hash": "dbe170e6e110c8a5"
+      }
+    ],
+    "GateTests.test_symlinked_source_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 108,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_symlinked_source_blocks:ea2a8717776ab374",
+        "signature_hash": "c433aa3f56688541"
+      }
+    ],
+    "GateTests.test_digest_changes_with_source": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_digest_changes_with_source:5aa9076de6f315e1",
+        "signature_hash": "e573cc21ce55f745"
+      }
+    ],
+    "GateTests.test_require_admitted_raises_typed_prefix": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_require_admitted_raises_typed_prefix:8bd92451d9260577",
+        "signature_hash": "5f808045ece7812a"
+      }
+    ],
+    "GateTests.test_missing_root_fails_closed": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 134,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_missing_root_fails_closed:6e21701ad0ec8d47",
+        "signature_hash": "378536f4432265cb"
+      }
+    ],
+    "GateTests.test_computed_mapping_key_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 145,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_computed_mapping_key_blocks:c6eb475f70a41510",
+        "signature_hash": "8ab4b500e70b2dab"
+      }
+    ],
+    "GateTests.test_computed_subscript_key_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 157,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_computed_subscript_key_blocks:d8b692ca3b1473af",
+        "signature_hash": "d993fde32f2a97c6"
+      }
+    ],
+    "GateTests.test_attribute_assignment_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 167,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_attribute_assignment_blocks:779629fd654f5659",
+        "signature_hash": "c7d1be5d0a1c4078"
+      }
+    ],
+    "GateTests.test_setattr_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 177,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_setattr_blocks:d2c7d0d8c2a42e48",
+        "signature_hash": "cc446ca3dee4ccb8"
+      }
+    ],
+    "GateTests.test_setdefault_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 187,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_setdefault_blocks:51f239bfe7f8ded1",
+        "signature_hash": "2a1fa227935f124c"
+      }
+    ],
+    "GateTests.test_loader_opaque_kwargs_fail_closed": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 196,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_opaque_kwargs_fail_closed:91d4ad5558decb78",
+        "signature_hash": "2be6e12f267ed47b"
+      }
+    ],
+    "GateTests.test_loader_explicit_false_with_opaque_kwargs_passes": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 207,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_explicit_false_with_opaque_kwargs_passes:21994b7da3185548",
+        "signature_hash": "1716ca6b4fc497c1"
+      }
+    ],
+    "GateTests.test_loader_static_unrelated_mapping_passes": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 219,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_static_unrelated_mapping_passes:3de8d7602a2bfbf5",
+        "signature_hash": "d6427ce5a001e5eb"
+      }
+    ],
+    "GateTests.test_loader_conflicting_computed_key_assignments_fail_closed": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 221,
+        "end_line": 232,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_conflicting_computed_key_assignments_fail_closed:0e34144d74a0d5a1",
+        "signature_hash": "e51f31b3a57f788e"
+      }
+    ],
+    "GateTests.test_loader_identical_computed_key_rebinding_remains_foldable": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 247,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_identical_computed_key_rebinding_remains_foldable:02210d6ae119c0b2",
+        "signature_hash": "e937674e01214743"
+      }
+    ],
+    "GateTests.test_dict_constructor_pair_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 249,
+        "end_line": 257,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_dict_constructor_pair_blocks:9f8c017cabf751e4",
+        "signature_hash": "87ca1aae8dce3adc"
+      }
+    ],
+    "GateTests.test_generic_opaque_kwargs_not_globally_blocked": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 264,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_generic_opaque_kwargs_not_globally_blocked:e15c49392e27de6a",
+        "signature_hash": "40860e1706f3ba96"
+      }
+    ],
+    "GateTests.test_loader_dynamic_subscript_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 266,
+        "end_line": 275,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_dynamic_subscript_mutation_blocks:884376415e6c03de",
+        "signature_hash": "e026a29b51ebf770"
+      }
+    ],
+    "GateTests.test_loader_dynamic_update_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 277,
+        "end_line": 286,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_dynamic_update_mutation_blocks:524916c1a1b0c8dc",
+        "signature_hash": "0eb3021300c07f2b"
+      }
+    ],
+    "GateTests.test_loader_alias_dynamic_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 288,
+        "end_line": 298,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_alias_dynamic_mutation_blocks:5a930d969007c5d5",
+        "signature_hash": "d25951380b78f9b5"
+      }
+    ],
+    "GateTests.test_loader_dynamic_merge_mutation_blocks": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 300,
+        "end_line": 309,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_dynamic_merge_mutation_blocks:b47294f4abd73309",
+        "signature_hash": "4b7ef1ff9c71f34a"
+      }
+    ],
+    "GateTests.test_loader_explicit_false_dominates_dynamic_mutation": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 311,
+        "end_line": 324,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_explicit_false_dominates_dynamic_mutation:80ac4eadb6924b0e",
+        "signature_hash": "1db56e4e92ad0ae9"
+      }
+    ],
+    "GateTests.test_generic_dynamic_mutation_not_globally_blocked": [
+      {
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 337,
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_generic_dynamic_mutation_not_globally_blocked:68b8dd0812e9edf5",
+        "signature_hash": "cb02c3e540bdd764"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -159057,6 +160709,8 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -159123,6 +160777,7 @@
       ".github/workflows/aura-spatial-s0-s2.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -159188,6 +160843,8 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -159364,6 +161021,15 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
+      ".github/workflows/awj032-airllm-tiny-runtime.yml"
+    ],
+    "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
+      ".github/workflows/awj032-airllm-tiny-runtime.yml"
+    ],
+    "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
+      ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -160054,7 +161720,8 @@
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
     ],
     "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md"
     ],
     "python aura_daemon.py": [
       "docs/staging/ready_review/README_STAGED.md"
@@ -160094,6 +161761,9 @@
     ],
     "python test_pvm_logic.py": [
       "test_pvm_logic.py"
+    ],
+    "python airllm_source_admission.py <materialized-airllm-source-root> --expected-version 3.3.0": [
+      "tools/awj032/README.md"
     ],
     "python verify_os.py": [
       "verify_os.py"
@@ -169041,6 +170711,188 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1216,
+      "lines": 39,
+      "tokens_est": 304,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          28
+        ],
+        "python -m pytest": [
+          34
+        ]
+      },
+      "topology": {},
+      "digest8": "605c07238061d3cc",
+      "vector": [
+        0.021368,
+        -0.076673,
+        -0.222478,
+        -0.008799,
+        0.179742,
+        -0.247617,
+        -0.227506,
+        -0.076673,
+        0.091757,
+        -0.096784,
+        0.026396,
+        0.023882,
+        -0.091757,
+        -0.199853,
+        0.124437,
+        0.049021,
+        0.059076,
+        -0.116895,
+        0.255159,
+        0.177229,
+        0.315492,
+        -0.240076,
+        -0.013826,
+        -0.06159,
+        0.129465,
+        0.192312,
+        0.285325,
+        0.267728,
+        -0.302923,
+        -0.257673,
+        -0.003771,
+        -0.260187
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-airllm-g1-source-contract.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2591,
+      "lines": 62,
+      "tokens_est": 648,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          51
+        ],
+        "python -m pytest": [
+          56
+        ]
+      },
+      "topology": {},
+      "digest8": "de6741510265da6e",
+      "vector": [
+        0.205918,
+        -0.084181,
+        0.195558,
+        0.167066,
+        -0.309525,
+        -0.22923,
+        0.218869,
+        0.319886,
+        0.208509,
+        0.135984,
+        -0.055689,
+        -0.265492,
+        0.112672,
+        0.016836,
+        -0.001295,
+        0.091951,
+        -0.001295,
+        -0.042738,
+        -0.060869,
+        -0.291394,
+        0.172246,
+        -0.050508,
+        0.244771,
+        0.208509,
+        0.099722,
+        0.029787,
+        0.07123,
+        -0.07123,
+        0.066049,
+        -0.221459,
+        -0.218869,
+        0.283624
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 8065,
+      "lines": 203,
+      "tokens_est": 2017,
+      "symbol_count": 0,
+      "commands": [
+        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json",
+        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json",
+        "python -m pip",
+        "python tools/awj032/airllm_tiny_fixture_probe.py \\"
+      ],
+      "command_lines": {
+        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
+          63
+        ],
+        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
+          104
+        ],
+        "python -m pip": [
+          149,
+          150,
+          159,
+          160
+        ],
+        "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
+          166
+        ]
+      },
+      "topology": {},
+      "digest8": "5eb8ed253fb26d63",
+      "vector": [
+        -0.082232,
+        -0.246695,
+        0.160548,
+        0.176211,
+        -0.011747,
+        -0.330232,
+        -0.155327,
+        -0.087453,
+        0.152716,
+        -0.014358,
+        -0.233642,
+        0.116169,
+        -0.194484,
+        -0.176211,
+        -0.131832,
+        -0.07179,
+        -0.02219,
+        -0.030021,
+        -0.264969,
+        -0.053516,
+        -0.139663,
+        -0.139663,
+        0.058737,
+        -0.103116,
+        0.283243,
+        -0.267579,
+        -0.001305,
+        0.194484,
+        -0.144884,
+        -0.31979,
+        -0.298906,
+        -0.147495
       ]
     },
     {
@@ -264334,6 +266186,533 @@
       ]
     },
     {
+      "path": "tools/awj032/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1974,
+      "lines": 38,
+      "tokens_est": 494,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest",
+        "python airllm_source_admission.py <materialized-airllm-source-root> --expected-version 3.3.0"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          33
+        ],
+        "python airllm_source_admission.py <materialized-airllm-source-root> --expected-version 3.3.0": [
+          34
+        ]
+      },
+      "topology": {},
+      "digest8": "75cf45e29e35951b",
+      "vector": [
+        -0.147308,
+        -0.134214,
+        -0.208414,
+        0.09275,
+        -0.060014,
+        -0.238967,
+        -0.197502,
+        -0.169132,
+        -0.114573,
+        -0.094932,
+        0.228055,
+        -0.186591,
+        0.051285,
+        -0.020732,
+        -0.241149,
+        -0.01855,
+        0.040373,
+        0.020732,
+        -0.15822,
+        -0.262973,
+        -0.016368,
+        0.05565,
+        -0.169132,
+        -0.186591,
+        0.241149,
+        0.206232,
+        0.271702,
+        -0.173496,
+        0.241149,
+        -0.267337,
+        -0.234602,
+        -0.238967
+      ]
+    },
+    {
+      "path": "tools/awj032/airllm_hard_false_inspected_tree.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10256,
+      "lines": 261,
+      "tokens_est": 2564,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bbf0e50bf522a6f6",
+      "vector": [
+        -0.129192,
+        -0.046616,
+        0.057271,
+        -0.027969,
+        0.027969,
+        0.246398,
+        0.331638,
+        0.110546,
+        -0.270372,
+        -0.169149,
+        -0.07059,
+        -0.131856,
+        0.145175,
+        0.310328,
+        -0.254389,
+        0.083908,
+        -0.014651,
+        0.291682,
+        -0.083908,
+        -0.057271,
+        -0.235743,
+        -0.187795,
+        0.110546,
+        0.201114,
+        -0.001332,
+        0.243734,
+        -0.235743,
+        -0.195786,
+        0.257053,
+        0.094564,
+        -0.065262,
+        -0.0919
+      ]
+    },
+    {
+      "path": "tools/awj032/airllm_hard_false_remediation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10217,
+      "lines": 289,
+      "tokens_est": 2555,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "486ffa2fccffe72e",
+      "vector": [
+        0.148081,
+        -0.009688,
+        0.081652,
+        -0.256027,
+        0.172992,
+        -0.070581,
+        -0.167456,
+        -0.04567,
+        -0.120402,
+        -0.114866,
+        0.081652,
+        -0.012455,
+        0.280938,
+        0.164688,
+        -0.078884,
+        0.341831,
+        -0.206206,
+        -0.134241,
+        0.012455,
+        -0.283706,
+        -0.001384,
+        0.106563,
+        -0.12317,
+        0.269867,
+        0.352903,
+        0.145313,
+        0.156384,
+        0.128706,
+        0.181295,
+        -0.303081,
+        0.109331,
+        0.114866
+      ]
+    },
+    {
+      "path": "tools/awj032/airllm_runtime_hard_false.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9081,
+      "lines": 256,
+      "tokens_est": 2271,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "64cb0100e324d7d7",
+      "vector": [
+        -0.045749,
+        0.24966,
+        -0.304559,
+        -0.16339,
+        0.090191,
+        0.003921,
+        0.31763,
+        0.048363,
+        0.288873,
+        0.082349,
+        -0.016993,
+        -0.166004,
+        -0.192147,
+        0.275802,
+        -0.00915,
+        0.155547,
+        -0.152933,
+        0.171233,
+        -0.108491,
+        -0.126791,
+        -0.048363,
+        0.111105,
+        -0.176461,
+        0.184304,
+        -0.011764,
+        -0.223517,
+        -0.016993,
+        -0.132019,
+        -0.223517,
+        0.265345,
+        0.288873,
+        0.132019
+      ]
+    },
+    {
+      "path": "tools/awj032/airllm_source_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 21193,
+      "lines": 487,
+      "tokens_est": 5299,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "941e3dd4dc70da62",
+      "vector": [
+        -0.205072,
+        0.157656,
+        -0.221667,
+        0.245375,
+        -0.129207,
+        0.205072,
+        -0.114983,
+        -0.013039,
+        0.219297,
+        0.043859,
+        0.086533,
+        0.027264,
+        -0.29042,
+        0.186106,
+        0.105499,
+        0.096016,
+        0.145803,
+        0.195589,
+        0.110241,
+        0.280937,
+        -0.29042,
+        0.160027,
+        0.105499,
+        -0.16951,
+        0.096016,
+        -0.190847,
+        0.283307,
+        0.20033,
+        0.020152,
+        0.190847,
+        0.119724,
+        0.190847
+      ]
+    },
+    {
+      "path": "tools/awj032/airllm_tiny_fixture_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9010,
+      "lines": 260,
+      "tokens_est": 2253,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ea7fae03964050af",
+      "vector": [
+        -0.156648,
+        0.245834,
+        0.028585,
+        0.017151,
+        0.18409,
+        -0.259555,
+        -0.179516,
+        0.222966,
+        0.177229,
+        -0.042306,
+        0.188663,
+        0.161221,
+        0.206958,
+        0.085756,
+        -0.18409,
+        0.188663,
+        0.264129,
+        0.227539,
+        0.028585,
+        -0.248121,
+        -0.001143,
+        0.122345,
+        -0.250408,
+        0.108624,
+        0.266415,
+        0.04688,
+        0.117772,
+        0.136066,
+        -0.28471,
+        0.133779,
+        -0.174942,
+        0.088043
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6380,
+      "lines": 183,
+      "tokens_est": 1595,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bea52901b51c2faf",
+      "vector": [
+        -0.263737,
+        -0.132524,
+        0.229622,
+        0.119403,
+        0.250616,
+        -0.022306,
+        0.2165,
+        0.226997,
+        -0.198131,
+        0.103658,
+        0.25324,
+        -0.258488,
+        -0.171888,
+        0.274234,
+        0.006561,
+        0.169264,
+        0.203379,
+        -0.011809,
+        0.032803,
+        0.019682,
+        0.030179,
+        -0.287355,
+        0.103658,
+        0.156143,
+        0.158767,
+        -0.119403,
+        0.179761,
+        0.137773,
+        -0.266361,
+        0.074791,
+        -0.140397,
+        0.145646
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6165,
+      "lines": 166,
+      "tokens_est": 1542,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2cc77f75cca26dd0",
+      "vector": [
+        0.210748,
+        -0.05164,
+        0.124215,
+        -0.344733,
+        0.115841,
+        0.13259,
+        0.224704,
+        -0.062806,
+        -0.138172,
+        0.210748,
+        0.23587,
+        0.163294,
+        -0.333567,
+        -0.311236,
+        0.023727,
+        0.314028,
+        -0.101885,
+        0.057223,
+        -0.040475,
+        0.121424,
+        -0.13259,
+        -0.182834,
+        -0.006978,
+        0.308445,
+        0.182834,
+        0.026518,
+        0.143755,
+        0.062806,
+        0.043266,
+        0.093511,
+        -0.006978,
+        0.185625
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_hard_false_remediation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5746,
+      "lines": 163,
+      "tokens_est": 1437,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "61afdb0691510dca",
+      "vector": [
+        -0.214171,
+        0.257731,
+        0.09317,
+        -0.153671,
+        0.221431,
+        0.187551,
+        -0.11495,
+        0.00847,
+        0.158511,
+        0.156091,
+        -0.175451,
+        -0.269831,
+        -0.03025,
+        0.153671,
+        -0.214171,
+        0.238371,
+        0.11253,
+        -0.182711,
+        -0.211751,
+        0.291611,
+        0.03267,
+        0.04961,
+        0.226271,
+        0.199651,
+        0.194811,
+        0.06655,
+        0.11979,
+        0.189971,
+        -0.10769,
+        0.08833,
+        0.279511,
+        0.129471
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_runtime_hard_false.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7980,
+      "lines": 201,
+      "tokens_est": 1995,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6e48f7cb22c158be",
+      "vector": [
+        0.207252,
+        -0.085057,
+        0.192876,
+        0.144957,
+        -0.247984,
+        -0.104225,
+        0.252776,
+        0.051514,
+        -0.109017,
+        0.027554,
+        0.152145,
+        -0.269548,
+        -0.209648,
+        -0.271944,
+        -0.259964,
+        0.106621,
+        -0.161729,
+        -0.003594,
+        0.264756,
+        -0.130581,
+        0.245588,
+        0.01797,
+        -0.303092,
+        0.176105,
+        -0.142561,
+        0.188085,
+        0.197668,
+        0.00599,
+        0.092245,
+        -0.02995,
+        -0.037138,
+        0.212044
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_source_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11827,
+      "lines": 342,
+      "tokens_est": 2957,
+      "symbol_count": 33,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "04d3b7d0c0f0e907",
+      "vector": [
+        -0.299782,
+        0.030342,
+        -0.074035,
+        -0.307064,
+        0.129865,
+        -0.008496,
+        0.010923,
+        -0.23667,
+        0.071608,
+        -0.115301,
+        -0.151712,
+        -0.020633,
+        -0.156566,
+        0.2925,
+        0.093454,
+        0.219678,
+        -0.129865,
+        0.115301,
+        0.248807,
+        -0.268226,
+        -0.307064,
+        -0.047334,
+        -0.0886,
+        -0.2925,
+        0.071608,
+        -0.22696,
+        0.047334,
+        0.037624,
+        -0.166276,
+        0.256089,
+        0.049761,
+        0.132292
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -288332,16 +290711,16 @@
     }
   },
   "summary": {
-    "file_count": 1658,
-    "total_bytes": 26418741,
-    "text_tokens_est": 6595075,
+    "file_count": 1672,
+    "total_bytes": 26530442,
+    "text_tokens_est": 6623006,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 242,
+      "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1008,
-      "schema_or_lexicon": 274,
+      "python_module": 1018,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288496,6 +290875,9 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-airllm-exact-head-verify.yml",
+      ".github/workflows/awj032-airllm-g1-source-contract.yml",
+      ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -290001,6 +292383,17 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/README.md",
+      "tools/awj032/airllm_hard_false_inspected_tree.py",
+      "tools/awj032/airllm_hard_false_remediation.py",
+      "tools/awj032/airllm_runtime_hard_false.py",
+      "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/test_airllm_binding_mutation_soundness.py",
+      "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+      "tools/awj032/test_airllm_hard_false_remediation.py",
+      "tools/awj032/test_airllm_runtime_hard_false.py",
+      "tools/awj032/test_airllm_source_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -448089,6 +450482,1676 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#class:InspectedTreeRemediationReceipt:844e8fce144c81b7",
+        "name": "InspectedTreeRemediationReceipt",
+        "kind": "class",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 66,
+        "end_line": 95,
+        "signature_hash": "3d82a34b3b443625",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_audit_mapping:8e289877fdcc118b",
+        "name": "_audit_mapping",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 144,
+        "end_line": 152,
+        "signature_hash": "3f507823b7f70aa6",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_canonical_digest:7dc2f6a3b19ee189",
+        "name": "_canonical_digest",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 98,
+        "end_line": 106,
+        "signature_hash": "0513d5eea6b714f2",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_manifest:3ba599a6aa8ada2c",
+        "name": "_manifest",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 109,
+        "end_line": 117,
+        "signature_hash": "8f38248d52f36e9f",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_remediate_inspected_tree:c7f9e3f682ffb2f2",
+        "name": "_remediate_inspected_tree",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 155,
+        "end_line": 247,
+        "signature_hash": "cf564554f696100a",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:_verify_exact_manifest:655aebd435821ed3",
+        "name": "_verify_exact_manifest",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 120,
+        "end_line": 141,
+        "signature_hash": "23cb4a6995da68ce",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#function:remediate_pinned_inspected_tree:032b6b1fb8918d48",
+        "name": "remediate_pinned_inspected_tree",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 250,
+        "end_line": 260,
+        "signature_hash": "58601f4db67ede8f",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#method:InspectedTreeRemediationReceipt.to_dict:956420beb1dd79b1",
+        "name": "InspectedTreeRemediationReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/airllm_hard_false_inspected_tree.py",
+        "line": 92,
+        "end_line": 95,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "bbf0e50bf522a6f6"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#class:FileRemediationReceipt:fd6257311865ad95",
+        "name": "FileRemediationReceipt",
+        "kind": "class",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 58,
+        "end_line": 72,
+        "signature_hash": "12f800ba409c587d",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#class:RemediationError:d7c0e5776645e72c",
+        "name": "RemediationError",
+        "kind": "class",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "ce34c118db551fc2",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_absolute_offset:37c3baf5ad711a4d",
+        "name": "_absolute_offset",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 179,
+        "end_line": 182,
+        "signature_hash": "03a9595a609f859f",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_add_edit:41aec5b6f0939bcc",
+        "name": "_add_edit",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 116,
+        "end_line": 131,
+        "signature_hash": "f2c36135efa0f041",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_apply_false_edits:8b2431ebe792e98f",
+        "name": "_apply_false_edits",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 185,
+        "end_line": 203,
+        "signature_hash": "c111404555939280",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_canonical:821e364e91f48755",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 86,
+        "end_line": 93,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_collect_policy_edits:67a647429393bd39",
+        "name": "_collect_policy_edits",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 134,
+        "end_line": 168,
+        "signature_hash": "20d1624d8ed92b0b",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_const_string:2c7f2779d0f28317",
+        "name": "_const_string",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 100,
+        "end_line": 103,
+        "signature_hash": "1397f9aad009be1d",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_is_false:fe505ce65451bbee",
+        "name": "_is_false",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 96,
+        "end_line": 97,
+        "signature_hash": "c6c9402d15bc85de",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_line_starts:d13d2c34571ed5f1",
+        "name": "_line_starts",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 171,
+        "end_line": 176,
+        "signature_hash": "3b04c7136319969a",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_sha256:393eb347f3216e71",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "f9c2d48c5f8c2866",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:_target_is_trust_remote_code:d282a648a5a0d419",
+        "name": "_target_is_trust_remote_code",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 106,
+        "end_line": 113,
+        "signature_hash": "a5615e31b9c500c4",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:git_blob_sha1:f08d965c402515a3",
+        "name": "git_blob_sha1",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 75,
+        "end_line": 79,
+        "signature_hash": "5bc298414085387a",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:remediate_bytes:3586ad4ca7621018",
+        "name": "remediate_bytes",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 206,
+        "end_line": 248,
+        "signature_hash": "337398d35e71e282",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#function:remediate_pinned_policy_files:449944c1a8dca942",
+        "name": "remediate_pinned_policy_files",
+        "kind": "function",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 251,
+        "end_line": 288,
+        "signature_hash": "5df958e1d311654f",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#method:FileRemediationReceipt.to_dict:401200aa428fc844",
+        "name": "FileRemediationReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 65,
+        "end_line": 72,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_hard_false_remediation.py#method:RemediationError.__init__:48f1ba74b393a0a8",
+        "name": "RemediationError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/airllm_hard_false_remediation.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "486ffa2fccffe72e"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:AirLLMRemoteCodeWideningRejected:d021ed5392d600bb",
+        "name": "AirLLMRemoteCodeWideningRejected",
+        "kind": "class",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 34,
+        "end_line": 41,
+        "signature_hash": "3d14aa9527494d0a",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:AirLLMRuntimeGuardError:d61785bf7a652f7f",
+        "name": "AirLLMRuntimeGuardError",
+        "kind": "class",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "1ff56e1712863c87",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:BoundarySpec:861de24a0bf0a278",
+        "name": "BoundarySpec",
+        "kind": "class",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "90eeeb3d88af9dcb",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:RuntimeHardFalseGuard:411f181a812b926e",
+        "name": "RuntimeHardFalseGuard",
+        "kind": "class",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 103,
+        "end_line": 218,
+        "signature_hash": "571ff7cb22d6f227",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:RuntimeHardFalseReceipt:c424f8bc584fa421",
+        "name": "RuntimeHardFalseReceipt",
+        "kind": "class",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 73,
+        "end_line": 92,
+        "signature_hash": "2b49b88403f5a1ea",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#class:_Patch:604150a6d32bd45d",
+        "name": "_Patch",
+        "kind": "class",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 96,
+        "end_line": 100,
+        "signature_hash": "036f7de88e6e8872",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#function:_import_transformers:c7222af1970b8a30",
+        "name": "_import_transformers",
+        "kind": "function",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 252,
+        "end_line": 255,
+        "signature_hash": "6d3bf55244b424d5",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#function:install_transformers_hard_false_guard:a44e44d2e42a052f",
+        "name": "install_transformers_hard_false_guard",
+        "kind": "function",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 221,
+        "end_line": 232,
+        "signature_hash": "ae0b7e44b9e938bc",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#function:transformers_hard_false_guard:e781d62565bab4d4",
+        "name": "transformers_hard_false_guard",
+        "kind": "function",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 236,
+        "end_line": 249,
+        "signature_hash": "8bfa67f9cf5169f6",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:AirLLMRemoteCodeWideningRejected.__init__:9b8bf7e231d197fd",
+        "name": "AirLLMRemoteCodeWideningRejected.__init__",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "6267215f19208019",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:BoundarySpec.boundary:db65b4113cf9efad",
+        "name": "BoundarySpec.boundary",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "9ea98c34f43747e5",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.__enter__:3ede4453c1042850",
+        "name": "RuntimeHardFalseGuard.__enter__",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 213,
+        "end_line": 214,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.__exit__:db31406494ee975c",
+        "name": "RuntimeHardFalseGuard.__exit__",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 216,
+        "end_line": 218,
+        "signature_hash": "c1ffe2d5c68b9bfc",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.__init__:a6011ff7399fde53",
+        "name": "RuntimeHardFalseGuard.__init__",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 106,
+        "end_line": 119,
+        "signature_hash": "f52179d988cd4919",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard._guarded_classmethod.guarded:6199d7bac4a629fa",
+        "name": "RuntimeHardFalseGuard._guarded_classmethod.guarded",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 125,
+        "end_line": 132,
+        "signature_hash": "dc449ac861dbcacd",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard._guarded_classmethod:8579ea3b601f18ee",
+        "name": "RuntimeHardFalseGuard._guarded_classmethod",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 121,
+        "end_line": 136,
+        "signature_hash": "7e64816129762365",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard._restore_patches:a0a08974b5ccbc15",
+        "name": "RuntimeHardFalseGuard._restore_patches",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 185,
+        "end_line": 197,
+        "signature_hash": "e4ac435c3ac6505c",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.install:695a558c88a11100",
+        "name": "RuntimeHardFalseGuard.install",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 138,
+        "end_line": 183,
+        "signature_hash": "af68cf1aaaca52b6",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.receipt:1a34a2127fd91279",
+        "name": "RuntimeHardFalseGuard.receipt",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 202,
+        "end_line": 211,
+        "signature_hash": "c724ebd1d568bc4d",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseGuard.restore:38fa54b26d92f618",
+        "name": "RuntimeHardFalseGuard.restore",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 199,
+        "end_line": 200,
+        "signature_hash": "4f95f30ac7abb461",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_runtime_hard_false.py#method:RuntimeHardFalseReceipt.receipt_digest:46aa9421cc3e29ce",
+        "name": "RuntimeHardFalseReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/airllm_runtime_hard_false.py",
+        "line": 84,
+        "end_line": 92,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "64cb0100e324d7d7"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#class:Finding:bf46a0e466c67b5f",
+        "name": "Finding",
+        "kind": "class",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "dcd7516b5d2a8d5d",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#class:SourceAdmissionReceipt:710384a1c44229be",
+        "name": "SourceAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 37,
+        "end_line": 51,
+        "signature_hash": "b96ddce77aa3fa61",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_call_name:22bf32ab791dd9f2",
+        "name": "_call_name",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 306,
+        "end_line": 311,
+        "signature_hash": "466dadabbeddd3b1",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_const_string:5ef1be862c5910fb",
+        "name": "_const_string",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 143,
+        "end_line": 176,
+        "signature_hash": "a3ef75506619ad0c",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_file_digest:100515a11a0a2976",
+        "name": "_file_digest",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 58,
+        "end_line": 67,
+        "signature_hash": "b327dcad24095fd0",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_mapping_opaque_mutation_names:c559d867fc3871b3",
+        "name": "_mapping_opaque_mutation_names",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 242,
+        "end_line": 303,
+        "signature_hash": "4e90e8147a74b542",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_mapping_trust_state:d6403c8f70bfabd7",
+        "name": "_mapping_trust_state",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 179,
+        "end_line": 239,
+        "signature_hash": "97129397edd3712c",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_rel:2ef7fa041898ab58",
+        "name": "_rel",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "772ed34bfc48a266",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_safe_source_file:a3d5eb9d77967c48",
+        "name": "_safe_source_file",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 385,
+        "end_line": 400,
+        "signature_hash": "0d3bfb8f2a947d11",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_scan_trust_remote_code:5e2ffdbe6e178a77",
+        "name": "_scan_trust_remote_code",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 314,
+        "end_line": 382,
+        "signature_hash": "e2a77e2590f24536",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_static_bindings:c6b1ea39ad66ec49",
+        "name": "_static_bindings",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 86,
+        "end_line": 140,
+        "signature_hash": "b295a7e4f9b836d4",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_trust_finding:dbecac3ad8f5a6e6",
+        "name": "_trust_finding",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 78,
+        "end_line": 83,
+        "signature_hash": "8c2713617c73bfd4",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_trust_value:267a9e24ceff6b6d",
+        "name": "_trust_value",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 70,
+        "end_line": 75,
+        "signature_hash": "e90ea397e7f40e63",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:audit_airllm_source:81f138e057323380",
+        "name": "audit_airllm_source",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 403,
+        "end_line": 463,
+        "signature_hash": "d633a6e011cb4876",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:main:5ff011d87b934cf0",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 474,
+        "end_line": 482,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:require_admitted:ba38ad2827581a4a",
+        "name": "require_admitted",
+        "kind": "function",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 466,
+        "end_line": 471,
+        "signature_hash": "46b37ab1f36534cb",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_source_admission.py#method:SourceAdmissionReceipt.to_dict:ba60a317abd23fef",
+        "name": "SourceAdmissionReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/airllm_source_admission.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "941e3dd4dc70da62"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_manifest:dcb91f4ec83965f1",
+        "name": "_manifest",
+        "kind": "function",
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "line": 39,
+        "end_line": 51,
+        "signature_hash": "3f782e49116f8aca",
+        "file_digest8": "ea7fae03964050af"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_one_generation:6e7e55222d80bf39",
+        "name": "_one_generation",
+        "kind": "function",
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "line": 78,
+        "end_line": 101,
+        "signature_hash": "8da6b94eb23fc2af",
+        "file_digest8": "ea7fae03964050af"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_sha256:97aa3104e68cb69a",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "line": 31,
+        "end_line": 36,
+        "signature_hash": "8b2fe119650f5918",
+        "file_digest8": "ea7fae03964050af"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:_versions:bf5f309859de5a34",
+        "name": "_versions",
+        "kind": "function",
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "line": 54,
+        "end_line": 75,
+        "signature_hash": "d86b850b710e8295",
+        "file_digest8": "ea7fae03964050af"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:main:cf9f070d0bfcf82c",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "line": 221,
+        "end_line": 255,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "ea7fae03964050af"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:run:039d5dc30f81c899",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/awj032/airllm_tiny_fixture_probe.py",
+        "line": 104,
+        "end_line": 218,
+        "signature_hash": "3b05aa323d68dd37",
+        "file_digest8": "ea7fae03964050af"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#class:BindingMutationSoundnessTests:7ab077d5ce2a6ac6",
+        "name": "BindingMutationSoundnessTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 8,
+        "end_line": 178,
+        "signature_hash": "6d1052599952b889",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests._codes:8dcc7daf41014b8f",
+        "name": "BindingMutationSoundnessTests._codes",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 9,
+        "end_line": 16,
+        "signature_hash": "d2893ffe4d6bb0bf",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.assert_loader_fails_closed:2ea001c321e81e0f",
+        "name": "BindingMutationSoundnessTests.assert_loader_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 18,
+        "end_line": 20,
+        "signature_hash": "8538266d82b01ef7",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_augassign_invalidates_stale_static_key:3dd171c61db80e77",
+        "name": "BindingMutationSoundnessTests.test_augassign_invalidates_stale_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 22,
+        "end_line": 28,
+        "signature_hash": "1a8238d344e9e81d",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_comprehension_target_invalidates_static_key_conservatively:a891d42c2a9534b1",
+        "name": "BindingMutationSoundnessTests.test_comprehension_target_invalidates_static_key_conservatively",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "89cc8a5c7e3a880d",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_definition_rebind_invalidates_static_key:c5316319eceaab06",
+        "name": "BindingMutationSoundnessTests.test_definition_rebind_invalidates_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 97,
+        "end_line": 104,
+        "signature_hash": "0571cf4c84203221",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_destructuring_assignment_invalidates_stale_static_key:4a3eff93799f7a1d",
+        "name": "BindingMutationSoundnessTests.test_destructuring_assignment_invalidates_stale_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 65,
+        "end_line": 71,
+        "signature_hash": "eb7738e377756d06",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_explicit_false_still_dominates_opaque_mapping:df4fb62567f548df",
+        "name": "BindingMutationSoundnessTests.test_explicit_false_still_dominates_opaque_mapping",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 125,
+        "end_line": 133,
+        "signature_hash": "427c58fdf6807e40",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_function_parameter_shadow_invalidates_outer_static_key:6fb62856e76639f3",
+        "name": "BindingMutationSoundnessTests.test_function_parameter_shadow_invalidates_outer_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 81,
+        "end_line": 87,
+        "signature_hash": "57bdc6c9a62e7829",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_identical_modeled_rebinding_remains_foldable:8becf3cde7492cbd",
+        "name": "BindingMutationSoundnessTests.test_identical_modeled_rebinding_remains_foldable",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 106,
+        "end_line": 114,
+        "signature_hash": "0a421d8ac8bedc36",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_import_alias_rebind_invalidates_static_key:750dd4a4c96cffe7",
+        "name": "BindingMutationSoundnessTests.test_import_alias_rebind_invalidates_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 89,
+        "end_line": 95,
+        "signature_hash": "f6635a4093217517",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_loop_target_invalidates_stale_static_key:b194321672fa5769",
+        "name": "BindingMutationSoundnessTests.test_loop_target_invalidates_stale_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 39,
+        "end_line": 46,
+        "signature_hash": "9ed912db9c06baa3",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_multi_target_assignment_invalidates_stale_static_key:0dd28bf326a02ceb",
+        "name": "BindingMutationSoundnessTests.test_multi_target_assignment_invalidates_stale_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 73,
+        "end_line": 79,
+        "signature_hash": "2fc7d34535baa993",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_namedexpr_invalidates_stale_static_key:3a41ee442cd69947",
+        "name": "BindingMutationSoundnessTests.test_namedexpr_invalidates_stale_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 30,
+        "end_line": 37,
+        "signature_hash": "3749892653d68bed",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_randomized_unmodeled_binding_forms_never_fail_open:df1fc09d96ec235e",
+        "name": "BindingMutationSoundnessTests.test_randomized_unmodeled_binding_forms_never_fail_open",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 135,
+        "end_line": 178,
+        "signature_hash": "b69864198b5f23ad",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_stable_unrelated_key_remains_admitted_by_this_scanner:72f2d2b478eb7a6f",
+        "name": "BindingMutationSoundnessTests.test_stable_unrelated_key_remains_admitted_by_this_scanner",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 116,
+        "end_line": 123,
+        "signature_hash": "5595bedd36b24535",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#method:BindingMutationSoundnessTests.test_with_target_invalidates_stale_static_key:b5d64ed4573d8dc7",
+        "name": "BindingMutationSoundnessTests.test_with_target_invalidates_stale_static_key",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
+        "line": 48,
+        "end_line": 55,
+        "signature_hash": "c6ce152f41eb4f78",
+        "file_digest8": "bea52901b51c2faf"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#class:InspectedTreeTests:28098940ccea427d",
+        "name": "InspectedTreeTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 61,
+        "end_line": 161,
+        "signature_hash": "f557887839870c61",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#function:make_files:94df354773d1c20b",
+        "name": "make_files",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 7,
+        "end_line": 33,
+        "signature_hash": "fa5cb7381a26989f",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#function:manifest:1cb1bfc9a5dd5c96",
+        "name": "manifest",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "7081e25b32ab809f",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#function:specs:0879afef680a65ad",
+        "name": "specs",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 40,
+        "end_line": 58,
+        "signature_hash": "5b7f3dd0b75e49a5",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests._run:0240136059446aa5",
+        "name": "InspectedTreeTests._run",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "dabc4d3f1feb9f53",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_change_set_is_exactly_mutation_specs:c06b67c56c87a6e1",
+        "name": "InspectedTreeTests.test_change_set_is_exactly_mutation_specs",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 140,
+        "end_line": 146,
+        "signature_hash": "f373f64c81ddb035",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_extra_file_refuses_commit_identity:0305a6b96448a2aa",
+        "name": "InspectedTreeTests.test_extra_file_refuses_commit_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 103,
+        "end_line": 116,
+        "signature_hash": "31a0848b396b21b0",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_full_manifest_candidate_passes_existing_gate:f56593a52fc4dd45",
+        "name": "InspectedTreeTests.test_full_manifest_candidate_passes_existing_gate",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 71,
+        "end_line": 86,
+        "signature_hash": "d1466fe30fd4d78c",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_missing_unaffected_file_refuses_commit_identity:106f2c1f480a955f",
+        "name": "InspectedTreeTests.test_missing_unaffected_file_refuses_commit_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 88,
+        "end_line": 101,
+        "signature_hash": "143266c41ffc0450",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_nonremote_blocker_is_not_repaired:1b07810daf23b4f4",
+        "name": "InspectedTreeTests.test_nonremote_blocker_is_not_repaired",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 133,
+        "end_line": 138,
+        "signature_hash": "478c8f0e8fd42a63",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_post_audit_is_authoritative:4935c577cb10c864",
+        "name": "InspectedTreeTests.test_post_audit_is_authoritative",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 148,
+        "end_line": 161,
+        "signature_hash": "d83c335f1a4995ee",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_inspected_tree.py#method:InspectedTreeTests.test_unaffected_blob_drift_refuses:aa1b1363a787057e",
+        "name": "InspectedTreeTests.test_unaffected_blob_drift_refuses",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+        "line": 118,
+        "end_line": 131,
+        "signature_hash": "d66f62e905a5806f",
+        "file_digest8": "2cc77f75cca26dd0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#class:HardFalseRemediationTests:ad7a2afc87ce1e23",
+        "name": "HardFalseRemediationTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 24,
+        "end_line": 158,
+        "signature_hash": "8db8d0f15f57a736",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#function:load:34cc7d21bcd5c50c",
+        "name": "load",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 10,
+        "end_line": 17,
+        "signature_hash": "b4f83327c4948cf9",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.assert_gate_clean:c72d992255ef270b",
+        "name": "HardFalseRemediationTests.assert_gate_clean",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "430d991f1b66261a",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.remediate:79a53ff1900c8a96",
+        "name": "HardFalseRemediationTests.remediate",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 25,
+        "end_line": 32,
+        "signature_hash": "ef680fbdbf513c5f",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_blob_drift_fails_before_transformation:c72d4661daeecf1b",
+        "name": "HardFalseRemediationTests.test_blob_drift_fails_before_transformation",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 112,
+        "end_line": 121,
+        "signature_hash": "b2c34a1f294a725d",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_dynamic_factory_mapping_and_direct_keyword_are_closed:f87de46b21809055",
+        "name": "HardFalseRemediationTests.test_dynamic_factory_mapping_and_direct_keyword_are_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 85,
+        "end_line": 98,
+        "signature_hash": "ab9dfe539ed13e30",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_edit_count_drift_fails_closed:fab189f50c880599",
+        "name": "HardFalseRemediationTests.test_edit_count_drift_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 123,
+        "end_line": 133,
+        "signature_hash": "f903a287ecdc804e",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_git_blob_identity_matches_git_object_encoding:ffac59a7ebc5e7cc",
+        "name": "HardFalseRemediationTests.test_git_blob_identity_matches_git_object_encoding",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 154,
+        "end_line": 158,
+        "signature_hash": "7ab7dd8992520fc1",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_missing_production_file_fails_closed:c904f31c40ba9881",
+        "name": "HardFalseRemediationTests.test_missing_production_file_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 149,
+        "end_line": 152,
+        "signature_hash": "9fc98beb8f1aa464",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_only_expression_bytes_change_and_comment_survives:16b7d7f9df5201db",
+        "name": "HardFalseRemediationTests.test_only_expression_bytes_change_and_comment_survives",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 100,
+        "end_line": 110,
+        "signature_hash": "041b6bb8fdc96695",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_opaque_loader_kwargs_are_not_laundered_by_transformer:87cb9a5e7e106916",
+        "name": "HardFalseRemediationTests.test_opaque_loader_kwargs_are_not_laundered_by_transformer",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 135,
+        "end_line": 147,
+        "signature_hash": "fad46c52eea82475",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_pinned_production_spec_is_exact_and_totals_thirteen_edits:e173d69c0bf89436",
+        "name": "HardFalseRemediationTests.test_pinned_production_spec_is_exact_and_totals_thirteen_edits",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 39,
+        "end_line": 69,
+        "signature_hash": "876885897eefec87",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_hard_false_remediation.py#method:HardFalseRemediationTests.test_true_dynamic_mapping_and_assignment_forms_become_hard_false:ffd6e33dd641d33f",
+        "name": "HardFalseRemediationTests.test_true_dynamic_mapping_and_assignment_forms_become_hard_false",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_hard_false_remediation.py",
+        "line": 71,
+        "end_line": 83,
+        "signature_hash": "4e4b719bb2ae4a7b",
+        "file_digest8": "61afdb0691510dca"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:RuntimeHardFalseGuardTests:54d0c1becfa7bf6c",
+        "name": "RuntimeHardFalseGuardTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 59,
+        "end_line": 196,
+        "signature_hash": "76eece63ccdc12cc",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoConfig:b057c6aa0a70355e",
+        "name": "fake_transformers.AutoConfig",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 9,
+        "end_line": 15,
+        "signature_hash": "1d8612cbdaffabce",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModel:decde944a10d6de0",
+        "name": "fake_transformers.AutoModel",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "c31a566acb1b3823",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelBase:a91c1cace0ea6daf",
+        "name": "fake_transformers.AutoModelBase",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "4149b840980396ae",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelForCausalLM:f9799ada51fa40b7",
+        "name": "fake_transformers.AutoModelForCausalLM",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "9613ac449a31d09e",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelForImageTextToText:3fa760834e2af650",
+        "name": "fake_transformers.AutoModelForImageTextToText",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "fc327faf1d39003f",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoModelForMultimodalLM:e41b41b3a8ef3d93",
+        "name": "fake_transformers.AutoModelForMultimodalLM",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "8e70abfe93d5da68",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#class:fake_transformers.AutoTokenizer:3a714b02ba4cbca4",
+        "name": "fake_transformers.AutoTokenizer",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 17,
+        "end_line": 23,
+        "signature_hash": "da2959e853cf0ab2",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#function:fake_transformers:2ea47380ce2d3dc3",
+        "name": "fake_transformers",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 8,
+        "end_line": 56,
+        "signature_hash": "544e6edffdb42ca1",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_context_manager_restores_after_exception:ce970aac3cf91a9e",
+        "name": "RuntimeHardFalseGuardTests.test_context_manager_restores_after_exception",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 167,
+        "end_line": 173,
+        "signature_hash": "61b8ecd2edb5b64b",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_context_manager_restores_exact_own_and_inherited_descriptors:1c0290800da80b57",
+        "name": "RuntimeHardFalseGuardTests.test_context_manager_restores_exact_own_and_inherited_descriptors",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 157,
+        "end_line": 165,
+        "signature_hash": "730caa78d32a5f13",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_literal_false_passes_through_as_false:687ec6603bf8caa5",
+        "name": "RuntimeHardFalseGuardTests.test_literal_false_passes_through_as_false",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 84,
+        "end_line": 92,
+        "signature_hash": "3de8a14c26fb6de7",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_missing_required_boundary_fails_closed_and_rolls_back:18874e37f9c13b0c",
+        "name": "RuntimeHardFalseGuardTests.test_missing_required_boundary_fails_closed_and_rolls_back",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 139,
+        "end_line": 155,
+        "signature_hash": "04b5c4a408e64043",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_nonliteral_values_are_rejected:7e3d8ba1da6ad0c1",
+        "name": "RuntimeHardFalseGuardTests.test_nonliteral_values_are_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 105,
+        "end_line": 114,
+        "signature_hash": "17b3f05aaf50639a",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_omitted_flag_is_injected_false_at_all_required_boundaries:dc2a369368f16e2a",
+        "name": "RuntimeHardFalseGuardTests.test_omitted_flag_is_injected_false_at_all_required_boundaries",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 60,
+        "end_line": 82,
+        "signature_hash": "7f7093beb6a65590",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_optional_absent_factories_are_skipped_not_inferred:b31cc55181405689",
+        "name": "RuntimeHardFalseGuardTests.test_optional_absent_factories_are_skipped_not_inferred",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 116,
+        "end_line": 127,
+        "signature_hash": "ba3f899db5e6dc35",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_optional_present_factories_are_guarded:a153786a2222cadf",
+        "name": "RuntimeHardFalseGuardTests.test_optional_present_factories_are_guarded",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 129,
+        "end_line": 137,
+        "signature_hash": "e937577510d2103d",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_receipt_contains_no_loader_arguments:35e07c43111328a5",
+        "name": "RuntimeHardFalseGuardTests.test_receipt_contains_no_loader_arguments",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 175,
+        "end_line": 184,
+        "signature_hash": "f9cd08ae4afb1a44",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_second_install_fails_closed:ecf8001c82da93f7",
+        "name": "RuntimeHardFalseGuardTests.test_second_install_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 186,
+        "end_line": 196,
+        "signature_hash": "30028f528eda8243",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:RuntimeHardFalseGuardTests.test_true_is_rejected_before_underlying_loader_runs:c85a22fe9697ceeb",
+        "name": "RuntimeHardFalseGuardTests.test_true_is_rejected_before_underlying_loader_runs",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 94,
+        "end_line": 103,
+        "signature_hash": "a1069bf8717cc070",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:fake_transformers.AutoConfig.from_pretrained:227b4d511773354b",
+        "name": "fake_transformers.AutoConfig.from_pretrained",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 13,
+        "end_line": 15,
+        "signature_hash": "8601faf30a49dc2b",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:fake_transformers.AutoModelBase.from_config:ee2b88ca032a2a19",
+        "name": "fake_transformers.AutoModelBase.from_config",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 29,
+        "end_line": 31,
+        "signature_hash": "746bcb37e72d2fdf",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_runtime_hard_false.py#method:fake_transformers.AutoTokenizer.from_pretrained:4e7d7732a625705f",
+        "name": "fake_transformers.AutoTokenizer.from_pretrained",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_runtime_hard_false.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "8601faf30a49dc2b",
+        "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
+        "name": "GateTests",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 24,
+        "end_line": 337,
+        "signature_hash": "db2f5c3e40d3dde2",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#function:make_tree:42bbbeee2e1240a1",
+        "name": "make_tree",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 8,
+        "end_line": 21,
+        "signature_hash": "258e8fddc4e5cf01",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests._codes:ba49b2e034da97b3",
+        "name": "GateTests._codes",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "9aca514d85d2eb70",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_attribute_assignment_blocks:779629fd654f5659",
+        "name": "GateTests.test_attribute_assignment_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 159,
+        "end_line": 167,
+        "signature_hash": "c7d1be5d0a1c4078",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_computed_mapping_key_blocks:c6eb475f70a41510",
+        "name": "GateTests.test_computed_mapping_key_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 136,
+        "end_line": 145,
+        "signature_hash": "8ab4b500e70b2dab",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_computed_subscript_key_blocks:d8b692ca3b1473af",
+        "name": "GateTests.test_computed_subscript_key_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 147,
+        "end_line": 157,
+        "signature_hash": "d993fde32f2a97c6",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_dict_constructor_pair_blocks:9f8c017cabf751e4",
+        "name": "GateTests.test_dict_constructor_pair_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 249,
+        "end_line": 257,
+        "signature_hash": "87ca1aae8dce3adc",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_digest_changes_with_source:5aa9076de6f315e1",
+        "name": "GateTests.test_digest_changes_with_source",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 110,
+        "end_line": 119,
+        "signature_hash": "e573cc21ce55f745",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_dynamic_policy_blocks:339637e4d3d648d4",
+        "name": "GateTests.test_dynamic_policy_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "777824ad663447f0",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_explicit_true_blocks:c0af7bb8e53e0509",
+        "name": "GateTests.test_explicit_true_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 38,
+        "end_line": 42,
+        "signature_hash": "7ba58e1f4a9a9c55",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_generic_dynamic_mutation_not_globally_blocked:68b8dd0812e9edf5",
+        "name": "GateTests.test_generic_dynamic_mutation_not_globally_blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 326,
+        "end_line": 337,
+        "signature_hash": "cb02c3e540bdd764",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_generic_opaque_kwargs_not_globally_blocked:e15c49392e27de6a",
+        "name": "GateTests.test_generic_opaque_kwargs_not_globally_blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 259,
+        "end_line": 264,
+        "signature_hash": "40860e1706f3ba96",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_hard_false_source_passes:c37e73263b5ee095",
+        "name": "GateTests.test_hard_false_source_passes",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 30,
+        "end_line": 36,
+        "signature_hash": "cd7e361422dd14e5",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_alias_dynamic_mutation_blocks:5a930d969007c5d5",
+        "name": "GateTests.test_loader_alias_dynamic_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 288,
+        "end_line": 298,
+        "signature_hash": "d25951380b78f9b5",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_conflicting_computed_key_assignments_fail_closed:0e34144d74a0d5a1",
+        "name": "GateTests.test_loader_conflicting_computed_key_assignments_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 221,
+        "end_line": 232,
+        "signature_hash": "e51f31b3a57f788e",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_dynamic_merge_mutation_blocks:b47294f4abd73309",
+        "name": "GateTests.test_loader_dynamic_merge_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 300,
+        "end_line": 309,
+        "signature_hash": "4b7ef1ff9c71f34a",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_dynamic_subscript_mutation_blocks:884376415e6c03de",
+        "name": "GateTests.test_loader_dynamic_subscript_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 266,
+        "end_line": 275,
+        "signature_hash": "e026a29b51ebf770",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_dynamic_update_mutation_blocks:524916c1a1b0c8dc",
+        "name": "GateTests.test_loader_dynamic_update_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 277,
+        "end_line": 286,
+        "signature_hash": "0eb3021300c07f2b",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_explicit_false_dominates_dynamic_mutation:80ac4eadb6924b0e",
+        "name": "GateTests.test_loader_explicit_false_dominates_dynamic_mutation",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 311,
+        "end_line": 324,
+        "signature_hash": "1db56e4e92ad0ae9",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_explicit_false_with_opaque_kwargs_passes:21994b7da3185548",
+        "name": "GateTests.test_loader_explicit_false_with_opaque_kwargs_passes",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 198,
+        "end_line": 207,
+        "signature_hash": "1716ca6b4fc497c1",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_identical_computed_key_rebinding_remains_foldable:02210d6ae119c0b2",
+        "name": "GateTests.test_loader_identical_computed_key_rebinding_remains_foldable",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 234,
+        "end_line": 247,
+        "signature_hash": "e937674e01214743",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_opaque_kwargs_fail_closed:91d4ad5558decb78",
+        "name": "GateTests.test_loader_opaque_kwargs_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 189,
+        "end_line": 196,
+        "signature_hash": "2be6e12f267ed47b",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_loader_static_unrelated_mapping_passes:3de8d7602a2bfbf5",
+        "name": "GateTests.test_loader_static_unrelated_mapping_passes",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 209,
+        "end_line": 219,
+        "signature_hash": "d6427ce5a001e5eb",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_mapping_dynamic_blocks:98487ea9d8187d9b",
+        "name": "GateTests.test_mapping_dynamic_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 60,
+        "end_line": 68,
+        "signature_hash": "d133152bd720df98",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_mapping_true_blocks:286a7321aaace33d",
+        "name": "GateTests.test_mapping_true_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 50,
+        "end_line": 58,
+        "signature_hash": "13ba3dacf9420fc2",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_missing_root_fails_closed:6e21701ad0ec8d47",
+        "name": "GateTests.test_missing_root_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 131,
+        "end_line": 134,
+        "signature_hash": "378536f4432265cb",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_nested_pip_mutation_blocks:2006d7c5370c8f36",
+        "name": "GateTests.test_nested_pip_mutation_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 87,
+        "end_line": 94,
+        "signature_hash": "dbe170e6e110c8a5",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_require_admitted_raises_typed_prefix:8bd92451d9260577",
+        "name": "GateTests.test_require_admitted_raises_typed_prefix",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 121,
+        "end_line": 129,
+        "signature_hash": "5f808045ece7812a",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_setattr_blocks:d2c7d0d8c2a42e48",
+        "name": "GateTests.test_setattr_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 169,
+        "end_line": 177,
+        "signature_hash": "cc446ca3dee4ccb8",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_setdefault_blocks:51f239bfe7f8ded1",
+        "name": "GateTests.test_setdefault_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 179,
+        "end_line": 187,
+        "signature_hash": "2a1fa227935f124c",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_subscript_assignment_true_blocks:4acee2df4e499697",
+        "name": "GateTests.test_subscript_assignment_true_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 70,
+        "end_line": 79,
+        "signature_hash": "65667898ea0151fa",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_symlinked_source_blocks:ea2a8717776ab374",
+        "name": "GateTests.test_symlinked_source_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 96,
+        "end_line": 108,
+        "signature_hash": "c433aa3f56688541",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_version_drift_blocks:a301ecc4a087cdd9",
+        "name": "GateTests.test_version_drift_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_source_admission.py",
+        "line": 81,
+        "end_line": 85,
+        "signature_hash": "e53ec68793bba4bf",
+        "file_digest8": "04d3b7d0c0f0e907"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -449339,7 +453402,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3904fe51d6dad5e2ad8c2b727b3a0f74",
-    "payload_hash": "4fae0f7341633bd75ea6b066e0d124e2"
+    "record_fingerprint": "609c2a6ac903e5399260fd842c0a70d9",
+    "payload_hash": "c28bdc85a0828d5ce9e654dc00c60d71"
   }
 }
