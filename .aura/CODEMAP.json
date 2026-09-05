@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2313,6 +2313,8 @@
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
+      "src/auraos/security/airllm_secure_wrapper.py",
+      "src/auraos/security/test_airllm_secure_wrapper.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
       "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
@@ -2765,6 +2767,8 @@
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
       "scripts/update_architect_benchmark_readme.py",
+      "src/auraos/security/airllm_secure_wrapper.py",
+      "src/auraos/security/test_airllm_secure_wrapper.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "test_support/__init__.py",
       "test_support/aura_human_agent_arena_suite.py",
@@ -2810,9 +2814,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -84521,6 +84523,100 @@
       ]
     },
     {
+      "path": "src/auraos/security/airllm_secure_wrapper.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14018,
+      "lines": 340,
+      "tokens_est": 3505,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4ffee860ed921b1d",
+      "vector": [
+        -0.27356,
+        -0.06987,
+        -0.043817,
+        0.088818,
+        0.062765,
+        -0.207242,
+        0.188295,
+        0.133819,
+        0.024869,
+        -0.235664,
+        -0.238033,
+        -0.247507,
+        0.150399,
+        -0.185926,
+        -0.103029,
+        -0.22619,
+        -0.294876,
+        -0.278297,
+        0.145662,
+        -0.22619,
+        -0.204874,
+        -0.157504,
+        -0.013027,
+        0.067502,
+        -0.211979,
+        0.110135,
+        -0.214348,
+        0.048554,
+        0.27356,
+        0.110135,
+        0.114872,
+        0.058028
+      ]
+    },
+    {
+      "path": "src/auraos/security/test_airllm_secure_wrapper.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11085,
+      "lines": 265,
+      "tokens_est": 2772,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3cbb80797055e184",
+      "vector": [
+        0.297664,
+        -0.226453,
+        -0.115363,
+        0.146696,
+        0.203665,
+        -0.277725,
+        0.029909,
+        -0.28627,
+        -0.160938,
+        -0.146696,
+        -0.351785,
+        -0.066939,
+        -0.061242,
+        0.015667,
+        -0.041303,
+        -0.192271,
+        0.024212,
+        0.280573,
+        -0.06409,
+        0.263483,
+        -0.078333,
+        -0.12106,
+        -0.061242,
+        0.075484,
+        -0.075484,
+        -0.17518,
+        0.126756,
+        -0.24924,
+        -0.126756,
+        0.266331,
+        0.012818,
+        0.143847
+      ]
+    },
+    {
       "path": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "role": "python_module",
       "binary": false,
@@ -105561,7 +105657,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788645157,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106816,6 +106912,8 @@
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
+      "src/auraos/security/airllm_secure_wrapper.py",
+      "src/auraos/security/test_airllm_secure_wrapper.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
       "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
@@ -208197,6 +208295,536 @@
         "file_digest8": "90a8a74c75228983"
       },
       {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:AirLLMSecurityError:5f64aebd6742c5e0",
+        "name": "AirLLMSecurityError",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "ea0b2e6d82faf606",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:InvalidAllowlistError:ab092220218735b3",
+        "name": "InvalidAllowlistError",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "4bfa05e6da16186f",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:ModelIntegrityError:ae42aad4edfc273f",
+        "name": "ModelIntegrityError",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "4dea5ba7e1fddbac",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:RemoteCodeTrustError:b9d524ce2d3566f9",
+        "name": "RemoteCodeTrustError",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "bffc0d4131185c8c",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:SecureAirLLMWrapper:a91d9a70ba6fd8d5",
+        "name": "SecureAirLLMWrapper",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 281,
+        "end_line": 324,
+        "signature_hash": "2af788c75783ae2e",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:UnsafeLoadOptionError:faf33a9850df4503",
+        "name": "UnsafeLoadOptionError",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "18b8c39e657a2a0d",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:VerifiedModel:baf04bbc02a27ed6",
+        "name": "VerifiedModel",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "b31515e2269d0c80",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:_AirLLMLoader:ef49d4ef3b618c7d",
+        "name": "_AirLLMLoader",
+        "kind": "class",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "74cc4582431ed920",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_assert_regular_local_file:e8a733aefd4e6bfb",
+        "name": "_assert_regular_local_file",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 110,
+        "end_line": 119,
+        "signature_hash": "34a5c835470bfc9b",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_canonical_json:6c41a58f82ad00cb",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 74,
+        "end_line": 81,
+        "signature_hash": "caa6df7371712507",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_resolve_transformers_module:d5aac710322aea3b",
+        "name": "_resolve_transformers_module",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 219,
+        "end_line": 226,
+        "signature_hash": "138e823479401107",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_sha256_regular_file:03412e9365cb2ee1",
+        "name": "_sha256_regular_file",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 122,
+        "end_line": 151,
+        "signature_hash": "bc2b854d87ebcd9a",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_trust_argument_value:a781cac1d5c16474",
+        "name": "_trust_argument_value",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 229,
+        "end_line": 239,
+        "signature_hash": "cddb580f13c529f3",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_validate_digest:7820d07f7293f77f",
+        "name": "_validate_digest",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "fd1844698c2e2d63",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:hard_false_remote_code_membrane:98247547d4030e50",
+        "name": "hard_false_remote_code_membrane",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 243,
+        "end_line": 278,
+        "signature_hash": "f2dede46b8ddd84b",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:normalize_allowlist:7bbb8aa96779d34c",
+        "name": "normalize_allowlist",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 90,
+        "end_line": 107,
+        "signature_hash": "8ab4a54e6d00e12d",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:sha256_model_path:edb1700ab65d926b",
+        "name": "sha256_model_path",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 154,
+        "end_line": 199,
+        "signature_hash": "f583588ba98ce5ca",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:verify_model_allowlist:22384dbb34e62a55",
+        "name": "verify_model_allowlist",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 202,
+        "end_line": 216,
+        "signature_hash": "53a5fc9f49a89332",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper.__init__:828b025fc60e6482",
+        "name": "SecureAirLLMWrapper.__init__",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 284,
+        "end_line": 293,
+        "signature_hash": "378911b3926036e4",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper._resolve_loader:d1b84b81e08cf97b",
+        "name": "SecureAirLLMWrapper._resolve_loader",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 298,
+        "end_line": 305,
+        "signature_hash": "579ab56fd24f1977",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper.load:daa643dcf81bfa1e",
+        "name": "SecureAirLLMWrapper.load",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 307,
+        "end_line": 324,
+        "signature_hash": "79e4911ea4e1a89e",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper.verify:2e4aa4288f97b965",
+        "name": "SecureAirLLMWrapper.verify",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 295,
+        "end_line": 296,
+        "signature_hash": "ab180137f55c81f3",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:_AirLLMLoader.from_pretrained:2270237081e239fa",
+        "name": "_AirLLMLoader.from_pretrained",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 63,
+        "end_line": 63,
+        "signature_hash": "b3213f7e4a881526",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:hard_false_remote_code_membrane.guarded:d928c3f605cd12e0",
+        "name": "hard_false_remote_code_membrane.guarded",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "line": 261,
+        "end_line": 269,
+        "signature_hash": "da8a8e7174515efc",
+        "file_digest8": "4ffee860ed921b1d"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:FakeTransformers:596050e8b89e1d5b",
+        "name": "FakeTransformers",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "f224996c6ed25346",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:OmittedTrustLoader:b7b580f9befdf4d8",
+        "name": "OmittedTrustLoader",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 44,
+        "end_line": 53,
+        "signature_hash": "c09e67a6814da448",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:RecorderBoundary:de4faf5590786aad",
+        "name": "RecorderBoundary",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 23,
+        "end_line": 34,
+        "signature_hash": "1712aeca69ca82aa",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:SecureWrapperTests:6530862b32a94488",
+        "name": "SecureWrapperTests",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 65,
+        "end_line": 260,
+        "signature_hash": "046a27f04caedaac",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:UnsafeInternalLoader:ce7f5f2c25bd0249",
+        "name": "UnsafeInternalLoader",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 56,
+        "end_line": 62,
+        "signature_hash": "682ac9c0bffe0b1e",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:OmittedTrustLoader.from_pretrained:eb62f3845baa4b3d",
+        "name": "OmittedTrustLoader.from_pretrained",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 48,
+        "end_line": 53,
+        "signature_hash": "c1c2e7de61c71294",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:RecorderBoundary.from_config:28774ea410a66d0f",
+        "name": "RecorderBoundary.from_config",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "746bcb37e72d2fdf",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:RecorderBoundary.from_pretrained:70eda73a44960ea0",
+        "name": "RecorderBoundary.from_pretrained",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "8601faf30a49dc2b",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests._allow:9edf817e227b525c",
+        "name": "SecureWrapperTests._allow",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "309b22bfad4d43ff",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests._file:34988455b7413fb8",
+        "name": "SecureWrapperTests._file",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "16e5ed63f1ce7d3b",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.setUp:1bbdbfd8abc78b8c",
+        "name": "SecureWrapperTests.setUp",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 66,
+        "end_line": 77,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.tearDown:f54f5d8c6b38c2a8",
+        "name": "SecureWrapperTests.tearDown",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 79,
+        "end_line": 80,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_01_allowlist_requires_exact_lowercase_sha256:729a172cd552b73d",
+        "name": "SecureWrapperTests.test_01_allowlist_requires_exact_lowercase_sha256",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 91,
+        "end_line": 96,
+        "signature_hash": "3ae3ea738b6da866",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_02_allowlist_rejects_ambiguous_shapes:c840505673a2f430",
+        "name": "SecureWrapperTests.test_02_allowlist_rejects_ambiguous_shapes",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 98,
+        "end_line": 106,
+        "signature_hash": "b0043337326cd013",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_03_exact_file_sha256_is_admitted:4f2f95bceeb3665a",
+        "name": "SecureWrapperTests.test_03_exact_file_sha256_is_admitted",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 108,
+        "end_line": 113,
+        "signature_hash": "f67e3acee878a2fb",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_04_unknown_model_and_digest_mismatch_fail_closed:607488d165a6da95",
+        "name": "SecureWrapperTests.test_04_unknown_model_and_digest_mismatch_fail_closed",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 115,
+        "end_line": 121,
+        "signature_hash": "355c434a2aa6e766",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_05_directory_digest_is_canonical_and_mutation_sensitive:2d2cf9089878981c",
+        "name": "SecureWrapperTests.test_05_directory_digest_is_canonical_and_mutation_sensitive",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 123,
+        "end_line": 134,
+        "signature_hash": "5e43ad1866d3084a",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_06_symlinks_are_rejected_in_model_tree:84ba37baf39020fb",
+        "name": "SecureWrapperTests.test_06_symlinks_are_rejected_in_model_tree",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 137,
+        "end_line": 148,
+        "signature_hash": "6a1a8fcec3338c41",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_07_empty_directory_and_missing_path_are_rejected:f689adaa2b4a8e13",
+        "name": "SecureWrapperTests.test_07_empty_directory_and_missing_path_are_rejected",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 150,
+        "end_line": 156,
+        "signature_hash": "512083b91b9b1c08",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_08_membrane_injects_literal_false_when_omitted:3038105419483e70",
+        "name": "SecureWrapperTests.test_08_membrane_injects_literal_false_when_omitted",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 158,
+        "end_line": 163,
+        "signature_hash": "c2bc7ad36bd14992",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_09_membrane_rejects_remote_code_true:c529a37fbfc175bd",
+        "name": "SecureWrapperTests.test_09_membrane_rejects_remote_code_true",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 165,
+        "end_line": 168,
+        "signature_hash": "84f9b4272192c1b0",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_10_membrane_restores_boundaries_after_exception:45272690b7f2e51f",
+        "name": "SecureWrapperTests.test_10_membrane_restores_boundaries_after_exception",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 170,
+        "end_line": 176,
+        "signature_hash": "1780a4e7018fe286",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_11_wrapper_verifies_then_loads_with_hard_false_membrane:c65d517ac8abd6b3",
+        "name": "SecureWrapperTests.test_11_wrapper_verifies_then_loads_with_hard_false_membrane",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 178,
+        "end_line": 190,
+        "signature_hash": "abaaaaa9fa4a7c8b",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_12_wrapper_rejects_caller_remote_code_widening_before_loader:0a80403344369e7a",
+        "name": "SecureWrapperTests.test_12_wrapper_rejects_caller_remote_code_widening_before_loader",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 192,
+        "end_line": 201,
+        "signature_hash": "f672edd60acedb6c",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_13_wrapper_blocks_stock_style_internal_true_fallback:44ca92655d7488ee",
+        "name": "SecureWrapperTests.test_13_wrapper_blocks_stock_style_internal_true_fallback",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 203,
+        "end_line": 212,
+        "signature_hash": "e709feb8a94a6f4e",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_14_wrapper_rejects_destructive_delete_original:ec7f2d564a9ba5a9",
+        "name": "SecureWrapperTests.test_14_wrapper_rejects_destructive_delete_original",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 214,
+        "end_line": 223,
+        "signature_hash": "953423bc3d109c57",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_15_digest_change_after_allowlist_creation_is_rejected:bc25efcfd65026fd",
+        "name": "SecureWrapperTests.test_15_digest_change_after_allowlist_creation_is_rejected",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 225,
+        "end_line": 232,
+        "signature_hash": "abf3ae9d12709593",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_16_all_five_hard_admission_axes_are_noncompensatory:dff3213dec3a32fd",
+        "name": "SecureWrapperTests.test_16_all_five_hard_admission_axes_are_noncompensatory",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 234,
+        "end_line": 260,
+        "signature_hash": "d2bf81f5c00e65d5",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:UnsafeInternalLoader.from_pretrained:7beb820dfccd41db",
+        "name": "UnsafeInternalLoader.from_pretrained",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "c1c2e7de61c71294",
+        "file_digest8": "3cbb80797055e184"
+      },
+      {
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:CandidateClosure:ec21c3b6b0262b12",
         "name": "CandidateClosure",
         "kind": "class",
@@ -267657,8 +268285,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "ad21d73f662ec5fec625254cd0f88dee",
+    "payload_hash": "c4e9e3df7644911050d6f789bb7275c1"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,15 +268299,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1651,
+      "bytes": 26508353,
+      "tokens_est": 6617430,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1005,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -268367,15 +268995,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1651,
+    "total_bytes": 26508353,
+    "text_tokens_est": 6617430,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1005,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -274008,6 +274636,14 @@
         "line": 153,
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
+        "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 81,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_canonical_json:6c41a58f82ad00cb",
         "signature_hash": "caa6df7371712507"
       }
     ],
@@ -368427,6 +369063,526 @@
         "end_line": 153,
         "semantic_id": "spatial_mapper.py#function:aura_tmm_server:a6201fc61ccae978",
         "signature_hash": "c1abdc93385a12b3"
+      }
+    ],
+    "AirLLMSecurityError": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:AirLLMSecurityError:5f64aebd6742c5e0",
+        "signature_hash": "ea0b2e6d82faf606"
+      }
+    ],
+    "InvalidAllowlistError": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:InvalidAllowlistError:ab092220218735b3",
+        "signature_hash": "4bfa05e6da16186f"
+      }
+    ],
+    "ModelIntegrityError": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:ModelIntegrityError:ae42aad4edfc273f",
+        "signature_hash": "4dea5ba7e1fddbac"
+      }
+    ],
+    "RemoteCodeTrustError": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:RemoteCodeTrustError:b9d524ce2d3566f9",
+        "signature_hash": "bffc0d4131185c8c"
+      }
+    ],
+    "UnsafeLoadOptionError": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:UnsafeLoadOptionError:faf33a9850df4503",
+        "signature_hash": "18b8c39e657a2a0d"
+      }
+    ],
+    "_AirLLMLoader": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:_AirLLMLoader:ef49d4ef3b618c7d",
+        "signature_hash": "74cc4582431ed920"
+      }
+    ],
+    "_AirLLMLoader.from_pretrained": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 63,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:_AirLLMLoader.from_pretrained:2270237081e239fa",
+        "signature_hash": "b3213f7e4a881526"
+      }
+    ],
+    "VerifiedModel": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:VerifiedModel:baf04bbc02a27ed6",
+        "signature_hash": "b31515e2269d0c80"
+      }
+    ],
+    "_validate_digest": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_validate_digest:7820d07f7293f77f",
+        "signature_hash": "fd1844698c2e2d63"
+      }
+    ],
+    "normalize_allowlist": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 107,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:normalize_allowlist:7bbb8aa96779d34c",
+        "signature_hash": "8ab4a54e6d00e12d"
+      }
+    ],
+    "_assert_regular_local_file": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 119,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_assert_regular_local_file:e8a733aefd4e6bfb",
+        "signature_hash": "34a5c835470bfc9b"
+      }
+    ],
+    "_sha256_regular_file": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 151,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_sha256_regular_file:03412e9365cb2ee1",
+        "signature_hash": "bc2b854d87ebcd9a"
+      }
+    ],
+    "sha256_model_path": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 154,
+        "end_line": 199,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:sha256_model_path:edb1700ab65d926b",
+        "signature_hash": "f583588ba98ce5ca"
+      }
+    ],
+    "verify_model_allowlist": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 202,
+        "end_line": 216,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:verify_model_allowlist:22384dbb34e62a55",
+        "signature_hash": "53a5fc9f49a89332"
+      }
+    ],
+    "_resolve_transformers_module": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 226,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_resolve_transformers_module:d5aac710322aea3b",
+        "signature_hash": "138e823479401107"
+      }
+    ],
+    "_trust_argument_value": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 229,
+        "end_line": 239,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:_trust_argument_value:a781cac1d5c16474",
+        "signature_hash": "cddb580f13c529f3"
+      }
+    ],
+    "hard_false_remote_code_membrane": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "function",
+        "line": 243,
+        "end_line": 278,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#function:hard_false_remote_code_membrane:98247547d4030e50",
+        "signature_hash": "f2dede46b8ddd84b"
+      }
+    ],
+    "hard_false_remote_code_membrane.guarded": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 261,
+        "end_line": 269,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:hard_false_remote_code_membrane.guarded:d928c3f605cd12e0",
+        "signature_hash": "da8a8e7174515efc"
+      }
+    ],
+    "SecureAirLLMWrapper": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 281,
+        "end_line": 324,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:SecureAirLLMWrapper:a91d9a70ba6fd8d5",
+        "signature_hash": "2af788c75783ae2e"
+      }
+    ],
+    "SecureAirLLMWrapper.__init__": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 284,
+        "end_line": 293,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper.__init__:828b025fc60e6482",
+        "signature_hash": "378911b3926036e4"
+      }
+    ],
+    "SecureAirLLMWrapper.verify": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 295,
+        "end_line": 296,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper.verify:2e4aa4288f97b965",
+        "signature_hash": "ab180137f55c81f3"
+      }
+    ],
+    "SecureAirLLMWrapper._resolve_loader": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 298,
+        "end_line": 305,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper._resolve_loader:d1b84b81e08cf97b",
+        "signature_hash": "579ab56fd24f1977"
+      }
+    ],
+    "SecureAirLLMWrapper.load": [
+      {
+        "file": "src/auraos/security/airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 324,
+        "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#method:SecureAirLLMWrapper.load:daa643dcf81bfa1e",
+        "signature_hash": "79e4911ea4e1a89e"
+      }
+    ],
+    "RecorderBoundary": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 34,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:RecorderBoundary:de4faf5590786aad",
+        "signature_hash": "1712aeca69ca82aa"
+      }
+    ],
+    "RecorderBoundary.from_pretrained": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:RecorderBoundary.from_pretrained:70eda73a44960ea0",
+        "signature_hash": "8601faf30a49dc2b"
+      }
+    ],
+    "RecorderBoundary.from_config": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:RecorderBoundary.from_config:28774ea410a66d0f",
+        "signature_hash": "746bcb37e72d2fdf"
+      }
+    ],
+    "FakeTransformers": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:FakeTransformers:596050e8b89e1d5b",
+        "signature_hash": "f224996c6ed25346"
+      }
+    ],
+    "OmittedTrustLoader": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 53,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:OmittedTrustLoader:b7b580f9befdf4d8",
+        "signature_hash": "c09e67a6814da448"
+      }
+    ],
+    "OmittedTrustLoader.from_pretrained": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 53,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:OmittedTrustLoader.from_pretrained:eb62f3845baa4b3d",
+        "signature_hash": "c1c2e7de61c71294"
+      }
+    ],
+    "UnsafeInternalLoader": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 62,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:UnsafeInternalLoader:ce7f5f2c25bd0249",
+        "signature_hash": "682ac9c0bffe0b1e"
+      }
+    ],
+    "UnsafeInternalLoader.from_pretrained": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:UnsafeInternalLoader.from_pretrained:7beb820dfccd41db",
+        "signature_hash": "c1c2e7de61c71294"
+      }
+    ],
+    "SecureWrapperTests": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 260,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:SecureWrapperTests:6530862b32a94488",
+        "signature_hash": "046a27f04caedaac"
+      }
+    ],
+    "SecureWrapperTests.setUp": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 77,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.setUp:1bbdbfd8abc78b8c",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "SecureWrapperTests.tearDown": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 80,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.tearDown:f54f5d8c6b38c2a8",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "SecureWrapperTests._file": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 85,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests._file:34988455b7413fb8",
+        "signature_hash": "16e5ed63f1ce7d3b"
+      }
+    ],
+    "SecureWrapperTests._allow": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests._allow:9edf817e227b525c",
+        "signature_hash": "309b22bfad4d43ff"
+      }
+    ],
+    "SecureWrapperTests.test_01_allowlist_requires_exact_lowercase_sha256": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 96,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_01_allowlist_requires_exact_lowercase_sha256:729a172cd552b73d",
+        "signature_hash": "3ae3ea738b6da866"
+      }
+    ],
+    "SecureWrapperTests.test_02_allowlist_rejects_ambiguous_shapes": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 106,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_02_allowlist_rejects_ambiguous_shapes:c840505673a2f430",
+        "signature_hash": "b0043337326cd013"
+      }
+    ],
+    "SecureWrapperTests.test_03_exact_file_sha256_is_admitted": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 113,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_03_exact_file_sha256_is_admitted:4f2f95bceeb3665a",
+        "signature_hash": "f67e3acee878a2fb"
+      }
+    ],
+    "SecureWrapperTests.test_04_unknown_model_and_digest_mismatch_fail_closed": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 121,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_04_unknown_model_and_digest_mismatch_fail_closed:607488d165a6da95",
+        "signature_hash": "355c434a2aa6e766"
+      }
+    ],
+    "SecureWrapperTests.test_05_directory_digest_is_canonical_and_mutation_sensitive": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 134,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_05_directory_digest_is_canonical_and_mutation_sensitive:2d2cf9089878981c",
+        "signature_hash": "5e43ad1866d3084a"
+      }
+    ],
+    "SecureWrapperTests.test_06_symlinks_are_rejected_in_model_tree": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 148,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_06_symlinks_are_rejected_in_model_tree:84ba37baf39020fb",
+        "signature_hash": "6a1a8fcec3338c41"
+      }
+    ],
+    "SecureWrapperTests.test_07_empty_directory_and_missing_path_are_rejected": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 156,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_07_empty_directory_and_missing_path_are_rejected:f689adaa2b4a8e13",
+        "signature_hash": "512083b91b9b1c08"
+      }
+    ],
+    "SecureWrapperTests.test_08_membrane_injects_literal_false_when_omitted": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 163,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_08_membrane_injects_literal_false_when_omitted:3038105419483e70",
+        "signature_hash": "c2bc7ad36bd14992"
+      }
+    ],
+    "SecureWrapperTests.test_09_membrane_rejects_remote_code_true": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 168,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_09_membrane_rejects_remote_code_true:c529a37fbfc175bd",
+        "signature_hash": "84f9b4272192c1b0"
+      }
+    ],
+    "SecureWrapperTests.test_10_membrane_restores_boundaries_after_exception": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 176,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_10_membrane_restores_boundaries_after_exception:45272690b7f2e51f",
+        "signature_hash": "1780a4e7018fe286"
+      }
+    ],
+    "SecureWrapperTests.test_11_wrapper_verifies_then_loads_with_hard_false_membrane": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 190,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_11_wrapper_verifies_then_loads_with_hard_false_membrane:c65d517ac8abd6b3",
+        "signature_hash": "abaaaaa9fa4a7c8b"
+      }
+    ],
+    "SecureWrapperTests.test_12_wrapper_rejects_caller_remote_code_widening_before_loader": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 201,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_12_wrapper_rejects_caller_remote_code_widening_before_loader:0a80403344369e7a",
+        "signature_hash": "f672edd60acedb6c"
+      }
+    ],
+    "SecureWrapperTests.test_13_wrapper_blocks_stock_style_internal_true_fallback": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 212,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_13_wrapper_blocks_stock_style_internal_true_fallback:44ca92655d7488ee",
+        "signature_hash": "e709feb8a94a6f4e"
+      }
+    ],
+    "SecureWrapperTests.test_14_wrapper_rejects_destructive_delete_original": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 223,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_14_wrapper_rejects_destructive_delete_original:ec7f2d564a9ba5a9",
+        "signature_hash": "953423bc3d109c57"
+      }
+    ],
+    "SecureWrapperTests.test_15_digest_change_after_allowlist_creation_is_rejected": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 232,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_15_digest_change_after_allowlist_creation_is_rejected:bc25efcfd65026fd",
+        "signature_hash": "abf3ae9d12709593"
+      }
+    ],
+    "SecureWrapperTests.test_16_all_five_hard_admission_axes_are_noncompensatory": [
+      {
+        "file": "src/auraos/security/test_airllm_secure_wrapper.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 260,
+        "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#method:SecureWrapperTests.test_16_all_five_hard_admission_axes_are_noncompensatory:dff3213dec3a32fd",
+        "signature_hash": "d2bf81f5c00e65d5"
       }
     ],
     "RefutationKey": [
