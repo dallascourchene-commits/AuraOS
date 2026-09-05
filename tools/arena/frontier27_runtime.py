@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections import OrderedDict, defaultdict, deque
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from hashlib import sha256
 import json
 import re
@@ -432,15 +433,71 @@ class StorageTier:
 
 class TierEnergyAdmission:
     @staticmethod
-    def admit(t: StorageTier, n: int, budget_j: float) -> bool:
-        return n <= t.capacity_bytes and n / 1e9 * t.joules_per_gb <= budget_j
+    def _finite_decimal(value: Any) -> Decimal | None:
+        if isinstance(value, bool):
+            return None
+        try:
+            out = Decimal(str(value))
+        except (InvalidOperation, TypeError, ValueError):
+            return None
+        return out if out.is_finite() else None
+
+    @classmethod
+    def plan_energy(cls, t: StorageTier, n: int) -> Decimal | None:
+        if type(n) is not int or n < 0:
+            return None
+        joules_per_gb = cls._finite_decimal(t.joules_per_gb)
+        if joules_per_gb is None or joules_per_gb < 0:
+            return None
+        return Decimal(n) / Decimal(1_000_000_000) * joules_per_gb
+
+    @classmethod
+    def admit(cls, t: StorageTier, n: int, budget_j: float) -> bool:
+        energy = cls.plan_energy(t, n)
+        budget = cls._finite_decimal(budget_j)
+        return (
+            energy is not None
+            and budget is not None
+            and budget >= 0
+            and type(t.capacity_bytes) is int
+            and 0 <= n <= t.capacity_bytes
+            and energy <= budget
+        )
+
+    @classmethod
+    def admit_cumulative(
+        cls, t: StorageTier, n: int, spent_j: float, budget_j: float
+    ) -> tuple[bool, float, float | None]:
+        """Return admission, exact new cumulative spend, and plan energy.
+
+        Decimal(str(...)) supplies one canonical arithmetic path for both
+        admission and accounting, so an exact boundary cannot be admitted and
+        then reported above the configured speculative-energy ceiling.
+        """
+        plan = cls.plan_energy(t, n)
+        spent = cls._finite_decimal(spent_j)
+        budget = cls._finite_decimal(budget_j)
+        if (
+            plan is None
+            or spent is None
+            or budget is None
+            or spent < 0
+            or budget < 0
+            or type(t.capacity_bytes) is not int
+            or n > t.capacity_bytes
+        ):
+            return False, float(spent) if spent is not None else 0.0, None if plan is None else float(plan)
+        proposed = spent + plan
+        if proposed > budget:
+            return False, float(spent), float(plan)
+        return True, float(proposed), float(plan)
 
 
 class StorageTierPlacement:
     @staticmethod
     def choose(tiers: Sequence[StorageTier], n: int, budget_j: float) -> StorageTier | None:
         ok = [t for t in tiers if TierEnergyAdmission.admit(t, n, budget_j)]
-        return max(ok, key=lambda t: t.bandwidth) if ok else None
+        return max(ok, key=lambda t:t.bandwidth) if ok else None
 
 
 @dataclass
@@ -533,7 +590,7 @@ class LegacyOffload:
 
 
 class FrontierOffload:
-    """Conservative serialized model: every actual prefetch/miss transfer counts time."""
+    """Conservative serialized model with canonical run-wide speculative energy admission."""
     def __init__(self, size: int, capacity: int, tier: StorageTier, window_s: float, budget_j: float):
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
@@ -546,18 +603,16 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            plan_energy = speculative_bytes / 1e9 * self.t.joules_per_gb
-            energy_ok = (
-                bool(missing_plan)
-                and speculative_bytes <= self.t.capacity_bytes
-                and speculative_energy + plan_energy <= self.e + 1e-12
+            energy_ok, admitted_spend, plan_energy = TierEnergyAdmission.admit_cumulative(
+                self.t, speculative_bytes, speculative_energy, self.e
             )
-            if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
+            if bool(missing_plan) and PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
                 for x in missing_plan:
-                    transfer_energy = self.size / 1e9 * self.t.joules_per_gb
                     self.r.prefetch(x); prefetch_transfers += 1
                     a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
-                    secs += self.size / self.t.bandwidth; energy += transfer_energy; speculative_energy += transfer_energy
+                    secs += self.size / self.t.bandwidth
+                energy += plan_energy or 0.0
+                speculative_energy = admitted_spend
             for x in native:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
