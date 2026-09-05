@@ -7,6 +7,14 @@ from proof_reuse_admission import *
 def base():
     return ProofReuseEvidence("head-a","head-a","result","result","wf-1","wf-1","input","input","deps","deps","steps","steps",2,2,True,True,True)
 
+def bench():
+    return replace(base(), claim_scope=RESOURCE_SENSITIVE_BENCHMARK,
+                   proved_trace_root="trace", expected_trace_root="trace",
+                   proved_environment_root="env", expected_environment_root="env",
+                   proved_resource_budget_root="budget", expected_resource_budget_root="budget",
+                   cumulative_resource_budget_verified=True,
+                   benchmark_oracle_ceiling_verified=True)
+
 class T(unittest.TestCase):
     def test_01_exact_reuse(self): self.assertEqual(decide(base()),Admission.REUSE_EXACT)
     def test_02_exact_head_with_changed_paths_reproves(self): self.assertEqual(decide(replace(base(),changed_paths=(".aura/CODEMAP.md",))),Admission.REPROVE)
@@ -33,7 +41,7 @@ class T(unittest.TestCase):
     def test_13_custom_allowlist_is_exact(self):
         e=replace(base(),current_source_head="b",direct_child_verified=True,trusted_generator_verified=True,changed_paths=("generated/nav.json",)); self.assertEqual(decide(e),Admission.REPROVE); self.assertEqual(decide(e,allowlist=("generated/nav.json",)),Admission.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND)
     def test_14_shape_errors_fail_closed(self):
-        for e in (replace(base(),proved_source_head=""),replace(base(),proved_binding_generation=-1),replace(base(),internal_receipt_valid=1)): self.assertEqual(decide(e),Admission.REPROVE)
+        for e in (replace(base(),proved_source_head=""),replace(base(),proved_binding_generation=-1),replace(base(),internal_receipt_valid=1),replace(base(),claim_scope="UNKNOWN")): self.assertEqual(decide(e),Admission.REPROVE)
     def test_15_omega8_hard_invalid_dominance(self):
         admits=0
         for state in itertools.product((0,1,2),repeat=8):
@@ -43,7 +51,7 @@ class T(unittest.TestCase):
         self.assertEqual(admits,1)
     def test_16_13d_context_cannot_repair_hard_failure(self):
         bad=replace(base(),source_truth_bound=False)
-        for trailing in itertools.product((0,1,2),repeat=5): self.assertEqual(decide(bad),Admission.REPROVE)
+        for _trailing in itertools.product((0,1,2),repeat=5): self.assertEqual(decide(bad),Admission.REPROVE)
     def test_17_randomized_independent_oracle(self):
         rng=random.Random(27027)
         for _ in range(50000):
@@ -53,5 +61,61 @@ class T(unittest.TestCase):
             good=receipt and truth and steps and roots
             oracle=Admission.REUSE_EXACT if good and exact else Admission.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND if good and (not exact) and direct and trusted and generated else Admission.REPROVE
             self.assertEqual(decide(e),oracle)
+
+    def test_18_resource_sensitive_exact_reuse(self): self.assertEqual(decide(bench()),Admission.REUSE_EXACT)
+    def test_19_trace_drift_reproves(self): self.assertEqual(decide(replace(bench(),expected_trace_root="trace-2")),Admission.REPROVE)
+    def test_20_environment_drift_reproves(self): self.assertEqual(decide(replace(bench(),expected_environment_root="env-2")),Admission.REPROVE)
+    def test_21_budget_drift_reproves(self): self.assertEqual(decide(replace(bench(),expected_resource_budget_root="budget-2")),Admission.REPROVE)
+    def test_22_cumulative_budget_proof_is_noncompensatory(self): self.assertEqual(decide(replace(bench(),cumulative_resource_budget_verified=False)),Admission.REPROVE)
+    def test_23_oracle_ceiling_proof_is_noncompensatory(self): self.assertEqual(decide(replace(bench(),benchmark_oracle_ceiling_verified=False)),Admission.REPROVE)
+    def test_24_resource_sensitive_na_sentinel_fails_closed(self):
+        self.assertEqual(decide(replace(base(),claim_scope=RESOURCE_SENSITIVE_BENCHMARK)),Admission.REPROVE)
+    def test_25_generated_rebind_requires_same_resource_envelope(self):
+        e=replace(bench(),current_source_head="head-b",direct_child_verified=True,trusted_generator_verified=True,changed_paths=(".aura/CODEMAP.md",))
+        self.assertEqual(decide(e),Admission.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND)
+        self.assertEqual(decide(replace(e,expected_resource_budget_root="budget-2")),Admission.REPROVE)
+    def test_26_receipt_binds_resource_envelope(self):
+        e=bench(); r=make_receipt(e); self.assertTrue(r.verify(e)); self.assertFalse(r.verify(replace(e,expected_environment_root="env-2")))
+    def test_27_resource_omega8_noncompensatory(self):
+        admits=0
+        for state in itertools.product((0,1,2),repeat=8):
+            e=replace(bench(),internal_receipt_valid=state[0]==1,source_truth_bound=state[1]==1,required_steps_complete=state[2]==1,
+                      expected_trace_root="trace" if state[3]==1 else "other",
+                      expected_environment_root="env" if state[4]==1 else "other",
+                      expected_resource_budget_root="budget" if state[5]==1 else "other",
+                      cumulative_resource_budget_verified=state[6]==1,
+                      benchmark_oracle_ceiling_verified=state[7]==1)
+            d=decide(e); admits += d==Admission.REUSE_EXACT
+            if any(x==0 for x in state): self.assertEqual(d,Admission.REPROVE)
+        self.assertEqual(admits,1)
+    def test_28_resource_13d_context_cannot_repair_budget_failure(self):
+        bad=replace(bench(),cumulative_resource_budget_verified=False)
+        for _trailing in itertools.product((0,1,2),repeat=5): self.assertEqual(decide(bad),Admission.REPROVE)
+    def test_29_randomized_resource_oracle(self):
+        rng=random.Random(27028)
+        for _ in range(50000):
+            exact,truth,receipt,steps,trace,env,budget,cumulative,oracle,direct,trusted,generated=[rng.choice((True,False)) for _ in range(12)]
+            changed=() if exact else ((".aura/CODEMAP.md",) if generated else ("src/material.py",))
+            e=replace(bench(),current_source_head="head-a" if exact else "head-b",internal_receipt_valid=receipt,source_truth_bound=truth,required_steps_complete=steps,
+                      expected_trace_root="trace" if trace else "other", expected_environment_root="env" if env else "other",
+                      expected_resource_budget_root="budget" if budget else "other", cumulative_resource_budget_verified=cumulative,
+                      benchmark_oracle_ceiling_verified=oracle,direct_child_verified=direct,trusted_generator_verified=trusted,changed_paths=changed)
+            good=truth and receipt and steps and trace and env and budget and cumulative and oracle
+            expected=Admission.REUSE_EXACT if good and exact else Admission.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND if good and (not exact) and direct and trusted and generated else Admission.REPROVE
+            self.assertEqual(decide(e),expected)
+    def test_30_hs1000_resource_reuse_cells(self):
+        admits=0
+        for source_i in range(10):
+            for budget_i in range(10):
+                for env_i in range(10):
+                    exact=source_i==0; budget_ok=budget_i==0; env_ok=env_i==0
+                    e=replace(bench(),current_source_head="head-a" if exact else f"head-{source_i}",
+                              expected_resource_budget_root="budget" if budget_ok else f"budget-{budget_i}",
+                              expected_environment_root="env" if env_ok else f"env-{env_i}",
+                              direct_child_verified=not exact,trusted_generator_verified=not exact,
+                              changed_paths=() if exact else (".aura/CODEMAP.md",))
+                    d=decide(e); admits += d != Admission.REPROVE
+                    if not (budget_ok and env_ok): self.assertEqual(d,Admission.REPROVE)
+        self.assertEqual(admits,10)
 
 if __name__=="__main__": unittest.main()

@@ -1,4 +1,9 @@
-"""Independent, non-authorizing proof-reuse admission verifier."""
+"""Independent, non-authorizing proof-reuse admission verifier.
+
+The verifier deliberately separates proof identity from source truth, generated-only
+provider movement, and resource-sensitive benchmark envelopes.  It never mints a
+fresh hosted pass or effect authority.
+"""
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
@@ -8,6 +13,9 @@ from pathlib import PurePosixPath
 from typing import Any, Iterable
 
 DEFAULT_GENERATED_ALLOWLIST = frozenset({".aura/CODEMAP.json", ".aura/CODEMAP.md"})
+GENERAL_PROOF = "GENERAL"
+RESOURCE_SENSITIVE_BENCHMARK = "RESOURCE_SENSITIVE_BENCHMARK"
+_VALID_CLAIM_SCOPES = frozenset({GENERAL_PROOF, RESOURCE_SENSITIVE_BENCHMARK})
 
 class Admission(str, Enum):
     REUSE_EXACT = "REUSE_EXACT"
@@ -54,6 +62,15 @@ class ProofReuseEvidence:
     trusted_generator_verified: bool = False
     changed_paths: tuple[str, ...] = ()
     authority_requested: bool = False
+    claim_scope: str = GENERAL_PROOF
+    proved_trace_root: str = "NA"
+    expected_trace_root: str = "NA"
+    proved_environment_root: str = "NA"
+    expected_environment_root: str = "NA"
+    proved_resource_budget_root: str = "NA"
+    expected_resource_budget_root: str = "NA"
+    cumulative_resource_budget_verified: bool = True
+    benchmark_oracle_ceiling_verified: bool = True
 
     def validate_shape(self) -> bool:
         strings = (self.proved_source_head, self.current_source_head, self.proved_result_root,
@@ -61,14 +78,27 @@ class ProofReuseEvidence:
                    self.expected_workflow_generation, self.proved_input_root,
                    self.expected_input_root, self.proved_dependency_root,
                    self.expected_dependency_root, self.proved_required_step_root,
-                   self.expected_required_step_root)
+                   self.expected_required_step_root, self.claim_scope,
+                   self.proved_trace_root, self.expected_trace_root,
+                   self.proved_environment_root, self.expected_environment_root,
+                   self.proved_resource_budget_root, self.expected_resource_budget_root)
         bools = (self.internal_receipt_valid, self.source_truth_bound, self.required_steps_complete,
-                 self.direct_child_verified, self.trusted_generator_verified, self.authority_requested)
-        return (all(isinstance(x, str) and x for x in strings)
+                 self.direct_child_verified, self.trusted_generator_verified, self.authority_requested,
+                 self.cumulative_resource_budget_verified, self.benchmark_oracle_ceiling_verified)
+        if not (all(isinstance(x, str) and x for x in strings)
                 and isinstance(self.proved_binding_generation, int)
                 and isinstance(self.expected_binding_generation, int)
                 and self.proved_binding_generation >= 0 and self.expected_binding_generation >= 0
-                and all(type(x) is bool for x in bools))
+                and all(type(x) is bool for x in bools)
+                and self.claim_scope in _VALID_CLAIM_SCOPES):
+            return False
+        if self.claim_scope == RESOURCE_SENSITIVE_BENCHMARK:
+            return all(x != "NA" for x in (
+                self.proved_trace_root, self.expected_trace_root,
+                self.proved_environment_root, self.expected_environment_root,
+                self.proved_resource_budget_root, self.expected_resource_budget_root,
+            ))
+        return True
 
 @dataclass(frozen=True)
 class ProofReuseReceipt:
@@ -109,7 +139,25 @@ def evidence_digest(evidence: ProofReuseEvidence) -> str:
         "trusted_generator_verified": evidence.trusted_generator_verified,
         "changed_paths": paths,
         "authority_requested": evidence.authority_requested,
+        "claim_scope": evidence.claim_scope,
+        "proved_trace_root": evidence.proved_trace_root,
+        "expected_trace_root": evidence.expected_trace_root,
+        "proved_environment_root": evidence.proved_environment_root,
+        "expected_environment_root": evidence.expected_environment_root,
+        "proved_resource_budget_root": evidence.proved_resource_budget_root,
+        "expected_resource_budget_root": evidence.expected_resource_budget_root,
+        "cumulative_resource_budget_verified": evidence.cumulative_resource_budget_verified,
+        "benchmark_oracle_ceiling_verified": evidence.benchmark_oracle_ceiling_verified,
     })
+
+def _resource_envelope_exact(e: ProofReuseEvidence) -> bool:
+    if e.claim_scope != RESOURCE_SENSITIVE_BENCHMARK:
+        return True
+    return (e.proved_trace_root == e.expected_trace_root
+            and e.proved_environment_root == e.expected_environment_root
+            and e.proved_resource_budget_root == e.expected_resource_budget_root
+            and e.cumulative_resource_budget_verified
+            and e.benchmark_oracle_ceiling_verified)
 
 def _proof_truth_exact(e: ProofReuseEvidence) -> bool:
     return (e.internal_receipt_valid and e.source_truth_bound and e.required_steps_complete
@@ -119,6 +167,7 @@ def _proof_truth_exact(e: ProofReuseEvidence) -> bool:
             and e.proved_dependency_root == e.expected_dependency_root
             and e.proved_required_step_root == e.expected_required_step_root
             and e.proved_binding_generation == e.expected_binding_generation
+            and _resource_envelope_exact(e)
             and not e.authority_requested)
 
 def decide(evidence: ProofReuseEvidence, *, allowlist: Iterable[str] = DEFAULT_GENERATED_ALLOWLIST) -> Admission:
