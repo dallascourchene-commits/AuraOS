@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1650,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2684,6 +2684,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frontier27_cumulative_energy.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -9808,53 +9809,53 @@
       "path": ".github/workflows/frontier27-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2494,
-      "lines": 62,
-      "tokens_est": 624,
+      "bytes": 2630,
+      "lines": 63,
+      "tokens_est": 658,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile"
       ],
       "command_lines": {
         "python -m py_compile": [
-          47
+          48
         ]
       },
       "topology": {},
-      "digest8": "8ada24a9d439b7b8",
+      "digest8": "0b730c5e5ba4e9a1",
       "vector": [
-        -0.186158,
-        -0.091427,
-        -0.109051,
-        -0.278686,
-        -0.003305,
-        0.126675,
-        -0.225813,
-        -0.062787,
-        0.236828,
-        0.071599,
-        -0.24564,
-        0.104645,
-        0.042959,
-        0.183955,
-        0.276483,
-        0.177345,
-        -0.109051,
-        0.186158,
-        -0.190564,
-        -0.16633,
-        -0.155315,
-        -0.228016,
-        -0.073802,
-        -0.078208,
-        -0.243437,
-        0.203782,
-        0.131081,
-        0.157518,
-        0.258858,
-        0.051772,
-        0.203782,
-        0.261061
+        0.245565,
+        0.132037,
+        -0.156717,
+        -0.025914,
+        -0.08021,
+        0.028382,
+        -0.206077,
+        0.277648,
+        0.191269,
+        -0.3122,
+        -0.159185,
+        0.267776,
+        0.090081,
+        -0.191269,
+        -0.309732,
+        -0.065402,
+        0.201141,
+        0.265308,
+        0.06787,
+        0.280116,
+        0.087613,
+        0.06787,
+        0.04319,
+        0.040722,
+        0.053062,
+        -0.092549,
+        -0.124633,
+        0.099953,
+        0.01851,
+        -0.038254,
+        -0.302328,
+        -0.233225
       ]
     },
     {
@@ -103953,6 +103954,53 @@
       ]
     },
     {
+      "path": "tests/test_frontier27_cumulative_energy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1977,
+      "lines": 61,
+      "tokens_est": 495,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "709169b0d2e534f9",
+      "vector": [
+        -0.06573,
+        -0.199496,
+        0.294055,
+        0.192577,
+        -0.181046,
+        -0.061117,
+        0.171821,
+        -0.104937,
+        0.035748,
+        -0.100325,
+        -0.151064,
+        0.130307,
+        0.095712,
+        -0.273298,
+        0.261767,
+        -0.054198,
+        -0.259461,
+        0.28483,
+        -0.28483,
+        0.056505,
+        -0.091099,
+        0.190271,
+        -0.116469,
+        -0.008072,
+        -0.088793,
+        -0.238704,
+        -0.091099,
+        -0.148757,
+        0.190271,
+        -0.201803,
+        0.247929,
+        -0.155676
+      ]
+    },
+    {
       "path": "tests/test_frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -104473,47 +104521,47 @@
       "path": "tools/arena/frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 19795,
-      "lines": 594,
-      "tokens_est": 4949,
+      "bytes": 20167,
+      "lines": 605,
+      "tokens_est": 5042,
       "symbol_count": 80,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b8e6e91c3558457f",
+      "digest8": "d0052577122fa0dd",
       "vector": [
-        0.120069,
-        -0.089225,
-        -0.124475,
-        -0.280894,
-        -0.091428,
-        -0.080413,
-        0.223614,
-        -0.131084,
-        0.245645,
-        0.177349,
-        -0.153115,
-        0.258863,
-        0.280894,
-        -0.073804,
-        -0.115662,
-        0.16413,
-        0.082616,
-        0.089225,
-        0.274285,
-        0.258863,
-        -0.045163,
-        -0.069397,
-        -0.239035,
-        0.062788,
-        0.117865,
-        -0.058382,
-        -0.247848,
-        -0.243442,
-        0.139896,
-        -0.016523,
-        -0.261066,
-        -0.208192
+        0.081468,
+        -0.236883,
+        0.154162,
+        -0.174216,
+        0.186749,
+        0.091495,
+        -0.221843,
+        0.191762,
+        -0.164189,
+        0.216829,
+        0.106535,
+        -0.229363,
+        -0.121575,
+        0.23187,
+        -0.156669,
+        0.27699,
+        0.036347,
+        -0.144135,
+        -0.312084,
+        -0.26947,
+        -0.013787,
+        0.008773,
+        0.001253,
+        -0.02632,
+        -0.006267,
+        0.176722,
+        -0.134108,
+        0.166695,
+        0.236883,
+        -0.312084,
+        -0.139122,
+        -0.056401
       ]
     },
     {
@@ -105561,7 +105609,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788647392,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107187,6 +107235,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frontier27_cumulative_energy.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -264537,6 +264586,56 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#class:CumulativeEnergyBudgetTests:36affb5f0caaec39",
+        "name": "CumulativeEnergyBudgetTests",
+        "kind": "class",
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "line": 11,
+        "end_line": 56,
+        "signature_hash": "4d470e4bd99908b5",
+        "file_digest8": "709169b0d2e534f9"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.test_demand_miss_energy_does_not_spend_speculation_budget:8bf188876968f49e",
+        "name": "CumulativeEnergyBudgetTests.test_demand_miss_energy_does_not_spend_speculation_budget",
+        "kind": "method",
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "line": 45,
+        "end_line": 56,
+        "signature_hash": "3a71d18c76f99a42",
+        "file_digest8": "709169b0d2e534f9"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.test_exact_run_wide_budget_can_be_fully_consumed:3e8221444cae90c1",
+        "name": "CumulativeEnergyBudgetTests.test_exact_run_wide_budget_can_be_fully_consumed",
+        "kind": "method",
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "line": 30,
+        "end_line": 43,
+        "signature_hash": "f24e031306ffad47",
+        "file_digest8": "709169b0d2e534f9"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.test_repeated_prefetches_share_one_run_wide_energy_budget:f2bffadac1093edc",
+        "name": "CumulativeEnergyBudgetTests.test_repeated_prefetches_share_one_run_wide_energy_budget",
+        "kind": "method",
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "line": 15,
+        "end_line": 28,
+        "signature_hash": "04fb73482a4d4422",
+        "file_digest8": "709169b0d2e534f9"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.tier:89404d224fcb2b96",
+        "name": "CumulativeEnergyBudgetTests.tier",
+        "kind": "method",
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "34c7f7aa59becd37",
+        "file_digest8": "709169b0d2e534f9"
+      },
+      {
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "name": "T",
         "kind": "class",
@@ -265614,7 +265713,7 @@
         "line": 95,
         "end_line": 99,
         "signature_hash": "96b8fe62f34788c9",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CollisionBucket:269792647939973b",
@@ -265624,7 +265723,7 @@
         "line": 273,
         "end_line": 284,
         "signature_hash": "b14fea6946813579",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:ComponentContract:b16d04847007fed4",
@@ -265634,7 +265733,7 @@
         "line": 103,
         "end_line": 108,
         "signature_hash": "f2d2fa1f25c0a919",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CompositionMembrane:455d3d1babb7a235",
@@ -265644,7 +265743,7 @@
         "line": 111,
         "end_line": 118,
         "signature_hash": "9ce687e2ffcccb33",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CurrentnessInvalidator:054b2d3224674b40",
@@ -265654,7 +265753,7 @@
         "line": 215,
         "end_line": 249,
         "signature_hash": "7fce545f5e183f07",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:ExportReceipt:5189d033105ce084",
@@ -265664,7 +265763,7 @@
         "line": 155,
         "end_line": 192,
         "signature_hash": "7395df647a272d24",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:HDCSemanticKey:f4bf9469efc632bd",
@@ -265674,7 +265773,7 @@
         "line": 287,
         "end_line": 298,
         "signature_hash": "5eaced9dd092cda8",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:HardFalseSecurityGate:d1abfe8d782b0b49",
@@ -265684,7 +265783,7 @@
         "line": 36,
         "end_line": 39,
         "signature_hash": "c008b1411af62259",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:HardGatePin:ea0e35fe6491108c",
@@ -265694,7 +265793,7 @@
         "line": 137,
         "end_line": 151,
         "signature_hash": "2690390ddbb7ff96",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:HotColdCache:80c9877ee717f648",
@@ -265704,7 +265803,7 @@
         "line": 341,
         "end_line": 359,
         "signature_hash": "1c342bf58fd8ac25",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:HybridIndexBridge:ea5b80b62e394ffc",
@@ -265714,7 +265813,7 @@
         "line": 301,
         "end_line": 338,
         "signature_hash": "f11db3a18a94b5e6",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:IdentityEnvelope:7c2512b1b0bee381",
@@ -265724,7 +265823,7 @@
         "line": 43,
         "end_line": 48,
         "signature_hash": "2820f7c1df3fe336",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:MatchedEnvelopeGate:32e1d3fa824a90c8",
@@ -265734,7 +265833,7 @@
         "line": 65,
         "end_line": 73,
         "signature_hash": "ece793dda9927e02",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:NativeRouterAuthority:f0b513527f242f37",
@@ -265744,7 +265843,7 @@
         "line": 406,
         "end_line": 410,
         "signature_hash": "3c3324eaf7a42909",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:P0IdentityGate:a59424a5653d10d3",
@@ -265754,7 +265853,7 @@
         "line": 51,
         "end_line": 54,
         "signature_hash": "0dee444af72a312e",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:PageCacheStateGate:08bb343e41e0d5f4",
@@ -265764,7 +265863,7 @@
         "line": 392,
         "end_line": 395,
         "signature_hash": "cfe0193df0c4aec1",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:PerformanceEnvelope:1dc0b5e0e01bcf98",
@@ -265774,7 +265873,7 @@
         "line": 58,
         "end_line": 62,
         "signature_hash": "ed92cd13773aa44f",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:PrefetchWasteGuard:0c298dd0b0820fbe",
@@ -265784,7 +265883,7 @@
         "line": 419,
         "end_line": 422,
         "signature_hash": "f33befbd812971b2",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:RetrievalReceipt:b4ad50deaac3a434",
@@ -265794,7 +265893,7 @@
         "line": 363,
         "end_line": 389,
         "signature_hash": "d6df977fe745227c",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:RouterPreservingPrefetch:cc9a6398b903e21a",
@@ -265804,7 +265903,7 @@
         "line": 398,
         "end_line": 403,
         "signature_hash": "0e6c2b25da2cfb8d",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:SnapshotRing:2d8ec2a81cd633ae",
@@ -265814,7 +265913,7 @@
         "line": 195,
         "end_line": 212,
         "signature_hash": "8d802e6adf633c33",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:StateHandleLease:765458ca06527869",
@@ -265824,7 +265923,7 @@
         "line": 122,
         "end_line": 134,
         "signature_hash": "5334887f9bd5373a",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:StorageTier:fd1614f61fb1d381",
@@ -265834,7 +265933,7 @@
         "line": 426,
         "end_line": 430,
         "signature_hash": "00c4fa54d4dea76a",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:StorageTierPlacement:cf6862979d68272f",
@@ -265844,7 +265943,7 @@
         "line": 439,
         "end_line": 443,
         "signature_hash": "0a8c36d5497de620",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:TierEnergyAdmission:67f9db438244a99a",
@@ -265854,7 +265953,7 @@
         "line": 433,
         "end_line": 436,
         "signature_hash": "07557f9e1cf9f63f",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:TypedEdge:b4ab908fab937a9d",
@@ -265864,7 +265963,7 @@
         "line": 253,
         "end_line": 259,
         "signature_hash": "ed73bb6b42fd746c",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:TypedGraphEdges:d84bab094d7eaf87",
@@ -265874,7 +265973,7 @@
         "line": 262,
         "end_line": 270,
         "signature_hash": "f0f4ce2b5dfcc6c6",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
@@ -265884,7 +265983,7 @@
         "line": 447,
         "end_line": 454,
         "signature_hash": "0d9f06875821b0a4",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:VersionRangeGate:dfca3e1612dd06fc",
@@ -265894,7 +265993,7 @@
         "line": 76,
         "end_line": 91,
         "signature_hash": "19ed0f12486eef75",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:WindowAwareBudget:865e0d4aa3df2c60",
@@ -265904,7 +266003,7 @@
         "line": 413,
         "end_line": 416,
         "signature_hash": "5c4dc2bef8c98844",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#function:_sha256_text:da1d3f984ef16843",
@@ -265914,7 +266013,7 @@
         "line": 29,
         "end_line": 30,
         "signature_hash": "0c71f77827103950",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
@@ -265924,7 +266023,7 @@
         "line": 21,
         "end_line": 22,
         "signature_hash": "0bff111c4fc1adcb",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#function:stable:4c11bb77b3afc1de",
@@ -265934,7 +266033,7 @@
         "line": 17,
         "end_line": 18,
         "signature_hash": "6c4779cb279e35c8",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#function:tokens:03171f6fc21a863b",
@@ -265944,7 +266043,7 @@
         "line": 25,
         "end_line": 26,
         "signature_hash": "de5ee57f32fcd478",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CapabilityManifest.allows:7ac4ba02433c0ce9",
@@ -265954,7 +266053,7 @@
         "line": 98,
         "end_line": 99,
         "signature_hash": "548732631e08b441",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.__init__:32f65b6d8da12fe0",
@@ -265964,7 +266063,7 @@
         "line": 274,
         "end_line": 275,
         "signature_hash": "3d77650513b79756",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.get:0a7e31acdea08fce",
@@ -265974,7 +266073,7 @@
         "line": 280,
         "end_line": 281,
         "signature_hash": "a2e5419ad7f1b285",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.identities:26430685ff986dfa",
@@ -265984,7 +266083,7 @@
         "line": 283,
         "end_line": 284,
         "signature_hash": "2f33852bac046b7a",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.put:8519eb4de08c371b",
@@ -265994,7 +266093,7 @@
         "line": 277,
         "end_line": 278,
         "signature_hash": "f30fdf8ed9b952d0",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CompositionMembrane.compose:5331ee1be0962709",
@@ -266004,7 +266103,7 @@
         "line": 113,
         "end_line": 118,
         "signature_hash": "a13733ab73bf29b4",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.__init__:ee8d28abf7b72b28",
@@ -266014,7 +266113,7 @@
         "line": 216,
         "end_line": 219,
         "signature_hash": "3d77650513b79756",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.bind:6bf67a59600a3365",
@@ -266024,7 +266123,7 @@
         "line": 221,
         "end_line": 232,
         "signature_hash": "a801bcf0ee310039",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.complete_reproof:360d220f7af1415f",
@@ -266034,7 +266133,7 @@
         "line": 241,
         "end_line": 246,
         "signature_hash": "50f4634066dae525",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.current:92e76f0fe6235f1d",
@@ -266044,7 +266143,7 @@
         "line": 248,
         "end_line": 249,
         "signature_hash": "714909359bc7dd03",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.invalidate:7eea77ef04d78ae2",
@@ -266054,7 +266153,7 @@
         "line": 234,
         "end_line": 239,
         "signature_hash": "650c9f5aecfbe1a0",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.build:790e4d7c7fc239ed",
@@ -266064,7 +266163,7 @@
         "line": 162,
         "end_line": 164,
         "signature_hash": "483d3c86cf68055c",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.reusable:f4d3386ce79c93ad",
@@ -266074,7 +266173,7 @@
         "line": 175,
         "end_line": 192,
         "signature_hash": "e1940705f3648c5a",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.verify:2a7fa99b906f72b6",
@@ -266084,7 +266183,7 @@
         "line": 166,
         "end_line": 173,
         "signature_hash": "771daa533e2dbc3d",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HDCSemanticKey.distance:a143b055b881f0eb",
@@ -266094,7 +266193,7 @@
         "line": 297,
         "end_line": 298,
         "signature_hash": "af915a32dca91644",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HDCSemanticKey.encode:542519be0e5472c5",
@@ -266104,7 +266203,7 @@
         "line": 288,
         "end_line": 294,
         "signature_hash": "cc9ef91207ff7fd5",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HardFalseSecurityGate.admit:e3cb058dc98828ba",
@@ -266114,7 +266213,7 @@
         "line": 38,
         "end_line": 39,
         "signature_hash": "1c1de9b54cd13940",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HardGatePin.admit:bca513eb187722c1",
@@ -266124,7 +266223,7 @@
         "line": 141,
         "end_line": 151,
         "signature_hash": "3e6af819e8686052",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HotColdCache.__init__:c0b13fd434efd086",
@@ -266134,7 +266233,7 @@
         "line": 342,
         "end_line": 347,
         "signature_hash": "72020fcc351235dc",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HotColdCache.get:9195bd0139d178e8",
@@ -266144,7 +266243,7 @@
         "line": 349,
         "end_line": 359,
         "signature_hash": "a34f4f7f16a11681",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.__init__:c81358ffd8e06ed7",
@@ -266154,7 +266253,7 @@
         "line": 304,
         "end_line": 311,
         "signature_hash": "0ccefd36a1d84c95",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.add:613e2212b2e48a98",
@@ -266164,7 +266263,7 @@
         "line": 313,
         "end_line": 320,
         "signature_hash": "d7c5407c0e255403",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.candidates:f81b68e78491b8ab",
@@ -266174,7 +266273,7 @@
         "line": 322,
         "end_line": 338,
         "signature_hash": "dc5bf526b810ab22",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:MatchedEnvelopeGate.comparable:98a82eb15145d6d0",
@@ -266184,7 +266283,7 @@
         "line": 67,
         "end_line": 73,
         "signature_hash": "4114a3d800af3df6",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:NativeRouterAuthority.execute:fe98880c6e0769ce",
@@ -266194,7 +266293,7 @@
         "line": 408,
         "end_line": 410,
         "signature_hash": "4198b1fe1afee110",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:P0IdentityGate.admit:45aa965e72c98b79",
@@ -266204,7 +266303,7 @@
         "line": 53,
         "end_line": 54,
         "signature_hash": "8d49b768f01d120e",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:PageCacheStateGate.classify:3a12de65c3b25d7e",
@@ -266214,7 +266313,7 @@
         "line": 394,
         "end_line": 395,
         "signature_hash": "6ffa62b796d6415d",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:PrefetchWasteGuard.admit:eb74b7197ae51d15",
@@ -266224,7 +266323,7 @@
         "line": 421,
         "end_line": 422,
         "signature_hash": "55a4915a4c9306b4",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:RetrievalReceipt.build:7a709dbd7a8ff430",
@@ -266234,7 +266333,7 @@
         "line": 370,
         "end_line": 373,
         "signature_hash": "3d87cd34f6a7301b",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:RetrievalReceipt.valid_for:ee8ceb67d44db832",
@@ -266244,7 +266343,7 @@
         "line": 383,
         "end_line": 389,
         "signature_hash": "48582991285079af",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:RetrievalReceipt.verify:dd3c71274fc5c637",
@@ -266254,7 +266353,7 @@
         "line": 375,
         "end_line": 381,
         "signature_hash": "771daa533e2dbc3d",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:RouterPreservingPrefetch.plan:847ad12433cb13e8",
@@ -266264,7 +266363,7 @@
         "line": 400,
         "end_line": 403,
         "signature_hash": "ada276d6c17cd09b",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.__init__:bd5c8e8bfe9afb3b",
@@ -266274,7 +266373,7 @@
         "line": 196,
         "end_line": 197,
         "signature_hash": "4f4a8036e78d6320",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.__len__:54567014c693dd1b",
@@ -266284,7 +266383,7 @@
         "line": 211,
         "end_line": 212,
         "signature_hash": "faa6d593407c8ebc",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.append:8c7f338aa8696529",
@@ -266294,7 +266393,7 @@
         "line": 199,
         "end_line": 201,
         "signature_hash": "2e53c60b55f3c71a",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.restore:863f877e66eb088a",
@@ -266304,7 +266403,7 @@
         "line": 203,
         "end_line": 209,
         "signature_hash": "aef32e9c3a0d0cf6",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:StateHandleLease.close:35f836f72ab44517",
@@ -266314,7 +266413,7 @@
         "line": 133,
         "end_line": 134,
         "signature_hash": "818fdb66f3084fa5",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:StateHandleLease.valid:064603f28d445ef3",
@@ -266324,7 +266423,7 @@
         "line": 129,
         "end_line": 131,
         "signature_hash": "f3af4d59f005bd8f",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:StorageTierPlacement.choose:26e2230621001c49",
@@ -266334,7 +266433,7 @@
         "line": 441,
         "end_line": 443,
         "signature_hash": "f61b81eb3f4dd7b1",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:TierEnergyAdmission.admit:36c0f784f856fa0d",
@@ -266344,7 +266443,7 @@
         "line": 435,
         "end_line": 436,
         "signature_hash": "120ce88bb1e0b5ba",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.__init__:27f5c56529186754",
@@ -266354,7 +266453,7 @@
         "line": 263,
         "end_line": 264,
         "signature_hash": "3d77650513b79756",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.add:52107c1054829de1",
@@ -266364,7 +266463,7 @@
         "line": 266,
         "end_line": 267,
         "signature_hash": "e14763350132af10",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.lookup:7396c011f140ba84",
@@ -266374,7 +266473,7 @@
         "line": 269,
         "end_line": 270,
         "signature_hash": "6e3c3a145fb4e998",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:VersionRangeGate._v:2f31e4391daa3028",
@@ -266384,7 +266483,7 @@
         "line": 78,
         "end_line": 84,
         "signature_hash": "02faebd7bdfe84fd",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:VersionRangeGate.admit:e8a58590cf8ec113",
@@ -266394,7 +266493,7 @@
         "line": 87,
         "end_line": 91,
         "signature_hash": "542a48fff9e6e7b6",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#method:WindowAwareBudget.bytes:e0d0f9913f151ec0",
@@ -266404,7 +266503,7 @@
         "line": 415,
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
-        "file_digest8": "b8e6e91c3558457f"
+        "file_digest8": "d0052577122fa0dd"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -267657,8 +267756,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "2742cb4a3f99d10e6685b258fd0e86d3",
+    "payload_hash": "387907b0e750b7020bd4a909582f3077"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,15 +267770,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1650,
+      "bytes": 26485735,
+      "tokens_est": 6611775,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1004,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -268367,15 +268466,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1650,
+    "total_bytes": 26485735,
+    "text_tokens_est": 6611775,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1004,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -423165,6 +423264,56 @@
         "end_line": 145,
         "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_missing_source_exit_rejected:b45c0089c53e6abb",
         "signature_hash": "6077ba9b80f59a19"
+      }
+    ],
+    "CumulativeEnergyBudgetTests": [
+      {
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 56,
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#class:CumulativeEnergyBudgetTests:36affb5f0caaec39",
+        "signature_hash": "4d470e4bd99908b5"
+      }
+    ],
+    "CumulativeEnergyBudgetTests.tier": [
+      {
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.tier:89404d224fcb2b96",
+        "signature_hash": "34c7f7aa59becd37"
+      }
+    ],
+    "CumulativeEnergyBudgetTests.test_repeated_prefetches_share_one_run_wide_energy_budget": [
+      {
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 28,
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.test_repeated_prefetches_share_one_run_wide_energy_budget:f2bffadac1093edc",
+        "signature_hash": "04fb73482a4d4422"
+      }
+    ],
+    "CumulativeEnergyBudgetTests.test_exact_run_wide_budget_can_be_fully_consumed": [
+      {
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 43,
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.test_exact_run_wide_budget_can_be_fully_consumed:3e8221444cae90c1",
+        "signature_hash": "f24e031306ffad47"
+      }
+    ],
+    "CumulativeEnergyBudgetTests.test_demand_miss_energy_does_not_spend_speculation_budget": [
+      {
+        "file": "tests/test_frontier27_cumulative_energy.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 56,
+        "semantic_id": "tests/test_frontier27_cumulative_energy.py#method:CumulativeEnergyBudgetTests.test_demand_miss_energy_does_not_spend_speculation_budget:8bf188876968f49e",
+        "signature_hash": "3a71d18c76f99a42"
       }
     ],
     "T": [
