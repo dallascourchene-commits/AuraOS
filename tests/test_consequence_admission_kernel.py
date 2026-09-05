@@ -56,6 +56,16 @@ class KernelTests(unittest.TestCase):
     def test_stale_source_exit_holds(self):
         self.assertEqual(self.assess(source_exit=source(False)).decision, Decision.HOLD_STALE_SOURCE)
 
+    def test_malformed_omega8_value_fails_closed(self):
+        vals = list(ready_vector().omega8); vals[2] = 99
+        with self.assertRaises(AdmissionError):
+            ConsequenceVector(tuple(vals))
+
+    def test_plain_int_even_valid_domain_fails_closed(self):
+        vals = list(ready_vector().omega8); vals[2] = 2
+        with self.assertRaises(AdmissionError):
+            ConsequenceVector(tuple(vals))
+
     def test_dependency_debt_noncompensatory(self):
         r = self.assess(unresolved_dependencies=("scope_lift_gate", "unrelated"))
         self.assertEqual(r.decision, Decision.HOLD_DEPENDENCY_DEBT)
@@ -142,6 +152,10 @@ class SuccessionTests(unittest.TestCase):
 
     def test_missing_source_exit_rejected(self):
         e = ReadjudicationEnvelope("P", "c", "pol", SourceExit("", "", "", "", True), (), (), (), "r")
+        with self.assertRaises(AdmissionError): e.validate()
+
+    def test_stale_source_exit_rejected(self):
+        e = ReadjudicationEnvelope("P", "c", "pol", source(False), (), (), (), "r")
         with self.assertRaises(AdmissionError): e.validate()
 
 
