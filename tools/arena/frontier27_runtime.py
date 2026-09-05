@@ -546,8 +546,12 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            remaining_energy = max(0.0, self.e - speculative_energy)
-            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, remaining_energy)
+            plan_energy = speculative_bytes / 1e9 * self.t.joules_per_gb
+            energy_ok = (
+                bool(missing_plan)
+                and speculative_bytes <= self.t.capacity_bytes
+                and speculative_energy + plan_energy <= self.e + 1e-12
+            )
             if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
                 for x in missing_plan:
                     transfer_energy = self.size / 1e9 * self.t.joules_per_gb
