@@ -48,6 +48,18 @@ The security campaign defines expected validity directly from the generated sour
 
 These are software-level/synthetic efficiency measurements; they do not substitute for owner-host GLM-5.3 profiling or real device throughput/energy measurements.
 
+## Canonical proof receipt
+
+The benchmark emits `AURA-FRONTIER27-PROOF-RECEIPT-v1`. The receipt separates three identities that must not be conflated:
+
+- `source_head` — the exact Git source generation observed by the proof runner.
+- `input_root` — a strict-JSON digest of the declared benchmark schema, seed, workload sizes, retrieval parameters, offload envelope, currentness fixture, snapshot fixture, and security-case count.
+- `result_root` — a strict-JSON digest of deterministic benchmark consequences only. Environment-sensitive retrieval wall-clock observations are retained in the JSON report but excluded from this root.
+
+`receipt_digest` binds the receipt schema, exact source head, input root, and deterministic result root. The threshold checker independently recomputes all three roots and can require `FRONTIER27_EXPECTED_SOURCE_HEAD` to equal the receipt source exactly. Missing receipts, source drift, input drift, deterministic-result tampering, receipt tampering, or authority widening fail closed. Wall-clock variation alone does not invalidate a deterministic proof receipt.
+
+The receipt is explicitly `D0_NONPROMOTING`: exact source identity and reproducibility evidence do not grant merge, deployment, model-provider, physical-performance, or Gate10 authority.
+
 ## Hosted proof identity
 
 The proof workflow pins `actions/checkout`, `actions/setup-python`, and `actions/upload-artifact` to immutable commit SHAs. On pull requests it checks out the exact `pull_request.head.sha` (and `github.sha` on push) and verifies `git rev-parse HEAD` equals that expected identity before compilation, tests or benchmarks run. A hosted PASS is therefore bound to the explicit semantic checkout used by the proof job rather than being inferred from an implicit pull-request merge ref.

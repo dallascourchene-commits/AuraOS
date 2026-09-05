@@ -1,3 +1,4 @@
+import copy
 import math
 import os
 import sys
@@ -6,10 +7,19 @@ from dataclasses import replace
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(ROOT, "tools", "arena"))
+sys.path.insert(0, os.path.join(ROOT, "benchmarks"))
 from frontier27_runtime import *
+import benchmark_frontier27 as bench
+import check_frontier27_thresholds as checker
 
 
 class T(unittest.TestCase):
+    PROOF_HEAD = "a" * 40
+
+    @classmethod
+    def setUpClass(cls):
+        cls.proof_result = bench.run_campaign(cls.PROOF_HEAD)
+
     def test_00_manifest(self): self.assertEqual((len(FRONTIER_27), len(set(FRONTIER_27))), (27, 27))
     def test_01_hard_false(self): self.assertFalse(HardFalseSecurityGate.admit(source_audited=True, runtime_hard_false=False, remote_code_widening=False))
     def test_02_hybrid_index(self):
@@ -113,6 +123,41 @@ class T(unittest.TestCase):
 
     def test_42_security_campaign_baseline_has_no_false_admits_or_valid_rejections(self):
         result=security_campaign(1000); self.assertEqual(result["after_false_admits"],0); self.assertEqual(result["valid_rejected"],0)
+
+    def test_43_proof_receipt_is_deterministic_and_source_bound(self):
+        ok, errors = bench.verify_proof_receipt(self.proof_result, self.PROOF_HEAD)
+        self.assertTrue(ok, errors)
+        repeated = bench.run_campaign(self.PROOF_HEAD)
+        self.assertEqual(self.proof_result["proof_receipt"], repeated["proof_receipt"])
+
+    def test_44_wall_time_observations_are_outside_semantic_root(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["retrieval"]["before"]["wall_s"] += 999.0
+        altered["retrieval"]["after"]["query_wall_s"] += 999.0
+        altered["retrieval"]["after"]["index_build_s"] += 999.0
+        altered["retrieval"]["after"]["amortized_wall_s"] += 999.0
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertTrue(ok, errors)
+        self.assertEqual(altered["proof_receipt"]["result_root"], self.proof_result["proof_receipt"]["result_root"])
+
+    def test_45_deterministic_result_tamper_breaks_receipt(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["offload"]["after"]["bytes"] += 1
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertFalse(ok)
+        self.assertIn("proof result_root mismatch", errors)
+
+    def test_46_expected_source_head_mismatch_breaks_receipt(self):
+        ok, errors = bench.verify_proof_receipt(self.proof_result, "b" * 40)
+        self.assertFalse(ok)
+        self.assertIn("proof source_head does not match expected source head", errors)
+
+    def test_47_checker_requires_and_recomputes_proof_receipt(self):
+        self.assertEqual(checker.validate_result(self.proof_result, self.PROOF_HEAD), [])
+        missing = copy.deepcopy(self.proof_result)
+        missing.pop("proof_receipt")
+        failures = checker.validate_result(missing, self.PROOF_HEAD)
+        self.assertTrue(any(key == "proof_receipt" for key, _, _ in failures))
 
 
 if __name__ == "__main__": unittest.main()
