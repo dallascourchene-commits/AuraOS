@@ -15,7 +15,7 @@ class T(unittest.TestCase):
     def test_02_hybrid_index(self):
         i = HybridIndexBridge(2); i.add("a", "alpha beta", (1, 2, 3)); self.assertTrue(i.candidates("alpha beta", 64))
     def test_03_export_receipt(self):
-        r = ExportReceipt.build({"x": 1}, ["a"], "g"); self.assertTrue(r.reusable(["a"], "g")); self.assertFalse(r.reusable(["b"], "g"))
+        payload = {"x": 1}; r = ExportReceipt.build(payload, ["a"], "g"); self.assertTrue(r.reusable(["a"], "g", payload=payload)); self.assertFalse(r.reusable(["b"], "g", payload=payload)); self.assertFalse(r.reusable(["a"], "g"))
     def test_04_typed_edges(self):
         g = TypedGraphEdges(); g.add(TypedEdge("a", "r", "b", "p", 1)); self.assertEqual(g.lookup("a", "r")[0].target, "b")
     def test_05_native_router(self): self.assertEqual(NativeRouterAuthority.execute([1], [9]), (1,))
@@ -68,7 +68,7 @@ class T(unittest.TestCase):
         self.assertFalse(HardGatePin.admit({})); self.assertFalse(HardGatePin.admit({"hard": True})); self.assertFalse(HardGatePin.admit({"hard": True, "identity": True, "extra": True})); self.assertFalse(HardGatePin.admit({"hard": 1, "identity": True}))
 
     def test_31_export_receipt_tamper_rejected(self):
-        r = ExportReceipt.build({"x": 1}, ["a"], "g"); self.assertFalse(replace(r, receipt_digest="0" * 64).reusable(["a"], "g")); self.assertFalse(replace(r, output_digest="f" * 64).reusable(["a"], "g")); self.assertFalse(r.reusable(["a"], "g", output_digest="e" * 64))
+        payload = {"x": 1}; r = ExportReceipt.build(payload, ["a"], "g"); self.assertFalse(replace(r, receipt_digest="0" * 64).reusable(["a"], "g", payload=payload)); self.assertFalse(replace(r, output_digest="f" * 64).reusable(["a"], "g", payload=payload)); self.assertFalse(r.reusable(["a"], "g", payload=payload, output_digest="e" * 64))
 
     def test_32_retrieval_receipt_tamper_and_context_rejected(self):
         r = RetrievalReceipt.build("q", ["a"], "g"); self.assertFalse(replace(r, receipt_digest="0" * 64).valid_for("q", ["a"], "g")); self.assertFalse(r.valid_for("other", ["a"], "g")); self.assertFalse(r.valid_for("q", ["b"], "g"))
@@ -90,13 +90,13 @@ class T(unittest.TestCase):
     def test_37_non_finite_canonical_values_fail_closed(self):
         for value in (float("nan"), float("inf"), float("-inf")):
             with self.subTest(value=value):
-                with self.assertRaises(ValueError):
-                    digest({"value": value})
-                with self.assertRaises(ValueError):
-                    ExportReceipt.build({"value": value}, ["a"], "g")
+                with self.assertRaises(ValueError): digest({"value": value})
+                with self.assertRaises(ValueError): ExportReceipt.build({"value": value}, ["a"], "g")
                 ring = SnapshotRing(1)
-                with self.assertRaises(ValueError):
-                    ring.append(0, {"value": value})
+                with self.assertRaises(ValueError): ring.append(0, {"value": value})
+
+    def test_38_forged_self_consistent_export_receipt_requires_source_truth(self):
+        fake_output = "f" * 64; dep_root = digest(sorted(["a"])); forged = ExportReceipt(fake_output, dep_root, "g", digest([fake_output, dep_root, "g"])); self.assertTrue(forged.verify()); self.assertFalse(forged.reusable(["a"], "g")); self.assertFalse(forged.reusable(["a"], "g", payload={"x": 1}))
 
 
 if __name__ == "__main__": unittest.main()
