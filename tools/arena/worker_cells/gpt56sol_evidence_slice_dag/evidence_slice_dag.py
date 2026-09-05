@@ -47,6 +47,15 @@ class Witness:
     d0: bool
     witness_root: str
 
+def witness_body(w: Witness):
+    return {'node_id': w.node_id, 'input_root': w.input_root, 'output_root': w.output_root,
+            'generation': w.generation, 'current': w.current, 'verified': w.verified, 'd0': w.d0}
+
+def verify_witness(w: Witness) -> bool:
+    if type(w.current) is not bool or type(w.verified) is not bool or type(w.d0) is not bool:
+        return False
+    return w.witness_root == digest(witness_body(w))
+
 @dataclass(frozen=True)
 class RecomputePlan:
     changed_roots: tuple[str, ...]
@@ -114,6 +123,8 @@ class EvidenceDag:
         for node_id, w in witnesses.items():
             if w.node_id != node_id:
                 raise DagError('WITNESS_ID_MISMATCH')
+            if not verify_witness(w):
+                raise DagError(f'INVALID_WITNESS_ROOT:{node_id}')
         invalid = self.descendants(changed)
         reusable = set(self.nodes) - invalid
         for node_id in reusable:
@@ -143,10 +154,11 @@ class EvidenceDag:
         return RecomputePlan(changed, tuple(sorted(invalid)), tuple(sorted(reusable)), order, keys, decision, digest(body))
 
 
-def witness_for(node_id: str, input_root: str, output_root: str, generation='g1') -> Witness:
-    body = {'node_id': node_id, 'input_root': input_root, 'output_root': output_root,
-            'generation': generation, 'current': True, 'verified': True, 'd0': True}
-    return Witness(node_id, input_root, output_root, generation, True, True, True, digest(body))
+def witness_for(node_id: str, input_root: str, output_root: str, generation='g1', current=True, verified=True, d0=True) -> Witness:
+    if type(current) is not bool or type(verified) is not bool or type(d0) is not bool:
+        raise DagError('INVALID_WITNESS_BOOL')
+    provisional = Witness(node_id, input_root, output_root, generation, current, verified, d0, '')
+    return Witness(node_id, input_root, output_root, generation, current, verified, d0, digest(witness_body(provisional)))
 
 
 def demo_dag() -> EvidenceDag:
