@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, replace
-from decimal import Decimal
+from fractions import Fraction
 from hashlib import sha256
 import json
 import math
@@ -35,9 +35,9 @@ def _finite_number(value, name: str, *, minimum: float = 0.0) -> float:
         raise CostReceiptError(f"INVALID_NUMBER:{name}")
     return out
 
-def _decimal_number(value, name: str) -> Decimal:
+def _exact_number(value, name: str) -> Fraction:
     _finite_number(value, name)
-    return Decimal(str(value))
+    return Fraction(value) if type(value) is int else Fraction.from_float(value)
 
 @dataclass(frozen=True)
 class RouteEvent:
@@ -143,8 +143,8 @@ def envelope_id(envelope: CostEnvelope) -> str:
 def validate_transfers(events: Sequence[RouteEvent], transfers: Sequence[TransferCharge], envelope: CostEnvelope) -> None:
     validate_route_events(events); validate_envelope(envelope)
     by_sequence = {e.sequence: e for e in events}
-    seen_ids: set[str] = set(); speculative_spent = Decimal(0)
-    speculative_budget = _decimal_number(envelope.speculative_energy_budget_j, "speculative_energy_budget_j")
+    seen_ids: set[str] = set(); speculative_spent = Fraction(0)
+    speculative_budget = _exact_number(envelope.speculative_energy_budget_j, "speculative_energy_budget_j")
     for expected, charge in enumerate(transfers, 1):
         if not isinstance(charge.transfer_id, str) or not charge.transfer_id:
             raise CostReceiptError("INVALID_TRANSFER_ID")
@@ -168,7 +168,7 @@ def validate_transfers(events: Sequence[RouteEvent], transfers: Sequence[Transfe
             raise CostReceiptError("SPECULATIVE_TRANSFER_MUST_TARGET_FUTURE_EVENT")
         _strict_int(charge.bytes_moved, "transfer.bytes", minimum=1)
         _finite_number(charge.modeled_time_s, "transfer.modeled_time_s")
-        energy = _decimal_number(charge.modeled_energy_j, "transfer.modeled_energy_j")
+        energy = _exact_number(charge.modeled_energy_j, "transfer.modeled_energy_j")
         if charge.kind == "SPECULATIVE":
             speculative_spent += energy
             if speculative_spent > speculative_budget:
@@ -178,10 +178,10 @@ def transfer_root(events: Sequence[RouteEvent], transfers: Sequence[TransferChar
     validate_transfers(events, transfers, envelope)
     return _digest([t.canonical() for t in transfers])
 
-def _sum_energy_decimal(transfers: Sequence[TransferCharge], kind: str | None = None) -> Decimal:
+def _sum_energy_exact(transfers: Sequence[TransferCharge], kind: str | None = None) -> Fraction:
     return sum(
-        (_decimal_number(t.modeled_energy_j, "transfer.modeled_energy_j") for t in transfers if kind is None or t.kind == kind),
-        Decimal(0),
+        (_exact_number(t.modeled_energy_j, "transfer.modeled_energy_j") for t in transfers if kind is None or t.kind == kind),
+        Fraction(0),
     )
 
 def _sum_fields(transfers: Sequence[TransferCharge], kind: str | None = None) -> tuple[int, float, float, int]:
@@ -189,7 +189,7 @@ def _sum_fields(transfers: Sequence[TransferCharge], kind: str | None = None) ->
     return (
         sum(t.bytes_moved for t in xs),
         math.fsum(float(t.modeled_time_s) for t in xs),
-        float(_sum_energy_decimal(xs)),
+        float(_sum_energy_exact(xs)),
         len(xs),
     )
 
@@ -198,14 +198,14 @@ def compile_receipt(events: Sequence[RouteEvent], transfers: Sequence[TransferCh
     total_b, total_t, total_e, total_n = _sum_fields(transfers)
     demand_b, demand_t, demand_e, demand_n = _sum_fields(transfers, "DEMAND")
     spec_b, spec_t, spec_e, spec_n = _sum_fields(transfers, "SPECULATIVE")
-    budget_decimal = _decimal_number(envelope.speculative_energy_budget_j, "speculative_energy_budget_j")
-    spec_decimal = _sum_energy_decimal(transfers, "SPECULATIVE")
-    remaining_decimal = max(Decimal(0), budget_decimal - spec_decimal)
+    budget_exact = _exact_number(envelope.speculative_energy_budget_j, "speculative_energy_budget_j")
+    spec_exact = _sum_energy_exact(transfers, "SPECULATIVE")
+    remaining_exact = max(Fraction(0), budget_exact - spec_exact)
     base = CostReceipt(
         SCHEMA, envelope.source_head, envelope_id(envelope), event_root(events), transfer_root(events, transfers, envelope),
         len(events), total_n, demand_n, spec_n, total_b, demand_b, spec_b, total_t, demand_t, spec_t,
         total_e, demand_e, spec_e, float(envelope.speculative_energy_budget_j),
-        float(remaining_decimal), False, False, ""
+        float(remaining_exact), False, False, ""
     )
     return replace(base, result_root=_digest(base.canonical_without_result_root()))
 
