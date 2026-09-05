@@ -114,5 +114,10 @@ class T(unittest.TestCase):
     def test_42_security_campaign_baseline_has_no_false_admits_or_valid_rejections(self):
         result=security_campaign(1000); self.assertEqual(result["after_false_admits"],0); self.assertEqual(result["valid_rejected"],0)
 
+    def test_43_prefetch_energy_budget_is_cumulative(self):
+        size=10**9; tier=StorageTier("ssd",4*10**9,10**12,1.0)
+        result=FrontierOffload(size,8,tier,1.0,1.5).run([[1],[2]],[[1],[2]])
+        self.assertEqual(result["prefetch_transfers"],1)
+
 
 if __name__ == "__main__": unittest.main()

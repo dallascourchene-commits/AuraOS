@@ -538,7 +538,7 @@ class FrontierOffload:
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
-        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
+        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0; remaining_prefetch_energy = self.e
         for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
@@ -546,8 +546,10 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, self.e)
+            speculative_energy = speculative_bytes / 1e9 * self.t.joules_per_gb
+            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, remaining_prefetch_energy)
             if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
+                remaining_prefetch_energy = max(0.0, remaining_prefetch_energy - speculative_energy)
                 for x in missing_plan:
                     self.r.prefetch(x); prefetch_transfers += 1
                     a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
