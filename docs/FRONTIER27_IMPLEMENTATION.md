@@ -6,19 +6,19 @@ This branch implements the 27 highest-leverage mechanism families selected by th
 
 1. HardFalseSecurityGate — hard-false runtime security admission.
 2. HybridIndexBridge — approximate HDC candidate routing plus an exact lexical backstop so retrieval efficiency cannot drop benchmark-declared relevant records.
-3. ExportReceipt — output/dependency/generation-bound export receipts with receipt-digest verification before reuse.
+3. ExportReceipt — output/dependency/generation-bound export receipts with receipt-digest verification and mandatory candidate-payload rehash before reuse; reuse without source payload fails closed.
 4. TypedGraphEdges — relation/provenance/generation-aware graph edges.
 5. NativeRouterAuthority — transfer prediction cannot change native execution route.
 6. RouterPreservingPrefetch — predictions only schedule allowed transfers.
 7. PageCacheStateGate — cold/warm/unknown cache state is explicit.
 8. VersionRangeGate — full-string semantic-version parsing; malformed, unknown and incompatible generations fail closed.
-9. SnapshotRing — bounded deterministic state checkpoints.
+9. SnapshotRing — bounded restorable JSON-canonical state checkpoints with digest verification on restore.
 10. HotColdCache — hot LRU overlay preserving canonical cold records.
 11. StorageTierPlacement — fastest feasible tier under capacity/energy constraints.
 12. StateHandleLease — owner/generation/expiry/closed-state typed resource handles.
 13. WindowAwareBudget — speculative bytes bounded by measured overlap window.
 14. PrefetchWasteGuard — byte-savings gate instead of hit-count optimism.
-15. TierEnergyAdmission — typed energy budget per storage transfer.
+15. TierEnergyAdmission — typed energy budget per storage transfer; aggregate speculative prefetch must satisfy the configured energy budget before execution.
 16. UsefulByteAccounting — useful/wasted/missed bytes separated.
 17. ExpertResidencyLRU — deterministic bounded expert residency/eviction.
 18. PLEExpertSeparation — separate PLE/n-gram and MoE expert residency classes.
@@ -32,13 +32,19 @@ This branch implements the 27 highest-leverage mechanism families selected by th
 26. CurrentnessInvalidator — dependency-indexed selective wake/reproof, replacement rebinding, and explicit exact-dependency reproof completion.
 27. HDCSemanticKey — deterministic semantic key for candidate routing only.
 
+Identity-bearing canonicalization uses strict JSON and rejects non-finite numeric values (`NaN`, positive infinity, negative infinity) rather than hashing non-portable representations.
+
 ## Benchmark scope
 
-`benchmarks/benchmark_frontier27.py` compares a simple pre-frontier reference path against the Frontier-27 composition on deterministic synthetic workloads. It measures transfer bytes, modeled transfer latency and energy, cache-hit rate, retrieval candidate examinations and wall time, selective reproof fanout, bounded snapshot retention, and blocked unproven/security cases.
+`benchmarks/benchmark_frontier27.py` compares a simple pre-frontier reference path against the Frontier-27 composition on deterministic synthetic workloads. It measures transfer bytes, modeled transfer latency and energy, cache-hit rate, actual prefetch transfer count, retrieval candidate examinations and wall time, selective reproof fanout, bounded snapshot retention, and security admission outcomes against an independent raw-input validity oracle.
 
-The offload before/after benchmark uses the same SSD source bandwidth and joules/GB on both sides. The after path now uses a conservative **serialized-all-transfers** model: every actual prefetch transfer contributes bytes, energy and transfer time. No overlap credit is claimed; physical overlap must be established separately by owner-host profiling.
+The offload before/after benchmark uses the same SSD source bandwidth and joules/GB on both sides. The after path uses a conservative **serialized-all-transfers** model: every actual prefetch transfer contributes bytes, energy and transfer time. No overlap credit is claimed; physical overlap must be established separately by owner-host profiling.
+
+The synthetic overlap window is 10 ms so at least one 8 MiB expert can be admitted at 1.2 GB/s. The threshold checker requires `prefetch_transfers > 0`; therefore the hosted proof cannot claim a prefetch-path result while exercising only LRU residency. The configured speculative energy budget is independently enforced before a prefetch plan is admitted.
 
 Retrieval candidate reduction receives efficiency credit only when the full-scan oracle's benchmark-declared relevant set is preserved. The threshold checker therefore requires **recall = 1.0 and zero false negatives** in addition to the candidate-reduction floor.
+
+The security campaign defines expected validity directly from the generated source-audit, runtime-hard-false, remote-code-widening and identity inputs, then compares the gates against that independent oracle. The threshold checker requires zero invalid false-admits and zero valid rejections; gate outputs cannot redefine which cases count as invalid.
 
 These are software-level/synthetic efficiency measurements; they do not substitute for owner-host GLM-5.3 profiling or real device throughput/energy measurements.
 
