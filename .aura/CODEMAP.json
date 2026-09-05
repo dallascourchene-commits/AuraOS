@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788588004,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1645,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -919,6 +920,8 @@
       "aura_workspace/outbox/WO-UNIVERSAL-GLOBAL-BENCHMARK-DAEMON-EXHAUSTIVE.telemetry.json",
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/benchmark_frontier27.py",
+      "benchmarks/check_frontier27_thresholds.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -1088,6 +1091,7 @@
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md",
+      "docs/FRONTIER27_IMPLEMENTATION.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
       "docs/PR_KIT.md",
@@ -1622,6 +1626,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1631,6 +1636,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/frontier27_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1666,6 +1672,8 @@
       "aura_spatial_importers/ply.py",
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/benchmark_frontier27.py",
+      "benchmarks/check_frontier27_thresholds.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
@@ -1745,9 +1753,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1761,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1645,
+      "bytes": 26439903,
+      "tokens_est": 6600317,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1001,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3154,6 +3160,14 @@
         "line": 26,
         "end_line": 36,
         "semantic_id": "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py#function:main:86710034f63daf96",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "benchmarks/benchmark_frontier27.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 42,
+        "semantic_id": "benchmarks/benchmark_frontier27.py#function:main:502e4c75183c2314",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -20123,6 +20137,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
         "signature_hash": "bd189b17ea870e50"
+      },
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
+        "signature_hash": "0bff111c4fc1adcb"
       }
     ],
     "_runtime_binding_digest": [
@@ -74879,6 +74901,14 @@
         "end_line": 100,
         "semantic_id": "aura_refactor_state_identity.py#function:tokens:49602440db545cec",
         "signature_hash": "cc4ec4376c52d132"
+      },
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tools/arena/frontier27_runtime.py#function:tokens:03171f6fc21a863b",
+        "signature_hash": "de5ee57f32fcd478"
       }
     ],
     "history_events": [
@@ -96541,6 +96571,26 @@
         "end_line": 23,
         "semantic_id": "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py#function:materialize:08f92f44dce31c1a",
         "signature_hash": "b0e27804875b66c3"
+      }
+    ],
+    "routes": [
+      {
+        "file": "benchmarks/benchmark_frontier27.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "benchmarks/benchmark_frontier27.py#function:routes:b2db99ab0887e9f4",
+        "signature_hash": "fdd1e9bd9a5a8365"
+      }
+    ],
+    "retrieval": [
+      {
+        "file": "benchmarks/benchmark_frontier27.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 29,
+        "semantic_id": "benchmarks/benchmark_frontier27.py#function:retrieval:3fb0932639b34b8d",
+        "signature_hash": "52e064a4a926d241"
       }
     ],
     "_diff": [
@@ -156881,6 +156931,306 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "T": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 34,
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.test_00_manifest": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_00_manifest:0d2cc562a8ba14a1",
+        "signature_hash": "7ce306a4bbd045cc"
+      }
+    ],
+    "T.test_01": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_01:9255863242d8707a",
+        "signature_hash": "6554ad499ce341ab"
+      }
+    ],
+    "T.test_02": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_02:0c0c41d26f0c4511",
+        "signature_hash": "814be5d3a59acfb2"
+      }
+    ],
+    "T.test_03": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_03:8bfc653d2ed2bcfb",
+        "signature_hash": "f39d37b917eec697"
+      }
+    ],
+    "T.test_04": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_04:2e7c0f57f7789f95",
+        "signature_hash": "d3d0dd167be70495"
+      }
+    ],
+    "T.test_05": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_05:fd593813b47cfa19",
+        "signature_hash": "2b29504208bab0b1"
+      }
+    ],
+    "T.test_06": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_06:80bd26fbd60a0b17",
+        "signature_hash": "e2f95fe71f33bce8"
+      }
+    ],
+    "T.test_07": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_07:198dad5587a46b75",
+        "signature_hash": "07f416b5ab9885d5"
+      }
+    ],
+    "T.test_08": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_08:2feb500c96310244",
+        "signature_hash": "05300ad80f3cce18"
+      }
+    ],
+    "T.test_09": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_09:1cb614c7d2e50643",
+        "signature_hash": "31703e855834592d"
+      }
+    ],
+    "T.test_10": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_10:266f5d08e8cfd7a2",
+        "signature_hash": "bdd17741d3a1dd9c"
+      }
+    ],
+    "T.test_11": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_11:5e1e957522587a50",
+        "signature_hash": "cc5855ff7cd217a0"
+      }
+    ],
+    "T.test_12": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_12:4f80e1f6cfb5e393",
+        "signature_hash": "ee0eb77e4022fb1b"
+      }
+    ],
+    "T.test_13": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_13:ea06fe20280a3d7c",
+        "signature_hash": "f2af948dcd9781f8"
+      }
+    ],
+    "T.test_14": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_14:7139cb5dbf3f4df9",
+        "signature_hash": "f661c707e4fb72f2"
+      }
+    ],
+    "T.test_15": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_15:20825ea005342dcc",
+        "signature_hash": "eeabd4fcc0c413eb"
+      }
+    ],
+    "T.test_16": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 22,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_16:438ebda769affc1c",
+        "signature_hash": "bdb6b3a353ae7696"
+      }
+    ],
+    "T.test_17": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_17:142e20f151f9b43b",
+        "signature_hash": "49b3fd41246844b4"
+      }
+    ],
+    "T.test_18": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 24,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_18:d40d864e7f2286c0",
+        "signature_hash": "b8c7220260df2e2b"
+      }
+    ],
+    "T.test_19": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_19:558dcf1aeef06bf2",
+        "signature_hash": "adf2eb4bc8a8ff1d"
+      }
+    ],
+    "T.test_20": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_20:80b153d53c989a0c",
+        "signature_hash": "2ba71008f62e9509"
+      }
+    ],
+    "T.test_21": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_21:80bf28f2f1b908e2",
+        "signature_hash": "05e032f6531416bb"
+      }
+    ],
+    "T.test_22": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_22:2c6941cb42573e4b",
+        "signature_hash": "401da7fe8f6aebc7"
+      }
+    ],
+    "T.test_23": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 29,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_23:22e0c764aa1347c8",
+        "signature_hash": "98e009c0f2c40400"
+      }
+    ],
+    "T.test_24": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 30,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_24:199f5f6e1a85e6c9",
+        "signature_hash": "7c21f9d1b1d7f036"
+      }
+    ],
+    "T.test_25": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 31,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_25:fb1ca550f05013bc",
+        "signature_hash": "17f2bd1b89deebcd"
+      }
+    ],
+    "T.test_26": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 32,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_26:8a0f611609e2a6fc",
+        "signature_hash": "a7af062f206bdc03"
+      }
+    ],
+    "T.test_27": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 33,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_27:967fe6eaaa04c8b7",
+        "signature_hash": "b1d4934b032f42c1"
+      }
+    ],
+    "T.test_28_security_campaign": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 34,
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_28_security_campaign:d91b472da6be4a2e",
+        "signature_hash": "0866f8116d4f2718"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157179,6 +157529,786 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "stable": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/frontier27_runtime.py#function:stable:4c11bb77b3afc1de",
+        "signature_hash": "6c4779cb279e35c8"
+      }
+    ],
+    "HardFalseSecurityGate": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 17,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HardFalseSecurityGate:d1abfe8d782b0b49",
+        "signature_hash": "c008b1411af62259"
+      }
+    ],
+    "HardFalseSecurityGate.admit": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HardFalseSecurityGate.admit:e3cb058dc98828ba",
+        "signature_hash": "1c1de9b54cd13940"
+      }
+    ],
+    "IdentityEnvelope": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:IdentityEnvelope:7c2512b1b0bee381",
+        "signature_hash": "2820f7c1df3fe336"
+      }
+    ],
+    "P0IdentityGate": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:P0IdentityGate:a59424a5653d10d3",
+        "signature_hash": "0dee444af72a312e"
+      }
+    ],
+    "P0IdentityGate.admit": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:P0IdentityGate.admit:45aa965e72c98b79",
+        "signature_hash": "8d49b768f01d120e"
+      }
+    ],
+    "PerformanceEnvelope": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:PerformanceEnvelope:1dc0b5e0e01bcf98",
+        "signature_hash": "ed92cd13773aa44f"
+      }
+    ],
+    "MatchedEnvelopeGate": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:MatchedEnvelopeGate:32e1d3fa824a90c8",
+        "signature_hash": "ece793dda9927e02"
+      }
+    ],
+    "MatchedEnvelopeGate.comparable": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:MatchedEnvelopeGate.comparable:98a82eb15145d6d0",
+        "signature_hash": "4114a3d800af3df6"
+      }
+    ],
+    "VersionRangeGate": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 41,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:VersionRangeGate:dfca3e1612dd06fc",
+        "signature_hash": "19ed0f12486eef75"
+      }
+    ],
+    "VersionRangeGate._v": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:VersionRangeGate._v:2f31e4391daa3028",
+        "signature_hash": "02faebd7bdfe84fd"
+      }
+    ],
+    "VersionRangeGate.admit": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:VersionRangeGate.admit:e8a58590cf8ec113",
+        "signature_hash": "542a48fff9e6e7b6"
+      }
+    ],
+    "CapabilityManifest": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
+        "signature_hash": "96b8fe62f34788c9"
+      }
+    ],
+    "CapabilityManifest.allows": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 46,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CapabilityManifest.allows:7ac4ba02433c0ce9",
+        "signature_hash": "548732631e08b441"
+      }
+    ],
+    "ComponentContract": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:ComponentContract:b16d04847007fed4",
+        "signature_hash": "f2d2fa1f25c0a919"
+      }
+    ],
+    "CompositionMembrane": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CompositionMembrane:455d3d1babb7a235",
+        "signature_hash": "9ce687e2ffcccb33"
+      }
+    ],
+    "CompositionMembrane.compose": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CompositionMembrane.compose:5331ee1be0962709",
+        "signature_hash": "a13733ab73bf29b4"
+      }
+    ],
+    "StateHandleLease": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:StateHandleLease:765458ca06527869",
+        "signature_hash": "5334887f9bd5373a"
+      }
+    ],
+    "StateHandleLease.valid": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:StateHandleLease.valid:064603f28d445ef3",
+        "signature_hash": "f3af4d59f005bd8f"
+      }
+    ],
+    "StateHandleLease.close": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 61,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:StateHandleLease.close:35f836f72ab44517",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "HardGatePin": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 65,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HardGatePin:ea0e35fe6491108c",
+        "signature_hash": "2690390ddbb7ff96"
+      }
+    ],
+    "HardGatePin.admit": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 65,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HardGatePin.admit:d633d4a9f6092902",
+        "signature_hash": "c68cc839bb5266f4"
+      }
+    ],
+    "ExportReceipt": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 73,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:ExportReceipt:5189d033105ce084",
+        "signature_hash": "7395df647a272d24"
+      }
+    ],
+    "ExportReceipt.build": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.build:790e4d7c7fc239ed",
+        "signature_hash": "483d3c86cf68055c"
+      }
+    ],
+    "ExportReceipt.reusable": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 73,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.reusable:6af82ab7d271b7b2",
+        "signature_hash": "ad79c55b9c449a6d"
+      }
+    ],
+    "SnapshotRing": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:SnapshotRing:2d8ec2a81cd633ae",
+        "signature_hash": "8d802e6adf633c33"
+      }
+    ],
+    "SnapshotRing.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 76,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.__init__:bd5c8e8bfe9afb3b",
+        "signature_hash": "4f4a8036e78d6320"
+      }
+    ],
+    "SnapshotRing.append": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 77,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.append:8c7f338aa8696529",
+        "signature_hash": "2e53c60b55f3c71a"
+      }
+    ],
+    "SnapshotRing.__len__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 78,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.__len__:54567014c693dd1b",
+        "signature_hash": "faa6d593407c8ebc"
+      }
+    ],
+    "CurrentnessInvalidator": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 86,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CurrentnessInvalidator:054b2d3224674b40",
+        "signature_hash": "7fce545f5e183f07"
+      }
+    ],
+    "CurrentnessInvalidator.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 81,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.__init__:ee8d28abf7b72b28",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "CurrentnessInvalidator.bind": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.bind:6bf67a59600a3365",
+        "signature_hash": "a801bcf0ee310039"
+      }
+    ],
+    "CurrentnessInvalidator.invalidate": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.invalidate:7eea77ef04d78ae2",
+        "signature_hash": "650c9f5aecfbe1a0"
+      }
+    ],
+    "CurrentnessInvalidator.current": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 86,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.current:92e76f0fe6235f1d",
+        "signature_hash": "714909359bc7dd03"
+      }
+    ],
+    "TypedEdge": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 89,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:TypedEdge:b4ab908fab937a9d",
+        "signature_hash": "ed73bb6b42fd746c"
+      }
+    ],
+    "TypedGraphEdges": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:TypedGraphEdges:d84bab094d7eaf87",
+        "signature_hash": "f0f4ce2b5dfcc6c6"
+      }
+    ],
+    "TypedGraphEdges.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 91,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.__init__:27f5c56529186754",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "TypedGraphEdges.add": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 92,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.add:52107c1054829de1",
+        "signature_hash": "e14763350132af10"
+      }
+    ],
+    "TypedGraphEdges.lookup": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 93,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.lookup:7396c011f140ba84",
+        "signature_hash": "6e3c3a145fb4e998"
+      }
+    ],
+    "CollisionBucket": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 99,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CollisionBucket:269792647939973b",
+        "signature_hash": "b14fea6946813579"
+      }
+    ],
+    "CollisionBucket.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 96,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.__init__:32f65b6d8da12fe0",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "CollisionBucket.put": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 97,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.put:8519eb4de08c371b",
+        "signature_hash": "f30fdf8ed9b952d0"
+      }
+    ],
+    "CollisionBucket.get": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 98,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.get:0a7e31acdea08fce",
+        "signature_hash": "a2e5419ad7f1b285"
+      }
+    ],
+    "CollisionBucket.identities": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 99,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.identities:26430685ff986dfa",
+        "signature_hash": "2f33852bac046b7a"
+      }
+    ],
+    "HDCSemanticKey": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 109,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HDCSemanticKey:f4bf9469efc632bd",
+        "signature_hash": "5eaced9dd092cda8"
+      }
+    ],
+    "HDCSemanticKey.encode": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 107,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HDCSemanticKey.encode:542519be0e5472c5",
+        "signature_hash": "cc9ef91207ff7fd5"
+      }
+    ],
+    "HDCSemanticKey.distance": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 109,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HDCSemanticKey.distance:a143b055b881f0eb",
+        "signature_hash": "af915a32dca91644"
+      }
+    ],
+    "HybridIndexBridge": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 117,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HybridIndexBridge:ea5b80b62e394ffc",
+        "signature_hash": "f11db3a18a94b5e6"
+      }
+    ],
+    "HybridIndexBridge.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 112,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.__init__:c81358ffd8e06ed7",
+        "signature_hash": "0ccefd36a1d84c95"
+      }
+    ],
+    "HybridIndexBridge.add": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 114,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.add:613e2212b2e48a98",
+        "signature_hash": "d7c5407c0e255403"
+      }
+    ],
+    "HybridIndexBridge.candidates": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 117,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.candidates:f81b68e78491b8ab",
+        "signature_hash": "dc5bf526b810ab22"
+      }
+    ],
+    "HotColdCache": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 119,
+        "end_line": 126,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HotColdCache:80c9877ee717f648",
+        "signature_hash": "1c342bf58fd8ac25"
+      }
+    ],
+    "HotColdCache.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 120,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HotColdCache.__init__:c0b13fd434efd086",
+        "signature_hash": "72020fcc351235dc"
+      }
+    ],
+    "HotColdCache.get": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 126,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HotColdCache.get:9195bd0139d178e8",
+        "signature_hash": "a34f4f7f16a11681"
+      }
+    ],
+    "RetrievalReceipt": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 129,
+        "end_line": 133,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:RetrievalReceipt:b4ad50deaac3a434",
+        "signature_hash": "d6df977fe745227c"
+      }
+    ],
+    "RetrievalReceipt.build": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 133,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:RetrievalReceipt.build:7a709dbd7a8ff430",
+        "signature_hash": "3d87cd34f6a7301b"
+      }
+    ],
+    "PageCacheStateGate": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:PageCacheStateGate:08bb343e41e0d5f4",
+        "signature_hash": "cfe0193df0c4aec1"
+      }
+    ],
+    "PageCacheStateGate.classify": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 137,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:PageCacheStateGate.classify:3a12de65c3b25d7e",
+        "signature_hash": "6ffa62b796d6415d"
+      }
+    ],
+    "RouterPreservingPrefetch": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 138,
+        "end_line": 140,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:RouterPreservingPrefetch:cc9a6398b903e21a",
+        "signature_hash": "0e6c2b25da2cfb8d"
+      }
+    ],
+    "RouterPreservingPrefetch.plan": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 140,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:RouterPreservingPrefetch.plan:847ad12433cb13e8",
+        "signature_hash": "ada276d6c17cd09b"
+      }
+    ],
+    "NativeRouterAuthority": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 141,
+        "end_line": 143,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:NativeRouterAuthority:f0b513527f242f37",
+        "signature_hash": "3c3324eaf7a42909"
+      }
+    ],
+    "NativeRouterAuthority.execute": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 143,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:NativeRouterAuthority.execute:fe98880c6e0769ce",
+        "signature_hash": "4198b1fe1afee110"
+      }
+    ],
+    "WindowAwareBudget": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 146,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:WindowAwareBudget:865e0d4aa3df2c60",
+        "signature_hash": "5c4dc2bef8c98844"
+      }
+    ],
+    "WindowAwareBudget.bytes": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 146,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:WindowAwareBudget.bytes:e0d0f9913f151ec0",
+        "signature_hash": "07e9da2822c60349"
+      }
+    ],
+    "PrefetchWasteGuard": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 147,
+        "end_line": 149,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:PrefetchWasteGuard:0c298dd0b0820fbe",
+        "signature_hash": "f33befbd812971b2"
+      }
+    ],
+    "PrefetchWasteGuard.admit": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 149,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:PrefetchWasteGuard.admit:eb74b7197ae51d15",
+        "signature_hash": "55a4915a4c9306b4"
+      }
+    ],
+    "StorageTier": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 152,
+        "end_line": 152,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:StorageTier:fd1614f61fb1d381",
+        "signature_hash": "00c4fa54d4dea76a"
+      }
+    ],
+    "TierEnergyAdmission": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 153,
+        "end_line": 155,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:TierEnergyAdmission:67f9db438244a99a",
+        "signature_hash": "07557f9e1cf9f63f"
+      }
+    ],
+    "TierEnergyAdmission.admit": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 155,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TierEnergyAdmission.admit:36c0f784f856fa0d",
+        "signature_hash": "120ce88bb1e0b5ba"
+      }
+    ],
+    "StorageTierPlacement": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 156,
+        "end_line": 159,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:StorageTierPlacement:cf6862979d68272f",
+        "signature_hash": "0a8c36d5497de620"
+      }
+    ],
+    "StorageTierPlacement.choose": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 159,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:StorageTierPlacement.choose:26e2230621001c49",
+        "signature_hash": "f61b81eb3f4dd7b1"
+      }
+    ],
+    "UsefulByteAccounting": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 162,
+        "end_line": 165,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
+        "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "UsefulByteAccounting.total": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 165,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:UsefulByteAccounting.total:8d9390f1fc4ee241",
+        "signature_hash": "b5a8100ebab79b52"
+      }
+    ],
+    "ExpertResidencyLRU": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "class",
+        "line": 167,
+        "end_line": 181,
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:ExpertResidencyLRU:25097573188b3e0b",
+        "signature_hash": "b24517ab382b0339"
+      }
+    ],
+    "ExpertResidencyLRU.__init__": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 168,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.__init__:518e07b04c637a3e",
+        "signature_hash": "7c467261b38d8808"
+      }
+    ],
+    "ExpertResidencyLRU.access": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 175,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.access:236b9f7a01cd5f15",
+        "signature_hash": "3614244069c79e5e"
+      }
+    ],
+    "ExpertResidencyLRU.resident": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 176,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.resident:319c15f2d000adcb",
+        "signature_hash": "2a5af01d4eb654a2"
+      }
+    ],
+    "ExpertResidencyLRU.prefetch": [
+      {
+        "file": "tools/arena/frontier27_runtime.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 181,
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.prefetch:c9a7b405535c5f4e",
+        "signature_hash": "42dadbccea95086c"
       }
     ],
     "_coordinates": [
@@ -158300,6 +159430,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -168415,6 +169546,59 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/frontier27-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1785,
+      "lines": 50,
+      "tokens_est": 447,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          35
+        ]
+      },
+      "topology": {},
+      "digest8": "f7fbd4ddce730844",
+      "vector": [
+        0.051323,
+        -0.247877,
+        -0.171439,
+        -0.014196,
+        -0.278452,
+        -0.186727,
+        0.129944,
+        -0.105921,
+        0.090633,
+        -0.145232,
+        -0.263164,
+        -0.191095,
+        0.219486,
+        -0.147416,
+        -0.21075,
+        0.042587,
+        -0.162703,
+        0.226037,
+        -0.046955,
+        0.13868,
+        -0.116841,
+        -0.162703,
+        0.236957,
+        -0.086266,
+        -0.186727,
+        -0.263164,
+        -0.228221,
+        0.101553,
+        0.132128,
+        -0.219486,
+        -0.278452,
+        0.046955
       ]
     },
     {
@@ -225631,6 +226815,100 @@
       ]
     },
     {
+      "path": "benchmarks/benchmark_frontier27.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3046,
+      "lines": 44,
+      "tokens_est": 762,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e44633b078a9103d",
+      "vector": [
+        0.259971,
+        0.073494,
+        0.218288,
+        -0.238032,
+        -0.159054,
+        -0.0713,
+        0.277522,
+        0.277522,
+        0.051555,
+        0.279716,
+        0.137115,
+        -0.031811,
+        0.036198,
+        0.143697,
+        -0.218288,
+        0.183186,
+        0.273134,
+        -0.036198,
+        -0.053749,
+        0.255583,
+        -0.073494,
+        -0.253389,
+        -0.060331,
+        0.020842,
+        0.12834,
+        0.077882,
+        0.268746,
+        0.268746,
+        -0.196349,
+        -0.038392,
+        -0.073494,
+        0.064719
+      ]
+    },
+    {
+      "path": "benchmarks/check_frontier27_thresholds.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 821,
+      "lines": 24,
+      "tokens_est": 206,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "58d484ba8a434456",
+      "vector": [
+        0.085599,
+        -0.189806,
+        0.095523,
+        -0.164995,
+        0.115372,
+        -0.246872,
+        -0.035976,
+        0.150108,
+        -0.194768,
+        -0.100485,
+        0.276645,
+        -0.147627,
+        -0.169957,
+        -0.22206,
+        0.028533,
+        0.239428,
+        -0.209655,
+        -0.08808,
+        0.098004,
+        0.093042,
+        -0.078155,
+        0.214617,
+        0.169957,
+        0.236947,
+        0.219579,
+        0.080636,
+        -0.224542,
+        -0.311381,
+        0.026052,
+        0.147627,
+        0.117853,
+        -0.306419
+      ]
+    },
+    {
       "path": "benchmarks/real_refactor_trial/plans.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -234329,6 +235607,53 @@
         -0.132771,
         0.115069,
         0.018967
+      ]
+    },
+    {
+      "path": "docs/FRONTIER27_IMPLEMENTATION.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3065,
+      "lines": 40,
+      "tokens_est": 753,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a923bb12918122cb",
+      "vector": [
+        -0.076441,
+        0.276364,
+        0.168171,
+        0.238732,
+        0.130538,
+        -0.168171,
+        0.147002,
+        0.194043,
+        0.28342,
+        -0.210507,
+        -0.264604,
+        0.12113,
+        0.198747,
+        0.074089,
+        -0.10937,
+        0.050569,
+        -0.048217,
+        -0.067033,
+        -0.01764,
+        0.010584,
+        -0.182283,
+        0.252844,
+        -0.24814,
+        0.027048,
+        -0.264604,
+        0.059977,
+        0.092905,
+        -0.055273,
+        -0.290476,
+        -0.022344,
+        -0.23638,
+        0.257548
       ]
     },
     {
@@ -262225,6 +263550,53 @@
       ]
     },
     {
+      "path": "tests/test_frontier27_runtime.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4057,
+      "lines": 37,
+      "tokens_est": 1015,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8b4e32eb48336d5d",
+      "vector": [
+        -0.029272,
+        -0.037636,
+        -0.085029,
+        -0.302478,
+        -0.026484,
+        0.179814,
+        -0.065514,
+        -0.282964,
+        0.232783,
+        0.079453,
+        -0.043211,
+        0.280176,
+        0.165875,
+        0.22442,
+        0.023696,
+        0.266237,
+        -0.129634,
+        -0.115695,
+        0.110119,
+        -0.179814,
+        0.037636,
+        -0.115695,
+        -0.085029,
+        0.037636,
+        -0.257873,
+        0.255086,
+        0.199329,
+        0.015333,
+        -0.073877,
+        -0.330357,
+        -0.154724,
+        0.288539
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +264017,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/arena/frontier27_runtime.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12081,
+      "lines": 224,
+      "tokens_est": 3021,
+      "symbol_count": 80,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "30e2a37459c744ef",
+      "vector": [
+        -0.0386,
+        0.190141,
+        0.055756,
+        -0.050037,
+        -0.270201,
+        0.075771,
+        0.107223,
+        0.121519,
+        0.19586,
+        0.047178,
+        0.087208,
+        0.027163,
+        0.347401,
+        -0.318808,
+        -0.021445,
+        0.041459,
+        0.050037,
+        -0.170126,
+        0.204438,
+        0.170126,
+        0.355979,
+        0.15583,
+        0.267342,
+        0.030022,
+        0.052896,
+        -0.052896,
+        0.267342,
+        0.23303,
+        -0.055756,
+        -0.264482,
+        -0.210156,
+        -0.064334
       ]
     },
     {
@@ -286646,16 +288065,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1645,
+    "total_bytes": 26439903,
+    "text_tokens_est": 6600317,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1001,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286812,6 +288231,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -287584,6 +289004,8 @@
       "aura_workspace/outbox/WO-UNIVERSAL-GLOBAL-BENCHMARK-DAEMON-EXHAUSTIVE.telemetry.json",
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/benchmark_frontier27.py",
+      "benchmarks/check_frontier27_thresholds.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -287753,6 +289175,7 @@
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md",
+      "docs/FRONTIER27_IMPLEMENTATION.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
       "docs/PR_KIT.md",
@@ -288287,6 +289710,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -288296,6 +289720,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/frontier27_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -382474,6 +383899,36 @@
         "file_digest8": "b8a7acc7d5e89779"
       },
       {
+        "semantic_id": "benchmarks/benchmark_frontier27.py#function:main:502e4c75183c2314",
+        "name": "main",
+        "kind": "function",
+        "file": "benchmarks/benchmark_frontier27.py",
+        "line": 31,
+        "end_line": 42,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "e44633b078a9103d"
+      },
+      {
+        "semantic_id": "benchmarks/benchmark_frontier27.py#function:retrieval:3fb0932639b34b8d",
+        "name": "retrieval",
+        "kind": "function",
+        "file": "benchmarks/benchmark_frontier27.py",
+        "line": 12,
+        "end_line": 29,
+        "signature_hash": "52e064a4a926d241",
+        "file_digest8": "e44633b078a9103d"
+      },
+      {
+        "semantic_id": "benchmarks/benchmark_frontier27.py#function:routes:b2db99ab0887e9f4",
+        "name": "routes",
+        "kind": "function",
+        "file": "benchmarks/benchmark_frontier27.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "fdd1e9bd9a5a8365",
+        "file_digest8": "e44633b078a9103d"
+      },
+      {
         "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:_ablation_tokens:d4e25fe816dc8ce1",
         "name": "_ablation_tokens",
         "kind": "function",
@@ -445314,6 +446769,306 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 5,
+        "end_line": 34,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_00_manifest:0d2cc562a8ba14a1",
+        "name": "T.test_00_manifest",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "7ce306a4bbd045cc",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_01:9255863242d8707a",
+        "name": "T.test_01",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "6554ad499ce341ab",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_02:0c0c41d26f0c4511",
+        "name": "T.test_02",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "814be5d3a59acfb2",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_03:8bfc653d2ed2bcfb",
+        "name": "T.test_03",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "f39d37b917eec697",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_04:2e7c0f57f7789f95",
+        "name": "T.test_04",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "d3d0dd167be70495",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_05:fd593813b47cfa19",
+        "name": "T.test_05",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "2b29504208bab0b1",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_06:80bd26fbd60a0b17",
+        "name": "T.test_06",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "e2f95fe71f33bce8",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_07:198dad5587a46b75",
+        "name": "T.test_07",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "07f416b5ab9885d5",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_08:2feb500c96310244",
+        "name": "T.test_08",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "05300ad80f3cce18",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_09:1cb614c7d2e50643",
+        "name": "T.test_09",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "31703e855834592d",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_10:266f5d08e8cfd7a2",
+        "name": "T.test_10",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "bdd17741d3a1dd9c",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_11:5e1e957522587a50",
+        "name": "T.test_11",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "cc5855ff7cd217a0",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_12:4f80e1f6cfb5e393",
+        "name": "T.test_12",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "ee0eb77e4022fb1b",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_13:ea06fe20280a3d7c",
+        "name": "T.test_13",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "f2af948dcd9781f8",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_14:7139cb5dbf3f4df9",
+        "name": "T.test_14",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "f661c707e4fb72f2",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_15:20825ea005342dcc",
+        "name": "T.test_15",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "eeabd4fcc0c413eb",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_16:438ebda769affc1c",
+        "name": "T.test_16",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 22,
+        "end_line": 22,
+        "signature_hash": "bdb6b3a353ae7696",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_17:142e20f151f9b43b",
+        "name": "T.test_17",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "49b3fd41246844b4",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_18:d40d864e7f2286c0",
+        "name": "T.test_18",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 24,
+        "end_line": 24,
+        "signature_hash": "b8c7220260df2e2b",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_19:558dcf1aeef06bf2",
+        "name": "T.test_19",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 25,
+        "end_line": 25,
+        "signature_hash": "adf2eb4bc8a8ff1d",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_20:80b153d53c989a0c",
+        "name": "T.test_20",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "2ba71008f62e9509",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_21:80bf28f2f1b908e2",
+        "name": "T.test_21",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "05e032f6531416bb",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_22:2c6941cb42573e4b",
+        "name": "T.test_22",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "401da7fe8f6aebc7",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_23:22e0c764aa1347c8",
+        "name": "T.test_23",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 29,
+        "end_line": 29,
+        "signature_hash": "98e009c0f2c40400",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_24:199f5f6e1a85e6c9",
+        "name": "T.test_24",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 30,
+        "end_line": 30,
+        "signature_hash": "7c21f9d1b1d7f036",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_25:fb1ca550f05013bc",
+        "name": "T.test_25",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 31,
+        "end_line": 31,
+        "signature_hash": "17f2bd1b89deebcd",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_26:8a0f611609e2a6fc",
+        "name": "T.test_26",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 32,
+        "end_line": 32,
+        "signature_hash": "a7af062f206bdc03",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_27:967fe6eaaa04c8b7",
+        "name": "T.test_27",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 33,
+        "end_line": 33,
+        "signature_hash": "b1d4934b032f42c1",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_runtime.py#method:T.test_28_security_campaign:d91b472da6be4a2e",
+        "name": "T.test_28_security_campaign",
+        "kind": "method",
+        "file": "tests/test_frontier27_runtime.py",
+        "line": 34,
+        "end_line": 34,
+        "signature_hash": "0866f8116d4f2718",
+        "file_digest8": "8b4e32eb48336d5d"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -445632,6 +447387,806 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
+        "name": "CapabilityManifest",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "96b8fe62f34788c9",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CollisionBucket:269792647939973b",
+        "name": "CollisionBucket",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 95,
+        "end_line": 99,
+        "signature_hash": "b14fea6946813579",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:ComponentContract:b16d04847007fed4",
+        "name": "ComponentContract",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "f2d2fa1f25c0a919",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CompositionMembrane:455d3d1babb7a235",
+        "name": "CompositionMembrane",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "9ce687e2ffcccb33",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:CurrentnessInvalidator:054b2d3224674b40",
+        "name": "CurrentnessInvalidator",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 80,
+        "end_line": 86,
+        "signature_hash": "7fce545f5e183f07",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:ExpertResidencyLRU:25097573188b3e0b",
+        "name": "ExpertResidencyLRU",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 167,
+        "end_line": 181,
+        "signature_hash": "b24517ab382b0339",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:ExportReceipt:5189d033105ce084",
+        "name": "ExportReceipt",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 68,
+        "end_line": 73,
+        "signature_hash": "7395df647a272d24",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HDCSemanticKey:f4bf9469efc632bd",
+        "name": "HDCSemanticKey",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 101,
+        "end_line": 109,
+        "signature_hash": "5eaced9dd092cda8",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HardFalseSecurityGate:d1abfe8d782b0b49",
+        "name": "HardFalseSecurityGate",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 14,
+        "end_line": 17,
+        "signature_hash": "c008b1411af62259",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HardGatePin:ea0e35fe6491108c",
+        "name": "HardGatePin",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 63,
+        "end_line": 65,
+        "signature_hash": "2690390ddbb7ff96",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HotColdCache:80c9877ee717f648",
+        "name": "HotColdCache",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 119,
+        "end_line": 126,
+        "signature_hash": "1c342bf58fd8ac25",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:HybridIndexBridge:ea5b80b62e394ffc",
+        "name": "HybridIndexBridge",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 111,
+        "end_line": 117,
+        "signature_hash": "f11db3a18a94b5e6",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:IdentityEnvelope:7c2512b1b0bee381",
+        "name": "IdentityEnvelope",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "2820f7c1df3fe336",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:MatchedEnvelopeGate:32e1d3fa824a90c8",
+        "name": "MatchedEnvelopeGate",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "ece793dda9927e02",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:NativeRouterAuthority:f0b513527f242f37",
+        "name": "NativeRouterAuthority",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 141,
+        "end_line": 143,
+        "signature_hash": "3c3324eaf7a42909",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:P0IdentityGate:a59424a5653d10d3",
+        "name": "P0IdentityGate",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "0dee444af72a312e",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:PageCacheStateGate:08bb343e41e0d5f4",
+        "name": "PageCacheStateGate",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "cfe0193df0c4aec1",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:PerformanceEnvelope:1dc0b5e0e01bcf98",
+        "name": "PerformanceEnvelope",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "ed92cd13773aa44f",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:PrefetchWasteGuard:0c298dd0b0820fbe",
+        "name": "PrefetchWasteGuard",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 147,
+        "end_line": 149,
+        "signature_hash": "f33befbd812971b2",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:RetrievalReceipt:b4ad50deaac3a434",
+        "name": "RetrievalReceipt",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 129,
+        "end_line": 133,
+        "signature_hash": "d6df977fe745227c",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:RouterPreservingPrefetch:cc9a6398b903e21a",
+        "name": "RouterPreservingPrefetch",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 138,
+        "end_line": 140,
+        "signature_hash": "0e6c2b25da2cfb8d",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:SnapshotRing:2d8ec2a81cd633ae",
+        "name": "SnapshotRing",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "8d802e6adf633c33",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:StateHandleLease:765458ca06527869",
+        "name": "StateHandleLease",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "5334887f9bd5373a",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:StorageTier:fd1614f61fb1d381",
+        "name": "StorageTier",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 152,
+        "end_line": 152,
+        "signature_hash": "00c4fa54d4dea76a",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:StorageTierPlacement:cf6862979d68272f",
+        "name": "StorageTierPlacement",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 156,
+        "end_line": 159,
+        "signature_hash": "0a8c36d5497de620",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:TierEnergyAdmission:67f9db438244a99a",
+        "name": "TierEnergyAdmission",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 153,
+        "end_line": 155,
+        "signature_hash": "07557f9e1cf9f63f",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:TypedEdge:b4ab908fab937a9d",
+        "name": "TypedEdge",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 89,
+        "end_line": 89,
+        "signature_hash": "ed73bb6b42fd746c",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:TypedGraphEdges:d84bab094d7eaf87",
+        "name": "TypedGraphEdges",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "f0f4ce2b5dfcc6c6",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
+        "name": "UsefulByteAccounting",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 162,
+        "end_line": 165,
+        "signature_hash": "0d9f06875821b0a4",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:VersionRangeGate:dfca3e1612dd06fc",
+        "name": "VersionRangeGate",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 32,
+        "end_line": 41,
+        "signature_hash": "19ed0f12486eef75",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#class:WindowAwareBudget:865e0d4aa3df2c60",
+        "name": "WindowAwareBudget",
+        "kind": "class",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 144,
+        "end_line": 146,
+        "signature_hash": "5c4dc2bef8c98844",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "0bff111c4fc1adcb",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#function:stable:4c11bb77b3afc1de",
+        "name": "stable",
+        "kind": "function",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "6c4779cb279e35c8",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#function:tokens:03171f6fc21a863b",
+        "name": "tokens",
+        "kind": "function",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "de5ee57f32fcd478",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CapabilityManifest.allows:7ac4ba02433c0ce9",
+        "name": "CapabilityManifest.allows",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 46,
+        "end_line": 46,
+        "signature_hash": "548732631e08b441",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.__init__:32f65b6d8da12fe0",
+        "name": "CollisionBucket.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 96,
+        "end_line": 96,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.get:0a7e31acdea08fce",
+        "name": "CollisionBucket.get",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 98,
+        "end_line": 98,
+        "signature_hash": "a2e5419ad7f1b285",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.identities:26430685ff986dfa",
+        "name": "CollisionBucket.identities",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 99,
+        "end_line": 99,
+        "signature_hash": "2f33852bac046b7a",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CollisionBucket.put:8519eb4de08c371b",
+        "name": "CollisionBucket.put",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 97,
+        "end_line": 97,
+        "signature_hash": "f30fdf8ed9b952d0",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CompositionMembrane.compose:5331ee1be0962709",
+        "name": "CompositionMembrane.compose",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "a13733ab73bf29b4",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.__init__:ee8d28abf7b72b28",
+        "name": "CurrentnessInvalidator.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 81,
+        "end_line": 81,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.bind:6bf67a59600a3365",
+        "name": "CurrentnessInvalidator.bind",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "a801bcf0ee310039",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.current:92e76f0fe6235f1d",
+        "name": "CurrentnessInvalidator.current",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 86,
+        "end_line": 86,
+        "signature_hash": "714909359bc7dd03",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:CurrentnessInvalidator.invalidate:7eea77ef04d78ae2",
+        "name": "CurrentnessInvalidator.invalidate",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "650c9f5aecfbe1a0",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.__init__:518e07b04c637a3e",
+        "name": "ExpertResidencyLRU.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 168,
+        "end_line": 168,
+        "signature_hash": "7c467261b38d8808",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.access:236b9f7a01cd5f15",
+        "name": "ExpertResidencyLRU.access",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 169,
+        "end_line": 175,
+        "signature_hash": "3614244069c79e5e",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.prefetch:c9a7b405535c5f4e",
+        "name": "ExpertResidencyLRU.prefetch",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 177,
+        "end_line": 181,
+        "signature_hash": "42dadbccea95086c",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExpertResidencyLRU.resident:319c15f2d000adcb",
+        "name": "ExpertResidencyLRU.resident",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 176,
+        "end_line": 176,
+        "signature_hash": "2a5af01d4eb654a2",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.build:790e4d7c7fc239ed",
+        "name": "ExportReceipt.build",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "483d3c86cf68055c",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:ExportReceipt.reusable:6af82ab7d271b7b2",
+        "name": "ExportReceipt.reusable",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 73,
+        "end_line": 73,
+        "signature_hash": "ad79c55b9c449a6d",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HDCSemanticKey.distance:a143b055b881f0eb",
+        "name": "HDCSemanticKey.distance",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 109,
+        "end_line": 109,
+        "signature_hash": "af915a32dca91644",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HDCSemanticKey.encode:542519be0e5472c5",
+        "name": "HDCSemanticKey.encode",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 102,
+        "end_line": 107,
+        "signature_hash": "cc9ef91207ff7fd5",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HardFalseSecurityGate.admit:e3cb058dc98828ba",
+        "name": "HardFalseSecurityGate.admit",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "1c1de9b54cd13940",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HardGatePin.admit:d633d4a9f6092902",
+        "name": "HardGatePin.admit",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 65,
+        "end_line": 65,
+        "signature_hash": "c68cc839bb5266f4",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HotColdCache.__init__:c0b13fd434efd086",
+        "name": "HotColdCache.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 120,
+        "end_line": 120,
+        "signature_hash": "72020fcc351235dc",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HotColdCache.get:9195bd0139d178e8",
+        "name": "HotColdCache.get",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 121,
+        "end_line": 126,
+        "signature_hash": "a34f4f7f16a11681",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.__init__:c81358ffd8e06ed7",
+        "name": "HybridIndexBridge.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 112,
+        "end_line": 112,
+        "signature_hash": "0ccefd36a1d84c95",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.add:613e2212b2e48a98",
+        "name": "HybridIndexBridge.add",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 113,
+        "end_line": 114,
+        "signature_hash": "d7c5407c0e255403",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:HybridIndexBridge.candidates:f81b68e78491b8ab",
+        "name": "HybridIndexBridge.candidates",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 115,
+        "end_line": 117,
+        "signature_hash": "dc5bf526b810ab22",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:MatchedEnvelopeGate.comparable:98a82eb15145d6d0",
+        "name": "MatchedEnvelopeGate.comparable",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "4114a3d800af3df6",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:NativeRouterAuthority.execute:fe98880c6e0769ce",
+        "name": "NativeRouterAuthority.execute",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 143,
+        "end_line": 143,
+        "signature_hash": "4198b1fe1afee110",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:P0IdentityGate.admit:45aa965e72c98b79",
+        "name": "P0IdentityGate.admit",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "8d49b768f01d120e",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:PageCacheStateGate.classify:3a12de65c3b25d7e",
+        "name": "PageCacheStateGate.classify",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 137,
+        "end_line": 137,
+        "signature_hash": "6ffa62b796d6415d",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:PrefetchWasteGuard.admit:eb74b7197ae51d15",
+        "name": "PrefetchWasteGuard.admit",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 149,
+        "end_line": 149,
+        "signature_hash": "55a4915a4c9306b4",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:RetrievalReceipt.build:7a709dbd7a8ff430",
+        "name": "RetrievalReceipt.build",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 132,
+        "end_line": 133,
+        "signature_hash": "3d87cd34f6a7301b",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:RouterPreservingPrefetch.plan:847ad12433cb13e8",
+        "name": "RouterPreservingPrefetch.plan",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 140,
+        "end_line": 140,
+        "signature_hash": "ada276d6c17cd09b",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.__init__:bd5c8e8bfe9afb3b",
+        "name": "SnapshotRing.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 76,
+        "end_line": 76,
+        "signature_hash": "4f4a8036e78d6320",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.__len__:54567014c693dd1b",
+        "name": "SnapshotRing.__len__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 78,
+        "end_line": 78,
+        "signature_hash": "faa6d593407c8ebc",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:SnapshotRing.append:8c7f338aa8696529",
+        "name": "SnapshotRing.append",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 77,
+        "end_line": 77,
+        "signature_hash": "2e53c60b55f3c71a",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:StateHandleLease.close:35f836f72ab44517",
+        "name": "StateHandleLease.close",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 61,
+        "end_line": 61,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:StateHandleLease.valid:064603f28d445ef3",
+        "name": "StateHandleLease.valid",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "f3af4d59f005bd8f",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:StorageTierPlacement.choose:26e2230621001c49",
+        "name": "StorageTierPlacement.choose",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 158,
+        "end_line": 159,
+        "signature_hash": "f61b81eb3f4dd7b1",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TierEnergyAdmission.admit:36c0f784f856fa0d",
+        "name": "TierEnergyAdmission.admit",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 155,
+        "end_line": 155,
+        "signature_hash": "120ce88bb1e0b5ba",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.__init__:27f5c56529186754",
+        "name": "TypedGraphEdges.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 91,
+        "end_line": 91,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.add:52107c1054829de1",
+        "name": "TypedGraphEdges.add",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 92,
+        "end_line": 92,
+        "signature_hash": "e14763350132af10",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:TypedGraphEdges.lookup:7396c011f140ba84",
+        "name": "TypedGraphEdges.lookup",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 93,
+        "end_line": 93,
+        "signature_hash": "6e3c3a145fb4e998",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:UsefulByteAccounting.total:8d9390f1fc4ee241",
+        "name": "UsefulByteAccounting.total",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 165,
+        "end_line": 165,
+        "signature_hash": "b5a8100ebab79b52",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:VersionRangeGate._v:2f31e4391daa3028",
+        "name": "VersionRangeGate._v",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "02faebd7bdfe84fd",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:VersionRangeGate.admit:e8a58590cf8ec113",
+        "name": "VersionRangeGate.admit",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "542a48fff9e6e7b6",
+        "file_digest8": "30e2a37459c744ef"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_runtime.py#method:WindowAwareBudget.bytes:e0d0f9913f151ec0",
+        "name": "WindowAwareBudget.bytes",
+        "kind": "method",
+        "file": "tools/arena/frontier27_runtime.py",
+        "line": 146,
+        "end_line": 146,
+        "signature_hash": "07e9da2822c60349",
+        "file_digest8": "30e2a37459c744ef"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +449439,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "24e83679be84ef8b662d4db4aa022863",
+    "payload_hash": "42f6b7b1cf09fc11f0d602da4323a0fa"
   }
 }
