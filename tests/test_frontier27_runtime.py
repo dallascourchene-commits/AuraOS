@@ -33,7 +33,15 @@ class T(unittest.TestCase):
     def test_13_budget(self): self.assertEqual(WindowAwareBudget.bytes(100, 0.5, 1000), 50)
     def test_14_waste_guard(self): self.assertTrue(PrefetchWasteGuard.admit(20,10)); self.assertFalse(PrefetchWasteGuard.admit(10,20))
     def test_15_energy(self):
-        t = StorageTier("x", 10**9, 1e9, 2); self.assertTrue(TierEnergyAdmission.admit(t, 10**8, 0.3)); self.assertFalse(TierEnergyAdmission.admit(t, 10**8, 0.1))
+        t = StorageTier("x", 10**9, 1e9, 2)
+        self.assertTrue(TierEnergyAdmission.admit(t, 10**8, 0.3)); self.assertFalse(TierEnergyAdmission.admit(t, 10**8, 0.1))
+        self.assertFalse(TierEnergyAdmission.admit(t, 10**8, True))
+        exact = StorageTier("exact", 10**9, 1e9, 1.0); spent = 0.0
+        for expected in (0.05, 0.10, 0.15):
+            ok, spent, plan = TierEnergyAdmission.admit_cumulative(exact, 50_000_000, spent, 0.15)
+            self.assertTrue(ok); self.assertEqual(spent, expected); self.assertEqual(plan, 0.05)
+        ok, unchanged, _ = TierEnergyAdmission.admit_cumulative(exact, 50_000_000, spent, 0.15)
+        self.assertFalse(ok); self.assertEqual(unchanged, 0.15)
     def test_16_accounting(self): self.assertEqual(UsefulByteAccounting(1,2,3).total,6)
     def test_17_lru(self):
         c=ExpertResidencyLRU(2); self.assertFalse(c.access(1)); self.assertTrue(c.access(1)); c.access(2); c.access(3); self.assertFalse(c.resident(1))
@@ -118,12 +126,13 @@ class T(unittest.TestCase):
         tier=StorageTier("ssd",10**9,10**9,1.0)
         result=FrontierOffload(100_000_000,8,tier,1.0,0.15).run([[1],[2]],[[1],[2]])
         self.assertEqual(result["prefetch_transfers"],1)
-        self.assertTrue(math.isclose(result["speculative_energy_j"],0.1,rel_tol=0,abs_tol=1e-12))
-        self.assertTrue(math.isclose(result["speculative_energy_remaining_j"],0.05,rel_tol=0,abs_tol=1e-12))
-        self.assertLessEqual(result["speculative_energy_j"],result["speculative_energy_budget_j"]+1e-12)
+        self.assertEqual(result["speculative_energy_j"],0.1)
+        self.assertEqual(result["speculative_energy_remaining_j"],0.05)
+        self.assertLessEqual(result["speculative_energy_j"],result["speculative_energy_budget_j"])
         exact=FrontierOffload(50_000_000,8,tier,1.0,0.15).run([[1],[2],[3]],[[1],[2],[3]])
         self.assertEqual(exact["prefetch_transfers"],3)
-        self.assertTrue(math.isclose(exact["speculative_energy_j"],0.15,rel_tol=0,abs_tol=1e-12))
+        self.assertEqual(exact["speculative_energy_j"],exact["speculative_energy_budget_j"])
+        self.assertEqual(exact["speculative_energy_remaining_j"],0.0)
 
 
 if __name__ == "__main__": unittest.main()
