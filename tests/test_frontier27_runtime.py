@@ -1,15 +1,26 @@
+import copy
 import math
 import os
 import sys
 import unittest
 from dataclasses import replace
+from unittest.mock import patch
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(ROOT, "tools", "arena"))
+sys.path.insert(0, os.path.join(ROOT, "benchmarks"))
 from frontier27_runtime import *
+import benchmark_frontier27 as bench
+import check_frontier27_thresholds as checker
 
 
 class T(unittest.TestCase):
+    PROOF_HEAD = bench.resolve_source_head()
+
+    @classmethod
+    def setUpClass(cls):
+        cls.proof_result = bench.run_campaign(cls.PROOF_HEAD)
+
     def test_00_manifest(self): self.assertEqual((len(FRONTIER_27), len(set(FRONTIER_27))), (27, 27))
     def test_01_hard_false(self): self.assertFalse(HardFalseSecurityGate.admit(source_audited=True, runtime_hard_false=False, remote_code_widening=False))
     def test_02_hybrid_index(self):
@@ -113,6 +124,96 @@ class T(unittest.TestCase):
 
     def test_42_security_campaign_baseline_has_no_false_admits_or_valid_rejections(self):
         result=security_campaign(1000); self.assertEqual(result["after_false_admits"],0); self.assertEqual(result["valid_rejected"],0)
+
+    def test_43_proof_receipt_is_deterministic_and_source_bound(self):
+        ok, errors = bench.verify_proof_receipt(self.proof_result, self.PROOF_HEAD)
+        self.assertTrue(ok, errors)
+        repeated = bench.run_campaign(self.PROOF_HEAD)
+        self.assertEqual(self.proof_result["proof_receipt"], repeated["proof_receipt"])
+
+    def test_44_wall_time_observations_are_outside_semantic_root(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["retrieval"]["before"]["wall_s"] += 999.0
+        altered["retrieval"]["after"]["query_wall_s"] += 999.0
+        altered["retrieval"]["after"]["index_build_s"] += 999.0
+        altered["retrieval"]["after"]["amortized_wall_s"] += 999.0
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertTrue(ok, errors)
+        self.assertEqual(altered["proof_receipt"]["result_root"], self.proof_result["proof_receipt"]["result_root"])
+
+    def test_45_deterministic_result_tamper_breaks_receipt(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["offload"]["after"]["bytes"] += 1
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertFalse(ok)
+        self.assertIn("proof result_root mismatch", errors)
+
+    def test_46_expected_source_head_mismatch_breaks_receipt(self):
+        ok, errors = bench.verify_proof_receipt(self.proof_result, "b" * 40)
+        self.assertFalse(ok)
+        self.assertIn("proof source_head does not match expected source head", errors)
+
+    def test_47_checker_requires_and_recomputes_proof_receipt(self):
+        self.assertEqual(checker.validate_result(self.proof_result, self.PROOF_HEAD), [])
+        missing = copy.deepcopy(self.proof_result)
+        missing.pop("proof_receipt")
+        failures = checker.validate_result(missing, self.PROOF_HEAD)
+        self.assertTrue(any(key == "proof_receipt" for key, _, _ in failures))
+
+    def test_48_explicit_source_head_must_match_checked_out_git(self):
+        forged = "b" * 40 if self.PROOF_HEAD != "b" * 40 else "c" * 40
+        with patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD):
+            with self.assertRaisesRegex(RuntimeError, "does not match checked-out Git HEAD"):
+                bench.resolve_source_head(forged)
+            with self.assertRaisesRegex(RuntimeError, "does not match checked-out Git HEAD"):
+                bench.run_campaign(forged)
+
+    def test_49_explicit_source_head_is_allowed_when_git_metadata_is_unavailable(self):
+        exported_head = "d" * 40
+        with patch.object(bench, "_observed_git_head", return_value=None):
+            self.assertEqual(bench.resolve_source_head(exported_head), exported_head)
+
+    def test_50_resolver_uses_observed_git_head_when_no_explicit_identity_exists(self):
+        with patch.dict(os.environ, {}, clear=True), patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD), patch.object(bench, "_tracked_worktree_dirty", return_value=False):
+            self.assertEqual(bench.resolve_source_head(), self.PROOF_HEAD)
+
+    def test_51_canonical_benchmark_schema_is_required(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["schema"] = "FORGED-BENCH-v999"
+        altered["proof_receipt"] = bench.build_proof_receipt(altered, self.PROOF_HEAD)
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertFalse(ok)
+        self.assertIn("benchmark schema mismatch", errors)
+
+    def test_52_canonical_frontier_manifest_is_required(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["manifest"] = ("FORGED",)
+        altered["proof_receipt"] = bench.build_proof_receipt(altered, self.PROOF_HEAD)
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertFalse(ok)
+        self.assertIn("benchmark manifest mismatch", errors)
+
+    def test_53_boolean_numeric_payloads_fail_closed(self):
+        altered = copy.deepcopy(self.proof_result)
+        for key in checker.THRESHOLDS:
+            altered["gains"][key] = True
+        altered["retrieval"]["quality"]["recall"] = True
+        altered["retrieval"]["quality"]["false_negatives"] = False
+        altered["offload"]["after"]["prefetch_transfers"] = True
+        altered["audit"]["after_false_admits"] = False
+        altered["audit"]["valid_rejected"] = False
+        altered["proof_receipt"] = bench.build_proof_receipt(altered, self.PROOF_HEAD)
+        failures = checker.validate_result(altered, self.PROOF_HEAD)
+        keys = {key for key, _, _ in failures}
+        self.assertTrue(set(checker.THRESHOLDS) <= keys)
+        self.assertTrue({"retrieval_recall", "retrieval_false_negatives", "prefetch_transfers", "security_after_false_admits", "security_valid_rejected"} <= keys)
+
+    def test_54_tracked_dirty_worktree_cannot_mint_git_source_identity(self):
+        with patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD), patch.object(bench, "_tracked_worktree_dirty", return_value=True):
+            with self.assertRaisesRegex(RuntimeError, "tracked worktree is dirty"):
+                bench.resolve_source_head(self.PROOF_HEAD)
+            with self.assertRaisesRegex(RuntimeError, "tracked worktree is dirty"):
+                bench.run_campaign(self.PROOF_HEAD)
 
 
 if __name__ == "__main__": unittest.main()

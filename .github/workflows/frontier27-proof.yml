@@ -11,6 +11,8 @@ on:
       - ".github/workflows/frontier27-proof.yml"
   push:
     branches:
+      - main
+      - "feature/**"
       - "arena/frontier27-implementation-benchmark-20260905-sol"
 
 permissions:
@@ -21,6 +23,9 @@ jobs:
     name: Frontier-27 proof (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      FRONTIER27_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      FRONTIER27_EXPECTED_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -29,11 +34,11 @@ jobs:
       - name: Checkout exact semantic head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 observed 2026-09-05
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ env.FRONTIER27_SOURCE_HEAD }}
       - name: Verify exact checkout identity
         shell: bash
         env:
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_HEAD: ${{ env.FRONTIER27_SOURCE_HEAD }}
         run: |
           set -euo pipefail
           actual="$(git rev-parse HEAD)"
@@ -45,11 +50,11 @@ jobs:
       - name: Compile Frontier-27 runtime
         run: |
           python -m py_compile tools/arena/frontier27_runtime.py tests/test_frontier27_runtime.py benchmarks/benchmark_frontier27.py benchmarks/check_frontier27_thresholds.py
-      - name: Run all Frontier-27 mechanism and review-regression tests
+      - name: Run all Frontier-27 mechanism and proof-integrity tests
         run: python -m unittest -v tests.test_frontier27_runtime
       - name: Run deterministic before/after benchmark
         run: python benchmarks/benchmark_frontier27.py > frontier27-benchmark.json
-      - name: Enforce deterministic efficiency + retrieval-quality floors
+      - name: Enforce deterministic efficiency, quality, and source-bound proof receipt
         run: python benchmarks/check_frontier27_thresholds.py frontier27-benchmark.json
       - name: Show benchmark
         run: cat frontier27-benchmark.json
