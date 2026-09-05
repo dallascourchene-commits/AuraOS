@@ -538,7 +538,7 @@ class FrontierOffload:
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
-        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
+        a = UsefulByteAccounting(); secs = energy = speculative_energy = 0.0; prefetch_transfers = 0
         for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
@@ -546,17 +546,28 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, self.e)
+            remaining_energy = max(0.0, self.e - speculative_energy)
+            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, remaining_energy)
             if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
                 for x in missing_plan:
+                    transfer_energy = self.size / 1e9 * self.t.joules_per_gb
                     self.r.prefetch(x); prefetch_transfers += 1
                     a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
-                    secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
+                    secs += self.size / self.t.bandwidth; energy += transfer_energy; speculative_energy += transfer_energy
             for x in native:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
         total = self.r.hits + self.r.misses
-        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total, "prefetch_transfers": prefetch_transfers}
+        return {
+            "bytes": a.total,
+            "seconds": secs,
+            "energy_j": energy,
+            "hit_rate": self.r.hits / total,
+            "prefetch_transfers": prefetch_transfers,
+            "speculative_energy_j": speculative_energy,
+            "speculative_energy_budget_j": self.e,
+            "speculative_energy_remaining_j": max(0.0, self.e - speculative_energy),
+        }
 
 
 def security_campaign(n: int = 1000) -> dict[str, Any]:
