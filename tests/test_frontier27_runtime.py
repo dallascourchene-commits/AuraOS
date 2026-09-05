@@ -4,6 +4,7 @@ import os
 import sys
 import unittest
 from dataclasses import replace
+from unittest.mock import patch
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(ROOT, "tools", "arena"))
@@ -14,7 +15,7 @@ import check_frontier27_thresholds as checker
 
 
 class T(unittest.TestCase):
-    PROOF_HEAD = "a" * 40
+    PROOF_HEAD = bench.resolve_source_head()
 
     @classmethod
     def setUpClass(cls):
@@ -158,6 +159,23 @@ class T(unittest.TestCase):
         missing.pop("proof_receipt")
         failures = checker.validate_result(missing, self.PROOF_HEAD)
         self.assertTrue(any(key == "proof_receipt" for key, _, _ in failures))
+
+    def test_48_explicit_source_head_must_match_checked_out_git(self):
+        forged = "b" * 40 if self.PROOF_HEAD != "b" * 40 else "c" * 40
+        with patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD):
+            with self.assertRaisesRegex(RuntimeError, "does not match checked-out Git HEAD"):
+                bench.resolve_source_head(forged)
+            with self.assertRaisesRegex(RuntimeError, "does not match checked-out Git HEAD"):
+                bench.run_campaign(forged)
+
+    def test_49_explicit_source_head_is_allowed_when_git_metadata_is_unavailable(self):
+        exported_head = "d" * 40
+        with patch.object(bench, "_observed_git_head", return_value=None):
+            self.assertEqual(bench.resolve_source_head(exported_head), exported_head)
+
+    def test_50_resolver_uses_observed_git_head_when_no_explicit_identity_exists(self):
+        with patch.dict(os.environ, {}, clear=True), patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD):
+            self.assertEqual(bench.resolve_source_head(), self.PROOF_HEAD)
 
 
 if __name__ == "__main__": unittest.main()

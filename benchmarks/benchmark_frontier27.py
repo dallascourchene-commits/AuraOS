@@ -88,13 +88,8 @@ def _valid_source_head(value: object) -> bool:
     return isinstance(value, str) and re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", value) is not None
 
 
-def resolve_source_head() -> str:
-    """Resolve an explicit or local Git source identity and fail closed if none exists."""
-    configured = os.environ.get("FRONTIER27_SOURCE_HEAD")
-    if configured is not None:
-        if not _valid_source_head(configured):
-            raise ValueError("FRONTIER27_SOURCE_HEAD must be a 40- or 64-hex Git object identity")
-        return configured
+def _observed_git_head() -> str | None:
+    """Return the checked-out Git HEAD, or None when Git metadata is unavailable."""
     try:
         completed = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -103,11 +98,27 @@ def resolve_source_head() -> str:
             capture_output=True,
             text=True,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
-        raise RuntimeError("source identity unavailable; set FRONTIER27_SOURCE_HEAD") from exc
+    except (OSError, subprocess.CalledProcessError):
+        return None
     observed = completed.stdout.strip()
     if not _valid_source_head(observed):
         raise RuntimeError("git rev-parse HEAD did not return a canonical Git object identity")
+    return observed
+
+
+def resolve_source_head(configured: str | None = None) -> str:
+    """Resolve source identity and reject explicit/checked-out Git disagreement."""
+    configured = os.environ.get("FRONTIER27_SOURCE_HEAD") if configured is None else configured
+    if configured is not None and not _valid_source_head(configured):
+        raise ValueError("FRONTIER27_SOURCE_HEAD must be a 40- or 64-hex Git object identity")
+
+    observed = _observed_git_head()
+    if configured is not None:
+        if observed is not None and configured != observed:
+            raise RuntimeError("configured source identity does not match checked-out Git HEAD")
+        return configured
+    if observed is None:
+        raise RuntimeError("source identity unavailable; set FRONTIER27_SOURCE_HEAD")
     return observed
 
 
@@ -282,7 +293,7 @@ def run_campaign(source_head: str | None = None) -> dict[str, Any]:
         "snapshot_retention_reduction": red(SNAPSHOT_INPUTS, len(ring)),
         "security_false_admission_reduction": audit["false_admission_reduction"],
     }
-    out["proof_receipt"] = build_proof_receipt(out, source_head or resolve_source_head())
+    out["proof_receipt"] = build_proof_receipt(out, resolve_source_head(source_head))
     return out
 
 

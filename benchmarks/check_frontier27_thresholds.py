@@ -7,7 +7,7 @@ from typing import Any
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(ROOT, "benchmarks"))
-from benchmark_frontier27 import verify_proof_receipt
+from benchmark_frontier27 import resolve_source_head, verify_proof_receipt
 
 THRESHOLDS = {
     "offload_transfer_bytes_reduction": 0.85,
@@ -69,7 +69,8 @@ def main(argv: list[str] | None = None) -> None:
     path = args[0] if args else "benchmark_result.json"
     with open(path, encoding="utf-8") as handle:
         result = json.load(handle)
-    expected_source_head = os.environ.get("FRONTIER27_EXPECTED_SOURCE_HEAD")
+    configured_expected = os.environ.get("FRONTIER27_EXPECTED_SOURCE_HEAD")
+    expected_source_head = resolve_source_head(configured_expected)
     fail = validate_result(result, expected_source_head)
     if fail:
         for key, got, want in fail:
