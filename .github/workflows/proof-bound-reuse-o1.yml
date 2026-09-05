@@ -1,0 +1,59 @@
+name: Proof-Bound Reuse O1
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena/proof_bound_reuse.py"
+      - "tests/test_proof_bound_reuse.py"
+      - "benchmarks/benchmark_proof_bound_reuse.py"
+      - "benchmarks/proof_bound_reuse_campaign.py"
+      - "docs/PROOF_BOUND_REUSE_O1.md"
+      - ".github/workflows/proof-bound-reuse-o1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    name: Proof-bound reuse (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - name: Checkout exact semantic head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: python -m py_compile tools/arena/proof_bound_reuse.py tests/test_proof_bound_reuse.py benchmarks/benchmark_proof_bound_reuse.py benchmarks/proof_bound_reuse_campaign.py
+      - name: Tests
+        run: python -m unittest -v tests.test_proof_bound_reuse
+      - name: Benchmark
+        run: python benchmarks/benchmark_proof_bound_reuse.py > proof-bound-reuse-benchmark.json
+      - name: Omega8 13D HS1000
+        run: python benchmarks/proof_bound_reuse_campaign.py > proof-bound-reuse-campaign.json
+      - name: Deterministic guards
+        run: |
+          python - <<'PY'
+          import json
+          b=json.load(open('proof-bound-reuse-benchmark.json')); c=json.load(open('proof-bound-reuse-campaign.json'))
+          assert b['evaluation_reduction'] >= .95
+          assert b['result_root_equal'] is True
+          assert b['stale_reuses_after_head_change'] == 0
+          assert c['omega8']['hard_invalid_false_admissions'] == 0
+          assert c['recursion13d']['routing_repairs'] == 0
+          PY
+      - name: Upload receipts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: proof-bound-reuse-${{ matrix.python-version }}-${{ github.run_id }}
+          path: |
+            proof-bound-reuse-benchmark.json
+            proof-bound-reuse-campaign.json
+          retention-days: 14
