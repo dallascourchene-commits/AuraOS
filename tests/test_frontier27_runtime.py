@@ -4,8 +4,7 @@ import sys
 import unittest
 from dataclasses import replace
 
-ROOT = os.path.dirname(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(ROOT, "tools", "arena"))
+ROOT = os.path.dirname(os.path.dirname(__file__));sys.path.insert(0,os.path.join(ROOT,'tools','arena'))
 from frontier27_runtime import *
 
 
@@ -67,34 +66,24 @@ class T(unittest.TestCase):
         h=HDCSemanticKey(); x=h.encode("expert cache"); self.assertEqual(h.distance(x,x),0)
     def test_28_security_campaign(self):
         r=security_campaign(1000); self.assertEqual(r["before_false_admits"],r["after_blocked"])
-
     def test_29_malformed_versions_fail_closed(self):
-        for v in ("5x","5.1-untrusted","5.1.2.3"," 5.1","5.1 ",""):
-            self.assertFalse(VersionRangeGate.admit(v,"5","6"),v)
-
+        for v in ("5x","5.1-untrusted","5.1.2.3"," 5.1","5.1 ",""): self.assertFalse(VersionRangeGate.admit(v,"5","6"),v)
     def test_30_missing_unknown_or_nonbool_hard_gates_fail_closed(self):
         self.assertFalse(HardGatePin.admit({})); self.assertFalse(HardGatePin.admit({"hard":True})); self.assertFalse(HardGatePin.admit({"hard":True,"identity":True,"extra":True})); self.assertFalse(HardGatePin.admit({"hard":1,"identity":True}))
-
     def test_31_export_receipt_tamper_rejected(self):
         payload={"x":1}; r=ExportReceipt.build(payload,["a"],"g"); self.assertFalse(replace(r,receipt_digest="0"*64).reusable(["a"],"g",payload=payload)); self.assertFalse(replace(r,output_digest="f"*64).reusable(["a"],"g",payload=payload)); self.assertFalse(r.reusable(["a"],"g",payload=payload,output_digest="e"*64))
-
     def test_32_retrieval_receipt_tamper_and_context_rejected(self):
         r=RetrievalReceipt.build("q",["a"],"g"); self.assertFalse(replace(r,receipt_digest="0"*64).valid_for("q",["a"],"g")); self.assertFalse(r.valid_for("other",["a"],"g")); self.assertFalse(r.valid_for("q",["b"],"g"))
-
     def test_33_currentness_rebind_removes_old_reverse_edge(self):
         c=CurrentnessInvalidator(); c.bind("n",["d1"]); c.bind("n",["d2"]); self.assertEqual(c.invalidate(["d1"]),set()); self.assertEqual(c.invalidate(["d2"]),{"n"})
-
     def test_34_reproof_completion_requires_exact_current_dependencies(self):
         c=CurrentnessInvalidator(); c.bind("n",["d2"]); c.invalidate(["d2"]); self.assertFalse(c.current("n")); self.assertFalse(c.complete_reproof("n",["d1"])); self.assertFalse(c.current("n")); self.assertTrue(c.complete_reproof("n",["d2"])); self.assertTrue(c.current("n")); self.assertFalse(c.current("unknown"))
-
     def test_35_hybrid_index_exact_lexical_backstop(self):
         idx=HybridIndexBridge(10)
         for i in range(200): idx.add(f"R{i}",f"family_{i%10} mechanism_{i%7} record_{i}",(i%27,(i*2)%27,(i*3)%27))
         q="family_3 mechanism_4"; expected={f"R{i}" for i in range(200) if i%10==3 and i%7==4}; got={x[0] for x in idx.candidates(q,0)}; self.assertTrue(expected<=got)
-
     def test_36_prefetch_time_is_counted_consistently(self):
         size=1024; tier=StorageTier("ssd",10**9,1024.0,1.0); r=FrontierOffload(size,8,tier,1.0,100.0).run([[1]],[[1]]); self.assertGreater(r["seconds"],0); self.assertTrue(math.isclose(r["seconds"],r["bytes"]/tier.bandwidth,rel_tol=0,abs_tol=1e-12))
-
     def test_37_non_finite_canonical_values_fail_closed(self):
         for value in (float("nan"),float("inf"),float("-inf")):
             with self.subTest(value=value):
@@ -102,32 +91,26 @@ class T(unittest.TestCase):
                 with self.assertRaises(ValueError): ExportReceipt.build({"value":value},["a"],"g")
                 ring=SnapshotRing(1)
                 with self.assertRaises(ValueError): ring.append(0,{"value":value})
-
     def test_38_forged_self_consistent_export_receipt_requires_source_truth(self):
         fake_output="f"*64; dep_root=digest(sorted(["a"])); forged=ExportReceipt(fake_output,dep_root,"g",digest([fake_output,dep_root,"g"])); self.assertTrue(forged.verify()); self.assertFalse(forged.reusable(["a"],"g")); self.assertFalse(forged.reusable(["a"],"g",payload={"x":1}))
-
     def test_39_snapshot_ring_restores_frozen_state(self):
         state={"x":[1,2]}; ring=SnapshotRing(2); ring.append(7,state); state["x"].append(3); self.assertEqual(ring.restore(7),{"x":[1,2]})
-
     def test_40_prefetch_respects_energy_budget(self):
         size=1024; tier=StorageTier("ssd",10**9,1024.0,1.0); blocked=FrontierOffload(size,8,tier,1.0,0.0).run([[1]],[[1]]); allowed=FrontierOffload(size,8,tier,1.0,10.0).run([[1]],[[1]]); self.assertEqual(blocked["prefetch_transfers"],0); self.assertGreater(allowed["prefetch_transfers"],0)
-
     def test_41_security_campaign_independent_oracle_detects_fail_open(self):
         hard_saved=HardFalseSecurityGate.admit; ident_saved=P0IdentityGate.admit
         try:
             HardFalseSecurityGate.admit=staticmethod(lambda **kwargs: True); P0IdentityGate.admit=staticmethod(lambda expected,observed: True); result=security_campaign(1000); self.assertGreater(result["after_false_admits"],0); self.assertLess(result["false_admission_reduction"],1.0)
         finally:
             HardFalseSecurityGate.admit=hard_saved; P0IdentityGate.admit=ident_saved
-
     def test_42_security_campaign_baseline_has_no_false_admits_or_valid_rejections(self):
         result=security_campaign(1000); self.assertEqual(result["after_false_admits"],0); self.assertEqual(result["valid_rejected"],0)
-
     def test_43_prefetch_energy_budget_is_cumulative(self):
         tier=StorageTier("ssd",10**9,10**9,1.0)
         result=FrontierOffload(100_000_000,8,tier,1.0,0.15).run([[1],[2]],[[1],[2]])
         self.assertEqual(result["prefetch_transfers"],1)
         self.assertEqual(result["speculative_energy_j"],0.1)
-        self.assertEqual(result["speculative_energy_remaining_j"],0.05)
+        self.assertTrue(math.isclose(result["speculative_energy_remaining_j"],0.05,rel_tol=0,abs_tol=1e-15))
         self.assertLessEqual(result["speculative_energy_j"],result["speculative_energy_budget_j"])
         exact=FrontierOffload(50_000_000,8,tier,1.0,0.15).run([[1],[2],[3]],[[1],[2],[3]])
         self.assertEqual(exact["prefetch_transfers"],3)
