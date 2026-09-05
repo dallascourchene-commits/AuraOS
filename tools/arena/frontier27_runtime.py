@@ -7,8 +7,8 @@ from __future__ import annotations
 
 from collections import OrderedDict, defaultdict, deque
 from dataclasses import dataclass
+from decimal import Decimal
 from hashlib import sha256
-from itertools import zip_longest
 import json
 import math
 import re
@@ -454,12 +454,28 @@ class StorageTier:
 
 class TierEnergyAdmission:
     @staticmethod
-    def admit(t: StorageTier, n: int, budget_j: float) -> bool:
+    def energy_decimal(t: StorageTier, n: int) -> Decimal:
+        if type(n) is not int or n < 0:
+            raise ValueError("n must be a non-negative integer")
+        return Decimal(n) / Decimal(1_000_000_000) * Decimal(str(t.joules_per_gb))
+
+    @classmethod
+    def admit_cumulative(cls, t: StorageTier, n: int, spent_j: Decimal, budget_j: Decimal) -> bool:
+        if type(n) is not int or n < 0:
+            return False
+        if not isinstance(spent_j, Decimal) or not isinstance(budget_j, Decimal):
+            return False
+        if not spent_j.is_finite() or not budget_j.is_finite() or spent_j < 0 or budget_j < 0:
+            return False
+        return n <= t.capacity_bytes and spent_j + cls.energy_decimal(t, n) <= budget_j
+
+    @classmethod
+    def admit(cls, t: StorageTier, n: int, budget_j: float) -> bool:
         if type(n) is not int or n < 0:
             return False
         if not _finite_number(budget_j) or budget_j < 0:
             return False
-        return n <= t.capacity_bytes and n / 1e9 * t.joules_per_gb <= budget_j
+        return cls.admit_cumulative(t, n, Decimal(0), Decimal(str(budget_j)))
 
 
 class StorageTierPlacement:
@@ -553,10 +569,11 @@ class LegacyOffload:
         self.jpgb = jpgb
 
     def run(self, routes, preds):
+        routes = tuple(routes); preds = tuple(preds)
+        if len(routes) != len(preds):
+            raise ValueError("routes and preds must have equal length")
         a = UsefulByteAccounting(); secs = energy = 0.0
-        for route, pred in zip_longest(routes, preds, fillvalue=_MISSING):
-            if route is _MISSING or pred is _MISSING:
-                raise ValueError("routes and preds must have equal length")
+        for route, pred in zip(routes, preds):
             n = len(route) * self.size
             a.missed += n; secs += n / self.bw; energy += n / 1e9 * self.jpgb; rs = set(route)
             for x in pred:
@@ -582,20 +599,25 @@ class FrontierOffload:
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
-        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0; remaining_prefetch_energy = self.e
-        for route, pred in zip_longest(routes, preds, fillvalue=_MISSING):
-            if route is _MISSING or pred is _MISSING:
-                raise ValueError("routes and preds must have equal length")
+        routes = tuple(routes); preds = tuple(preds)
+        if len(routes) != len(preds):
+            raise ValueError("routes and preds must have equal length")
+        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
+        speculative_spent = Decimal(0); speculative_budget = Decimal(str(self.e))
+        start_hits, start_misses = self.r.hits, self.r.misses
+        for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
             plan = RouterPreservingPrefetch.plan(native, pred[: budget // self.size], range(10000))
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            speculative_energy = speculative_bytes / 1e9 * self.t.joules_per_gb
-            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, remaining_prefetch_energy)
+            plan_energy = TierEnergyAdmission.energy_decimal(self.t, speculative_bytes)
+            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit_cumulative(
+                self.t, speculative_bytes, speculative_spent, speculative_budget
+            )
             if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
-                remaining_prefetch_energy = max(0.0, remaining_prefetch_energy - speculative_energy)
+                speculative_spent += plan_energy
                 for x in missing_plan:
                     self.r.prefetch(x); prefetch_transfers += 1
                     a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
@@ -603,8 +625,9 @@ class FrontierOffload:
             for x in native:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
-        total = self.r.hits + self.r.misses
-        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total if total else 0.0, "prefetch_transfers": prefetch_transfers}
+        call_hits = self.r.hits - start_hits; call_misses = self.r.misses - start_misses
+        total = call_hits + call_misses
+        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": call_hits / total if total else 0.0, "prefetch_transfers": prefetch_transfers}
 
 
 def security_campaign(n: int = 1000) -> dict[str, Any]:
