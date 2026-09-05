@@ -135,7 +135,7 @@ class ConsequenceAdmissionKernel:
             decision = Decision.HOLD_REQUIRED_UNKNOWN
         elif inp.source_exit is None or not inp.source_exit.valid():
             decision = Decision.HOLD_MISSING_SOURCE_EXIT
-        elif not inp.source_exit.current:
+        elif inp.source_exit.current is not True:
             decision = Decision.HOLD_STALE_SOURCE
         elif unpaid:
             decision = Decision.HOLD_DEPENDENCY_DEBT
@@ -245,7 +245,7 @@ class ReadjudicationEnvelope:
     def validate(self) -> None:
         if self.inherited_truth or self.inherited_authority:
             raise AdmissionError("succession transfers reproof duties, not truth/authority")
-        if not self.source_exit.valid() or not self.source_exit.current:
+        if not self.source_exit.valid() or self.source_exit.current is not True:
             raise AdmissionError("current-source exit required")
         if not self.consequence_id or not self.policy_id:
             raise AdmissionError("consequence/policy identity required")
