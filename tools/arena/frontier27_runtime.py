@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from collections import OrderedDict, defaultdict, deque
 from dataclasses import dataclass
-from decimal import Decimal
+from fractions import Fraction
 from hashlib import sha256
 import json
 import math
@@ -37,6 +37,10 @@ _MISSING = object()
 
 def _finite_number(v: object) -> bool:
     return type(v) in (int, float) and math.isfinite(v)
+
+
+def _exact_number(v: int | float) -> Fraction:
+    return Fraction(v) if type(v) is int else Fraction.from_float(v)
 
 
 class HardFalseSecurityGate:
@@ -454,20 +458,20 @@ class StorageTier:
 
 class TierEnergyAdmission:
     @staticmethod
-    def energy_decimal(t: StorageTier, n: int) -> Decimal:
+    def energy_fraction(t: StorageTier, n: int) -> Fraction:
         if type(n) is not int or n < 0:
             raise ValueError("n must be a non-negative integer")
-        return Decimal(n) / Decimal(1_000_000_000) * Decimal(str(t.joules_per_gb))
+        return Fraction(n, 1_000_000_000) * _exact_number(t.joules_per_gb)
 
     @classmethod
-    def admit_cumulative(cls, t: StorageTier, n: int, spent_j: Decimal, budget_j: Decimal) -> bool:
+    def admit_cumulative(cls, t: StorageTier, n: int, spent_j: Fraction, budget_j: Fraction) -> bool:
         if type(n) is not int or n < 0:
             return False
-        if not isinstance(spent_j, Decimal) or not isinstance(budget_j, Decimal):
+        if not isinstance(spent_j, Fraction) or not isinstance(budget_j, Fraction):
             return False
-        if not spent_j.is_finite() or not budget_j.is_finite() or spent_j < 0 or budget_j < 0:
+        if spent_j < 0 or budget_j < 0:
             return False
-        return n <= t.capacity_bytes and spent_j + cls.energy_decimal(t, n) <= budget_j
+        return n <= t.capacity_bytes and spent_j + cls.energy_fraction(t, n) <= budget_j
 
     @classmethod
     def admit(cls, t: StorageTier, n: int, budget_j: float) -> bool:
@@ -475,7 +479,7 @@ class TierEnergyAdmission:
             return False
         if not _finite_number(budget_j) or budget_j < 0:
             return False
-        return cls.admit_cumulative(t, n, Decimal(0), Decimal(str(budget_j)))
+        return cls.admit_cumulative(t, n, Fraction(0), _exact_number(budget_j))
 
 
 class StorageTierPlacement:
@@ -603,7 +607,7 @@ class FrontierOffload:
         if len(routes) != len(preds):
             raise ValueError("routes and preds must have equal length")
         a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
-        speculative_spent = Decimal(0); speculative_budget = Decimal(str(self.e))
+        speculative_spent = Fraction(0); speculative_budget = _exact_number(self.e)
         start_hits, start_misses = self.r.hits, self.r.misses
         for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
@@ -612,7 +616,7 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            plan_energy = TierEnergyAdmission.energy_decimal(self.t, speculative_bytes)
+            plan_energy = TierEnergyAdmission.energy_fraction(self.t, speculative_bytes)
             energy_ok = bool(missing_plan) and TierEnergyAdmission.admit_cumulative(
                 self.t, speculative_bytes, speculative_spent, speculative_budget
             )
