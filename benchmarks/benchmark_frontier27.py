@@ -53,7 +53,9 @@ def retrieval(n=10000, q=500):
 
 def main():
     rs, ps = routes(); size = 8 * 1024 * 1024; tier = StorageTier("ssd", 10_000 * size, 1.2e9, 2.4)
-    b = LegacyOffload(size, 1.2e9, 2.4).run(rs, ps); a = FrontierOffload(size, 24, tier, 0.0025, 0.1).run(rs, ps)
+    # A 10 ms synthetic window admits at least one 8 MiB expert at 1.2 GB/s,
+    # so the proof actually exercises prefetch while still charging serialized transfer time.
+    b = LegacyOffload(size, 1.2e9, 2.4).run(rs, ps); a = FrontierOffload(size, 24, tier, 0.010, 0.1).run(rs, ps)
     inv = CurrentnessInvalidator(); nodes = 20000
     for i in range(nodes): inv.bind(f"N{i}", [f"D{i%200}", f"D{(i*7)%200}"])
     affected = inv.invalidate(["D17"]); ring = SnapshotRing(128)
