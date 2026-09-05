@@ -106,13 +106,34 @@ def _observed_git_head() -> str | None:
     return observed
 
 
+def _tracked_worktree_dirty() -> bool | None:
+    """Return tracked-worktree dirtiness, or None when Git metadata is unavailable."""
+    try:
+        completed = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=no"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return bool(completed.stdout.strip())
+
+
 def resolve_source_head(configured: str | None = None) -> str:
-    """Resolve source identity and reject explicit/checked-out Git disagreement."""
+    """Resolve source identity and reject Git disagreement or tracked dirty state."""
     configured = os.environ.get("FRONTIER27_SOURCE_HEAD") if configured is None else configured
     if configured is not None and not _valid_source_head(configured):
         raise ValueError("FRONTIER27_SOURCE_HEAD must be a 40- or 64-hex Git object identity")
 
     observed = _observed_git_head()
+    if observed is not None:
+        dirty = _tracked_worktree_dirty()
+        if dirty is None:
+            raise RuntimeError("tracked worktree state unavailable for Git-backed source identity")
+        if dirty:
+            raise RuntimeError("tracked worktree is dirty; exact Git source identity is unavailable")
     if configured is not None:
         if observed is not None and configured != observed:
             raise RuntimeError("configured source identity does not match checked-out Git HEAD")
@@ -223,6 +244,11 @@ def verify_proof_receipt(result: dict[str, Any], expected_source_head: str | Non
         return False, ("missing proof_receipt",)
     if receipt.get("schema") != PROOF_RECEIPT_SCHEMA:
         errors.append("proof schema mismatch")
+    if result.get("schema") != BENCHMARK_SCHEMA:
+        errors.append("benchmark schema mismatch")
+    manifest = result.get("manifest")
+    if not isinstance(manifest, (list, tuple)) or tuple(manifest) != FRONTIER_27:
+        errors.append("benchmark manifest mismatch")
     source_head = receipt.get("source_head")
     if not _valid_source_head(source_head):
         errors.append("invalid proof source_head")

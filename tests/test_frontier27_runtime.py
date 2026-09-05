@@ -174,8 +174,46 @@ class T(unittest.TestCase):
             self.assertEqual(bench.resolve_source_head(exported_head), exported_head)
 
     def test_50_resolver_uses_observed_git_head_when_no_explicit_identity_exists(self):
-        with patch.dict(os.environ, {}, clear=True), patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD):
+        with patch.dict(os.environ, {}, clear=True), patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD), patch.object(bench, "_tracked_worktree_dirty", return_value=False):
             self.assertEqual(bench.resolve_source_head(), self.PROOF_HEAD)
+
+    def test_51_canonical_benchmark_schema_is_required(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["schema"] = "FORGED-BENCH-v999"
+        altered["proof_receipt"] = bench.build_proof_receipt(altered, self.PROOF_HEAD)
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertFalse(ok)
+        self.assertIn("benchmark schema mismatch", errors)
+
+    def test_52_canonical_frontier_manifest_is_required(self):
+        altered = copy.deepcopy(self.proof_result)
+        altered["manifest"] = ("FORGED",)
+        altered["proof_receipt"] = bench.build_proof_receipt(altered, self.PROOF_HEAD)
+        ok, errors = bench.verify_proof_receipt(altered, self.PROOF_HEAD)
+        self.assertFalse(ok)
+        self.assertIn("benchmark manifest mismatch", errors)
+
+    def test_53_boolean_numeric_payloads_fail_closed(self):
+        altered = copy.deepcopy(self.proof_result)
+        for key in checker.THRESHOLDS:
+            altered["gains"][key] = True
+        altered["retrieval"]["quality"]["recall"] = True
+        altered["retrieval"]["quality"]["false_negatives"] = False
+        altered["offload"]["after"]["prefetch_transfers"] = True
+        altered["audit"]["after_false_admits"] = False
+        altered["audit"]["valid_rejected"] = False
+        altered["proof_receipt"] = bench.build_proof_receipt(altered, self.PROOF_HEAD)
+        failures = checker.validate_result(altered, self.PROOF_HEAD)
+        keys = {key for key, _, _ in failures}
+        self.assertTrue(set(checker.THRESHOLDS) <= keys)
+        self.assertTrue({"retrieval_recall", "retrieval_false_negatives", "prefetch_transfers", "security_after_false_admits", "security_valid_rejected"} <= keys)
+
+    def test_54_tracked_dirty_worktree_cannot_mint_git_source_identity(self):
+        with patch.object(bench, "_observed_git_head", return_value=self.PROOF_HEAD), patch.object(bench, "_tracked_worktree_dirty", return_value=True):
+            with self.assertRaisesRegex(RuntimeError, "tracked worktree is dirty"):
+                bench.resolve_source_head(self.PROOF_HEAD)
+            with self.assertRaisesRegex(RuntimeError, "tracked worktree is dirty"):
+                bench.run_campaign(self.PROOF_HEAD)
 
 
 if __name__ == "__main__": unittest.main()

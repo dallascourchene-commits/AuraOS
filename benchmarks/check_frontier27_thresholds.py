@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 from typing import Any
@@ -20,6 +21,14 @@ THRESHOLDS = {
 }
 
 
+def _finite_number(value: object) -> bool:
+    return type(value) in (int, float) and math.isfinite(value)
+
+
+def _int_count(value: object) -> bool:
+    return type(value) is int
+
+
 def validate_result(result: dict[str, Any], expected_source_head: str | None = None) -> list[tuple[str, Any, Any]]:
     """Validate deterministic floors plus the source-bound proof receipt."""
     fail: list[tuple[str, Any, Any]] = []
@@ -29,7 +38,7 @@ def validate_result(result: dict[str, Any], expected_source_head: str | None = N
 
     for key, minimum in THRESHOLDS.items():
         got = gains.get(key)
-        if not isinstance(got, (int, float)) or got + 1e-12 < minimum:
+        if not _finite_number(got) or got + 1e-12 < minimum:
             fail.append((key, got, minimum))
 
     try:
@@ -39,23 +48,25 @@ def validate_result(result: dict[str, Any], expected_source_head: str | None = N
     except (KeyError, TypeError):
         recall = None
         false_negatives = None
-    if not isinstance(recall, (int, float)) or recall + 1e-12 < 1.0:
+    if not _finite_number(recall) or recall + 1e-12 < 1.0:
         fail.append(("retrieval_recall", recall, 1.0))
-    if false_negatives != 0:
+    if not _int_count(false_negatives) or false_negatives != 0:
         fail.append(("retrieval_false_negatives", false_negatives, 0))
 
     try:
         prefetch_transfers = result["offload"]["after"].get("prefetch_transfers", 0)
     except (KeyError, TypeError, AttributeError):
         prefetch_transfers = 0
-    if not isinstance(prefetch_transfers, int) or prefetch_transfers <= 0:
+    if not _int_count(prefetch_transfers) or prefetch_transfers <= 0:
         fail.append(("prefetch_transfers", prefetch_transfers, ">0"))
 
     audit = result.get("audit") if isinstance(result.get("audit"), dict) else {}
-    if audit.get("after_false_admits") != 0:
-        fail.append(("security_after_false_admits", audit.get("after_false_admits"), 0))
-    if audit.get("valid_rejected") != 0:
-        fail.append(("security_valid_rejected", audit.get("valid_rejected"), 0))
+    after_false_admits = audit.get("after_false_admits")
+    valid_rejected = audit.get("valid_rejected")
+    if not _int_count(after_false_admits) or after_false_admits != 0:
+        fail.append(("security_after_false_admits", after_false_admits, 0))
+    if not _int_count(valid_rejected) or valid_rejected != 0:
+        fail.append(("security_valid_rejected", valid_rejected, 0))
 
     receipt_ok, receipt_errors = verify_proof_receipt(result, expected_source_head)
     if not receipt_ok:
