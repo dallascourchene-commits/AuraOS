@@ -119,5 +119,23 @@ class T(unittest.TestCase):
         result=FrontierOffload(size,8,tier,1.0,1.5).run([[1],[2]],[[1],[2]])
         self.assertEqual(result["prefetch_transfers"],1)
 
+    def test_44_offload_stream_length_mismatch_fails_closed(self):
+        size=1024; tier=StorageTier("ssd",10**9,1024.0,1.0)
+        for runner in (LegacyOffload(size,1024.0,1.0), FrontierOffload(size,8,tier,1.0,10.0)):
+            with self.subTest(type=type(runner).__name__, surplus="routes"):
+                with self.assertRaises(ValueError): runner.run([[1],[2]], [[1]])
+            with self.subTest(type=type(runner).__name__, surplus="preds"):
+                with self.assertRaises(ValueError): runner.run([[1]], [[1],[2]])
+
+    def test_45_frontier_empty_workload_is_zero_valued(self):
+        tier=StorageTier("ssd",10**9,1024.0,1.0)
+        result=FrontierOffload(1024,8,tier,1.0,10.0).run([],[])
+        self.assertEqual(result["bytes"],0)
+        self.assertEqual(result["seconds"],0.0)
+        self.assertEqual(result["energy_j"],0.0)
+        self.assertEqual(result["hit_rate"],0.0)
+        self.assertEqual(result["prefetch_transfers"],0)
+
+
 
 if __name__ == "__main__": unittest.main()

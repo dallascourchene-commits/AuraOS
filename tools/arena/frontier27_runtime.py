@@ -8,6 +8,7 @@ from __future__ import annotations
 from collections import OrderedDict, defaultdict, deque
 from dataclasses import dataclass
 from hashlib import sha256
+from itertools import zip_longest
 import json
 import re
 import time
@@ -274,7 +275,7 @@ class CollisionBucket:
     def __init__(self):
         self.b = defaultdict(dict)
 
-    def put(self, k: tuple[int, int, int], identity: str, v: Any) -> None:
+    def put(self, k: tuple[int, int, int], identity: str, ": Any) -> None:
         self.b[k][identity] = v
 
     def get(self, k: tuple[int, int, int], identity: str) -> Any:
@@ -522,7 +523,9 @@ class LegacyOffload:
 
     def run(self, routes, preds):
         a = UsefulByteAccounting(); secs = energy = 0.0
-        for route, pred in zip(routes, preds):
+        for route, pred in zip_longest(routes, preds, fillvalue=_MISSING):
+            if route is _MISSING or pred is _MISSING:
+                raise ValueError("routes and preds must have equal length")
             n = len(route) * self.size
             a.missed += n; secs += n / self.bw; energy += n / 1e9 * self.jpgb; rs = set(route)
             for x in pred:
@@ -539,7 +542,9 @@ class FrontierOffload:
 
     def run(self, routes, preds):
         a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0; remaining_prefetch_energy = self.e
-        for route, pred in zip(routes, preds):
+        for route, pred in zip_longest(routes, preds, fillvalue=_MISSING):
+            if route is _MISSING or pred is _MISSING:
+                raise ValueError("routes and preds must have equal length")
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
             plan = RouterPreservingPrefetch.plan(native, pred[: budget // self.size], range(10000))
@@ -558,7 +563,7 @@ class FrontierOffload:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
         total = self.r.hits + self.r.misses
-        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total, "prefetch_transfers": prefetch_transfers}
+        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total if total else 0.0, "prefetch_transfers": prefetch_transfers}
 
 
 def security_campaign(n: int = 1000) -> dict[str, Any]:
