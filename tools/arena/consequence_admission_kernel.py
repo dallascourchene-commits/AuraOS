@@ -57,6 +57,8 @@ class ConsequenceVector:
     def __post_init__(self) -> None:
         if len(self.omega8) != 8:
             raise AdmissionError("omega8 must have exactly 8 axes")
+        if any(not isinstance(v, AxisState) for v in self.omega8):
+            raise AdmissionError("omega8 values must be AxisState members")
         if len(self.routing5) != 5 or any(v not in (0, 1, 2) for v in self.routing5):
             raise AdmissionError("routing5 must be five ternary coordinates")
     @property
@@ -133,7 +135,7 @@ class ConsequenceAdmissionKernel:
             decision = Decision.HOLD_REQUIRED_UNKNOWN
         elif inp.source_exit is None or not inp.source_exit.valid():
             decision = Decision.HOLD_MISSING_SOURCE_EXIT
-        elif not inp.source_exit.current:
+        elif inp.source_exit.current is not True:
             decision = Decision.HOLD_STALE_SOURCE
         elif unpaid:
             decision = Decision.HOLD_DEPENDENCY_DEBT
@@ -243,7 +245,7 @@ class ReadjudicationEnvelope:
     def validate(self) -> None:
         if self.inherited_truth or self.inherited_authority:
             raise AdmissionError("succession transfers reproof duties, not truth/authority")
-        if not self.source_exit.valid():
+        if not self.source_exit.valid() or self.source_exit.current is not True:
             raise AdmissionError("current-source exit required")
         if not self.consequence_id or not self.policy_id:
             raise AdmissionError("consequence/policy identity required")

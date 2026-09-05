@@ -40,6 +40,11 @@ class KernelTests(unittest.TestCase):
             self.assertEqual(r.decision, Decision.HOLD_HARD_INVALID)
             self.assertIn(i, r.hard_invalid_axes)
 
+    def test_malformed_omega8_member_fails_closed(self):
+        vals = list(ready_vector().omega8); vals[2] = 99
+        with self.assertRaises(AdmissionError):
+            ConsequenceVector(tuple(vals))
+
     def test_trailing_13d_routing_never_repairs_hard_invalid(self):
         vals = list(ready_vector().omega8); vals[2] = AxisState.HARD_INVALID
         for tail in itertools.product((0,1,2), repeat=5):
@@ -55,6 +60,12 @@ class KernelTests(unittest.TestCase):
 
     def test_stale_source_exit_holds(self):
         self.assertEqual(self.assess(source_exit=source(False)).decision, Decision.HOLD_STALE_SOURCE)
+
+    def test_truthy_nonboolean_source_currentness_fails_closed(self):
+        for malformed in (1, "true", "false"):
+            self.assertEqual(self.assess(source_exit=source(malformed)).decision, Decision.HOLD_STALE_SOURCE)
+        with self.assertRaises(AdmissionError):
+            self.assess(source_exit=source(object()))
 
     def test_dependency_debt_noncompensatory(self):
         r = self.assess(unresolved_dependencies=("scope_lift_gate", "unrelated"))
@@ -143,6 +154,16 @@ class SuccessionTests(unittest.TestCase):
     def test_missing_source_exit_rejected(self):
         e = ReadjudicationEnvelope("P", "c", "pol", SourceExit("", "", "", "", True), (), (), (), "r")
         with self.assertRaises(AdmissionError): e.validate()
+
+    def test_stale_source_exit_rejected(self):
+        e = ReadjudicationEnvelope("P", "c", "pol", source(False), (), (), (), "r")
+        with self.assertRaises(AdmissionError): e.validate()
+
+    def test_truthy_nonboolean_source_currentness_rejected(self):
+        for malformed in (1, "true", "false", object()):
+            e = ReadjudicationEnvelope("P", "c", "pol", source(malformed), (), (), (), "r")
+            with self.assertRaises(AdmissionError):
+                e.validate()
 
 
 if __name__ == "__main__":
