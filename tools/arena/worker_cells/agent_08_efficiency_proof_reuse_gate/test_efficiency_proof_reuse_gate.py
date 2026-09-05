@@ -4,34 +4,49 @@ from itertools import product
 from efficiency_proof_reuse_gate import *
 
 class T(unittest.TestCase):
-    def test_exact(self): self.assertEqual(decide(valid_evidence()),Decision.REUSE_EXACT)
-    def test_neutral_rebind(self): self.assertEqual(decide(valid_evidence(Decision.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND)),Decision.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND)
-    def test_parent_reprove(self):
-        e=valid_evidence(); e=replace(e,proof=replace(e.proof,decision=Decision.REPROVE)); self.assertEqual(decide(e),Decision.REPROVE)
-    def test_parent_integrity(self):
-        for kw in ({"receipt_valid":False},{"trace_provenance_bound":False},{"expected_receipt_root":"drift"}):
-            e=valid_evidence(); self.assertEqual(decide(replace(e,proof=replace(e.proof,**kw))),Decision.REPROVE)
-    def test_cost_hard_flags(self):
-        for k in ("receipt_valid","policy_ranking_eligible","exact_cumulative_cost_verified","source_current"):
-            e=valid_evidence(); r=make_receipt(replace(e,cost=replace(e.cost,**{k:False}))); self.assertEqual(r.decision,Decision.REPROVE)
-    def test_all_cost_identities_noncompensatory(self):
+    def test_exact_reuse(self): self.assertEqual(assess(valid_evidence()).decision, Decision.REUSE_EXACT)
+    def test_no_caller_validity_booleans(self):
+        self.assertNotIn("verified", ProofParentEvidence.__dataclass_fields__); self.assertNotIn("receipt_valid", CostParentEvidence.__dataclass_fields__)
+    def test_proof_semantic_generation_pinned(self):
+        e=valid_evidence(); p=replace(e.proof,semantic_commit="1"*40); self.assertEqual(assess(replace(e,proof=p)).decision,Decision.REPROVE)
+    def test_proof_verifier_blob_pinned(self):
+        e=valid_evidence(); p=replace(e.proof,verifier_blob="1"*40); self.assertEqual(assess(replace(e,proof=p)).decision,Decision.REPROVE)
+    def test_proof_current_source_pinned(self):
+        e=valid_evidence(); p=replace(e.proof,current_source_head="1"*40); self.assertEqual(assess(replace(e,proof=p)).decision,Decision.REPROVE)
+    def test_proof_axes_noncompensatory(self):
         e=valid_evidence()
-        for _,b,reason in DRIFTS:
-            r=make_receipt(replace(e,cost=replace(e.cost,**{b:"drift"}))); self.assertEqual(r.decision,Decision.REPROVE); self.assertIn(reason,r.reasons)
+        for field in ("expected_result_root","expected_workflow_generation","expected_input_root","expected_dependency_root","expected_required_step_root","expected_trace_root","expected_environment_root","expected_resource_budget_root","expected_trace_schema_root","expected_event_root","reconstructed_event_root","expected_cumulative_budget_proof_root","expected_oracle_ceiling_proof_root","expected_execution_provenance_root","expected_fused_event_structure_root"):
+            p=replace(e.proof,**{field:"drift" if "generation" in field else digest({"drift":field})}); self.assertEqual(assess(replace(e,proof=p)).decision,Decision.REPROVE,field)
+    def test_cost_semantic_generation_pinned(self):
+        e=valid_evidence(); c=replace(e.cost,semantic_commit="1"*40); self.assertEqual(assess(replace(e,cost=c)).decision,Decision.REPROVE)
+    def test_cost_verifier_blob_pinned(self):
+        e=valid_evidence(); c=replace(e.cost,verifier_blob="1"*40); self.assertEqual(assess(replace(e,cost=c)).decision,Decision.REPROVE)
+    def test_cost_source_pinned(self):
+        e=valid_evidence(); c=replace(e.cost,envelope=replace(e.cost.envelope,source_head="1"*40)); self.assertEqual(assess(replace(e,cost=c)).decision,Decision.REPROVE)
+    def test_cost_contamination_recomputed(self):
+        e=valid_evidence(); ss=list(e.cost.samples); ss[1]=replace(ss[1],rendered_prefix=ss[0].rendered_prefix); c=replace(e.cost,samples=tuple(ss)); self.assertEqual(assess(replace(e,cost=c)).decision,Decision.REPROVE)
+    def test_cost_budget_recomputed(self):
+        e=valid_evidence(); c=replace(e.cost,envelope=replace(e.cost.envelope,speculative_energy_budget_j="0.0000001")); self.assertEqual(assess(replace(e,cost=c)).decision,Decision.REPROVE)
+    def test_cost_transfer_integrity_recomputed(self):
+        e=valid_evidence(); ts=list(e.cost.transfers); ts[1]=replace(ts[1],sequence=9); c=replace(e.cost,transfers=tuple(ts)); self.assertEqual(assess(replace(e,cost=c)).decision,Decision.REPROVE)
+    def test_recorded_projection_drift_reproves(self):
+        e=valid_evidence(); self.assertEqual(assess(replace(e,proved_cost_projection_root="f"*64)).decision,Decision.REPROVE)
     def test_authority_never_minted(self):
-        r=make_receipt(replace(valid_evidence(),authority_requested=True)); self.assertEqual(r.decision,Decision.REPROVE); self.assertFalse(r.effect_authority); self.assertFalse(r.gate10)
-    def test_multiple_failures_do_not_compensate(self):
-        e=valid_evidence(); c=replace(e.cost,policy_ranking_eligible=False,expected_workload_root="drift"); r=make_receipt(replace(e,cost=c)); self.assertEqual(r.decision,Decision.REPROVE); self.assertGreater(len(r.reasons),1)
-    def test_receipt_deterministic(self):
-        e=valid_evidence(); a=make_receipt(e); b=make_receipt(e); self.assertEqual(a.receipt_root,b.receipt_root); self.assertTrue(verify_receipt(e,a))
+        r=assess(replace(valid_evidence(),authority_requested=True)); self.assertEqual(r.decision,Decision.REPROVE); self.assertFalse(r.truth_authority); self.assertFalse(r.effect_authority); self.assertFalse(r.gate10)
+    def test_context_changes_receipt_not_decision(self):
+        e=valid_evidence(); a=assess(e,(0,0,0,0,0)); b=assess(e,(2,2,2,2,2)); self.assertEqual(a.decision,b.decision); self.assertNotEqual(a.context_root,b.context_root); self.assertNotEqual(a.receipt_root,b.receipt_root)
+    def test_context_cannot_repair_invalid(self):
+        e=replace(valid_evidence(),proved_cost_projection_root="f"*64); base=assess(e); roots=set()
+        self.assertEqual(base.decision,Decision.REPROVE)
+        for tail in product(range(3),repeat=5):
+            r=recontextualize(base,tail); self.assertEqual(r.decision,Decision.REPROVE); roots.add(r.context_root)
+        self.assertEqual(len(roots),243)
     def test_receipt_tamper(self):
-        e=valid_evidence(); r=make_receipt(e); self.assertFalse(verify_receipt(e,replace(r,claim_generation="x")))
-    def test_omega8_exact_keeper(self): self.assertEqual(sum(crystalline_admission(x) for x in product(range(3),repeat=8)),1)
-    def test_13d_no_repair(self):
-        bad=(0,2,2,2,2,2,2,1)
-        for t in product(range(3),repeat=5): self.assertFalse(admission_13d(bad,t))
-    def test_invalid_omega(self):
-        with self.assertRaises(GateError): crystalline_admission((2,)*7)
-    def test_invalid_tail(self):
-        with self.assertRaises(GateError): admission_13d((2,2,2,2,2,2,2,1),(2,)*4)
+        e=valid_evidence(); r=assess(e); self.assertFalse(verify_receipt(e,replace(r,claim_generation="x")))
+    def test_omega8_one_keeper(self): self.assertEqual(sum(crystalline_admission(x) for x in product(range(3),repeat=8)),1)
+    def test_13d_tail_applied_no_repair(self):
+        bad=(0,2,2,2,2,2,2,1); roots=set()
+        for tail in product(range(3),repeat=5):
+            self.assertFalse(admission_13d(bad,tail)); roots.add(digest({"context5":list(tail)}))
+        self.assertEqual(len(roots),243)
 if __name__=="__main__": unittest.main()

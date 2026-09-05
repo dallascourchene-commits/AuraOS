@@ -1,13 +1,11 @@
-# AGENT_08 — Workload-Qualified Efficiency Proof Reuse V1
+# AGENT_08 — Workload-Qualified Efficiency Proof Reuse V2
 
-Proof-only D0 composition membrane.
+Independent D0 verifier/composition membrane over AGENT_27 trace/resource proof-reuse semantics and AGENT_07 workload-qualified exact-cost semantics.
 
-Exact foreign parents:
-1. AGENT_27 Proof-Reuse Trace-Bound Admission — canonical trace schema, execution-source provenance, fused-event identity, resource envelope and proof-currentness obligations.
-2. AGENT_07 Workload-Qualified Cost Receipt — contamination-safe ranking workload plus exact cumulative transfer-cost/source-envelope receipt.
+This version removes caller-authored `verified/current/receipt_valid` booleans from the admission basis. It independently recomputes the consequence-bearing parent projections from raw evidence, pins the exact parent semantic commits and verifier source blobs, pins the current base source generation, recomputes contamination/cost/transfer/budget invariants, and compares current projection roots to the proof-time roots. Any mismatch returns `REPROVE`.
 
-Keeper law:
+Keeper: `ReusableEfficiencyProof => IndependentlyRecomputedTraceProofProjectionExact AND IndependentlyRecomputedQualifiedCostProjectionExact AND RecordedProjectionRootsCurrent AND D0`.
 
-`ReusableEfficiencyProof => ParentTraceProofReuseEligible AND QualifiedCostReceiptValid AND RankingWorkloadEligible AND ExactCumulativeCost AND ExactSource/Workload/Transfer/Envelope/Result/BenchmarkGeneration AND D0`.
+The 13D context is now hashed into each decision receipt; different tails produce different context roots while remaining unable to repair a failed hard axis.
 
-No axis compensates for another. Any drift returns `REPROVE`. This module does not reimplement routing, trace reconstruction, cache policy, energy arithmetic, model execution, hosted proof, merge authority, effect authority, or Gate10.
+No model/provider execution, physical performance, hosted PASS, truth/effect authority, merge/deploy, private/native transformer KV, or Gate10.

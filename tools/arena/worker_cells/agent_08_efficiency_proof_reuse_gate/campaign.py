@@ -1,67 +1,35 @@
 from dataclasses import replace
 from hashlib import sha256
 from itertools import product
-import json
-import random
+import json, random
+from efficiency_proof_reuse_gate import *
 
-from efficiency_proof_reuse_gate import Decision, admission_13d, crystalline_admission, decide, make_receipt, valid_evidence
-
-
-def semantic_campaign(seed=827, hs=1000, destructive=50000, tails=100000):
-    rng = random.Random(seed)
-    base = valid_evidence()
-    mutations = [
-        lambda e: replace(e, authority_requested=True),
-        lambda e: replace(e, proof=replace(e.proof, receipt_valid=False)),
-        lambda e: replace(e, proof=replace(e.proof, expected_receipt_root="drift-proof")),
-        lambda e: replace(e, cost=replace(e.cost, receipt_valid=False)),
-        lambda e: replace(e, cost=replace(e.cost, policy_ranking_eligible=False)),
-        lambda e: replace(e, cost=replace(e.cost, exact_cumulative_cost_verified=False)),
-        lambda e: replace(e, cost=replace(e.cost, source_current=False)),
-        lambda e: replace(e, cost=replace(e.cost, expected_source_head="drift-source")),
-        lambda e: replace(e, cost=replace(e.cost, expected_workload_root="drift-workload")),
-        lambda e: replace(e, cost=replace(e.cost, expected_transfer_root="drift-transfer")),
-        lambda e: replace(e, cost=replace(e.cost, expected_envelope_id="drift-envelope")),
-        lambda e: replace(e, cost=replace(e.cost, expected_result_root="drift-result")),
-        lambda e: replace(e, cost=replace(e.cost, expected_benchmark_generation="bench-g2")),
-        lambda e: replace(e, cost=replace(e.cost, expected_receipt_root="drift-cost")),
-    ]
-    false_admits = 0
-    for i in range(hs):
-        e = mutations[i % len(mutations)](base)
-        false_admits += int(decide(e) != Decision.REPROVE)
-
-    destructive_false_admits = 0
-    for _ in range(destructive):
-        e = mutations[rng.randrange(len(mutations))](base)
-        destructive_false_admits += int(decide(e) != Decision.REPROVE)
-
-    omega_keepers = sum(crystalline_admission(x) for x in product(range(3), repeat=8))
-    failed = (0,2,2,2,2,2,2,1)
-    repaired = 0
+def semantic_campaign(seed=808, hs=1000, destructive=50000, tails=100000):
+    rng=random.Random(seed); base=valid_evidence()
+    def mutate(e,i):
+        m=i%12
+        if m==0: return replace(e,proof=replace(e.proof,semantic_commit="1"*40))
+        if m==1: return replace(e,proof=replace(e.proof,verifier_blob="1"*40))
+        if m==2: return replace(e,proof=replace(e.proof,expected_event_root=digest({"drift":"event"})))
+        if m==3: return replace(e,proof=replace(e.proof,expected_execution_provenance_root=digest({"drift":"exec"})))
+        if m==4: return replace(e,cost=replace(e.cost,semantic_commit="1"*40))
+        if m==5: return replace(e,cost=replace(e.cost,verifier_blob="1"*40))
+        if m==6:
+            ss=list(e.cost.samples); ss[1]=replace(ss[1],rendered_prefix=ss[0].rendered_prefix); return replace(e,cost=replace(e.cost,samples=tuple(ss)))
+        if m==7: return replace(e,cost=replace(e.cost,envelope=replace(e.cost.envelope,source_head="1"*40)))
+        if m==8: return replace(e,cost=replace(e.cost,envelope=replace(e.cost.envelope,speculative_energy_budget_j="0.0000001")))
+        if m==9: return replace(e,proved_proof_projection_root="e"*64)
+        if m==10: return replace(e,proved_cost_projection_root="f"*64)
+        return replace(e,authority_requested=True)
+    false=sum(assess(mutate(base,i)).decision!=Decision.REPROVE for i in range(hs))
+    destructive_false=0
+    for _ in range(destructive): destructive_false += assess(mutate(base,rng.randrange(12))).decision!=Decision.REPROVE
+    omega=sum(crystalline_admission(x) for x in product(range(3),repeat=8))
+    invalid=replace(base,proved_cost_projection_root="f"*64); invalid_receipt=assess(invalid); repairs=0; context_roots=set()
+    if invalid_receipt.decision != Decision.REPROVE: raise RuntimeError("invalid base unexpectedly reusable")
     for _ in range(tails):
-        tail = tuple(rng.randrange(3) for _ in range(5))
-        repaired += int(admission_13d(failed, tail))
-
-    exact = make_receipt(base)
-    neutral = make_receipt(valid_evidence(Decision.ELIGIBLE_BY_PROOF_NEUTRAL_REBIND))
-    semantic = {
-        "schema": "AURA-WQ-EFFICIENCY-PROOF-REUSE-CAMPAIGN-v1",
-        "hs_cases": hs,
-        "hs_false_admits": false_admits,
-        "destructive_handoffs": destructive,
-        "destructive_false_admits": destructive_false_admits,
-        "omega8_states": 3**8,
-        "omega8_keepers": omega_keepers,
-        "tails_13d": tails,
-        "tails_13d_repairs": repaired,
-        "exact_receipt_root": exact.receipt_root,
-        "neutral_rebind_receipt_root": neutral.receipt_root,
-    }
-    root = sha256(json.dumps(semantic, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-    return semantic, root
-
-
-if __name__ == "__main__":
-    s, r = semantic_campaign()
-    print(json.dumps({"semantic": s, "campaign_root": r}, sort_keys=True))
+        tail=tuple(rng.randrange(3) for _ in range(5)); r=recontextualize(invalid_receipt,tail); context_roots.add(r.context_root); repairs += r.decision!=Decision.REPROVE
+    semantic={"schema":"AURA-WQ-EFFICIENCY-PROOF-REUSE-CAMPAIGN-v2","hs_cases":hs,"hs_false_admits":false,"destructive_handoffs":destructive,"destructive_false_reuses":destructive_false,"omega8_states":3**8,"omega8_keepers":omega,"tails_13d":tails,"distinct_context_roots":len(context_roots),"tails_13d_repairs":repairs,"valid_receipt_root":assess(base).receipt_root}
+    root=sha256(json.dumps(semantic,sort_keys=True,separators=(",",":")).encode()).hexdigest(); return semantic,root
+if __name__=="__main__":
+    s,r=semantic_campaign(); print(json.dumps({"semantic":s,"campaign_root":r},sort_keys=True))
