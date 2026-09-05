@@ -33,8 +33,9 @@ _DEFAULT_REQUIRED_PATHS = (
     "persist/model_persister.py",
     "persist/safetensor_model_persister.py",
 )
-_IGNORED_DIRS = frozenset({"__pycache__", ".git"})
-_IGNORED_SUFFIXES = frozenset({".pyc", ".pyo"})
+_IGNORED_DIRS = frozenset({".git"})
+_REJECTED_DIRS = frozenset({"__pycache__"})
+_REJECTED_SUFFIXES = frozenset({".pyc", ".pyo"})
 
 
 class SourceManifestError(RuntimeError):
@@ -59,34 +60,22 @@ class VerifiedSourceManifest:
 
 
 def _canonical_json(value: object) -> bytes:
-    return json.dumps(
-        value,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=True,
-        allow_nan=False,
-    ).encode("ascii")
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
 
 
 def _validate_digest(value: str) -> str:
     if not isinstance(value, str) or _SHA256_RE.fullmatch(value) is None:
-        raise InvalidManifestAllowlistError(
-            "manifest SHA-256 values must be exact lowercase 64-hex strings"
-        )
+        raise InvalidManifestAllowlistError("manifest SHA-256 values must be exact lowercase 64-hex strings")
     return value
 
 
 def normalize_manifest_allowlist(values: Iterable[str] | None) -> frozenset[str]:
     if values is None or isinstance(values, (str, bytes)):
-        raise InvalidManifestAllowlistError(
-            "source-manifest allowlist must be a non-empty collection of SHA-256 values"
-        )
+        raise InvalidManifestAllowlistError("source-manifest allowlist must be a non-empty collection of SHA-256 values")
     try:
         normalized = frozenset(_validate_digest(value) for value in values)
     except TypeError as exc:
-        raise InvalidManifestAllowlistError(
-            "source-manifest allowlist must be iterable"
-        ) from exc
+        raise InvalidManifestAllowlistError("source-manifest allowlist must be iterable") from exc
     if not normalized:
         raise InvalidManifestAllowlistError("source-manifest allowlist must not be empty")
     return normalized
@@ -155,11 +144,7 @@ def _sha256_regular_file(path: Path, *, chunk_size: int = 1024 * 1024) -> tuple[
     return digest.hexdigest(), before.st_size
 
 
-def build_source_manifest(
-    source_root: str | os.PathLike[str],
-    *,
-    required_paths: Sequence[str] | None = None,
-) -> tuple[dict[str, object], VerifiedSourceManifest]:
+def build_source_manifest(source_root: str | os.PathLike[str], *, required_paths: Sequence[str] | None = None) -> tuple[dict[str, object], VerifiedSourceManifest]:
     root = Path(source_root).expanduser()
     if not root.is_absolute():
         root = (Path.cwd() / root).resolve(strict=False)
@@ -187,6 +172,8 @@ def build_source_manifest(
                 raise SourceTreeIntegrityError(f"source directory symlink is not admitted: {candidate}")
             if not stat.S_ISDIR(metadata.st_mode):
                 raise SourceTreeIntegrityError(f"source tree contains non-directory entry: {candidate}")
+            if dirname in _REJECTED_DIRS:
+                raise SourceTreeIntegrityError(f"executable bytecode/cache directory is not admitted: {candidate}")
             if dirname not in _IGNORED_DIRS:
                 kept_dirs.append(dirname)
         dirnames[:] = kept_dirs
@@ -199,8 +186,8 @@ def build_source_manifest(
                 raise SourceTreeIntegrityError(f"source symlink is not admitted: {candidate}")
             if not stat.S_ISREG(metadata.st_mode):
                 raise SourceTreeIntegrityError(f"source tree contains a special file: {candidate}")
-            if candidate.suffix.lower() in _IGNORED_SUFFIXES:
-                continue
+            if candidate.suffix.lower() in _REJECTED_SUFFIXES:
+                raise SourceTreeIntegrityError(f"executable Python bytecode is not admitted: {candidate}")
             file_digest, size = _sha256_regular_file(candidate)
             entries.append({"path": relative, "size": size, "sha256": file_digest})
             observed.add(relative)
@@ -212,28 +199,13 @@ def build_source_manifest(
     if not entries:
         raise SourceTreeIntegrityError("AirLLM source manifest may not be empty")
 
-    manifest: dict[str, object] = {
-        "schema": _SCHEMA,
-        "required_paths": list(required),
-        "files": sorted(entries, key=lambda entry: str(entry["path"])),
-    }
+    manifest: dict[str, object] = {"schema": _SCHEMA, "required_paths": list(required), "files": sorted(entries, key=lambda entry: str(entry["path"]))}
     manifest_digest = sha256(_canonical_json(manifest)).hexdigest()
-    verified = VerifiedSourceManifest(
-        root=str(root),
-        sha256=manifest_digest,
-        file_count=len(entries),
-        total_bytes=total_bytes,
-        required_paths=required,
-    )
+    verified = VerifiedSourceManifest(root=str(root), sha256=manifest_digest, file_count=len(entries), total_bytes=total_bytes, required_paths=required)
     return manifest, verified
 
 
-def verify_source_manifest(
-    source_root: str | os.PathLike[str],
-    allowlist: Iterable[str] | None,
-    *,
-    required_paths: Sequence[str] | None = None,
-) -> VerifiedSourceManifest:
+def verify_source_manifest(source_root: str | os.PathLike[str], allowlist: Iterable[str] | None, *, required_paths: Sequence[str] | None = None) -> VerifiedSourceManifest:
     admitted = normalize_manifest_allowlist(allowlist)
     _, verified = build_source_manifest(source_root, required_paths=required_paths)
     if not any(hmac.compare_digest(verified.sha256, digest) for digest in admitted):
@@ -246,13 +218,4 @@ def k27_for_manifest(manifest_sha256: str) -> tuple[int, int, int]:
     return digest[0] % 27, digest[1] % 27, digest[2] % 27
 
 
-__all__ = [
-    "InvalidManifestAllowlistError",
-    "SourceManifestError",
-    "SourceTreeIntegrityError",
-    "VerifiedSourceManifest",
-    "build_source_manifest",
-    "k27_for_manifest",
-    "normalize_manifest_allowlist",
-    "verify_source_manifest",
-]
+__all__ = ["InvalidManifestAllowlistError", "SourceManifestError", "SourceTreeIntegrityError", "VerifiedSourceManifest", "build_source_manifest", "k27_for_manifest", "normalize_manifest_allowlist", "verify_source_manifest"]
