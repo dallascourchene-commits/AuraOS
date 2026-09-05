@@ -37,6 +37,10 @@ class EvidenceSliceDagTests(unittest.TestCase):
     def test_tampered_witness_fields_with_old_root_fail_closed(self):
         d=demo_dag(); w=demo_witnesses(d); w['source_receipt']=replace(w['source_receipt'], output_root='tampered')
         with self.assertRaisesRegex(DagError,'INVALID_WITNESS_ROOT'): d.compile_plan(['transfer_raw'],w)
+    def test_self_valid_but_detached_reusable_witness_fails_closed(self):
+        d=demo_dag(); w=demo_witnesses(d); old=w['source_receipt']
+        w['source_receipt']=witness_for(old.node_id,digest({'detached':'input'}),old.output_root,old.generation)
+        with self.assertRaisesRegex(DagError,'INVALID_DEPENDENCY_BINDING'): d.compile_plan(['transfer_raw'],w)
     def test_truthy_nonbool_witness_state_fails_closed(self):
         d=demo_dag(); w=demo_witnesses(d); old=w['transfer_raw']
         w['transfer_raw']=Witness(old.node_id,old.input_root,old.output_root,old.generation,1,True,True,old.witness_root)
