@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1233,6 +1233,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/proof-bound-reuse-o1.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1977,7 +1978,9 @@
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/benchmark_frontier27.py",
+      "benchmarks/benchmark_proof_bound_reuse.py",
       "benchmarks/check_frontier27_thresholds.py",
+      "benchmarks/proof_bound_reuse_campaign.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -2150,6 +2153,7 @@
       "docs/FRONTIER27_IMPLEMENTATION.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+      "docs/PROOF_BOUND_REUSE_O1.md",
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
@@ -2687,6 +2691,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_proof_bound_reuse.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2696,6 +2701,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/proof_bound_reuse.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -2732,7 +2738,9 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/benchmark_frontier27.py",
+      "benchmarks/benchmark_proof_bound_reuse.py",
       "benchmarks/check_frontier27_thresholds.py",
+      "benchmarks/proof_bound_reuse_campaign.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
@@ -2810,9 +2818,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -11722,6 +11728,53 @@
         0.087905,
         -0.204351,
         -0.156402
+      ]
+    },
+    {
+      "path": ".github/workflows/proof-bound-reuse-o1.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2341,
+      "lines": 60,
+      "tokens_est": 586,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6765fd2f0ad864e3",
+      "vector": [
+        0.178406,
+        0.119365,
+        -0.18354,
+        0.324724,
+        -0.142468,
+        0.20921,
+        -0.311889,
+        -0.011551,
+        0.240014,
+        0.211777,
+        -0.152736,
+        -0.160437,
+        0.024386,
+        -0.021819,
+        0.150169,
+        0.137334,
+        -0.008984,
+        0.103963,
+        0.026953,
+        -0.011551,
+        -0.075726,
+        0.062891,
+        0.211777,
+        0.091128,
+        -0.165571,
+        0.142468,
+        -0.257983,
+        0.237447,
+        0.211777,
+        -0.309322,
+        0.270817,
+        -0.014118
       ]
     },
     {
@@ -67171,6 +67224,53 @@
       ]
     },
     {
+      "path": "benchmarks/benchmark_proof_bound_reuse.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2426,
+      "lines": 43,
+      "tokens_est": 607,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3e3b8dbc66194ec8",
+      "vector": [
+        0.118852,
+        -0.102378,
+        -0.238881,
+        0.269477,
+        -0.038833,
+        0.165922,
+        -0.241235,
+        -0.052954,
+        0.048247,
+        0.067075,
+        -0.163569,
+        0.024712,
+        -0.067075,
+        0.092964,
+        0.04354,
+        -0.243588,
+        0.26477,
+        -0.205932,
+        0.269477,
+        -0.015298,
+        0.064721,
+        0.092964,
+        -0.260063,
+        -0.13062,
+        -0.255356,
+        -0.104731,
+        -0.238881,
+        0.144741,
+        0.269477,
+        -0.172983,
+        -0.234174,
+        0.229467
+      ]
+    },
+    {
       "path": "benchmarks/check_frontier27_thresholds.py",
       "role": "python_module",
       "binary": false,
@@ -67215,6 +67315,53 @@
         0.141345,
         0.128378,
         -0.024638
+      ]
+    },
+    {
+      "path": "benchmarks/proof_bound_reuse_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1159,
+      "lines": 15,
+      "tokens_est": 290,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cccac9e742c3b600",
+      "vector": [
+        -0.17009,
+        -0.044098,
+        0.217968,
+        0.215448,
+        -0.013859,
+        0.086935,
+        0.091975,
+        -0.099534,
+        -0.280964,
+        -0.248206,
+        -0.18773,
+        -0.094495,
+        -0.117173,
+        0.149932,
+        -0.011339,
+        -0.318762,
+        -0.17765,
+        0.17009,
+        0.207888,
+        -0.283484,
+        -0.119693,
+        -0.255766,
+        0.081895,
+        0.061737,
+        0.243166,
+        -0.026459,
+        0.023939,
+        -0.235607,
+        -0.258286,
+        -0.205369,
+        0.069296,
+        0.149932
       ]
     },
     {
@@ -76063,6 +76210,53 @@
         0.081234,
         -0.099878,
         -0.201088
+      ]
+    },
+    {
+      "path": "docs/PROOF_BOUND_REUSE_O1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 2901,
+      "lines": 41,
+      "tokens_est": 724,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c55746579ae23226",
+      "vector": [
+        -0.056476,
+        -0.299205,
+        -0.186252,
+        0.046863,
+        0.289592,
+        0.306414,
+        0.049267,
+        0.082912,
+        -0.241527,
+        -0.227107,
+        0.082912,
+        0.130977,
+        -0.289592,
+        0.006008,
+        -0.193462,
+        -0.142993,
+        -0.130977,
+        0.042057,
+        -0.210284,
+        -0.246333,
+        0.253543,
+        -0.116558,
+        -0.176639,
+        -0.073299,
+        -0.061283,
+        0.013218,
+        -0.142993,
+        0.222301,
+        0.018024,
+        0.25114,
+        0.179042,
+        0.010815
       ]
     },
     {
@@ -104094,6 +104288,53 @@
       ]
     },
     {
+      "path": "tests/test_proof_bound_reuse.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4600,
+      "lines": 43,
+      "tokens_est": 1150,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b880cddd1db29c49",
+      "vector": [
+        0.085799,
+        0.055065,
+        -0.152389,
+        -0.308619,
+        0.116533,
+        0.167756,
+        0.060187,
+        0.142144,
+        0.04482,
+        -0.19849,
+        0.262519,
+        0.244591,
+        -0.144705,
+        0.326548,
+        -0.049943,
+        0.003842,
+        0.001281,
+        -0.193367,
+        -0.060187,
+        0.270202,
+        0.129338,
+        0.055065,
+        -0.137022,
+        -0.306058,
+        -0.113972,
+        -0.067871,
+        -0.149828,
+        -0.001281,
+        -0.321425,
+        -0.11141,
+        -0.321425,
+        -0.006403
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -104514,6 +104755,53 @@
         0.04276,
         -0.030543,
         -0.194251
+      ]
+    },
+    {
+      "path": "tools/arena/proof_bound_reuse.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7298,
+      "lines": 167,
+      "tokens_est": 1825,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1bb6a3946c5d2227",
+      "vector": [
+        -0.220947,
+        0.286316,
+        -0.18434,
+        0.103283,
+        0.312463,
+        -0.016996,
+        0.220947,
+        -0.092824,
+        -0.218332,
+        0.173881,
+        0.328152,
+        0.032684,
+        0.265398,
+        0.13466,
+        0.124201,
+        0.019611,
+        -0.064062,
+        0.053603,
+        -0.056217,
+        -0.192185,
+        0.18957,
+        -0.087594,
+        -0.150349,
+        -0.006537,
+        -0.210488,
+        0.037914,
+        -0.302004,
+        -0.061447,
+        -0.168652,
+        0.29939,
+        -0.056217,
+        -0.053603
       ]
     },
     {
@@ -105561,7 +105849,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788636424,
+  "generated_at_unix": 1788637236,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -105736,6 +106024,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/proof-bound-reuse-o1.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -106480,7 +106769,9 @@
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/benchmark_frontier27.py",
+      "benchmarks/benchmark_proof_bound_reuse.py",
       "benchmarks/check_frontier27_thresholds.py",
+      "benchmarks/proof_bound_reuse_campaign.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -106653,6 +106944,7 @@
       "docs/FRONTIER27_IMPLEMENTATION.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+      "docs/PROOF_BOUND_REUSE_O1.md",
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
@@ -107190,6 +107482,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_proof_bound_reuse.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -107199,6 +107492,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/proof_bound_reuse.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -201407,6 +201701,36 @@
         "file_digest8": "ac3114981739d14d"
       },
       {
+        "semantic_id": "benchmarks/benchmark_proof_bound_reuse.py#function:build:4835384a48b2c7cd",
+        "name": "build",
+        "kind": "function",
+        "file": "benchmarks/benchmark_proof_bound_reuse.py",
+        "line": 13,
+        "end_line": 21,
+        "signature_hash": "d8db297c043ef6a4",
+        "file_digest8": "3e3b8dbc66194ec8"
+      },
+      {
+        "semantic_id": "benchmarks/benchmark_proof_bound_reuse.py#function:expensive:1e6e1b4b83eaca8c",
+        "name": "expensive",
+        "kind": "function",
+        "file": "benchmarks/benchmark_proof_bound_reuse.py",
+        "line": 8,
+        "end_line": 11,
+        "signature_hash": "009ab1ac15d392bd",
+        "file_digest8": "3e3b8dbc66194ec8"
+      },
+      {
+        "semantic_id": "benchmarks/benchmark_proof_bound_reuse.py#function:main:42c8ca208eecbeae",
+        "name": "main",
+        "kind": "function",
+        "file": "benchmarks/benchmark_proof_bound_reuse.py",
+        "line": 23,
+        "end_line": 41,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "3e3b8dbc66194ec8"
+      },
+      {
         "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:_ablation_tokens:d4e25fe816dc8ce1",
         "name": "_ablation_tokens",
         "kind": "function",
@@ -265197,6 +265521,216 @@
         "file_digest8": "bec72310a01d581a"
       },
       {
+        "semantic_id": "tests/test_proof_bound_reuse.py#class:T:d4c7c997f289df19",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 6,
+        "end_line": 40,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.setUp:c12002644190be1b",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 7,
+        "end_line": 10,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_01_admit_and_reuse:44399fb8b0bc6820",
+        "name": "T.test_01_admit_and_reuse",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "00092a363ba68da8",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_02_missing_step_holds:9ee6843d09e6cb50",
+        "name": "T.test_02_missing_step_holds",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "d71ad4a9bde619cb",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_03_tamper_holds:0e9bdd6dfba1c990",
+        "name": "T.test_03_tamper_holds",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "c1b6abb621046316",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_04_head_change_invalidates_reuse:0306f524196b382a",
+        "name": "T.test_04_head_change_invalidates_reuse",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "15f63a0b7b523097",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_05_workflow_change_invalidates_reuse:16db8754083e194b",
+        "name": "T.test_05_workflow_change_invalidates_reuse",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "add9e502501b3434",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_06_input_change_invalidates_reuse:c462a6a8553b0671",
+        "name": "T.test_06_input_change_invalidates_reuse",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "eac52baeddcd872e",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_07_dependency_invalidation:aceb55ecd1b6687b",
+        "name": "T.test_07_dependency_invalidation",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "2facee1ebb39859c",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_08_unrelated_dependency_does_not_wake:618c36650c23e9e0",
+        "name": "T.test_08_unrelated_dependency_does_not_wake",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "78fa9eb68e0763be",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_09_rebind_old_dependency_removed:528f463cc20702da",
+        "name": "T.test_09_rebind_old_dependency_removed",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "f0649e7421c9c8db",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_10_old_receipt_fails_after_rebind:d530559efe35ff61",
+        "name": "T.test_10_old_receipt_fails_after_rebind",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "2bbd5aed3b74dd2a",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_11_fresh_reproof_closes_stale:be7931f4b6b841c8",
+        "name": "T.test_11_fresh_reproof_closes_stale",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "6191cad7fb53d164",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_12_authority_cannot_promote:0d3b07e4c936c347",
+        "name": "T.test_12_authority_cannot_promote",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 30,
+        "end_line": 30,
+        "signature_hash": "0d46e8e044b9acba",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_13_receipt_result_tamper:08ae49c727c8b372",
+        "name": "T.test_13_receipt_result_tamper",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 31,
+        "end_line": 31,
+        "signature_hash": "8252cf6997149892",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_14_receipt_steps_tamper:3146b2dc5d7e0ed3",
+        "name": "T.test_14_receipt_steps_tamper",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 32,
+        "end_line": 32,
+        "signature_hash": "9cc4768532d07998",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_15_unknown_project_not_reusable:97caa37f627ee1ac",
+        "name": "T.test_15_unknown_project_not_reusable",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 33,
+        "end_line": 33,
+        "signature_hash": "47c14b8187bd8024",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_16_empty_binding_rejected:99c4f43a634d6ce3",
+        "name": "T.test_16_empty_binding_rejected",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "2456bbb2a8550dba",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_17_omega8_hard_invalid_dominance:c7f1dae85026a50f",
+        "name": "T.test_17_omega8_hard_invalid_dominance",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "b7279584fa16d845",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_18_forged_alternate_head_cannot_be_admitted:aba11a4028e40688",
+        "name": "T.test_18_forged_alternate_head_cannot_be_admitted",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "4821ae589e77fae2",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_19_rebind_requires_new_generation_receipt:d543a977ce665306",
+        "name": "T.test_19_rebind_requires_new_generation_receipt",
+        "kind": "method",
+        "file": "tests/test_proof_bound_reuse.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "9b93d2d79caa9781",
+        "file_digest8": "b880cddd1db29c49"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -266345,6 +266879,216 @@
         "end_line": 392,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "1d2a62940a82b09b"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:CurrentContext:8d6ccff59235746a",
+        "name": "CurrentContext",
+        "kind": "class",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "1395de4d19c0814d",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProjectBinding:1f2e59048647ebe0",
+        "name": "ProjectBinding",
+        "kind": "class",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 66,
+        "end_line": 70,
+        "signature_hash": "6f9d9e1493d5749a",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProofBoundReuseLedger:87b6df1db092775f",
+        "name": "ProofBoundReuseLedger",
+        "kind": "class",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 78,
+        "end_line": 160,
+        "signature_hash": "2fe80971ff3dcf67",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProofIdentity:cab31e524036c2c0",
+        "name": "ProofIdentity",
+        "kind": "class",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 21,
+        "end_line": 36,
+        "signature_hash": "d798899478990e68",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProofReceipt:6a701910c460867d",
+        "name": "ProofReceipt",
+        "kind": "class",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 39,
+        "end_line": 63,
+        "signature_hash": "9f523c2c49dc952b",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#function:digest:8517d4bca2c81900",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "0bff111c4fc1adcb",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#function:omega8_admit:7e42caa045bb86fd",
+        "name": "omega8_admit",
+        "kind": "function",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 163,
+        "end_line": 166,
+        "signature_hash": "bfa2429a41b29ea3",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#function:stable:e3c6a9e5fcb92264",
+        "name": "stable",
+        "kind": "function",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "6c4779cb279e35c8",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.__init__:5848df7be96764bd",
+        "name": "ProofBoundReuseLedger.__init__",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger._rebuild_expected:a1406d722f491151",
+        "name": "ProofBoundReuseLedger._rebuild_expected",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 87,
+        "end_line": 100,
+        "signature_hash": "8ca821dd3e74470e",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.admit_fresh_proof:9ae028195dda28f9",
+        "name": "ProofBoundReuseLedger.admit_fresh_proof",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 138,
+        "end_line": 145,
+        "signature_hash": "b130f1825509169d",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.bind:b748766a3197cea1",
+        "name": "ProofBoundReuseLedger.bind",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 102,
+        "end_line": 117,
+        "signature_hash": "43b35dcb64e2c615",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.current_identity:0f17878936d076f9",
+        "name": "ProofBoundReuseLedger.current_identity",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 127,
+        "end_line": 130,
+        "signature_hash": "5ab785a8617262f8",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.current_projects:f6c6113e1fdc08f9",
+        "name": "ProofBoundReuseLedger.current_projects",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 159,
+        "end_line": 160,
+        "signature_hash": "1cbc07d9a22e48eb",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.invalidate:7fd6c44116205f21",
+        "name": "ProofBoundReuseLedger.invalidate",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 132,
+        "end_line": 136,
+        "signature_hash": "7bce77596a616cb7",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.reusable:43f3cb683614ce53",
+        "name": "ProofBoundReuseLedger.reusable",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 147,
+        "end_line": 153,
+        "signature_hash": "7e132f6a31170715",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.reusable_result:ef2db64723722300",
+        "name": "ProofBoundReuseLedger.reusable_result",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 155,
+        "end_line": 157,
+        "signature_hash": "24c6ca705c90a24a",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.set_current_context:8be72453b7686b40",
+        "name": "ProofBoundReuseLedger.set_current_context",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 119,
+        "end_line": 125,
+        "signature_hash": "48d4b6df447ea6d3",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofIdentity.identity_digest:e6530005871968f4",
+        "name": "ProofIdentity.identity_digest",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 31,
+        "end_line": 36,
+        "signature_hash": "c693ea685ee9d854",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofReceipt.build:50fb377ae422b3cb",
+        "name": "ProofReceipt.build",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "0c8be17ab0b5cbb8",
+        "file_digest8": "1bb6a3946c5d2227"
+      },
+      {
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofReceipt.validate:a713201ee0155191",
+        "name": "ProofReceipt.validate",
+        "kind": "method",
+        "file": "tools/arena/proof_bound_reuse.py",
+        "line": 53,
+        "end_line": 63,
+        "signature_hash": "afe9169e007e07b0",
+        "file_digest8": "1bb6a3946c5d2227"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -267597,8 +268341,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "51104405c5aaca6022a1e6ff69436773",
-    "payload_hash": "172bd62f05074a06a60843864c2d9bf4"
+    "record_fingerprint": "9c11203176ecb48281a6f4dfb069a338",
+    "payload_hash": "140d7572d8bedf564cd52376064b2ba4"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267611,16 +268355,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26477363,
-      "tokens_est": 6609681,
+      "files": 1655,
+      "bytes": 26498088,
+      "tokens_est": 6614863,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 273,
+        "python_module": 1007,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -268307,16 +269051,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26477363,
-    "text_tokens_est": 6609681,
+    "file_count": 1655,
+    "total_bytes": 26498088,
+    "text_tokens_est": 6614863,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 273,
+      "python_module": 1007,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -269038,6 +269782,14 @@
         "line": 54,
         "end_line": 74,
         "semantic_id": "benchmarks/benchmark_frontier27.py#function:main:502e4c75183c2314",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "benchmarks/benchmark_proof_bound_reuse.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 41,
+        "semantic_id": "benchmarks/benchmark_proof_bound_reuse.py#function:main:42c8ca208eecbeae",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -286030,6 +286782,14 @@
         "line": 21,
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
+        "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#function:digest:8517d4bca2c81900",
         "signature_hash": "0bff111c4fc1adcb"
       }
     ],
@@ -362479,6 +363239,26 @@
         "signature_hash": "52e064a4a926d241"
       }
     ],
+    "expensive": [
+      {
+        "file": "benchmarks/benchmark_proof_bound_reuse.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": "benchmarks/benchmark_proof_bound_reuse.py#function:expensive:1e6e1b4b83eaca8c",
+        "signature_hash": "009ab1ac15d392bd"
+      }
+    ],
+    "build": [
+      {
+        "file": "benchmarks/benchmark_proof_bound_reuse.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 21,
+        "semantic_id": "benchmarks/benchmark_proof_bound_reuse.py#function:build:4835384a48b2c7cd",
+        "signature_hash": "d8db297c043ef6a4"
+      }
+    ],
     "_diff": [
       {
         "file": "benchmarks/refactor_code_quality/generate_fixture.py",
@@ -423115,6 +423895,14 @@
         "end_line": 88,
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "class",
+        "line": 6,
+        "end_line": 40,
+        "semantic_id": "tests/test_proof_bound_reuse.py#class:T:d4c7c997f289df19",
+        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -423747,6 +424535,206 @@
         "signature_hash": "a7f899fb2c74e634"
       }
     ],
+    "T.setUp": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 10,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.setUp:c12002644190be1b",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.test_01_admit_and_reuse": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_01_admit_and_reuse:44399fb8b0bc6820",
+        "signature_hash": "00092a363ba68da8"
+      }
+    ],
+    "T.test_02_missing_step_holds": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_02_missing_step_holds:9ee6843d09e6cb50",
+        "signature_hash": "d71ad4a9bde619cb"
+      }
+    ],
+    "T.test_03_tamper_holds": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_03_tamper_holds:0e9bdd6dfba1c990",
+        "signature_hash": "c1b6abb621046316"
+      }
+    ],
+    "T.test_04_head_change_invalidates_reuse": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_04_head_change_invalidates_reuse:0306f524196b382a",
+        "signature_hash": "15f63a0b7b523097"
+      }
+    ],
+    "T.test_05_workflow_change_invalidates_reuse": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_05_workflow_change_invalidates_reuse:16db8754083e194b",
+        "signature_hash": "add9e502501b3434"
+      }
+    ],
+    "T.test_06_input_change_invalidates_reuse": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_06_input_change_invalidates_reuse:c462a6a8553b0671",
+        "signature_hash": "eac52baeddcd872e"
+      }
+    ],
+    "T.test_07_dependency_invalidation": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_07_dependency_invalidation:aceb55ecd1b6687b",
+        "signature_hash": "2facee1ebb39859c"
+      }
+    ],
+    "T.test_08_unrelated_dependency_does_not_wake": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_08_unrelated_dependency_does_not_wake:618c36650c23e9e0",
+        "signature_hash": "78fa9eb68e0763be"
+      }
+    ],
+    "T.test_09_rebind_old_dependency_removed": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_09_rebind_old_dependency_removed:528f463cc20702da",
+        "signature_hash": "f0649e7421c9c8db"
+      }
+    ],
+    "T.test_10_old_receipt_fails_after_rebind": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_10_old_receipt_fails_after_rebind:d530559efe35ff61",
+        "signature_hash": "2bbd5aed3b74dd2a"
+      }
+    ],
+    "T.test_11_fresh_reproof_closes_stale": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_11_fresh_reproof_closes_stale:be7931f4b6b841c8",
+        "signature_hash": "6191cad7fb53d164"
+      }
+    ],
+    "T.test_12_authority_cannot_promote": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 30,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_12_authority_cannot_promote:0d3b07e4c936c347",
+        "signature_hash": "0d46e8e044b9acba"
+      }
+    ],
+    "T.test_13_receipt_result_tamper": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 31,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_13_receipt_result_tamper:08ae49c727c8b372",
+        "signature_hash": "8252cf6997149892"
+      }
+    ],
+    "T.test_14_receipt_steps_tamper": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 32,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_14_receipt_steps_tamper:3146b2dc5d7e0ed3",
+        "signature_hash": "9cc4768532d07998"
+      }
+    ],
+    "T.test_15_unknown_project_not_reusable": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 33,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_15_unknown_project_not_reusable:97caa37f627ee1ac",
+        "signature_hash": "47c14b8187bd8024"
+      }
+    ],
+    "T.test_16_empty_binding_rejected": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_16_empty_binding_rejected:99c4f43a634d6ce3",
+        "signature_hash": "2456bbb2a8550dba"
+      }
+    ],
+    "T.test_17_omega8_hard_invalid_dominance": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_17_omega8_hard_invalid_dominance:c7f1dae85026a50f",
+        "signature_hash": "b7279584fa16d845"
+      }
+    ],
+    "T.test_18_forged_alternate_head_cannot_be_admitted": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_18_forged_alternate_head_cannot_be_admitted:aba11a4028e40688",
+        "signature_hash": "4821ae589e77fae2"
+      }
+    ],
+    "T.test_19_rebind_requires_new_generation_receipt": [
+      {
+        "file": "tests/test_proof_bound_reuse.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tests/test_proof_bound_reuse.py#method:T.test_19_rebind_requires_new_generation_receipt:d543a977ce665306",
+        "signature_hash": "9b93d2d79caa9781"
+      }
+    ],
     "test_default_dockerfile_launches_unified_showcase": [
       {
         "file": "tests/test_render_four_tab_deployment.py",
@@ -424084,6 +425072,14 @@
         "line": 17,
         "end_line": 18,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:stable:4c11bb77b3afc1de",
+        "signature_hash": "6c4779cb279e35c8"
+      },
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#function:stable:e3c6a9e5fcb92264",
         "signature_hash": "6c4779cb279e35c8"
       }
     ],
@@ -424855,6 +425851,196 @@
         "end_line": 430,
         "semantic_id": "tools/arena/frontier27_runtime.py#method:UsefulByteAccounting.total:8d9390f1fc4ee241",
         "signature_hash": "b5a8100ebab79b52"
+      }
+    ],
+    "ProofIdentity": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 36,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProofIdentity:cab31e524036c2c0",
+        "signature_hash": "d798899478990e68"
+      }
+    ],
+    "ProofIdentity.identity_digest": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 36,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofIdentity.identity_digest:e6530005871968f4",
+        "signature_hash": "c693ea685ee9d854"
+      }
+    ],
+    "ProofReceipt": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 63,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProofReceipt:6a701910c460867d",
+        "signature_hash": "9f523c2c49dc952b"
+      }
+    ],
+    "ProofReceipt.build": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofReceipt.build:50fb377ae422b3cb",
+        "signature_hash": "0c8be17ab0b5cbb8"
+      }
+    ],
+    "ProofReceipt.validate": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 63,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofReceipt.validate:a713201ee0155191",
+        "signature_hash": "afe9169e007e07b0"
+      }
+    ],
+    "ProjectBinding": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 70,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProjectBinding:1f2e59048647ebe0",
+        "signature_hash": "6f9d9e1493d5749a"
+      }
+    ],
+    "CurrentContext": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:CurrentContext:8d6ccff59235746a",
+        "signature_hash": "1395de4d19c0814d"
+      }
+    ],
+    "ProofBoundReuseLedger": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 160,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#class:ProofBoundReuseLedger:87b6df1db092775f",
+        "signature_hash": "2fe80971ff3dcf67"
+      }
+    ],
+    "ProofBoundReuseLedger.__init__": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.__init__:5848df7be96764bd",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "ProofBoundReuseLedger._rebuild_expected": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 100,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger._rebuild_expected:a1406d722f491151",
+        "signature_hash": "8ca821dd3e74470e"
+      }
+    ],
+    "ProofBoundReuseLedger.bind": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 117,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.bind:b748766a3197cea1",
+        "signature_hash": "43b35dcb64e2c615"
+      }
+    ],
+    "ProofBoundReuseLedger.set_current_context": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 125,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.set_current_context:8be72453b7686b40",
+        "signature_hash": "48d4b6df447ea6d3"
+      }
+    ],
+    "ProofBoundReuseLedger.current_identity": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 130,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.current_identity:0f17878936d076f9",
+        "signature_hash": "5ab785a8617262f8"
+      }
+    ],
+    "ProofBoundReuseLedger.invalidate": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 136,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.invalidate:7fd6c44116205f21",
+        "signature_hash": "7bce77596a616cb7"
+      }
+    ],
+    "ProofBoundReuseLedger.admit_fresh_proof": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 145,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.admit_fresh_proof:9ae028195dda28f9",
+        "signature_hash": "b130f1825509169d"
+      }
+    ],
+    "ProofBoundReuseLedger.reusable": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 153,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.reusable:43f3cb683614ce53",
+        "signature_hash": "7e132f6a31170715"
+      }
+    ],
+    "ProofBoundReuseLedger.reusable_result": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 157,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.reusable_result:ef2db64723722300",
+        "signature_hash": "24c6ca705c90a24a"
+      }
+    ],
+    "ProofBoundReuseLedger.current_projects": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 160,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#method:ProofBoundReuseLedger.current_projects:f6c6113e1fdc08f9",
+        "signature_hash": "1cbc07d9a22e48eb"
+      }
+    ],
+    "omega8_admit": [
+      {
+        "file": "tools/arena/proof_bound_reuse.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 166,
+        "semantic_id": "tools/arena/proof_bound_reuse.py#function:omega8_admit:7e42caa045bb86fd",
+        "signature_hash": "bfa2429a41b29ea3"
       }
     ],
     "_coordinates": [

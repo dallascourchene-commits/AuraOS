@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26477363
-- **text_tokens_est**: 6609681
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26498088
+- **text_tokens_est**: 6614863
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -196,6 +196,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-compass-bounded-projection-repair.yml",
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
+    ".github/workflows/proof-bound-reuse-o1.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -940,7 +941,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/benchmark_frontier27.py",
+    "benchmarks/benchmark_proof_bound_reuse.py",
     "benchmarks/check_frontier27_thresholds.py",
+    "benchmarks/proof_bound_reuse_campaign.py",
     "benchmarks/real_refactor_trial/plans.json",
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "build_aura.sh",
@@ -1113,6 +1116,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/FRONTIER27_IMPLEMENTATION.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
+    "docs/PROOF_BOUND_REUSE_O1.md",
     "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
@@ -1650,6 +1654,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
+    "tests/test_proof_bound_reuse.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
@@ -1659,6 +1664,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/proof_bound_reuse.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1695,7 +1701,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/spz.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/benchmark_frontier27.py",
+    "benchmarks/benchmark_proof_bound_reuse.py",
     "benchmarks/check_frontier27_thresholds.py",
+    "benchmarks/proof_bound_reuse_campaign.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
@@ -1773,9 +1781,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
     "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_blind_gate10_benchmark.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1789,16 +1795,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26477363,
-  "tokens_est": 6609681,
+  "files": 1655,
+  "bytes": 26498088,
+  "tokens_est": 6614863,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 273,
+    "python_module": 1007,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }
