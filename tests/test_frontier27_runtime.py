@@ -87,5 +87,16 @@ class T(unittest.TestCase):
     def test_36_prefetch_time_is_counted_consistently(self):
         size = 1024; tier = StorageTier("ssd", 10**9, 1024.0, 1.0); r = FrontierOffload(size, 8, tier, 1.0, 100.0).run([[1]], [[1]]); self.assertGreater(r["seconds"], 0); self.assertTrue(math.isclose(r["seconds"], r["bytes"] / tier.bandwidth, rel_tol=0, abs_tol=1e-12))
 
+    def test_37_non_finite_canonical_values_fail_closed(self):
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    digest({"value": value})
+                with self.assertRaises(ValueError):
+                    ExportReceipt.build({"value": value}, ["a"], "g")
+                ring = SnapshotRing(1)
+                with self.assertRaises(ValueError):
+                    ring.append(0, {"value": value})
+
 
 if __name__ == "__main__": unittest.main()
