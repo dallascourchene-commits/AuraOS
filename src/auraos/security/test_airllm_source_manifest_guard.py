@@ -95,14 +95,16 @@ class SourceManifestTests(unittest.TestCase):
         with self.assertRaises(SourceTreeIntegrityError):
             build_source_manifest(self.root)
 
-    def test_07_pycache_and_pyc_are_nonsemantic_and_ignored(self):
-        _, before = build_source_manifest(self.root)
-        cache = self.root / "__pycache__"
-        cache.mkdir()
-        (cache / "utils.cpython-312.pyc").write_bytes(b"volatile")
-        (self.root / "manual.pyc").write_bytes(b"volatile")
-        _, after = build_source_manifest(self.root)
-        self.assertEqual(before.sha256, after.sha256)
+    def test_07_executable_bytecode_and_pycache_fail_closed(self):
+        for relative in ("__pycache__/utils.cpython-312.pyc", "manual.pyc", "manual.pyo"):
+            with self.subTest(relative=relative):
+                with tempfile.TemporaryDirectory() as td:
+                    root = make_tree(Path(td) / "airllm")
+                    path = root / relative
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b"executable-bytecode")
+                    with self.assertRaises(SourceTreeIntegrityError):
+                        build_source_manifest(root)
 
     def test_08_allowlist_and_required_path_shapes_fail_closed(self):
         for bad in (None, [], "a" * 64, ["A" * 64], ["a" * 63]):
@@ -121,7 +123,6 @@ class SourceManifestTests(unittest.TestCase):
         self.assertNotEqual(manifest_before.sha256, manifest_after.sha256)
 
     def test_10_eight_axis_and_13d_noncompensation(self):
-        # Axes: root, file set, content, anchors, symlink-free, regular-only, allowlist, currentness.
         keeper = 0
         for state in range(3 ** 8):
             digits = []
