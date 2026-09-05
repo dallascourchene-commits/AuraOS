@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2687,6 +2687,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_proof_reuse_admission.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2696,6 +2697,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/proof_reuse_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -104094,6 +104096,53 @@
       ]
     },
     {
+      "path": "tests/test_proof_reuse_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 20046,
+      "lines": 175,
+      "tokens_est": 5012,
+      "symbol_count": 40,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0a90645201c2d7a1",
+      "vector": [
+        0.166306,
+        0.281895,
+        0.123845,
+        0.133281,
+        -0.159229,
+        0.142716,
+        -0.071948,
+        0.116768,
+        0.029487,
+        0.154511,
+        -0.015333,
+        -0.260664,
+        0.171024,
+        0.168665,
+        0.147434,
+        0.272459,
+        -0.159229,
+        0.248869,
+        -0.229998,
+        -0.088461,
+        0.274818,
+        -0.2701,
+        0.031846,
+        -0.133281,
+        -0.097896,
+        -0.161588,
+        0.038923,
+        -0.213485,
+        -0.083743,
+        0.218203,
+        0.258305,
+        0.171024
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -104514,6 +104563,53 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/proof_reuse_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 24064,
+      "lines": 401,
+      "tokens_est": 6016,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ff0b2b5d628b9dcd",
+      "vector": [
+        0.1026,
+        0.158973,
+        0.059756,
+        -0.012402,
+        -0.134169,
+        0.27623,
+        -0.273975,
+        0.255936,
+        -0.27623,
+        0.134169,
+        -0.244661,
+        -0.186033,
+        -0.010147,
+        -0.253681,
+        0.251426,
+        -0.050736,
+        -0.001127,
+        -0.086815,
+        -0.109365,
+        -0.273975,
+        -0.226622,
+        0.235641,
+        -0.125149,
+        0.167993,
+        -0.190543,
+        -0.001127,
+        0.048481,
+        0.095835,
+        0.183778,
+        0.071031,
+        0.215347,
+        0.167993
       ]
     },
     {
@@ -105561,7 +105657,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788651597,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107190,6 +107286,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_proof_reuse_admission.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -107199,6 +107296,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/proof_reuse_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -265257,6 +265355,406 @@
         "file_digest8": "bec72310a01d581a"
       },
       {
+        "semantic_id": "tests/test_proof_reuse_admission.py#class:O4EvidenceAncestry:a5810c82d1065019",
+        "name": "O4EvidenceAncestry",
+        "kind": "class",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 117,
+        "end_line": 172,
+        "signature_hash": "79c836a2959d94c5",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#class:T:7a9d85ba2bdc38da",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 51,
+        "end_line": 115,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:base:b1c82dac51de6264",
+        "name": "base",
+        "kind": "function",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 7,
+        "end_line": 8,
+        "signature_hash": "fc255db21ad827bd",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:both:ec9c0d51339ca802",
+        "name": "both",
+        "kind": "function",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 17,
+        "end_line": 20,
+        "signature_hash": "eb6a6d71c0ea0b5b",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:oracle:d883e90632a659a7",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 27,
+        "end_line": 49,
+        "signature_hash": "3ba5318fd8ee172f",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:rebound:5e1c903a0c1882a0",
+        "name": "rebound",
+        "kind": "function",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "c353540ba3fd89ac",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:resource:2e7b4af61e3b81c6",
+        "name": "resource",
+        "kind": "function",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 9,
+        "end_line": 12,
+        "signature_hash": "163ce89566374296",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:trace:fd25381aa1c284cf",
+        "name": "trace",
+        "kind": "function",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 13,
+        "end_line": 16,
+        "signature_hash": "aac667deebed296f",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry._raw:4e4a92b535e676b7",
+        "name": "O4EvidenceAncestry._raw",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 119,
+        "end_line": 119,
+        "signature_hash": "054845aa946bf447",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry._transition:d1b4df41f95c2a99",
+        "name": "O4EvidenceAncestry._transition",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 120,
+        "end_line": 122,
+        "signature_hash": "731925f6b0bb5344",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_21_raw_projection_recomputes_and_rejects_duplicate_or_missing_keys:03abe55cde46d762",
+        "name": "O4EvidenceAncestry.test_21_raw_projection_recomputes_and_rejects_duplicate_or_missing_keys",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 123,
+        "end_line": 127,
+        "signature_hash": "65adc199b9397836",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_22_exact_unchanged_requires_same_generation_projection_and_no_paths:2b8f6ab9ed3402ab",
+        "name": "O4EvidenceAncestry.test_22_exact_unchanged_requires_same_generation_projection_and_no_paths",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 128,
+        "end_line": 129,
+        "signature_hash": "f7ee60d4e7ad8b57",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_23_generation_change_same_consequence_is_proof_neutral_rebind:826b0df72b6b0fca",
+        "name": "O4EvidenceAncestry.test_23_generation_change_same_consequence_is_proof_neutral_rebind",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 130,
+        "end_line": 131,
+        "signature_hash": "b7af81867385d698",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_24_consequence_change_reproves_only_parent_plus_cross_bindings:63d5737be08a4246",
+        "name": "O4EvidenceAncestry.test_24_consequence_change_reproves_only_parent_plus_cross_bindings",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 132,
+        "end_line": 133,
+        "signature_hash": "7f8f1bace369740b",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_25_unbound_provider_observation_is_unknown:aa91cbce8cb20948",
+        "name": "O4EvidenceAncestry.test_25_unbound_provider_observation_is_unknown",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 134,
+        "end_line": 134,
+        "signature_hash": "a19398072e841fea",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_26_projection_root_or_owner_substitution_is_unknown:684a234dbdfded56",
+        "name": "O4EvidenceAncestry.test_26_projection_root_or_owner_substitution_is_unknown",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "59297ebc6c2a62f9",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_27_same_generation_raw_evidence_drift_is_unknown_not_rebind:ff09b49ff3cbf110",
+        "name": "O4EvidenceAncestry.test_27_same_generation_raw_evidence_drift_is_unknown_not_rebind",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 138,
+        "end_line": 139,
+        "signature_hash": "a874e85dd7a0047a",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_28_o4_omega8_noncompensatory:9a33768d9dfad27a",
+        "name": "O4EvidenceAncestry.test_28_o4_omega8_noncompensatory",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 140,
+        "end_line": 154,
+        "signature_hash": "506d76bac203df69",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_29_o4_13d_context_cannot_repair_unknown:fb11bdc76ff3931a",
+        "name": "O4EvidenceAncestry.test_29_o4_13d_context_cannot_repair_unknown",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 155,
+        "end_line": 157,
+        "signature_hash": "c98de0f918ecb1b8",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_30_o4_hs1000_and_randomized_oracle:6698769badb0401b",
+        "name": "O4EvidenceAncestry.test_30_o4_hs1000_and_randomized_oracle",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 158,
+        "end_line": 172,
+        "signature_hash": "fb93f5f79c2e2bc7",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_01_general_exact_and_hard_gates:052c6d7c21ce765f",
+        "name": "T.test_01_general_exact_and_hard_gates",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 52,
+        "end_line": 54,
+        "signature_hash": "0a31f81b48774979",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_02_bare_rebind_booleans_no_longer_suffice:100c647af7c82404",
+        "name": "T.test_02_bare_rebind_booleans_no_longer_suffice",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "ddc9da2d6428f4b1",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_03_bound_rebind_succeeds:8efabd17c65c4624",
+        "name": "T.test_03_bound_rebind_succeeds",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 57,
+        "end_line": 57,
+        "signature_hash": "70e1acbefed3a1d2",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_04_rebind_parent_child_generator_and_observation_are_noncompensatory:b2b79f982f67599f",
+        "name": "T.test_04_rebind_parent_child_generator_and_observation_are_noncompensatory",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "a3c3ae4d4ea57323",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_05_live_codemap_transition:943e2571a61cfaad",
+        "name": "T.test_05_live_codemap_transition",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "8f2aa5348454051d",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_06_receipt_binds_allowlist_policy:1a60bcf609e99ac2",
+        "name": "T.test_06_receipt_binds_allowlist_policy",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "60829ea09b841a9f",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_07_receipt_tamper_and_canonical_paths:29e280cac93a3949",
+        "name": "T.test_07_receipt_tamper_and_canonical_paths",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 65,
+        "end_line": 66,
+        "signature_hash": "f84b662e7bbabc60",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_08_bad_paths_and_shape_fail_closed:3278733a52837f12",
+        "name": "T.test_08_bad_paths_and_shape_fail_closed",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "52557ef4678d62ce",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_09_resource_surface:3f0c22363354a63f",
+        "name": "T.test_09_resource_surface",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "8a78ce3cd887ddee",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_10_trace_surface:5735214f7e9ab514",
+        "name": "T.test_10_trace_surface",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "ac149bb969cdf41b",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_11_combined_scope:89b249a909929b27",
+        "name": "T.test_11_combined_scope",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 78,
+        "end_line": 78,
+        "signature_hash": "e361b64706ee50d6",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_12_general_omega8_and_13d:c835551e1ec23651",
+        "name": "T.test_12_general_omega8_and_13d",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "1e5873490311334c",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_13_rebind_omega8:2ae35e3bfa558a33",
+        "name": "T.test_13_rebind_omega8",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 86,
+        "end_line": 91,
+        "signature_hash": "c42755d76bab69fb",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_14_rebind_13d_context_cannot_repair_forged_provider_observation:0333652de537e44c",
+        "name": "T.test_14_rebind_13d_context_cannot_repair_forged_provider_observation",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 92,
+        "end_line": 94,
+        "signature_hash": "3b5302ffe9d86154",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_15_randomized_general_oracle:6cf04eb0be187603",
+        "name": "T.test_15_randomized_general_oracle",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 95,
+        "end_line": 98,
+        "signature_hash": "0af7e070ef00108c",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_16_randomized_resource_oracle:fc3b3454dbd9e600",
+        "name": "T.test_16_randomized_resource_oracle",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 99,
+        "end_line": 102,
+        "signature_hash": "8cdcb3096a5d6fd0",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_17_randomized_trace_oracle:5df7d8f514b11094",
+        "name": "T.test_17_randomized_trace_oracle",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "ad5d91b4939bee2f",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_18_hs1000_provider_binding_surface:de852a3f872206b7",
+        "name": "T.test_18_hs1000_provider_binding_surface",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "556b3e61c5ad98b9",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_19_provider_observation_root_is_canonical:93e0c7d94321b2d5",
+        "name": "T.test_19_provider_observation_root_is_canonical",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 113,
+        "end_line": 114,
+        "signature_hash": "aff46ee816cd8a7b",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_20_bound_attestation_remains_nonauthorizing:f77aef12d051febb",
+        "name": "T.test_20_bound_attestation_remains_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_proof_reuse_admission.py",
+        "line": 115,
+        "end_line": 115,
+        "signature_hash": "756641b66f684c7c",
+        "file_digest8": "0a90645201c2d7a1"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -266405,6 +266903,296 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:Admission:4af0c1cbea59fd75",
+        "name": "Admission",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "a608b5f53e008742",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:EvidenceProjectionReceipt:a43d1f0887584e49",
+        "name": "EvidenceProjectionReceipt",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 280,
+        "end_line": 284,
+        "signature_hash": "3cec21f0ab32f9b4",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:GenerationDisposition:ded2b41faaa64522",
+        "name": "GenerationDisposition",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 257,
+        "end_line": 261,
+        "signature_hash": "2e16663e33dd6bc9",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:GenerationReproofReceipt:c3c3027c4a7ab5b7",
+        "name": "GenerationReproofReceipt",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 337,
+        "end_line": 353,
+        "signature_hash": "7116cd4999ba1e81",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:ParentGenerationTransition:143355cb94f9cd3f",
+        "name": "ParentGenerationTransition",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 307,
+        "end_line": 334,
+        "signature_hash": "13f6fb65eea9147b",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:ProofReuseEvidence:b878492f0c7ee709",
+        "name": "ProofReuseEvidence",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 61,
+        "end_line": 137,
+        "signature_hash": "f258da5e15430ceb",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:ProofReuseReceipt:c1d7cebbe4e5f8a3",
+        "name": "ProofReuseReceipt",
+        "kind": "class",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 140,
+        "end_line": 158,
+        "signature_hash": "ca526793394a1ced",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_canonical_named_fields:95e4d825bab31614",
+        "name": "_canonical_named_fields",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 263,
+        "end_line": 277,
+        "signature_hash": "8f972a8a6f65f6e7",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_canonical_paths:63c2c6c48c8ebdcc",
+        "name": "_canonical_paths",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 38,
+        "end_line": 47,
+        "signature_hash": "1c01379d80882fd6",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_digest:5920d1b1bd1f2936",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_proof_truth_exact:143dfb6d583a4c4f",
+        "name": "_proof_truth_exact",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 209,
+        "end_line": 217,
+        "signature_hash": "b6eef3b7dced61fe",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_rebind_attestation_exact:6b83f9318fee94e0",
+        "name": "_rebind_attestation_exact",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 219,
+        "end_line": 233,
+        "signature_hash": "96c5e7a8a1c77b14",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_resource_envelope_exact:86d79f0ed08d660d",
+        "name": "_resource_envelope_exact",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 195,
+        "end_line": 200,
+        "signature_hash": "23870b315a9aaf6b",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_stable:c009adba77abb81e",
+        "name": "_stable",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "b1affea65c951178",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_trace_replay_exact:6a777f7fb700cfaa",
+        "name": "_trace_replay_exact",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 202,
+        "end_line": 207,
+        "signature_hash": "c03b9c2b35adb504",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_unknown_generation_receipt:db387964f3bac055",
+        "name": "_unknown_generation_receipt",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 355,
+        "end_line": 365,
+        "signature_hash": "0d758238a1372d18",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:allowlist_root:c9d4ad637aeeefd4",
+        "name": "allowlist_root",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "d2d9e975e0dcabfa",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:allowlist_root_fn:097552b5b85d8212",
+        "name": "allowlist_root_fn",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 160,
+        "end_line": 161,
+        "signature_hash": "41415556afcd004c",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:classify_parent_generation:61bbf480dac2eebb",
+        "name": "classify_parent_generation",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 367,
+        "end_line": 400,
+        "signature_hash": "39ba0ec4db22daf7",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:decide:d7314072d120692a",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 235,
+        "end_line": 249,
+        "signature_hash": "4378f1ade2e59eb9",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:evidence_digest:66d36df26688e419",
+        "name": "evidence_digest",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 163,
+        "end_line": 193,
+        "signature_hash": "67dfd397a8fe995d",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:generation_observation_root:5cb53e355c137c21",
+        "name": "generation_observation_root",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 299,
+        "end_line": 304,
+        "signature_hash": "ed239ced0d6df14e",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:make_receipt:6e6ca3720645402d",
+        "name": "make_receipt",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 251,
+        "end_line": 255,
+        "signature_hash": "582e651b9b3a1cf0",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:project_raw_evidence:886d4b941b9e09fd",
+        "name": "project_raw_evidence",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 286,
+        "end_line": 297,
+        "signature_hash": "c42ac0dd97da37ff",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:rebind_observation_root:ca93a7d4855a4a4b",
+        "name": "rebind_observation_root",
+        "kind": "function",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 52,
+        "end_line": 58,
+        "signature_hash": "e918df02f87c3825",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:GenerationReproofReceipt.verify:67784fbf54f04b07",
+        "name": "GenerationReproofReceipt.verify",
+        "kind": "method",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 352,
+        "end_line": 353,
+        "signature_hash": "5fb57871fc9a3760",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:ParentGenerationTransition.validate_shape:878b35a92e8cc710",
+        "name": "ParentGenerationTransition.validate_shape",
+        "kind": "method",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 326,
+        "end_line": 334,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:ProofReuseEvidence.validate_shape:8aed1537de5fe440",
+        "name": "ProofReuseEvidence.validate_shape",
+        "kind": "method",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 108,
+        "end_line": 137,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "ff0b2b5d628b9dcd"
+      },
+      {
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:ProofReuseReceipt.verify:d602d8d5f6da717c",
+        "name": "ProofReuseReceipt.verify",
+        "kind": "method",
+        "file": "tools/arena/proof_reuse_admission.py",
+        "line": 148,
+        "end_line": 158,
+        "signature_hash": "33d4c4c5ee9d229b",
+        "file_digest8": "ff0b2b5d628b9dcd"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -267657,8 +268445,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "10189be150b0ee314f6a9b1439d73c75",
+    "payload_hash": "19494c76514d5b76b9d0c926cf80cef5"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,15 +268459,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1651,
+      "bytes": 26527360,
+      "tokens_est": 6622181,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1005,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -268367,15 +269155,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1651,
+    "total_bytes": 26527360,
+    "text_tokens_est": 6622181,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1005,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -270289,6 +271077,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_digest:5920d1b1bd1f2936",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -423175,6 +423971,14 @@
         "end_line": 115,
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 115,
+        "semantic_id": "tests/test_proof_reuse_admission.py#class:T:7a9d85ba2bdc38da",
+        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -423865,6 +424669,396 @@
         "end_line": 383,
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_quorum_policy_boolean_parameters_are_strict:774427495a3346f4",
         "signature_hash": "a7f899fb2c74e634"
+      }
+    ],
+    "base": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:base:b1c82dac51de6264",
+        "signature_hash": "fc255db21ad827bd"
+      }
+    ],
+    "resource": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 12,
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:resource:2e7b4af61e3b81c6",
+        "signature_hash": "163ce89566374296"
+      }
+    ],
+    "trace": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 16,
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:trace:fd25381aa1c284cf",
+        "signature_hash": "aac667deebed296f"
+      }
+    ],
+    "both": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 20,
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:both:ec9c0d51339ca802",
+        "signature_hash": "eb6a6d71c0ea0b5b"
+      }
+    ],
+    "rebound": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:rebound:5e1c903a0c1882a0",
+        "signature_hash": "c353540ba3fd89ac"
+      }
+    ],
+    "oracle": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 49,
+        "semantic_id": "tests/test_proof_reuse_admission.py#function:oracle:d883e90632a659a7",
+        "signature_hash": "3ba5318fd8ee172f"
+      }
+    ],
+    "T.test_01_general_exact_and_hard_gates": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 54,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_01_general_exact_and_hard_gates:052c6d7c21ce765f",
+        "signature_hash": "0a31f81b48774979"
+      }
+    ],
+    "T.test_02_bare_rebind_booleans_no_longer_suffice": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_02_bare_rebind_booleans_no_longer_suffice:100c647af7c82404",
+        "signature_hash": "ddc9da2d6428f4b1"
+      }
+    ],
+    "T.test_03_bound_rebind_succeeds": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 57,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_03_bound_rebind_succeeds:8efabd17c65c4624",
+        "signature_hash": "70e1acbefed3a1d2"
+      }
+    ],
+    "T.test_04_rebind_parent_child_generator_and_observation_are_noncompensatory": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_04_rebind_parent_child_generator_and_observation_are_noncompensatory:b2b79f982f67599f",
+        "signature_hash": "a3c3ae4d4ea57323"
+      }
+    ],
+    "T.test_05_live_codemap_transition": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_05_live_codemap_transition:943e2571a61cfaad",
+        "signature_hash": "8f2aa5348454051d"
+      }
+    ],
+    "T.test_06_receipt_binds_allowlist_policy": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_06_receipt_binds_allowlist_policy:1a60bcf609e99ac2",
+        "signature_hash": "60829ea09b841a9f"
+      }
+    ],
+    "T.test_07_receipt_tamper_and_canonical_paths": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_07_receipt_tamper_and_canonical_paths:29e280cac93a3949",
+        "signature_hash": "f84b662e7bbabc60"
+      }
+    ],
+    "T.test_08_bad_paths_and_shape_fail_closed": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_08_bad_paths_and_shape_fail_closed:3278733a52837f12",
+        "signature_hash": "52557ef4678d62ce"
+      }
+    ],
+    "T.test_09_resource_surface": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_09_resource_surface:3f0c22363354a63f",
+        "signature_hash": "8a78ce3cd887ddee"
+      }
+    ],
+    "T.test_10_trace_surface": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_10_trace_surface:5735214f7e9ab514",
+        "signature_hash": "ac149bb969cdf41b"
+      }
+    ],
+    "T.test_11_combined_scope": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 78,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_11_combined_scope:89b249a909929b27",
+        "signature_hash": "e361b64706ee50d6"
+      }
+    ],
+    "T.test_12_general_omega8_and_13d": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_12_general_omega8_and_13d:c835551e1ec23651",
+        "signature_hash": "1e5873490311334c"
+      }
+    ],
+    "T.test_13_rebind_omega8": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 91,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_13_rebind_omega8:2ae35e3bfa558a33",
+        "signature_hash": "c42755d76bab69fb"
+      }
+    ],
+    "T.test_14_rebind_13d_context_cannot_repair_forged_provider_observation": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 94,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_14_rebind_13d_context_cannot_repair_forged_provider_observation:0333652de537e44c",
+        "signature_hash": "3b5302ffe9d86154"
+      }
+    ],
+    "T.test_15_randomized_general_oracle": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 98,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_15_randomized_general_oracle:6cf04eb0be187603",
+        "signature_hash": "0af7e070ef00108c"
+      }
+    ],
+    "T.test_16_randomized_resource_oracle": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 102,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_16_randomized_resource_oracle:fc3b3454dbd9e600",
+        "signature_hash": "8cdcb3096a5d6fd0"
+      }
+    ],
+    "T.test_17_randomized_trace_oracle": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_17_randomized_trace_oracle:5df7d8f514b11094",
+        "signature_hash": "ad5d91b4939bee2f"
+      }
+    ],
+    "T.test_18_hs1000_provider_binding_surface": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_18_hs1000_provider_binding_surface:de852a3f872206b7",
+        "signature_hash": "556b3e61c5ad98b9"
+      }
+    ],
+    "T.test_19_provider_observation_root_is_canonical": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 114,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_19_provider_observation_root_is_canonical:93e0c7d94321b2d5",
+        "signature_hash": "aff46ee816cd8a7b"
+      }
+    ],
+    "T.test_20_bound_attestation_remains_nonauthorizing": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 115,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:T.test_20_bound_attestation_remains_nonauthorizing:f77aef12d051febb",
+        "signature_hash": "756641b66f684c7c"
+      }
+    ],
+    "O4EvidenceAncestry": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "class",
+        "line": 117,
+        "end_line": 172,
+        "semantic_id": "tests/test_proof_reuse_admission.py#class:O4EvidenceAncestry:a5810c82d1065019",
+        "signature_hash": "79c836a2959d94c5"
+      }
+    ],
+    "O4EvidenceAncestry._raw": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 119,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry._raw:4e4a92b535e676b7",
+        "signature_hash": "054845aa946bf447"
+      }
+    ],
+    "O4EvidenceAncestry._transition": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 122,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry._transition:d1b4df41f95c2a99",
+        "signature_hash": "731925f6b0bb5344"
+      }
+    ],
+    "O4EvidenceAncestry.test_21_raw_projection_recomputes_and_rejects_duplicate_or_missing_keys": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 127,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_21_raw_projection_recomputes_and_rejects_duplicate_or_missing_keys:03abe55cde46d762",
+        "signature_hash": "65adc199b9397836"
+      }
+    ],
+    "O4EvidenceAncestry.test_22_exact_unchanged_requires_same_generation_projection_and_no_paths": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 129,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_22_exact_unchanged_requires_same_generation_projection_and_no_paths:2b8f6ab9ed3402ab",
+        "signature_hash": "f7ee60d4e7ad8b57"
+      }
+    ],
+    "O4EvidenceAncestry.test_23_generation_change_same_consequence_is_proof_neutral_rebind": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 131,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_23_generation_change_same_consequence_is_proof_neutral_rebind:826b0df72b6b0fca",
+        "signature_hash": "b7af81867385d698"
+      }
+    ],
+    "O4EvidenceAncestry.test_24_consequence_change_reproves_only_parent_plus_cross_bindings": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 133,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_24_consequence_change_reproves_only_parent_plus_cross_bindings:63d5737be08a4246",
+        "signature_hash": "7f8f1bace369740b"
+      }
+    ],
+    "O4EvidenceAncestry.test_25_unbound_provider_observation_is_unknown": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 134,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_25_unbound_provider_observation_is_unknown:aa91cbce8cb20948",
+        "signature_hash": "a19398072e841fea"
+      }
+    ],
+    "O4EvidenceAncestry.test_26_projection_root_or_owner_substitution_is_unknown": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_26_projection_root_or_owner_substitution_is_unknown:684a234dbdfded56",
+        "signature_hash": "59297ebc6c2a62f9"
+      }
+    ],
+    "O4EvidenceAncestry.test_27_same_generation_raw_evidence_drift_is_unknown_not_rebind": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 139,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_27_same_generation_raw_evidence_drift_is_unknown_not_rebind:ff09b49ff3cbf110",
+        "signature_hash": "a874e85dd7a0047a"
+      }
+    ],
+    "O4EvidenceAncestry.test_28_o4_omega8_noncompensatory": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 154,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_28_o4_omega8_noncompensatory:9a33768d9dfad27a",
+        "signature_hash": "506d76bac203df69"
+      }
+    ],
+    "O4EvidenceAncestry.test_29_o4_13d_context_cannot_repair_unknown": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 157,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_29_o4_13d_context_cannot_repair_unknown:fb11bdc76ff3931a",
+        "signature_hash": "c98de0f918ecb1b8"
+      }
+    ],
+    "O4EvidenceAncestry.test_30_o4_hs1000_and_randomized_oracle": [
+      {
+        "file": "tests/test_proof_reuse_admission.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 172,
+        "semantic_id": "tests/test_proof_reuse_admission.py#method:O4EvidenceAncestry.test_30_o4_hs1000_and_randomized_oracle:6698769badb0401b",
+        "signature_hash": "fb93f5f79c2e2bc7"
       }
     ],
     "test_default_dockerfile_launches_unified_showcase": [
@@ -424975,6 +426169,286 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "Admission": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:Admission:4af0c1cbea59fd75",
+        "signature_hash": "a608b5f53e008742"
+      }
+    ],
+    "_stable": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_stable:c009adba77abb81e",
+        "signature_hash": "b1affea65c951178"
+      }
+    ],
+    "_canonical_paths": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 47,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_canonical_paths:63c2c6c48c8ebdcc",
+        "signature_hash": "1c01379d80882fd6"
+      }
+    ],
+    "allowlist_root": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:allowlist_root:c9d4ad637aeeefd4",
+        "signature_hash": "d2d9e975e0dcabfa"
+      }
+    ],
+    "rebind_observation_root": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 58,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:rebind_observation_root:ca93a7d4855a4a4b",
+        "signature_hash": "e918df02f87c3825"
+      }
+    ],
+    "ProofReuseEvidence": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 137,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:ProofReuseEvidence:b878492f0c7ee709",
+        "signature_hash": "f258da5e15430ceb"
+      }
+    ],
+    "ProofReuseEvidence.validate_shape": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 137,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:ProofReuseEvidence.validate_shape:8aed1537de5fe440",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "ProofReuseReceipt": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 140,
+        "end_line": 158,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:ProofReuseReceipt:c1d7cebbe4e5f8a3",
+        "signature_hash": "ca526793394a1ced"
+      }
+    ],
+    "ProofReuseReceipt.verify": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 158,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:ProofReuseReceipt.verify:d602d8d5f6da717c",
+        "signature_hash": "33d4c4c5ee9d229b"
+      }
+    ],
+    "allowlist_root_fn": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 160,
+        "end_line": 161,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:allowlist_root_fn:097552b5b85d8212",
+        "signature_hash": "41415556afcd004c"
+      }
+    ],
+    "evidence_digest": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 193,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:evidence_digest:66d36df26688e419",
+        "signature_hash": "67dfd397a8fe995d"
+      }
+    ],
+    "_resource_envelope_exact": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 200,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_resource_envelope_exact:86d79f0ed08d660d",
+        "signature_hash": "23870b315a9aaf6b"
+      }
+    ],
+    "_trace_replay_exact": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 202,
+        "end_line": 207,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_trace_replay_exact:6a777f7fb700cfaa",
+        "signature_hash": "c03b9c2b35adb504"
+      }
+    ],
+    "_proof_truth_exact": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 209,
+        "end_line": 217,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_proof_truth_exact:143dfb6d583a4c4f",
+        "signature_hash": "b6eef3b7dced61fe"
+      }
+    ],
+    "_rebind_attestation_exact": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 233,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_rebind_attestation_exact:6b83f9318fee94e0",
+        "signature_hash": "96c5e7a8a1c77b14"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 249,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:decide:d7314072d120692a",
+        "signature_hash": "4378f1ade2e59eb9"
+      }
+    ],
+    "make_receipt": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 251,
+        "end_line": 255,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:make_receipt:6e6ca3720645402d",
+        "signature_hash": "582e651b9b3a1cf0"
+      }
+    ],
+    "GenerationDisposition": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 257,
+        "end_line": 261,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:GenerationDisposition:ded2b41faaa64522",
+        "signature_hash": "2e16663e33dd6bc9"
+      }
+    ],
+    "_canonical_named_fields": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 277,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_canonical_named_fields:95e4d825bab31614",
+        "signature_hash": "8f972a8a6f65f6e7"
+      }
+    ],
+    "EvidenceProjectionReceipt": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 280,
+        "end_line": 284,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:EvidenceProjectionReceipt:a43d1f0887584e49",
+        "signature_hash": "3cec21f0ab32f9b4"
+      }
+    ],
+    "project_raw_evidence": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 286,
+        "end_line": 297,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:project_raw_evidence:886d4b941b9e09fd",
+        "signature_hash": "c42ac0dd97da37ff"
+      }
+    ],
+    "generation_observation_root": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 299,
+        "end_line": 304,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:generation_observation_root:5cb53e355c137c21",
+        "signature_hash": "ed239ced0d6df14e"
+      }
+    ],
+    "ParentGenerationTransition": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 307,
+        "end_line": 334,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:ParentGenerationTransition:143355cb94f9cd3f",
+        "signature_hash": "13f6fb65eea9147b"
+      }
+    ],
+    "ParentGenerationTransition.validate_shape": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 334,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:ParentGenerationTransition.validate_shape:878b35a92e8cc710",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "GenerationReproofReceipt": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "class",
+        "line": 337,
+        "end_line": 353,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#class:GenerationReproofReceipt:c3c3027c4a7ab5b7",
+        "signature_hash": "7116cd4999ba1e81"
+      }
+    ],
+    "GenerationReproofReceipt.verify": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "method",
+        "line": 352,
+        "end_line": 353,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#method:GenerationReproofReceipt.verify:67784fbf54f04b07",
+        "signature_hash": "5fb57871fc9a3760"
+      }
+    ],
+    "_unknown_generation_receipt": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 355,
+        "end_line": 365,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:_unknown_generation_receipt:db387964f3bac055",
+        "signature_hash": "0d758238a1372d18"
+      }
+    ],
+    "classify_parent_generation": [
+      {
+        "file": "tools/arena/proof_reuse_admission.py",
+        "kind": "function",
+        "line": 367,
+        "end_line": 400,
+        "semantic_id": "tools/arena/proof_reuse_admission.py#function:classify_parent_generation:61bbf480dac2eebb",
+        "signature_hash": "39ba0ec4db22daf7"
       }
     ],
     "_coordinates": [
