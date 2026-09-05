@@ -15,7 +15,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 
 def stable(v: Any) -> bytes:
-    return json.dumps(v, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+    return json.dumps(v, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode()
 
 
 def digest(v: Any) -> str:
@@ -28,6 +28,9 @@ def tokens(s: str) -> list[str]:
 
 def _sha256_text(v: object) -> bool:
     return isinstance(v, str) and re.fullmatch(r"[0-9a-f]{64}", v) is not None
+
+
+_MISSING = object()
 
 
 class HardFalseSecurityGate:
@@ -169,12 +172,24 @@ class ExportReceipt:
             and self.receipt_digest == digest([self.output_digest, self.dependency_root, self.generation])
         )
 
-    def reusable(self, deps: Sequence[str], generation: str, *, output_digest: str | None = None) -> bool:
-        if not self.verify():
+    def reusable(
+        self,
+        deps: Sequence[str],
+        generation: str,
+        *,
+        payload: Any = _MISSING,
+        output_digest: str | None = None,
+    ) -> bool:
+        if payload is _MISSING or not self.verify():
             return False
-        if output_digest is not None and self.output_digest != output_digest:
+        observed_output = digest(payload)
+        if output_digest is not None and observed_output != output_digest:
             return False
-        return self.dependency_root == digest(sorted(deps)) and self.generation == generation
+        return (
+            self.output_digest == observed_output
+            and self.dependency_root == digest(sorted(deps))
+            and self.generation == generation
+        )
 
 
 class SnapshotRing:
@@ -182,7 +197,16 @@ class SnapshotRing:
         self.r = deque(maxlen=capacity)
 
     def append(self, tick: int, state: Any) -> None:
-        self.r.append((tick, digest(state)))
+        frozen = json.loads(stable(state).decode("ascii"))
+        self.r.append((tick, frozen, digest(frozen)))
+
+    def restore(self, tick: int) -> Any:
+        for recorded_tick, frozen, expected_digest in reversed(self.r):
+            if recorded_tick == tick:
+                if digest(frozen) != expected_digest:
+                    raise ValueError("snapshot digest mismatch")
+                return json.loads(stable(frozen).decode("ascii"))
+        raise KeyError(tick)
 
     def __len__(self) -> int:
         return len(self.r)
@@ -514,30 +538,56 @@ class FrontierOffload:
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
-        a = UsefulByteAccounting(); secs = energy = 0.0
+        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
         for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
             plan = RouterPreservingPrefetch.plan(native, pred[: budget // self.size], range(10000))
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
-            if PrefetchWasteGuard.admit(useful, wasted):
-                for x in plan:
-                    if not self.r.resident(x):
-                        self.r.prefetch(x)
-                        a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
-                        secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
+            missing_plan = [x for x in plan if not self.r.resident(x)]
+            speculative_bytes = len(missing_plan) * self.size
+            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, self.e)
+            if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
+                for x in missing_plan:
+                    self.r.prefetch(x); prefetch_transfers += 1
+                    a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
+                    secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
             for x in native:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
         total = self.r.hits + self.r.misses
-        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total}
+        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total, "prefetch_transfers": prefetch_transfers}
 
 
 def security_campaign(n: int = 1000) -> dict[str, Any]:
-    e = IdentityEnvelope("glm53", "r", "s", "h", "g"); invalid = blocked = 0
+    e = IdentityEnvelope("glm53", "r", "s", "h", "g")
+    invalid_expected = blocked_invalid = after_false_admits = valid_rejected = 0
     for i in range(n):
+        source_audited = i % 11 != 0
+        runtime_hard_false = i % 13 != 0
+        remote_code_widening = i % 17 == 0
         observed = e if i % 7 else IdentityEnvelope("glm53", "r2", "s", "h", "g")
-        hard = HardFalseSecurityGate.admit(source_audited=i % 11 != 0, runtime_hard_false=i % 13 != 0, remote_code_widening=i % 17 == 0)
+        expected_valid = source_audited and runtime_hard_false and not remote_code_widening and observed == e
+        hard = HardFalseSecurityGate.admit(
+            source_audited=source_audited,
+            runtime_hard_false=runtime_hard_false,
+            remote_code_widening=remote_code_widening,
+        )
         ident = P0IdentityGate.admit(e, observed)
-        invalid += not (hard and ident); blocked += not HardGatePin.admit({"hard": hard, "identity": ident})
-    return {"cases": n, "invalid": invalid, "before_false_admits": invalid, "after_blocked": blocked, "false_admission_reduction": blocked / invalid if invalid else 1.0}
+        admitted = HardGatePin.admit({"hard": hard, "identity": ident})
+        if not expected_valid:
+            invalid_expected += 1
+            blocked_invalid += int(not admitted)
+            after_false_admits += int(admitted)
+        else:
+            valid_rejected += int(not admitted)
+    reduction = 1.0 if invalid_expected == 0 else 1.0 - after_false_admits / invalid_expected
+    return {
+        "cases": n,
+        "invalid": invalid_expected,
+        "before_false_admits": invalid_expected,
+        "after_blocked": blocked_invalid,
+        "after_false_admits": after_false_admits,
+        "valid_rejected": valid_rejected,
+        "false_admission_reduction": reduction,
+    }
