@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 from itertools import zip_longest
 import json
+import math
 import re
 import time
 from typing import Any, Iterable, Mapping, Sequence
@@ -32,6 +33,10 @@ def _sha256_text(v: object) -> bool:
 
 
 _MISSING = object()
+
+
+def _finite_number(v: object) -> bool:
+    return type(v) in (int, float) and math.isfinite(v)
 
 
 class HardFalseSecurityGate:
@@ -275,7 +280,7 @@ class CollisionBucket:
     def __init__(self):
         self.b = defaultdict(dict)
 
-    def put(self, k: tuple[int, int, int], identity: str, ": Any) -> None:
+    def put(self, k: tuple[int, int, int], identity: str, v: Any) -> None:
         self.b[k][identity] = v
 
     def get(self, k: tuple[int, int, int], identity: str) -> Any:
@@ -414,6 +419,12 @@ class NativeRouterAuthority:
 class WindowAwareBudget:
     @staticmethod
     def bytes(bandwidth: float, window_s: float, cap: int) -> int:
+        if not _finite_number(bandwidth) or bandwidth < 0:
+            raise ValueError("bandwidth must be a finite non-negative number")
+        if not _finite_number(window_s) or window_s < 0:
+            raise ValueError("window_s must be a finite non-negative number")
+        if type(cap) is not int or cap < 0:
+            raise ValueError("cap must be a non-negative integer")
         return min(cap, max(0, int(bandwidth * window_s)))
 
 
@@ -430,10 +441,24 @@ class StorageTier:
     bandwidth: float
     joules_per_gb: float
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.name, str) or not self.name:
+            raise ValueError("tier name required")
+        if type(self.capacity_bytes) is not int or self.capacity_bytes < 0:
+            raise ValueError("capacity_bytes must be a non-negative integer")
+        if not _finite_number(self.bandwidth) or self.bandwidth <= 0:
+            raise ValueError("bandwidth must be a finite positive number")
+        if not _finite_number(self.joules_per_gb) or self.joules_per_gb < 0:
+            raise ValueError("joules_per_gb must be a finite non-negative number")
+
 
 class TierEnergyAdmission:
     @staticmethod
     def admit(t: StorageTier, n: int, budget_j: float) -> bool:
+        if type(n) is not int or n < 0:
+            return False
+        if not _finite_number(budget_j) or budget_j < 0:
+            return False
         return n <= t.capacity_bytes and n / 1e9 * t.joules_per_gb <= budget_j
 
 
@@ -517,6 +542,12 @@ FRONTIER_27 = (
 
 class LegacyOffload:
     def __init__(self, size: int, bandwidth: float, jpgb: float):
+        if type(size) is not int or size <= 0:
+            raise ValueError("size must be a positive integer")
+        if not _finite_number(bandwidth) or bandwidth <= 0:
+            raise ValueError("bandwidth must be a finite positive number")
+        if not _finite_number(jpgb) or jpgb < 0:
+            raise ValueError("jpgb must be a finite non-negative number")
         self.size = size
         self.bw = bandwidth
         self.jpgb = jpgb
@@ -538,6 +569,16 @@ class LegacyOffload:
 class FrontierOffload:
     """Conservative serialized model: every actual prefetch/miss transfer counts time."""
     def __init__(self, size: int, capacity: int, tier: StorageTier, window_s: float, budget_j: float):
+        if type(size) is not int or size <= 0:
+            raise ValueError("size must be a positive integer")
+        if type(capacity) is not int or capacity < 0:
+            raise ValueError("capacity must be a non-negative integer")
+        if not isinstance(tier, StorageTier):
+            raise ValueError("tier must be a StorageTier")
+        if not _finite_number(window_s) or window_s < 0:
+            raise ValueError("window_s must be a finite non-negative number")
+        if not _finite_number(budget_j) or budget_j < 0:
+            raise ValueError("budget_j must be a finite non-negative number")
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
