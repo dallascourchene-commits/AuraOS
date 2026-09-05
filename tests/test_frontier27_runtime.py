@@ -136,6 +136,31 @@ class T(unittest.TestCase):
         self.assertEqual(result["hit_rate"],0.0)
         self.assertEqual(result["prefetch_transfers"],0)
 
+    def test_46_mismatch_rejection_does_not_mutate_frontier_state(self):
+        tier=StorageTier("ssd",10**9,1024.0,1.0)
+        runner=FrontierOffload(1024,8,tier,1.0,10.0)
+        before=(tuple(runner.r.r.items()),runner.r.hits,runner.r.misses)
+        with self.assertRaises(ValueError): runner.run([[1],[2]],[[1]])
+        after=(tuple(runner.r.r.items()),runner.r.hits,runner.r.misses)
+        self.assertEqual(after,before)
+        retry=runner.run([[1]],[[1]])
+        fresh=FrontierOffload(1024,8,tier,1.0,10.0).run([[1]],[[1]])
+        self.assertEqual(retry,fresh)
+
+    def test_47_empty_workload_after_prior_run_has_zero_call_hit_rate(self):
+        tier=StorageTier("ssd",10**9,1024.0,1.0)
+        runner=FrontierOffload(1024,8,tier,1.0,10.0)
+        runner.run([[1]],[[1]])
+        result=runner.run([],[])
+        self.assertEqual(result,{"bytes":0,"seconds":0.0,"energy_j":0.0,"hit_rate":0.0,"prefetch_transfers":0})
+
+    def test_48_long_exact_boundary_does_not_drop_final_prefetch(self):
+        per_plan=0.23264748169005192
+        tier=StorageTier("ssd",100,10**6,per_plan*10**9)
+        routes=[[i] for i in range(1000)]
+        preds=[[i] for i in range(1000)]
+        result=FrontierOffload(1,1000,tier,1.0,per_plan*1000).run(routes,preds)
+        self.assertEqual(result["prefetch_transfers"],1000)
 
 
 if __name__ == "__main__": unittest.main()
