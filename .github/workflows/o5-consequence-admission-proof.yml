@@ -33,7 +33,7 @@ jobs:
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           AURA_GITHUB_TOKEN: ${{ github.token }}
           EXPECTED_SOURCE_BLOB: 97aba2d24103d2aa093ebd8b73e235fe41457f5e
-          EXPECTED_TEST_BLOB: 5b2e4982d744fe2132ebca01602b26e46cee4ac1
+          EXPECTED_TEST_BLOB: 306e6b0ba0732d4362a25d3ad0b23371adc6f7bf
         run: |
           set -euo pipefail
           test -n "$TARGET_SHA"
