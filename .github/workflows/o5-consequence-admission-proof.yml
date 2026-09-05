@@ -28,6 +28,8 @@ jobs:
         env:
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           AURA_GITHUB_TOKEN: ${{ github.token }}
+          EXPECTED_SOURCE_BLOB: 70e90d834cf5e8f3c86789d07565119136dced58
+          EXPECTED_TEST_BLOB: c7c3327cfa8bc2b497bd44aec53806f247867a5e
         run: |
           set -euo pipefail
           test -n "$TARGET_SHA"
@@ -52,8 +54,14 @@ jobs:
               exit 1
               ;;
           esac
+          source_blob="$(git rev-parse HEAD:tools/arena/consequence_admission_kernel.py)"
+          test "$source_blob" = "$EXPECTED_SOURCE_BLOB"
+          test_blob="$(git rev-parse HEAD:tests/test_consequence_admission_kernel.py)"
+          test "$test_blob" = "$EXPECTED_TEST_BLOB"
           printf 'exact_checkout_head=%s\n' "$actual"
           printf 'credential_isolation=verified\n'
+          printf 'semantic_source_blob=%s\n' "$source_blob"
+          printf 'semantic_test_blob=%s\n' "$test_blob"
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: ${{ matrix.python-version }}
