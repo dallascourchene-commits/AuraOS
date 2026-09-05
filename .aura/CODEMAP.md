@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1651
-- **total_bytes**: 26508353
-- **text_tokens_est**: 6617430
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1652
+- **total_bytes**: 26538665
+- **text_tokens_est**: 6625008
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1651,
+  "repo_file_count": 1652,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1277,6 +1277,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "setup_aura.sh",
     "spatial_mapper.py",
     "src/auraos/security/airllm_secure_wrapper.py",
+    "src/auraos/security/airllm_security_receipt.py",
     "src/auraos/security/test_airllm_secure_wrapper.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
@@ -1731,6 +1732,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/install_refactor_quality_docs.py",
     "scripts/update_architect_benchmark_readme.py",
     "src/auraos/security/airllm_secure_wrapper.py",
+    "src/auraos/security/airllm_security_receipt.py",
     "src/auraos/security/test_airllm_secure_wrapper.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "test_support/__init__.py",
@@ -1776,8 +1778,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_gate_dialogue.py",
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py"
+    "tests/test_aura_bilateral_planning_enforcement.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1791,15 +1792,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1651,
-  "bytes": 26508353,
-  "tokens_est": 6617430,
+  "files": 1652,
+  "bytes": 26538665,
+  "tokens_est": 6625008,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1005,
+    "python_module": 1006,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
