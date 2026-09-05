@@ -115,12 +115,15 @@ class T(unittest.TestCase):
         result=security_campaign(1000); self.assertEqual(result["after_false_admits"],0); self.assertEqual(result["valid_rejected"],0)
 
     def test_43_prefetch_energy_budget_is_cumulative(self):
-        size=100_000_000; tier=StorageTier("ssd",10**9,10**9,1.0)
-        result=FrontierOffload(size,8,tier,1.0,0.15).run([[1],[2]],[[1],[2]])
+        tier=StorageTier("ssd",10**9,10**9,1.0)
+        result=FrontierOffload(100_000_000,8,tier,1.0,0.15).run([[1],[2]],[[1],[2]])
         self.assertEqual(result["prefetch_transfers"],1)
         self.assertTrue(math.isclose(result["speculative_energy_j"],0.1,rel_tol=0,abs_tol=1e-12))
         self.assertTrue(math.isclose(result["speculative_energy_remaining_j"],0.05,rel_tol=0,abs_tol=1e-12))
         self.assertLessEqual(result["speculative_energy_j"],result["speculative_energy_budget_j"]+1e-12)
+        exact=FrontierOffload(50_000_000,8,tier,1.0,0.15).run([[1],[2],[3]],[[1],[2],[3]])
+        self.assertEqual(exact["prefetch_transfers"],3)
+        self.assertTrue(math.isclose(exact["speculative_energy_j"],0.15,rel_tol=0,abs_tol=1e-12))
 
 
 if __name__ == "__main__": unittest.main()
