@@ -13,18 +13,60 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: o5-consequence-admission-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   proof:
     name: O5 proof (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.12"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Fetch exact semantic head without persisted credentials
+        shell: bash
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          AURA_GITHUB_TOKEN: ${{ github.token }}
+          EXPECTED_SOURCE_BLOB: 70e90d834cf5e8f3c86789d07565119136dced58
+          EXPECTED_TEST_BLOB: c7c3327cfa8bc2b497bd44aec53806f247867a5e
+        run: |
+          set -euo pipefail
+          test -n "$TARGET_SHA"
+          test -n "$AURA_GITHUB_TOKEN"
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          auth_header="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$AURA_GITHUB_TOKEN" | base64 | tr -d '\n')"
+          git -c http.https://github.com/.extraheader="$auth_header" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset auth_header AURA_GITHUB_TOKEN
+          git checkout --detach FETCH_HEAD
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$TARGET_SHA"
+          if git config --local --get-regexp '^http\..*\.extraheader$' >/dev/null 2>&1; then
+            echo "credential extraheader persisted after fetch" >&2
+            exit 1
+          fi
+          origin_url="$(git remote get-url origin)"
+          case "$origin_url" in
+            "https://github.com/${GITHUB_REPOSITORY}"|"https://github.com/${GITHUB_REPOSITORY}.git") ;;
+            *)
+              echo "unexpected or credential-bearing origin URL" >&2
+              exit 1
+              ;;
+          esac
+          source_blob="$(git rev-parse HEAD:tools/arena/consequence_admission_kernel.py)"
+          test "$source_blob" = "$EXPECTED_SOURCE_BLOB"
+          test_blob="$(git rev-parse HEAD:tests/test_consequence_admission_kernel.py)"
+          test "$test_blob" = "$EXPECTED_TEST_BLOB"
+          printf 'exact_checkout_head=%s\n' "$actual"
+          printf 'credential_isolation=verified\n'
+          printf 'semantic_source_blob=%s\n' "$source_blob"
+          printf 'semantic_test_blob=%s\n' "$test_blob"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile O5 source and regression suite
