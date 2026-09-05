@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26483250
-- **text_tokens_est**: 6611153
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1657
+- **total_bytes**: 26578227
+- **text_tokens_est**: 6634900
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1657,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1276,6 +1276,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "setup.sh",
     "setup_aura.sh",
     "spatial_mapper.py",
+    "src/auraos/security/airllm_manifest_pinned_wrapper.py",
+    "src/auraos/security/airllm_secure_wrapper.py",
+    "src/auraos/security/airllm_security_receipt.py",
+    "src/auraos/security/airllm_security_reuse_gate.py",
+    "src/auraos/security/airllm_source_manifest_guard.py",
+    "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
+    "src/auraos/security/test_airllm_secure_wrapper.py",
+    "src/auraos/security/test_airllm_source_manifest_guard.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
     "staging/02_verification_and_falsification/SPEC_FALSIFIER_ROUTING.md",
@@ -1728,6 +1736,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/finalize_refactor_quality_doc_sync.py",
     "scripts/install_refactor_quality_docs.py",
     "scripts/update_architect_benchmark_readme.py",
+    "src/auraos/security/airllm_manifest_pinned_wrapper.py",
+    "src/auraos/security/airllm_secure_wrapper.py",
+    "src/auraos/security/airllm_security_receipt.py",
+    "src/auraos/security/airllm_security_reuse_gate.py",
+    "src/auraos/security/airllm_source_manifest_guard.py",
+    "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
+    "src/auraos/security/test_airllm_secure_wrapper.py",
+    "src/auraos/security/test_airllm_source_manifest_guard.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "test_support/__init__.py",
     "test_support/aura_human_agent_arena_suite.py",
@@ -1767,15 +1783,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow.py",
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
-    "tests/test_aura_benchmark_four.py",
-    "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_benchmark_four.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1789,15 +1797,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26483250,
-  "tokens_est": 6611153,
+  "files": 1657,
+  "bytes": 26578227,
+  "tokens_est": 6634900,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
+    "python_module": 1011,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
