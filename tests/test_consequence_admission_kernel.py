@@ -61,6 +61,10 @@ class KernelTests(unittest.TestCase):
     def test_stale_source_exit_holds(self):
         self.assertEqual(self.assess(source_exit=source(False)).decision, Decision.HOLD_STALE_SOURCE)
 
+    def test_truthy_nonboolean_source_currentness_holds(self):
+        for malformed in (1, "true", "false", object()):
+            self.assertEqual(self.assess(source_exit=source(malformed)).decision, Decision.HOLD_STALE_SOURCE)
+
     def test_dependency_debt_noncompensatory(self):
         r = self.assess(unresolved_dependencies=("scope_lift_gate", "unrelated"))
         self.assertEqual(r.decision, Decision.HOLD_DEPENDENCY_DEBT)
@@ -152,6 +156,12 @@ class SuccessionTests(unittest.TestCase):
     def test_stale_source_exit_rejected(self):
         e = ReadjudicationEnvelope("P", "c", "pol", source(False), (), (), (), "r")
         with self.assertRaises(AdmissionError): e.validate()
+
+    def test_truthy_nonboolean_source_currentness_rejected(self):
+        for malformed in (1, "true", "false", object()):
+            e = ReadjudicationEnvelope("P", "c", "pol", source(malformed), (), (), (), "r")
+            with self.assertRaises(AdmissionError):
+                e.validate()
 
 
 if __name__ == "__main__":
