@@ -131,6 +131,11 @@ class EvidenceDag:
             w = witnesses[node_id]
             if not (w.current and w.verified and w.d0):
                 raise DagError(f'UNCURRENT_REUSE_WITNESS:{node_id}')
+            deps = self.nodes[node_id].deps
+            if deps:
+                expected_input_root = digest([witnesses[d].output_root for d in deps])
+                if w.input_root != expected_input_root:
+                    raise DagError(f'INVALID_DEPENDENCY_BINDING:{node_id}')
         # A reusable node is lawful only if none of its transitive deps are invalid.
         # Descendant closure makes this true by construction; assert for tamper detection.
         for r in reusable:
