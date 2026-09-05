@@ -10,19 +10,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **elapsed_ms**: 28044.17
 - **file_count**: 1649
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
-- **text_tokens_est**: 6606349
-- **topology_edges**: 28068
-- **topology_nodes**: 11478
-- **topology_source**: compiled_deep_topology
 - **total_bytes**: 26464028
+- **text_tokens_est**: 6606349
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **topology_nodes**: 11478
+- **topology_edges**: 28068
+- **topology_source**: compiled_deep_topology
+- **elapsed_ms**: 28044.17
 
 ## Coverage
 
 ```json
 {
+  "repo_file_count": 1649,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1674,8 +1675,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "verify_os.py",
     "vsa_resonator.py"
   ],
-  "coverage_complete_for_repo_scan": true,
-  "repo_file_count": 1649,
   "source_paths_without_topology": [
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
@@ -1778,7 +1777,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py"
   ],
-  "topology_paths_without_source_cards": []
+  "topology_paths_without_source_cards": [],
+  "coverage_complete_for_repo_scan": true
 }
 ```
 
@@ -2500,46 +2500,46 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Highest-connectivity source files
 
-- `aura_node.py` — score `1112`; nodes `221`; out `566`; in `325`
-- `aura_ephemeral_workspace_contracts.py` — score `961`; nodes `99`; out `421`; in `441`
-- `aura_relationship_contracts.py` — score `830`; nodes `91`; out `367`; in `372`
-- `aura_gate.py` — score `826`; nodes `69`; out `380`; in `377`
-- `aura_unified_memory_continuity.py` — score `815`; nodes `93`; out `350`; in `372`
-- `aura_agent_arena_cli.py` — score `676`; nodes `101`; out `295`; in `280`
-- `test_scientific_memory.py` — score `637`; nodes `120`; out `358`; in `159`
-- `aura_ephemeral_workspace_runtime_v2.py` — score `631`; nodes `57`; out `326`; in `248`
-- `aura_fst_routing.py` — score `597`; nodes `36`; out `79`; in `482`
-- `aura_live_architect.py` — score `591`; nodes `85`; out `274`; in `232`
-- `aura_spatial_contracts.py` — score `587`; nodes `75`; out `232`; in `280`
-- `aura_architect_loop.py` — score `583`; nodes `78`; out `228`; in `277`
-- `aura_relational_authority.py` — score `540`; nodes `59`; out `241`; in `240`
-- `aura_relational_index.py` — score `536`; nodes `81`; out `233`; in `222`
-- `aura_relational_synthesis.py` — score `525`; nodes `70`; out `232`; in `223`
-- `aura_intent_refinement.py` — score `512`; nodes `64`; out `227`; in `221`
-- `aura_agent_arena_mcp.py` — score `498`; nodes `66`; out `229`; in `203`
-- `aura_project_context_compiler.py` — score `457`; nodes `85`; out `187`; in `185`
-- `test_aura_functions.py` — score `445`; nodes `87`; out `257`; in `101`
-- `aura_gate_adapters.py` — score `437`; nodes `42`; out `198`; in `197`
-- `aura_agent_arena_github_bridge.py` — score `426`; nodes `43`; out `190`; in `193`
-- `aura_construction_spatial_foundry.py` — score `422`; nodes `56`; out `125`; in `241`
-- `aura_bilateral_live_repair_foundry_contracts.py` — score `408`; nodes `36`; out `86`; in `286`
-- `aura_human_agent_arena.py` — score `406`; nodes `73`; out `175`; in `158`
-- `aura_gate_server.py` — score `399`; nodes `57`; out `176`; in `166`
-- `aura_planning_board.py` — score `399`; nodes `54`; out `160`; in `185`
-- `aura_scientific_memory.py` — score `387`; nodes `46`; out `98`; in `243`
-- `aura_review_arena.py` — score `383`; nodes `78`; out `157`; in `148`
-- `aura_event_contracts.py` — score `382`; nodes `41`; out `118`; in `223`
-- `aura_unified_memory_continuity_learning.py` — score `377`; nodes `38`; out `187`; in `152`
-- `aura_coding_arena_planning.py` — score `371`; nodes `21`; out `176`; in `174`
-- `aura_pascal_spatial_presentation_part1.py` — score `361`; nodes `27`; out `91`; in `243`
-- `aura_construction_adapter.py` — score `357`; nodes `51`; out `147`; in `159`
-- `aura_topological_context_anchor.py` — score `355`; nodes `72`; out `142`; in `141`
-- `aura_construction_contracts.py` — score `345`; nodes `53`; out `140`; in `152`
-- `aura_music_coding_arena.py` — score `343`; nodes `49`; out `150`; in `144`
-- `aura_gate_audit.py` — score `338`; nodes `35`; out `160`; in `143`
-- `aura_understand_graph_bridge.py` — score `336`; nodes `65`; out `142`; in `129`
-- `test_aura_ojibwe_tutor.py` — score `332`; nodes `78`; out `177`; in `77`
-- `aura_coding_arena_planning_integrity.py` — score `321`; nodes `21`; out `150`; in `150`
+- `aura_node.py` — score `1112.0`; nodes `221`; out `566`; in `325`
+- `aura_ephemeral_workspace_contracts.py` — score `961.0`; nodes `99`; out `421`; in `441`
+- `aura_relationship_contracts.py` — score `830.0`; nodes `91`; out `367`; in `372`
+- `aura_gate.py` — score `826.0`; nodes `69`; out `380`; in `377`
+- `aura_unified_memory_continuity.py` — score `815.0`; nodes `93`; out `350`; in `372`
+- `aura_agent_arena_cli.py` — score `676.0`; nodes `101`; out `295`; in `280`
+- `test_scientific_memory.py` — score `637.0`; nodes `120`; out `358`; in `159`
+- `aura_ephemeral_workspace_runtime_v2.py` — score `631.0`; nodes `57`; out `326`; in `248`
+- `aura_fst_routing.py` — score `597.0`; nodes `36`; out `79`; in `482`
+- `aura_live_architect.py` — score `591.0`; nodes `85`; out `274`; in `232`
+- `aura_spatial_contracts.py` — score `587.0`; nodes `75`; out `232`; in `280`
+- `aura_architect_loop.py` — score `583.0`; nodes `78`; out `228`; in `277`
+- `aura_relational_authority.py` — score `540.0`; nodes `59`; out `241`; in `240`
+- `aura_relational_index.py` — score `536.0`; nodes `81`; out `233`; in `222`
+- `aura_relational_synthesis.py` — score `525.0`; nodes `70`; out `232`; in `223`
+- `aura_intent_refinement.py` — score `512.0`; nodes `64`; out `227`; in `221`
+- `aura_agent_arena_mcp.py` — score `498.0`; nodes `66`; out `229`; in `203`
+- `aura_project_context_compiler.py` — score `457.0`; nodes `85`; out `187`; in `185`
+- `test_aura_functions.py` — score `445.0`; nodes `87`; out `257`; in `101`
+- `aura_gate_adapters.py` — score `437.0`; nodes `42`; out `198`; in `197`
+- `aura_agent_arena_github_bridge.py` — score `426.0`; nodes `43`; out `190`; in `193`
+- `aura_construction_spatial_foundry.py` — score `422.0`; nodes `56`; out `125`; in `241`
+- `aura_bilateral_live_repair_foundry_contracts.py` — score `408.0`; nodes `36`; out `86`; in `286`
+- `aura_human_agent_arena.py` — score `406.0`; nodes `73`; out `175`; in `158`
+- `aura_gate_server.py` — score `399.0`; nodes `57`; out `176`; in `166`
+- `aura_planning_board.py` — score `399.0`; nodes `54`; out `160`; in `185`
+- `aura_scientific_memory.py` — score `387.0`; nodes `46`; out `98`; in `243`
+- `aura_review_arena.py` — score `383.0`; nodes `78`; out `157`; in `148`
+- `aura_event_contracts.py` — score `382.0`; nodes `41`; out `118`; in `223`
+- `aura_unified_memory_continuity_learning.py` — score `377.0`; nodes `38`; out `187`; in `152`
+- `aura_coding_arena_planning.py` — score `371.0`; nodes `21`; out `176`; in `174`
+- `aura_pascal_spatial_presentation_part1.py` — score `361.0`; nodes `27`; out `91`; in `243`
+- `aura_construction_adapter.py` — score `357.0`; nodes `51`; out `147`; in `159`
+- `aura_topological_context_anchor.py` — score `355.0`; nodes `72`; out `142`; in `141`
+- `aura_construction_contracts.py` — score `345.0`; nodes `53`; out `140`; in `152`
+- `aura_music_coding_arena.py` — score `343.0`; nodes `49`; out `150`; in `144`
+- `aura_gate_audit.py` — score `338.0`; nodes `35`; out `160`; in `143`
+- `aura_understand_graph_bridge.py` — score `336.0`; nodes `65`; out `142`; in `129`
+- `test_aura_ojibwe_tutor.py` — score `332.0`; nodes `78`; out `177`; in `77`
+- `aura_coding_arena_planning_integrity.py` — score `321.0`; nodes `21`; out `150`; in `150`
 
 ## Example usage
 
