@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1642
-- **total_bytes**: 26438088
-- **text_tokens_est**: 6599873
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1643
+- **total_bytes**: 26439173
+- **text_tokens_est**: 6600145
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1642,
+  "repo_file_count": 1643,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -172,6 +172,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-replay-probes.yml",
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
+    ".github/workflows/o5-consequence-admission-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
     ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -1782,16 +1783,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1642,
-  "bytes": 26438088,
-  "tokens_est": 6599873,
+  "files": 1643,
+  "bytes": 26439173,
+  "tokens_est": 6600145,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 999,
-    "schema_or_lexicon": 271,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
