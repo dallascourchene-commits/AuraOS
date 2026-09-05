@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/arena/frontier27_runtime.py"
       - "tests/test_frontier27_runtime.py"
+      - "tests/test_frontier27_cumulative_energy.py"
       - "benchmarks/benchmark_frontier27.py"
       - "benchmarks/check_frontier27_thresholds.py"
       - "docs/FRONTIER27_IMPLEMENTATION.md"
@@ -44,9 +45,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Compile Frontier-27 runtime
         run: |
-          python -m py_compile tools/arena/frontier27_runtime.py tests/test_frontier27_runtime.py benchmarks/benchmark_frontier27.py benchmarks/check_frontier27_thresholds.py
+          python -m py_compile tools/arena/frontier27_runtime.py tests/test_frontier27_runtime.py tests/test_frontier27_cumulative_energy.py benchmarks/benchmark_frontier27.py benchmarks/check_frontier27_thresholds.py
       - name: Run all Frontier-27 mechanism and review-regression tests
-        run: python -m unittest -v tests.test_frontier27_runtime
+        run: python -m unittest -v tests.test_frontier27_runtime tests.test_frontier27_cumulative_energy
       - name: Run deterministic before/after benchmark
         run: python benchmarks/benchmark_frontier27.py > frontier27-benchmark.json
       - name: Enforce deterministic efficiency + retrieval-quality floors
