@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, replace
+from decimal import Decimal
 from hashlib import sha256
 import json
 import math
@@ -11,7 +12,6 @@ from typing import Iterable, Sequence
 
 SCHEMA = "AURA-FUSED-ROUTE-COST-RECEIPT-v1"
 _HEX40 = re.compile(r"^[0-9a-f]{40}$")
-_TOL = 1e-12
 
 class CostReceiptError(ValueError):
     pass
@@ -34,6 +34,10 @@ def _finite_number(value, name: str, *, minimum: float = 0.0) -> float:
     if not math.isfinite(out) or out < minimum:
         raise CostReceiptError(f"INVALID_NUMBER:{name}")
     return out
+
+def _decimal_number(value, name: str) -> Decimal:
+    _finite_number(value, name)
+    return Decimal(str(value))
 
 @dataclass(frozen=True)
 class RouteEvent:
@@ -139,7 +143,8 @@ def envelope_id(envelope: CostEnvelope) -> str:
 def validate_transfers(events: Sequence[RouteEvent], transfers: Sequence[TransferCharge], envelope: CostEnvelope) -> None:
     validate_route_events(events); validate_envelope(envelope)
     by_sequence = {e.sequence: e for e in events}
-    seen_ids: set[str] = set(); speculative_spent = 0.0
+    seen_ids: set[str] = set(); speculative_spent = Decimal(0)
+    speculative_budget = _decimal_number(envelope.speculative_energy_budget_j, "speculative_energy_budget_j")
     for expected, charge in enumerate(transfers, 1):
         if not isinstance(charge.transfer_id, str) or not charge.transfer_id:
             raise CostReceiptError("INVALID_TRANSFER_ID")
@@ -163,30 +168,44 @@ def validate_transfers(events: Sequence[RouteEvent], transfers: Sequence[Transfe
             raise CostReceiptError("SPECULATIVE_TRANSFER_MUST_TARGET_FUTURE_EVENT")
         _strict_int(charge.bytes_moved, "transfer.bytes", minimum=1)
         _finite_number(charge.modeled_time_s, "transfer.modeled_time_s")
-        energy = _finite_number(charge.modeled_energy_j, "transfer.modeled_energy_j")
+        energy = _decimal_number(charge.modeled_energy_j, "transfer.modeled_energy_j")
         if charge.kind == "SPECULATIVE":
             speculative_spent += energy
-            if speculative_spent > float(envelope.speculative_energy_budget_j) + _TOL:
+            if speculative_spent > speculative_budget:
                 raise CostReceiptError("CUMULATIVE_SPECULATIVE_ENERGY_BUDGET_EXCEEDED")
 
 def transfer_root(events: Sequence[RouteEvent], transfers: Sequence[TransferCharge], envelope: CostEnvelope) -> str:
     validate_transfers(events, transfers, envelope)
     return _digest([t.canonical() for t in transfers])
 
+def _sum_energy_decimal(transfers: Sequence[TransferCharge], kind: str | None = None) -> Decimal:
+    return sum(
+        (_decimal_number(t.modeled_energy_j, "transfer.modeled_energy_j") for t in transfers if kind is None or t.kind == kind),
+        Decimal(0),
+    )
+
 def _sum_fields(transfers: Sequence[TransferCharge], kind: str | None = None) -> tuple[int, float, float, int]:
     xs = [t for t in transfers if kind is None or t.kind == kind]
-    return (sum(t.bytes_moved for t in xs), math.fsum(float(t.modeled_time_s) for t in xs), math.fsum(float(t.modeled_energy_j) for t in xs), len(xs))
+    return (
+        sum(t.bytes_moved for t in xs),
+        math.fsum(float(t.modeled_time_s) for t in xs),
+        float(_sum_energy_decimal(xs)),
+        len(xs),
+    )
 
 def compile_receipt(events: Sequence[RouteEvent], transfers: Sequence[TransferCharge], envelope: CostEnvelope) -> CostReceipt:
     validate_transfers(events, transfers, envelope)
     total_b, total_t, total_e, total_n = _sum_fields(transfers)
     demand_b, demand_t, demand_e, demand_n = _sum_fields(transfers, "DEMAND")
     spec_b, spec_t, spec_e, spec_n = _sum_fields(transfers, "SPECULATIVE")
+    budget_decimal = _decimal_number(envelope.speculative_energy_budget_j, "speculative_energy_budget_j")
+    spec_decimal = _sum_energy_decimal(transfers, "SPECULATIVE")
+    remaining_decimal = max(Decimal(0), budget_decimal - spec_decimal)
     base = CostReceipt(
         SCHEMA, envelope.source_head, envelope_id(envelope), event_root(events), transfer_root(events, transfers, envelope),
         len(events), total_n, demand_n, spec_n, total_b, demand_b, spec_b, total_t, demand_t, spec_t,
         total_e, demand_e, spec_e, float(envelope.speculative_energy_budget_j),
-        max(0.0, float(envelope.speculative_energy_budget_j) - spec_e), False, False, ""
+        float(remaining_decimal), False, False, ""
     )
     return replace(base, result_root=_digest(base.canonical_without_result_root()))
 
