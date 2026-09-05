@@ -21,7 +21,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 import inspect
 import threading
-from types import ModuleType
+from types import MethodType, ModuleType
 from typing import Any
 
 try:
@@ -155,6 +155,49 @@ def force_false_native_compat_membrane(transformers_module: ModuleType | Any | N
                 setattr(cls, method_name, raw_descriptor)
 
 
+def install_custom_generate_denial(loaded: Any) -> Any:
+    """Persistently deny Transformers custom-generation code on a loaded model.
+
+    CVE-2026-80047 / CERT VU#456290 documents a Transformers path where
+    ``load_custom_generate`` may fetch and cache remote Python before the trust decision.
+    AirLLM delegates ``generate`` to its underlying Transformers model, so a load-time
+    membrane alone is insufficient.  For generative model objects we therefore replace
+    the *instance* ``load_custom_generate`` boundary with a denial function after secure
+    admission.  Ordinary native ``generate`` remains available.
+
+    Non-generative loader results are left unchanged.  A generative target without a
+    guardable ``load_custom_generate`` boundary fails closed rather than pretending that
+    the vulnerable surface is covered.
+    """
+    target = getattr(loaded, "model", loaded)
+    generate = getattr(target, "generate", None)
+    if not callable(generate):
+        return loaded
+    boundary = getattr(target, "load_custom_generate", None)
+    if not callable(boundary):
+        raise RemoteCodeTrustError(
+            "generative model does not expose a guardable load_custom_generate boundary"
+        )
+
+    def deny_custom_generate(self: Any, *args: Any, **kwargs: Any) -> Any:
+        raise RemoteCodeTrustError(
+            "custom_generate is not admitted: remote generation code fetch/cache is disabled"
+        )
+
+    try:
+        setattr(target, "load_custom_generate", MethodType(deny_custom_generate, target))
+    except Exception as exc:
+        raise RemoteCodeTrustError(
+            "could not install persistent custom_generate denial on loaded model"
+        ) from exc
+    installed = getattr(target, "load_custom_generate", None)
+    if not callable(installed) or getattr(installed, "__func__", None) is not deny_custom_generate:
+        raise RemoteCodeTrustError(
+            "custom_generate denial could not be verified after installation"
+        )
+    return loaded
+
+
 class ManifestPinnedNativeAirLLMWrapper(ManifestPinnedSecureAirLLMWrapper):
     """Strict manifest-pinned loader that permits only native Transformers execution."""
 
@@ -192,10 +235,12 @@ class ManifestPinnedNativeAirLLMWrapper(ManifestPinnedSecureAirLLMWrapper):
                     "AirLLM package source generation changed at invocation boundary"
                 )
             with force_false_native_compat_membrane(self._base._transformers_module):
-                return loader.from_pretrained(second_model.path, *args, **kwargs)
+                loaded = loader.from_pretrained(second_model.path, *args, **kwargs)
+        return install_custom_generate_denial(loaded)
 
 
 __all__ = [
     "ManifestPinnedNativeAirLLMWrapper",
     "force_false_native_compat_membrane",
+    "install_custom_generate_denial",
 ]
