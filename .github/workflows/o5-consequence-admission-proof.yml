@@ -1,0 +1,36 @@
+name: O5 Consequence Admission Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena/consequence_admission_kernel.py"
+      - "tests/test_consequence_admission_kernel.py"
+      - ".github/workflows/o5-consequence-admission-proof.yml"
+  push:
+    branches:
+      - "arena/o5-consequence-admission-kernel-20260903-sol"
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    name: O5 proof (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile O5 source and regression suite
+        run: |
+          python -m py_compile tools/arena/consequence_admission_kernel.py tests/test_consequence_admission_kernel.py
+      - name: Run O5 consequence-admission regression suite
+        env:
+          PYTHONHASHSEED: "0"
+        run: python -m unittest -v tests.test_consequence_admission_kernel

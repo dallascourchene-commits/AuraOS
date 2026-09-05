@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788586564,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -154,6 +154,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -1097,6 +1098,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1622,6 +1624,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_consequence_admission_kernel.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1631,6 +1634,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/consequence_admission_kernel.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26439173,
+      "tokens_est": 6600145,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3899,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 47,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#function:_canonical:85857feaaa5d3470",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -20123,6 +20135,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
         "signature_hash": "bd189b17ea870e50"
+      },
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#function:digest:e9b0dbc6797652bb",
+        "signature_hash": "3c60ab9e6d97eef8"
       }
     ],
     "_runtime_binding_digest": [
@@ -156881,6 +156901,296 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "ready_vector": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#function:ready_vector:007835991cb3eed1",
+        "signature_hash": "9eaa8f72ee92f0b3"
+      }
+    ],
+    "source": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#function:source:9c1e9784a34b651a",
+        "signature_hash": "a1a8ec6d00f701b6"
+      }
+    ],
+    "KernelTests": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 90,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#class:KernelTests:b19e5bdd61ef3372",
+        "signature_hash": "98de350e5fd7beda"
+      }
+    ],
+    "KernelTests.setUp": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.setUp:e2afcbc911dd3478",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "KernelTests.assess": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.assess:4155f5d8e17b545b",
+        "signature_hash": "6dcb26d8cdeb0b41"
+      }
+    ],
+    "KernelTests.test_ready_nonauthorizing": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_ready_nonauthorizing:8d77d1a29aef9831",
+        "signature_hash": "2d944daa5a2986eb"
+      }
+    ],
+    "KernelTests.test_any_hard_invalid_dominates_each_axis": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 41,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_any_hard_invalid_dominates_each_axis:f8cc1c351aa3a5b1",
+        "signature_hash": "fa5dea765a26fed9"
+      }
+    ],
+    "KernelTests.test_trailing_13d_routing_never_repairs_hard_invalid": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 47,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_trailing_13d_routing_never_repairs_hard_invalid:4ea83c756ff13b31",
+        "signature_hash": "992d7d994c7079ca"
+      }
+    ],
+    "KernelTests.test_required_unknown_holds": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_required_unknown_holds:1bc587faca744e46",
+        "signature_hash": "af670346aec568ee"
+      }
+    ],
+    "KernelTests.test_missing_source_exit_holds": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_missing_source_exit_holds:48e1dd7d709be0a8",
+        "signature_hash": "9783d29470c5783a"
+      }
+    ],
+    "KernelTests.test_stale_source_exit_holds": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_stale_source_exit_holds:e7540e17a8b5c432",
+        "signature_hash": "16ea59f948a03e7e"
+      }
+    ],
+    "KernelTests.test_dependency_debt_noncompensatory": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_dependency_debt_noncompensatory:e499bea120115b17",
+        "signature_hash": "04197d8617137def"
+      }
+    ],
+    "KernelTests.test_effect_authority_not_minted": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_effect_authority_not_minted:58a7f43269e7f364",
+        "signature_hash": "443f7b61a99320d7"
+      }
+    ],
+    "KernelTests.test_routing_coordinates_do_not_change_ready_decision": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 73,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_routing_coordinates_do_not_change_ready_decision:b67e1efc9f8e2d06",
+        "signature_hash": "50231313f363ce75"
+      }
+    ],
+    "KernelTests.test_omega8_census": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_omega8_census:c0512eddba54b4c1",
+        "signature_hash": "f07b5804c6d8f0c4"
+      }
+    ],
+    "KernelTests.test_hard_invalid_priority_over_other_failures": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 83,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_hard_invalid_priority_over_other_failures:b3a4a6711a69564a",
+        "signature_hash": "617f895b9d9797db"
+      }
+    ],
+    "KernelTests.test_receipt_digest_deterministic": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_receipt_digest_deterministic:f22cbddc87a3b8a3",
+        "signature_hash": "16bea7da0452e8d6"
+      }
+    ],
+    "KernelTests.test_unsupported_canonical_values_fail_closed": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 90,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_unsupported_canonical_values_fail_closed:327e5856581f4697",
+        "signature_hash": "9ece4a68b42654fb"
+      }
+    ],
+    "LedgerTests": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 93,
+        "end_line": 127,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#class:LedgerTests:901034d53893c3bf",
+        "signature_hash": "01ad3b20d2d7db3b"
+      }
+    ],
+    "LedgerTests.test_append_and_verify": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 99,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_append_and_verify:22ec117664b4c9ee",
+        "signature_hash": "1416bc211593d088"
+      }
+    ],
+    "LedgerTests.test_invalidation_wakes_smallest_cutset": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 108,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_invalidation_wakes_smallest_cutset:70b311d93a17ad5e",
+        "signature_hash": "1ee9922d1be93c9d"
+      }
+    ],
+    "LedgerTests.test_invalidation_never_auto_readmits": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_invalidation_never_auto_readmits:cd8b979d95260c7e",
+        "signature_hash": "cfc581c677e614d2"
+      }
+    ],
+    "LedgerTests.test_duplicate_event_id_fails": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_duplicate_event_id_fails:23e9bbdf00f3b31d",
+        "signature_hash": "ea297d5ab8a48ccd"
+      }
+    ],
+    "LedgerTests.test_tamper_detected": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 127,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_tamper_detected:e99cb17c5e0db97f",
+        "signature_hash": "7c7dd9cfa5b9d2cd"
+      }
+    ],
+    "SuccessionTests": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 145,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#class:SuccessionTests:24f973b60660dda8",
+        "signature_hash": "92ef97ae3301efff"
+      }
+    ],
+    "SuccessionTests.test_successor_neutral_envelope": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 133,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_successor_neutral_envelope:4c256223839091f3",
+        "signature_hash": "d6db10361647015f"
+      }
+    ],
+    "SuccessionTests.test_inherited_truth_rejected": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_inherited_truth_rejected:f952475d510b92d8",
+        "signature_hash": "d23d1a60fbb78da8"
+      }
+    ],
+    "SuccessionTests.test_inherited_authority_rejected": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 141,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_inherited_authority_rejected:77b5e93534d033bd",
+        "signature_hash": "227461213b86bc11"
+      }
+    ],
+    "SuccessionTests.test_missing_source_exit_rejected": [
+      {
+        "file": "tests/test_consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 145,
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_missing_source_exit_rejected:b45c0089c53e6abb",
+        "signature_hash": "6077ba9b80f59a19"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157179,6 +157489,296 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "AdmissionError": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
+        "signature_hash": "fed24af61bcc2081"
+      }
+    ],
+    "AxisState": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AxisState:ddf7497f0d0e8cf6",
+        "signature_hash": "218775d645e58673"
+      }
+    ],
+    "Decision": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
+        "signature_hash": "d6a166dc8cfde9f6"
+      }
+    ],
+    "ConsequenceVector": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 64,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ConsequenceVector:85b42a9195adaa2d",
+        "signature_hash": "b9567a1dc4a9c8b5"
+      }
+    ],
+    "ConsequenceVector.__post_init__": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceVector.__post_init__:f47a4fc16ec20892",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ConsequenceVector.y13": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceVector.y13:cea4ea7bb8339c54",
+        "signature_hash": "e55bcccf4891a21a"
+      }
+    ],
+    "SourceExit": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 74,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:SourceExit:bc64b7153d20232c",
+        "signature_hash": "e0b143da0a82b1ef"
+      }
+    ],
+    "SourceExit.valid": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 74,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:SourceExit.valid:c8697cc30e45477c",
+        "signature_hash": "6cca0427257ffe2f"
+      }
+    ],
+    "AdmissionPolicy": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 88,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionPolicy:0ce60e40d1dab5f3",
+        "signature_hash": "b441215db8e04a92"
+      }
+    ],
+    "AdmissionPolicy.__post_init__": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 88,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionPolicy.__post_init__:453da6d10e891f9e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AdmissionInput": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 98,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionInput:af0c34f51b5e6773",
+        "signature_hash": "ce871eca824a90b4"
+      }
+    ],
+    "AdmissionReceipt": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 117,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionReceipt:8228ef77266ecbd8",
+        "signature_hash": "cdf4b6f2ba88559d"
+      }
+    ],
+    "AdmissionReceipt.receipt_digest": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 117,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionReceipt.receipt_digest:c8181f1b757f3042",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "ConsequenceAdmissionKernel": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 119,
+        "end_line": 160,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ConsequenceAdmissionKernel:06513f260afc1a5f",
+        "signature_hash": "fb62787aed11d229"
+      }
+    ],
+    "ConsequenceAdmissionKernel.assess": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 160,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceAdmissionKernel.assess:bc465865eec07f1b",
+        "signature_hash": "dee14104dab918ea"
+      }
+    ],
+    "AdmissionEvent": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 163,
+        "end_line": 183,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionEvent:858aa4268e376672",
+        "signature_hash": "ecb642dcca95e6dd"
+      }
+    ],
+    "AdmissionEvent.body": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 179,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionEvent.body:74b4ab66c9f86cd7",
+        "signature_hash": "83eb82cbaeff4f6f"
+      }
+    ],
+    "AdmissionEvent.computed_hash": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 181,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionEvent.computed_hash:7aa49b11a4dd839a",
+        "signature_hash": "3a473b569576e089"
+      }
+    ],
+    "AdmissionEvent.sealed": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 183,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionEvent.sealed:56c8bdabcd1e0252",
+        "signature_hash": "6fe6851dcd6fbc22"
+      }
+    ],
+    "ConsequenceEventLedger": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 185,
+        "end_line": 229,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ConsequenceEventLedger:03c28a96a98fd77d",
+        "signature_hash": "5a2d884f3792135a"
+      }
+    ],
+    "ConsequenceEventLedger.__init__": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 191,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.__init__:07d06f5a900adc82",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "ConsequenceEventLedger.events": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 194,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.events:d1236135c84c19f3",
+        "signature_hash": "f313fb85cbb4b333"
+      }
+    ],
+    "ConsequenceEventLedger.append_receipt": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 208,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.append_receipt:cd4ec5b6481e3b1d",
+        "signature_hash": "2d9bfbbe064088f6"
+      }
+    ],
+    "ConsequenceEventLedger.invalidate": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 221,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.invalidate:b7906d608ae61f30",
+        "signature_hash": "1c0557ce82b551da"
+      }
+    ],
+    "ConsequenceEventLedger.verify": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 229,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.verify:79867a7d4a85593d",
+        "signature_hash": "771daa533e2dbc3d"
+      }
+    ],
+    "ReadjudicationEnvelope": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 232,
+        "end_line": 252,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ReadjudicationEnvelope:e369492437065b09",
+        "signature_hash": "7d15df1976f45c95"
+      }
+    ],
+    "ReadjudicationEnvelope.validate": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 249,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ReadjudicationEnvelope.validate:ddb819646de7051a",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ReadjudicationEnvelope.envelope_digest": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 252,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ReadjudicationEnvelope.envelope_digest:23e538db5a04a074",
+        "signature_hash": "beacbb57b980cab6"
+      }
+    ],
+    "exhaustive_omega8": [
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 268,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
+        "signature_hash": "033c7cd0343e1003"
       }
     ],
     "_coordinates": [
@@ -158307,6 +158907,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
       ".github/workflows/p2-2-planning-regression.yml",
@@ -168819,6 +169420,59 @@
         0.223457,
         -0.266637,
         -0.080963
+      ]
+    },
+    {
+      "path": ".github/workflows/o5-consequence-admission-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1085,
+      "lines": 37,
+      "tokens_est": 272,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          32
+        ]
+      },
+      "topology": {},
+      "digest8": "efa6bd0a5da9b17f",
+      "vector": [
+        -0.033138,
+        -0.145607,
+        -0.097406,
+        -0.235984,
+        0.025105,
+        -0.254059,
+        0.209875,
+        0.211883,
+        -0.169707,
+        0.065272,
+        -0.06728,
+        0.127532,
+        0.15364,
+        0.093389,
+        -0.189791,
+        0.233975,
+        0.209875,
+        -0.04318,
+        0.223934,
+        0.109456,
+        0.1918,
+        -0.137574,
+        0.244017,
+        -0.254059,
+        0.155649,
+        -0.069289,
+        0.041172,
+        -0.223934,
+        0.219917,
+        0.223934,
+        0.24,
+        -0.237992
       ]
     },
     {
@@ -234820,6 +235474,53 @@
       ]
     },
     {
+      "path": "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3987,
+      "lines": 68,
+      "tokens_est": 996,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "69831009547f5d59",
+      "vector": [
+        0.249377,
+        -0.313257,
+        0.286231,
+        -0.04791,
+        -0.178127,
+        -0.067565,
+        0.060195,
+        0.124075,
+        -0.124075,
+        -0.148644,
+        -0.131445,
+        -0.156014,
+        0.222351,
+        -0.234636,
+        0.23955,
+        0.293602,
+        -0.023341,
+        0.109333,
+        -0.160928,
+        -0.116704,
+        -0.116704,
+        -0.146187,
+        -0.237093,
+        -0.087221,
+        0.018427,
+        -0.148644,
+        0.104419,
+        -0.244464,
+        0.060195,
+        0.298516,
+        -0.178127,
+        0.067565
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -262225,6 +262926,53 @@
       ]
     },
     {
+      "path": "tests/test_consequence_admission_kernel.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7082,
+      "lines": 150,
+      "tokens_est": 1771,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f087b81e7b3ac934",
+      "vector": [
+        0.244348,
+        -0.085912,
+        0.041283,
+        -0.166246,
+        0.114922,
+        0.088144,
+        -0.063597,
+        0.135005,
+        -0.179635,
+        0.166246,
+        0.204181,
+        0.130542,
+        -0.175172,
+        -0.179635,
+        0.264431,
+        0.114922,
+        -0.255505,
+        -0.146162,
+        0.17294,
+        0.273357,
+        -0.206413,
+        0.032357,
+        0.070292,
+        -0.284515,
+        0.222033,
+        -0.135005,
+        0.065829,
+        -0.224264,
+        0.259968,
+        0.094838,
+        0.15732,
+        0.226496
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263393,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/arena/consequence_admission_kernel.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11971,
+      "lines": 269,
+      "tokens_est": 2993,
+      "symbol_count": 31,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1397bda28a709ec7",
+      "vector": [
+        0.028232,
+        0.109541,
+        0.152455,
+        0.066628,
+        0.285711,
+        -0.269901,
+        0.236022,
+        0.041784,
+        -0.118576,
+        0.249574,
+        -0.213436,
+        -0.014681,
+        -0.077921,
+        -0.132127,
+        -0.098248,
+        0.208919,
+        -0.258608,
+        -0.224729,
+        0.141162,
+        0.132127,
+        -0.039525,
+        -0.256349,
+        -0.211178,
+        -0.251832,
+        -0.199885,
+        0.233764,
+        0.240539,
+        -0.068887,
+        0.156972,
+        0.17504,
+        0.005646,
+        -0.077921
       ]
     },
     {
@@ -286646,16 +287441,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26439173,
+    "text_tokens_est": 6600145,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286819,6 +287614,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -287762,6 +288558,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -288287,6 +289084,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_consequence_admission_kernel.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -288296,6 +289094,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/consequence_admission_kernel.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445314,6 +446113,296 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#class:KernelTests:b19e5bdd61ef3372",
+        "name": "KernelTests",
+        "kind": "class",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 21,
+        "end_line": 90,
+        "signature_hash": "98de350e5fd7beda",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#class:LedgerTests:901034d53893c3bf",
+        "name": "LedgerTests",
+        "kind": "class",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 93,
+        "end_line": 127,
+        "signature_hash": "01ad3b20d2d7db3b",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#class:SuccessionTests:24f973b60660dda8",
+        "name": "SuccessionTests",
+        "kind": "class",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 130,
+        "end_line": 145,
+        "signature_hash": "92ef97ae3301efff",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#function:ready_vector:007835991cb3eed1",
+        "name": "ready_vector",
+        "kind": "function",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "9eaa8f72ee92f0b3",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#function:source:9c1e9784a34b651a",
+        "name": "source",
+        "kind": "function",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "a1a8ec6d00f701b6",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.assess:4155f5d8e17b545b",
+        "name": "KernelTests.assess",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "6dcb26d8cdeb0b41",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.setUp:e2afcbc911dd3478",
+        "name": "KernelTests.setUp",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_any_hard_invalid_dominates_each_axis:f8cc1c351aa3a5b1",
+        "name": "KernelTests.test_any_hard_invalid_dominates_each_axis",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 36,
+        "end_line": 41,
+        "signature_hash": "fa5dea765a26fed9",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_dependency_debt_noncompensatory:e499bea120115b17",
+        "name": "KernelTests.test_dependency_debt_noncompensatory",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "04197d8617137def",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_effect_authority_not_minted:58a7f43269e7f364",
+        "name": "KernelTests.test_effect_authority_not_minted",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "443f7b61a99320d7",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_hard_invalid_priority_over_other_failures:b3a4a6711a69564a",
+        "name": "KernelTests.test_hard_invalid_priority_over_other_failures",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 80,
+        "end_line": 83,
+        "signature_hash": "617f895b9d9797db",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_missing_source_exit_holds:48e1dd7d709be0a8",
+        "name": "KernelTests.test_missing_source_exit_holds",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "9783d29470c5783a",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_omega8_census:c0512eddba54b4c1",
+        "name": "KernelTests.test_omega8_census",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "f07b5804c6d8f0c4",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_ready_nonauthorizing:8d77d1a29aef9831",
+        "name": "KernelTests.test_ready_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "2d944daa5a2986eb",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_receipt_digest_deterministic:f22cbddc87a3b8a3",
+        "name": "KernelTests.test_receipt_digest_deterministic",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "16bea7da0452e8d6",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_required_unknown_holds:1bc587faca744e46",
+        "name": "KernelTests.test_required_unknown_holds",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "af670346aec568ee",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_routing_coordinates_do_not_change_ready_decision:b67e1efc9f8e2d06",
+        "name": "KernelTests.test_routing_coordinates_do_not_change_ready_decision",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 67,
+        "end_line": 73,
+        "signature_hash": "50231313f363ce75",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_stale_source_exit_holds:e7540e17a8b5c432",
+        "name": "KernelTests.test_stale_source_exit_holds",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "16ea59f948a03e7e",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_trailing_13d_routing_never_repairs_hard_invalid:4ea83c756ff13b31",
+        "name": "KernelTests.test_trailing_13d_routing_never_repairs_hard_invalid",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 43,
+        "end_line": 47,
+        "signature_hash": "992d7d994c7079ca",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:KernelTests.test_unsupported_canonical_values_fail_closed:327e5856581f4697",
+        "name": "KernelTests.test_unsupported_canonical_values_fail_closed",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 88,
+        "end_line": 90,
+        "signature_hash": "9ece4a68b42654fb",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_append_and_verify:22ec117664b4c9ee",
+        "name": "LedgerTests.test_append_and_verify",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 94,
+        "end_line": 99,
+        "signature_hash": "1416bc211593d088",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_duplicate_event_id_fails:23e9bbdf00f3b31d",
+        "name": "LedgerTests.test_duplicate_event_id_fails",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "ea297d5ab8a48ccd",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_invalidation_never_auto_readmits:cd8b979d95260c7e",
+        "name": "LedgerTests.test_invalidation_never_auto_readmits",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 110,
+        "end_line": 113,
+        "signature_hash": "cfc581c677e614d2",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_invalidation_wakes_smallest_cutset:70b311d93a17ad5e",
+        "name": "LedgerTests.test_invalidation_wakes_smallest_cutset",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 101,
+        "end_line": 108,
+        "signature_hash": "1ee9922d1be93c9d",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:LedgerTests.test_tamper_detected:e99cb17c5e0db97f",
+        "name": "LedgerTests.test_tamper_detected",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 122,
+        "end_line": 127,
+        "signature_hash": "7c7dd9cfa5b9d2cd",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_inherited_authority_rejected:77b5e93534d033bd",
+        "name": "SuccessionTests.test_inherited_authority_rejected",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 139,
+        "end_line": 141,
+        "signature_hash": "227461213b86bc11",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_inherited_truth_rejected:f952475d510b92d8",
+        "name": "SuccessionTests.test_inherited_truth_rejected",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "d23d1a60fbb78da8",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_missing_source_exit_rejected:b45c0089c53e6abb",
+        "name": "SuccessionTests.test_missing_source_exit_rejected",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 143,
+        "end_line": 145,
+        "signature_hash": "6077ba9b80f59a19",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
+        "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_successor_neutral_envelope:4c256223839091f3",
+        "name": "SuccessionTests.test_successor_neutral_envelope",
+        "kind": "method",
+        "file": "tests/test_consequence_admission_kernel.py",
+        "line": 131,
+        "end_line": 133,
+        "signature_hash": "d6db10361647015f",
+        "file_digest8": "f087b81e7b3ac934"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -445632,6 +446721,316 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
+        "name": "AdmissionError",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "fed24af61bcc2081",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionEvent:858aa4268e376672",
+        "name": "AdmissionEvent",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 163,
+        "end_line": 183,
+        "signature_hash": "ecb642dcca95e6dd",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionInput:af0c34f51b5e6773",
+        "name": "AdmissionInput",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 91,
+        "end_line": 98,
+        "signature_hash": "ce871eca824a90b4",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionPolicy:0ce60e40d1dab5f3",
+        "name": "AdmissionPolicy",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 77,
+        "end_line": 88,
+        "signature_hash": "b441215db8e04a92",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionReceipt:8228ef77266ecbd8",
+        "name": "AdmissionReceipt",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 101,
+        "end_line": 117,
+        "signature_hash": "cdf4b6f2ba88559d",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AxisState:ddf7497f0d0e8cf6",
+        "name": "AxisState",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "218775d645e58673",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ConsequenceAdmissionKernel:06513f260afc1a5f",
+        "name": "ConsequenceAdmissionKernel",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 119,
+        "end_line": 160,
+        "signature_hash": "fb62787aed11d229",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ConsequenceEventLedger:03c28a96a98fd77d",
+        "name": "ConsequenceEventLedger",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 185,
+        "end_line": 229,
+        "signature_hash": "5a2d884f3792135a",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ConsequenceVector:85b42a9195adaa2d",
+        "name": "ConsequenceVector",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 54,
+        "end_line": 64,
+        "signature_hash": "b9567a1dc4a9c8b5",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 27,
+        "end_line": 34,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:ReadjudicationEnvelope:e369492437065b09",
+        "name": "ReadjudicationEnvelope",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 232,
+        "end_line": 252,
+        "signature_hash": "7d15df1976f45c95",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:SourceExit:bc64b7153d20232c",
+        "name": "SourceExit",
+        "kind": "class",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 67,
+        "end_line": 74,
+        "signature_hash": "e0b143da0a82b1ef",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#function:_canonical:85857feaaa5d3470",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 36,
+        "end_line": 47,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#function:digest:e9b0dbc6797652bb",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "3c60ab9e6d97eef8",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
+        "name": "exhaustive_omega8",
+        "kind": "function",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 262,
+        "end_line": 268,
+        "signature_hash": "033c7cd0343e1003",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionEvent.body:74b4ab66c9f86cd7",
+        "name": "AdmissionEvent.body",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 173,
+        "end_line": 179,
+        "signature_hash": "83eb82cbaeff4f6f",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionEvent.computed_hash:7aa49b11a4dd839a",
+        "name": "AdmissionEvent.computed_hash",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 180,
+        "end_line": 181,
+        "signature_hash": "3a473b569576e089",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionEvent.sealed:56c8bdabcd1e0252",
+        "name": "AdmissionEvent.sealed",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 182,
+        "end_line": 183,
+        "signature_hash": "6fe6851dcd6fbc22",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionPolicy.__post_init__:453da6d10e891f9e",
+        "name": "AdmissionPolicy.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 82,
+        "end_line": 88,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:AdmissionReceipt.receipt_digest:c8181f1b757f3042",
+        "name": "AdmissionReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 116,
+        "end_line": 117,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceAdmissionKernel.assess:bc465865eec07f1b",
+        "name": "ConsequenceAdmissionKernel.assess",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 125,
+        "end_line": 160,
+        "signature_hash": "dee14104dab918ea",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.__init__:07d06f5a900adc82",
+        "name": "ConsequenceEventLedger.__init__",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 187,
+        "end_line": 191,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.append_receipt:cd4ec5b6481e3b1d",
+        "name": "ConsequenceEventLedger.append_receipt",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 195,
+        "end_line": 208,
+        "signature_hash": "2d9bfbbe064088f6",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.events:d1236135c84c19f3",
+        "name": "ConsequenceEventLedger.events",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 193,
+        "end_line": 194,
+        "signature_hash": "f313fb85cbb4b333",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.invalidate:b7906d608ae61f30",
+        "name": "ConsequenceEventLedger.invalidate",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 209,
+        "end_line": 221,
+        "signature_hash": "1c0557ce82b551da",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceEventLedger.verify:79867a7d4a85593d",
+        "name": "ConsequenceEventLedger.verify",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 222,
+        "end_line": 229,
+        "signature_hash": "771daa533e2dbc3d",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceVector.__post_init__:f47a4fc16ec20892",
+        "name": "ConsequenceVector.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ConsequenceVector.y13:cea4ea7bb8339c54",
+        "name": "ConsequenceVector.y13",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "e55bcccf4891a21a",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ReadjudicationEnvelope.envelope_digest:23e538db5a04a074",
+        "name": "ReadjudicationEnvelope.envelope_digest",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 251,
+        "end_line": 252,
+        "signature_hash": "beacbb57b980cab6",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:ReadjudicationEnvelope.validate:ddb819646de7051a",
+        "name": "ReadjudicationEnvelope.validate",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 243,
+        "end_line": 249,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#method:SourceExit.valid:c8697cc30e45477c",
+        "name": "SourceExit.valid",
+        "kind": "method",
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "line": 73,
+        "end_line": 74,
+        "signature_hash": "6cca0427257ffe2f",
+        "file_digest8": "1397bda28a709ec7"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +448283,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "93801b3ffb36126c42cee33b9022ee00",
+    "payload_hash": "12ea7bd96569031c8989c31ee1551b1d"
   }
 }
