@@ -126,6 +126,19 @@ class CostReceiptTests(unittest.TestCase):
             (root / "untracked.tmp").write_text("not executed source\n")
             self.assertRegex(resolve_clean_git_head(root, ["tracked.py"]), r"^[0-9a-f]{40}$")
 
+    def test_long_exact_boundary_uses_stable_cumulative_arithmetic(self):
+        per_plan = 0.23264748169005192
+        events = tuple(RouteEvent(i, i, 0, (i,)) for i in range(1, 1002))
+        transfers = tuple(
+            TransferCharge(f"p{i}", i, "SPECULATIVE", i, i + 1, i + 1, 1, 0.0, per_plan)
+            for i in range(1, 1001)
+        )
+        env = replace(ENV, speculative_energy_budget_j=per_plan * 1000)
+        r = compile_receipt(events, transfers, env)
+        self.assertEqual(r.speculative_transfer_count, 1000)
+        self.assertTrue(verify_receipt(events, transfers, env, r))
+        self.assertLessEqual(r.speculative_modeled_energy_j, r.speculative_energy_budget_j)
+
     def test_omega8_hard_invalid_dominates(self):
         for i in range(8):
             x = [1] * 8; x[i] = 0
