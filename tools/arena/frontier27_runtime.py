@@ -274,13 +274,13 @@ class CollisionBucket:
     def __init__(self):
         self.b = defaultdict(dict)
 
-    def put(self, k: tuple[int, int, int], identity: str, v: Any) -> None:
+    def put(self, k: tuple[int,int,int], identity: str, v: Any) -> None:
         self.b[k][identity] = v
 
-    def get(self, k: tuple[int, int, int], identity: str) -> Any:
+    def get(self, k: tuple[int,int,int], identity: str) -> Any:
         return self.b[k][identity]
 
-    def identities(self, k: tuple[int, int, int]) -> tuple[str, ...]:
+    def identities(self, k: tuple[int,int,int]) -> tuple[str,...]:
         return tuple(sorted(self.b[k]))
 
 
@@ -308,9 +308,9 @@ class HybridIndexBridge:
         self.h = HDCSemanticKey()
         self.b: dict[int, list[str]] = defaultdict(list)
         self.lex: dict[str, set[str]] = defaultdict(set)
-        self.meta: dict[str, tuple[int, tuple[int, int, int]]] = {}
+        self.meta: dict[str, tuple[int, tuple[int,int,int]]] = {}
 
-    def add(self, identity: str, text: str, k27: tuple[int, int, int]) -> None:
+    def add(self, identity: str, text: str, k27: tuple[int,int,int]) -> None:
         if identity in self.meta:
             raise ValueError("duplicate identity")
         k = self.h.encode(text)
@@ -533,12 +533,12 @@ class LegacyOffload:
 
 
 class FrontierOffload:
-    """Conservative serialized model: every actual prefetch/miss transfer counts time."""
+    """Conservative serialized model with a run-wide speculative-energy ceiling."""
     def __init__(self, size: int, capacity: int, tier: StorageTier, window_s: float, budget_j: float):
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
-        a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
+        a = UsefulByteAccounting(); secs = energy = speculative_energy = 0.0; prefetch_transfers = 0
         for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
@@ -546,17 +546,28 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, self.e)
+            remaining_energy_budget = max(0.0, self.e - speculative_energy)
+            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, remaining_energy_budget)
             if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
                 for x in missing_plan:
                     self.r.prefetch(x); prefetch_transfers += 1
                     a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
-                    secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
+                    delta_energy = self.size / 1e9 * self.t.joules_per_gb
+                    speculative_energy += delta_energy
+                    secs += self.size / self.t.bandwidth; energy += delta_energy
             for x in native:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
         total = self.r.hits + self.r.misses
-        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total, "prefetch_transfers": prefetch_transfers}
+        return {
+            "bytes": a.total,
+            "seconds": secs,
+            "energy_j": energy,
+            "hit_rate": self.r.hits / total,
+            "prefetch_transfers": prefetch_transfers,
+            "prefetch_energy_j": speculative_energy,
+            "prefetch_energy_budget_j": self.e,
+        }
 
 
 def security_campaign(n: int = 1000) -> dict[str, Any]:
