@@ -253,3 +253,148 @@ def make_receipt(evidence: ProofReuseEvidence, *, allowlist: Iterable[str] = DEF
     return ProofReuseReceipt(decision=decide(evidence, allowlist=allowlist), evidence_root=evidence_digest(evidence),
                              changed_path_root=_digest(paths), allowlist_root=allowlist_root(allowlist),
                              fresh_hosted_pass=False, authority=False)
+
+class GenerationDisposition(str, Enum):
+    EXACT_UNCHANGED = "EXACT_UNCHANGED"
+    PROOF_NEUTRAL_REBIND = "PROOF_NEUTRAL_REBIND"
+    CONSEQUENCE_CHANGED = "CONSEQUENCE_CHANGED"
+    UNKNOWN = "UNKNOWN"
+
+def _canonical_named_fields(fields: Iterable[tuple[str, Any]]) -> tuple[tuple[str, Any], ...]:
+    if isinstance(fields, (str, bytes)):
+        raise ValueError("raw evidence fields must be named pairs")
+    out: dict[str, Any] = {}
+    for item in fields:
+        if not isinstance(item, (tuple, list)) or len(item) != 2:
+            raise ValueError("raw evidence fields must be (name, value) pairs")
+        name, value = item
+        if not isinstance(name, str) or not name or name in out:
+            raise ValueError("raw evidence field names must be unique non-empty strings")
+        _stable(value)
+        out[name] = value
+    if not out:
+        raise ValueError("raw evidence cannot be empty")
+    return tuple((name, out[name]) for name in sorted(out))
+
+@dataclass(frozen=True)
+class EvidenceProjectionReceipt:
+    schema: str
+    full_projection_root: str
+    consequence_projection_root: str
+    consequence_keys_root: str
+
+def project_raw_evidence(schema: str, fields: Iterable[tuple[str, Any]], consequence_keys: Iterable[str]) -> EvidenceProjectionReceipt:
+    """Recompute full and consequence-only roots from explicit raw evidence."""
+    if not isinstance(schema, str) or not schema or schema == "NA":
+        raise ValueError("evidence schema must be concrete")
+    canonical = _canonical_named_fields(fields)
+    by_name = dict(canonical)
+    keys = tuple(sorted(set(consequence_keys)))
+    if not keys or any(not isinstance(k, str) or not k for k in keys) or any(k not in by_name for k in keys):
+        raise ValueError("consequence keys must be present non-empty strings")
+    consequence = tuple((k, by_name[k]) for k in keys)
+    return EvidenceProjectionReceipt(schema, _digest({"schema": schema, "fields": canonical}),
+                                     _digest({"schema": schema, "consequence": consequence}), _digest(keys))
+
+def generation_observation_root(owner_id: str, prior_generation: str, current_generation: str,
+                                current_projection_root: str, changed_paths: Iterable[str]) -> str:
+    if not all(isinstance(x, str) and x and x != "NA" for x in (owner_id, prior_generation, current_generation, current_projection_root)):
+        raise ValueError("generation observation requires concrete owner/generation/projection identity")
+    return _digest({"owner_id": owner_id, "prior_generation": prior_generation, "current_generation": current_generation,
+                    "current_projection_root": current_projection_root, "changed_paths": _canonical_paths(changed_paths)})
+
+@dataclass(frozen=True)
+class ParentGenerationTransition:
+    owner_id: str
+    expected_owner_id: str
+    prior_generation: str
+    current_generation: str
+    evidence_schema: str
+    prior_raw_evidence: tuple[tuple[str, Any], ...]
+    current_raw_evidence: tuple[tuple[str, Any], ...]
+    consequence_keys: tuple[str, ...]
+    proof_time_full_projection_root: str
+    proof_time_consequence_projection_root: str
+    expected_current_full_projection_root: str
+    expected_current_consequence_projection_root: str
+    changed_paths: tuple[str, ...] = ()
+    provider_observation_root: str = "NA"
+    expected_provider_observation_root: str = "NA"
+    provider_observation_verified: bool = False
+    authority_requested: bool = False
+
+    def validate_shape(self) -> bool:
+        strings=(self.owner_id,self.expected_owner_id,self.prior_generation,self.current_generation,self.evidence_schema,
+                 self.proof_time_full_projection_root,self.proof_time_consequence_projection_root,
+                 self.expected_current_full_projection_root,self.expected_current_consequence_projection_root,
+                 self.provider_observation_root,self.expected_provider_observation_root)
+        return (all(isinstance(x,str) and x for x in strings) and type(self.provider_observation_verified) is bool
+                and type(self.authority_requested) is bool and isinstance(self.prior_raw_evidence,tuple)
+                and isinstance(self.current_raw_evidence,tuple) and isinstance(self.consequence_keys,tuple)
+                and isinstance(self.changed_paths,tuple))
+
+@dataclass(frozen=True)
+class GenerationReproofReceipt:
+    disposition: GenerationDisposition
+    owner_id: str
+    prior_generation: str
+    current_generation: str
+    prior_projection_root: str
+    current_projection_root: str
+    prior_consequence_root: str
+    current_consequence_root: str
+    changed_path_root: str
+    obligations: tuple[str, ...]
+    readjudication_required: bool
+    auto_admit: bool = False
+    authority: bool = False
+
+    def verify(self, transition: ParentGenerationTransition) -> bool:
+        return self == classify_parent_generation(transition)
+
+def _unknown_generation_receipt(t: ParentGenerationTransition, prior: EvidenceProjectionReceipt | None = None,
+                                current: EvidenceProjectionReceipt | None = None) -> GenerationReproofReceipt:
+    owner=t.owner_id if isinstance(t.owner_id,str) and t.owner_id else "UNKNOWN_OWNER"
+    try:path_root=_digest(_canonical_paths(t.changed_paths))
+    except (TypeError,ValueError):path_root="UNRESOLVED"
+    return GenerationReproofReceipt(GenerationDisposition.UNKNOWN,owner,
+        t.prior_generation if isinstance(t.prior_generation,str) else "UNRESOLVED",
+        t.current_generation if isinstance(t.current_generation,str) else "UNRESOLVED",
+        prior.full_projection_root if prior else "UNRESOLVED",current.full_projection_root if current else "UNRESOLVED",
+        prior.consequence_projection_root if prior else "UNRESOLVED",current.consequence_projection_root if current else "UNRESOLVED",
+        path_root,(f"{owner}:VERIFY_OR_REPROVE_PARENT","CROSS_BINDINGS:READJUDICATE_AFTER_PARENT_PROOF"),True,False,False)
+
+def classify_parent_generation(t: ParentGenerationTransition) -> GenerationReproofReceipt:
+    """Recompute evidence ancestry and return the smallest nonauthorizing reproof cone."""
+    if not t.validate_shape() or t.authority_requested:return _unknown_generation_receipt(t)
+    try:
+        prior=project_raw_evidence(t.evidence_schema,t.prior_raw_evidence,t.consequence_keys)
+        current=project_raw_evidence(t.evidence_schema,t.current_raw_evidence,t.consequence_keys)
+        changed=_canonical_paths(t.changed_paths)
+    except (TypeError,ValueError,OverflowError):return _unknown_generation_receipt(t)
+    if (t.owner_id!=t.expected_owner_id or prior.full_projection_root!=t.proof_time_full_projection_root
+            or prior.consequence_projection_root!=t.proof_time_consequence_projection_root
+            or current.full_projection_root!=t.expected_current_full_projection_root
+            or current.consequence_projection_root!=t.expected_current_consequence_projection_root):
+        return _unknown_generation_receipt(t,prior,current)
+    common=dict(owner_id=t.owner_id,prior_generation=t.prior_generation,current_generation=t.current_generation,
+        prior_projection_root=prior.full_projection_root,current_projection_root=current.full_projection_root,
+        prior_consequence_root=prior.consequence_projection_root,current_consequence_root=current.consequence_projection_root,
+        changed_path_root=_digest(changed),auto_admit=False,authority=False)
+    if t.prior_generation==t.current_generation:
+        if prior.full_projection_root==current.full_projection_root and not changed:
+            return GenerationReproofReceipt(disposition=GenerationDisposition.EXACT_UNCHANGED,obligations=(),readjudication_required=False,**common)
+        return GenerationReproofReceipt(disposition=GenerationDisposition.UNKNOWN,
+            obligations=(f"{t.owner_id}:VERIFY_OR_REPROVE_PARENT","CROSS_BINDINGS:READJUDICATE_AFTER_PARENT_PROOF"),readjudication_required=True,**common)
+    try:observed=generation_observation_root(t.owner_id,t.prior_generation,t.current_generation,current.full_projection_root,changed)
+    except (TypeError,ValueError):return _unknown_generation_receipt(t,prior,current)
+    bound=(t.provider_observation_verified and t.provider_observation_root!="NA" and t.expected_provider_observation_root!="NA"
+           and t.provider_observation_root==t.expected_provider_observation_root==observed)
+    if not bound:
+        return GenerationReproofReceipt(disposition=GenerationDisposition.UNKNOWN,
+            obligations=(f"{t.owner_id}:VERIFY_OR_REPROVE_PARENT","CROSS_BINDINGS:READJUDICATE_AFTER_PARENT_PROOF"),readjudication_required=True,**common)
+    if prior.consequence_projection_root!=current.consequence_projection_root:
+        return GenerationReproofReceipt(disposition=GenerationDisposition.CONSEQUENCE_CHANGED,
+            obligations=(f"{t.owner_id}:REPROVE_PARENT","CROSS_BINDINGS:READJUDICATE_AFTER_PARENT_PROOF"),readjudication_required=True,**common)
+    return GenerationReproofReceipt(disposition=GenerationDisposition.PROOF_NEUTRAL_REBIND,
+        obligations=("CROSS_BINDINGS:READJUDICATE_CURRENTNESS",),readjudication_required=True,**common)
