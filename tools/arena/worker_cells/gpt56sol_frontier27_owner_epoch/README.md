@@ -23,8 +23,14 @@ The raw Frontier owner is not returned to the parent. A parent-side retained obj
 - `PersistentMutationEpoch != ExternalEffectTransaction`.
 - `K27Coordinate != Truth != Currentness != Authority`.
 
-## Proof boundary
+## Proof boundary and recovery scar
 
-Local source-equivalent fixture proof is separate from hosted exact-PR825 proof. The hosted test pins `tools/arena/frontier27_runtime.py` to SHA-256 `d255abf8b6b59fd6fc86944a715b77104c334ce5112b1c52c6f0c3783607d5ee`, the current AGENT_01/PR825 source root identified by the R11.3/R11.4 donor chain.
+Local source-equivalent fixture proof is separate from hosted exact-PR825 proof. The first dedicated hosted run intentionally failed currentness before executing the owner/epoch behavior because the inherited R11.3/R11.4 source identity `d255abf8b6b59fd6fc86944a715b77104c334ce5112b1c52c6f0c3783607d5ee` was stale.
+
+The exact PR825 merge checkout reported the current `tools/arena/frontier27_runtime.py` SHA-256 as:
+
+`a9a31401e6440241c5eb1095390b706d3fe3f9e6460dac984510007cd1485e20`
+
+R11.5 is rebound to that exact hosted owner identity. The stale donor hash receives zero hosted proof credit; source-currentness failure is preserved as a recovery scar rather than weakened or ignored.
 
 No merge/deploy, provider/model execution, physical-performance claim, Gate10, external effect authority, native/private Transformer KV access, or canonical owner adoption is claimed.
