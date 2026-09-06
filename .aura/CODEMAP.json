@@ -32,6 +32,7 @@
       ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-memory-city-candidate.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1060,7 +1061,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1655,
+    "repo_file_count": 1670,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1096,6 +1097,15 @@
       ".aura/execution_budgets/coding_localize.v1.json",
       ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/intents/example.aura.md",
+      ".aura/k27_memory_city/cold_source_manifest.json",
+      ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+      ".aura/k27_memory_city/frozen_68_manifest.json",
+      ".aura/k27_memory_city/registry_build_receipt.json",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
@@ -1128,6 +1138,7 @@
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
+      ".aura/runtime_profiles/k27_memory_city.v1.json",
       ".aura/source_anchor_manifest.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
@@ -1205,6 +1216,7 @@
       ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-memory-city-candidate.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1655,6 +1667,7 @@
       "aura_k27_memory_city/coordinate_bridge.py",
       "aura_k27_memory_city/k27_city.py",
       "aura_k27_memory_city/persistent_memory.py",
+      "aura_k27_memory_city/registry_recipe.py",
       "aura_k27_memory_city/world_atlas.py",
       "aura_k27_memory_city_runtime.py",
       "aura_language_data_governance.py",
@@ -2314,8 +2327,10 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/k27_memory_city_cas_stress.py",
       "scripts/security_accuracy_pinned_fixture.json",
       "scripts/update_architect_benchmark_readme.py",
+      "scripts/verify_k27_memory_city_candidate.py",
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
@@ -2560,6 +2575,7 @@
       "tests/test_aura_intent_ingestion_bilateral.py",
       "tests/test_aura_intent_refinement.py",
       "tests/test_aura_jspace_codec.py",
+      "tests/test_aura_k27_memory_city_runtime.py",
       "tests/test_aura_mesh_to_gaussian.py",
       "tests/test_aura_model_cognome.py",
       "tests/test_aura_model_cognome_call_logger.py",
@@ -2719,6 +2735,12 @@
       "vsa_resonator.py"
     ],
     "source_paths_without_topology": [
+      ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
       ".github/phase4/wc02_phase4_current_generation_patch.py",
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
@@ -2734,6 +2756,7 @@
       "aura_k27_memory_city/coordinate_bridge.py",
       "aura_k27_memory_city/k27_city.py",
       "aura_k27_memory_city/persistent_memory.py",
+      "aura_k27_memory_city/registry_recipe.py",
       "aura_k27_memory_city/world_atlas.py",
       "aura_k27_memory_city_runtime.py",
       "aura_spatial_importers/__init__.py",
@@ -2776,7 +2799,9 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/k27_memory_city_cas_stress.py",
       "scripts/update_architect_benchmark_readme.py",
+      "scripts/verify_k27_memory_city_candidate.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "test_support/__init__.py",
       "test_support/aura_human_agent_arena_suite.py",
@@ -2809,16 +2834,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
-      "tests/test_aura_arena_connector_hardening.py",
-      "tests/test_aura_arena_experience_ledger.py",
-      "tests/test_aura_arena_live_cli.py",
-      "tests/test_aura_arena_persistence_adapters.py",
-      "tests/test_aura_arena_st3gg_shadow.py",
-      "tests/test_aura_arena_st3gg_shadow_hardening.py",
-      "tests/test_aura_arena_wfst_phase_a.py",
-      "tests/test_aura_benchmark_four.py",
-      "tests/test_aura_benchmark_four_hardening.py",
-      "tests/test_aura_bilateral_gate_dialogue.py"
+      "tests/test_aura_arena_connector_hardening.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -4433,6 +4449,429 @@
       ]
     },
     {
+      "path": ".aura/k27_memory_city/cold_source_manifest.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5931,
+      "lines": 123,
+      "tokens_est": 1483,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "487aa6956c920df3",
+      "vector": [
+        -0.131645,
+        0.037777,
+        0.216356,
+        0.24383,
+        -0.195751,
+        -0.271304,
+        -0.133935,
+        -0.069829,
+        -0.056092,
+        0.273594,
+        0.069829,
+        -0.062961,
+        0.275883,
+        0.159119,
+        0.184304,
+        0.145382,
+        -0.104172,
+        0.120198,
+        0.269015,
+        0.241541,
+        -0.223225,
+        0.02175,
+        -0.248409,
+        0.234672,
+        0.062961,
+        0.257567,
+        0.161409,
+        0.104172,
+        0.195751,
+        0.11333,
+        -0.120198,
+        0.030908
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2059,
+      "lines": 54,
+      "tokens_est": 515,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3b306e513249244d",
+      "vector": [
+        0.16846,
+        -0.211471,
+        -0.235366,
+        0.089606,
+        -0.053764,
+        0.013142,
+        0.271208,
+        -0.230587,
+        -0.135007,
+        -0.132617,
+        -0.003584,
+        0.180407,
+        -0.144565,
+        0.237755,
+        -0.16846,
+        -0.082438,
+        0.173239,
+        0.048985,
+        0.108722,
+        -0.127838,
+        0.235366,
+        0.244924,
+        0.02509,
+        -0.158902,
+        -0.156512,
+        0.142175,
+        -0.21386,
+        0.151733,
+        -0.197134,
+        0.21386,
+        0.304661,
+        -0.244924
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3236,
+      "lines": 96,
+      "tokens_est": 809,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "48ea637226ed3c9a",
+      "vector": [
+        -0.24812,
+        -0.12341,
+        -0.292288,
+        -0.066252,
+        -0.128607,
+        0.076644,
+        0.16498,
+        0.11042,
+        0.001299,
+        0.16498,
+        -0.271503,
+        0.115616,
+        -0.253316,
+        0.087037,
+        -0.045467,
+        0.159784,
+        -0.287091,
+        0.258512,
+        0.066252,
+        -0.305278,
+        0.053261,
+        0.232531,
+        0.097429,
+        0.040271,
+        0.01429,
+        0.331259,
+        0.118214,
+        0.105224,
+        0.055859,
+        -0.035075,
+        0.297484,
+        -0.12341
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2183,
+      "lines": 38,
+      "tokens_est": 546,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "36f0c0ffc45f28e7",
+      "vector": [
+        -0.203855,
+        0.106917,
+        0.004277,
+        0.297942,
+        0.26658,
+        0.252324,
+        -0.14113,
+        0.275133,
+        0.152535,
+        0.169642,
+        0.035639,
+        -0.1896,
+        0.029937,
+        -0.175344,
+        -0.021383,
+        0.021383,
+        0.081257,
+        0.169642,
+        0.135428,
+        0.061299,
+        -0.058448,
+        -0.206706,
+        0.007128,
+        0.118322,
+        0.032788,
+        0.277984,
+        -0.306496,
+        -0.018532,
+        -0.235217,
+        0.152535,
+        -0.138279,
+        0.34356
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2364,
+      "lines": 42,
+      "tokens_est": 591,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "95c8afe263d6a79c",
+      "vector": [
+        0.017144,
+        -0.097148,
+        0.270871,
+        -0.028573,
+        0.23887,
+        0.024001,
+        0.014858,
+        0.06286,
+        -0.254871,
+        -0.117721,
+        -0.234298,
+        0.09029,
+        0.257156,
+        0.117721,
+        0.261728,
+        -0.01943,
+        -0.291444,
+        -0.033145,
+        0.264014,
+        -0.06286,
+        -0.277729,
+        0.206868,
+        0.037716,
+        -0.094862,
+        0.042288,
+        -0.241156,
+        0.165723,
+        -0.097148,
+        0.072004,
+        0.225155,
+        0.243441,
+        0.248013
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 921,
+      "lines": 13,
+      "tokens_est": 231,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5b27be79de5cf70e",
+      "vector": [
+        -0.104093,
+        -0.042323,
+        -0.266523,
+        -0.16815,
+        -0.209329,
+        0.145272,
+        -0.129258,
+        -0.209329,
+        0.2894,
+        0.069776,
+        -0.12697,
+        0.110956,
+        -0.287112,
+        0.085791,
+        0.248221,
+        0.223055,
+        0.26881,
+        0.110956,
+        -0.257372,
+        -0.211617,
+        -0.008007,
+        -0.001144,
+        -0.275674,
+        -0.07664,
+        -0.12697,
+        0.021734,
+        0.170437,
+        0.207041,
+        -0.195603,
+        -0.081215,
+        -0.060625,
+        -0.172725
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2410,
+      "lines": 52,
+      "tokens_est": 603,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f7e94e74e0c880b1",
+      "vector": [
+        0.228567,
+        0.157675,
+        -0.228567,
+        0.013445,
+        0.279903,
+        -0.294571,
+        0.277459,
+        0.150341,
+        0.248124,
+        0.028113,
+        0.011001,
+        -0.123451,
+        -0.125895,
+        0.262791,
+        0.030557,
+        -0.118562,
+        0.189454,
+        0.125895,
+        0.15523,
+        -0.001222,
+        0.028113,
+        0.081893,
+        -0.255458,
+        -0.074559,
+        -0.199233,
+        0.260347,
+        0.103894,
+        0.194343,
+        0.245679,
+        -0.157675,
+        -0.079449,
+        -0.162564
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/frozen_68_manifest.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3041,
+      "lines": 97,
+      "tokens_est": 761,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "848d2161543d6ac4",
+      "vector": [
+        -0.258237,
+        0.149754,
+        0.225221,
+        -0.126171,
+        -0.053062,
+        0.107304,
+        -0.135604,
+        -0.069571,
+        -0.140321,
+        -0.090796,
+        0.185129,
+        0.022404,
+        -0.180412,
+        -0.246446,
+        -0.227579,
+        -0.003537,
+        -0.008254,
+        0.232296,
+        0.225221,
+        -0.112021,
+        0.267671,
+        0.270029,
+        -0.123812,
+        -0.239371,
+        -0.121454,
+        0.239371,
+        0.112021,
+        0.194562,
+        -0.246446,
+        0.043629,
+        -0.232296,
+        0.159187
+      ]
+    },
+    {
+      "path": ".aura/k27_memory_city/registry_build_receipt.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 692,
+      "lines": 19,
+      "tokens_est": 173,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fdd130a0272d2c9a",
+      "vector": [
+        0.120105,
+        -0.030884,
+        0.108666,
+        0.165859,
+        0.218477,
+        -0.021733,
+        -0.138407,
+        0.168147,
+        0.076638,
+        -0.072063,
+        -0.010295,
+        -0.20475,
+        0.033172,
+        -0.273382,
+        -0.259655,
+        -0.25508,
+        0.261943,
+        0.177298,
+        0.163571,
+        0.232203,
+        -0.056049,
+        -0.010295,
+        -0.213901,
+        -0.177298,
+        -0.168147,
+        0.060624,
+        0.223052,
+        0.193312,
+        0.213901,
+        0.227627,
+        -0.282533,
+        -0.17501
+      ]
+    },
+    {
       "path": ".aura/memory_apertures/coding_localize.v1.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -5934,6 +6373,53 @@
         0.145089,
         0.104717,
         -0.09967
+      ]
+    },
+    {
+      "path": ".aura/runtime_profiles/k27_memory_city.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1596,
+      "lines": 30,
+      "tokens_est": 399,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8a355e61a8ff22c4",
+      "vector": [
+        -0.006597,
+        -0.001319,
+        0.220333,
+        -0.312688,
+        -0.080481,
+        0.241442,
+        -0.106868,
+        -0.222971,
+        0.072565,
+        -0.072565,
+        0.006597,
+        -0.133255,
+        0.196584,
+        -0.027707,
+        -0.133255,
+        0.032984,
+        0.286301,
+        0.056732,
+        0.170197,
+        -0.183391,
+        -0.077842,
+        -0.096313,
+        -0.091036,
+        0.333797,
+        0.310049,
+        -0.278384,
+        -0.077842,
+        0.125339,
+        -0.022429,
+        -0.199223,
+        -0.201862,
+        -0.286301
       ]
     },
     {
@@ -9976,6 +10462,59 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-memory-city-candidate.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3568,
+      "lines": 97,
+      "tokens_est": 892,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          61
+        ]
+      },
+      "topology": {},
+      "digest8": "4c09d760f6ef1669",
+      "vector": [
+        0.231791,
+        0.298383,
+        -0.216423,
+        0.236913,
+        -0.098607,
+        0.078117,
+        -0.226668,
+        0.154954,
+        -0.265087,
+        -0.003842,
+        0.316311,
+        0.288138,
+        -0.20874,
+        0.04226,
+        -0.024332,
+        0.18825,
+        0.047383,
+        0.142148,
+        0.267648,
+        0.265087,
+        -0.088362,
+        -0.198495,
+        -0.088362,
+        0.119097,
+        -0.101168,
+        0.075556,
+        -0.144709,
+        -0.072995,
+        -0.096046,
+        -0.16776,
+        -0.088362,
+        -0.085801
       ]
     },
     {
@@ -43321,6 +43860,53 @@
       ]
     },
     {
+      "path": "aura_k27_memory_city/registry_recipe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 16449,
+      "lines": 254,
+      "tokens_est": 4113,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe00c2c721445d91",
+      "vector": [
+        -0.155725,
+        -0.274599,
+        0.051116,
+        -0.205652,
+        0.046361,
+        0.14146,
+        0.158102,
+        0.198519,
+        -0.1795,
+        -0.208029,
+        -0.300751,
+        0.001189,
+        0.024964,
+        0.10342,
+        -0.15097,
+        0.269844,
+        -0.234182,
+        0.162857,
+        0.036851,
+        0.134327,
+        -0.086778,
+        0.291241,
+        -0.134327,
+        0.193764,
+        0.284109,
+        -0.262711,
+        0.136705,
+        -0.077268,
+        0.136705,
+        0.060626,
+        0.212784,
+        -0.072513
+      ]
+    },
+    {
       "path": "aura_k27_memory_city/world_atlas.py",
       "role": "python_module",
       "binary": false,
@@ -43371,47 +43957,47 @@
       "path": "aura_k27_memory_city_runtime.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9457,
-      "lines": 176,
-      "tokens_est": 2365,
-      "symbol_count": 19,
+      "bytes": 15198,
+      "lines": 329,
+      "tokens_est": 3800,
+      "symbol_count": 20,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "3b92aaaabd724aed",
+      "digest8": "ebd9e8c9aa7d36e0",
       "vector": [
-        -0.134716,
-        -0.22981,
-        -0.245659,
-        0.200376,
-        -0.12566,
-        -0.064528,
-        -0.20264,
-        -0.236602,
-        0.046415,
-        -0.103018,
-        0.062264,
-        0.078113,
-        -0.223017,
-        0.256979,
-        0.238866,
-        -0.091698,
-        0.093962,
-        0.227546,
-        0.182263,
-        -0.053207,
-        -0.132452,
-        -0.216225,
-        0.055471,
-        0.209433,
-        0.078113,
-        0.259244,
-        -0.225282,
-        0.195848,
-        -0.216225,
-        0.232074,
-        -0.00566,
-        0.19132
+        0.28727,
+        0.240748,
+        0.161662,
+        0.152358,
+        0.14538,
+        -0.229118,
+        0.296574,
+        -0.14538,
+        0.010467,
+        0.110488,
+        -0.182597,
+        -0.070945,
+        0.163988,
+        0.089554,
+        -0.166314,
+        -0.056989,
+        -0.22214,
+        0.196553,
+        0.264009,
+        -0.001163,
+        -0.296574,
+        0.27564,
+        -0.117467,
+        -0.101184,
+        0.089554,
+        0.129097,
+        0.017446,
+        0.250053,
+        0.112814,
+        -0.108162,
+        0.029076,
+        0.229118
       ]
     },
     {
@@ -84534,6 +85120,53 @@
       ]
     },
     {
+      "path": "scripts/k27_memory_city_cas_stress.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5413,
+      "lines": 107,
+      "tokens_est": 1354,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "facc8f055225e8e3",
+      "vector": [
+        0.203366,
+        0.01805,
+        0.26594,
+        0.042117,
+        -0.232246,
+        0.092658,
+        0.205773,
+        -0.184112,
+        0.23706,
+        -0.030084,
+        0.104691,
+        -0.02527,
+        0.008423,
+        0.152825,
+        -0.297227,
+        0.085438,
+        -0.22984,
+        0.287601,
+        0.191333,
+        0.246687,
+        0.092658,
+        0.054151,
+        -0.294821,
+        0.126352,
+        -0.205773,
+        -0.261127,
+        0.085438,
+        0.02527,
+        0.111911,
+        0.176892,
+        -0.006017,
+        0.22262
+      ]
+    },
+    {
       "path": "scripts/security_accuracy_pinned_fixture.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -84625,6 +85258,53 @@
         0.100802,
         -0.077084,
         0.034391
+      ]
+    },
+    {
+      "path": "scripts/verify_k27_memory_city_candidate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7167,
+      "lines": 109,
+      "tokens_est": 1792,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "099590ce1fbda8df",
+      "vector": [
+        0.106288,
+        0.206735,
+        0.06424,
+        -0.195055,
+        -0.267471,
+        -0.230095,
+        0.230095,
+        -0.108624,
+        0.031536,
+        -0.134319,
+        0.136655,
+        -0.06424,
+        0.183375,
+        0.195055,
+        -0.150671,
+        -0.0876,
+        0.019856,
+        -0.274479,
+        0.202063,
+        0.209071,
+        0.265135,
+        0.096944,
+        -0.153007,
+        0.066576,
+        0.248783,
+        0.246447,
+        0.031536,
+        0.190383,
+        0.082928,
+        0.295503,
+        -0.220751,
+        0.008176
       ]
     },
     {
@@ -98131,6 +98811,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_k27_memory_city_runtime.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4686,
+      "lines": 94,
+      "tokens_est": 1172,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d24ae822b85bcccb",
+      "vector": [
+        0.060386,
+        -0.102286,
+        0.040668,
+        0.178692,
+        -0.306857,
+        0.274816,
+        -0.028344,
+        -0.176227,
+        -0.289604,
+        -0.030809,
+        -0.06285,
+        -0.183621,
+        0.087497,
+        0.260027,
+        0.06285,
+        0.208268,
+        0.156509,
+        0.183621,
+        -0.038203,
+        -0.215663,
+        -0.085033,
+        -0.060386,
+        -0.131862,
+        0.205804,
+        -0.008627,
+        -0.309322,
+        0.301928,
+        -0.018485,
+        0.284675,
+        0.149115,
+        0.126933,
+        0.149115
+      ]
+    },
+    {
       "path": "tests/test_aura_mesh_to_gaussian.py",
       "role": "python_module",
       "binary": false,
@@ -105849,7 +106576,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788704030,
+  "generated_at_unix": 1788709016,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -105887,6 +106614,15 @@
       ".aura/execution_budgets/coding_localize.v1.json",
       ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/intents/example.aura.md",
+      ".aura/k27_memory_city/cold_source_manifest.json",
+      ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+      ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+      ".aura/k27_memory_city/frozen_68_manifest.json",
+      ".aura/k27_memory_city/registry_build_receipt.json",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
@@ -105919,6 +106655,7 @@
       ".aura/runtime_profiles/construction_foundry_p4.confirmation.template.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
+      ".aura/runtime_profiles/k27_memory_city.v1.json",
       ".aura/source_anchor_manifest.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
@@ -105996,6 +106733,7 @@
       ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-memory-city-candidate.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -106446,6 +107184,7 @@
       "aura_k27_memory_city/coordinate_bridge.py",
       "aura_k27_memory_city/k27_city.py",
       "aura_k27_memory_city/persistent_memory.py",
+      "aura_k27_memory_city/registry_recipe.py",
       "aura_k27_memory_city/world_atlas.py",
       "aura_k27_memory_city_runtime.py",
       "aura_language_data_governance.py",
@@ -107105,8 +107844,10 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/k27_memory_city_cas_stress.py",
       "scripts/security_accuracy_pinned_fixture.json",
       "scripts/update_architect_benchmark_readme.py",
+      "scripts/verify_k27_memory_city_candidate.py",
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
@@ -107351,6 +108092,7 @@
       "tests/test_aura_intent_ingestion_bilateral.py",
       "tests/test_aura_intent_refinement.py",
       "tests/test_aura_jspace_codec.py",
+      "tests/test_aura_k27_memory_city_runtime.py",
       "tests/test_aura_mesh_to_gaussian.py",
       "tests/test_aura_model_cognome.py",
       "tests/test_aura_model_cognome_call_logger.py",
@@ -107510,6 +108252,656 @@
       "vsa_resonator.py"
     ],
     "records": [
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#class:DigestBucket:10d97788dc69518f",
+        "name": "DigestBucket",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 36,
+        "end_line": 38,
+        "signature_hash": "9a82b4f9d6fb0626",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:address_record:e83b7ff919a12ae5",
+        "name": "address_record",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "7e619577113f8e4d",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:checked_address:0fc7ca24b774d046",
+        "name": "checked_address",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 23,
+        "end_line": 29,
+        "signature_hash": "b44017d75453b8c4",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:checked_path:1a8e6eee39db8298",
+        "name": "checked_path",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 16,
+        "end_line": 21,
+        "signature_hash": "c7213b19a299a76e",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:digest_bucket:c02af9d9220971ca",
+        "name": "digest_bucket",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "d4c268eb2a0a071b",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:local_octants:d57029c9a0d916f8",
+        "name": "local_octants",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "0ddf9866087dade5",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:nonempty:b2b1d94660bf4ae9",
+        "name": "nonempty",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 11,
+        "end_line": 14,
+        "signature_hash": "34d752deb11c7810",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:path_key:5d82c696afddb1b5",
+        "name": "path_key",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "2243d6e827c8dc2d",
+        "file_digest8": "3b306e513249244d"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:Cell:2e4e0a8d0f58e901",
+        "name": "Cell",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 58,
+        "end_line": 63,
+        "signature_hash": "94b1bf27828222a5",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:K27City:d67ba729541c8bf1",
+        "name": "K27City",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 66,
+        "end_line": 90,
+        "signature_hash": "7ffed6806ced0f4c",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:K27Path:8add9aba8747bff0",
+        "name": "K27Path",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 26,
+        "end_line": 45,
+        "signature_hash": "01b934ab05afc0c7",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:OverlayRule:b46896fa05749188",
+        "name": "OverlayRule",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 49,
+        "end_line": 54,
+        "signature_hash": "945e01f50e05e753",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#function:digit_from_xyz:22c779e54b41d724",
+        "name": "digit_from_xyz",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "21e532a03fcd9d4a",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#function:scale_role:2a9e78df848d7572",
+        "name": "scale_role",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 94,
+        "end_line": 95,
+        "signature_hash": "ea2538d2c5c87c2a",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#function:xyz_from_digit:ffe06eaf12146128",
+        "name": "xyz_from_digit",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "26a5e6839e884f8c",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.__init__:d782b81e0718c214",
+        "name": "K27City.__init__",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 67,
+        "end_line": 67,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.add:3c01f8fdd877e747",
+        "name": "K27City.add",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 68,
+        "end_line": 70,
+        "signature_hash": "fad192bd215a2445",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.effective_rules:e7ff3dc24f8d9159",
+        "name": "K27City.effective_rules",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 77,
+        "end_line": 85,
+        "signature_hash": "51c9d0a462d39ba2",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.lineage:7629318c865b1f80",
+        "name": "K27City.lineage",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 71,
+        "end_line": 76,
+        "signature_hash": "8587a99eb1947501",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.rename:a5e835a459bb77b0",
+        "name": "K27City.rename",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 86,
+        "end_line": 86,
+        "signature_hash": "21c726bb7577b0e2",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.stable_identity:911634219a4d46ea",
+        "name": "K27City.stable_identity",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "b802a4246eedf13f",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.__post_init__:02c35bcd4d07e3c7",
+        "name": "K27Path.__post_init__",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.child:79be9a0b557def19",
+        "name": "K27Path.child",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 30,
+        "end_line": 30,
+        "signature_hash": "2918eac7ed434ab2",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.is_prefix_of:ecd10de7473680b7",
+        "name": "K27Path.is_prefix_of",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "480118d01f204402",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.label:8c97381886cfcfc9",
+        "name": "K27Path.label",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 45,
+        "end_line": 45,
+        "signature_hash": "81706bbf3bf2d2ee",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.morton27:a536e666b9494394",
+        "name": "K27Path.morton27",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "aefa43b5e4951b49",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.parent:725380b7738919eb",
+        "name": "K27Path.parent",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "4f0520045efeadf4",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.xyz_trits:c3deeec260daeea7",
+        "name": "K27Path.xyz_trits",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "1099addf70ed0fdd",
+        "file_digest8": "48ea637226ed3c9a"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#class:Ticket:67a5ea782c4767b7",
+        "name": "Ticket",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "4ae22ca4657ac98c",
+        "file_digest8": "36f0c0ffc45f28e7"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:generate:42ab25b45d8d79e2",
+        "name": "generate",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "line": 14,
+        "end_line": 21,
+        "signature_hash": "919481582a70064e",
+        "file_digest8": "36f0c0ffc45f28e7"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:hot_frontier:d1d8d203f1c64076",
+        "name": "hot_frontier",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "cf7d020158bec70e",
+        "file_digest8": "36f0c0ffc45f28e7"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:k27_for:d6e2ce3a5a32c78e",
+        "name": "k27_for",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "18812228602040ee",
+        "file_digest8": "36f0c0ffc45f28e7"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:receipt:652f264aba282979",
+        "name": "receipt",
+        "kind": "function",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "85dc9bf0a7688e46",
+        "file_digest8": "36f0c0ffc45f28e7"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#class:T:d603317a5f9c5e26",
+        "name": "T",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 5,
+        "end_line": 38,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_delegated_override:1a52c4ea7080bf3f",
+        "name": "T.test_delegated_override",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "8e3419e594b4b78f",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_digit_bijection:162df0658562b365",
+        "name": "T.test_digit_bijection",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 6,
+        "end_line": 7,
+        "signature_hash": "b716074bb8d10cfb",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_geography_profile_not_coordinate:98ae458799b039ca",
+        "name": "T.test_geography_profile_not_coordinate",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "975346c36e465775",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_hard_override_blocked:190d007201d38e73",
+        "name": "T.test_hard_override_blocked",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "e979e0029e91a705",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_lineage_inheritance:8b80c6f1bc4273a1",
+        "name": "T.test_lineage_inheritance",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 18,
+        "end_line": 23,
+        "signature_hash": "42764b884e9de601",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_morton_prefix:386d658b82451449",
+        "name": "T.test_morton_prefix",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 15,
+        "end_line": 17,
+        "signature_hash": "5f77a2da410be49c",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_random_roundtrip:21b989c34423ed82",
+        "name": "T.test_random_roundtrip",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "082b1229ef8d4ec5",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_recursive_27:5b4fbb62f23b8e6d",
+        "name": "T.test_recursive_27",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 8,
+        "end_line": 11,
+        "signature_hash": "3c69e65cae1849d7",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_rename_not_identity:02a8b2075faf9cc8",
+        "name": "T.test_rename_not_identity",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "34585e4577a14729",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_xyz_trits:659c2226e8491452",
+        "name": "T.test_xyz_trits",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "7ad9b6391c41afcb",
+        "file_digest8": "95c8afe263d6a79c"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#class:T:eb37501f1a2cad62",
+        "name": "T",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 3,
+        "end_line": 11,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_1000:aeff97746cad5adf",
+        "name": "T.test_1000",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 4,
+        "end_line": 4,
+        "signature_hash": "d8df7e461f978607",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_diverse_concerns:d8dbd814039c0849",
+        "name": "T.test_diverse_concerns",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "2dbc18b1f09de50a",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_diverse_ops:5b3bd6d35b781513",
+        "name": "T.test_diverse_ops",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "365f1177bb6dea26",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_diverse_primitives:9ef3a442844907c2",
+        "name": "T.test_diverse_primitives",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "90d5cf7609a04274",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_hot:c83f1eeaeee08f6e",
+        "name": "T.test_hot",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "41e824861a6fd924",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_k27_nonauthority:15ae1587222b8cbf",
+        "name": "T.test_k27_nonauthority",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "72691611d2324b99",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_nonpromotion:0c1005fe3c9d8026",
+        "name": "T.test_nonpromotion",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "0e6939e76538cc1c",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_unique:7942e42e41fce4bd",
+        "name": "T.test_unique",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "8733bb6dbfd46e8c",
+        "file_digest8": "5b27be79de5cf70e"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#class:T:9fd7632ab3545604",
+        "name": "T",
+        "kind": "class",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 5,
+        "end_line": 48,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.setUp:9364ce1a205841fc",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 6,
+        "end_line": 12,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_27_children_collapse:1940fab060686ab2",
+        "name": "T.test_27_children_collapse",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 30,
+        "end_line": 32,
+        "signature_hash": "f4f6c6b72814756d",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_coverage_is_frame_isolated:7238fc624236fa5d",
+        "name": "T.test_coverage_is_frame_isolated",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "4b3c38205927e4dd",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_generation_drift_holds:d5913166bb0fbf26",
+        "name": "T.test_generation_drift_holds",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "bcf29fcdb88539a8",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_incomplete_does_not_collapse:c480b9e06f48f4d8",
+        "name": "T.test_incomplete_does_not_collapse",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "4b2e8d0d40d58a7d",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_path_is_frame_qualified:ce4fefd74827728d",
+        "name": "T.test_path_is_frame_qualified",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 13,
+        "end_line": 15,
+        "signature_hash": "a598548cdd9c5e8a",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_portal_no_authority:ae2966a15a416c68",
+        "name": "T.test_portal_no_authority",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "b0fd6609c954e981",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_stale_transform_holds:32876579ef4fea57",
+        "name": "T.test_stale_transform_holds",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "7ecec6751117a1b9",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_transform_preserves_identity:bbfc0e5d62a2b730",
+        "name": "T.test_transform_preserves_identity",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 19,
+        "end_line": 23,
+        "signature_hash": "324331987d2208ec",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_transform_required:7b0ef983e6a0aecd",
+        "name": "T.test_transform_required",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "588bf7e8ae9c8e53",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
+      {
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_zoom_prefixes:218a06c7366c6146",
+        "name": "T.test_zoom_prefixes",
+        "kind": "method",
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "48b281d0e45d263b",
+        "file_digest8": "f7e94e74e0c880b1"
+      },
       {
         "semantic_id": ".github/phase4/wc02_phase4_current_generation_patch.py#function:main:fa396146ab2337a5",
         "name": "main",
@@ -159811,6 +161203,46 @@
         "file_digest8": "c6d0085c69c1e83a"
       },
       {
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#class:Ticket:10f30e1084ba5a63",
+        "name": "Ticket",
+        "kind": "class",
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "line": 201,
+        "end_line": 207,
+        "signature_hash": "4ae22ca4657ac98c",
+        "file_digest8": "fe00c2c721445d91"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#function:build_routes_and_families:5ce0ce1119ea0619",
+        "name": "build_routes_and_families",
+        "kind": "function",
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "line": 226,
+        "end_line": 253,
+        "signature_hash": "1dd7c0d72f8384f0",
+        "file_digest8": "fe00c2c721445d91"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#function:generate_tickets:6fab9b391a1678d9",
+        "name": "generate_tickets",
+        "kind": "function",
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "line": 214,
+        "end_line": 223,
+        "signature_hash": "c00f68decf775b1c",
+        "file_digest8": "fe00c2c721445d91"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#function:k27_for:cb92c9c998a03ed3",
+        "name": "k27_for",
+        "kind": "function",
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "line": 210,
+        "end_line": 211,
+        "signature_hash": "1cba85808eb8ef75",
+        "file_digest8": "fe00c2c721445d91"
+      },
+      {
         "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameAddress:a7e3ff317b0034b5",
         "name": "FrameAddress",
         "kind": "class",
@@ -160025,190 +161457,200 @@
         "name": "K27MemoryCityRuntime",
         "kind": "class",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 94,
-        "end_line": 128,
+        "line": 171,
+        "end_line": 235,
         "signature_hash": "1a31f25248244a8a",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#class:_Handler:6ec0c6a201cdb5a7",
         "name": "_Handler",
         "kind": "class",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 131,
-        "end_line": 149,
+        "line": 238,
+        "end_line": 275,
         "signature_hash": "9302fa0795deba3b",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
-        "semantic_id": "aura_k27_memory_city_runtime.py#function:_read_payload_parts:5bbd51e2d2e8668b",
-        "name": "_read_payload_parts",
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_load_cold_source_manifest:2cb77a5fb31d6d81",
+        "name": "_load_cold_source_manifest",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 52,
-        "end_line": 61,
-        "signature_hash": "8c33706d6e0b755b",
-        "file_digest8": "3b92aaaabd724aed"
+        "line": 55,
+        "end_line": 79,
+        "signature_hash": "a84aa7308849c5d5",
+        "file_digest8": "ebd9e8c9aa7d36e0"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_rebuild_registry_from_recipe:083f70fc36de7e43",
+        "name": "_rebuild_registry_from_recipe",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 82,
+        "end_line": 132,
+        "signature_hash": "e832ccf71fe3e2a3",
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#function:_semantic_root:7bee09b5442ad9d5",
         "name": "_semantic_root",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 85,
-        "end_line": 91,
+        "line": 156,
+        "end_line": 168,
         "signature_hash": "cf8b27055ce5dd4f",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#function:_sha256:e97d9af53633f709",
         "name": "_sha256",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 44,
-        "end_line": 49,
+        "line": 47,
+        "end_line": 52,
         "signature_hash": "8b2fe119650f5918",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#function:default_registry:b61674b2d80ffea1",
         "name": "default_registry",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 64,
-        "end_line": 82,
+        "line": 135,
+        "end_line": 153,
         "signature_hash": "67ce1e6bf59f1c11",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#function:main:c2f845032b40d450",
         "name": "main",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 168,
-        "end_line": 173,
+        "line": 307,
+        "end_line": 324,
         "signature_hash": "1107cedc597d81be",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#function:probe_url:15c86d8db9b4f55e",
         "name": "probe_url",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 159,
-        "end_line": 165,
+        "line": 291,
+        "end_line": 304,
         "signature_hash": "ef8d4737d8df5ae3",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#function:serve:b01ad249c84f1f47",
         "name": "serve",
         "kind": "function",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 152,
-        "end_line": 156,
+        "line": 278,
+        "end_line": 288,
         "signature_hash": "fb3c216bc180186b",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__enter__:ca547557478dca5e",
         "name": "K27MemoryCityRuntime.__enter__",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 117,
-        "end_line": 117,
+        "line": 205,
+        "end_line": 206,
         "signature_hash": "70703c73fc87d8b5",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__exit__:5f9278f55a89158d",
         "name": "K27MemoryCityRuntime.__exit__",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 118,
-        "end_line": 118,
+        "line": 208,
+        "end_line": 209,
         "signature_hash": "0644df2e0c6f4a60",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__init__:92ef84aed9418bf8",
         "name": "K27MemoryCityRuntime.__init__",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 96,
-        "end_line": 113,
+        "line": 174,
+        "end_line": 199,
         "signature_hash": "9fa82d519e5ff96b",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.close:98c66afb8f833a8e",
         "name": "K27MemoryCityRuntime.close",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 115,
-        "end_line": 116,
+        "line": 201,
+        "end_line": 203,
         "signature_hash": "818fdb66f3084fa5",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.get:c6fb8b8707531b0e",
         "name": "K27MemoryCityRuntime.get",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 124,
-        "end_line": 125,
+        "line": 228,
+        "end_line": 230,
         "signature_hash": "f56f42e058861db2",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.status:ae4c22ddeac3d8eb",
         "name": "K27MemoryCityRuntime.status",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 119,
-        "end_line": 123,
+        "line": 211,
+        "end_line": 226,
         "signature_hash": "5669d9fd37503ce9",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.under:2ae7e47528b1f177",
         "name": "K27MemoryCityRuntime.under",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 126,
-        "end_line": 128,
+        "line": 232,
+        "end_line": 235,
         "signature_hash": "2573d93320044ea7",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler._reply:a9c577f0d5bc1961",
         "name": "_Handler._reply",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 134,
-        "end_line": 136,
+        "line": 244,
+        "end_line": 250,
         "signature_hash": "29a6d9d291748eb2",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.do_GET:65541077dbc34047",
         "name": "_Handler.do_GET",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 137,
-        "end_line": 149,
+        "line": 252,
+        "end_line": 275,
         "signature_hash": "0f22ff7b0395d880",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.log_message:ce08628170a03a0a",
         "name": "_Handler.log_message",
         "kind": "method",
         "file": "aura_k27_memory_city_runtime.py",
-        "line": 133,
-        "end_line": 133,
+        "line": 241,
+        "end_line": 242,
         "signature_hash": "0588e7e4e10e6567",
-        "file_digest8": "3b92aaaabd724aed"
+        "file_digest8": "ebd9e8c9aa7d36e0"
       },
       {
         "semantic_id": "aura_language_data_governance.py#class:DataAccessLevel:e9900e74a51db04a",
@@ -209151,6 +210593,46 @@
         "file_digest8": "3ad7b4c6dbb3ea84"
       },
       {
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#function:canonical:087c7f4d23ae11d1",
+        "name": "canonical",
+        "kind": "function",
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "1d37540cc7d21fba",
+        "file_digest8": "facc8f055225e8e3"
+      },
+      {
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#function:main:5fc46afb548d408e",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "line": 87,
+        "end_line": 104,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "facc8f055225e8e3"
+      },
+      {
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#function:one_round:98ea3519224a134b",
+        "name": "one_round",
+        "kind": "function",
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "line": 33,
+        "end_line": 84,
+        "signature_hash": "f203bbbf0443f891",
+        "file_digest8": "facc8f055225e8e3"
+      },
+      {
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#method:one_round.worker:e1d1008d51fe83f0",
+        "name": "one_round.worker",
+        "kind": "method",
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "line": 43,
+        "end_line": 53,
+        "signature_hash": "8444d316c93c2d88",
+        "file_digest8": "facc8f055225e8e3"
+      },
+      {
         "semantic_id": "scripts/update_architect_benchmark_readme.py#function:_load:c1c403cb81d8593a",
         "name": "_load",
         "kind": "function",
@@ -209219,6 +210701,36 @@
         "end_line": 200,
         "signature_hash": "33c33daa273ba653",
         "file_digest8": "4380ab61680bd8f7"
+      },
+      {
+        "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:main:ed243f9e299f647a",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/verify_k27_memory_city_candidate.py",
+        "line": 68,
+        "end_line": 106,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "099590ce1fbda8df"
+      },
+      {
+        "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:registry_oracle:ac4ddb206fa280c1",
+        "name": "registry_oracle",
+        "kind": "function",
+        "file": "scripts/verify_k27_memory_city_candidate.py",
+        "line": 23,
+        "end_line": 65,
+        "signature_hash": "2b6d89e4cc83f795",
+        "file_digest8": "099590ce1fbda8df"
+      },
+      {
+        "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:run:5e423d46883445b0",
+        "name": "run",
+        "kind": "function",
+        "file": "scripts/verify_k27_memory_city_candidate.py",
+        "line": 16,
+        "end_line": 20,
+        "signature_hash": "92c8b0309c0d438f",
+        "file_digest8": "099590ce1fbda8df"
       },
       {
         "semantic_id": "spatial_mapper.py#class:CodeTopologyMapper:6b11b766d4de3d35",
@@ -248121,6 +249633,76 @@
         "file_digest8": "f5b2e7ebcba704b4"
       },
       {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#class:K27RuntimeBindingTests:4c330b7f58cab70f",
+        "name": "K27RuntimeBindingTests",
+        "kind": "class",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 17,
+        "end_line": 89,
+        "signature_hash": "c1cb23c19f925a56",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_authority_is_nonpromoting:ab1eed43715f50d2",
+        "name": "K27RuntimeBindingTests.test_authority_is_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 62,
+        "end_line": 64,
+        "signature_hash": "b1ee551849a66abe",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_canonical_registry_exact_identity_and_live_routes:fe1fe72f061ede7f",
+        "name": "K27RuntimeBindingTests.test_canonical_registry_exact_identity_and_live_routes",
+        "kind": "method",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 22,
+        "end_line": 33,
+        "signature_hash": "68a91c31bf8a4835",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_canonical_registry_is_read_only:b53c5a69b8cdbda1",
+        "name": "K27RuntimeBindingTests.test_canonical_registry_is_read_only",
+        "kind": "method",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 51,
+        "end_line": 60,
+        "signature_hash": "ffaff62620a5c15a",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_ephemeral_copy_preserves_revision_plus_epoch_cas:2d2a59a63930093b",
+        "name": "K27RuntimeBindingTests.test_ephemeral_copy_preserves_revision_plus_epoch_cas",
+        "kind": "method",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 66,
+        "end_line": 89,
+        "signature_hash": "5526ec955dadb905",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_recipe_rebuild_does_not_require_raw_sqlite_bytes:32d78a6768c316e0",
+        "name": "K27RuntimeBindingTests.test_recipe_rebuild_does_not_require_raw_sqlite_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 35,
+        "end_line": 49,
+        "signature_hash": "c27aaab2c56971b7",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_root_import_contract:2cac22a096b27426",
+        "name": "K27RuntimeBindingTests.test_root_import_contract",
+        "kind": "method",
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "line": 18,
+        "end_line": 20,
+        "signature_hash": "2cfb1d64dce98671",
+        "file_digest8": "d24ae822b85bcccb"
+      },
+      {
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#class:FakeCoordinateSystem:5a2e7613e6462d9f",
         "name": "FakeCoordinateSystem",
         "kind": "class",
@@ -268831,8 +270413,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1cda833bf5031f00fa07a40f81a11ac8",
-    "payload_hash": "9ace9cece61737016306bf081b115efd"
+    "record_fingerprint": "90c19611de87ed72f2c2796d01acfb51",
+    "payload_hash": "0306e7e9d8bc22c41dcd076a805c78c5"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268845,16 +270427,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1655,
-      "bytes": 26516803,
-      "tokens_est": 6619544,
+      "files": 1670,
+      "bytes": 26584260,
+      "tokens_est": 6636413,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1009,
-        "schema_or_lexicon": 273,
+        "python_module": 1019,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -269135,6 +270717,12 @@
     {
       "ring": "code",
       "paths": [
+        ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
         ".github/phase4/wc02_phase4_current_generation_patch.py",
         "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
         "06_refactor/D0_MUTANT_HARNESS.py",
@@ -269455,6 +271043,7 @@
         "aura_k27_memory_city/coordinate_bridge.py",
         "aura_k27_memory_city/k27_city.py",
         "aura_k27_memory_city/persistent_memory.py",
+        "aura_k27_memory_city/registry_recipe.py",
         "aura_k27_memory_city/world_atlas.py",
         "aura_k27_memory_city_runtime.py",
         "aura_language_data_governance.py",
@@ -269527,30 +271116,23 @@
         "aura_pascal_spatial_presentation_part3.py",
         "aura_pascal_spatial_presentation_part4.py",
         "aura_pascal_spatial_presentation_part5.py",
-        "aura_patch_quality_gate.py",
-        "aura_patch_repair.py",
-        "aura_patcher.py",
-        "aura_persistence_cli.py",
-        "aura_persistence_registry.py",
-        "aura_phase_c2_codemap_verify.py",
-        "aura_phase_c3_trial_crucible.py",
-        "aura_phase_capsule.py"
+        "aura_patch_quality_gate.py"
       ]
     }
   ],
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1655,
-    "total_bytes": 26516803,
-    "text_tokens_est": 6619544,
+    "file_count": 1670,
+    "total_bytes": 26584260,
+    "text_tokens_est": 6636413,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1009,
-      "schema_or_lexicon": 273,
+      "python_module": 1019,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -269559,6 +271141,924 @@
     "elapsed_ms": 28044.17
   },
   "symbol_index": {
+    "nonempty": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 14,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:nonempty:b2b1d94660bf4ae9",
+        "signature_hash": "34d752deb11c7810"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 14,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:nonempty:7362cd205c1305a6",
+        "signature_hash": "34d752deb11c7810"
+      }
+    ],
+    "checked_path": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 21,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:checked_path:1a8e6eee39db8298",
+        "signature_hash": "c7213b19a299a76e"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 21,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_path:51ec4cf2fc34442a",
+        "signature_hash": "c7213b19a299a76e"
+      }
+    ],
+    "checked_address": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 29,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:checked_address:0fc7ca24b774d046",
+        "signature_hash": "b44017d75453b8c4"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 29,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_address:e47aa085ca7dbf60",
+        "signature_hash": "b44017d75453b8c4"
+      }
+    ],
+    "path_key": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:path_key:5d82c696afddb1b5",
+        "signature_hash": "2243d6e827c8dc2d"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:path_key:4c3e36fa1e3c830a",
+        "signature_hash": "2243d6e827c8dc2d"
+      }
+    ],
+    "DigestBucket": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 38,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#class:DigestBucket:10d97788dc69518f",
+        "signature_hash": "9a82b4f9d6fb0626"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 38,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#class:DigestBucket:4cf83f4f9d0078ba",
+        "signature_hash": "9a82b4f9d6fb0626"
+      }
+    ],
+    "digest_bucket": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:digest_bucket:c02af9d9220971ca",
+        "signature_hash": "d4c268eb2a0a071b"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:digest_bucket:ef77202b3b0f9b13",
+        "signature_hash": "d4c268eb2a0a071b"
+      }
+    ],
+    "local_octants": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:local_octants:d57029c9a0d916f8",
+        "signature_hash": "0ddf9866087dade5"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:local_octants:ad212a6e2e6a7818",
+        "signature_hash": "0ddf9866087dade5"
+      }
+    ],
+    "address_record": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py#function:address_record:e83b7ff919a12ae5",
+        "signature_hash": "7e619577113f8e4d"
+      },
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:address_record:9ec4dcead883be7e",
+        "signature_hash": "7e619577113f8e4d"
+      }
+    ],
+    "digit_from_xyz": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#function:digit_from_xyz:22c779e54b41d724",
+        "signature_hash": "21e532a03fcd9d4a"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 13,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:digit_from_xyz:9b3264b9234c41a1",
+        "signature_hash": "21e532a03fcd9d4a"
+      }
+    ],
+    "xyz_from_digit": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#function:xyz_from_digit:ffe06eaf12146128",
+        "signature_hash": "26a5e6839e884f8c"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:xyz_from_digit:fca7cc2e3bc2dda7",
+        "signature_hash": "26a5e6839e884f8c"
+      }
+    ],
+    "K27Path": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 45,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:K27Path:8add9aba8747bff0",
+        "signature_hash": "01b934ab05afc0c7"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 40,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27Path:ca1aec86223e9978",
+        "signature_hash": "01b934ab05afc0c7"
+      }
+    ],
+    "K27Path.__post_init__": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.__post_init__:02c35bcd4d07e3c7",
+        "signature_hash": "175e4972e4d2d582"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.__post_init__:c75f2f399ca2c542",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "K27Path.child": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 30,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.child:79be9a0b557def19",
+        "signature_hash": "2918eac7ed434ab2"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.child:1b5414e9bbb42653",
+        "signature_hash": "2918eac7ed434ab2"
+      }
+    ],
+    "K27Path.parent": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.parent:725380b7738919eb",
+        "signature_hash": "4f0520045efeadf4"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.parent:fda292f8e3e0c036",
+        "signature_hash": "4f0520045efeadf4"
+      }
+    ],
+    "K27Path.is_prefix_of": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.is_prefix_of:ecd10de7473680b7",
+        "signature_hash": "480118d01f204402"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.is_prefix_of:9f46ff4022795785",
+        "signature_hash": "480118d01f204402"
+      }
+    ],
+    "K27Path.xyz_trits": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.xyz_trits:c3deeec260daeea7",
+        "signature_hash": "1099addf70ed0fdd"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.xyz_trits:078f45cf77d3e1f9",
+        "signature_hash": "1099addf70ed0fdd"
+      }
+    ],
+    "K27Path.morton27": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.morton27:a536e666b9494394",
+        "signature_hash": "aefa43b5e4951b49"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.morton27:a76dce7b378fffd5",
+        "signature_hash": "aefa43b5e4951b49"
+      }
+    ],
+    "K27Path.label": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 45,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27Path.label:8c97381886cfcfc9",
+        "signature_hash": "81706bbf3bf2d2ee"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 40,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.label:bc5cb3cd040f61bf",
+        "signature_hash": "81706bbf3bf2d2ee"
+      }
+    ],
+    "OverlayRule": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 54,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:OverlayRule:b46896fa05749188",
+        "signature_hash": "945e01f50e05e753"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 48,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:OverlayRule:73ed5d9c191d896f",
+        "signature_hash": "945e01f50e05e753"
+      }
+    ],
+    "Cell": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 63,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:Cell:2e4e0a8d0f58e901",
+        "signature_hash": "94b1bf27828222a5"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 56,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:Cell:3c45f8bb03334811",
+        "signature_hash": "94b1bf27828222a5"
+      }
+    ],
+    "K27City": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 90,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#class:K27City:d67ba729541c8bf1",
+        "signature_hash": "7ffed6806ced0f4c"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 82,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27City:94d9dc810a8aaad4",
+        "signature_hash": "7ffed6806ced0f4c"
+      }
+    ],
+    "K27City.__init__": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 67,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.__init__:d782b81e0718c214",
+        "signature_hash": "3d77650513b79756"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 59,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.__init__:842ddde81b5ba323",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "K27City.add": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 70,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.add:3c01f8fdd877e747",
+        "signature_hash": "fad192bd215a2445"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.add:61fa6f5922050016",
+        "signature_hash": "fad192bd215a2445"
+      }
+    ],
+    "K27City.lineage": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 76,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.lineage:7629318c865b1f80",
+        "signature_hash": "8587a99eb1947501"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.lineage:b7563dc8886dc2ec",
+        "signature_hash": "8587a99eb1947501"
+      }
+    ],
+    "K27City.effective_rules": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 85,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.effective_rules:e7ff3dc24f8d9159",
+        "signature_hash": "51c9d0a462d39ba2"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.effective_rules:651a6d1e1c38fa94",
+        "signature_hash": "51c9d0a462d39ba2"
+      }
+    ],
+    "K27City.rename": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 86,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.rename:a5e835a459bb77b0",
+        "signature_hash": "21c726bb7577b0e2"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 78,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.rename:eeaa8f5e876ace30",
+        "signature_hash": "21c726bb7577b0e2"
+      }
+    ],
+    "K27City.stable_identity": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#method:K27City.stable_identity:911634219a4d46ea",
+        "signature_hash": "b802a4246eedf13f"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.stable_identity:fb11f713b005693e",
+        "signature_hash": "b802a4246eedf13f"
+      }
+    ],
+    "scale_role": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py#function:scale_role:2a9e78df848d7572",
+        "signature_hash": "ea2538d2c5c87c2a"
+      },
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:scale_role:a06884df2273ffe4",
+        "signature_hash": "ea2538d2c5c87c2a"
+      }
+    ],
+    "Ticket": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#class:Ticket:67a5ea782c4767b7",
+        "signature_hash": "4ae22ca4657ac98c"
+      },
+      {
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "kind": "class",
+        "line": 201,
+        "end_line": 207,
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#class:Ticket:10f30e1084ba5a63",
+        "signature_hash": "4ae22ca4657ac98c"
+      }
+    ],
+    "k27_for": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:k27_for:d6e2ce3a5a32c78e",
+        "signature_hash": "18812228602040ee"
+      },
+      {
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "kind": "function",
+        "line": 210,
+        "end_line": 211,
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#function:k27_for:cb92c9c998a03ed3",
+        "signature_hash": "1cba85808eb8ef75"
+      }
+    ],
+    "generate": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 21,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:generate:42ab25b45d8d79e2",
+        "signature_hash": "919481582a70064e"
+      },
+      {
+        "file": "benchmarks/refactor_code_quality/generate_fixture.py",
+        "kind": "function",
+        "line": 276,
+        "end_line": 386,
+        "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:generate:1b827933e25e682f",
+        "signature_hash": "14f27adf741dce28"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 328,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate:8f256fbac9cbe8fe",
+        "signature_hash": "1c5e1e67479187a7"
+      },
+      {
+        "file": "scripts/aura_source_anchor_map.py",
+        "kind": "function",
+        "line": 193,
+        "end_line": 199,
+        "semantic_id": "scripts/aura_source_anchor_map.py#function:generate:57b3457eec06a284",
+        "signature_hash": "5e206b8b2edb8cd1"
+      }
+    ],
+    "hot_frontier": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:hot_frontier:d1d8d203f1c64076",
+        "signature_hash": "cf7d020158bec70e"
+      }
+    ],
+    "receipt": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py#function:receipt:652f264aba282979",
+        "signature_hash": "85dc9bf0a7688e46"
+      }
+    ],
+    "T": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 38,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#class:T:d603317a5f9c5e26",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "class",
+        "line": 3,
+        "end_line": 11,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#class:T:eb37501f1a2cad62",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 48,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#class:T:9fd7632ab3545604",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 115,
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.test_digit_bijection": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_digit_bijection:162df0658562b365",
+        "signature_hash": "b716074bb8d10cfb"
+      }
+    ],
+    "T.test_recursive_27": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_recursive_27:5b4fbb62f23b8e6d",
+        "signature_hash": "3c69e65cae1849d7"
+      }
+    ],
+    "T.test_xyz_trits": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_xyz_trits:659c2226e8491452",
+        "signature_hash": "7ad9b6391c41afcb"
+      }
+    ],
+    "T.test_morton_prefix": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_morton_prefix:386d658b82451449",
+        "signature_hash": "5f77a2da410be49c"
+      }
+    ],
+    "T.test_lineage_inheritance": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 23,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_lineage_inheritance:8b80c6f1bc4273a1",
+        "signature_hash": "42764b884e9de601"
+      }
+    ],
+    "T.test_hard_override_blocked": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_hard_override_blocked:190d007201d38e73",
+        "signature_hash": "e979e0029e91a705"
+      }
+    ],
+    "T.test_delegated_override": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_delegated_override:1a52c4ea7080bf3f",
+        "signature_hash": "8e3419e594b4b78f"
+      }
+    ],
+    "T.test_rename_not_identity": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_rename_not_identity:02a8b2075faf9cc8",
+        "signature_hash": "34585e4577a14729"
+      }
+    ],
+    "T.test_geography_profile_not_coordinate": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_geography_profile_not_coordinate:98ae458799b039ca",
+        "signature_hash": "975346c36e465775"
+      }
+    ],
+    "T.test_random_roundtrip": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py#method:T.test_random_roundtrip:21b989c34423ed82",
+        "signature_hash": "082b1229ef8d4ec5"
+      }
+    ],
+    "T.test_1000": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_1000:aeff97746cad5adf",
+        "signature_hash": "d8df7e461f978607"
+      }
+    ],
+    "T.test_unique": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_unique:7942e42e41fce4bd",
+        "signature_hash": "8733bb6dbfd46e8c"
+      }
+    ],
+    "T.test_hot": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_hot:c83f1eeaeee08f6e",
+        "signature_hash": "41e824861a6fd924"
+      }
+    ],
+    "T.test_diverse_primitives": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_diverse_primitives:9ef3a442844907c2",
+        "signature_hash": "90d5cf7609a04274"
+      }
+    ],
+    "T.test_diverse_concerns": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_diverse_concerns:d8dbd814039c0849",
+        "signature_hash": "2dbc18b1f09de50a"
+      }
+    ],
+    "T.test_diverse_ops": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_diverse_ops:5b3bd6d35b781513",
+        "signature_hash": "365f1177bb6dea26"
+      }
+    ],
+    "T.test_nonpromotion": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_nonpromotion:0c1005fe3c9d8026",
+        "signature_hash": "0e6939e76538cc1c"
+      }
+    ],
+    "T.test_k27_nonauthority": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py#method:T.test_k27_nonauthority:15ae1587222b8cbf",
+        "signature_hash": "72691611d2324b99"
+      }
+    ],
+    "T.setUp": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 12,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.setUp:9364ce1a205841fc",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.test_path_is_frame_qualified": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_path_is_frame_qualified:ce4fefd74827728d",
+        "signature_hash": "a598548cdd9c5e8a"
+      }
+    ],
+    "T.test_transform_required": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_transform_required:7b0ef983e6a0aecd",
+        "signature_hash": "588bf7e8ae9c8e53"
+      }
+    ],
+    "T.test_transform_preserves_identity": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 23,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_transform_preserves_identity:bbfc0e5d62a2b730",
+        "signature_hash": "324331987d2208ec"
+      }
+    ],
+    "T.test_generation_drift_holds": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_generation_drift_holds:d5913166bb0fbf26",
+        "signature_hash": "bcf29fcdb88539a8"
+      }
+    ],
+    "T.test_stale_transform_holds": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_stale_transform_holds:32876579ef4fea57",
+        "signature_hash": "7ecec6751117a1b9"
+      }
+    ],
+    "T.test_27_children_collapse": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 32,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_27_children_collapse:1940fab060686ab2",
+        "signature_hash": "f4f6c6b72814756d"
+      }
+    ],
+    "T.test_incomplete_does_not_collapse": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_incomplete_does_not_collapse:c480b9e06f48f4d8",
+        "signature_hash": "4b2e8d0d40d58a7d"
+      }
+    ],
+    "T.test_coverage_is_frame_isolated": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_coverage_is_frame_isolated:7238fc624236fa5d",
+        "signature_hash": "4b3c38205927e4dd"
+      }
+    ],
+    "T.test_portal_no_authority": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_portal_no_authority:ae2966a15a416c68",
+        "signature_hash": "b0fd6609c954e981"
+      }
+    ],
+    "T.test_zoom_prefixes": [
+      {
+        "file": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py#method:T.test_zoom_prefixes:218a06c7366c6146",
+        "signature_hash": "48b281d0e45d263b"
+      }
+    ],
     "replace_once": [
       {
         "file": ".github/phase4/wc02_phase4_current_generation_patch.py",
@@ -270005,8 +272505,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 168,
-        "end_line": 173,
+        "line": 307,
+        "end_line": 324,
         "semantic_id": "aura_k27_memory_city_runtime.py#function:main:c2f845032b40d450",
         "signature_hash": "1107cedc597d81be"
       },
@@ -270555,12 +273055,28 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 104,
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#function:main:5fc46afb548d408e",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "scripts/update_architect_benchmark_readme.py",
         "kind": "function",
         "line": 209,
         "end_line": 240,
         "semantic_id": "scripts/update_architect_benchmark_readme.py#function:main:dfa392ecda1b7e98",
         "signature_hash": "c3265d7d89056dc5"
+      },
+      {
+        "file": "scripts/verify_k27_memory_city_candidate.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 106,
+        "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:main:ed243f9e299f647a",
+        "signature_hash": "1107cedc597d81be"
       },
       {
         "file": "spatial_mapper.py",
@@ -270779,6 +273295,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "scripts/verify_k27_memory_city_candidate.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 20,
+        "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:run:5e423d46883445b0",
+        "signature_hash": "92c8b0309c0d438f"
       }
     ],
     "run.record": [
@@ -277965,8 +280489,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 152,
-        "end_line": 156,
+        "line": 278,
+        "end_line": 288,
         "semantic_id": "aura_k27_memory_city_runtime.py#function:serve:b01ad249c84f1f47",
         "signature_hash": "fb3c216bc180186b"
       },
@@ -280837,8 +283361,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 44,
-        "end_line": 49,
+        "line": 47,
+        "end_line": 52,
         "semantic_id": "aura_k27_memory_city_runtime.py#function:_sha256:e97d9af53633f709",
         "signature_hash": "8b2fe119650f5918"
       },
@@ -325035,286 +327559,6 @@
         "signature_hash": "72a55c0eba7c0b8b"
       }
     ],
-    "nonempty": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 11,
-        "end_line": 14,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:nonempty:7362cd205c1305a6",
-        "signature_hash": "34d752deb11c7810"
-      }
-    ],
-    "checked_path": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 16,
-        "end_line": 21,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_path:51ec4cf2fc34442a",
-        "signature_hash": "c7213b19a299a76e"
-      }
-    ],
-    "checked_address": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 23,
-        "end_line": 29,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_address:e47aa085ca7dbf60",
-        "signature_hash": "b44017d75453b8c4"
-      }
-    ],
-    "path_key": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 31,
-        "end_line": 33,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:path_key:4c3e36fa1e3c830a",
-        "signature_hash": "2243d6e827c8dc2d"
-      }
-    ],
-    "DigestBucket": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "class",
-        "line": 36,
-        "end_line": 38,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#class:DigestBucket:4cf83f4f9d0078ba",
-        "signature_hash": "9a82b4f9d6fb0626"
-      }
-    ],
-    "digest_bucket": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 40,
-        "end_line": 43,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:digest_bucket:ef77202b3b0f9b13",
-        "signature_hash": "d4c268eb2a0a071b"
-      }
-    ],
-    "local_octants": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 45,
-        "end_line": 47,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:local_octants:ad212a6e2e6a7818",
-        "signature_hash": "0ddf9866087dade5"
-      }
-    ],
-    "address_record": [
-      {
-        "file": "aura_k27_memory_city/coordinate_bridge.py",
-        "kind": "function",
-        "line": 49,
-        "end_line": 53,
-        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:address_record:9ec4dcead883be7e",
-        "signature_hash": "7e619577113f8e4d"
-      }
-    ],
-    "digit_from_xyz": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 13,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#function:digit_from_xyz:9b3264b9234c41a1",
-        "signature_hash": "21e532a03fcd9d4a"
-      }
-    ],
-    "xyz_from_digit": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "function",
-        "line": 16,
-        "end_line": 18,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#function:xyz_from_digit:fca7cc2e3bc2dda7",
-        "signature_hash": "26a5e6839e884f8c"
-      }
-    ],
-    "K27Path": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "class",
-        "line": 21,
-        "end_line": 40,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27Path:ca1aec86223e9978",
-        "signature_hash": "01b934ab05afc0c7"
-      }
-    ],
-    "K27Path.__post_init__": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 23,
-        "end_line": 24,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.__post_init__:c75f2f399ca2c542",
-        "signature_hash": "175e4972e4d2d582"
-      }
-    ],
-    "K27Path.child": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 25,
-        "end_line": 25,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.child:1b5414e9bbb42653",
-        "signature_hash": "2918eac7ed434ab2"
-      }
-    ],
-    "K27Path.parent": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 27,
-        "end_line": 28,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.parent:fda292f8e3e0c036",
-        "signature_hash": "4f0520045efeadf4"
-      }
-    ],
-    "K27Path.is_prefix_of": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 29,
-        "end_line": 30,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.is_prefix_of:9f46ff4022795785",
-        "signature_hash": "480118d01f204402"
-      }
-    ],
-    "K27Path.xyz_trits": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 31,
-        "end_line": 35,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.xyz_trits:078f45cf77d3e1f9",
-        "signature_hash": "1099addf70ed0fdd"
-      }
-    ],
-    "K27Path.morton27": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 36,
-        "end_line": 39,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.morton27:a76dce7b378fffd5",
-        "signature_hash": "aefa43b5e4951b49"
-      }
-    ],
-    "K27Path.label": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 40,
-        "end_line": 40,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.label:bc5cb3cd040f61bf",
-        "signature_hash": "81706bbf3bf2d2ee"
-      }
-    ],
-    "OverlayRule": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "class",
-        "line": 43,
-        "end_line": 48,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#class:OverlayRule:73ed5d9c191d896f",
-        "signature_hash": "945e01f50e05e753"
-      }
-    ],
-    "Cell": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "class",
-        "line": 51,
-        "end_line": 56,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#class:Cell:3c45f8bb03334811",
-        "signature_hash": "94b1bf27828222a5"
-      }
-    ],
-    "K27City": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "class",
-        "line": 58,
-        "end_line": 82,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27City:94d9dc810a8aaad4",
-        "signature_hash": "7ffed6806ced0f4c"
-      }
-    ],
-    "K27City.__init__": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 59,
-        "end_line": 59,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.__init__:842ddde81b5ba323",
-        "signature_hash": "3d77650513b79756"
-      }
-    ],
-    "K27City.add": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 60,
-        "end_line": 62,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.add:61fa6f5922050016",
-        "signature_hash": "fad192bd215a2445"
-      }
-    ],
-    "K27City.lineage": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 63,
-        "end_line": 68,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.lineage:b7563dc8886dc2ec",
-        "signature_hash": "8587a99eb1947501"
-      }
-    ],
-    "K27City.effective_rules": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 69,
-        "end_line": 77,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.effective_rules:651a6d1e1c38fa94",
-        "signature_hash": "51c9d0a462d39ba2"
-      }
-    ],
-    "K27City.rename": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 78,
-        "end_line": 78,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.rename:eeaa8f5e876ace30",
-        "signature_hash": "21c726bb7577b0e2"
-      }
-    ],
-    "K27City.stable_identity": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "method",
-        "line": 79,
-        "end_line": 82,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.stable_identity:fb11f713b005693e",
-        "signature_hash": "b802a4246eedf13f"
-      }
-    ],
-    "scale_role": [
-      {
-        "file": "aura_k27_memory_city/k27_city.py",
-        "kind": "function",
-        "line": 85,
-        "end_line": 86,
-        "semantic_id": "aura_k27_memory_city/k27_city.py#function:scale_role:a06884df2273ffe4",
-        "signature_hash": "ea2538d2c5c87c2a"
-      }
-    ],
     "MemoryConflict": [
       {
         "file": "aura_k27_memory_city/persistent_memory.py",
@@ -325351,6 +327595,14 @@
         "end_line": 92,
         "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
         "signature_hash": "8405a7944186ce60"
+      },
+      {
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#function:canonical:087c7f4d23ae11d1",
+        "signature_hash": "1d37540cc7d21fba"
       }
     ],
     "MemoryStore": [
@@ -325521,6 +327773,26 @@
         "end_line": 225,
         "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._project_snapshot:56f3506a339563a0",
         "signature_hash": "2c7de5bdd9b72c9a"
+      }
+    ],
+    "generate_tickets": [
+      {
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "kind": "function",
+        "line": 214,
+        "end_line": 223,
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#function:generate_tickets:6fab9b391a1678d9",
+        "signature_hash": "c00f68decf775b1c"
+      }
+    ],
+    "build_routes_and_families": [
+      {
+        "file": "aura_k27_memory_city/registry_recipe.py",
+        "kind": "function",
+        "line": 226,
+        "end_line": 253,
+        "semantic_id": "aura_k27_memory_city/registry_recipe.py#function:build_routes_and_families:5ce0ce1119ea0619",
+        "signature_hash": "1dd7c0d72f8384f0"
       }
     ],
     "validate_path": [
@@ -325733,22 +328005,32 @@
         "signature_hash": "5341f1efd5d56c5e"
       }
     ],
-    "_read_payload_parts": [
+    "_load_cold_source_manifest": [
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 52,
-        "end_line": 61,
-        "semantic_id": "aura_k27_memory_city_runtime.py#function:_read_payload_parts:5bbd51e2d2e8668b",
-        "signature_hash": "8c33706d6e0b755b"
+        "line": 55,
+        "end_line": 79,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_load_cold_source_manifest:2cb77a5fb31d6d81",
+        "signature_hash": "a84aa7308849c5d5"
+      }
+    ],
+    "_rebuild_registry_from_recipe": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 132,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_rebuild_registry_from_recipe:083f70fc36de7e43",
+        "signature_hash": "e832ccf71fe3e2a3"
       }
     ],
     "default_registry": [
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 64,
-        "end_line": 82,
+        "line": 135,
+        "end_line": 153,
         "semantic_id": "aura_k27_memory_city_runtime.py#function:default_registry:b61674b2d80ffea1",
         "signature_hash": "67ce1e6bf59f1c11"
       }
@@ -325757,8 +328039,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 85,
-        "end_line": 91,
+        "line": 156,
+        "end_line": 168,
         "semantic_id": "aura_k27_memory_city_runtime.py#function:_semantic_root:7bee09b5442ad9d5",
         "signature_hash": "cf8b27055ce5dd4f"
       }
@@ -325767,8 +328049,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "class",
-        "line": 94,
-        "end_line": 128,
+        "line": 171,
+        "end_line": 235,
         "semantic_id": "aura_k27_memory_city_runtime.py#class:K27MemoryCityRuntime:8ae356591e8dd14b",
         "signature_hash": "1a31f25248244a8a"
       }
@@ -325777,8 +328059,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 96,
-        "end_line": 113,
+        "line": 174,
+        "end_line": 199,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__init__:92ef84aed9418bf8",
         "signature_hash": "9fa82d519e5ff96b"
       }
@@ -325787,8 +328069,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 115,
-        "end_line": 116,
+        "line": 201,
+        "end_line": 203,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.close:98c66afb8f833a8e",
         "signature_hash": "818fdb66f3084fa5"
       }
@@ -325797,8 +328079,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 117,
-        "end_line": 117,
+        "line": 205,
+        "end_line": 206,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__enter__:ca547557478dca5e",
         "signature_hash": "70703c73fc87d8b5"
       }
@@ -325807,8 +328089,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 118,
-        "end_line": 118,
+        "line": 208,
+        "end_line": 209,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__exit__:5f9278f55a89158d",
         "signature_hash": "0644df2e0c6f4a60"
       }
@@ -325817,8 +328099,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 119,
-        "end_line": 123,
+        "line": 211,
+        "end_line": 226,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.status:ae4c22ddeac3d8eb",
         "signature_hash": "5669d9fd37503ce9"
       }
@@ -325827,8 +328109,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 124,
-        "end_line": 125,
+        "line": 228,
+        "end_line": 230,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.get:c6fb8b8707531b0e",
         "signature_hash": "f56f42e058861db2"
       }
@@ -325837,8 +328119,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 126,
-        "end_line": 128,
+        "line": 232,
+        "end_line": 235,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.under:2ae7e47528b1f177",
         "signature_hash": "2573d93320044ea7"
       }
@@ -325847,8 +328129,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "class",
-        "line": 131,
-        "end_line": 149,
+        "line": 238,
+        "end_line": 275,
         "semantic_id": "aura_k27_memory_city_runtime.py#class:_Handler:6ec0c6a201cdb5a7",
         "signature_hash": "9302fa0795deba3b"
       }
@@ -325857,8 +328139,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 133,
-        "end_line": 133,
+        "line": 241,
+        "end_line": 242,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.log_message:ce08628170a03a0a",
         "signature_hash": "0588e7e4e10e6567"
       }
@@ -325867,8 +328149,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 134,
-        "end_line": 136,
+        "line": 244,
+        "end_line": 250,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler._reply:a9c577f0d5bc1961",
         "signature_hash": "29a6d9d291748eb2"
       }
@@ -325877,8 +328159,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "method",
-        "line": 137,
-        "end_line": 149,
+        "line": 252,
+        "end_line": 275,
         "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.do_GET:65541077dbc34047",
         "signature_hash": "0f22ff7b0395d880"
       }
@@ -325887,8 +328169,8 @@
       {
         "file": "aura_k27_memory_city_runtime.py",
         "kind": "function",
-        "line": 159,
-        "end_line": 165,
+        "line": 291,
+        "end_line": 304,
         "semantic_id": "aura_k27_memory_city_runtime.py#function:probe_url:15c86d8db9b4f55e",
         "signature_hash": "ef8d4737d8df5ae3"
       }
@@ -364623,32 +366905,6 @@
         "signature_hash": "7bb75b917cc85c65"
       }
     ],
-    "generate": [
-      {
-        "file": "benchmarks/refactor_code_quality/generate_fixture.py",
-        "kind": "function",
-        "line": 276,
-        "end_line": 386,
-        "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:generate:1b827933e25e682f",
-        "signature_hash": "14f27adf741dce28"
-      },
-      {
-        "file": "scripts/aura_blind_gate10_benchmark.py",
-        "kind": "function",
-        "line": 312,
-        "end_line": 328,
-        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate:8f256fbac9cbe8fe",
-        "signature_hash": "1c5e1e67479187a7"
-      },
-      {
-        "file": "scripts/aura_source_anchor_map.py",
-        "kind": "function",
-        "line": 193,
-        "end_line": 199,
-        "semantic_id": "scripts/aura_source_anchor_map.py#function:generate:57b3457eec06a284",
-        "signature_hash": "5e206b8b2edb8cd1"
-      }
-    ],
     "CognitiveRouter": [
       {
         "file": "cognitive_router.py",
@@ -370267,6 +372523,26 @@
         "signature_hash": "51e3fc8269189baf"
       }
     ],
+    "one_round": [
+      {
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 84,
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#function:one_round:98ea3519224a134b",
+        "signature_hash": "f203bbbf0443f891"
+      }
+    ],
+    "one_round.worker": [
+      {
+        "file": "scripts/k27_memory_city_cas_stress.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 53,
+        "semantic_id": "scripts/k27_memory_city_cas_stress.py#method:one_round.worker:e1d1008d51fe83f0",
+        "signature_hash": "8444d316c93c2d88"
+      }
+    ],
     "_replace_marked": [
       {
         "file": "scripts/update_architect_benchmark_readme.py",
@@ -370333,6 +372609,16 @@
         "end_line": 17,
         "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:_load:e69cccc566d4080f",
         "signature_hash": "14c822894a4346b1"
+      }
+    ],
+    "registry_oracle": [
+      {
+        "file": "scripts/verify_k27_memory_city_candidate.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 65,
+        "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:registry_oracle:ac4ddb206fa280c1",
+        "signature_hash": "2b6d89e4cc83f795"
       }
     ],
     "DirectoryCache": [
@@ -408729,6 +411015,76 @@
         "signature_hash": "2d7ce86033ed364c"
       }
     ],
+    "K27RuntimeBindingTests": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#class:K27RuntimeBindingTests:4c330b7f58cab70f",
+        "signature_hash": "c1cb23c19f925a56"
+      }
+    ],
+    "K27RuntimeBindingTests.test_root_import_contract": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_root_import_contract:2cac22a096b27426",
+        "signature_hash": "2cfb1d64dce98671"
+      }
+    ],
+    "K27RuntimeBindingTests.test_canonical_registry_exact_identity_and_live_routes": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_canonical_registry_exact_identity_and_live_routes:fe1fe72f061ede7f",
+        "signature_hash": "68a91c31bf8a4835"
+      }
+    ],
+    "K27RuntimeBindingTests.test_recipe_rebuild_does_not_require_raw_sqlite_bytes": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 49,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_recipe_rebuild_does_not_require_raw_sqlite_bytes:32d78a6768c316e0",
+        "signature_hash": "c27aaab2c56971b7"
+      }
+    ],
+    "K27RuntimeBindingTests.test_canonical_registry_is_read_only": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_canonical_registry_is_read_only:b53c5a69b8cdbda1",
+        "signature_hash": "ffaff62620a5c15a"
+      }
+    ],
+    "K27RuntimeBindingTests.test_authority_is_nonpromoting": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 64,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_authority_is_nonpromoting:ab1eed43715f50d2",
+        "signature_hash": "b1ee551849a66abe"
+      }
+    ],
+    "K27RuntimeBindingTests.test_ephemeral_copy_preserves_revision_plus_epoch_cas": [
+      {
+        "file": "tests/test_aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_k27_memory_city_runtime.py#method:K27RuntimeBindingTests.test_ephemeral_copy_preserves_revision_plus_epoch_cas:2d2a59a63930093b",
+        "signature_hash": "5526ec955dadb905"
+      }
+    ],
     "_triangle_inputs": [
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
@@ -425211,16 +427567,6 @@
         "end_line": 145,
         "semantic_id": "tests/test_consequence_admission_kernel.py#method:SuccessionTests.test_missing_source_exit_rejected:b45c0089c53e6abb",
         "signature_hash": "6077ba9b80f59a19"
-      }
-    ],
-    "T": [
-      {
-        "file": "tests/test_frontier27_runtime.py",
-        "kind": "class",
-        "line": 12,
-        "end_line": 115,
-        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
-        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
