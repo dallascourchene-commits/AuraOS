@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1653,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2699,7 +2699,9 @@
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/README.md",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -104571,141 +104573,235 @@
       "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6016,
-      "lines": 148,
-      "tokens_est": 1504,
-      "symbol_count": 17,
+      "bytes": 7829,
+      "lines": 175,
+      "tokens_est": 1958,
+      "symbol_count": 19,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6aad4b898fea970b",
+      "digest8": "0dc3785be3f66ac6",
       "vector": [
-        0.153537,
-        -0.28354,
-        -0.122157,
-        -0.050432,
-        0.084053,
-        0.178193,
-        -0.155779,
-        0.101985,
-        -0.045949,
-        0.225263,
-        0.202849,
-        0.135606,
-        0.202849,
-        -0.032501,
-        0.225263,
-        0.214056,
-        0.117675,
-        0.117675,
-        0.272333,
-        -0.124399,
-        0.227504,
-        0.014569,
-        0.223021,
-        -0.041466,
-        0.218538,
-        -0.128882,
-        0.263367,
-        0.131123,
-        0.26785,
-        0.048191,
-        0.202849,
-        0.258884
+        -0.207601,
+        -0.121427,
+        0.001306,
+        -0.293775,
+        -0.011751,
+        -0.121427,
+        -0.254605,
+        0.001306,
+        0.267661,
+        -0.236325,
+        -0.150152,
+        0.032642,
+        0.105759,
+        0.157986,
+        0.173654,
+        0.124038,
+        0.045698,
+        -0.176265,
+        -0.095314,
+        0.16582,
+        0.176265,
+        0.03003,
+        -0.058755,
+        -0.150152,
+        -0.181488,
+        0.309443,
+        0.257216,
+        -0.074423,
+        0.275495,
+        -0.18671,
+        -0.322499,
+        -0.022196
       ]
     },
     {
       "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 2462,
-      "lines": 44,
-      "tokens_est": 616,
+      "bytes": 2636,
+      "lines": 45,
+      "tokens_est": 659,
       "symbol_count": 2,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "0046254dbc4026b7",
+      "digest8": "2dfc46440cbba8b1",
       "vector": [
-        0.12447,
-        -0.001232,
-        0.210737,
-        -0.094893,
-        0.080105,
-        -0.260032,
-        -0.203343,
-        0.141724,
-        -0.045598,
-        -0.287144,
-        -0.030809,
-        -0.006162,
-        0.267426,
-        0.166371,
-        -0.141724,
-        -0.156512,
-        -0.119541,
-        0.141724,
-        0.151583,
-        -0.240314,
-        0.109682,
-        0.087499,
-        0.151583,
-        0.191019,
-        -0.297004,
-        -0.191019,
-        -0.200878,
-        -0.269891,
-        0.114611,
-        0.18116,
-        0.18116,
-        -0.235385
+        0.021215,
+        0.072576,
+        -0.260159,
+        -0.231128,
+        -0.121705,
+        0.253459,
+        0.242294,
+        -0.043546,
+        -0.108306,
+        -0.101607,
+        -0.275791,
+        0.06811,
+        0.161901,
+        -0.219963,
+        0.193165,
+        -0.054711,
+        0.257926,
+        0.166368,
+        0.226662,
+        -0.010049,
+        -0.079276,
+        -0.11054,
+        -0.28249,
+        0.181999,
+        0.240061,
+        -0.228895,
+        -0.195398,
+        0.1753,
+        0.036847,
+        -0.237828,
+        -0.00335,
+        -0.043546
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4282,
+      "lines": 60,
+      "tokens_est": 1071,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "af9d372a9b4a69b9",
+      "vector": [
+        0.251424,
+        -0.196137,
+        0.08293,
+        -0.243526,
+        0.101359,
+        0.301445,
+        0.127686,
+        -0.156646,
+        0.030276,
+        0.285649,
+        0.077665,
+        -0.206668,
+        -0.135585,
+        0.009214,
+        0.030276,
+        0.309343,
+        0.022378,
+        -0.314609,
+        0.182973,
+        -0.177708,
+        0.093461,
+        0.119788,
+        0.048705,
+        -0.280384,
+        0.119788,
+        0.119788,
+        -0.035542,
+        -0.172442,
+        -0.030276,
+        0.204035,
+        0.251424,
+        -0.098727
       ]
     },
     {
       "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 2979,
+      "bytes": 3057,
       "lines": 35,
-      "tokens_est": 745,
+      "tokens_est": 765,
       "symbol_count": 18,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "1330fe23a310999e",
+      "digest8": "c8687a555d560578",
       "vector": [
-        -0.196809,
-        -0.073404,
-        -0.009574,
-        0.211702,
-        0.118085,
-        -0.154255,
-        0.271277,
-        0.237234,
-        0.241489,
-        -0.084043,
-        -0.045745,
-        -0.271277,
-        -0.111702,
-        0.139362,
-        0.062766,
-        -0.235106,
-        0.260638,
-        -0.173404,
-        0.235106,
-        0.256383,
-        0.241489,
-        0.145745,
-        -0.05,
-        0.237234,
-        -0.032979,
-        0.190426,
-        -0.01383,
-        0.218085,
-        -0.103191,
-        0.045745,
-        -0.060638,
-        -0.228723
+        -0.135763,
+        0.081947,
+        -0.089286,
+        -0.214041,
+        -0.028131,
+        0.055039,
+        -0.081947,
+        -0.311888,
+        -0.214041,
+        0.0159,
+        -0.106409,
+        -0.297211,
+        0.050147,
+        -0.042808,
+        0.052593,
+        -0.18224,
+        0.152886,
+        0.289872,
+        -0.089286,
+        -0.033023,
+        0.287426,
+        -0.250733,
+        -0.184687,
+        0.086839,
+        -0.089286,
+        0.311888,
+        -0.162671,
+        0.262964,
+        0.023239,
+        -0.145548,
+        -0.174902,
+        -0.265411
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5754,
+      "lines": 72,
+      "tokens_est": 1439,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3647b3c29bab23da",
+      "vector": [
+        0.281355,
+        0.221774,
+        -0.054064,
+        -0.21074,
+        -0.157779,
+        0.122472,
+        -0.248254,
+        0.246048,
+        -0.118059,
+        -0.058478,
+        0.188673,
+        -0.126886,
+        -0.111439,
+        0.124679,
+        -0.082751,
+        0.073925,
+        -0.159986,
+        -0.131299,
+        -0.239427,
+        0.235014,
+        -0.148953,
+        0.02317,
+        0.102612,
+        0.056271,
+        0.250461,
+        -0.272528,
+        0.031997,
+        -0.21736,
+        -0.067304,
+        0.175433,
+        0.276941,
+        0.252668
       ]
     },
     {
@@ -105753,7 +105849,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788658522,
+  "generated_at_unix": 1788659236,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107394,7 +107490,9 @@
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/README.md",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -266610,7 +266708,7 @@
         "line": 15,
         "end_line": 20,
         "signature_hash": "9386d60514f2578d",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#class:E:337e7074546e5b59",
@@ -266620,7 +266718,7 @@
         "line": 14,
         "end_line": 14,
         "signature_hash": "1d79b2fd5a5693b8",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#class:OwnerSnapshot:8c01597d4098f7b4",
@@ -266630,7 +266728,7 @@
         "line": 34,
         "end_line": 36,
         "signature_hash": "62830e30135be7a8",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#class:Proposal:5c5e8278a9568c31",
@@ -266640,7 +266738,7 @@
         "line": 23,
         "end_line": 31,
         "signature_hash": "eff9d5569ec5fde4",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#class:PublicationPlan:d345b3b7b07fc346",
@@ -266650,7 +266748,7 @@
         "line": 39,
         "end_line": 49,
         "signature_hash": "2809be7ee90a9347",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#class:PublicationReceipt:b4ce86c767d8502f",
@@ -266660,7 +266758,7 @@
         "line": 52,
         "end_line": 61,
         "signature_hash": "1dcff7d3f8a98933",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_hex:a6db5c05a4a58dee",
@@ -266670,7 +266768,7 @@
         "line": 68,
         "end_line": 71,
         "signature_hash": "18f19638a9d34231",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_is_debris:233011b3974e547d",
@@ -266680,7 +266778,7 @@
         "line": 78,
         "end_line": 80,
         "signature_hash": "4ed15a15e8eed419",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_path:78527c10effbb7c1",
@@ -266690,17 +266788,37 @@
         "line": 73,
         "end_line": 76,
         "signature_hash": "7aac8c0b3c5261b2",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_plan_hold:79d42452af9eddf9",
         "name": "_plan_hold",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
-        "line": 130,
-        "end_line": 133,
+        "line": 156,
+        "end_line": 160,
         "signature_hash": "5d80f9f3eceb92ea",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_proposal_binding:aec9b44c7d716736",
+        "name": "_proposal_binding",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "22e393cfa1970ab6",
+        "file_digest8": "0dc3785be3f66ac6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_publication_payload_root:08ac893d7dc3ee99",
+        "name": "_publication_payload_root",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "2e85e4d4f6258f47",
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_text:9126a53a07558829",
@@ -266710,27 +266828,27 @@
         "line": 64,
         "end_line": 66,
         "signature_hash": "e64e32ccb2d0588f",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:commit:a3fc1a9604d16253",
         "name": "commit",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
-        "line": 135,
-        "end_line": 142,
+        "line": 162,
+        "end_line": 169,
         "signature_hash": "92625332c33deae5",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:context13_preserves_invalid:38391989049a775c",
         "name": "context13_preserves_invalid",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
-        "line": 145,
-        "end_line": 147,
+        "line": 172,
+        "end_line": 174,
         "signature_hash": "6576780be1531849",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:digest:4b0d3a14a12321ec",
@@ -266740,37 +266858,37 @@
         "line": 11,
         "end_line": 12,
         "signature_hash": "3f5db76ec614c8b9",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:omega8_keeper:75aef84c70b3ebda",
         "name": "omega8_keeper",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
-        "line": 144,
-        "end_line": 144,
+        "line": 171,
+        "end_line": 171,
         "signature_hash": "c99187ee65645eb4",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:plan:9f164fc1f4b4fd5f",
         "name": "plan",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
-        "line": 89,
-        "end_line": 128,
+        "line": 98,
+        "end_line": 154,
         "signature_hash": "7de73a9f96fc4a70",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:validate_proposal:037f92a030ff7608",
         "name": "validate_proposal",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
-        "line": 82,
-        "end_line": 87,
+        "line": 91,
+        "end_line": 96,
         "signature_hash": "e70c8a173c33bfd3",
-        "file_digest8": "6aad4b898fea970b"
+        "file_digest8": "0dc3785be3f66ac6"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py#function:mk:691c8b532b458ac5",
@@ -266780,7 +266898,7 @@
         "line": 5,
         "end_line": 10,
         "signature_hash": "504ce7f36e615917",
-        "file_digest8": "0046254dbc4026b7"
+        "file_digest8": "2dfc46440cbba8b1"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py#function:run:1e8d6a6c7516b1f5",
@@ -266788,9 +266906,59 @@
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
         "line": 12,
-        "end_line": 42,
+        "end_line": 43,
         "signature_hash": "26799ab4ad82cbfb",
-        "file_digest8": "0046254dbc4026b7"
+        "file_digest8": "2dfc46440cbba8b1"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:P:3faaebae599e1f5d",
+        "name": "P",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "598fd4d950aff09b",
+        "file_digest8": "af9d372a9b4a69b9"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:case:0b16f7e6f8777f1b",
+        "name": "case",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "line": 18,
+        "end_line": 32,
+        "signature_hash": "5cac5c18b92b6e6b",
+        "file_digest8": "af9d372a9b4a69b9"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:hx:314c0b37c49f59ed",
+        "name": "hx",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "9597dfd9c862d918",
+        "file_digest8": "af9d372a9b4a69b9"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:oracle:8623100067cd8d1a",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "line": 12,
+        "end_line": 16,
+        "signature_hash": "50a0560034a235ec",
+        "file_digest8": "af9d372a9b4a69b9"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:run:eba6e44ea60a5eba",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "line": 34,
+        "end_line": 58,
+        "signature_hash": "2a6b862c860b9913",
+        "file_digest8": "af9d372a9b4a69b9"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#class:Tst:5bed94788974af6f",
@@ -266800,7 +266968,7 @@
         "line": 8,
         "end_line": 33,
         "signature_hash": "e65a024393958047",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#function:P:7c6def920be83aa8",
@@ -266810,7 +266978,7 @@
         "line": 4,
         "end_line": 7,
         "signature_hash": "f20d7e2e09031a69",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.s:d915e0c08b972a28",
@@ -266820,7 +266988,7 @@
         "line": 9,
         "end_line": 9,
         "signature_hash": "a8e4821a9d18c9f1",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_13d_no_repair:95fe046b9a0cdf0a",
@@ -266830,7 +266998,7 @@
         "line": 33,
         "end_line": 33,
         "signature_hash": "ba1f156470f37c0b",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_bad_blob_fails:c6593438f8a83cb5",
@@ -266840,7 +267008,7 @@
         "line": 23,
         "end_line": 24,
         "signature_hash": "ff7e1ed221f5bbf7",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_bad_path_fails:7f89f56fab314a63",
@@ -266850,7 +267018,7 @@
         "line": 25,
         "end_line": 26,
         "signature_hash": "d4c23e53e6b54e0f",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_cas_movement_zero_write:a1000a7c6ea6fb94",
@@ -266860,7 +267028,7 @@
         "line": 13,
         "end_line": 14,
         "signature_hash": "71b93e850a0f9840",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_conflicting_path_holds:ff7234010a87774c",
@@ -266870,7 +267038,7 @@
         "line": 15,
         "end_line": 16,
         "signature_hash": "2748de749edfffe2",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_disjoint_two_proposals_atomic:8f7892df86fb07c2",
@@ -266880,17 +267048,17 @@
         "line": 10,
         "end_line": 11,
         "signature_hash": "d1856aca45feb2b3",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_duplicate_consequence_collapses:06d8602b5f29475c",
-        "name": "Tst.test_duplicate_consequence_collapses",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_duplicate_consequence_exact_redelivery_collapses:6a676a7f982fa939",
+        "name": "Tst.test_duplicate_consequence_exact_redelivery_collapses",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
         "line": 19,
         "end_line": 20,
-        "signature_hash": "52ef4cd91542bbca",
-        "file_digest8": "1330fe23a310999e"
+        "signature_hash": "60f46679a14a588e",
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_effect_authority_holds:354217f67733742e",
@@ -266900,7 +267068,7 @@
         "line": 22,
         "end_line": 22,
         "signature_hash": "5ba1b1718cbbb6e1",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_hold_commit_no_write:1eafc89243bf7080",
@@ -266910,7 +267078,7 @@
         "line": 30,
         "end_line": 31,
         "signature_hash": "193f0631011b198b",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_identical_path_blob_safe:1e9453cc523ae038",
@@ -266920,7 +267088,7 @@
         "line": 17,
         "end_line": 18,
         "signature_hash": "52ae4601894b6ad1",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_manifest_deterministic_order:0b3ec192c950ff9f",
@@ -266930,7 +267098,7 @@
         "line": 27,
         "end_line": 27,
         "signature_hash": "531337399b90aba8",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_no_proposals:3710f9b866bf8bea",
@@ -266940,7 +267108,7 @@
         "line": 28,
         "end_line": 29,
         "signature_hash": "8166911d0421b6b7",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_omega8_one_keeper:df011461166dd194",
@@ -266950,7 +267118,7 @@
         "line": 32,
         "end_line": 32,
         "signature_hash": "9400cf91b466602e",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_staging_marker_holds:c86d73e7bc89b565",
@@ -266960,7 +267128,7 @@
         "line": 21,
         "end_line": 21,
         "signature_hash": "2c14a609ee9dd50d",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_stale_any_rebases_all:0df956c674af2dea",
@@ -266970,7 +267138,227 @@
         "line": 12,
         "end_line": 12,
         "signature_hash": "5525bccd768f1b6f",
-        "file_digest8": "1330fe23a310999e"
+        "file_digest8": "c8687a555d560578"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#class:AtomicAbsorptionR2Tests:47f3ac755d49e7e0",
+        "name": "AtomicAbsorptionR2Tests",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 20,
+        "end_line": 69,
+        "signature_hash": "be9cb6d7fcf4cda2",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#function:prop:b8c42b3bad395ee3",
+        "name": "prop",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "004aecb66436dfda",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.setUp:ac8c47b22d947564",
+        "name": "AtomicAbsorptionR2Tests.setUp",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_01_real_bridge_fixture_ready:aa92fdb21ec0a1d4",
+        "name": "AtomicAbsorptionR2Tests.test_01_real_bridge_fixture_ready",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "95616893922ed12b",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_02_exact_redelivery_collapses_without_losing_writes:15fd10fd9b4ca45e",
+        "name": "AtomicAbsorptionR2Tests.test_02_exact_redelivery_collapses_without_losing_writes",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "34190597508bf2a7",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_03_same_consequence_different_receipt_holds:80ec33bfe3352a89",
+        "name": "AtomicAbsorptionR2Tests.test_03_same_consequence_different_receipt_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "3f0bebec2069c72c",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_04_same_consequence_different_blob_holds:435fe42bb1c2d8d7",
+        "name": "AtomicAbsorptionR2Tests.test_04_same_consequence_different_blob_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 29,
+        "end_line": 31,
+        "signature_hash": "6da4e1e9463989f6",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_05_same_consequence_extra_file_holds:1a314dd4038f1eaf",
+        "name": "AtomicAbsorptionR2Tests.test_05_same_consequence_extra_file_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "b993a6f4cbc345b8",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_06_duplicate_proposal_id_holds:f9ea01d1d25472f7",
+        "name": "AtomicAbsorptionR2Tests.test_06_duplicate_proposal_id_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "43fbae1203b5ff24",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_07_distinct_consequence_path_conflict_holds:8eb4f14c6ec9feb7",
+        "name": "AtomicAbsorptionR2Tests.test_07_distinct_consequence_path_conflict_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "7d8007bec5302827",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_08_distinct_consequence_disjoint_writes_ready:d93b10f8f9341b91",
+        "name": "AtomicAbsorptionR2Tests.test_08_distinct_consequence_disjoint_writes_ready",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "2478a1f7691e7837",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_09_stale_base_rebase:71c616de46fbe543",
+        "name": "AtomicAbsorptionR2Tests.test_09_stale_base_rebase",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 44,
+        "end_line": 44,
+        "signature_hash": "cf026d421e0c0fad",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_10_debris_holds:4199a9d2b4452120",
+        "name": "AtomicAbsorptionR2Tests.test_10_debris_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 45,
+        "end_line": 45,
+        "signature_hash": "63bae81ddb713d22",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_11_authority_holds:68b2b3f150456edb",
+        "name": "AtomicAbsorptionR2Tests.test_11_authority_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 46,
+        "end_line": 46,
+        "signature_hash": "9a5e7a63b871a999",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_12_cas_head_move_zero_writes:1f79bc9da64d8351",
+        "name": "AtomicAbsorptionR2Tests.test_12_cas_head_move_zero_writes",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "03ae488c9ed4a271",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_13_exact_commit_receipt:d0e48031a66f75a0",
+        "name": "AtomicAbsorptionR2Tests.test_13_exact_commit_receipt",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "60cfde651198c464",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_14_actor_provenance_changes_manifest:da75b3ebf508c181",
+        "name": "AtomicAbsorptionR2Tests.test_14_actor_provenance_changes_manifest",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "1260fc8fb1bb7468",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_15_lineage_provenance_changes_manifest:202ec231cee579bd",
+        "name": "AtomicAbsorptionR2Tests.test_15_lineage_provenance_changes_manifest",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "4d663c9fb9eab4d4",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_16_collapsed_actor_is_bound:868222728281eb6f",
+        "name": "AtomicAbsorptionR2Tests.test_16_collapsed_actor_is_bound",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "391c5a3964de6492",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_17_omega8_exactly_one_keeper:2adf4f57f1411d3a",
+        "name": "AtomicAbsorptionR2Tests.test_17_omega8_exactly_one_keeper",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "bc85db6998e7aaae",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_18_13d_tail_cannot_repair_invalid:fc69a5d1ea2c2487",
+        "name": "AtomicAbsorptionR2Tests.test_18_13d_tail_cannot_repair_invalid",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "cdf1b7e787b85061",
+        "file_digest8": "3647b3c29bab23da"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_19_same_consequence_different_paths_regression:7bb77d42cc90ffef",
+        "name": "AtomicAbsorptionR2Tests.test_19_same_consequence_different_paths_regression",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "0a538821d34ea9c3",
+        "file_digest8": "3647b3c29bab23da"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -268223,8 +268611,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0b6f87203e6f84fe90085d0059661bb4",
-    "payload_hash": "8d68bc850980574875f8595950837426"
+    "record_fingerprint": "ea54865bfe9b2c485746ead7e46870b4",
+    "payload_hash": "107616db26e96e9c35e7cf86ee66fa9e"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268237,15 +268625,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1653,
-      "bytes": 26495906,
-      "tokens_est": 6614318,
+      "files": 1655,
+      "bytes": 26508007,
+      "tokens_est": 6617345,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
+        "python_module": 1008,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -268933,15 +269321,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1653,
-    "total_bytes": 26495906,
-    "text_tokens_est": 6614318,
+    "file_count": 1655,
+    "total_bytes": 26508007,
+    "text_tokens_est": 6617345,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
+      "python_module": 1008,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -270168,9 +270556,17 @@
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
         "kind": "function",
         "line": 12,
-        "end_line": 42,
+        "end_line": 43,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py#function:run:1e8d6a6c7516b1f5",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 58,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:run:eba6e44ea60a5eba",
+        "signature_hash": "2a6b862c860b9913"
       }
     ],
     "run.record": [
@@ -425649,12 +426045,32 @@
         "signature_hash": "4ed15a15e8eed419"
       }
     ],
-    "validate_proposal": [
+    "_proposal_binding": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
         "kind": "function",
         "line": 82,
-        "end_line": 87,
+        "end_line": 85,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_proposal_binding:aec9b44c7d716736",
+        "signature_hash": "22e393cfa1970ab6"
+      }
+    ],
+    "_publication_payload_root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_publication_payload_root:08ac893d7dc3ee99",
+        "signature_hash": "2e85e4d4f6258f47"
+      }
+    ],
+    "validate_proposal": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 96,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:validate_proposal:037f92a030ff7608",
         "signature_hash": "e70c8a173c33bfd3"
       }
@@ -425663,8 +426079,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
         "kind": "function",
-        "line": 89,
-        "end_line": 128,
+        "line": 98,
+        "end_line": 154,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:plan:9f164fc1f4b4fd5f",
         "signature_hash": "7de73a9f96fc4a70"
       }
@@ -425673,8 +426089,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
         "kind": "function",
-        "line": 130,
-        "end_line": 133,
+        "line": 156,
+        "end_line": 160,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_plan_hold:79d42452af9eddf9",
         "signature_hash": "5d80f9f3eceb92ea"
       }
@@ -425683,8 +426099,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
         "kind": "function",
-        "line": 135,
-        "end_line": 142,
+        "line": 162,
+        "end_line": 169,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:commit:a3fc1a9604d16253",
         "signature_hash": "92625332c33deae5"
       }
@@ -425693,8 +426109,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
         "kind": "function",
-        "line": 144,
-        "end_line": 144,
+        "line": 171,
+        "end_line": 171,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:omega8_keeper:75aef84c70b3ebda",
         "signature_hash": "c99187ee65645eb4"
       }
@@ -425703,8 +426119,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
         "kind": "function",
-        "line": 145,
-        "end_line": 147,
+        "line": 172,
+        "end_line": 174,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:context13_preserves_invalid:38391989049a775c",
         "signature_hash": "6576780be1531849"
       }
@@ -425719,7 +426135,25 @@
         "signature_hash": "504ce7f36e615917"
       }
     ],
+    "hx": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:hx:314c0b37c49f59ed",
+        "signature_hash": "9597dfd9c862d918"
+      }
+    ],
     "P": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:P:3faaebae599e1f5d",
+        "signature_hash": "598fd4d950aff09b"
+      },
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
         "kind": "function",
@@ -425727,6 +426161,26 @@
         "end_line": 7,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#function:P:7c6def920be83aa8",
         "signature_hash": "f20d7e2e09031a69"
+      }
+    ],
+    "oracle": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:oracle:8623100067cd8d1a",
+        "signature_hash": "50a0560034a235ec"
+      }
+    ],
+    "case": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:case:0b16f7e6f8777f1b",
+        "signature_hash": "5cac5c18b92b6e6b"
       }
     ],
     "Tst": [
@@ -425799,14 +426253,14 @@
         "signature_hash": "52ae4601894b6ad1"
       }
     ],
-    "Tst.test_duplicate_consequence_collapses": [
+    "Tst.test_duplicate_consequence_exact_redelivery_collapses": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
         "kind": "method",
         "line": 19,
         "end_line": 20,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_duplicate_consequence_collapses:06d8602b5f29475c",
-        "signature_hash": "52ef4cd91542bbca"
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_duplicate_consequence_exact_redelivery_collapses:6a676a7f982fa939",
+        "signature_hash": "60f46679a14a588e"
       }
     ],
     "Tst.test_staging_marker_holds": [
@@ -425897,6 +426351,226 @@
         "end_line": 33,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#method:Tst.test_13d_no_repair:95fe046b9a0cdf0a",
         "signature_hash": "ba1f156470f37c0b"
+      }
+    ],
+    "prop": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#function:prop:b8c42b3bad395ee3",
+        "signature_hash": "004aecb66436dfda"
+      }
+    ],
+    "AtomicAbsorptionR2Tests": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 69,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#class:AtomicAbsorptionR2Tests:47f3ac755d49e7e0",
+        "signature_hash": "be9cb6d7fcf4cda2"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.setUp": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.setUp:ac8c47b22d947564",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_01_real_bridge_fixture_ready": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_01_real_bridge_fixture_ready:aa92fdb21ec0a1d4",
+        "signature_hash": "95616893922ed12b"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_02_exact_redelivery_collapses_without_losing_writes": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_02_exact_redelivery_collapses_without_losing_writes:15fd10fd9b4ca45e",
+        "signature_hash": "34190597508bf2a7"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_03_same_consequence_different_receipt_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_03_same_consequence_different_receipt_holds:80ec33bfe3352a89",
+        "signature_hash": "3f0bebec2069c72c"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_04_same_consequence_different_blob_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_04_same_consequence_different_blob_holds:435fe42bb1c2d8d7",
+        "signature_hash": "6da4e1e9463989f6"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_05_same_consequence_extra_file_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_05_same_consequence_extra_file_holds:1a314dd4038f1eaf",
+        "signature_hash": "b993a6f4cbc345b8"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_06_duplicate_proposal_id_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_06_duplicate_proposal_id_holds:f9ea01d1d25472f7",
+        "signature_hash": "43fbae1203b5ff24"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_07_distinct_consequence_path_conflict_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_07_distinct_consequence_path_conflict_holds:8eb4f14c6ec9feb7",
+        "signature_hash": "7d8007bec5302827"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_08_distinct_consequence_disjoint_writes_ready": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_08_distinct_consequence_disjoint_writes_ready:d93b10f8f9341b91",
+        "signature_hash": "2478a1f7691e7837"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_09_stale_base_rebase": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 44,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_09_stale_base_rebase:71c616de46fbe543",
+        "signature_hash": "cf026d421e0c0fad"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_10_debris_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 45,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_10_debris_holds:4199a9d2b4452120",
+        "signature_hash": "63bae81ddb713d22"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_11_authority_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 46,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_11_authority_holds:68b2b3f150456edb",
+        "signature_hash": "9a5e7a63b871a999"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_12_cas_head_move_zero_writes": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_12_cas_head_move_zero_writes:1f79bc9da64d8351",
+        "signature_hash": "03ae488c9ed4a271"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_13_exact_commit_receipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_13_exact_commit_receipt:d0e48031a66f75a0",
+        "signature_hash": "60cfde651198c464"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_14_actor_provenance_changes_manifest": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_14_actor_provenance_changes_manifest:da75b3ebf508c181",
+        "signature_hash": "1260fc8fb1bb7468"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_15_lineage_provenance_changes_manifest": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_15_lineage_provenance_changes_manifest:202ec231cee579bd",
+        "signature_hash": "4d663c9fb9eab4d4"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_16_collapsed_actor_is_bound": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_16_collapsed_actor_is_bound:868222728281eb6f",
+        "signature_hash": "391c5a3964de6492"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_17_omega8_exactly_one_keeper": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_17_omega8_exactly_one_keeper:2adf4f57f1411d3a",
+        "signature_hash": "bc85db6998e7aaae"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_18_13d_tail_cannot_repair_invalid": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_18_13d_tail_cannot_repair_invalid:fc69a5d1ea2c2487",
+        "signature_hash": "cdf1b7e787b85061"
+      }
+    ],
+    "AtomicAbsorptionR2Tests.test_19_same_consequence_different_paths_regression": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py#method:AtomicAbsorptionR2Tests.test_19_same_consequence_different_paths_regression:7bb77d42cc90ffef",
+        "signature_hash": "0a538821d34ea9c3"
       }
     ],
     "_coordinates": [
