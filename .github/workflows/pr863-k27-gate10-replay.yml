@@ -29,10 +29,12 @@ jobs:
       matrix:
         python: ['3.10', '3.12', '3.13']
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
         with:
           python-version: ${{ matrix.python }}
+      - name: Execute campaign-oracle regressions
+        run: python -m unittest -v tests.test_k27_gate10_campaign_oracle
       - name: Execute 5x750 Gate10 campaign
         run: |
           python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json
@@ -40,35 +42,60 @@ jobs:
       - name: Enforce hard invariants
         run: |
           python - <<'PY'
-          import json
+          import json, sys
           from pathlib import Path
+          sys.path.insert(0, str(Path('tools/arena').resolve()))
+          from k27_memory.gate10_campaign_oracle import campaign_root_from_trace
           r = json.loads(Path('gate10-receipt.json').read_text())
           expected = {
               'workers': 5,
               'rounds': 750,
               'attempts': 3750,
+              'stale_dependency_probes': 750,
+              'target_concurrent_attempts': 3750,
+              'target_stale_dependency_probes': 750,
+              'target_dependency_repairs': 750,
+              'dependency_repairs': 750,
+              'target_campaign_round_write_attempts': 5250,
+              'total_write_attempts': 5250,
               'false_accept': 0,
               'false_hold': 0,
               'store_root_conflict_holds': 3000,
-              'revision_conflict_holds': 0,
-              'epoch_conflict_holds': 0,
-              'memory_conflict_holds': 0,
               'stale_dependency_holds': 750,
-              'unclassified_errors': 0,
-              'stale_dependency_probes': 750,
               'aba_violations': 0,
               'stale_dependency_violations': 0,
               'omega8_keepers': 1,
+              'routing13_nonverified_repairs': 0,
               'routing13_hard_invalid_repairs': 0,
+              'routing13_unknown_repairs': 0,
               'routing13_decision_variations': 0,
-              'routing13_vectors_checked': 15066,
+              'routing13_vectors_checked': 17010,
+              'campaign_complete': True,
+              'completed_rounds': 750,
+              'round_failures': 0,
+              'round_identity_complete': True,
+              'trace_entries': 750,
+              'campaign_root_evidence_schema': 'AURA-K27-GATE10-TRACE-v1',
           }
           bad = {k: (r.get(k), v) for k, v in expected.items() if r.get(k) != v}
           if bad:
               raise SystemExit(f'Gate10 invariant failure: {bad}')
-          print('GATE10_EPOCH_CAS_REPLAY_PASS', r['campaign_root'])
+          trace = r.get('trace')
+          if not isinstance(trace, list):
+              raise SystemExit('Gate10 receipt omits complete trace evidence')
+          recomputed = campaign_root_from_trace(trace)
+          if recomputed != r.get('campaign_root'):
+              raise SystemExit(f"Gate10 campaign-root mismatch: {recomputed} != {r.get('campaign_root')}")
+          if r.get('final') != trace[-1]:
+              raise SystemExit('Gate10 final row is not the final complete-trace row')
+          final = r.get('final') or {}
+          if final.get('root_scope') != 'POST_DEPENDENCY_REPAIR':
+              raise SystemExit(f"Gate10 root-scope failure: {final.get('root_scope')}")
+          if not isinstance(final.get('root'), str) or len(final['root']) != 64:
+              raise SystemExit('Gate10 final root is not one SHA-256 digest')
+          print('GATE10_EPOCH_CAS_REPLAY_PASS', r['campaign_root'], final['root'])
           PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
         with:
           name: pr863-gate10-epoch-cas-py${{ matrix.python }}-${{ github.sha }}
           path: gate10-receipt.json

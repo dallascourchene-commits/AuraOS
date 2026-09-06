@@ -1063,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1669,
+    "repo_file_count": 1674,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1238,6 +1238,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/pr863-k27-gate10-replay.yml",
+      ".github/workflows/pr868-gate10-causal-extension.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -2694,6 +2695,8 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_gate10_campaign_oracle.py",
+      "tests/test_k27_gate10_causal_extension.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -2710,6 +2713,8 @@
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
+      "tools/arena/k27_memory/gate10_campaign_oracle.py",
+      "tools/arena/k27_memory/gate10_causal_extension.py",
       "tools/arena/k27_memory/k27_city.py",
       "tools/arena/k27_memory/persistent_memory.py",
       "tools/arena/k27_memory/world_atlas.py",
@@ -11798,53 +11803,100 @@
       "path": ".github/workflows/pr863-k27-gate10-replay.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2652,
-      "lines": 77,
-      "tokens_est": 663,
+      "bytes": 4290,
+      "lines": 104,
+      "tokens_est": 1073,
       "symbol_count": 0,
       "commands": [
         "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json"
       ],
       "command_lines": {
         "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json": [
-          38
+          40
         ]
       },
       "topology": {},
-      "digest8": "a242acf5a37b6f53",
+      "digest8": "a7edf35beb2f4b6f",
       "vector": [
-        0.282695,
-        0.010136,
-        -0.248907,
-        0.145289,
-        -0.237644,
-        0.170067,
-        -0.203856,
-        0.147542,
-        -0.235391,
-        0.264675,
-        0.082218,
-        -0.037167,
-        0.061945,
-        0.138532,
-        0.280442,
-        0.122764,
-        0.152047,
-        0.197098,
-        0.043925,
-        -0.152047,
-        -0.219624,
-        0.005631,
-        -0.064198,
-        0.217371,
-        0.005631,
-        -0.161057,
-        -0.070955,
-        -0.003379,
-        0.237644,
-        -0.260169,
-        -0.280442,
-        0.131774
+        -0.309091,
+        -0.043777,
+        -0.019899,
+        0.014592,
+        -0.237457,
+        0.128678,
+        0.293173,
+        -0.271947,
+        0.131331,
+        -0.141943,
+        0.033164,
+        0.080921,
+        0.08888,
+        -0.187047,
+        0.245416,
+        -0.070308,
+        -0.049083,
+        0.144596,
+        0.035817,
+        -0.298479,
+        -0.179087,
+        -0.099493,
+        -0.245416,
+        -0.038471,
+        0.070308,
+        0.118065,
+        -0.157862,
+        -0.128678,
+        -0.226844,
+        0.338276,
+        0.051736,
+        0.263988
+      ]
+    },
+    {
+      "path": ".github/workflows/pr868-gate10-causal-extension.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1739,
+      "lines": 35,
+      "tokens_est": 435,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "acbe99176965a234",
+      "vector": [
+        0.18126,
+        -0.042717,
+        0.005773,
+        -0.197423,
+        0.019627,
+        -0.271313,
+        0.174333,
+        -0.22975,
+        0.227441,
+        -0.125843,
+        0.27824,
+        -0.100443,
+        -0.27824,
+        0.040408,
+        0.144315,
+        -0.215896,
+        -0.102752,
+        0.100443,
+        -0.047335,
+        0.241295,
+        -0.257458,
+        -0.049644,
+        0.25284,
+        -0.206659,
+        0.102752,
+        0.269004,
+        -0.130461,
+        -0.005773,
+        0.289785,
+        -0.098134,
+        -0.021936,
+        -0.130461
       ]
     },
     {
@@ -104311,6 +104363,100 @@
       ]
     },
     {
+      "path": "tests/test_k27_gate10_campaign_oracle.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7227,
+      "lines": 168,
+      "tokens_est": 1807,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a49c12fabb6385f0",
+      "vector": [
+        -0.150387,
+        -0.073329,
+        -0.242359,
+        -0.210044,
+        -0.224959,
+        -0.302016,
+        0.115587,
+        -0.090729,
+        -0.0261,
+        0.157844,
+        0.050958,
+        -0.309474,
+        0.237387,
+        0.19513,
+        0.316931,
+        -0.031072,
+        -0.192644,
+        0.110615,
+        -0.269702,
+        0.075815,
+        -0.105644,
+        0.234902,
+        -0.070843,
+        -0.222473,
+        -0.088244,
+        0.152873,
+        -0.021129,
+        0.028586,
+        -0.078301,
+        -0.100672,
+        -0.078301,
+        -0.287102
+      ]
+    },
+    {
+      "path": "tests/test_k27_gate10_causal_extension.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1084,
+      "lines": 28,
+      "tokens_est": 271,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "28dce4dbad6c798a",
+      "vector": [
+        -0.229311,
+        -0.113985,
+        -0.113985,
+        0.017433,
+        0.033525,
+        -0.213219,
+        0.301725,
+        -0.143487,
+        -0.111303,
+        0.108621,
+        -0.202491,
+        -0.030843,
+        -0.132759,
+        0.097893,
+        0.264177,
+        -0.046935,
+        -0.135441,
+        -0.001341,
+        0.331227,
+        0.146169,
+        -0.111303,
+        -0.186399,
+        0.317817,
+        0.240039,
+        0.223947,
+        0.215901,
+        0.049617,
+        -0.041571,
+        0.071073,
+        -0.317817,
+        -0.124713,
+        0.140805
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -104972,47 +105118,47 @@
       "path": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 8947,
-      "lines": 186,
-      "tokens_est": 2237,
-      "symbol_count": 4,
+      "bytes": 8621,
+      "lines": 172,
+      "tokens_est": 2156,
+      "symbol_count": 2,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "eefb88b3d354e956",
+      "digest8": "ef1660970069719c",
       "vector": [
-        0.120842,
-        -0.118665,
-        -0.212291,
-        -0.088182,
-        -0.236242,
-        0.277611,
-        0.177453,
-        0.092537,
-        0.059877,
-        -0.197049,
-        -0.221,
-        0.199227,
-        0.075118,
-        0.033749,
-        0.210114,
-        -0.118665,
-        -0.162212,
-        -0.190517,
-        0.225355,
-        -0.181808,
-        -0.225355,
-        0.005443,
-        -0.120842,
-        0.020685,
-        -0.151325,
-        0.227532,
-        0.072941,
-        0.268902,
-        -0.266724,
-        -0.210114,
-        0.029394,
-        -0.26237
+        -0.286174,
+        0.022013,
+        -0.026648,
+        0.295443,
+        0.267637,
+        -0.191169,
+        -0.054454,
+        -0.031282,
+        -0.242147,
+        0.119336,
+        0.054454,
+        -0.142508,
+        -0.038234,
+        0.23983,
+        -0.144825,
+        0.28154,
+        -0.121653,
+        0.23983,
+        0.267637,
+        0.276905,
+        0.00811,
+        0.089212,
+        -0.04982,
+        0.093847,
+        0.267637,
+        -0.117019,
+        0.003476,
+        0.188852,
+        0.137873,
+        0.06604,
+        0.142508,
+        -0.23983
       ]
     },
     {
@@ -105060,6 +105206,100 @@
         -0.09201,
         0.233176,
         -0.06176
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8546,
+      "lines": 226,
+      "tokens_est": 2137,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3594e2a59e522a01",
+      "vector": [
+        -0.238983,
+        0.011144,
+        0.152305,
+        0.12754,
+        -0.174594,
+        -0.29099,
+        0.276131,
+        0.305849,
+        -0.308325,
+        -0.271178,
+        -0.12754,
+        0.003715,
+        -0.040862,
+        0.115158,
+        0.154782,
+        -0.011144,
+        0.02848,
+        -0.154782,
+        -0.02105,
+        0.236506,
+        0.214218,
+        -0.073057,
+        0.149829,
+        -0.236506,
+        -0.102775,
+        0.157258,
+        0.011144,
+        0.120111,
+        0.060674,
+        0.169641,
+        -0.261272,
+        -0.182023
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory/gate10_causal_extension.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4323,
+      "lines": 110,
+      "tokens_est": 1081,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "60486cc15d569254",
+      "vector": [
+        -0.09975,
+        -0.116179,
+        0.264044,
+        0.078626,
+        0.271085,
+        0.240573,
+        -0.111485,
+        0.16312,
+        -0.172509,
+        -0.20302,
+        -0.113832,
+        -0.109138,
+        0.12322,
+        0.271085,
+        0.221797,
+        0.207714,
+        0.12322,
+        0.09975,
+        -0.264044,
+        -0.076279,
+        0.144344,
+        -0.010562,
+        -0.095056,
+        0.177203,
+        -0.120873,
+        -0.285167,
+        -0.073932,
+        0.235879,
+        0.200673,
+        0.149038,
+        0.029338,
+        -0.266391
       ]
     },
     {
@@ -106530,7 +106770,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788718835,
+  "generated_at_unix": 1788729738,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106707,6 +106947,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/pr863-k27-gate10-replay.yml",
+      ".github/workflows/pr868-gate10-causal-extension.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -108163,6 +108404,8 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_gate10_campaign_oracle.py",
+      "tests/test_k27_gate10_causal_extension.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -108179,6 +108422,8 @@
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
+      "tools/arena/k27_memory/gate10_campaign_oracle.py",
+      "tools/arena/k27_memory/gate10_causal_extension.py",
       "tools/arena/k27_memory/k27_city.py",
       "tools/arena/k27_memory/persistent_memory.py",
       "tools/arena/k27_memory/world_atlas.py",
@@ -266276,6 +266521,256 @@
         "file_digest8": "94c9ed628d66a22d"
       },
       {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#class:Gate10CampaignOracleTests:3aa8c20e96d0d54f",
+        "name": "Gate10CampaignOracleTests",
+        "kind": "class",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 23,
+        "end_line": 163,
+        "signature_hash": "d1bd1acddffcee97",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.canonical_round:37f6e9ebf7cfd842",
+        "name": "Gate10CampaignOracleTests.canonical_round",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "f6d5311422bbdc90",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.canonical_trace:276646e63935a603",
+        "name": "Gate10CampaignOracleTests.canonical_trace",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "8bef3c606bbc1e35",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_attempt_count_mismatch_fails_closed:d659cc3c8f7242e3",
+        "name": "Gate10CampaignOracleTests.test_attempt_count_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "723af41a37fe796f",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_bad_win_digest_is_malformed:ba63a9a39ae67af1",
+        "name": "Gate10CampaignOracleTests.test_bad_win_digest_is_malformed",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "f1714c421477c150",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_changes_when_evidence_changes:fdbf083e48011bd0",
+        "name": "Gate10CampaignOracleTests.test_campaign_root_changes_when_evidence_changes",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 146,
+        "end_line": 151,
+        "signature_hash": "85559000c83f7582",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_is_recomputable_from_complete_trace:206713c97c53a910",
+        "name": "Gate10CampaignOracleTests.test_campaign_root_is_recomputable_from_complete_trace",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 139,
+        "end_line": 144,
+        "signature_hash": "3dde41c5b22a0404",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_rejects_missing_or_duplicate_round:005b35c5741c467a",
+        "name": "Gate10CampaignOracleTests.test_campaign_root_rejects_missing_or_duplicate_round",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 153,
+        "end_line": 157,
+        "signature_hash": "3a4c6fd55858289f",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_rejects_noncanonical_trace_row:df8e8400b0f8ba60",
+        "name": "Gate10CampaignOracleTests.test_campaign_root_rejects_noncanonical_trace_row",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 159,
+        "end_line": 163,
+        "signature_hash": "3ffc3d9c7ec8568a",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_completion_rejects_duplicate_round_identity:8e3f59967e9af2ec",
+        "name": "Gate10CampaignOracleTests.test_completion_rejects_duplicate_round_identity",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 125,
+        "end_line": 131,
+        "signature_hash": "c6cc8d3d0cdc8e46",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_completion_requires_all_rounds_and_no_failures:e48cfc8e927541a3",
+        "name": "Gate10CampaignOracleTests.test_completion_requires_all_rounds_and_no_failures",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 114,
+        "end_line": 123,
+        "signature_hash": "dd4eda3639efadfb",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_duplicate_worker_identity_fails_closed:ae8c389ee90ba7b9",
+        "name": "Gate10CampaignOracleTests.test_duplicate_worker_identity_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 87,
+        "end_line": 92,
+        "signature_hash": "9d7aa9423380e64f",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_exact_single_winner_and_store_root_losers_is_valid:aa8e840dd77b7be5",
+        "name": "Gate10CampaignOracleTests.test_exact_single_winner_and_store_root_losers_is_valid",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 27,
+        "end_line": 32,
+        "signature_hash": "73ea0ed84a93951e",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_execution_fields_report_actual_not_target_on_partial_run:f48b9248d86121ed",
+        "name": "Gate10CampaignOracleTests.test_execution_fields_report_actual_not_target_on_partial_run",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 95,
+        "end_line": 102,
+        "signature_hash": "280d34c37d146d7f",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_hold_exception_must_match_status:a0cf64ebb8c84281",
+        "name": "Gate10CampaignOracleTests.test_hold_exception_must_match_status",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "07ce27d71d474bc7",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_multiple_winners_is_structured_failure:284387cc5aa1c719",
+        "name": "Gate10CampaignOracleTests.test_multiple_winners_is_structured_failure",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "e9c956fc3238a2a0",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_stale_dependency_status_cannot_masquerade_as_store_root_loser:7f2960cf89868b83",
+        "name": "Gate10CampaignOracleTests.test_stale_dependency_status_cannot_masquerade_as_store_root_loser",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 53,
+        "end_line": 57,
+        "signature_hash": "a8cf31ee26c56bf1",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_trace_binds_post_repair_root:758a63eab83b1fc9",
+        "name": "Gate10CampaignOracleTests.test_trace_binds_post_repair_root",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 104,
+        "end_line": 108,
+        "signature_hash": "89c39ccf77b1441a",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_trace_rejects_non_digest_root:b6c84b111cfe7b7c",
+        "name": "Gate10CampaignOracleTests.test_trace_rejects_non_digest_root",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 110,
+        "end_line": 112,
+        "signature_hash": "32974112267a9935",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_truncated_hold_is_malformed:a7473c8eb36f06bd",
+        "name": "Gate10CampaignOracleTests.test_truncated_hold_is_malformed",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "27239e9681659a33",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_truncated_win_is_malformed_not_valid:04d692bcc2d02dfb",
+        "name": "Gate10CampaignOracleTests.test_truncated_win_is_malformed_not_valid",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 59,
+        "end_line": 65,
+        "signature_hash": "def2b9c24302a623",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_zero_winner_is_structured_failure:75e7acecd61090ce",
+        "name": "Gate10CampaignOracleTests.test_zero_winner_is_structured_failure",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "line": 34,
+        "end_line": 39,
+        "signature_hash": "3dd38057e3410da8",
+        "file_digest8": "a49c12fabb6385f0"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#class:Gate10CausalExtensionTests:43b1770a5000cb83",
+        "name": "Gate10CausalExtensionTests",
+        "kind": "class",
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "532ad10f3a25d72c",
+        "file_digest8": "28dce4dbad6c798a"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails:67781a5c2324e772",
+        "name": "Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "line": 18,
+        "end_line": 23,
+        "signature_hash": "7ce82edd90809e69",
+        "file_digest8": "28dce4dbad6c798a"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe:a8117e2cb1f42612",
+        "name": "Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "line": 11,
+        "end_line": 16,
+        "signature_hash": "6a85b778d96756c2",
+        "file_digest8": "28dce4dbad6c798a"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_runtime.py#class:SafetyRegressionTests:a478fbf333c9f89b",
         "name": "SafetyRegressionTests",
         "kind": "class",
@@ -268026,44 +268521,24 @@
         "file_digest8": "b8e6e91c3558457f"
       },
       {
-        "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:canon:37d3e0e603debb0a",
-        "name": "canon",
-        "kind": "function",
-        "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
-        "line": 26,
-        "end_line": 27,
-        "signature_hash": "ceba26963124d7c5",
-        "file_digest8": "eefb88b3d354e956"
-      },
-      {
-        "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:classify_hold:1986b30010344c1b",
-        "name": "classify_hold",
-        "kind": "function",
-        "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
-        "line": 29,
-        "end_line": 41,
-        "signature_hash": "de74ddd73fe1b01b",
-        "file_digest8": "eefb88b3d354e956"
-      },
-      {
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:run:145d96f58ea52f8e",
         "name": "run",
         "kind": "function",
         "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
-        "line": 43,
-        "end_line": 182,
+        "line": 22,
+        "end_line": 168,
         "signature_hash": "26799ab4ad82cbfb",
-        "file_digest8": "eefb88b3d354e956"
+        "file_digest8": "ef1660970069719c"
       },
       {
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#method:run.attempt:63373d6cb82b74e6",
         "name": "run.attempt",
         "kind": "method",
         "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
-        "line": 69,
-        "end_line": 78,
+        "line": 46,
+        "end_line": 55,
         "signature_hash": "0eb5362419fc417d",
-        "file_digest8": "eefb88b3d354e956"
+        "file_digest8": "ef1660970069719c"
       },
       {
         "semantic_id": "tools/arena/k27_memory/coordinate_bridge.py#class:DigestBucket:ca0ae4444cf483c2",
@@ -268144,6 +268619,156 @@
         "end_line": 33,
         "signature_hash": "2243d6e827c8dc2d",
         "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#class:CampaignOracleError:a4125ef4c1eb82ab",
+        "name": "CampaignOracleError",
+        "kind": "class",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "c0d463e8624b7584",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#class:RoundClassification:0dc817683100b8dd",
+        "name": "RoundClassification",
+        "kind": "class",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 49,
+        "end_line": 58,
+        "signature_hash": "fe5e8fd20a85b09a",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_is_sha256:413d0df9e4e15e07",
+        "name": "_is_sha256",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 65,
+        "end_line": 66,
+        "signature_hash": "cd43b7b42a81a6f4",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_valid_hold:64c370d321bf3fd1",
+        "name": "_valid_hold",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 82,
+        "end_line": 88,
+        "signature_hash": "467d5d69fd655700",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_valid_win:be4a5ff127db0135",
+        "name": "_valid_win",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 69,
+        "end_line": 79,
+        "signature_hash": "50c38618932f6dea",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_worker_ok:160e2d766daf87a7",
+        "name": "_worker_ok",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "3050e72e58b40f9d",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:campaign_root_from_trace:aeacab267aee7789",
+        "name": "campaign_root_from_trace",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 28,
+        "end_line": 45,
+        "signature_hash": "604e17d933352dea",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:canonical_json:14001896e02ab284",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "2af8a10abc3d606e",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:classify_round:c1c75a90fa784292",
+        "name": "classify_round",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 91,
+        "end_line": 165,
+        "signature_hash": "c6df42fce0e4f827",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:completion_fields:7b5b5ad274fc78a9",
+        "name": "completion_fields",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 189,
+        "end_line": 201,
+        "signature_hash": "98308cf2515facbf",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:execution_fields:cb827a7d4ea9d78c",
+        "name": "execution_fields",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 204,
+        "end_line": 225,
+        "signature_hash": "e7470aef77e317e4",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:trace_entry:6d92afaf2385260b",
+        "name": "trace_entry",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "line": 168,
+        "end_line": 186,
+        "signature_hash": "3a0bde1e7939281f",
+        "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:routing_nonhard_sweep:6081e39181c09ddf",
+        "name": "routing_nonhard_sweep",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "line": 60,
+        "end_line": 91,
+        "signature_hash": "e2a4e85853365852",
+        "file_digest8": "60486cc15d569254"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:run:003943d271e6d5ae",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "line": 94,
+        "end_line": 105,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "60486cc15d569254"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:store_root_guard_probe:bbc71be98481367e",
+        "name": "store_root_guard_probe",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "line": 21,
+        "end_line": 57,
+        "signature_hash": "cf290a723f3f19e1",
+        "file_digest8": "60486cc15d569254"
       },
       {
         "semantic_id": "tools/arena/k27_memory/k27_city.py#class:Cell:364ecc59f4cbe0e6",
@@ -270826,8 +271451,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "263c6d78a3efc44718521810971174c2",
-    "payload_hash": "a69649186f65838de30ae0f5b8988192"
+    "record_fingerprint": "4b8194802d6692271aebee4ea2670a9f",
+    "payload_hash": "f08f3ac18e1239e368b54293245c6777"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270840,16 +271465,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1669,
-      "bytes": 26607108,
-      "tokens_est": 6642125,
+      "files": 1674,
+      "bytes": 26631339,
+      "tokens_est": 6648185,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1019,
-        "schema_or_lexicon": 275,
+        "python_module": 1023,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -271536,16 +272161,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1669,
-    "total_bytes": 26607108,
-    "text_tokens_est": 6642125,
+    "file_count": 1674,
+    "total_bytes": 26631339,
+    "text_tokens_est": 6648185,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1019,
-      "schema_or_lexicon": 275,
+      "python_module": 1023,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -272770,9 +273395,17 @@
       {
         "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
         "kind": "function",
-        "line": 43,
-        "end_line": 182,
+        "line": 22,
+        "end_line": 168,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:run:145d96f58ea52f8e",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 105,
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:run:003943d271e6d5ae",
         "signature_hash": "26799ab4ad82cbfb"
       }
     ],
@@ -286475,6 +287108,14 @@
         "line": 631,
         "end_line": 632,
         "semantic_id": "aura_arena_st3gg_shadow.py#function:_is_sha256:3ade4705ab4d8089",
+        "signature_hash": "cd43b7b42a81a6f4"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_is_sha256:413d0df9e4e15e07",
         "signature_hash": "cd43b7b42a81a6f4"
       }
     ],
@@ -314596,6 +315237,14 @@
         "end_line": 63,
         "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:canonical_json:db24948aa4a8caf8",
         "signature_hash": "c9911db40069043d"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:canonical_json:14001896e02ab284",
+        "signature_hash": "2af8a10abc3d606e"
       }
     ],
     "stable_digest": [
@@ -370940,14 +371589,6 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_security_accuracy_harness.py#function:canon:11bd004c7cfedf61",
         "signature_hash": "013604bc627266a0"
-      },
-      {
-        "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
-        "kind": "function",
-        "line": 26,
-        "end_line": 27,
-        "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:canon:37d3e0e603debb0a",
-        "signature_hash": "ceba26963124d7c5"
       }
     ],
     "load_fixture": [
@@ -427158,6 +427799,256 @@
         "signature_hash": "5cf64e2bab72f15b"
       }
     ],
+    "Gate10CampaignOracleTests": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 163,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#class:Gate10CampaignOracleTests:3aa8c20e96d0d54f",
+        "signature_hash": "d1bd1acddffcee97"
+      }
+    ],
+    "Gate10CampaignOracleTests.canonical_round": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.canonical_round:37f6e9ebf7cfd842",
+        "signature_hash": "f6d5311422bbdc90"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_exact_single_winner_and_store_root_losers_is_valid": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 32,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_exact_single_winner_and_store_root_losers_is_valid:aa8e840dd77b7be5",
+        "signature_hash": "73ea0ed84a93951e"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_zero_winner_is_structured_failure": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 39,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_zero_winner_is_structured_failure:75e7acecd61090ce",
+        "signature_hash": "3dd38057e3410da8"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_multiple_winners_is_structured_failure": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_multiple_winners_is_structured_failure:284387cc5aa1c719",
+        "signature_hash": "e9c956fc3238a2a0"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_attempt_count_mismatch_fails_closed": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_attempt_count_mismatch_fails_closed:d659cc3c8f7242e3",
+        "signature_hash": "723af41a37fe796f"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_stale_dependency_status_cannot_masquerade_as_store_root_loser": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 57,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_stale_dependency_status_cannot_masquerade_as_store_root_loser:7f2960cf89868b83",
+        "signature_hash": "a8cf31ee26c56bf1"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_truncated_win_is_malformed_not_valid": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 65,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_truncated_win_is_malformed_not_valid:04d692bcc2d02dfb",
+        "signature_hash": "def2b9c24302a623"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_truncated_hold_is_malformed": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_truncated_hold_is_malformed:a7473c8eb36f06bd",
+        "signature_hash": "27239e9681659a33"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_bad_win_digest_is_malformed": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_bad_win_digest_is_malformed:ba63a9a39ae67af1",
+        "signature_hash": "f1714c421477c150"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_hold_exception_must_match_status": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_hold_exception_must_match_status:a0cf64ebb8c84281",
+        "signature_hash": "07ce27d71d474bc7"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_duplicate_worker_identity_fails_closed": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 92,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_duplicate_worker_identity_fails_closed:ae8c389ee90ba7b9",
+        "signature_hash": "9d7aa9423380e64f"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_execution_fields_report_actual_not_target_on_partial_run": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 102,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_execution_fields_report_actual_not_target_on_partial_run:f48b9248d86121ed",
+        "signature_hash": "280d34c37d146d7f"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_trace_binds_post_repair_root": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 108,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_trace_binds_post_repair_root:758a63eab83b1fc9",
+        "signature_hash": "89c39ccf77b1441a"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_trace_rejects_non_digest_root": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 112,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_trace_rejects_non_digest_root:b6c84b111cfe7b7c",
+        "signature_hash": "32974112267a9935"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_completion_requires_all_rounds_and_no_failures": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 123,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_completion_requires_all_rounds_and_no_failures:e48cfc8e927541a3",
+        "signature_hash": "dd4eda3639efadfb"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_completion_rejects_duplicate_round_identity": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 131,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_completion_rejects_duplicate_round_identity:8e3f59967e9af2ec",
+        "signature_hash": "c6cc8d3d0cdc8e46"
+      }
+    ],
+    "Gate10CampaignOracleTests.canonical_trace": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.canonical_trace:276646e63935a603",
+        "signature_hash": "8bef3c606bbc1e35"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_campaign_root_is_recomputable_from_complete_trace": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 144,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_is_recomputable_from_complete_trace:206713c97c53a910",
+        "signature_hash": "3dde41c5b22a0404"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_campaign_root_changes_when_evidence_changes": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 151,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_changes_when_evidence_changes:fdbf083e48011bd0",
+        "signature_hash": "85559000c83f7582"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_campaign_root_rejects_missing_or_duplicate_round": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 157,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_rejects_missing_or_duplicate_round:005b35c5741c467a",
+        "signature_hash": "3a4c6fd55858289f"
+      }
+    ],
+    "Gate10CampaignOracleTests.test_campaign_root_rejects_noncanonical_trace_row": [
+      {
+        "file": "tests/test_k27_gate10_campaign_oracle.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 163,
+        "semantic_id": "tests/test_k27_gate10_campaign_oracle.py#method:Gate10CampaignOracleTests.test_campaign_root_rejects_noncanonical_trace_row:df8e8400b0f8ba60",
+        "signature_hash": "3ffc3d9c7ec8568a"
+      }
+    ],
+    "Gate10CausalExtensionTests": [
+      {
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#class:Gate10CausalExtensionTests:43b1770a5000cb83",
+        "signature_hash": "532ad10f3a25d72c"
+      }
+    ],
+    "Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe": [
+      {
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 16,
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe:a8117e2cb1f42612",
+        "signature_hash": "6a85b778d96756c2"
+      }
+    ],
+    "Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails": [
+      {
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails:67781a5c2324e772",
+        "signature_hash": "7ce82edd90809e69"
+      }
+    ],
     "provenance_leaf_manifest": [
       {
         "file": "tests/test_k27_memory_runtime.py",
@@ -428808,22 +429699,12 @@
         "signature_hash": "0d9f06875821b0a4"
       }
     ],
-    "classify_hold": [
-      {
-        "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
-        "kind": "function",
-        "line": 29,
-        "end_line": 41,
-        "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:classify_hold:1986b30010344c1b",
-        "signature_hash": "de74ddd73fe1b01b"
-      }
-    ],
     "run.attempt": [
       {
         "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
         "kind": "method",
-        "line": 69,
-        "end_line": 78,
+        "line": 46,
+        "end_line": 55,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#method:run.attempt:63373d6cb82b74e6",
         "signature_hash": "0eb5362419fc417d"
       }
@@ -428906,6 +429787,126 @@
         "end_line": 53,
         "semantic_id": "tools/arena/k27_memory/coordinate_bridge.py#function:address_record:b701831d4a92abf4",
         "signature_hash": "7e619577113f8e4d"
+      }
+    ],
+    "CampaignOracleError": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#class:CampaignOracleError:a4125ef4c1eb82ab",
+        "signature_hash": "c0d463e8624b7584"
+      }
+    ],
+    "campaign_root_from_trace": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 45,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:campaign_root_from_trace:aeacab267aee7789",
+        "signature_hash": "604e17d933352dea"
+      }
+    ],
+    "RoundClassification": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 58,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#class:RoundClassification:0dc817683100b8dd",
+        "signature_hash": "fe5e8fd20a85b09a"
+      }
+    ],
+    "_worker_ok": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_worker_ok:160e2d766daf87a7",
+        "signature_hash": "3050e72e58b40f9d"
+      }
+    ],
+    "_valid_win": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 79,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_valid_win:be4a5ff127db0135",
+        "signature_hash": "50c38618932f6dea"
+      }
+    ],
+    "_valid_hold": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 88,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:_valid_hold:64c370d321bf3fd1",
+        "signature_hash": "467d5d69fd655700"
+      }
+    ],
+    "classify_round": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 165,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:classify_round:c1c75a90fa784292",
+        "signature_hash": "c6df42fce0e4f827"
+      }
+    ],
+    "trace_entry": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 186,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:trace_entry:6d92afaf2385260b",
+        "signature_hash": "3a0bde1e7939281f"
+      }
+    ],
+    "completion_fields": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 189,
+        "end_line": 201,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:completion_fields:7b5b5ad274fc78a9",
+        "signature_hash": "98308cf2515facbf"
+      }
+    ],
+    "execution_fields": [
+      {
+        "file": "tools/arena/k27_memory/gate10_campaign_oracle.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 225,
+        "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:execution_fields:cb827a7d4ea9d78c",
+        "signature_hash": "e7470aef77e317e4"
+      }
+    ],
+    "store_root_guard_probe": [
+      {
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 57,
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:store_root_guard_probe:bbc71be98481367e",
+        "signature_hash": "cf290a723f3f19e1"
+      }
+    ],
+    "routing_nonhard_sweep": [
+      {
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 91,
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:routing_nonhard_sweep:6081e39181c09ddf",
+        "signature_hash": "e2a4e85853365852"
       }
     ],
     "_trit": [
