@@ -8,7 +8,8 @@ HEAD=Head("GEN25","d91e0a39358901c5")
 def oracle(command, receipts):
     if command.generation != HEAD.generation or command.head_digest != HEAD.digest:
         return CommandState.STALE_HEAD
-    bound=[r for r in receipts if r.command_id==command.command_id and r.observed_s>=command.created_s]
+    bound=[r for r in receipts if r.command_id==command.command_id and type(r.observed_s) is int and r.observed_s>=command.created_s]
+    if any(r.observed_s>NOW for r in bound): return "FUTURE_RECEIPT"
     if not bound: return CommandState.ADMISSION_STARVED
     if any(r.kind in {"RESULT","ERROR"} or r.state.startswith("TERMINAL_") for r in bound): return CommandState.TERMINAL
     if any("REJECT" in r.state or "BLOCK" in r.state for r in bound): return CommandState.TYPED_REJECTED
@@ -18,6 +19,7 @@ def oracle(command, receipts):
 def run():
     rng=random.Random(59025)
     mismatches=0
+    future_receipts_rejected=0
     roots=[]
     for i in range(100_000):
         cid=f"C{i}"
@@ -25,18 +27,22 @@ def run():
         generation="GEN25" if rng.randrange(7) else "GEN24"
         c=Command(cid,created,generation,"d91e0a39358901c5" if rng.randrange(11) else "wrong","AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND",False)
         rs=[]
-        mode=rng.randrange(7)
+        mode=rng.randrange(8)
         if mode==1: rs=[Receipt(cid,created+rng.randrange(max(1,NOW-created)),"ACK","ACK_ACCEPTED")]
         elif mode==2: rs=[Receipt(cid,created+rng.randrange(max(1,NOW-created)),"RESULT","TERMINAL_SUCCESS")]
         elif mode==3: rs=[Receipt(cid,created+rng.randrange(max(1,NOW-created)),"ACK","CURRENTNESS_REJECTED")]
         elif mode==4: rs=[Receipt("OTHER",NOW-1,"RESULT","TERMINAL_SUCCESS")]
         elif mode==5: rs=[Receipt(cid,max(0,created-1),"ACK","ACK_ACCEPTED")]
         elif mode==6: rs=[Receipt(cid,created+rng.randrange(max(1,NOW-created)),"ACK","WEIRD")]
-        got=classify_command(NOW,HEAD,c,rs).state
+        elif mode==7 and generation=="GEN25" and c.head_digest==HEAD.digest: rs=[Receipt(cid,NOW+1+rng.randrange(1000),"ACK","ACK_ACCEPTED")]
         exp=oracle(c,rs)
+        try:
+            got=classify_command(NOW,HEAD,c,rs).state
+        except E as exc:
+            got=str(exc)
+        if exp=="FUTURE_RECEIPT" and got=="FUTURE_RECEIPT": future_receipts_rejected+=1
         mismatches += got!=exp
-        roots.append(sha256(json.dumps([cid,got.value],separators=(",",":")).encode()).hexdigest())
-    # HS1000: every cell has active ingress but no command-bound current receipt; unrelated historical bus success may exist.
+        roots.append(sha256(json.dumps([cid,str(got)],separators=(",",":")).encode()).hexdigest())
     false_healthy=0
     hs=[]
     for i in range(1000):
@@ -45,16 +51,26 @@ def run():
         p=compile_recovery(now_s=NOW,head=HEAD,commands=[c],receipts=unrelated,consumer=ConsumerObservation(False),starvation_after_s=3600,reducer_stall_after_s=3600)
         if p.system_state==SystemState.HEALTHY_PROGRESS or p.provider_fanout_allowed: false_healthy+=1
         hs.append(p.receipt_root)
+    consumer_fuzz_rejected=0
+    for i in range(1000):
+        bad = ConsumerObservation(True, service_active=(i if i%2 else True), lease_current=(True if i%3 else None))
+        try:
+            compile_recovery(now_s=NOW,head=HEAD,commands=[Command(f"X{i}",NOW-7200,"GEN25","d91e0a39358901c5","READY",False)],receipts=[],consumer=bad,starvation_after_s=3600,reducer_stall_after_s=3600)
+        except E:
+            consumer_fuzz_rejected += 1
     omega=sum(omega8_keeper(x) for x in itertools.product(range(3),repeat=8))
     repairs=sum(context13_preserves_invalid((2,2,2,2,2,2,2,1),t) for t in itertools.product(range(3),repeat=5))
     out={
       "oracle_decisions":100_000,"oracle_mismatches":mismatches,
-      "hs1000_false_healthy":false_healthy,"omega8_keepers":omega,"13d_repairs":repairs,
+      "future_receipts_rejected":future_receipts_rejected,
+      "hs1000_false_healthy":false_healthy,
+      "consumer_fuzz_rejected":consumer_fuzz_rejected,
+      "omega8_keepers":omega,"13d_repairs":repairs,
       "oracle_root":sha256("".join(roots).encode()).hexdigest(),
       "hs1000_root":sha256("".join(hs).encode()).hexdigest(),
     }
     out["campaign_root"]=sha256(json.dumps(out,sort_keys=True,separators=(",",":")).encode()).hexdigest()
     print(json.dumps(out,sort_keys=True))
-    if mismatches or false_healthy or omega!=1 or repairs!=0: raise SystemExit(1)
+    if mismatches or false_healthy or omega!=1 or repairs!=0 or consumer_fuzz_rejected != 667: raise SystemExit(1)
 
 if __name__=='__main__': run()
