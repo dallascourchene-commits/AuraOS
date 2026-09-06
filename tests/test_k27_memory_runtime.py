@@ -253,12 +253,14 @@ class SealedRegistryRuntimeTests(unittest.TestCase):
             self.assertEqual(rt.seal.seal_scope,'working_registry_state')
             self.assertNotEqual(rt.seal.database_sha256,REGISTRY_SHA256)
             with self.assertRaises(StaleMemory): rt.read(dependent)
-            dep_epochs={}
+            dep_revisions={}; dep_epochs={}
             for key in dep_r['dependencies']:
-                dep_epochs[key]=rt.read(key)[0].epoch
+                current=rt.read(key)[0]
+                dep_revisions[key]=current.revision_id
+                dep_epochs[key]=current.epoch
             repaired=rt.publish_cas(dependent,dep_r['payload'],source_url=dep_r['source_url'],source_version=dep_r['source_version'],
                                     expected_revision=dep_b.revision_id,expected_epoch=dep_b.epoch+1,
-                                    dependencies=dep_r['dependencies'],dependency_epochs=dep_epochs)
+                                    dependencies=dep_revisions,dependency_epochs=dep_epochs)
             self.assertGreater(repaired['epoch'],dep_b.epoch)
             self.assertTrue(rt.consumed)
             with self.assertRaisesRegex(RuntimeBindingError,'consumed'):
