@@ -98,6 +98,7 @@ def plan(snapshot:OwnerSnapshot, proposals:Sequence[Proposal])->PublicationPlan:
     debris=tuple(sorted({path for p in proposals for path in p.files if _is_debris(path)}))
     if debris:
         return _plan_hold(Disposition.DEBRIS_HOLD,snapshot,proposals,(),debris)
+    # consequence quotient: one deterministic representative per exact consequence root
     by_cons={}
     collapsed=[]
     for p in sorted(proposals,key=lambda x:x.proposal_id):
