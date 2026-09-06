@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1670
-- **total_bytes**: 26584260
-- **text_tokens_est**: 6636413
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1677
+- **total_bytes**: 26644999
+- **text_tokens_est**: 6651599
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1670,
+  "repo_file_count": 1677,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -60,12 +60,19 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
     ".aura/intents/example.aura.md",
     ".aura/k27_memory_city/cold_source_manifest.json",
+    ".aura/k27_memory_city/frozen_68/memory_city/build_research_registry.py",
     ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
     ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/materialize_registry.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/persistent_memory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/test_persistent_memory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/verify_registry.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/world_atlas.py",
+    ".aura/k27_memory_city/frozen_68/review/test_independent_memory.py",
     ".aura/k27_memory_city/frozen_68_manifest.json",
     ".aura/k27_memory_city/registry_build_receipt.json",
     ".aura/memory_apertures/coding_localize.v1.json",
@@ -1697,12 +1704,19 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "vsa_resonator.py"
   ],
   "source_paths_without_topology": [
+    ".aura/k27_memory_city/frozen_68/memory_city/build_research_registry.py",
     ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
     ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/materialize_registry.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/persistent_memory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/test_persistent_memory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/verify_registry.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/world_atlas.py",
+    ".aura/k27_memory_city/frozen_68/review/test_independent_memory.py",
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
@@ -1789,14 +1803,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_amd_track3_demo.py",
     "tests/test_aura_arch_v2_3_capsule_validator.py",
     "tests/test_aura_architect_benchmark_report_warning.py",
-    "tests/test_aura_architect_controls_vault_and_surfaces.py",
-    "tests/test_aura_architect_council_v2_contracts.py",
-    "tests/test_aura_architect_council_v3.py",
-    "tests/test_aura_architecture_harness.py",
-    "tests/test_aura_architecture_harness_export_workflow.py",
-    "tests/test_aura_architecture_harness_git_tree_routing.py",
-    "tests/test_aura_architecture_harness_original_github_routing.py",
-    "tests/test_aura_arena_connector_hardening.py"
+    "tests/test_aura_architect_controls_vault_and_surfaces.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1810,15 +1817,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1670,
-  "bytes": 26584260,
-  "tokens_est": 6636413,
+  "files": 1677,
+  "bytes": 26644999,
+  "tokens_est": 6651599,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1019,
+    "python_module": 1026,
     "schema_or_lexicon": 278,
     "support_file": 49
   }
@@ -2115,12 +2122,19 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 {
   "ring": "code",
   "paths": [
+    ".aura/k27_memory_city/frozen_68/memory_city/build_research_registry.py",
     ".aura/k27_memory_city/frozen_68/memory_city/coordinate_bridge.py",
     ".aura/k27_memory_city/frozen_68/memory_city/k27_city.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/materialize_registry.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/persistent_memory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/research_factory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_k27_city.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/test_persistent_memory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_research_factory.py",
     ".aura/k27_memory_city/frozen_68/memory_city/test_world_atlas.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/verify_registry.py",
+    ".aura/k27_memory_city/frozen_68/memory_city/world_atlas.py",
+    ".aura/k27_memory_city/frozen_68/review/test_independent_memory.py",
     ".github/phase4/wc02_phase4_current_generation_patch.py",
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
@@ -2507,14 +2521,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_opd_license_adapter.py",
     "aura_open_weight_jacobian_adapter.py",
     "aura_packaged_source_identity.py",
-    "aura_paper_memory.py",
-    "aura_pascal_spatial_presentation.py",
-    "aura_pascal_spatial_presentation_part1.py",
-    "aura_pascal_spatial_presentation_part2.py",
-    "aura_pascal_spatial_presentation_part3.py",
-    "aura_pascal_spatial_presentation_part4.py",
-    "aura_pascal_spatial_presentation_part5.py",
-    "aura_patch_quality_gate.py"
+    "aura_paper_memory.py"
   ]
 }
 ```
