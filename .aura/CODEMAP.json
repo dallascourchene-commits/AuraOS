@@ -1063,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1674,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1238,6 +1238,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/pr863-k27-gate10-replay.yml",
+      ".github/workflows/pr868-gate10-causal-extension.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -2695,6 +2696,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_gate10_campaign_oracle.py",
+      "tests/test_k27_gate10_causal_extension.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -2712,6 +2714,7 @@
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
       "tools/arena/k27_memory/gate10_campaign_oracle.py",
+      "tools/arena/k27_memory/gate10_causal_extension.py",
       "tools/arena/k27_memory/k27_city.py",
       "tools/arena/k27_memory/persistent_memory.py",
       "tools/arena/k27_memory/world_atlas.py",
@@ -11847,6 +11850,53 @@
         0.338276,
         0.051736,
         0.263988
+      ]
+    },
+    {
+      "path": ".github/workflows/pr868-gate10-causal-extension.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1739,
+      "lines": 35,
+      "tokens_est": 435,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "acbe99176965a234",
+      "vector": [
+        0.18126,
+        -0.042717,
+        0.005773,
+        -0.197423,
+        0.019627,
+        -0.271313,
+        0.174333,
+        -0.22975,
+        0.227441,
+        -0.125843,
+        0.27824,
+        -0.100443,
+        -0.27824,
+        0.040408,
+        0.144315,
+        -0.215896,
+        -0.102752,
+        0.100443,
+        -0.047335,
+        0.241295,
+        -0.257458,
+        -0.049644,
+        0.25284,
+        -0.206659,
+        0.102752,
+        0.269004,
+        -0.130461,
+        -0.005773,
+        0.289785,
+        -0.098134,
+        -0.021936,
+        -0.130461
       ]
     },
     {
@@ -104360,6 +104410,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_gate10_causal_extension.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1084,
+      "lines": 28,
+      "tokens_est": 271,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "28dce4dbad6c798a",
+      "vector": [
+        -0.229311,
+        -0.113985,
+        -0.113985,
+        0.017433,
+        0.033525,
+        -0.213219,
+        0.301725,
+        -0.143487,
+        -0.111303,
+        0.108621,
+        -0.202491,
+        -0.030843,
+        -0.132759,
+        0.097893,
+        0.264177,
+        -0.046935,
+        -0.135441,
+        -0.001341,
+        0.331227,
+        0.146169,
+        -0.111303,
+        -0.186399,
+        0.317817,
+        0.240039,
+        0.223947,
+        0.215901,
+        0.049617,
+        -0.041571,
+        0.071073,
+        -0.317817,
+        -0.124713,
+        0.140805
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105156,6 +105253,53 @@
         0.169641,
         -0.261272,
         -0.182023
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory/gate10_causal_extension.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4323,
+      "lines": 110,
+      "tokens_est": 1081,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "60486cc15d569254",
+      "vector": [
+        -0.09975,
+        -0.116179,
+        0.264044,
+        0.078626,
+        0.271085,
+        0.240573,
+        -0.111485,
+        0.16312,
+        -0.172509,
+        -0.20302,
+        -0.113832,
+        -0.109138,
+        0.12322,
+        0.271085,
+        0.221797,
+        0.207714,
+        0.12322,
+        0.09975,
+        -0.264044,
+        -0.076279,
+        0.144344,
+        -0.010562,
+        -0.095056,
+        0.177203,
+        -0.120873,
+        -0.285167,
+        -0.073932,
+        0.235879,
+        0.200673,
+        0.149038,
+        0.029338,
+        -0.266391
       ]
     },
     {
@@ -106626,7 +106770,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788719110,
+  "generated_at_unix": 1788729738,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106803,6 +106947,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/pr863-k27-gate10-replay.yml",
+      ".github/workflows/pr868-gate10-causal-extension.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -108260,6 +108405,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_gate10_campaign_oracle.py",
+      "tests/test_k27_gate10_causal_extension.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -108277,6 +108423,7 @@
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
       "tools/arena/k27_memory/gate10_campaign_oracle.py",
+      "tools/arena/k27_memory/gate10_causal_extension.py",
       "tools/arena/k27_memory/k27_city.py",
       "tools/arena/k27_memory/persistent_memory.py",
       "tools/arena/k27_memory/world_atlas.py",
@@ -266594,6 +266741,36 @@
         "file_digest8": "a49c12fabb6385f0"
       },
       {
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#class:Gate10CausalExtensionTests:43b1770a5000cb83",
+        "name": "Gate10CausalExtensionTests",
+        "kind": "class",
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "532ad10f3a25d72c",
+        "file_digest8": "28dce4dbad6c798a"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails:67781a5c2324e772",
+        "name": "Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "line": 18,
+        "end_line": 23,
+        "signature_hash": "7ce82edd90809e69",
+        "file_digest8": "28dce4dbad6c798a"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe:a8117e2cb1f42612",
+        "name": "Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "line": 11,
+        "end_line": 16,
+        "signature_hash": "6a85b778d96756c2",
+        "file_digest8": "28dce4dbad6c798a"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_runtime.py#class:SafetyRegressionTests:a478fbf333c9f89b",
         "name": "SafetyRegressionTests",
         "kind": "class",
@@ -268562,6 +268739,36 @@
         "end_line": 186,
         "signature_hash": "3a0bde1e7939281f",
         "file_digest8": "3594e2a59e522a01"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:routing_nonhard_sweep:6081e39181c09ddf",
+        "name": "routing_nonhard_sweep",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "line": 60,
+        "end_line": 91,
+        "signature_hash": "e2a4e85853365852",
+        "file_digest8": "60486cc15d569254"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:run:003943d271e6d5ae",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "line": 94,
+        "end_line": 105,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "60486cc15d569254"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:store_root_guard_probe:bbc71be98481367e",
+        "name": "store_root_guard_probe",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "line": 21,
+        "end_line": 57,
+        "signature_hash": "cf290a723f3f19e1",
+        "file_digest8": "60486cc15d569254"
       },
       {
         "semantic_id": "tools/arena/k27_memory/k27_city.py#class:Cell:364ecc59f4cbe0e6",
@@ -271244,8 +271451,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b869b5a42d2ea104aa1233dd832288e8",
-    "payload_hash": "18c05e59b67867c85a265bd2b9de51bb"
+    "record_fingerprint": "4b8194802d6692271aebee4ea2670a9f",
+    "payload_hash": "f08f3ac18e1239e368b54293245c6777"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271258,16 +271465,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26624193,
-      "tokens_est": 6646398,
+      "files": 1674,
+      "bytes": 26631339,
+      "tokens_est": 6648185,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1021,
-        "schema_or_lexicon": 275,
+        "python_module": 1023,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -271954,16 +272161,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26624193,
-    "text_tokens_est": 6646398,
+    "file_count": 1674,
+    "total_bytes": 26631339,
+    "text_tokens_est": 6648185,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1021,
-      "schema_or_lexicon": 275,
+      "python_module": 1023,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -273191,6 +273398,14 @@
         "line": 22,
         "end_line": 168,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:run:145d96f58ea52f8e",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 105,
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:run:003943d271e6d5ae",
         "signature_hash": "26799ab4ad82cbfb"
       }
     ],
@@ -427804,6 +428019,36 @@
         "signature_hash": "3ffc3d9c7ec8568a"
       }
     ],
+    "Gate10CausalExtensionTests": [
+      {
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#class:Gate10CausalExtensionTests:43b1770a5000cb83",
+        "signature_hash": "532ad10f3a25d72c"
+      }
+    ],
+    "Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe": [
+      {
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 16,
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_unconfounded_store_root_guard_probe:a8117e2cb1f42612",
+        "signature_hash": "6a85b778d96756c2"
+      }
+    ],
+    "Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails": [
+      {
+        "file": "tests/test_k27_gate10_causal_extension.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_gate10_causal_extension.py#method:Gate10CausalExtensionTests.test_all_nonhard_states_across_all_routing_tails:67781a5c2324e772",
+        "signature_hash": "7ce82edd90809e69"
+      }
+    ],
     "provenance_leaf_manifest": [
       {
         "file": "tests/test_k27_memory_runtime.py",
@@ -429642,6 +429887,26 @@
         "end_line": 225,
         "semantic_id": "tools/arena/k27_memory/gate10_campaign_oracle.py#function:execution_fields:cb827a7d4ea9d78c",
         "signature_hash": "e7470aef77e317e4"
+      }
+    ],
+    "store_root_guard_probe": [
+      {
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 57,
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:store_root_guard_probe:bbc71be98481367e",
+        "signature_hash": "cf290a723f3f19e1"
+      }
+    ],
+    "routing_nonhard_sweep": [
+      {
+        "file": "tools/arena/k27_memory/gate10_causal_extension.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 91,
+        "semantic_id": "tools/arena/k27_memory/gate10_causal_extension.py#function:routing_nonhard_sweep:6081e39181c09ddf",
+        "signature_hash": "e2a4e85853365852"
       }
     ],
     "_trit": [
