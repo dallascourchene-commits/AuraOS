@@ -17,6 +17,15 @@ class StaleMemory(ValueError): pass
 def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False)
 
+EXPECTED_SCHEMA_OBJECTS = frozenset({
+    ('table', 'frames'),
+    ('table', 'revisions'),
+    ('table', 'objects'),
+    ('table', 'dependencies'),
+    ('index', 'dependency_reverse'),
+    ('index', 'city_prefix'),
+})
+
 class MemoryStore:
     def __init__(self, filename):
         self.db = sqlite3.connect(str(filename), timeout=5, isolation_level=None)
@@ -60,6 +69,15 @@ class MemoryStore:
             if actual != columns:
                 self.db.close()
                 raise ValueError(f'incompatible memory schema table: {table}')
+        actual_objects = frozenset(
+            (row['type'], row['name']) for row in self.db.execute('''
+                SELECT type,name FROM sqlite_schema
+                WHERE name NOT LIKE 'sqlite_%' AND type IN ('table','index','trigger','view')
+                ORDER BY type,name''').fetchall()
+        )
+        if actual_objects != EXPECTED_SCHEMA_OBJECTS:
+            self.db.close()
+            raise ValueError('incompatible memory schema objects')
     def close(self): self.db.close()
     def __enter__(self): return self
     def __exit__(self, *_): self.close()
@@ -80,8 +98,16 @@ class MemoryStore:
             raise MemoryConflict('revision payload digest mismatch')
         return envelope
 
-    def state_root(self):
-        """Exact local whole-store root; currentness/owner authority is not implied."""
+    def _schema_snapshot(self):
+        rows = self.db.execute('''
+            SELECT type,name,tbl_name,sql FROM sqlite_schema
+            WHERE name NOT LIKE 'sqlite_%' AND type IN ('table','index','trigger','view')
+            ORDER BY type,name,tbl_name''').fetchall()
+        return [dict(row) for row in rows]
+
+    def _state_root_snapshot(self):
+        schema = self._schema_snapshot()
+        user_version = self.db.execute('PRAGMA user_version').fetchone()[0]
         frames = [dict(r) for r in self.db.execute(
             'SELECT frame_id,generation FROM frames ORDER BY frame_id').fetchall()]
         revision_rows = self.db.execute(
@@ -100,11 +126,26 @@ class MemoryStore:
         dependencies = [dict(r) for r in self.db.execute(
             'SELECT revision_id,source_object,source_rev FROM dependencies ORDER BY revision_id,source_object').fetchall()]
         return sha256(canonical({
+            'schema': schema,
+            'user_version': user_version,
             'frames': frames,
             'revisions': revisions,
             'objects': objects,
             'dependencies': dependencies,
         }).encode()).hexdigest()
+
+    def state_root(self):
+        """Exact one-snapshot whole-store root; currentness/owner authority is not implied."""
+        if self.db.in_transaction:
+            return self._state_root_snapshot()
+        self.db.execute('BEGIN')
+        try:
+            root = self._state_root_snapshot()
+            self.db.execute('COMMIT')
+            return root
+        except BaseException:
+            self.db.execute('ROLLBACK')
+            raise
 
     @contextmanager
     def _write(self):
