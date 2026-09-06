@@ -64,14 +64,47 @@ class MemoryStore:
     def __enter__(self): return self
     def __exit__(self, *_): self.close()
 
+    def _verified_envelope(self, row):
+        """Return a canonical revision envelope only when both stored digests reprove."""
+        try:
+            envelope = json.loads(row['envelope'])
+        except (TypeError, json.JSONDecodeError) as exc:
+            raise MemoryConflict('revision envelope is invalid JSON') from exc
+        encoded = canonical(envelope)
+        if sha256(encoded.encode()).hexdigest() != row['revision_id']:
+            raise MemoryConflict('revision envelope digest mismatch')
+        if not isinstance(envelope, dict) or 'payload' not in envelope:
+            raise MemoryConflict('revision envelope payload missing')
+        payload_text = canonical(envelope['payload'])
+        if sha256(payload_text.encode()).hexdigest() != row['payload_sha256']:
+            raise MemoryConflict('revision payload digest mismatch')
+        return envelope
+
     def state_root(self):
-        """Exact local registry state root; currentness/owner authority is not implied."""
+        """Exact local whole-store root; currentness/owner authority is not implied."""
         frames = [dict(r) for r in self.db.execute(
             'SELECT frame_id,generation FROM frames ORDER BY frame_id').fetchall()]
-        objects = [dict(r) for r in self.db.execute('''SELECT o.object_id,o.current_rev,o.state,o.frame_id,
-            o.frame_generation,o.path,o.epoch,r.payload_sha256 FROM objects o
-            JOIN revisions r ON r.revision_id=o.current_rev ORDER BY o.object_id''').fetchall()]
-        return sha256(canonical({'frames':frames,'objects':objects}).encode()).hexdigest()
+        revision_rows = self.db.execute(
+            'SELECT revision_id,object_id,envelope,payload_sha256 FROM revisions ORDER BY revision_id').fetchall()
+        revisions = []
+        for row in revision_rows:
+            envelope = self._verified_envelope(row)
+            revisions.append({
+                'revision_id': row['revision_id'],
+                'object_id': row['object_id'],
+                'envelope': envelope,
+                'payload_sha256': row['payload_sha256'],
+            })
+        objects = [dict(r) for r in self.db.execute('''SELECT object_id,current_rev,state,frame_id,
+            frame_generation,path,epoch FROM objects ORDER BY object_id''').fetchall()]
+        dependencies = [dict(r) for r in self.db.execute(
+            'SELECT revision_id,source_object,source_rev FROM dependencies ORDER BY revision_id,source_object').fetchall()]
+        return sha256(canonical({
+            'frames': frames,
+            'revisions': revisions,
+            'objects': objects,
+            'dependencies': dependencies,
+        }).encode()).hexdigest()
 
     @contextmanager
     def _write(self):
@@ -178,9 +211,6 @@ class MemoryStore:
                 ON CONFLICT(object_id) DO UPDATE SET current_rev=excluded.current_rev,state='fresh',
                 frame_id=excluded.frame_id,frame_generation=excluded.frame_generation,path=excluded.path,epoch=excluded.epoch''',
                 (object_id,revision,address.frame_id,address.frame_generation,path_key(address.path),epoch))
-            # Lifecycle epoch is part of dependency identity. Every republish advances
-            # the epoch, so dependents observed against the prior epoch must become
-            # stale even when the immutable revision bytes happen to be identical.
             affected = self._invalidate([object_id]) if prior else set()
             return {'object_id':object_id,'revision_id':revision,'epoch':epoch,'invalidated':sorted(affected),
                     'store_state_root':self.state_root()}
@@ -190,14 +220,17 @@ class MemoryStore:
             o.frame_generation,f.generation,o.epoch FROM objects o JOIN revisions r ON r.revision_id=o.current_rev
             JOIN frames f USING(frame_id) WHERE o.object_id=?''',(object_id,)).fetchone()
         if row is None: return None
+        envelope = self._verified_envelope(row)
         state = row['state'] if row['frame_generation'] == row['generation'] else ('retracted' if row['state']=='retracted' else 'stale')
         if state != 'fresh' and not allow_stale: raise StaleMemory(f'{object_id}: {state}')
-        return {**json.loads(row['envelope']), 'revision_id':row['revision_id'], 'payload_sha256':row['payload_sha256'],
+        return {**envelope, 'revision_id':row['revision_id'], 'payload_sha256':row['payload_sha256'],
                 'state':state,'epoch':row['epoch'],'currentness_scope':'local registry consistency only'}
 
     def history(self, object_id, revision_id):
-        row = self.db.execute('SELECT envelope,payload_sha256 FROM revisions WHERE object_id=? AND revision_id=?',(object_id,revision_id)).fetchone()
-        return None if row is None else {**json.loads(row[0]),'revision_id':revision_id,'payload_sha256':row[1],'state':'historical; currentness not asserted'}
+        row = self.db.execute('SELECT revision_id,envelope,payload_sha256 FROM revisions WHERE object_id=? AND revision_id=?',(object_id,revision_id)).fetchone()
+        if row is None: return None
+        envelope = self._verified_envelope(row)
+        return {**envelope,'revision_id':revision_id,'payload_sha256':row['payload_sha256'],'state':'historical; currentness not asserted'}
 
     def retract(self, object_id, *, expected_revision, expected_epoch):
         with self._write():
@@ -210,15 +243,22 @@ class MemoryStore:
     def under(self, frame_id, generation, prefix=()):
         nonempty(frame_id,'frame_id'); nonempty(generation,'generation'); checked_path(prefix)
         key = path_key(prefix)
+        # Current frame and revision data are resolved together by this one read statement.
         rows = self.db.execute('''SELECT r.envelope,r.revision_id,r.payload_sha256,o.epoch FROM objects o
             JOIN frames f USING(frame_id) JOIN revisions r ON r.revision_id=o.current_rev
             WHERE o.frame_id=? AND o.frame_generation=? AND f.generation=?
             AND o.path>=? AND o.path<? AND o.state='fresh' ORDER BY o.path,o.object_id''',
             (frame_id,generation,generation,key,key+'\uffff')).fetchall()
-        return [{**json.loads(r[0]),'revision_id':r[1],'payload_sha256':r[2],'state':'fresh','epoch':r[3],
-                 'currentness_scope':'local registry consistency only'} for r in rows]
+        out=[]
+        for r in rows:
+            row={'envelope':r[0],'revision_id':r[1],'payload_sha256':r[2]}
+            envelope=self._verified_envelope(row)
+            out.append({**envelope,'revision_id':r[1],'payload_sha256':r[2],'state':'fresh','epoch':r[3],
+                        'currentness_scope':'local registry consistency only'})
+        return out
 
     def project(self, object_id, atlas, destination_frame):
+        # Pin source and destination registry state in the same SQLite snapshot.
         self.db.execute('BEGIN')
         try:
             result = self._project_snapshot(object_id,atlas,destination_frame)
@@ -233,6 +273,12 @@ class MemoryStore:
         if record is None: return None
         a = record['address']
         addr = FrameAddress(a['frame_id'],a['frame_generation'],tuple(a['path']),object_id)
+        if addr.frame_id != destination_frame:
+            transform = atlas.transforms.get((addr.frame_id,destination_frame))
+            if transform is not None and (tuple(sorted(transform.axis_perm)) != (0,1,2)
+                or any(type(v) is not int for v in transform.axis_perm)
+                or len(transform.invert) != 3 or any(type(v) is not bool for v in transform.invert)):
+                raise ValueError('invalid axis permutation or inversion flags')
         projected = atlas.project(addr,destination_frame)
         checked_address(projected)
         frame = self.db.execute('SELECT generation FROM frames WHERE frame_id=?',(destination_frame,)).fetchone()

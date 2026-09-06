@@ -142,6 +142,24 @@ class SpatialSeamTests(unittest.TestCase):
         route = load_route(); route["authority"]["automatic_merge"] = True
         self.assertIn("ROUTE_AUTOMATIC_MERGE_MUST_BE_FALSE", decision(route).reasons)
 
+    def test_route_vsa_patch_authority_true_holds(self):
+        route = load_route(); route["authority"]["vsa_patch_authority"] = True
+        self.assertIn("ROUTE_VSA_PATCH_AUTHORITY_MUST_BE_FALSE", decision(route).reasons)
+
+    def test_route_patch_authority_drift_holds(self):
+        route = load_route(); route["authority"]["patch_authority"] = "anything"
+        self.assertIn("ROUTE_PATCH_AUTHORITY_MISMATCH", decision(route).reasons)
+
+    def test_route_unknown_authority_fields_hold(self):
+        for key, value in (("effect_authority",False),("gate10",False),("authority_minted",False)):
+            with self.subTest(key=key):
+                route = load_route(); route["authority"][key] = value
+                self.assertIn("ROUTE_AUTHORITY_KEYSET_MISMATCH", decision(route).reasons)
+
+    def test_route_missing_authority_field_holds(self):
+        route = load_route(); route["authority"].pop("automatic_merge")
+        self.assertIn("ROUTE_AUTHORITY_KEYSET_MISMATCH", decision(route).reasons)
+
     def test_provenance_manifest_drift_holds(self):
         manifest = deepcopy(load_manifest())
         manifest["files"]["k27_memory/cold_sources/MC-SRC-O1O9.md"]["sha256"] = "f" * 64

@@ -35,6 +35,15 @@ BINDING_KEYS = frozenset({
     "projection_laws", "read_apis", "strict_hold_unknown", "projection_only",
     "renderer_authority", "execution_authority", "effect_authority", "gate10",
 })
+ROUTE_AUTHORITY = {
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "vsa_patch_authority": False,
+    "automatic_grammar_promotion": False,
+    "renderer_authority": False,
+    "execution_authority": False,
+    "automatic_merge": False,
+}
+ROUTE_AUTHORITY_KEYS = frozenset(ROUTE_AUTHORITY)
 
 class SeamDisposition(str, Enum):
     READY_FOR_INDEPENDENT_REVIEW = "READY_FOR_INDEPENDENT_REVIEW"
@@ -129,11 +138,17 @@ def _validate_route_structure(route_bytes: bytes, manifest: Mapping[str, Any]) -
         _authority_false(reasons, "BINDING_EFFECT_AUTHORITY", binding.get("effect_authority"))
         _authority_false(reasons, "BINDING_GATE10", binding.get("gate10"))
     authority = route.get("authority")
-    if not isinstance(authority, Mapping): reasons.append("ROUTE_AUTHORITY_INVALID")
+    if not isinstance(authority, Mapping):
+        reasons.append("ROUTE_AUTHORITY_INVALID")
     else:
+        if set(authority) != ROUTE_AUTHORITY_KEYS:
+            reasons.append("ROUTE_AUTHORITY_KEYSET_MISMATCH")
+        if authority.get("patch_authority") != ROUTE_AUTHORITY["patch_authority"]:
+            reasons.append("ROUTE_PATCH_AUTHORITY_MISMATCH")
+        _authority_false(reasons, "ROUTE_VSA_PATCH_AUTHORITY", authority.get("vsa_patch_authority"))
+        _authority_false(reasons, "ROUTE_AUTOMATIC_PROMOTION", authority.get("automatic_grammar_promotion"))
         _authority_false(reasons, "ROUTE_RENDERER_AUTHORITY", authority.get("renderer_authority"))
         _authority_false(reasons, "ROUTE_EXECUTION_AUTHORITY", authority.get("execution_authority"))
-        _authority_false(reasons, "ROUTE_AUTOMATIC_PROMOTION", authority.get("automatic_grammar_promotion"))
         _authority_false(reasons, "ROUTE_AUTOMATIC_MERGE", authority.get("automatic_merge"))
     files = manifest.get("files") if isinstance(manifest, Mapping) else None
     if not isinstance(files, Mapping): reasons.append("PROVENANCE_FILES_MISSING")
