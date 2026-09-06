@@ -5,7 +5,9 @@ from hashlib import sha256
 import json
 from typing import Iterable, Sequence
 
-SCHEMA = "AURA-GEN25-ADMISSION-LIVENESS-WITNESS-v2"
+SCHEMA = "AURA-GEN25-ADMISSION-LIVENESS-WITNESS-v3"
+ACTIVE_QUEUE_STATES = frozenset({"AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND", "READY"})
+INACTIVE_QUEUE_STATES = frozenset({"CANCELLED", "HOLD", "SUPERSEDED", "DONE", "TERMINAL"})
 
 class E(ValueError):
     pass
@@ -16,6 +18,7 @@ class CommandState(str, Enum):
     TYPED_REJECTED = "TYPED_REJECTED"
     ADMISSION_STARVED = "ADMISSION_STARVED"
     STALE_HEAD = "STALE_HEAD"
+    INACTIVE_QUEUE = "INACTIVE_QUEUE"
     UNKNOWN = "UNKNOWN"
 
 class SystemState(str, Enum):
@@ -123,6 +126,13 @@ def _validate_command(command: Command) -> None:
     _valid_text(command.queue_state, "BAD_QUEUE_STATE", max_len=256)
     _bool(command.execution_authorized, "BAD_EXEC_AUTH")
 
+def _queue_class(queue_state: str) -> str:
+    if queue_state in ACTIVE_QUEUE_STATES:
+        return "ACTIVE"
+    if queue_state in INACTIVE_QUEUE_STATES:
+        return "INACTIVE"
+    return "UNKNOWN"
+
 def _validate_bound_receipt(receipt: Receipt, now_s: int) -> None:
     _valid_id(receipt.command_id)
     _valid_nonneg(receipt.observed_s, "BAD_RECEIPT_TIME")
@@ -152,6 +162,11 @@ def classify_command(now_s: int, head: Head, command: Command, receipts: Sequenc
     if command.created_s > now_s:
         raise E("FUTURE_COMMAND")
     age = now_s - command.created_s
+    queue_class = _queue_class(command.queue_state)
+    if queue_class == "INACTIVE":
+        return CommandDisposition(command.command_id, CommandState.INACTIVE_QUEUE, f"QUEUE:{command.queue_state}", age, None)
+    if queue_class == "UNKNOWN":
+        return CommandDisposition(command.command_id, CommandState.UNKNOWN, "QUEUE_STATE_NOT_CLASSIFIED", age, None)
     if command.generation != head.generation or command.head_digest != head.digest:
         return CommandDisposition(command.command_id, CommandState.STALE_HEAD, "COMMAND_HEAD_DIFFERS_FROM_CURRENT_HEAD", age, None)
 
@@ -198,17 +213,21 @@ def compile_recovery(
     ids = [_valid_id(c.command_id) for c in cmds]
     if len(set(ids)) != len(ids):
         raise E("DUPLICATE_COMMAND_ID")
+    queue_classes = tuple(_queue_class(c.queue_state) for c in cmds)
     dispositions = tuple(classify_command(now_s, head, c, receipts) for c in cmds)
+    active_dispositions = tuple(d for d, q in zip(dispositions, queue_classes) if q == "ACTIVE")
 
     if not cmds:
         system = SystemState.NO_ACTIVE_INGRESS
-    elif any(d.state == CommandState.STALE_HEAD for d in dispositions):
+    elif not active_dispositions:
+        system = SystemState.HOST_VISIBILITY_REQUIRED if "UNKNOWN" in queue_classes else SystemState.NO_ACTIVE_INGRESS
+    elif any(d.state == CommandState.STALE_HEAD for d in active_dispositions):
         system = SystemState.CURRENTNESS_BLOCK
-    elif any(d.state == CommandState.ADMITTED_NOT_TERMINAL and (d.progress_age_s or 0) >= reducer_stall_after_s for d in dispositions):
+    elif any(d.state == CommandState.ADMITTED_NOT_TERMINAL and (d.progress_age_s or 0) >= reducer_stall_after_s for d in active_dispositions):
         system = SystemState.POST_ACK_REDUCER_STALL
-    elif any(d.state == CommandState.ADMISSION_STARVED and d.age_s >= starvation_after_s for d in dispositions):
+    elif any(d.state == CommandState.ADMISSION_STARVED and d.age_s >= starvation_after_s for d in active_dispositions):
         system = SystemState.ACTIVE_INGRESS_EGRESS_STARVATION
-    elif all(d.state == CommandState.TERMINAL for d in dispositions):
+    elif all(d.state == CommandState.TERMINAL for d in active_dispositions):
         system = SystemState.HEALTHY_PROGRESS
     else:
         system = SystemState.HOST_VISIBILITY_REQUIRED
@@ -253,7 +272,7 @@ def compile_recovery(
         steps = ()
         restart_budget = 0
 
-    progress = any(d.state in {CommandState.TERMINAL, CommandState.ADMITTED_NOT_TERMINAL, CommandState.TYPED_REJECTED} for d in dispositions)
+    progress = any(d.state in {CommandState.TERMINAL, CommandState.ADMITTED_NOT_TERMINAL, CommandState.TYPED_REJECTED} for d in active_dispositions)
     fanout = False
     payload = {
         "schema": SCHEMA,
@@ -268,6 +287,7 @@ def compile_recovery(
             }
             for d in dispositions
         ],
+        "queue_classes": list(queue_classes),
         "recovery_steps": list(steps),
         "local_progress_proven": progress,
         "provider_fanout_allowed": fanout,
