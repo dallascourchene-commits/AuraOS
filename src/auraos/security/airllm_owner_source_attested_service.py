@@ -240,6 +240,7 @@ class OwnerSourceAttestedService:
             identity.service_source_sha256,
             loaded_root,
         )
+        # Use the established PR #844 v1 service only after all outer owner-code checks pass.
         self._inner = IsolatedNativeAirLLMService(
             model_id,
             model_path,
