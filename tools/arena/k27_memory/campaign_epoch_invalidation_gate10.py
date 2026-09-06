@@ -8,7 +8,9 @@ ARENA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ARENA))
 
 from k27_memory import FrameAddress, MemoryConflict, MemoryStore, StaleMemory
-from k27_memory.gate10_campaign_oracle import classify_round, trace_entry, completion_fields
+from k27_memory.gate10_campaign_oracle import (
+    HOLD_STORE_ROOT_CONFLICT, HOLD_STALE_DEPENDENCY, classify_round, completion_fields, trace_entry,
+)
 from consequence_admission_kernel import (
     AdmissionInput, AdmissionPolicy, AxisState, ConsequenceAdmissionKernel,
     ConsequenceVector, Decision, SourceExit,
@@ -26,6 +28,8 @@ def run():
     false_hold=0
     aba_violations=0
     stale_dependency_violations=0
+    stale_dependency_holds=0
+    store_root_conflict_holds=0
     round_failures=[]
     with tempfile.TemporaryDirectory() as td:
         p=Path(td)/'campaign.sqlite'
@@ -45,11 +49,14 @@ def run():
                         out=s.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1',
                                       expected_revision=observed_rev, expected_epoch=observed_epoch, expected_store_root=root)
                     return ('WIN', worker, out['revision_id'], out['epoch'], tuple(out['invalidated']), out['store_state_root'])
-                except (MemoryConflict, StaleMemory) as e:
-                    return ('HOLD_STALE_DEPENDENCY', worker, type(e).__name__)
+                except MemoryConflict as e:
+                    return (HOLD_STORE_ROOT_CONFLICT, worker, type(e).__name__)
+                except StaleMemory as e:
+                    return (HOLD_STALE_DEPENDENCY, worker, type(e).__name__)
             with ThreadPoolExecutor(max_workers=WORKERS) as ex:
                 results=list(ex.map(attempt, range(WORKERS)))
-            classified=classify_round(results, WORKERS)
+            classified=classify_round(results, WORKERS, expected_hold=HOLD_STORE_ROOT_CONFLICT)
+            store_root_conflict_holds += classified.hold_count
             false_accept += classified.false_accept_delta
             false_hold += classified.false_hold_delta
             if not classified.valid:
@@ -70,6 +77,15 @@ def run():
                 except StaleMemory:
                     pass
                 dep_stale=s.get('dep', allow_stale=True)
+                try:
+                    s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
+                              expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
+                              dependencies={'src':observed_rev}, dependency_epochs={'src':observed_epoch})
+                    stale_dependency_violations += 1
+                except StaleMemory:
+                    stale_dependency_holds += 1
+                except MemoryConflict:
+                    stale_dependency_violations += 1
                 src_fresh=s.get('src')
                 dep_repaired=s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
                                        expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
@@ -116,7 +132,10 @@ def run():
     completion=completion_fields(trace, round_failures, ROUNDS)
     return {
         'workers':WORKERS,'rounds':ROUNDS,'attempts':WORKERS*ROUNDS,
+        'stale_dependency_probes':ROUNDS, 'total_write_attempts':(WORKERS+1)*ROUNDS,
         'false_accept':false_accept,'false_hold':false_hold,
+        'store_root_conflict_holds':store_root_conflict_holds,
+        'stale_dependency_holds':stale_dependency_holds,
         'aba_violations':aba_violations,'stale_dependency_violations':stale_dependency_violations,
         'omega8_keepers':keeper,'routing13_hard_invalid_repairs':hard_invalid_repaired,
         'routing13_decision_variations':routing_decision_variations,

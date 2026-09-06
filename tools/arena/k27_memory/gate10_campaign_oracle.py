@@ -6,7 +6,8 @@ import re
 
 SCHEMA = "AURA-K27-GATE10-CAMPAIGN-ORACLE-v1"
 WIN = "WIN"
-HOLD = "HOLD_STALE_DEPENDENCY"
+HOLD_STORE_ROOT_CONFLICT = "HOLD_STORE_ROOT_CONFLICT"
+HOLD_STALE_DEPENDENCY = "HOLD_STALE_DEPENDENCY"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -26,15 +27,22 @@ class RoundClassification:
     false_hold_delta: int
 
 
-def classify_round(results: Iterable[Sequence[Any]], workers: int) -> RoundClassification:
+def classify_round(
+    results: Iterable[Sequence[Any]],
+    workers: int,
+    *,
+    expected_hold: str = HOLD_STORE_ROOT_CONFLICT,
+) -> RoundClassification:
     if type(workers) is not int or workers < 2:
         raise CampaignOracleError("workers must be an exact int >= 2")
+    if expected_hold not in (HOLD_STORE_ROOT_CONFLICT, HOLD_STALE_DEPENDENCY):
+        raise CampaignOracleError("expected_hold must be a canonical campaign HOLD")
     rows = tuple(tuple(row) for row in results)
     if any(not row for row in rows):
         raise CampaignOracleError("round result rows must be nonempty")
     wins = tuple(row for row in rows if row[0] == WIN)
-    holds = tuple(row for row in rows if row[0] == HOLD)
-    unexpected = tuple(row for row in rows if row[0] not in (WIN, HOLD))
+    holds = tuple(row for row in rows if row[0] == expected_hold)
+    unexpected = tuple(row for row in rows if row[0] not in (WIN, expected_hold))
     exact_attempts = len(rows) == workers
     valid = exact_attempts and len(wins) == 1 and len(holds) == workers - 1 and not unexpected
     if not exact_attempts:
