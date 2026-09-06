@@ -101,10 +101,12 @@ class MemoryStore:
             self.db.execute("UPDATE objects SET state='stale',epoch=epoch+1 WHERE frame_id=? AND state='fresh'",(frame_id,))
             return sorted(roots | self._invalidate(roots))
 
-    def _require_current(self, object_id, revision):
-        row = self.db.execute('''SELECT o.current_rev,o.state,o.frame_generation,f.generation
+    def _require_current(self, object_id, revision, epoch):
+        row = self.db.execute('''SELECT o.current_rev,o.state,o.frame_generation,f.generation,o.epoch
             FROM objects o JOIN frames f USING(frame_id) WHERE object_id=?''',(object_id,)).fetchone()
-        if not row or row[0] != revision or row[1] != 'fresh' or row[2] != row[3]:
+        if (not row or row['current_rev'] != revision or row['state'] != 'fresh'
+                or row['frame_generation'] != row['generation']
+                or type(epoch) is not int or row['epoch'] != epoch):
             raise StaleMemory(f'input is missing, changed, retired, or stale: {object_id}')
 
     def _check_cycle(self, object_id, dependencies):
@@ -118,16 +120,26 @@ class MemoryStore:
                 JOIN dependencies d ON d.revision_id=o.current_rev WHERE o.object_id=?''',(parent,)))
 
     def publish(self, object_id, payload, address, *, source_url, source_version,
-                expected_revision=None, expected_epoch=None, dependencies=None):
+                expected_revision=None, expected_epoch=None, dependencies=None, dependency_epochs=None):
         nonempty(object_id,'object_id'); nonempty(source_url,'source_url'); nonempty(source_version,'source_version')
         checked_address(address)
         if address.canonical_ref != object_id: raise ValueError('address must bind the exact object identity')
         if dependencies is None: dependencies = {}
+        if dependency_epochs is None: dependency_epochs = {}
         if not isinstance(dependencies, dict): raise ValueError('dependencies must map object IDs to exact revisions')
-        for key, rev in dependencies.items(): nonempty(key,'dependency object'); nonempty(rev,'dependency revision')
+        if not isinstance(dependency_epochs, dict): raise ValueError('dependency_epochs must map object IDs to observed lifecycle epochs')
+        if set(dependency_epochs) != set(dependencies):
+            raise ValueError('each dependency requires its exact observed lifecycle epoch')
+        for key, rev in dependencies.items():
+            nonempty(key,'dependency object'); nonempty(rev,'dependency revision')
+            epoch = dependency_epochs[key]
+            if type(epoch) is not int or epoch <= 0:
+                raise ValueError('dependency epoch must be a positive int')
         payload_text = canonical(payload)
         envelope = {'object_id':object_id, 'payload':json.loads(payload_text), 'address':address_record(address),
-                    'source_url':source_url, 'source_version':source_version, 'dependencies':dict(sorted(dependencies.items()))}
+                    'source_url':source_url, 'source_version':source_version,
+                    'dependencies':dict(sorted(dependencies.items())),
+                    'dependency_epochs':dict(sorted(dependency_epochs.items()))}
         encoded = canonical(envelope)
         revision = sha256(encoded.encode()).hexdigest()
         with self._write():
@@ -140,7 +152,7 @@ class MemoryStore:
                     raise MemoryConflict('object lifecycle epoch changed; reload before publishing')
             elif expected_epoch is not None:
                 raise MemoryConflict('new objects require expected_epoch=None')
-            for key, rev in dependencies.items(): self._require_current(key,rev)
+            for key, rev in dependencies.items(): self._require_current(key,rev,dependency_epochs[key])
             self._check_cycle(object_id, dependencies)
             self.db.execute('INSERT OR IGNORE INTO revisions VALUES(?,?,?,?)',
                             (revision,object_id,encoded,sha256(payload_text.encode()).hexdigest()))
@@ -204,12 +216,6 @@ class MemoryStore:
         if record is None: return None
         a = record['address']
         addr = FrameAddress(a['frame_id'],a['frame_generation'],tuple(a['path']),object_id)
-        if addr.frame_id != destination_frame:
-            transform = atlas.transforms.get((addr.frame_id,destination_frame))
-            if transform is not None and (tuple(sorted(transform.axis_perm)) != (0,1,2)
-                or any(type(v) is not int for v in transform.axis_perm)
-                or len(transform.invert) != 3 or any(type(v) is not bool for v in transform.invert)):
-                raise ValueError('invalid axis permutation or inversion flags')
         projected = atlas.project(addr,destination_frame)
         checked_address(projected)
         frame = self.db.execute('SELECT generation FROM frames WHERE frame_id=?',(destination_frame,)).fetchone()
