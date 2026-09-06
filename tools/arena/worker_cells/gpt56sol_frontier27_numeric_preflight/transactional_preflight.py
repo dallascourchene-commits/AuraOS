@@ -1,19 +1,21 @@
-"""D0 donor membrane for Frontier-27 numeric totality and failure atomicity.
+"""D0 donor membrane for Frontier-27 numeric and invocation preflight totality.
 
-This module deliberately does not replace the canonical FrontierOffload owner.  It
-freezes and validates one invocation, proves that all consequential float metrics
-are representable before owner mutation, and restores the exact residency/counter
+This module deliberately does not replace the canonical FrontierOffload owner. It
+bounds and validates one caller invocation, proves consequential float metrics are
+representable before owner mutation, and restores the exact residency/counter
 snapshot if the owner raises or emits a non-finite governed metric.
 """
 from __future__ import annotations
 
 from collections import OrderedDict
 import math
-from typing import Iterable, Sequence
+from typing import Iterable, Iterator, Sequence
 
 from tools.arena.frontier27_runtime import FrontierOffload, LegacyOffload
 
 MAX_GOVERNED_INT = (1 << 63) - 1
+MAX_GOVERNED_RECORDS = 4096
+MAX_GOVERNED_EXPERT_IDS_PER_RECORD = 4096
 
 
 def _bounded_int(v: object, *, minimum: int = 0) -> bool:
@@ -30,18 +32,73 @@ def _finite_derived(v: float) -> bool:
     return type(v) is float and math.isfinite(v) and v >= 0.0
 
 
-def _freeze_records(routes: Iterable[Sequence[int]], preds: Iterable[Sequence[int]]) -> tuple[tuple[tuple[int, ...], ...], tuple[tuple[int, ...], ...]]:
+def _iter_or_valueerror(source: object, *, label: str) -> Iterator:
     try:
-        frozen_routes = tuple(tuple(route) for route in routes)
-        frozen_preds = tuple(tuple(pred) for pred in preds)
-    except (TypeError, OverflowError) as exc:
-        raise ValueError("routes/preds must be finite iterables of expert ids") from exc
+        return iter(source)  # type: ignore[arg-type]
+    except Exception as exc:
+        raise ValueError(f"{label} must be iterable") from exc
+
+
+def _next_or_valueerror(iterator: Iterator, *, label: str):
+    try:
+        return next(iterator)
+    except StopIteration:
+        raise
+    except Exception as exc:
+        raise ValueError(f"{label} iteration failed") from exc
+
+
+def _freeze_record(record: object, *, label: str, max_items: int) -> tuple[int, ...]:
+    iterator = _iter_or_valueerror(record, label=label)
+    out: list[int] = []
+    for index in range(max_items + 1):
+        try:
+            expert_id = _next_or_valueerror(iterator, label=label)
+        except StopIteration:
+            return tuple(out)
+        if index == max_items:
+            raise ValueError(f"{label} exceeds governed cardinality")
+        if type(expert_id) is not int:
+            raise ValueError(f"{label} expert ids must be integers")
+        out.append(expert_id)
+    raise AssertionError("unreachable")
+
+
+def _freeze_family(source: object, *, family: str, max_records: int, max_items: int) -> tuple[tuple[int, ...], ...]:
+    iterator = _iter_or_valueerror(source, label=family)
+    out: list[tuple[int, ...]] = []
+    for index in range(max_records + 1):
+        try:
+            record = _next_or_valueerror(iterator, label=family)
+        except StopIteration:
+            return tuple(out)
+        if index == max_records:
+            raise ValueError(f"{family} exceeds governed cardinality")
+        out.append(_freeze_record(record, label=f"{family}[{index}]", max_items=max_items))
+    raise AssertionError("unreachable")
+
+
+def _freeze_records(
+    routes: Iterable[Sequence[int]],
+    preds: Iterable[Sequence[int]],
+    *,
+    max_records: int = MAX_GOVERNED_RECORDS,
+    max_items_per_record: int = MAX_GOVERNED_EXPERT_IDS_PER_RECORD,
+) -> tuple[tuple[tuple[int, ...], ...], tuple[tuple[int, ...], ...]]:
+    """Materialize caller records with bounded cardinality and governed errors.
+
+    Ordinary exceptions from ``iter``/``next`` are translated to ``ValueError``.
+    Process-control ``BaseException`` subclasses are intentionally not swallowed.
+    The cardinality ceilings are conservative donor policy, not canonical Aura law.
+    """
+    if type(max_records) is not int or not 0 <= max_records <= MAX_GOVERNED_INT:
+        raise ValueError("max_records is outside the governed integer domain")
+    if type(max_items_per_record) is not int or not 0 <= max_items_per_record <= MAX_GOVERNED_INT:
+        raise ValueError("max_items_per_record is outside the governed integer domain")
+    frozen_routes = _freeze_family(routes, family="routes", max_records=max_records, max_items=max_items_per_record)
+    frozen_preds = _freeze_family(preds, family="preds", max_records=max_records, max_items=max_items_per_record)
     if len(frozen_routes) != len(frozen_preds):
         raise ValueError("routes and preds must have equal length")
-    for family, records in (("route", frozen_routes), ("prediction", frozen_preds)):
-        for record in records:
-            if any(type(x) is not int for x in record):
-                raise ValueError(f"{family} expert ids must be integers")
     return frozen_routes, frozen_preds
 
 
