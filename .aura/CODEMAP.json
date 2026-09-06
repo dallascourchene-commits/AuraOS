@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1653,
+    "repo_file_count": 1654,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2700,6 +2700,7 @@
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
+      "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -104709,6 +104710,53 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7333,
+      "lines": 183,
+      "tokens_est": 1834,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4f98679737535411",
+      "vector": [
+        -0.059786,
+        0.176443,
+        0.126864,
+        -0.030622,
+        0.065619,
+        -0.228938,
+        0.077285,
+        -0.100616,
+        0.027706,
+        0.31643,
+        0.237687,
+        0.013124,
+        0.164777,
+        0.301848,
+        -0.164777,
+        0.325179,
+        -0.132696,
+        0.091867,
+        -0.059786,
+        0.17061,
+        0.249353,
+        -0.024789,
+        0.086034,
+        -0.065619,
+        -0.287266,
+        0.255186,
+        -0.045204,
+        -0.013124,
+        0.328096,
+        -0.214356,
+        0.17061,
+        0.030622
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -105753,7 +105801,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788703753,
+  "generated_at_unix": 1788704558,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107395,6 +107443,7 @@
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
+      "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -267463,6 +267512,146 @@
         "file_digest8": "9f54b2e7aaaf3f42"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:WatchdogReceipt:4c4b97339728acbe",
+        "name": "WatchdogReceipt",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 81,
+        "end_line": 98,
+        "signature_hash": "6b3caae76ec20794",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:_NeverReturnsNext:ba070cd9258c004b",
+        "name": "_NeverReturnsNext",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 35,
+        "end_line": 39,
+        "signature_hash": "153afd97d54c2418",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:_RaisesOnNext:19ae046e3e8aab7e",
+        "name": "_RaisesOnNext",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 24,
+        "end_line": 32,
+        "signature_hash": "cf5fd989d8a242f4",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_child_entry:d52d63920544d29b",
+        "name": "_child_entry",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 50,
+        "end_line": 77,
+        "signature_hash": "519563aa7a389548",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_digest:b504d75860ec4c72",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "22b8f6b7c7e2c8e3",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_stable:7bdf8a437e724a28",
+        "name": "_stable",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "b3f6f219b026df73",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_terminate_and_reap:eb15e7a07d018d2f",
+        "name": "_terminate_and_reap",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 101,
+        "end_line": 114,
+        "signature_hash": "edb3d6f6fa09fa2a",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:run_watchdog_canary:07c276625cc283ef",
+        "name": "run_watchdog_canary",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 117,
+        "end_line": 182,
+        "signature_hash": "fcd7c166c9ebc6e9",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:WatchdogReceipt.stable_evidence:79e35a748e671843",
+        "name": "WatchdogReceipt.stable_evidence",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 90,
+        "end_line": 98,
+        "signature_hash": "7c8b5588bc3f3fdc",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_NeverReturnsNext.__iter__:6c9164ca05d31a66",
+        "name": "_NeverReturnsNext.__iter__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "5e3cae30e5fc6c82",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_NeverReturnsNext.__next__:f3ec48328b90a8a7",
+        "name": "_NeverReturnsNext.__next__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 37,
+        "end_line": 39,
+        "signature_hash": "3a90c4089cceb17a",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_RaisesOnNext.__init__:e415f2bc48ad4790",
+        "name": "_RaisesOnNext.__init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_RaisesOnNext.__iter__:55a2edf88943e77a",
+        "name": "_RaisesOnNext.__iter__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "5e3cae30e5fc6c82",
+        "file_digest8": "4f98679737535411"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_RaisesOnNext.__next__:65e7b01b07931ae8",
+        "name": "_RaisesOnNext.__next__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "3a90c4089cceb17a",
+        "file_digest8": "4f98679737535411"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -268713,8 +268902,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "5c3d0f981bd6af31e2492cff33a5978d",
-    "payload_hash": "81592896ea048634d777b8e5d43fb0bc"
+    "record_fingerprint": "3b79c77da56de6eb5253428f8eafcadb",
+    "payload_hash": "43a288138b8f172f07f304cd39c2537b"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268727,15 +268916,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1653,
-      "bytes": 26522184,
-      "tokens_est": 6620888,
+      "files": 1654,
+      "bytes": 26529517,
+      "tokens_est": 6622722,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
+        "python_module": 1007,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -269423,15 +269612,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1653,
-    "total_bytes": 26522184,
-    "text_tokens_est": 6620888,
+    "file_count": 1654,
+    "total_bytes": 26529517,
+    "text_tokens_est": 6622722,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
+      "python_module": 1007,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -271353,6 +271542,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_digest:b504d75860ec4c72",
+        "signature_hash": "22b8f6b7c7e2c8e3"
       }
     ],
     "_token_proxy": [
@@ -426883,6 +427080,136 @@
         "end_line": 234,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py#function:run_frontier_totalized:5c7dac9b8de6764a",
         "signature_hash": "5fb132286b42501d"
+      }
+    ],
+    "_RaisesOnNext": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:_RaisesOnNext:19ae046e3e8aab7e",
+        "signature_hash": "cf5fd989d8a242f4"
+      }
+    ],
+    "_RaisesOnNext.__init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_RaisesOnNext.__init__:e415f2bc48ad4790",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "_RaisesOnNext.__iter__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_RaisesOnNext.__iter__:55a2edf88943e77a",
+        "signature_hash": "5e3cae30e5fc6c82"
+      }
+    ],
+    "_RaisesOnNext.__next__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_RaisesOnNext.__next__:65e7b01b07931ae8",
+        "signature_hash": "3a90c4089cceb17a"
+      }
+    ],
+    "_NeverReturnsNext": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 39,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:_NeverReturnsNext:ba070cd9258c004b",
+        "signature_hash": "153afd97d54c2418"
+      }
+    ],
+    "_NeverReturnsNext.__iter__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_NeverReturnsNext.__iter__:6c9164ca05d31a66",
+        "signature_hash": "5e3cae30e5fc6c82"
+      }
+    ],
+    "_NeverReturnsNext.__next__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:_NeverReturnsNext.__next__:f3ec48328b90a8a7",
+        "signature_hash": "3a90c4089cceb17a"
+      }
+    ],
+    "_stable": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_stable:7bdf8a437e724a28",
+        "signature_hash": "b3f6f219b026df73"
+      }
+    ],
+    "_child_entry": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 77,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_child_entry:d52d63920544d29b",
+        "signature_hash": "519563aa7a389548"
+      }
+    ],
+    "WatchdogReceipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 98,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:WatchdogReceipt:4c4b97339728acbe",
+        "signature_hash": "6b3caae76ec20794"
+      }
+    ],
+    "WatchdogReceipt.stable_evidence": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 98,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#method:WatchdogReceipt.stable_evidence:79e35a748e671843",
+        "signature_hash": "7c8b5588bc3f3fdc"
+      }
+    ],
+    "_terminate_and_reap": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 114,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:_terminate_and_reap:eb15e7a07d018d2f",
+        "signature_hash": "edb3d6f6fa09fa2a"
+      }
+    ],
+    "run_watchdog_canary": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 182,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#function:run_watchdog_canary:07c276625cc283ef",
+        "signature_hash": "fcd7c166c9ebc6e9"
       }
     ],
     "_coordinates": [
