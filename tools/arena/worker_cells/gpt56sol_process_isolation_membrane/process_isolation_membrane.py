@@ -14,6 +14,7 @@ from pathlib import Path
 import re
 import secrets
 import sys
+import time
 from types import ModuleType
 from typing import Any, Iterable
 
@@ -42,7 +43,6 @@ def _strict_text(value: object, name: str) -> str:
     if type(value) is not str or not value:
         raise IsolationContractError(f"INVALID_TEXT:{name}")
     return value
-
 
 
 
@@ -122,13 +122,8 @@ def factory_identity_currentness(expected: FactoryIdentity, current: FactoryIden
     return "EXACT" if expected.identity_root == current.identity_root else "HOLD"
 
 
-def factory_identity_for_spec(factory_spec: str, *, loaded: bool = False) -> FactoryIdentity:
-    """Derive exact module-file identity for a factory without granting source truth.
-
-    Parent preflight uses import metadata; the worker independently recomputes the
-    identity from the module it actually imported. Equality proves byte parity for
-    this module file only, not package/transitive provenance or provider truth.
-    """
+def factory_origin_for_spec(factory_spec: str, *, loaded: bool = False) -> str:
+    """Resolve the concrete factory-module file path without granting source truth."""
     module_name, _ = _split_factory_spec(factory_spec)
     if loaded:
         module = importlib.import_module(module_name)
@@ -138,6 +133,29 @@ def factory_identity_for_spec(factory_spec: str, *, loaded: bool = False) -> Fac
         origin = None if spec is None else spec.origin
     if type(origin) is not str or not origin or origin in {"built-in", "frozen"}:
         raise WorkerProtocolError("FACTORY_ORIGIN")
+    try:
+        return str(Path(origin).resolve(strict=True))
+    except (OSError, RuntimeError) as exc:
+        raise WorkerProtocolError("FACTORY_ORIGIN") from exc
+
+
+def preimport_factory_identity(factory_spec: str, expected_origin: str) -> FactoryIdentity:
+    """Hash the exact expected module file before target-module import.
+
+    This prevents a changed target module from executing merely to discover that it
+    drifted. It does not claim an immutable filesystem; the module is hashed again
+    after import and the loaded origin must equal the preflight origin.
+    """
+    expected_origin = _strict_text(expected_origin, "expected_origin")
+    return FactoryIdentity.mint(
+        factory_spec=factory_spec,
+        module_bytes_root=_sha256_file(expected_origin),
+    )
+
+
+def factory_identity_for_spec(factory_spec: str, *, loaded: bool = False) -> FactoryIdentity:
+    """Derive exact direct-module byte identity without granting package provenance."""
+    origin = factory_origin_for_spec(factory_spec, loaded=loaded)
     return FactoryIdentity.mint(
         factory_spec=factory_spec,
         module_bytes_root=_sha256_file(origin),
@@ -275,12 +293,29 @@ def _dedicated_worker_scope(token: str):
         _WORKER_CONTEXT.reset(reset)
 
 
-def _worker_main(conn, parent_pid: int, factory_spec: str, expected_factory_identity: FactoryIdentity, init_args: tuple[Any, ...], init_kwargs: dict[str, Any]) -> None:
+def _worker_main(
+    conn,
+    parent_pid: int,
+    factory_spec: str,
+    expected_factory_identity: FactoryIdentity,
+    expected_factory_origin: str,
+    init_args: tuple[Any, ...],
+    init_kwargs: dict[str, Any],
+) -> None:
     token = secrets.token_hex(32)
     nonce_root = sha256(token.encode()).hexdigest()
     try:
         with _dedicated_worker_scope(token):
+            # Critical ordering: verify the target file bytes before importing the
+            # target module, so drifted top-level code cannot execute first.
+            preimport_identity = preimport_factory_identity(factory_spec, expected_factory_origin)
+            if factory_identity_currentness(expected_factory_identity, preimport_identity) != "EXACT":
+                raise WorkerProtocolError("FACTORY_IDENTITY_DRIFT_PREIMPORT")
+
             factory = _resolve_spec(factory_spec)
+            loaded_origin = factory_origin_for_spec(factory_spec, loaded=True)
+            if loaded_origin != expected_factory_origin:
+                raise WorkerProtocolError("FACTORY_ORIGIN_DRIFT")
             worker_identity = factory_identity_for_spec(factory_spec, loaded=True)
             if factory_identity_currentness(expected_factory_identity, worker_identity) != "EXACT":
                 raise WorkerProtocolError("FACTORY_IDENTITY_DRIFT")
@@ -337,6 +372,7 @@ class DedicatedProcessService:
         self._conn = conn
         self.receipt = receipt
         self._closed = False
+        self._call_timeout_seconds = 30.0
 
     @classmethod
     def start(
@@ -347,17 +383,20 @@ class DedicatedProcessService:
         **init_kwargs: Any,
     ) -> "DedicatedProcessService":
         factory_spec = _strict_text(factory_spec, "factory_spec")
-        parent_identity = factory_identity_for_spec(factory_spec, loaded=False)
+        if start_method != "spawn":
+            raise WorkerProtocolError("UNSUPPORTED_START_METHOD")
+        parent_origin = factory_origin_for_spec(factory_spec, loaded=False)
+        parent_identity = preimport_factory_identity(factory_spec, parent_origin)
         # Fail before spawning if the construction payload itself cannot cross IPC.
         try:
             pickle.dumps((factory_spec, init_args, init_kwargs))
         except Exception as exc:
             raise WorkerProtocolError("UNSERIALIZABLE_INIT") from exc
-        ctx = multiprocessing.get_context(start_method)
+        ctx = multiprocessing.get_context("spawn")
         parent_conn, child_conn = ctx.Pipe(duplex=True)
         proc = ctx.Process(
             target=_worker_main,
-            args=(child_conn, os.getpid(), factory_spec, parent_identity, init_args, init_kwargs),
+            args=(child_conn, os.getpid(), factory_spec, parent_identity, parent_origin, init_args, init_kwargs),
             daemon=True,
         )
         proc.start()
@@ -414,7 +453,11 @@ class DedicatedProcessService:
         if not self._process.is_alive():
             raise WorkerProtocolError("WORKER_NOT_ALIVE")
         self._conn.send(("CALL", method_name, args, kwargs))
-        if not self._conn.poll(30):
+        if not self._conn.poll(self._call_timeout_seconds):
+            # A timed-out request may still complete later. Reusing this uncorrelated
+            # channel could misattribute its response to a later RPC, so poison the
+            # whole service and terminate the resident worker before returning.
+            self._poison()
             raise WorkerProtocolError("WORKER_CALL_TIMEOUT")
         status, payload = self._conn.recv()
         if status == "OK":
@@ -423,6 +466,18 @@ class DedicatedProcessService:
             name, message = payload
             raise WorkerProtocolError(f"WORKER_ERROR:{name}:{message}")
         raise WorkerProtocolError(f"WORKER_RESPONSE:{status}")
+
+    def _poison(self) -> None:
+        if self._closed:
+            return
+        self._closed = True
+        try:
+            self._conn.close()
+        except OSError:
+            pass
+        if self._process.is_alive():
+            self._process.terminate()
+        self._process.join(timeout=5)
 
     def close(self) -> None:
         if self._closed:
@@ -476,6 +531,13 @@ class IsolationProbe:
     def parent_independent_marker(self) -> tuple[int, str]:
         setattr(self.module, "worker_only_marker", os.getpid())
         return os.getpid(), _digest((self.name, os.getpid(), self.counter))
+
+    def delayed_value(self, delay_seconds: float, value: str) -> tuple[str, int]:
+        if type(delay_seconds) not in (int, float) or isinstance(delay_seconds, bool) or delay_seconds < 0:
+            raise WorkerProtocolError("DELAY_TYPE")
+        value = _strict_text(value, "value")
+        time.sleep(float(delay_seconds))
+        return value, os.getpid()
 
 
 def omega8_admit(state: tuple[int, ...]) -> bool:
