@@ -1,0 +1,46 @@
+{
+  "schema": "AURA-K27-GATE10-REVIEWER-ADMISSION-MANIFEST-v1",
+  "owner_pr": 863,
+  "owner_branch": "arena/wave2-k27-runtime-binding-e4b9-addendum",
+  "owner_head_sha": "67e1062cfab90ce647c7e3450cc613424746e285",
+  "owner_lineage_root": "SESSION-WORKER:GPT56SOL:20260906T0846-0500-E4B9-STACK",
+  "foreign_consequence_anchors": [
+    {
+      "reviewer": "greptile-apps[bot]",
+      "github_comment_id": 3944702118,
+      "pr": 868,
+      "consequence": "governed verifier rows must fail closed on malformed evidence; later review also required independently recoverable complete campaign evidence"
+    },
+    {
+      "reviewer": "coderabbitai[bot]",
+      "github_issue_comment_id": 5561033892,
+      "pr": 868,
+      "consequence": "exact-head CodeRabbit review found incomplete multi-unknown 13D routing coverage and missing exact PR-head workflow replay binding; also confirmed executed-work accounting, post-repair root scope and immutable pins"
+    }
+  ],
+  "laws": [
+    "ReviewerGreen != Gate10Authority",
+    "DifferentLineageString != AuthenticatedDifferentJ",
+    "SameLineageReview != IndependentReview",
+    "Gate10Admission => All13HardAxes",
+    "K27Coordinate != Truth != Currentness != Authority"
+  ],
+  "authority_ceiling": {
+    "local_identity_authentication": false,
+    "consumes_upstream_external_identity_projection": true,
+    "authority_minted": false,
+    "gate10": false,
+    "canonical_promotion": false,
+    "merge_authority": false,
+    "effect_authority": false
+  },
+  "proof": {
+    "venvs": 3,
+    "tests_per_venv": 14,
+    "mutants_per_venv": 1300,
+    "false_ready_per_venv": 0,
+    "isolated_axis_attacks_per_axis": 50,
+    "campaign_root": "37800dfc7d2881e0673061f0e436a8376150d4044d542a8bc6decc2f6edfc479",
+    "campaign_output_sha256": "4de52b4860630d9a3b55d0838f1fe558e93db06bfe3156a63225823cee95d577"
+  }
+}

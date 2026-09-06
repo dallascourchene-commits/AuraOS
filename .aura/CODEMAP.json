@@ -1063,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1669,
+    "repo_file_count": 1673,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1099,6 +1099,7 @@
       ".aura/execution_budgets/coding_localize.v1.json",
       ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/intents/example.aura.md",
+      ".aura/k27_memory/gate10_reviewer_admission.v1.json",
       ".aura/k27_memory/runtime_binding.v1.json",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
@@ -2694,6 +2695,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_gate10_reviewer_admission.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -2709,7 +2711,9 @@
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
+      "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
+      "tools/arena/k27_memory/gate10_reviewer_admission.py",
       "tools/arena/k27_memory/k27_city.py",
       "tools/arena/k27_memory/persistent_memory.py",
       "tools/arena/k27_memory/world_atlas.py",
@@ -4447,6 +4451,53 @@
         -0.124851,
         -0.048855,
         -0.081424
+      ]
+    },
+    {
+      "path": ".aura/k27_memory/gate10_reviewer_admission.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1848,
+      "lines": 47,
+      "tokens_est": 462,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9c4f4f99849c3f28",
+      "vector": [
+        0.092789,
+        0.092789,
+        -0.324126,
+        -0.219898,
+        -0.181765,
+        -0.031777,
+        -0.013982,
+        -0.311416,
+        0.16397,
+        -0.19956,
+        0.197018,
+        -0.148717,
+        -0.034319,
+        0.01144,
+        0.1055,
+        0.212271,
+        0.100416,
+        -0.006355,
+        0.080078,
+        0.054657,
+        -0.265657,
+        0.016524,
+        -0.156343,
+        0.3165,
+        -0.138548,
+        -0.308873,
+        0.100416,
+        0.212271,
+        -0.303789,
+        0.148717,
+        -0.057199,
+        0.102958
       ]
     },
     {
@@ -104311,6 +104362,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_gate10_reviewer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6786,
+      "lines": 139,
+      "tokens_est": 1697,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "66f3370f6c232e97",
+      "vector": [
+        -0.103463,
+        -0.213313,
+        -0.103463,
+        -0.093245,
+        -0.075362,
+        0.269515,
+        -0.026824,
+        -0.246523,
+        -0.12901,
+        -0.077917,
+        -0.307835,
+        -0.31039,
+        -0.121346,
+        -0.100909,
+        0.146892,
+        -0.042152,
+        -0.254187,
+        0.180103,
+        -0.039597,
+        -0.008941,
+        0.093245,
+        0.098354,
+        0.113682,
+        -0.131564,
+        -0.261851,
+        0.167329,
+        -0.077917,
+        0.254187,
+        0.195431,
+        -0.274625,
+        0.300171,
+        0.065144
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105016,6 +105114,53 @@
       ]
     },
     {
+      "path": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6508,
+      "lines": 135,
+      "tokens_est": 1627,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e5280c5d17368857",
+      "vector": [
+        0.317143,
+        -0.110252,
+        -0.014972,
+        0.186475,
+        -0.091196,
+        -0.338921,
+        0.24092,
+        -0.001361,
+        -0.017695,
+        -0.270865,
+        0.09664,
+        0.224586,
+        -0.080307,
+        0.050362,
+        0.07214,
+        -0.009528,
+        0.025861,
+        0.227309,
+        0.077584,
+        -0.273587,
+        0.104807,
+        0.191919,
+        0.224586,
+        -0.15653,
+        -0.15653,
+        0.15653,
+        -0.036751,
+        0.208253,
+        0.123863,
+        0.167419,
+        -0.186475,
+        -0.308977
+      ]
+    },
+    {
       "path": "tools/arena/k27_memory/coordinate_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -105060,6 +105205,53 @@
         -0.09201,
         0.233176,
         -0.06176
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11987,
+      "lines": 291,
+      "tokens_est": 2997,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7fc0f770fe60052d",
+      "vector": [
+        -0.254747,
+        0.217402,
+        -0.236075,
+        -0.073357,
+        0.134709,
+        -0.006669,
+        0.020006,
+        -0.017339,
+        -0.22007,
+        -0.020006,
+        -0.137377,
+        0.222737,
+        -0.017339,
+        0.028009,
+        -0.065354,
+        0.060019,
+        -0.228072,
+        -0.161384,
+        0.094697,
+        0.29476,
+        0.108034,
+        0.313433,
+        -0.126707,
+        0.32677,
+        0.177389,
+        0.25208,
+        -0.113369,
+        -0.108034,
+        -0.132042,
+        0.038679,
+        -0.236075,
+        0.28409
       ]
     },
     {
@@ -106530,7 +106722,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788718835,
+  "generated_at_unix": 1788729201,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106568,6 +106760,7 @@
       ".aura/execution_budgets/coding_localize.v1.json",
       ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/intents/example.aura.md",
+      ".aura/k27_memory/gate10_reviewer_admission.v1.json",
       ".aura/k27_memory/runtime_binding.v1.json",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
@@ -108163,6 +108356,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_gate10_reviewer_admission.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -108178,7 +108372,9 @@
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
+      "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
+      "tools/arena/k27_memory/gate10_reviewer_admission.py",
       "tools/arena/k27_memory/k27_city.py",
       "tools/arena/k27_memory/persistent_memory.py",
       "tools/arena/k27_memory/world_atlas.py",
@@ -266276,6 +266472,196 @@
         "file_digest8": "94c9ed628d66a22d"
       },
       {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#class:Gate10ReviewerAdmissionTests:671e195fa014e163",
+        "name": "Gate10ReviewerAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 73,
+        "end_line": 134,
+        "signature_hash": "49a5827165aab556",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:state_root:ad9e7a5e1048fb3f",
+        "name": "state_root",
+        "kind": "function",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "ae4f8801815c67b4",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:terminal_for:08b3ca110dec7e90",
+        "name": "terminal_for",
+        "kind": "function",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 66,
+        "end_line": 70,
+        "signature_hash": "c9f6939c8300ad69",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:valid_evidence:a6a9e5084ea9a0bb",
+        "name": "valid_evidence",
+        "kind": "function",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 26,
+        "end_line": 63,
+        "signature_hash": "0a90bc798999d282",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.evaluate:39763117c32f1be7",
+        "name": "Gate10ReviewerAdmissionTests.evaluate",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "0d7dddca1be50117",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_all_13_axes_are_noncompensatory:59c0320185ecffb0",
+        "name": "Gate10ReviewerAdmissionTests.test_all_13_axes_are_noncompensatory",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 132,
+        "end_line": 134,
+        "signature_hash": "12f7a58d13e8ab29",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_coordinate_authority_escalation_holds:148705275e57bfc2",
+        "name": "Gate10ReviewerAdmissionTests.test_coordinate_authority_escalation_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 115,
+        "end_line": 117,
+        "signature_hash": "73dc04ba63d84259",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_different_string_without_external_identity_authentication_holds:0471fbf0107fa3a9",
+        "name": "Gate10ReviewerAdmissionTests.test_different_string_without_external_identity_authentication_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "50c1b620b0005e3b",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_evidence_mutation_after_terminal_seal_holds:80e7217ce9fcb594",
+        "name": "Gate10ReviewerAdmissionTests.test_evidence_mutation_after_terminal_seal_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 127,
+        "end_line": 130,
+        "signature_hash": "624f7b84eab74dd7",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_external_identity_projection_must_cross_bind_actor:de62c3fc56cf5294",
+        "name": "Gate10ReviewerAdmissionTests.test_external_identity_projection_must_cross_bind_actor",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 91,
+        "end_line": 93,
+        "signature_hash": "5301fdd7734c6dc9",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_premature_gate10_claim_holds:187d2a1b3215e485",
+        "name": "Gate10ReviewerAdmissionTests.test_premature_gate10_claim_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 119,
+        "end_line": 121,
+        "signature_hash": "53c27776ff8a2c0f",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_projected_trace_cannot_verify_campaign_root:921790260126ea1f",
+        "name": "Gate10ReviewerAdmissionTests.test_projected_trace_cannot_verify_campaign_root",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 99,
+        "end_line": 101,
+        "signature_hash": "2e6ec44e8674b3c0",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_provider_projection_without_exact_bytes_holds:71d3e1dafc6eb60e",
+        "name": "Gate10ReviewerAdmissionTests.test_provider_projection_without_exact_bytes_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 111,
+        "end_line": 113,
+        "signature_hash": "dd10f83c9a9861b1",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_same_lineage_is_hard_hold:a73d77d12c311bd3",
+        "name": "Gate10ReviewerAdmissionTests.test_same_lineage_is_hard_hold",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "fcb30dae75bbd7c7",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_stale_review_head_is_hard_hold:cfb05f0a0c8d94f2",
+        "name": "Gate10ReviewerAdmissionTests.test_stale_review_head_is_hard_hold",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 95,
+        "end_line": 97,
+        "signature_hash": "49db720f35c909f7",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_tampered_trace_with_old_root_holds:56e885f74a1fb166",
+        "name": "Gate10ReviewerAdmissionTests.test_tampered_trace_with_old_root_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 103,
+        "end_line": 105,
+        "signature_hash": "f98fb49b37da0f1e",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_terminal_receipt_tamper_holds:2220658c429b536b",
+        "name": "Gate10ReviewerAdmissionTests.test_terminal_receipt_tamper_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "96d92cb5cfc8c603",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_valid_complete_evidence_is_ready_non_authorizing:d88f8602618e8e39",
+        "name": "Gate10ReviewerAdmissionTests.test_valid_complete_evidence_is_ready_non_authorizing",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 77,
+        "end_line": 80,
+        "signature_hash": "b241c178361e9169",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_wrong_registry_shape_holds:59ea9515545e6b55",
+        "name": "Gate10ReviewerAdmissionTests.test_wrong_registry_shape_holds",
+        "kind": "method",
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "line": 107,
+        "end_line": 109,
+        "signature_hash": "358bc7fcb362e68e",
+        "file_digest8": "66f3370f6c232e97"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_runtime.py#class:SafetyRegressionTests:a478fbf333c9f89b",
         "name": "SafetyRegressionTests",
         "kind": "class",
@@ -268066,6 +268452,86 @@
         "file_digest8": "eefb88b3d354e956"
       },
       {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:canonical:f6e04221ccc63521",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 58,
+        "end_line": 58,
+        "signature_hash": "309e79b5e4bd8588",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:main:c56f69bd8ee0c63a",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 104,
+        "end_line": 131,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:mutate:aa2e90a1cc205a83",
+        "name": "mutate",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 66,
+        "end_line": 97,
+        "signature_hash": "d50e5c5f95cf5e3a",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:one:b6d78133338adba1",
+        "name": "one",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "c46dfc750d3da76d",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:reseal:bf90d84feb015009",
+        "name": "reseal",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "698191b19e9016bd",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:state_root:eacba62b0c4b5ce2",
+        "name": "state_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "b93885c4884433e7",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:terminal_for:6601a60eaf7b43b6",
+        "name": "terminal_for",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "c9f6939c8300ad69",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:valid_evidence:373e6a05ae30435e",
+        "name": "valid_evidence",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 19,
+        "end_line": 38,
+        "signature_hash": "0a90bc798999d282",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory/coordinate_bridge.py#class:DigestBucket:ca0ae4444cf483c2",
         "name": "DigestBucket",
         "kind": "class",
@@ -268144,6 +268610,136 @@
         "end_line": 33,
         "signature_hash": "2243d6e827c8dc2d",
         "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#class:AdmissionReceipt:ac489970385a6c87",
+        "name": "AdmissionReceipt",
+        "kind": "class",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 65,
+        "end_line": 78,
+        "signature_hash": "cdf4b6f2ba88559d",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#class:Decision:bf0cb6d8f178e7cd",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_is_git_sha:6e6bb22289c68992",
+        "name": "_is_git_sha",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "333c025921382e30",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_is_sha256:92b7a07ab4031864",
+        "name": "_is_sha256",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "cd43b7b42a81a6f4",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_nonempty:1f2b30c3d814d77f",
+        "name": "_nonempty",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "1d1a182e9d625fc5",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_trace_exact:d7dd8b8a75f92278",
+        "name": "_trace_exact",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 94,
+        "end_line": 118,
+        "signature_hash": "77a185b24c4865ca",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:build_terminal:2ef9a9af4f749a71",
+        "name": "build_terminal",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 278,
+        "end_line": 290,
+        "signature_hash": "314afd24113c78f1",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:canonical:b993242ef3bc3698",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "8405a7944186ce60",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:digest:1678a27024b0fcea",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "3c60ab9e6d97eef8",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:evaluate_gate10_reviewer_admission:897399820019fefa",
+        "name": "evaluate_gate10_reviewer_admission",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 121,
+        "end_line": 275,
+        "signature_hash": "c1662196dc5bfbf8",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:evidence_root:fd854de373e9e638",
+        "name": "evidence_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "68702d892fef767f",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:replay_trace_root:e7a8731f098554ad",
+        "name": "replay_trace_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 81,
+        "end_line": 82,
+        "signature_hash": "52adc62cd456c0cd",
+        "file_digest8": "7fc0f770fe60052d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:terminal_receipt_root:d0e2d3c72a12120a",
+        "name": "terminal_receipt_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "line": 89,
+        "end_line": 91,
+        "signature_hash": "c44e7ec94c3b932f",
+        "file_digest8": "7fc0f770fe60052d"
       },
       {
         "semantic_id": "tools/arena/k27_memory/k27_city.py#class:Cell:364ecc59f4cbe0e6",
@@ -270826,8 +271422,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "263c6d78a3efc44718521810971174c2",
-    "payload_hash": "a69649186f65838de30ae0f5b8988192"
+    "record_fingerprint": "2cb33d0359002448a03c2f6f0c905c9d",
+    "payload_hash": "f7ce74a81ea7d2bd7444849a03a57d23"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270840,16 +271436,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1669,
-      "bytes": 26607108,
-      "tokens_est": 6642125,
+      "files": 1673,
+      "bytes": 26634237,
+      "tokens_est": 6648908,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1019,
-        "schema_or_lexicon": 275,
+        "python_module": 1022,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -271536,16 +272132,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1669,
-    "total_bytes": 26607108,
-    "text_tokens_est": 6642125,
+    "file_count": 1673,
+    "total_bytes": 26634237,
+    "text_tokens_est": 6648908,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1019,
-      "schema_or_lexicon": 275,
+      "python_module": 1022,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -272571,6 +273167,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 131,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:main:c56f69bd8ee0c63a",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -286476,6 +287080,14 @@
         "end_line": 632,
         "semantic_id": "aura_arena_st3gg_shadow.py#function:_is_sha256:3ade4705ab4d8089",
         "signature_hash": "cd43b7b42a81a6f4"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_is_sha256:92b7a07ab4031864",
+        "signature_hash": "cd43b7b42a81a6f4"
       }
     ],
     "_trusted_sha256": [
@@ -289284,6 +289896,14 @@
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
         "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:digest:1678a27024b0fcea",
+        "signature_hash": "3c60ab9e6d97eef8"
       }
     ],
     "_runtime_binding_digest": [
@@ -344037,6 +344657,22 @@
         "line": 85,
         "end_line": 92,
         "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
+        "signature_hash": "8405a7944186ce60"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 58,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:canonical:f6e04221ccc63521",
+        "signature_hash": "309e79b5e4bd8588"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:canonical:b993242ef3bc3698",
         "signature_hash": "8405a7944186ce60"
       },
       {
@@ -427158,6 +427794,220 @@
         "signature_hash": "5cf64e2bab72f15b"
       }
     ],
+    "state_root": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:state_root:ad9e7a5e1048fb3f",
+        "signature_hash": "ae4f8801815c67b4"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:state_root:eacba62b0c4b5ce2",
+        "signature_hash": "b93885c4884433e7"
+      }
+    ],
+    "valid_evidence": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:valid_evidence:a6a9e5084ea9a0bb",
+        "signature_hash": "0a90bc798999d282"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 38,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:valid_evidence:373e6a05ae30435e",
+        "signature_hash": "0a90bc798999d282"
+      }
+    ],
+    "terminal_for": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 70,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:terminal_for:08b3ca110dec7e90",
+        "signature_hash": "c9f6939c8300ad69"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:terminal_for:6601a60eaf7b43b6",
+        "signature_hash": "c9f6939c8300ad69"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 134,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#class:Gate10ReviewerAdmissionTests:671e195fa014e163",
+        "signature_hash": "49a5827165aab556"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.evaluate": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.evaluate:39763117c32f1be7",
+        "signature_hash": "0d7dddca1be50117"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_valid_complete_evidence_is_ready_non_authorizing": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 80,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_valid_complete_evidence_is_ready_non_authorizing:d88f8602618e8e39",
+        "signature_hash": "b241c178361e9169"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_same_lineage_is_hard_hold": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 85,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_same_lineage_is_hard_hold:a73d77d12c311bd3",
+        "signature_hash": "fcb30dae75bbd7c7"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_different_string_without_external_identity_authentication_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_different_string_without_external_identity_authentication_holds:0471fbf0107fa3a9",
+        "signature_hash": "50c1b620b0005e3b"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_external_identity_projection_must_cross_bind_actor": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 93,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_external_identity_projection_must_cross_bind_actor:de62c3fc56cf5294",
+        "signature_hash": "5301fdd7734c6dc9"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_stale_review_head_is_hard_hold": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 97,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_stale_review_head_is_hard_hold:cfb05f0a0c8d94f2",
+        "signature_hash": "49db720f35c909f7"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_projected_trace_cannot_verify_campaign_root": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 101,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_projected_trace_cannot_verify_campaign_root:921790260126ea1f",
+        "signature_hash": "2e6ec44e8674b3c0"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_tampered_trace_with_old_root_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 105,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_tampered_trace_with_old_root_holds:56e885f74a1fb166",
+        "signature_hash": "f98fb49b37da0f1e"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_wrong_registry_shape_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 109,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_wrong_registry_shape_holds:59ea9515545e6b55",
+        "signature_hash": "358bc7fcb362e68e"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_provider_projection_without_exact_bytes_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 113,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_provider_projection_without_exact_bytes_holds:71d3e1dafc6eb60e",
+        "signature_hash": "dd10f83c9a9861b1"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_coordinate_authority_escalation_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 117,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_coordinate_authority_escalation_holds:148705275e57bfc2",
+        "signature_hash": "73dc04ba63d84259"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_premature_gate10_claim_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 121,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_premature_gate10_claim_holds:187d2a1b3215e485",
+        "signature_hash": "53c27776ff8a2c0f"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_terminal_receipt_tamper_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_terminal_receipt_tamper_holds:2220658c429b536b",
+        "signature_hash": "96d92cb5cfc8c603"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_evidence_mutation_after_terminal_seal_holds": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 130,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_evidence_mutation_after_terminal_seal_holds:80e7217ce9fcb594",
+        "signature_hash": "624f7b84eab74dd7"
+      }
+    ],
+    "Gate10ReviewerAdmissionTests.test_all_13_axes_are_noncompensatory": [
+      {
+        "file": "tests/test_k27_gate10_reviewer_admission.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 134,
+        "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#method:Gate10ReviewerAdmissionTests.test_all_13_axes_are_noncompensatory:59c0320185ecffb0",
+        "signature_hash": "12f7a58d13e8ab29"
+      }
+    ],
     "provenance_leaf_manifest": [
       {
         "file": "tests/test_k27_memory_runtime.py",
@@ -427766,6 +428616,14 @@
         "end_line": 34,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
         "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#class:Decision:bf0cb6d8f178e7cd",
+        "signature_hash": "d6a166dc8cfde9f6"
       }
     ],
     "ConsequenceVector": [
@@ -427855,6 +428713,14 @@
         "line": 101,
         "end_line": 117,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionReceipt:8228ef77266ecbd8",
+        "signature_hash": "cdf4b6f2ba88559d"
+      },
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 78,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#class:AdmissionReceipt:ac489970385a6c87",
         "signature_hash": "cdf4b6f2ba88559d"
       }
     ],
@@ -428828,6 +429694,36 @@
         "signature_hash": "0eb5362419fc417d"
       }
     ],
+    "reseal": [
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:reseal:bf90d84feb015009",
+        "signature_hash": "698191b19e9016bd"
+      }
+    ],
+    "mutate": [
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 97,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:mutate:aa2e90a1cc205a83",
+        "signature_hash": "d50e5c5f95cf5e3a"
+      }
+    ],
+    "one": [
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:one:b6d78133338adba1",
+        "signature_hash": "c46dfc750d3da76d"
+      }
+    ],
     "nonempty": [
       {
         "file": "tools/arena/k27_memory/coordinate_bridge.py",
@@ -428906,6 +429802,86 @@
         "end_line": 53,
         "semantic_id": "tools/arena/k27_memory/coordinate_bridge.py#function:address_record:b701831d4a92abf4",
         "signature_hash": "7e619577113f8e4d"
+      }
+    ],
+    "_nonempty": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_nonempty:1f2b30c3d814d77f",
+        "signature_hash": "1d1a182e9d625fc5"
+      }
+    ],
+    "_is_git_sha": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_is_git_sha:6e6bb22289c68992",
+        "signature_hash": "333c025921382e30"
+      }
+    ],
+    "replay_trace_root": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 82,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:replay_trace_root:e7a8731f098554ad",
+        "signature_hash": "52adc62cd456c0cd"
+      }
+    ],
+    "evidence_root": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:evidence_root:fd854de373e9e638",
+        "signature_hash": "68702d892fef767f"
+      }
+    ],
+    "terminal_receipt_root": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 91,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:terminal_receipt_root:d0e2d3c72a12120a",
+        "signature_hash": "c44e7ec94c3b932f"
+      }
+    ],
+    "_trace_exact": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 118,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:_trace_exact:d7dd8b8a75f92278",
+        "signature_hash": "77a185b24c4865ca"
+      }
+    ],
+    "evaluate_gate10_reviewer_admission": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 275,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:evaluate_gate10_reviewer_admission:897399820019fefa",
+        "signature_hash": "c1662196dc5bfbf8"
+      }
+    ],
+    "build_terminal": [
+      {
+        "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 278,
+        "end_line": 290,
+        "semantic_id": "tools/arena/k27_memory/gate10_reviewer_admission.py#function:build_terminal:2ef9a9af4f749a71",
+        "signature_hash": "314afd24113c78f1"
       }
     ],
     "_trit": [
