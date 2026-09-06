@@ -398,6 +398,8 @@ class K27MemoryRuntime:
             },
             "committed_store_state_root": committed_root,
             "continuation": "COMMITTED_REOPEN_REQUIRED",
+            "commit_status": "COMMITTED_REOPEN_REQUIRED",
+            "reopen_required": True,
             "runtime_consumed": True,
             "authority_minted": False,
             "gate10": False,
