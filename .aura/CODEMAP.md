@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1671
-- **total_bytes**: 26625722
-- **text_tokens_est**: 6646779
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1673
+- **total_bytes**: 26634078
+- **text_tokens_est**: 6648868
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1671,
+  "repo_file_count": 1673,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -59,6 +59,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/execution_budgets/coding_localize.v1.json",
     ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
     ".aura/intents/example.aura.md",
+    ".aura/k27_memory/gate10_reviewer_admission.v1.json",
     ".aura/k27_memory/runtime_binding.v1.json",
     ".aura/memory_apertures/coding_localize.v1.json",
     ".aura/model_policies/local_first.v1.json",
@@ -1670,6 +1671,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory/README.md",
     "tools/arena/k27_memory/__init__.py",
     "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
+    "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
     "tools/arena/k27_memory/coordinate_bridge.py",
     "tools/arena/k27_memory/gate10_reviewer_admission.py",
     "tools/arena/k27_memory/k27_city.py",
@@ -1811,16 +1813,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1671,
-  "bytes": 26625722,
-  "tokens_est": 6646779,
+  "files": 1673,
+  "bytes": 26634078,
+  "tokens_est": 6648868,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1021,
-    "schema_or_lexicon": 275,
+    "python_module": 1022,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }

@@ -1063,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1673,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1099,6 +1099,7 @@
       ".aura/execution_budgets/coding_localize.v1.json",
       ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/intents/example.aura.md",
+      ".aura/k27_memory/gate10_reviewer_admission.v1.json",
       ".aura/k27_memory/runtime_binding.v1.json",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
@@ -2710,6 +2711,7 @@
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
+      "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
       "tools/arena/k27_memory/gate10_reviewer_admission.py",
       "tools/arena/k27_memory/k27_city.py",
@@ -4449,6 +4451,53 @@
         -0.124851,
         -0.048855,
         -0.081424
+      ]
+    },
+    {
+      "path": ".aura/k27_memory/gate10_reviewer_admission.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1848,
+      "lines": 47,
+      "tokens_est": 462,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9c4f4f99849c3f28",
+      "vector": [
+        0.092789,
+        0.092789,
+        -0.324126,
+        -0.219898,
+        -0.181765,
+        -0.031777,
+        -0.013982,
+        -0.311416,
+        0.16397,
+        -0.19956,
+        0.197018,
+        -0.148717,
+        -0.034319,
+        0.01144,
+        0.1055,
+        0.212271,
+        0.100416,
+        -0.006355,
+        0.080078,
+        0.054657,
+        -0.265657,
+        0.016524,
+        -0.156343,
+        0.3165,
+        -0.138548,
+        -0.308873,
+        0.100416,
+        0.212271,
+        -0.303789,
+        0.148717,
+        -0.057199,
+        0.102958
       ]
     },
     {
@@ -105065,6 +105114,53 @@
       ]
     },
     {
+      "path": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6508,
+      "lines": 135,
+      "tokens_est": 1627,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e5280c5d17368857",
+      "vector": [
+        0.317143,
+        -0.110252,
+        -0.014972,
+        0.186475,
+        -0.091196,
+        -0.338921,
+        0.24092,
+        -0.001361,
+        -0.017695,
+        -0.270865,
+        0.09664,
+        0.224586,
+        -0.080307,
+        0.050362,
+        0.07214,
+        -0.009528,
+        0.025861,
+        0.227309,
+        0.077584,
+        -0.273587,
+        0.104807,
+        0.191919,
+        0.224586,
+        -0.15653,
+        -0.15653,
+        0.15653,
+        -0.036751,
+        0.208253,
+        0.123863,
+        0.167419,
+        -0.186475,
+        -0.308977
+      ]
+    },
+    {
       "path": "tools/arena/k27_memory/coordinate_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -106626,7 +106722,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788728997,
+  "generated_at_unix": 1788729128,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106664,6 +106760,7 @@
       ".aura/execution_budgets/coding_localize.v1.json",
       ".aura/final_definition_of_done/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/intents/example.aura.md",
+      ".aura/k27_memory/gate10_reviewer_admission.v1.json",
       ".aura/k27_memory/runtime_binding.v1.json",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
@@ -108275,6 +108372,7 @@
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
+      "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
       "tools/arena/k27_memory/coordinate_bridge.py",
       "tools/arena/k27_memory/gate10_reviewer_admission.py",
       "tools/arena/k27_memory/k27_city.py",
@@ -268354,6 +268452,86 @@
         "file_digest8": "eefb88b3d354e956"
       },
       {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:canonical:f6e04221ccc63521",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 58,
+        "end_line": 58,
+        "signature_hash": "309e79b5e4bd8588",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:main:c56f69bd8ee0c63a",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 104,
+        "end_line": 131,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:mutate:aa2e90a1cc205a83",
+        "name": "mutate",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 66,
+        "end_line": 97,
+        "signature_hash": "d50e5c5f95cf5e3a",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:one:b6d78133338adba1",
+        "name": "one",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "c46dfc750d3da76d",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:reseal:bf90d84feb015009",
+        "name": "reseal",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "698191b19e9016bd",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:state_root:eacba62b0c4b5ce2",
+        "name": "state_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "b93885c4884433e7",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:terminal_for:6601a60eaf7b43b6",
+        "name": "terminal_for",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "c9f6939c8300ad69",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:valid_evidence:373e6a05ae30435e",
+        "name": "valid_evidence",
+        "kind": "function",
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "line": 19,
+        "end_line": 38,
+        "signature_hash": "0a90bc798999d282",
+        "file_digest8": "e5280c5d17368857"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory/coordinate_bridge.py#class:DigestBucket:ca0ae4444cf483c2",
         "name": "DigestBucket",
         "kind": "class",
@@ -271244,8 +271422,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e514119205c41ff7eaaf94e51970792e",
-    "payload_hash": "1e4a040dcbb80ec13d6c1447403deac5"
+    "record_fingerprint": "8d209465eaa4ce3c7e0d12647393f5eb",
+    "payload_hash": "35721a7133a8dad2ce22cdcc509d204a"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271258,16 +271436,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26625722,
-      "tokens_est": 6646779,
+      "files": 1673,
+      "bytes": 26634078,
+      "tokens_est": 6648868,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1021,
-        "schema_or_lexicon": 275,
+        "python_module": 1022,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -271954,16 +272132,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26625722,
-    "text_tokens_est": 6646779,
+    "file_count": 1673,
+    "total_bytes": 26634078,
+    "text_tokens_est": 6648868,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1021,
-      "schema_or_lexicon": 275,
+      "python_module": 1022,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -272989,6 +273167,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 131,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:main:c56f69bd8ee0c63a",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -344472,6 +344658,14 @@
         "end_line": 92,
         "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
         "signature_hash": "8405a7944186ce60"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 58,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:canonical:f6e04221ccc63521",
+        "signature_hash": "309e79b5e4bd8588"
       },
       {
         "file": "tools/arena/k27_memory/gate10_reviewer_admission.py",
@@ -427608,6 +427802,14 @@
         "end_line": 18,
         "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:state_root:ad9e7a5e1048fb3f",
         "signature_hash": "ae4f8801815c67b4"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:state_root:eacba62b0c4b5ce2",
+        "signature_hash": "b93885c4884433e7"
       }
     ],
     "valid_evidence": [
@@ -427618,6 +427820,14 @@
         "end_line": 58,
         "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:valid_evidence:a6a9e5084ea9a0bb",
         "signature_hash": "0a90bc798999d282"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 38,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:valid_evidence:373e6a05ae30435e",
+        "signature_hash": "0a90bc798999d282"
       }
     ],
     "terminal_for": [
@@ -427627,6 +427837,14 @@
         "line": 61,
         "end_line": 65,
         "semantic_id": "tests/test_k27_gate10_reviewer_admission.py#function:terminal_for:08b3ca110dec7e90",
+        "signature_hash": "c9f6939c8300ad69"
+      },
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:terminal_for:6601a60eaf7b43b6",
         "signature_hash": "c9f6939c8300ad69"
       }
     ],
@@ -429474,6 +429692,36 @@
         "end_line": 78,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#method:run.attempt:63373d6cb82b74e6",
         "signature_hash": "0eb5362419fc417d"
+      }
+    ],
+    "reseal": [
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:reseal:bf90d84feb015009",
+        "signature_hash": "698191b19e9016bd"
+      }
+    ],
+    "mutate": [
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 97,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:mutate:aa2e90a1cc205a83",
+        "signature_hash": "d50e5c5f95cf5e3a"
+      }
+    ],
+    "one": [
+      {
+        "file": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tools/arena/k27_memory/campaign_gate10_reviewer_admission.py#function:one:b6d78133338adba1",
+        "signature_hash": "c46dfc750d3da76d"
       }
     ],
     "nonempty": [
