@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1653,
+    "repo_file_count": 1657,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2684,6 +2684,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frontier27_exact_projection_r11.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_frontier27_transactional_preflight.py",
       "tests/test_huggingface_space_deployment.py",
@@ -2697,6 +2698,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/README.md",
+      "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
@@ -103957,6 +103961,53 @@
       ]
     },
     {
+      "path": "tests/test_frontier27_exact_projection_r11.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3313,
+      "lines": 47,
+      "tokens_est": 829,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "895b5afa922c4414",
+      "vector": [
+        0.239516,
+        -0.022418,
+        -0.109729,
+        0.09557,
+        0.071973,
+        0.036576,
+        -0.173443,
+        0.206479,
+        0.053095,
+        0.173443,
+        0.09557,
+        0.083772,
+        -0.159284,
+        0.020058,
+        -0.005899,
+        -0.189961,
+        -0.291431,
+        -0.041296,
+        0.230077,
+        0.270193,
+        -0.234797,
+        -0.060174,
+        0.159284,
+        -0.258394,
+        -0.215918,
+        0.156924,
+        -0.038936,
+        -0.272553,
+        -0.274913,
+        0.166363,
+        0.289071,
+        -0.182882
+      ]
+    },
+    {
       "path": "tests/test_frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -104565,6 +104616,147 @@
         0.227946,
         0.030022,
         -0.130096
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1169,
+      "lines": 14,
+      "tokens_est": 293,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2ef61ae7fd5409ed",
+      "vector": [
+        -0.147383,
+        0.226991,
+        -0.26572,
+        0.031198,
+        0.149535,
+        0.097897,
+        -0.196869,
+        -0.250659,
+        -0.194718,
+        -0.22484,
+        0.13017,
+        -0.08929,
+        -0.242052,
+        -0.244204,
+        0.235598,
+        0.274326,
+        -0.136625,
+        -0.248507,
+        0.112958,
+        0.149535,
+        -0.108655,
+        0.013985,
+        0.237749,
+        0.13017,
+        -0.026895,
+        0.082836,
+        0.067775,
+        0.059168,
+        -0.011834,
+        -0.231295,
+        0.231295,
+        0.188263
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3453,
+      "lines": 51,
+      "tokens_est": 864,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bd201d4a862514a2",
+      "vector": [
+        0.279444,
+        -0.029348,
+        -0.029348,
+        -0.075284,
+        -0.269236,
+        -0.07018,
+        -0.292204,
+        -0.016588,
+        0.052316,
+        -0.054868,
+        -0.065076,
+        -0.14674,
+        0.182468,
+        0.164604,
+        -0.136532,
+        0.151844,
+        -0.103356,
+        0.179916,
+        -0.310068,
+        -0.090596,
+        -0.065076,
+        0.284548,
+        0.187572,
+        -0.05742,
+        0.1595,
+        0.310068,
+        -0.182468,
+        0.29986,
+        -0.238612,
+        0.144188,
+        0.118668,
+        0.100804
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4573,
+      "lines": 109,
+      "tokens_est": 1144,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "af96ae7e7563c9d2",
+      "vector": [
+        0.10032,
+        0.153825,
+        0.295611,
+        0.113697,
+        0.185927,
+        0.073568,
+        -0.207329,
+        0.169876,
+        -0.22338,
+        0.049491,
+        -0.167201,
+        -0.137773,
+        -0.207329,
+        -0.252808,
+        0.159175,
+        -0.226055,
+        0.287585,
+        -0.185927,
+        -0.084269,
+        -0.020064,
+        -0.116372,
+        -0.113697,
+        0.004013,
+        -0.183252,
+        -0.22338,
+        -0.287585,
+        -0.239432,
+        -0.022739,
+        -0.188602,
+        0.137773,
+        0.185927,
+        0.084269
       ]
     },
     {
@@ -105753,7 +105945,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788703753,
+  "generated_at_unix": 1788705372,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107379,6 +107571,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frontier27_exact_projection_r11.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_frontier27_transactional_preflight.py",
       "tests/test_huggingface_space_deployment.py",
@@ -107392,6 +107585,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/README.md",
+      "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
@@ -264733,6 +264929,106 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#class:ExactProjectionR11Tests:9165c434da9a165d",
+        "name": "ExactProjectionR11Tests",
+        "kind": "class",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 8,
+        "end_line": 45,
+        "signature_hash": "141ca2233e908451",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.state:e80ec0f322345ef8",
+        "name": "ExactProjectionR11Tests.state",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "f402ebc0a47c91ef",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_aggregate_rejection_is_failure_atomic:a9f9de8f73dedeec",
+        "name": "ExactProjectionR11Tests.test_aggregate_rejection_is_failure_atomic",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "82c3ca7601304767",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_all_hit_collision_admitted_where_worst_case_overflows:30701ff664f17a2a",
+        "name": "ExactProjectionR11Tests.test_all_hit_collision_admitted_where_worst_case_overflows",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 22,
+        "end_line": 28,
+        "signature_hash": "f3ac40215b2212a4",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_exact_projection_preserves_preexisting_state:797d6d7a16531e18",
+        "name": "ExactProjectionR11Tests.test_exact_projection_preserves_preexisting_state",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "69d36ba7c213a348",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_projection_does_not_mutate_real_owner_on_rejection:922d42f6edb714f8",
+        "name": "ExactProjectionR11Tests.test_projection_does_not_mutate_real_owner_on_rejection",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 42,
+        "end_line": 45,
+        "signature_hash": "6647dc41be58117e",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_shared_aggregate_budget_rejects_routes_plus_preds:d07a7e3d9d63099b",
+        "name": "ExactProjectionR11Tests.test_shared_aggregate_budget_rejects_routes_plus_preds",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 34,
+        "end_line": 36,
+        "signature_hash": "b8f6b46725180b91",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_true_overflow_rejected_before_real_mutation:ac0bbbdb19a0f5a0",
+        "name": "ExactProjectionR11Tests.test_true_overflow_rejected_before_real_mutation",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "83762b67280274b7",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_valid_result_and_state_match_direct_owner:f747850081e2bb71",
+        "name": "ExactProjectionR11Tests.test_valid_result_and_state_match_direct_owner",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 12,
+        "end_line": 16,
+        "signature_hash": "8f40f77498c319f2",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.tier:3459c2a96c12046b",
+        "name": "ExactProjectionR11Tests.tier",
+        "kind": "method",
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "3a047a6123a33de3",
+        "file_digest8": "895b5afa922c4414"
+      },
+      {
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "name": "T",
         "kind": "class",
@@ -267083,6 +267379,166 @@
         "file_digest8": "7082cc35de438b2e"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:aggregate_policy:e06a8d23235e6986",
+        "name": "aggregate_policy",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 33,
+        "end_line": 41,
+        "signature_hash": "9e4bef9e71f36757",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:collision_cases:1c4c552bcea7e955",
+        "name": "collision_cases",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 24,
+        "end_line": 32,
+        "signature_hash": "af60d4b601a476a9",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:owner_equivalence:f8a259181a353212",
+        "name": "owner_equivalence",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "f8bd764a24bd3093",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:root:98f8dff75495be4a",
+        "name": "root",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "bc5eb26d40a6b4e7",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:run:4cca430351d60ad3",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 42,
+        "end_line": 49,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:stable:d03fe7bd16566e24",
+        "name": "stable",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "2ada6977dacc078c",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:state:245e942cf5c7f8be",
+        "name": "state",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "74588729a3e4ef2b",
+        "file_digest8": "bd201d4a862514a2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#class:_AggregateBudget:e1ecc32e96634817",
+        "name": "_AggregateBudget",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 27,
+        "end_line": 33,
+        "signature_hash": "04a64dfe5b75161d",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_budgeted_family:b293c49af11221e5",
+        "name": "_budgeted_family",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "d0ef207e656090cf",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_budgeted_record:0f41ff302f9e2597",
+        "name": "_budgeted_record",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "d50dd8779a6f482c",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_clone_frontier:874e9a4403dfb04e",
+        "name": "_clone_frontier",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 66,
+        "end_line": 73,
+        "signature_hash": "2271a74471cf2e19",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_state:0af9771f080fee7c",
+        "name": "_state",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "a3822e924e91ac50",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:freeze_records_with_aggregate_budget:5a7227dc28863598",
+        "name": "freeze_records_with_aggregate_budget",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 44,
+        "end_line": 61,
+        "signature_hash": "8950caefad90d219",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:project_frontier_exact:9e5a08de8aa1ce24",
+        "name": "project_frontier_exact",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 75,
+        "end_line": 80,
+        "signature_hash": "5163a33b7422ef31",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:run_frontier_exact_projected:4869ed81f9795606",
+        "name": "run_frontier_exact_projected",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 82,
+        "end_line": 108,
+        "signature_hash": "8cc18ab991cd2055",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#method:_AggregateBudget.consume:e1e3c6de94d25e50",
+        "name": "_AggregateBudget.consume",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "004e75cdc8a1a59b",
+        "file_digest8": "af96ae7e7563c9d2"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py#class:_InfiniteInner:c2e42b18ea540912",
         "name": "_InfiniteInner",
         "kind": "class",
@@ -268713,8 +269169,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "5c3d0f981bd6af31e2492cff33a5978d",
-    "payload_hash": "81592896ea048634d777b8e5d43fb0bc"
+    "record_fingerprint": "172bb03ae6069aa14538b426825830df",
+    "payload_hash": "a6a8e1a743caa9f412bf7fac5158eb77"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268727,15 +269183,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1653,
-      "bytes": 26522184,
-      "tokens_est": 6620888,
+      "files": 1657,
+      "bytes": 26534692,
+      "tokens_est": 6624018,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 240,
+        "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
+        "python_module": 1009,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -269423,15 +269879,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1653,
-    "total_bytes": 26522184,
-    "text_tokens_est": 6620888,
+    "file_count": 1657,
+    "total_bytes": 26534692,
+    "text_tokens_est": 6624018,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 240,
+      "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
+      "python_module": 1009,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -270653,6 +271109,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 49,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:run:4cca430351d60ad3",
+        "signature_hash": "26799ab4ad82cbfb"
       },
       {
         "file": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
@@ -394339,6 +394803,14 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py#function:_state:fc84b404b01d0888",
         "signature_hash": "e7a0fd0a90453616"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_state:0af9771f080fee7c",
+        "signature_hash": "a3822e924e91ac50"
       }
     ],
     "_json_body": [
@@ -394969,6 +395441,14 @@
         "end_line": 43,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:state:f36d665e567b7907",
         "signature_hash": "4f98deada91b795f"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:state:245e942cf5c7f8be",
+        "signature_hash": "74588729a3e4ef2b"
       }
     ],
     "decoded": [
@@ -424247,6 +424727,106 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "ExactProjectionR11Tests": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 45,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#class:ExactProjectionR11Tests:9165c434da9a165d",
+        "signature_hash": "141ca2233e908451"
+      }
+    ],
+    "ExactProjectionR11Tests.tier": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.tier:3459c2a96c12046b",
+        "signature_hash": "3a047a6123a33de3"
+      }
+    ],
+    "ExactProjectionR11Tests.state": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.state:e80ec0f322345ef8",
+        "signature_hash": "f402ebc0a47c91ef"
+      }
+    ],
+    "ExactProjectionR11Tests.test_valid_result_and_state_match_direct_owner": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_valid_result_and_state_match_direct_owner:f747850081e2bb71",
+        "signature_hash": "8f40f77498c319f2"
+      }
+    ],
+    "ExactProjectionR11Tests.test_exact_projection_preserves_preexisting_state": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_exact_projection_preserves_preexisting_state:797d6d7a16531e18",
+        "signature_hash": "69d36ba7c213a348"
+      }
+    ],
+    "ExactProjectionR11Tests.test_all_hit_collision_admitted_where_worst_case_overflows": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_all_hit_collision_admitted_where_worst_case_overflows:30701ff664f17a2a",
+        "signature_hash": "f3ac40215b2212a4"
+      }
+    ],
+    "ExactProjectionR11Tests.test_true_overflow_rejected_before_real_mutation": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_true_overflow_rejected_before_real_mutation:ac0bbbdb19a0f5a0",
+        "signature_hash": "83762b67280274b7"
+      }
+    ],
+    "ExactProjectionR11Tests.test_shared_aggregate_budget_rejects_routes_plus_preds": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 36,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_shared_aggregate_budget_rejects_routes_plus_preds:d07a7e3d9d63099b",
+        "signature_hash": "b8f6b46725180b91"
+      }
+    ],
+    "ExactProjectionR11Tests.test_aggregate_rejection_is_failure_atomic": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_aggregate_rejection_is_failure_atomic:a9f9de8f73dedeec",
+        "signature_hash": "82c3ca7601304767"
+      }
+    ],
+    "ExactProjectionR11Tests.test_projection_does_not_mutate_real_owner_on_rejection": [
+      {
+        "file": "tests/test_frontier27_exact_projection_r11.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "tests/test_frontier27_exact_projection_r11.py#method:ExactProjectionR11Tests.test_projection_does_not_mutate_real_owner_on_rejection:922d42f6edb714f8",
+        "signature_hash": "6647dc41be58117e"
+      }
+    ],
     "T": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -425767,6 +426347,14 @@
         "signature_hash": "6c4779cb279e35c8"
       },
       {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:stable:d03fe7bd16566e24",
+        "signature_hash": "2ada6977dacc078c"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
         "kind": "function",
         "line": 13,
@@ -426537,12 +427125,130 @@
     ],
     "root": [
       {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:root:98f8dff75495be4a",
+        "signature_hash": "bc5eb26d40a6b4e7"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
         "kind": "function",
         "line": 14,
         "end_line": 14,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py#function:root:516d1c46cb9dad2d",
         "signature_hash": "bc5eb26d40a6b4e7"
+      }
+    ],
+    "owner_equivalence": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:owner_equivalence:f8a259181a353212",
+        "signature_hash": "f8bd764a24bd3093"
+      }
+    ],
+    "collision_cases": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:collision_cases:1c4c552bcea7e955",
+        "signature_hash": "af60d4b601a476a9"
+      }
+    ],
+    "aggregate_policy": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 41,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py#function:aggregate_policy:e06a8d23235e6986",
+        "signature_hash": "9e4bef9e71f36757"
+      }
+    ],
+    "_AggregateBudget": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#class:_AggregateBudget:e1ecc32e96634817",
+        "signature_hash": "04a64dfe5b75161d"
+      }
+    ],
+    "_AggregateBudget.consume": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#method:_AggregateBudget.consume:e1e3c6de94d25e50",
+        "signature_hash": "004e75cdc8a1a59b"
+      }
+    ],
+    "_budgeted_record": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_budgeted_record:0f41ff302f9e2597",
+        "signature_hash": "d50dd8779a6f482c"
+      }
+    ],
+    "_budgeted_family": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_budgeted_family:b293c49af11221e5",
+        "signature_hash": "d0ef207e656090cf"
+      }
+    ],
+    "freeze_records_with_aggregate_budget": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 61,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:freeze_records_with_aggregate_budget:5a7227dc28863598",
+        "signature_hash": "8950caefad90d219"
+      }
+    ],
+    "_clone_frontier": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 73,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:_clone_frontier:874e9a4403dfb04e",
+        "signature_hash": "2271a74471cf2e19"
+      }
+    ],
+    "project_frontier_exact": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 80,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:project_frontier_exact:9e5a08de8aa1ce24",
+        "signature_hash": "5163a33b7422ef31"
+      }
+    ],
+    "run_frontier_exact_projected": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 108,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py#function:run_frontier_exact_projected:4869ed81f9795606",
+        "signature_hash": "8cc18ab991cd2055"
       }
     ],
     "_finite_add_sequence": [

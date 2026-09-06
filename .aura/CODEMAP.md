@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26522184
-- **text_tokens_est**: 6620888
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1657
+- **total_bytes**: 26534692
+- **text_tokens_est**: 6624018
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1657,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1647,6 +1647,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_consequence_admission_kernel.py",
+    "tests/test_frontier27_exact_projection_r11.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_frontier27_transactional_preflight.py",
     "tests/test_huggingface_space_deployment.py",
@@ -1660,6 +1661,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/README.md",
+    "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/campaign.py",
+    "tools/arena/worker_cells/gpt56sol_frontier27_exact_projection/exact_projection.py",
     "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
     "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
     "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
@@ -1793,15 +1797,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26522184,
-  "tokens_est": 6620888,
+  "files": 1657,
+  "bytes": 26534692,
+  "tokens_est": 6624018,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1006,
+    "python_module": 1009,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
