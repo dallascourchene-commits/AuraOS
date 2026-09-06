@@ -121,6 +121,20 @@ class Tests(unittest.TestCase):
         bs[a.receipt_digest]=replace(bs[a.receipt_digest],parent_evidence=ParentEvidence(ea.parent,None))
         self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
 
+    def test_source_owner_binding_mismatch_blocks(self):
+        ea,eb,a,b,bs=pair()
+        bs[a.receipt_digest]=replace(bs[a.receipt_digest],source_owner_ref='drive:detached-owner')
+        q=compile_rebase_after_parent_admission([a,b],bs,CTX)
+        self.assertFalse(q.admitted)
+        self.assertIn('A_SOURCE_OWNER_BINDING_MISMATCH',q.reasons)
+
+    def test_source_revision_binding_mismatch_blocks(self):
+        ea,eb,a,b,bs=pair()
+        bs[a.receipt_digest]=replace(bs[a.receipt_digest],source_revision_root='f'*64)
+        q=compile_rebase_after_parent_admission([a,b],bs,CTX)
+        self.assertFalse(q.admitted)
+        self.assertIn('A_SOURCE_REVISION_BINDING_MISMATCH',q.reasons)
+
     def test_effect_bearing_receipt_excluded(self):
         _,_,a,b,bs=pair(); a=replace(a,effect_authority=True)
         self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
