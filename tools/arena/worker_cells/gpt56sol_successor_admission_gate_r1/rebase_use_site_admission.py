@@ -80,6 +80,8 @@ def _binding_reasons(r:ConveyorReceiptRef,b:ReceiptParentBinding,label:str)->lis
     else:
         actual=getattr(immediate,'receipt_root',None)
         if actual!=b.terminal_receipt_root: out.append(label+'_TERMINAL_RECEIPT_BINDING_MISMATCH')
+        if getattr(immediate,'source_owner_ref',None)!=b.source_owner_ref: out.append(label+'_SOURCE_OWNER_BINDING_MISMATCH')
+        if getattr(immediate,'source_revision_root',None)!=b.source_revision_root: out.append(label+'_SOURCE_REVISION_BINDING_MISMATCH')
     return out
 
 
