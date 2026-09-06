@@ -1,25 +1,33 @@
-# GEN25 Admission-Liveness Witness
+# GEN25 Admission-Liveness Witness + Project006 Observation Bridge
 
-D0-only Arena worker cell for distinguishing command admission starvation from unrelated historical bus activity, stale/future receipts, inactive queue entries, incomplete host observation, or assumed service death.
+D0-only Arena worker cell for distinguishing current command starvation from unrelated historical bus activity, stale/future receipts, inactive/unknown queue entries, incomplete host observation, or assumed service death. It also provides an observation-only bridge for the exact AWJ033 Project006 owner-host surface.
 
 Keeper laws:
 - `HistoricalBusSuccess != CurrentCommandAdmission`.
 - `SameGeneration != SameExactHead`; generation and authoritative head digest are both bound.
-- `ProcessAlive != ConsumerProgress`.
 - `QueuePresence != ActiveCurrentIngress`; only explicitly active queue states can create starvation pressure.
-- `FutureReceipt != CurrentProgress`; a command-bound receipt observed after `now_s` fails closed.
+- Known active states: `AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND`, `READY`.
+- Known inactive states: `CANCELLED`, `HOLD`, `SUPERSEDED`, `DONE`, `TERMINAL`; unknown states require visibility instead of guessed activation.
+- `ProcessAlive != ConsumerProgress`.
+- `FutureReceipt != CurrentProgress`; command-bound receipts after the observation cut fail closed.
+- `GenericReceiptDirectoryChurn != CanaryProgress`; only an exact canary command-bound receipt may contribute on the receipt plane.
 - `QueuePresence != ACK_ACCEPTED_PRE_EFFECT != RESULT/ERROR != HostEffect`.
-- `StarvationPressure = ActiveCurrentIngress AND MissingCommandBoundTypedProgress AND AgeThreshold`; inactive/cancelled/superseded commands cannot create starvation pressure.
-- `ObservationFlag != CompleteHostObservation`; restart planning requires direct service-active and lease-current facts.
-- This D0 witness never self-authorizes provider/model fanout. It may prove local admission progress, but provider dispatch remains a separate owner/effect decision.
-- A restart is never authorized from silence alone; it is at most one restart after complete direct host observation shows an inactive/stale service or lease.
+- `Project006RestartEligibility = ServiceInactiveOrMissingPID OR ActiveServiceAndObservedNoProgressAfterBoundedCanaryIteration`.
+- Consumer progress is measured from state hash, cursor, last-scan, or exact canary command-bound receipt movement. Lease state is retained as advisory only; the current AWJ033 owner contract does not make it a restart prerequisite.
+- The recovery receipt root commits to the exact current head, queue classes, and exact consumer-observation surface.
+- This D0 witness never self-authorizes provider/model fanout.
+- The Project006 bridge is read-only: it compiles service/hash/state/receipt inspection commands but never executes `systemctl restart`, the consumer, the canary, providers, or models.
 
-Known active queue states in this worker are `AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND` and `READY`. Known inactive states are `CANCELLED`, `HOLD`, `SUPERSEDED`, `DONE`, and `TERMINAL`. Unknown queue states fail to `HOST_VISIBILITY_REQUIRED` rather than being guessed active or inactive.
+Exact owner-host bindings are source-derived from the current AWJ033 R2 handoff:
+- service `aura-project006.service`;
+- consumer `/home/john_of_wick/.config/aura-drive/bin/aura_drive_swarm_consumer_v1.py`;
+- state `/home/john_of_wick/.config/aura-drive/state/swarm_consumer_v1/consumer_state.json`;
+- receipts `/home/john_of_wick/.config/aura-drive/state/swarm_consumer_v1/receipts`;
+- head `GEN25 / d91e0a39358901c5`;
+- existing execution-false canary `AWJ033-CURRENT-CONSUMER-WAKE-ADMISSION-DIAGNOSTIC-20260902T234505Z-R1`.
 
-The worker does not execute services, providers, models, or network effects. It compiles a minimal owner-host recovery cone.
+The bridge's read-only probe plan checks systemd state, hashes the installed consumer, reads the consumer state, inventories receipts, and locates receipts containing the exact canary command ID. It does not execute the owner-host recovery procedure. The owner-host handoff remains the authority for any actual restart or consumer iteration.
 
 ## Falsifier closure
 
-The original branch passed its own campaign but admitted three boundary defects. A concurrent v2 repair closed future-dated receipt admission and incomplete consumer-observation handling. v3 preserves those stricter checks and closes the remaining queue-semantic gap: inactive or unknown queue entries can no longer manufacture active-ingress starvation.
-
-Proof is credited only after exact published-byte replay in fresh environments; see the PR body and durable Arena repair receipt for the current hashes and campaign root.
+Successive repairs closed: future-dated command receipts, incomplete observations, inactive/unknown queue starvation inflation, mandatory-lease drift from the actual owner contract, recovery receipts that did not bind exact host evidence, and generic receipt-directory churn being mistaken for canary progress. Proof is credited only after exact published-byte replay in fresh environments.
