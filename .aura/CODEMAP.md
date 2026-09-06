@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26505214
-- **text_tokens_est**: 6616639
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1657
+- **total_bytes**: 26527736
+- **text_tokens_est**: 6622271
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1657,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1660,9 +1660,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/README.md",
+    "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/SUCCESSOR_PARENT_ADMISSION_R2.md",
     "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/campaign.py",
+    "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/campaign_parent_admission_r2.py",
     "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/successor_admission_gate.py",
+    "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/successor_parent_admission_r2.py",
     "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/tests/test_gate.py",
+    "tools/arena/worker_cells/gpt56sol_successor_admission_gate_r1/tests/test_parent_admission_r2.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1793,15 +1797,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26505214,
-  "tokens_est": 6616639,
+  "files": 1657,
+  "bytes": 26527736,
+  "tokens_est": 6622271,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1006,
+    "python_module": 1009,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
