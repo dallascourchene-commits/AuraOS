@@ -79,6 +79,15 @@ def _is_debris(p):
     low=p.lower()
     return any(m in low for m in STAGING_MARKERS)
 
+def _proposal_binding(p:Proposal):
+    return {'proposal_id':p.proposal_id,'actor_id':p.actor_id,'lineage_root':p.lineage_root,
+            'base_head':p.base_head,'consequence_root':p.consequence_root,'receipt_root':p.receipt_root,
+            'files':sorted(p.files.items()),'asks_effect_authority':p.asks_effect_authority}
+
+def _publication_payload_root(p:Proposal):
+    return digest({'consequence_root':p.consequence_root,'receipt_root':p.receipt_root,'files':sorted(p.files.items()),
+                   'asks_effect_authority':p.asks_effect_authority})
+
 def validate_proposal(p:Proposal):
     for x,n in ((p.proposal_id,'BAD_PROPOSAL_ID'),(p.actor_id,'BAD_ACTOR'),(p.lineage_root,'BAD_LINEAGE')):_text(x,n)
     for x,n in ((p.base_head,'BAD_BASE_HEAD'),(p.consequence_root,'BAD_CONSEQUENCE_ROOT'),(p.receipt_root,'BAD_RECEIPT_ROOT')):_hex(x,n)
@@ -98,14 +107,29 @@ def plan(snapshot:OwnerSnapshot, proposals:Sequence[Proposal])->PublicationPlan:
     debris=tuple(sorted({path for p in proposals for path in p.files if _is_debris(path)}))
     if debris:
         return _plan_hold(Disposition.DEBRIS_HOLD,snapshot,proposals,(),debris)
-    # consequence quotient: one deterministic representative per exact consequence root
+    # Proposal identity must be unique before quotienting; one ID cannot name two payloads.
+    ids=[p.proposal_id for p in proposals]
+    if len(set(ids))!=len(ids):
+        dup=tuple(sorted({x for x in ids if ids.count(x)>1}))
+        return _plan_hold(Disposition.CONFLICT_HOLD,snapshot,proposals,
+                          tuple(f'duplicate-proposal-id:{x}' for x in dup),())
+    # Consequence quotient is legal only for exact semantic publication redelivery.
+    # Same consequence with a different receipt/write payload is divergent evidence/work, not a duplicate.
     by_cons={}
     collapsed=[]
+    consequence_conflicts=[]
     for p in sorted(proposals,key=lambda x:x.proposal_id):
-        if p.consequence_root in by_cons:
+        prev=by_cons.get(p.consequence_root)
+        if prev is None:
+            by_cons[p.consequence_root]=p
+            continue
+        if _publication_payload_root(prev)==_publication_payload_root(p):
             collapsed.append(p.proposal_id)
         else:
-            by_cons[p.consequence_root]=p
+            a,b=sorted((prev.proposal_id,p.proposal_id))
+            consequence_conflicts.append(f'consequence-divergence:{p.consequence_root}:{a}:{b}')
+    if consequence_conflicts:
+        return _plan_hold(Disposition.CONFLICT_HOLD,snapshot,proposals,tuple(sorted(consequence_conflicts)),())
     accepted=tuple(by_cons.values())
     path_owner={}; conflicts=[]; writes={}
     for p in accepted:
@@ -118,18 +142,21 @@ def plan(snapshot:OwnerSnapshot, proposals:Sequence[Proposal])->PublicationPlan:
                     conflicts.append(f'{path}:{prev_id}:{p.proposal_id}')
     if conflicts:
         return _plan_hold(Disposition.CONFLICT_HOLD,snapshot,accepted,tuple(sorted(conflicts)),())
-    body={'schema':'AURA-ATOMIC-ABSORPTION-v1','expected_head':snapshot.head,
+    body={'schema':'AURA-ATOMIC-ABSORPTION-v1.1','expected_head':snapshot.head,
           'tree_root':snapshot.tree_root,'accepted':[p.proposal_id for p in accepted],
           'collapsed':sorted(collapsed),'writes':sorted(writes.items()),
           'consequences':sorted(p.consequence_root for p in accepted),
           'receipts':sorted(p.receipt_root for p in accepted),
+          # Bind provenance for every submitted proposal, including exact redeliveries that collapse.
+          'proposal_bindings':[_proposal_binding(p) for p in sorted(proposals,key=lambda x:x.proposal_id)],
           'authority':'D0_NONPROMOTING','gate10':False}
     root=digest(body)
     return PublicationPlan(Disposition.READY,snapshot.head,tuple(p.proposal_id for p in accepted),tuple(sorted(collapsed)),(),(),tuple(sorted(writes.items())),root)
 
 def _plan_hold(d,snapshot,proposals,conflicts,debris):
-    body={'schema':'AURA-ATOMIC-ABSORPTION-v1','disposition':d.value,'expected_head':snapshot.head,
-          'proposals':sorted(p.proposal_id for p in proposals),'conflicts':list(conflicts),'debris':list(debris)}
+    body={'schema':'AURA-ATOMIC-ABSORPTION-v1.1','disposition':d.value,'expected_head':snapshot.head,
+          'proposals':sorted(p.proposal_id for p in proposals),'conflicts':list(conflicts),'debris':list(debris),
+          'proposal_bindings':[_proposal_binding(p) for p in sorted(proposals,key=lambda x:x.proposal_id)]}
     return PublicationPlan(d,snapshot.head,(),(),tuple(conflicts),tuple(debris),(),digest(body))
 
 def commit(plan:PublicationPlan, observed_head:str)->PublicationReceipt:
