@@ -16,8 +16,8 @@ class Tst(unittest.TestCase):
         a=P('A',files={'x':digest('a')}); b=P('B',files={'x':digest('b')}); self.assertEqual(plan(self.s(),[a,b]).disposition,Disposition.CONFLICT_HOLD)
     def test_identical_path_blob_safe(self):
         d=digest('x'); q=plan(self.s(),[P('A',files={'x':d}),P('B',files={'x':d})]); self.assertEqual(q.disposition,Disposition.READY); self.assertEqual(len(q.writes),1)
-    def test_duplicate_consequence_collapses(self):
-        c=digest('same'); q=plan(self.s(),[P('A',cons=c),P('B',cons=c)]); self.assertEqual(len(q.accepted_proposals),1); self.assertEqual(q.collapsed_proposals,('B',))
+    def test_duplicate_consequence_exact_redelivery_collapses(self):
+        c=digest('same'); a=P('A',cons=c); b=Proposal('B','agent-B','lin-B',H,c,a.receipt_root,dict(a.files)); q=plan(self.s(),[a,b]); self.assertEqual(len(q.accepted_proposals),1); self.assertEqual(q.collapsed_proposals,('B',))
     def test_staging_marker_holds(self): self.assertEqual(plan(self.s(),[P('A',files={'x/.v5-stage-marker':digest('x')})]).disposition,Disposition.DEBRIS_HOLD)
     def test_effect_authority_holds(self): self.assertEqual(plan(self.s(),[P('A',auth=True)]).disposition,Disposition.AUTHORITY_HOLD)
     def test_bad_blob_fails(self):
