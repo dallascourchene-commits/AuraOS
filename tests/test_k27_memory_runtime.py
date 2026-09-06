@@ -228,7 +228,7 @@ class SealedRegistryRuntimeTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeBindingError,'changed outside'):
                 _=rt.seal
 
-    def test_owned_write_refreshes_seal_and_stale_dependent_can_be_repaired(self):
+    def test_owned_write_consumes_runtime_and_exact_rebind_repairs_stale_dependent(self):
         with tempfile.TemporaryDirectory() as td:
             p=Path(td)/'registry.sqlite'; shutil.copyfile(REGISTRY,p)
             rt=K27MemoryRuntime(p,writable=True)
@@ -240,6 +240,16 @@ class SealedRegistryRuntimeTests(unittest.TestCase):
             src_out=rt.publish_cas(source,payload,source_url=src_r['source_url'],source_version=src_r['source_version'],
                                    expected_revision=src_b.revision_id,expected_epoch=src_b.epoch,
                                    dependencies={},dependency_epochs={})
+            self.assertTrue(rt.consumed)
+            self.assertTrue(src_out['runtime_consumed']); self.assertTrue(src_out['reopen_required'])
+            self.assertEqual(src_out['commit_status'],'COMMITTED_REOPEN_REQUIRED')
+            with self.assertRaisesRegex(RuntimeBindingError,'consumed'):
+                _=rt.seal
+            with self.assertRaisesRegex(RuntimeBindingError,'consumed'):
+                rt.read(dependent)
+
+            rt=K27MemoryRuntime.from_working_registry(
+                p,expected_state_root=src_out['committed_store_state_root'],writable=True)
             self.assertEqual(rt.seal.seal_scope,'working_registry_state')
             self.assertNotEqual(rt.seal.database_sha256,REGISTRY_SHA256)
             with self.assertRaises(StaleMemory): rt.read(dependent)
@@ -250,6 +260,12 @@ class SealedRegistryRuntimeTests(unittest.TestCase):
                                     expected_revision=dep_b.revision_id,expected_epoch=dep_b.epoch+1,
                                     dependencies=dep_r['dependencies'],dependency_epochs=dep_epochs)
             self.assertGreater(repaired['epoch'],dep_b.epoch)
+            self.assertTrue(rt.consumed)
+            with self.assertRaisesRegex(RuntimeBindingError,'consumed'):
+                rt.read(dependent)
+
+            rt=K27MemoryRuntime.from_working_registry(
+                p,expected_state_root=repaired['committed_store_state_root'])
             self.assertEqual(rt.read(dependent)[0].state,'fresh')
 
     def test_k27_path_is_locality_only(self):
