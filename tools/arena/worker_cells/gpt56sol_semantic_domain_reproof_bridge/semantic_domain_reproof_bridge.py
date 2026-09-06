@@ -7,6 +7,10 @@ import re
 from typing import Iterable, Mapping
 
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
+EXACT = "EXACT"
+REBIND = "REBIND"
+REPROVE = "REPROVE"
+HOLD = "HOLD"
 
 
 class ReproofContractError(ValueError):
@@ -30,7 +34,11 @@ def _digest(value: object) -> str:
     return sha256(raw.encode()).hexdigest()
 
 
-def _canon_pairs(items: Iterable[tuple[str, str]], name: str, value_is_root: bool = False) -> tuple[tuple[str, str], ...]:
+def _canon_pairs(
+    items: Iterable[tuple[str, str]],
+    name: str,
+    value_is_root: bool = False,
+) -> tuple[tuple[str, str], ...]:
     out = []
     seen = set()
     for key, value in items:
@@ -59,7 +67,13 @@ class Node:
             raise ReproofContractError(f"DUPLICATE_DEPENDENCY:{node_id}")
         if len(set(keys)) != len(keys):
             raise ReproofContractError(f"DUPLICATE_CONSEQUENCE_KEY:{node_id}")
-        return replace(self, node_id=node_id, verifier_id=verifier_id, dependencies=tuple(sorted(deps)), consequence_keys=tuple(sorted(keys)))
+        return replace(
+            self,
+            node_id=node_id,
+            verifier_id=verifier_id,
+            dependencies=tuple(sorted(deps)),
+            consequence_keys=tuple(sorted(keys)),
+        )
 
 
 @dataclass(frozen=True)
@@ -161,7 +175,6 @@ class AdmissionSurface:
         observation_generation: str,
         external_receipt_root: str,
     ) -> "AdmissionSurface":
-        # This computes identity only. It does not authenticate external_receipt_root.
         graph_root = _root(graph_root, "graph_root")
         vg = _canon_pairs(verifier_generations, "verifier_generations")
         aw = _canon_pairs(accepted_witness_roots, "accepted_witness_roots", True)
@@ -200,7 +213,6 @@ class CurrentOwnerSurface:
         semantic_domain_roots: Iterable[tuple[str, str]],
         owner_replay_receipt_root: str,
     ) -> "CurrentOwnerSurface":
-        # This binds a replay result supplied by the owner plane; it does not prove that the owner replay was truthful.
         graph_root = _root(graph_root, "owner.graph_root")
         vg = _canon_pairs(verifier_generations, "owner.verifier_generations")
         pp = _canon_pairs(projection_roots, "owner.projection_roots", True)
@@ -233,7 +245,14 @@ class EvidenceWitness:
 
     def validate_shape(self) -> None:
         _strict_text(self.node_id, "witness.node_id")
-        for name in ("graph_root", "witness_root", "output_root", "dependency_input_root", "projection_root", "semantic_domain_root"):
+        for name in (
+            "graph_root",
+            "witness_root",
+            "output_root",
+            "dependency_input_root",
+            "projection_root",
+            "semantic_domain_root",
+        ):
             _root(getattr(self, name), f"witness.{name}")
         _strict_text(self.verifier_generation, "witness.verifier_generation")
         for name in ("d0", "truth_authority", "effect_authority", "gate10"):
@@ -246,8 +265,10 @@ class ReproofPlan:
     graph_root: str
     explicit_changed_roots: tuple[str, ...]
     drift_seeds: tuple[str, ...]
+    rebind_nodes: tuple[str, ...]
     recompute_order: tuple[str, ...]
     reuse_nodes: tuple[str, ...]
+    transition_classes: tuple[tuple[str, str], ...]
     admission_surface_root: str
     owner_surface_root: str
     authority_ceiling: str
@@ -258,7 +279,43 @@ def _pairs_map(pairs: tuple[tuple[str, str], ...]) -> dict[str, str]:
     return dict(pairs)
 
 
-def dependency_input_root(graph: CanonicalGraph, node_id: str, evidence: Mapping[str, EvidenceWitness]) -> str:
+def classify_owner_transition(
+    *,
+    proof_generation: object,
+    current_generation: object,
+    proof_projection_root: object,
+    current_projection_root: object,
+    proof_semantic_domain_root: object,
+    current_semantic_domain_root: object,
+) -> str:
+    """Classify current-owner movement without authenticating either owner receipt.
+
+    EXACT: generation, projection, and semantic-domain identity are unchanged.
+    REBIND: generation moved, but exact projection and semantic-domain identities did not.
+    REPROVE: projection or semantic-domain identity moved.
+    HOLD: any required identity is malformed/unknown.
+    """
+    try:
+        pg = _strict_text(proof_generation, "transition.proof_generation")
+        cg = _strict_text(current_generation, "transition.current_generation")
+        pp = _root(proof_projection_root, "transition.proof_projection_root")
+        cp = _root(current_projection_root, "transition.current_projection_root")
+        pd = _root(proof_semantic_domain_root, "transition.proof_semantic_domain_root")
+        cd = _root(current_semantic_domain_root, "transition.current_semantic_domain_root")
+    except ReproofContractError:
+        return HOLD
+    if pp != cp or pd != cd:
+        return REPROVE
+    if pg != cg:
+        return REBIND
+    return EXACT
+
+
+def dependency_input_root(
+    graph: CanonicalGraph,
+    node_id: str,
+    evidence: Mapping[str, EvidenceWitness],
+) -> str:
     node = graph.by_id[node_id]
     bound = []
     for dep in node.dependencies:
@@ -309,24 +366,44 @@ def compile_reproof_plan(
         if root not in expected_nodes:
             raise ReproofContractError(f"UNKNOWN_CHANGED_ROOT:{root}")
 
+    classes: dict[str, str] = {}
     drift = set()
+    candidate_rebind = set()
     for n in graph.nodes:
-        if owner_gen[n.verifier_id] != admitted_gen[n.verifier_id]:
+        state = classify_owner_transition(
+            proof_generation=admitted_gen[n.verifier_id],
+            current_generation=owner_gen[n.verifier_id],
+            proof_projection_root=proof_proj[n.node_id],
+            current_projection_root=owner_proj[n.node_id],
+            proof_semantic_domain_root=proof_domain[n.node_id],
+            current_semantic_domain_root=owner_domain[n.node_id],
+        )
+        if state == HOLD:
+            raise ReproofContractError(f"UNKNOWN_OWNER_TRANSITION:{n.node_id}")
+        classes[n.node_id] = state
+        if state == REPROVE:
             drift.add(n.node_id)
-        if owner_proj[n.node_id] != proof_proj[n.node_id]:
-            drift.add(n.node_id)
-        if owner_domain[n.node_id] != proof_domain[n.node_id]:
-            drift.add(n.node_id)
+        elif state == REBIND:
+            candidate_rebind.add(n.node_id)
 
     seeds = set(explicit) | drift
     recompute = graph.dependency_closed_descendants(seeds)
     recompute_set = set(recompute)
-    reuse = tuple(x for x in graph.topo_order if x not in recompute_set)
+    rebind = tuple(x for x in graph.topo_order if x in candidate_rebind and x not in recompute_set)
+    reuse = tuple(
+        x
+        for x in graph.topo_order
+        if x not in recompute_set and x not in candidate_rebind
+    )
 
-    # Only evidence reused outside the reproof cone must validate. Evidence inside the cone is stale input by definition.
-    for node_id in reuse:
+    # Surviving evidence is validated differently by transition class:
+    # EXACT evidence must already bind both proof-time and current generation.
+    # REBIND evidence remains proof-time evidence and is carried only as an explicit
+    # nonauthorizing rebind obligation bound to current_owner.surface_root.
+    survivors = tuple(x for x in graph.topo_order if x not in recompute_set)
+    for node_id in survivors:
         if node_id not in evidence:
-            raise ReproofContractError(f"MISSING_REUSE_EVIDENCE:{node_id}")
+            raise ReproofContractError(f"MISSING_SURVIVOR_EVIDENCE:{node_id}")
         ev = evidence[node_id]
         ev.validate_shape()
         node = graph.by_id[node_id]
@@ -336,23 +413,38 @@ def compile_reproof_plan(
             raise ReproofContractError(f"WITNESS_GRAPH_MISMATCH:{node_id}")
         if ev.witness_root != aw[node_id]:
             raise ReproofContractError(f"UNADMITTED_WITNESS:{node_id}")
-        if ev.verifier_generation != owner_gen[node.verifier_id] or ev.verifier_generation != admitted_gen[node.verifier_id]:
-            raise ReproofContractError(f"VERIFIER_GENERATION_DRIFT:{node_id}")
         if ev.projection_root != owner_proj[node_id] or ev.projection_root != proof_proj[node_id]:
             raise ReproofContractError(f"PROJECTION_DRIFT:{node_id}")
         if ev.semantic_domain_root != owner_domain[node_id] or ev.semantic_domain_root != proof_domain[node_id]:
             raise ReproofContractError(f"SEMANTIC_DOMAIN_DRIFT:{node_id}")
         if ev.dependency_input_root != dependency_input_root(graph, node_id, evidence):
             raise ReproofContractError(f"DEPENDENCY_DETACHMENT:{node_id}")
+        state = classes[node_id]
+        if state == EXACT:
+            if (
+                ev.verifier_generation != admitted_gen[node.verifier_id]
+                or ev.verifier_generation != owner_gen[node.verifier_id]
+            ):
+                raise ReproofContractError(f"VERIFIER_GENERATION_DRIFT:{node_id}")
+        elif state == REBIND:
+            if ev.verifier_generation != admitted_gen[node.verifier_id]:
+                raise ReproofContractError(f"REBIND_PROOF_GENERATION_MISMATCH:{node_id}")
+            if admitted_gen[node.verifier_id] == owner_gen[node.verifier_id]:
+                raise ReproofContractError(f"SPURIOUS_REBIND:{node_id}")
+        else:
+            raise ReproofContractError(f"INVALID_SURVIVOR_CLASS:{node_id}:{state}")
         if not ev.d0 or ev.truth_authority or ev.effect_authority or ev.gate10:
             raise ReproofContractError(f"AUTHORITY_WIDENING:{node_id}")
 
+    transition_classes = tuple((x, classes[x]) for x in graph.topo_order)
     body = {
         "graph_root": graph.graph_root,
         "explicit_changed_roots": explicit,
         "drift_seeds": tuple(x for x in graph.topo_order if x in drift),
+        "rebind_nodes": rebind,
         "recompute_order": recompute,
         "reuse_nodes": reuse,
+        "transition_classes": transition_classes,
         "admission_surface_root": admission.surface_root,
         "owner_surface_root": current_owner.surface_root,
         "authority_ceiling": "D0_EXTERNAL_AUTH_UNPROVEN",
@@ -361,8 +453,10 @@ def compile_reproof_plan(
         graph_root=graph.graph_root,
         explicit_changed_roots=explicit,
         drift_seeds=body["drift_seeds"],
+        rebind_nodes=rebind,
         recompute_order=recompute,
         reuse_nodes=reuse,
+        transition_classes=transition_classes,
         admission_surface_root=admission.surface_root,
         owner_surface_root=current_owner.surface_root,
         authority_ceiling=body["authority_ceiling"],
