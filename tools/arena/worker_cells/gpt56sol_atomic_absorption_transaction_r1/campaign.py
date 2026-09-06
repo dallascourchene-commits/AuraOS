@@ -1,3 +1,6 @@
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from atomic_absorption import *
 import random,itertools,json
 H='1'*64; T='2'*64
@@ -29,16 +32,18 @@ def run():
         if mode==3 and q.disposition!=Disposition.AUTHORITY_HOLD: counts['authority_escape']+=1
         if mode==4 and q.disposition!=Disposition.CONFLICT_HOLD: counts['conflict_escape']+=1
         if mode==5 and q.disposition!=Disposition.CONFLICT_HOLD: counts['consequence_divergence_escape']+=1
-    hs_false=0
+    hs_false=legacy_escape=0
     for i in range(1000):
-        q=plan(snap,[mk(i,0)]); r=commit(q,('4'*64 if i%2==0 else H))
+        props=[mk(i,0)]; q=plan(snap,props)
+        r=commit(q,('4'*64 if i%2==0 else H),snapshot=snap,proposals=props)
         if i%2==0 and (r.committed or r.write_count): hs_false+=1
         if i%2==1 and not r.committed: hs_false+=1
+        if commit(q,H).committed: legacy_escape+=1
     omega=sum(omega8_keeper(x) for x in itertools.product(range(3),repeat=8))
     repairs=sum(context13_preserves_invalid((2,2,2,2,2,2,2,1),t) for t in itertools.product(range(3),repeat=5))
-    out={**counts,'hs1000_false':hs_false,'omega8_keepers':omega,'13d_repairs':repairs}
+    out={**counts,'hs1000_false':hs_false,'legacy_commit_escape':legacy_escape,'omega8_keepers':omega,'13d_repairs':repairs}
     out['campaign_root']=digest(out)
     print(json.dumps(out,sort_keys=True))
-    assert not any(out[k] for k in ('bad_ready','cas_lost','conflict_escape','debris_escape','authority_escape','consequence_divergence_escape','hs1000_false'))
+    assert not any(out[k] for k in ('bad_ready','cas_lost','conflict_escape','debris_escape','authority_escape','consequence_divergence_escape','hs1000_false','legacy_commit_escape'))
     assert omega==1 and repairs==0
 if __name__=='__main__': run()
