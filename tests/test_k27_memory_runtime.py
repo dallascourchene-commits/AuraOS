@@ -126,7 +126,7 @@ class RuntimeTests(unittest.TestCase):
         base={
             'transitions':[{'transition_id':'SPATIAL.GROUND.COMPILE_SCENE','memory_city_binding':{
                 'binding_schema':'AURA-K27-SPATIAL-SEAM-v1',
-                'provenance_archive_sha256':'042e78055f23def062e07aaf412524be01a590f969d8f2817a4ed1020220334b64e3c',
+                'provenance_archive_sha256':'042e78055f23def062e07aaf412524be01a590f969d8f474c143b34f6b45c319',
                 'scene_schema':'AURA-XR-SCENE-v1',
                 'read_apis':{name:'REVIEW_ONLY' for name in (
                     'CITY_K27_CONTEXT','CITY_SCENE_SHELL','CITY_ROUTE','CITY_WHY',
