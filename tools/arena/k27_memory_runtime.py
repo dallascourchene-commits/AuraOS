@@ -45,7 +45,7 @@ SPATIAL_SEAM_SCHEMA = "AURA-K27-SPATIAL-SEAM-v1"
 SPATIAL_SEAM_PARENT_SHA = "dedcb8d16ada00bb44ce71271175945a4b0a0fac"
 SPATIAL_ROUTE_BLOB = "f8786e721813af7c81fca94eaeda08ec0b9598f3"
 SPATIAL_SEAM_SOURCE_BLOB = "c439b0e1e438299cd8a914aade89034342065dd3"
-SPATIAL_SEAM_MODULE_BLOB = "8983170b71dd962facb4eb586c002bd63948f2f8"
+SPATIAL_SEAM_MODULE_BLOB = "ec9f41a9778c6f97b2c6bfc853d0c0f619f303f1"
 SPATIAL_TRANSITION = "SPATIAL.GROUND.COMPILE_SCENE"
 
 
@@ -383,30 +383,22 @@ class K27MemoryRuntime:
                 dependency_epochs=None if dependency_epochs is None else dict(dependency_epochs),
                 expected_store_root=self._state_root,
             )
-        # `store_state_root` was computed while BEGIN IMMEDIATE still protected
-        # the exact committed transition. Do not reopen/refresh after COMMIT:
-        # another writer may legitimately supersede it before any filesystem read.
-        # Instead consume this runtime and require an exact-root successor rebind.
         committed_root = result["store_state_root"]
         self._consumed = True
         return {
             **result,
-            "commit_status": "COMMITTED_REOPEN_REQUIRED",
-            "committed_store_state_root": committed_root,
             "target_k27": list(binding.path),
             "invalidation_cone": {
                 "root_object_id": object_id,
-                "root_path": list(binding.path),
-                "affected_objects": list(result.get("invalidated", [])),
-                "snapshot_scope": "write_transaction",
+                "affected_object_ids": list(result["invalidated"]),
                 "bounded": True,
+                "snapshot": "commit_transaction",
                 "mutation_performed": True,
                 "authority_minted": False,
             },
+            "committed_store_state_root": committed_root,
+            "continuation": "COMMITTED_REOPEN_REQUIRED",
             "runtime_consumed": True,
-            "reopen_required": True,
-            "truth_authority": False,
-            "effect_authority": False,
             "authority_minted": False,
             "gate10": False,
         }
