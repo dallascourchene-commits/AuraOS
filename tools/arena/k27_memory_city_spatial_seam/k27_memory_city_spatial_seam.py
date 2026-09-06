@@ -63,7 +63,9 @@ class SeamReceipt:
         return _digest(payload)
 
 def _digest(value: Any) -> str:
-    return sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    """Strict canonical digest: ambiguous/non-finite JSON values are invalid."""
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    return sha256(encoded.encode()).hexdigest()
 
 def _sha(data: bytes) -> str:
     return sha256(data).hexdigest()
@@ -95,7 +97,10 @@ def _validate_route_structure(route_bytes: bytes, manifest: Mapping[str, Any]) -
     if binding is None: reasons.append("MEMORY_CITY_BINDING_MISSING")
     adapters: tuple[str, ...] = (); read_apis: tuple[str, ...] = (); binding_root = None
     if binding is not None:
-        binding_root = _digest(binding)
+        try:
+            binding_root = _digest(binding)
+        except (TypeError, ValueError):
+            reasons.append("BINDING_CANONICALIZATION_INVALID")
         if set(binding) != BINDING_KEYS: reasons.append("BINDING_KEYSET_MISMATCH")
         if binding.get("binding_schema") != BINDING_SCHEMA: reasons.append("BINDING_SCHEMA_MISMATCH")
         if binding.get("source_root") != SOURCE_ROOT: reasons.append("SOURCE_ROOT_MISMATCH")
