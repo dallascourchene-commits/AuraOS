@@ -10,7 +10,9 @@ from tools.arena.worker_cells.gpt56sol_frontier27_owner_epoch.owner_epoch import
 
 REPO = Path(__file__).resolve().parents[1]
 OWNER_SOURCE = REPO / "tools" / "arena" / "frontier27_runtime.py"
-EXPECTED_OWNER_SHA256 = "d255abf8b6b59fd6fc86944a715b77104c334ce5112b1c52c6f0c3783607d5ee"
+# Rebound from exact hosted PR825 checkout after the older R11.3/R11.4 donor
+# identity d255abf8... failed currentness on the first R11.5 hosted attempt.
+EXPECTED_OWNER_SHA256 = "a9a31401e6440241c5eb1095390b706d3fe3f9e6460dac984510007cd1485e20"
 SPEC = {
     "size": 1024,
     "capacity": 4,
