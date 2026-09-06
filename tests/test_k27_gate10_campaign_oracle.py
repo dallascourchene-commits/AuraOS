@@ -113,11 +113,22 @@ class Gate10CampaignOracleTests(unittest.TestCase):
 
     def test_completion_requires_all_rounds_and_no_failures(self):
         full = completion_fields([{}] * 750, [], 750)
-        self.assertEqual(full, {"campaign_complete": True, "completed_rounds": 750, "round_failures": 0})
-        short = completion_fields([{}] * 749, [], 750)
+        full_trace = [{"round": i} for i in range(750)]
+        full = completion_fields(full_trace, [], 750)
+        self.assertEqual(full, {"campaign_complete": True, "completed_rounds": 750, "round_failures": 0, "round_identity_complete": True})
+        short = completion_fields(full_trace[:-1], [], 750)
         self.assertFalse(short["campaign_complete"])
-        failed = completion_fields([{}] * 750, [{"round": 1}], 750)
+        self.assertFalse(short["round_identity_complete"])
+        failed = completion_fields(full_trace, [{"round": 1}], 750)
         self.assertFalse(failed["campaign_complete"])
+
+    def test_completion_rejects_duplicate_round_identity(self):
+        trace = [{"round": i} for i in range(750)]
+        trace[-1] = {"round": 748}
+        out = completion_fields(trace, [], 750)
+        self.assertEqual(out["completed_rounds"], 750)
+        self.assertFalse(out["round_identity_complete"])
+        self.assertFalse(out["campaign_complete"])
 
 
 if __name__ == "__main__":
