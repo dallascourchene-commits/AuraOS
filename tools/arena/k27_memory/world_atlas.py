@@ -24,7 +24,9 @@ class FrameAddress:
     canonical_ref: str
 
     def __post_init__(self):
-        validate_path(self.path)
+        frozen = tuple(self.path)
+        validate_path(frozen)
+        object.__setattr__(self, 'path', frozen)
 
 @dataclass(frozen=True)
 class FrameTransform:
