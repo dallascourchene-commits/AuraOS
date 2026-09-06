@@ -1,0 +1,29 @@
+{
+  "version": "AURA_RUNTIME_PROFILE_V1",
+  "profile_id": "k27-memory-city-readonly",
+  "objective": "Boot the repository-owned K27 Memory City registry as a loopback-only read-only AuraOS runtime service; verify the pinned source-database provenance identity, rebuilt semantic root, 1,115 records, 1,000 route projections, frozen predecessor tests, and registry oracles without granting write, belief, use, effect, promotion, or Gate 10 authority.",
+  "environment": {"create_venv": true, "requirements": []},
+  "server": {
+    "command": ["{python}", "aura_k27_memory_city_runtime.py", "--repo-root", "{repo}", "--serve", "--host", "127.0.0.1", "--port", "8772"],
+    "readiness_url": "http://127.0.0.1:8772/health",
+    "readiness_timeout_seconds": 30
+  },
+  "probe": {
+    "command": ["{python}", "aura_k27_memory_city_runtime.py", "--probe-url", "http://127.0.0.1:8772/health"],
+    "timeout_seconds": 30,
+    "required_artifacts": []
+  },
+  "verification_commands": [
+    {"command": ["{python}", "scripts/verify_k27_memory_city_candidate.py", "--repo-root", "{repo}"], "timeout_seconds": 300}
+  ],
+  "axiom_bindings": [
+    "K27Coordinate != Truth != Currentness != Authority",
+    "CASAuthority = ExactObjectIdentity + ExactRevision + ExactLifecycleEpoch",
+    "RevisionEqualityAfterABA != EpochEquality",
+    "StaleReadSet => HOLD_STALE_DEPENDENCY",
+    "MemoryWrite != BeliefCommit != UseAuthority",
+    "canonical registry is read-only in the host runtime",
+    "mutation verification uses ephemeral copies only",
+    "keep promotion and Gate 10 authority outside the candidate"
+  ]
+}
