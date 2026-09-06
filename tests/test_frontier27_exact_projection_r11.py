@@ -31,6 +31,18 @@ class ExactProjectionR11Tests(unittest.TestCase):
         f=FrontierOffload(size,0,self.tier(bandwidth=bw,jpgb=0.0),0.0,0.0); before=self.state(f)
         with self.assertRaises(ValueError): run_frontier_exact_projected(f,[(i,) for i in range(11)],[() for _ in range(11)])
         self.assertEqual(self.state(f),before)
+
+    def test_all_hit_high_energy_admitted_despite_aggregate_potential_overflow(self):
+        size=600_000_000; jpgb=1.7e308
+        f=FrontierOffload(size,2,self.tier(bandwidth=1e9,jpgb=jpgb),0.0,0.0)
+        for x in range(2): f.r.access(x)
+        got=run_frontier_exact_projected(f,[(0,),(1,)],[(),()])
+        self.assertEqual(got['bytes'],0); self.assertEqual(got['seconds'],0.0); self.assertEqual(got['energy_j'],0.0)
+    def test_actual_high_energy_overflow_rejected_before_real_mutation(self):
+        size=600_000_000; jpgb=1.7e308
+        f=FrontierOffload(size,0,self.tier(bandwidth=1e9,jpgb=jpgb),0.0,0.0); before=self.state(f)
+        with self.assertRaises(ValueError): run_frontier_exact_projected(f,[(0,),(1,)],[(),()])
+        self.assertEqual(self.state(f),before)
     def test_shared_aggregate_budget_rejects_routes_plus_preds(self):
         routes=[tuple(range(3)),tuple(range(3))]; preds=[tuple(range(3)),tuple(range(3))]
         with self.assertRaises(ValueError): freeze_records_with_aggregate_budget(routes,preds,max_records=4,max_items_per_record=4,max_aggregate_items=10)

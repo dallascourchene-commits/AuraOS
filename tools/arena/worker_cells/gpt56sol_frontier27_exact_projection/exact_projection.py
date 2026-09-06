@@ -18,7 +18,6 @@ from tools.arena.worker_cells.gpt56sol_frontier27_numeric_preflight.transactiona
     _freeze_records,
     _preflight_common,
     _prove_frontier_window,
-    _prove_metric_domain,
 )
 
 MAX_GOVERNED_EXPERT_IDS_PER_INVOCATION = 100_000
@@ -83,7 +82,10 @@ def run_frontier_exact_projected(offload: FrontierOffload, routes, preds):
     """Admit only when exact dry-run and real canonical execution agree."""
     frozen_routes, frozen_preds = freeze_records_with_aggregate_budget(routes, preds)
     total_bytes = _preflight_common(offload.size, frozen_routes, frozen_preds)
-    _prove_metric_domain(total_bytes, offload.t.bandwidth, offload.t.joules_per_gb)
+    # Keep the governed aggregate-byte ceiling, but do not infer actual-transfer
+    # seconds/energy from potential route+prediction bytes. Exact transfer metrics
+    # are decided by the canonical shadow execution below.
+    del total_bytes
     _prove_frontier_window(offload, frozen_preds)
     before = _state(offload)
     try:

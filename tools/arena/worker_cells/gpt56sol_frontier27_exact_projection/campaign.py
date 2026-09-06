@@ -30,6 +30,16 @@ def collision_cases(n=1000):
         got=run_frontier_exact_projected(f,[(x,) for x in ids],[() for _ in ids])
         mismatches += got['seconds'] != 0.0 or got['energy_j'] != 0.0
     return {'cases':n,'mismatches':mismatches,'r10_worst_case_false_rejects':n}
+
+def potential_metric_collision(n=1000):
+    mismatches=0
+    size=600_000_000; jpgb=1.7e308
+    for _ in range(n):
+        t=StorageTier('ssd',(1<<63)-1,1e9,jpgb); f=FrontierOffload(size,2,t,0.0,0.0)
+        f.r.access(0); f.r.access(1)
+        got=run_frontier_exact_projected(f,[(0,),(1,)],[(),()])
+        mismatches += got['bytes'] != 0 or got['seconds'] != 0.0 or got['energy_j'] != 0.0
+    return {'cases':n,'mismatches':mismatches,'aggregate_metric_surrogate_false_rejects':n}
 def aggregate_policy(n=30_000):
     mismatches=0
     for i in range(n):
@@ -40,11 +50,11 @@ def aggregate_policy(n=30_000):
         mismatches += got != expected
     return {'cases':n,'mismatches':mismatches}
 def run():
-    eq=owner_equivalence(); col=collision_cases(); agg=aggregate_policy()
+    eq=owner_equivalence(); col=collision_cases(); metric_col=potential_metric_collision(); agg=aggregate_policy()
     omega=sum(int(all(v==2 for v in axes)) for axes in itertools.product((0,1,2),repeat=8))
     hard=(0,2,2,2,2,2,2,2); repairs=sum(int(all(v==2 for v in hard)) for _ in itertools.product((0,1,2),repeat=5))
-    receipt={'schema':'AURA-F27-EXACT-PROJECTION-R11-RESIDUAL-v1','owner_equivalence':eq,'all_hit_collision':col,'aggregate_policy':agg,'omega8_states':3**8,'omega8_keepers':omega,'thirteen_d_trailing_contexts':3**5,'thirteen_d_repairs':repairs}
+    receipt={'schema':'AURA-F27-EXACT-PROJECTION-R11.1-RESIDUAL-v2','owner_equivalence':eq,'all_hit_collision':col,'potential_metric_collision':metric_col,'aggregate_policy':agg,'omega8_states':3**8,'omega8_keepers':omega,'thirteen_d_trailing_contexts':3**5,'thirteen_d_repairs':repairs}
     receipt['campaign_root']=root(receipt)
-    assert eq['result_mismatches']==eq['state_mismatches']==col['mismatches']==agg['mismatches']==repairs==0 and omega==1
+    assert eq['result_mismatches']==eq['state_mismatches']==col['mismatches']==metric_col['mismatches']==agg['mismatches']==repairs==0 and omega==1
     return receipt
 if __name__=='__main__': print(json.dumps(run(),sort_keys=True))
