@@ -6,7 +6,10 @@ import json
 import math
 import random
 
-from tools.arena.worker_cells.gpt56sol_frontier27_numeric_preflight.transactional_preflight import MAX_GOVERNED_INT
+from tools.arena.worker_cells.gpt56sol_frontier27_numeric_preflight.transactional_preflight import (
+    MAX_GOVERNED_INT,
+    _freeze_records,
+)
 
 
 def stable(v):
@@ -79,6 +82,113 @@ def random_case(rng):
     return base
 
 
+class _OuterFailure:
+    def __init__(self, exc, *, on_next=False):
+        self.exc = exc
+        self.on_next = on_next
+        self.used = False
+
+    def __iter__(self):
+        if not self.on_next:
+            raise self.exc
+        return self
+
+    def __next__(self):
+        if not self.used:
+            self.used = True
+            return (1,)
+        raise self.exc
+
+
+class _InnerFailure:
+    def __init__(self, exc, *, on_next=False):
+        self.exc = exc
+        self.on_next = on_next
+        self.used = False
+
+    def __iter__(self):
+        if not self.on_next:
+            raise self.exc
+        return self
+
+    def __next__(self):
+        if not self.used:
+            self.used = True
+            return 1
+        raise self.exc
+
+
+class _InfiniteOuter:
+    def __iter__(self):
+        while True:
+            yield (1,)
+
+
+class _InfiniteInner:
+    def __iter__(self):
+        while True:
+            yield 1
+
+
+def materialization_case(i):
+    family = i % 10
+    if family == 0:
+        routes, preds, expected = [(1, 2), (3,)], [(1,), (3, 4)], True
+    elif family == 1:
+        routes, preds, expected = _OuterFailure(RuntimeError("outer")), [], False
+    elif family == 2:
+        routes, preds, expected = _OuterFailure(KeyError("outer"), on_next=True), [(1,)], False
+    elif family == 3:
+        routes, preds, expected = [_InnerFailure(LookupError("inner"))], [(1,)], False
+    elif family == 4:
+        routes, preds, expected = [_InnerFailure(RuntimeError("inner"), on_next=True)], [(1,)], False
+    elif family == 5:
+        routes, preds, expected = _InfiniteOuter(), [(1,)] * 8, False
+    elif family == 6:
+        routes, preds, expected = [_InfiniteInner()], [(1,)], False
+    elif family == 7:
+        routes, preds, expected = [(True,)], [(1,)], False
+    elif family == 8:
+        routes, preds, expected = [(1,)], [(1,), (2,)], False
+    else:
+        routes, preds, expected = [(), (1,)], [(), (1,)], True
+    try:
+        _freeze_records(routes, preds, max_records=8, max_items_per_record=8)
+        got = True
+    except ValueError:
+        got = False
+    return got, expected
+
+
+def materialization_campaign(n=30_000):
+    mismatches = false_accepts = false_rejects = uncontrolled = 0
+    for i in range(n):
+        try:
+            got, expected = materialization_case(i)
+        except Exception:
+            uncontrolled += 1
+            continue
+        mismatches += got != expected
+        false_accepts += got and not expected
+        false_rejects += expected and not got
+
+    hs_escapes = 0
+    for family in range(10):
+        for j in range(1000):
+            got, expected = materialization_case(family * 1000 + j)
+            hs_escapes += got != expected
+    return {
+        "cases": n,
+        "mismatches": mismatches,
+        "false_accepts": false_accepts,
+        "false_rejects": false_rejects,
+        "uncontrolled_exceptions": uncontrolled,
+        "hs1000_families": 10,
+        "hs1000_cases": 10_000,
+        "hs1000_escapes": hs_escapes,
+    }
+
+
 def run(seed=270825, n=100_000):
     rng = random.Random(seed)
     mismatches = 0
@@ -103,9 +213,10 @@ def run(seed=270825, n=100_000):
         for _ in range(1000):
             hs_false_accepts += bool(implementation_decision(**family))
 
+    invocation = materialization_campaign()
+
     omega_keeper = 0
     for axes in itertools.product((0, 1, 2), repeat=8):
-        # Each hard axis has exactly one verified state (=2); unknown/invalid cannot compensate.
         omega_keeper += int(all(v == 2 for v in axes))
 
     hard_invalid = (0, 2, 2, 2, 2, 2, 2, 2)
@@ -115,19 +226,23 @@ def run(seed=270825, n=100_000):
         repairs += int(all(v == 2 for v in hard_invalid))
 
     receipt = {
-        "schema": "AURA-F27-NUMERIC-TOTALITY-DONOR-CAMPAIGN-v1",
+        "schema": "AURA-F27-NUMERIC-INVOCATION-TOTALITY-DONOR-CAMPAIGN-v2",
         "seed": seed,
         "randomized_decisions": n,
         "oracle_mismatches": mismatches,
-        "hs1000_families": len(hs_families),
-        "hs1000_cases": len(hs_families) * 1000,
-        "hs_false_accepts": hs_false_accepts,
+        "numeric_hs1000_families": len(hs_families),
+        "numeric_hs1000_cases": len(hs_families) * 1000,
+        "numeric_hs_false_accepts": hs_false_accepts,
+        "invocation_materialization": invocation,
         "omega8_states": 3**8,
         "omega8_keepers": omega_keeper,
         "13d_trailing_contexts": 3**5,
         "13d_repairs": repairs,
     }
     receipt["campaign_root"] = root(receipt)
+    assert mismatches == hs_false_accepts == repairs == 0
+    assert all(invocation[k] == 0 for k in ("mismatches", "false_accepts", "false_rejects", "uncontrolled_exceptions", "hs1000_escapes"))
+    assert omega_keeper == 1
     return receipt
 
 
