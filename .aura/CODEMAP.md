@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1657
-- **total_bytes**: 26538457
-- **text_tokens_est**: 6624958
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1662
+- **total_bytes**: 26557823
+- **text_tokens_est**: 6629802
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1657,
+  "repo_file_count": 1662,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1667,6 +1667,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/worker_cells/gpt56sol_invocation_watchdog/README.md",
     "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
     "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
+    "tools/arena/worker_cells/gpt56sol_subreaper_fixed_point/README.md",
+    "tools/arena/worker_cells/gpt56sol_subreaper_fixed_point/campaign.py",
+    "tools/arena/worker_cells/gpt56sol_subreaper_fixed_point/subreaper_containment.py",
+    "tools/arena/worker_cells/gpt56sol_subreaper_fixed_point/test_subreaper_containment.py",
+    "tools/arena/worker_cells/gpt56sol_subreaper_fixed_point/tree_worker.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1797,15 +1802,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1657,
-  "bytes": 26538457,
-  "tokens_est": 6624958,
+  "files": 1662,
+  "bytes": 26557823,
+  "tokens_est": 6629802,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 241,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1009,
+    "python_module": 1013,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
