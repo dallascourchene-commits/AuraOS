@@ -5,7 +5,7 @@ from hashlib import sha256
 import json
 from typing import Iterable, Sequence
 
-SCHEMA = "AURA-GEN25-ADMISSION-LIVENESS-WITNESS-v3"
+SCHEMA = "AURA-GEN25-ADMISSION-LIVENESS-WITNESS-v4"
 ACTIVE_QUEUE_STATES = frozenset({"AUTHORIZED_FOR_DISPATCH_WHEN_OWNER_BOUND", "READY"})
 INACTIVE_QUEUE_STATES = frozenset({"CANCELLED", "HOLD", "SUPERSEDED", "DONE", "TERMINAL"})
 
@@ -56,7 +56,9 @@ class ConsumerObservation:
     service_active: bool | None = None
     cursor_s: int | None = None
     last_scan_s: int | None = None
+    progress_moved: bool | None = None
     lease_current: bool | None = None
+    evidence_root: str | None = None
 
 @dataclass(frozen=True)
 class CommandDisposition:
@@ -144,15 +146,20 @@ def _validate_bound_receipt(receipt: Receipt, now_s: int) -> None:
 def _validate_consumer(consumer: ConsumerObservation, now_s: int) -> None:
     _bool(consumer.observed, "BAD_CONSUMER_OBSERVED")
     _opt_bool(consumer.service_active, "BAD_SERVICE_ACTIVE")
+    _opt_bool(consumer.progress_moved, "BAD_PROGRESS_MOVED")
     _opt_bool(consumer.lease_current, "BAD_LEASE_CURRENT")
     _opt_time(consumer.cursor_s, "CURSOR_TIME", now_s)
     _opt_time(consumer.last_scan_s, "LAST_SCAN_TIME", now_s)
+    if consumer.evidence_root is not None:
+        _valid_text(consumer.evidence_root, "BAD_EVIDENCE_ROOT", max_len=256)
     if not consumer.observed:
-        if any(v is not None for v in (consumer.service_active, consumer.cursor_s, consumer.last_scan_s, consumer.lease_current)):
+        if any(v is not None for v in (
+            consumer.service_active, consumer.cursor_s, consumer.last_scan_s,
+            consumer.progress_moved, consumer.lease_current, consumer.evidence_root,
+        )):
             raise E("UNOBSERVED_CONSUMER_HAS_STATE")
-    else:
-        if consumer.service_active is None or consumer.lease_current is None:
-            raise E("INCOMPLETE_CONSUMER_OBSERVATION")
+    elif consumer.service_active is None:
+        raise E("INCOMPLETE_CONSUMER_OBSERVATION")
 
 
 def classify_command(now_s: int, head: Head, command: Command, receipts: Sequence[Receipt]) -> CommandDisposition:
@@ -243,17 +250,42 @@ def compile_recovery(
                 "EMIT_COMMAND_BOUND_TYPED_ADMISSION_OR_FIRST_FAILING_GATE",
             )
             restart_budget = 0
-        else:
-            restart_needed = (consumer.service_active is False) or (consumer.lease_current is False)
+        elif consumer.service_active is False:
             steps = (
                 "CAPTURE_PRE_STATE",
-                *(("RESTART_AURA_PROJECT006_ONCE",) if restart_needed else ()),
+                "RESTART_AURA_PROJECT006_ONCE",
                 "REUSE_EXISTING_EXECUTION_FALSE_CANARY",
                 "RUN_EXACTLY_ONE_CONSUMER_ITERATION",
                 "CAPTURE_POST_STATE_AND_LOCAL_RECEIPTS",
                 "EMIT_COMMAND_BOUND_TYPED_ADMISSION_OR_FIRST_FAILING_GATE",
             )
-            restart_budget = 1 if restart_needed else 0
+            restart_budget = 1
+        elif consumer.progress_moved is False:
+            steps = (
+                "CAPTURE_STUCK_ACTIVE_STATE",
+                "RESTART_AURA_PROJECT006_ONCE",
+                "REUSE_EXISTING_EXECUTION_FALSE_CANARY",
+                "RUN_EXACTLY_ONE_CONSUMER_ITERATION",
+                "CAPTURE_POST_STATE_AND_LOCAL_RECEIPTS",
+                "EMIT_COMMAND_BOUND_TYPED_ADMISSION_OR_FIRST_FAILING_GATE",
+            )
+            restart_budget = 1
+        elif consumer.progress_moved is None:
+            steps = (
+                "CAPTURE_PRE_STATE",
+                "REUSE_EXISTING_EXECUTION_FALSE_CANARY",
+                "RUN_EXACTLY_ONE_CONSUMER_ITERATION",
+                "CAPTURE_POST_STATE_AND_LOCAL_RECEIPTS",
+                "COMPARE_CURSOR_STATE_RECEIPT_MOVEMENT",
+                "EMIT_COMMAND_BOUND_TYPED_ADMISSION_OR_FIRST_FAILING_GATE",
+            )
+            restart_budget = 0
+        else:
+            steps = (
+                "INSPECT_COMMAND_BOUND_RECEIPT_OR_CALLBACK_BOUNDARY",
+                "EMIT_COMMAND_BOUND_TYPED_ADMISSION_OR_FIRST_FAILING_GATE",
+            )
+            restart_budget = 0
     elif system == SystemState.POST_ACK_REDUCER_STALL:
         steps = (
             "DO_NOT_REPLAY_EFFECT",
@@ -266,7 +298,7 @@ def compile_recovery(
         steps = ("REBIND_EXACT_CURRENT_HEAD", "REVALIDATE_COMMAND_AUTHORITY_AND_ADMISSION_SURFACE")
         restart_budget = 0
     elif system == SystemState.HOST_VISIBILITY_REQUIRED:
-        steps = ("OBSERVE_CONSUMER_CURSOR_LEASE_LAST_SCAN", "EMIT_TYPED_COMMAND_STATE")
+        steps = ("OBSERVE_CONSUMER_CURSOR_LAST_SCAN_AND_RECEIPTS", "EMIT_TYPED_COMMAND_STATE")
         restart_budget = 0
     else:
         steps = ()
@@ -276,6 +308,7 @@ def compile_recovery(
     fanout = False
     payload = {
         "schema": SCHEMA,
+        "head": {"generation": head.generation, "digest": head.digest},
         "system_state": system.value,
         "commands": [
             {
@@ -288,6 +321,15 @@ def compile_recovery(
             for d in dispositions
         ],
         "queue_classes": list(queue_classes),
+        "consumer": {
+            "observed": consumer.observed,
+            "service_active": consumer.service_active,
+            "cursor_s": consumer.cursor_s,
+            "last_scan_s": consumer.last_scan_s,
+            "progress_moved": consumer.progress_moved,
+            "lease_current_advisory": consumer.lease_current,
+            "evidence_root": consumer.evidence_root,
+        },
         "recovery_steps": list(steps),
         "local_progress_proven": progress,
         "provider_fanout_allowed": fanout,
