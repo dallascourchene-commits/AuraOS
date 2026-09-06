@@ -54,6 +54,9 @@ class IsolatedPatchedTarget:
     def crash(self):
         raise ValueError("synthetic child failure")
 
+    def unpickleable(self):
+        return lambda value: value
+
     def close(self):
         if self._membrane is not None:
             membrane, self._membrane = self._membrane, None
@@ -69,6 +72,9 @@ class AirLLMProcessIsolationTests(unittest.TestCase):
             self.assertEqual(proxy.receipt.parent_pid, os.getpid())
             self.assertNotEqual(proxy.receipt.child_pid, os.getpid())
             self.assertEqual(proxy.receipt.start_method, "spawn")
+            self.assertEqual(len(proxy.receipt.worker_nonce_root), 64)
+            self.assertEqual(len(proxy.receipt.factory_identity_root), 64)
+            self.assertEqual(len(proxy.receipt.receipt_root), 64)
 
     def test_02_child_hard_false_membrane_remains_active(self):
         with self._proxy() as proxy:
@@ -105,6 +111,8 @@ class AirLLMProcessIsolationTests(unittest.TestCase):
         with self._proxy() as proxy:
             with self.assertRaises(IsolationBoundaryError):
                 proxy.call("_secret")
+            with self.assertRaises(IsolationBoundaryError):
+                proxy.call("not-valid!")
 
     def test_07_missing_method_fails_closed_without_child_exception_pickle(self):
         with self._proxy() as proxy:
@@ -131,6 +139,19 @@ class AirLLMProcessIsolationTests(unittest.TestCase):
     def test_10_unimportable_or_private_symbol_fails_closed(self):
         with self.assertRaises(RemoteInvocationError):
             IsolatedObjectProxy(__name__, "_PrivateTarget", timeout_seconds=2.0)
+
+    def test_11_unserializable_call_fails_in_parent_without_killing_child(self):
+        with self._proxy() as proxy:
+            with self.assertRaises(IsolationBoundaryError):
+                proxy.call("generate", lambda x: x)
+            self.assertEqual(proxy.generate("still-alive")["text"], "still-alive")
+
+    def test_12_unserializable_child_result_is_sanitized_and_session_survives(self):
+        with self._proxy() as proxy:
+            with self.assertRaises(RemoteInvocationError) as caught:
+                proxy.call("unpickleable")
+            self.assertEqual(caught.exception.error_type, "IsolationBoundaryError")
+            self.assertEqual(proxy.generate("after-error")["text"], "after-error")
 
 
 class _PrivateTarget:
