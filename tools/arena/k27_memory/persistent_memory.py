@@ -63,6 +63,15 @@ class MemoryStore:
     def __enter__(self): return self
     def __exit__(self, *_): self.close()
 
+    def state_root(self):
+        """Exact local registry state root; currentness/owner authority is not implied."""
+        frames = [dict(r) for r in self.db.execute(
+            'SELECT frame_id,generation FROM frames ORDER BY frame_id').fetchall()]
+        objects = [dict(r) for r in self.db.execute('''SELECT o.object_id,o.current_rev,o.state,o.frame_id,
+            o.frame_generation,o.path,o.epoch,r.payload_sha256 FROM objects o
+            JOIN revisions r ON r.revision_id=o.current_rev ORDER BY o.object_id''').fetchall()]
+        return sha256(canonical({'frames':frames,'objects':objects}).encode()).hexdigest()
+
     @contextmanager
     def _write(self):
         self.db.execute('BEGIN IMMEDIATE')
@@ -120,7 +129,8 @@ class MemoryStore:
                 JOIN dependencies d ON d.revision_id=o.current_rev WHERE o.object_id=?''',(parent,)))
 
     def publish(self, object_id, payload, address, *, source_url, source_version,
-                expected_revision=None, expected_epoch=None, dependencies=None, dependency_epochs=None):
+                expected_revision=None, expected_epoch=None, dependencies=None, dependency_epochs=None,
+                expected_store_root=None):
         nonempty(object_id,'object_id'); nonempty(source_url,'source_url'); nonempty(source_version,'source_version')
         checked_address(address)
         if address.canonical_ref != object_id: raise ValueError('address must bind the exact object identity')
@@ -135,6 +145,8 @@ class MemoryStore:
             epoch = dependency_epochs[key]
             if type(epoch) is not int or epoch <= 0:
                 raise ValueError('dependency epoch must be a positive int')
+        if expected_store_root is not None:
+            nonempty(expected_store_root,'expected_store_root')
         payload_text = canonical(payload)
         envelope = {'object_id':object_id, 'payload':json.loads(payload_text), 'address':address_record(address),
                     'source_url':source_url, 'source_version':source_version,
@@ -143,6 +155,8 @@ class MemoryStore:
         encoded = canonical(envelope)
         revision = sha256(encoded.encode()).hexdigest()
         with self._write():
+            if expected_store_root is not None and self.state_root() != expected_store_root:
+                raise MemoryConflict('registry state changed; reload before publishing')
             frame = self.db.execute('SELECT generation FROM frames WHERE frame_id=?',(address.frame_id,)).fetchone()
             if not frame or frame[0] != address.frame_generation: raise StaleMemory('address frame generation is not current')
             prior = self.db.execute('SELECT current_rev,epoch FROM objects WHERE object_id=?',(object_id,)).fetchone()
@@ -164,7 +178,8 @@ class MemoryStore:
                 frame_id=excluded.frame_id,frame_generation=excluded.frame_generation,path=excluded.path,epoch=excluded.epoch''',
                 (object_id,revision,address.frame_id,address.frame_generation,path_key(address.path),epoch))
             affected = self._invalidate([object_id]) if prior and prior[0] != revision else set()
-            return {'object_id':object_id,'revision_id':revision,'epoch':epoch,'invalidated':sorted(affected)}
+            return {'object_id':object_id,'revision_id':revision,'epoch':epoch,'invalidated':sorted(affected),
+                    'store_state_root':self.state_root()}
 
     def get(self, object_id, *, allow_stale=False):
         row = self.db.execute('''SELECT r.envelope,r.revision_id,r.payload_sha256,o.state,
@@ -191,7 +206,6 @@ class MemoryStore:
     def under(self, frame_id, generation, prefix=()):
         nonempty(frame_id,'frame_id'); nonempty(generation,'generation'); checked_path(prefix)
         key = path_key(prefix)
-        # Current frame and revision data are resolved together by this one read statement.
         rows = self.db.execute('''SELECT r.envelope,r.revision_id,r.payload_sha256,o.epoch FROM objects o
             JOIN frames f USING(frame_id) JOIN revisions r ON r.revision_id=o.current_rev
             WHERE o.frame_id=? AND o.frame_generation=? AND f.generation=?
@@ -201,7 +215,6 @@ class MemoryStore:
                  'currentness_scope':'local registry consistency only'} for r in rows]
 
     def project(self, object_id, atlas, destination_frame):
-        # Pin source and destination registry state in the same SQLite snapshot.
         self.db.execute('BEGIN')
         try:
             result = self._project_snapshot(object_id,atlas,destination_frame)
