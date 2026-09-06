@@ -46,39 +46,7 @@ jobs:
             tools/arena/worker_cells/gpt56sol_frontier27_owner_epoch/owner_epoch.py \
             tools/arena/worker_cells/gpt56sol_frontier27_owner_epoch/campaign.py \
             tests/test_frontier27_owner_epoch_r115.py
-      - name: Exact PR825 owner-source, restart-incarnation and ABA proof
+      - name: Exact PR825 source + restart-incarnation + ABA + Omega8/HS1000/13D proof
         run: python -m unittest -q tests.test_frontier27_owner_epoch_r115
-      - name: Implementation-backed Omega8 HS1000 13D falsification
-        run: |
-          python - <<'PY'
-          from hashlib import sha256
-          from pathlib import Path
-          from tools.arena.worker_cells.gpt56sol_frontier27_owner_epoch.campaign import run
-          owner = Path('tools/arena/frontier27_runtime.py').read_bytes()
-          source_root = sha256(owner).hexdigest()
-          expected = 'a9a31401e6440241c5eb1095390b706d3fe3f9e6460dac984510007cd1485e20'
-          assert source_root == expected, (source_root, expected)
-          spec = {
-              'size': 1024,
-              'capacity': 4,
-              'tier': {'name':'ram','capacity_bytes':1_000_000,'bandwidth':1_000_000.0,'joules_per_gb':1.0},
-              'window_s':1.0,
-              'budget_j':10.0,
-          }
-          r = run(source=owner, source_root=source_root, spec=spec)
-          assert r['live_restart_probe'] is True, r
-          assert r['omega_states'] == 6561, r
-          assert r['omega_keepers'] == 1, r
-          assert r['omega_oracle_mismatches'] == 0, r
-          assert r['routing_tails'] == 243, r
-          assert r['hard_invalid_repairs'] == 0, r
-          assert r['valid_tail_admits'] == 243, r
-          assert r['hs1000'] == 1000, r
-          assert r['false_promotions'] == 0, r
-          assert r['hs_root'] == '1a88fd0affed00c61c6274c706e28325675f304502cb8023a60893040ecab3bc', r
-          assert r['omega_root'] == 'f686082019497abe2ad835b52d311ce4efcb403602020dbb3f9ab54b9a0e5793', r
-          assert r['campaign_root'] == '12400187ceb3161d48e675d1d32a9305af6e98512bdf5cca7d4a00f5c0e52fb8', r
-          print(r)
-          PY
       - name: Verify proof did not dirty repository
         run: test -z "$(git status --porcelain=v1)"
