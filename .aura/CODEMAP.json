@@ -32,6 +32,7 @@
       ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/kinetic-audio-multirate-proof.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -358,6 +359,9 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python -m tools.arena.campaign_kinetic_audio_multirate_donor": [
+      ".github/workflows/kinetic-audio-multirate-proof.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -1060,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1654,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1205,6 +1209,7 @@
       ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/kinetic-audio-multirate-proof.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -2158,6 +2163,7 @@
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
       "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
+      "docs/arena/kinetic-audio-multirate-donor.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -2686,6 +2692,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_kinetic_audio_multirate_donor.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -2694,8 +2701,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_kinetic_audio_multirate_donor.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/kinetic_audio_multirate_donor.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -9970,6 +9979,63 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/kinetic-audio-multirate-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2727,
+      "lines": 62,
+      "tokens_est": 682,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m tools.arena.campaign_kinetic_audio_multirate_donor"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          32
+        ],
+        "python -m tools.arena.campaign_kinetic_audio_multirate_donor": [
+          40
+        ]
+      },
+      "topology": {},
+      "digest8": "c480de33ffad2685",
+      "vector": [
+        -0.063288,
+        -0.153393,
+        0.138376,
+        -0.07616,
+        -0.140521,
+        -0.170556,
+        0.213463,
+        -0.159829,
+        0.269243,
+        -0.026817,
+        -0.134085,
+        0.239208,
+        -0.170556,
+        0.153393,
+        0.234917,
+        0.243498,
+        -0.258516,
+        -0.159829,
+        0.161975,
+        -0.159829,
+        0.209173,
+        -0.230626,
+        -0.061143,
+        -0.243498,
+        -0.140521,
+        -0.168411,
+        0.273533,
+        -0.194155,
+        0.035398,
+        -0.069724,
+        0.183428,
+        -0.086887
       ]
     },
     {
@@ -76501,6 +76567,53 @@
       ]
     },
     {
+      "path": "docs/arena/kinetic-audio-multirate-donor.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 8520,
+      "lines": 130,
+      "tokens_est": 2129,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b829956585c7fb69",
+      "vector": [
+        -0.023523,
+        -0.219135,
+        -0.162184,
+        -0.283513,
+        0.169613,
+        0.2538,
+        -0.028475,
+        -0.092854,
+        0.018571,
+        0.105234,
+        0.127519,
+        -0.028475,
+        -0.048284,
+        0.184469,
+        0.256276,
+        -0.073045,
+        -0.186945,
+        -0.256276,
+        0.033427,
+        0.288465,
+        0.154756,
+        0.00619,
+        -0.157232,
+        0.06314,
+        -0.20923,
+        0.06314,
+        0.263704,
+        -0.241419,
+        -0.288465,
+        0.276085,
+        -0.080473,
+        0.16466
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -104047,6 +104160,53 @@
       ]
     },
     {
+      "path": "tests/test_kinetic_audio_multirate_donor.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9262,
+      "lines": 217,
+      "tokens_est": 2316,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8f3f65cd71c160d",
+      "vector": [
+        -0.301439,
+        -0.050928,
+        0.29318,
+        0.180313,
+        -0.075704,
+        0.001376,
+        0.166549,
+        -0.070198,
+        0.056434,
+        0.075704,
+        0.006882,
+        0.130761,
+        -0.06194,
+        -0.249135,
+        0.13902,
+        -0.122503,
+        -0.180313,
+        -0.199583,
+        -0.348238,
+        -0.08121,
+        0.089468,
+        0.086715,
+        0.086715,
+        -0.083962,
+        0.191324,
+        0.25464,
+        -0.25464,
+        -0.202336,
+        -0.232617,
+        -0.282169,
+        -0.150031,
+        0.172054
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -104423,6 +104583,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11336,
+      "lines": 295,
+      "tokens_est": 2834,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6c750ce334d7cbfd",
+      "vector": [
+        -0.277853,
+        -0.046943,
+        -0.222028,
+        0.199191,
+        0.117992,
+        -0.123067,
+        0.072318,
+        0.074855,
+        0.158592,
+        -0.171279,
+        0.189041,
+        0.074855,
+        -0.001269,
+        -0.143367,
+        -0.262628,
+        -0.133217,
+        -0.27024,
+        -0.052018,
+        0.019031,
+        0.138292,
+        -0.237253,
+        -0.222028,
+        0.166204,
+        0.277853,
+        -0.034256,
+        0.288002,
+        0.024106,
+        -0.320989,
+        -0.211878,
+        0.013956,
+        0.064705,
+        0.214416
+      ]
+    },
+    {
       "path": "tools/arena/consequence_admission_kernel.py",
       "role": "python_module",
       "binary": false,
@@ -104514,6 +104721,53 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/kinetic_audio_multirate_donor.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14856,
+      "lines": 226,
+      "tokens_est": 3714,
+      "symbol_count": 61,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e86fef61c78aa7d3",
+      "vector": [
+        0.027555,
+        -0.303105,
+        -0.061671,
+        0.247995,
+        0.045925,
+        -0.135151,
+        -0.069544,
+        0.150896,
+        0.289983,
+        0.051174,
+        -0.331972,
+        0.190261,
+        0.053798,
+        0.234873,
+        0.316226,
+        0.048549,
+        0.305729,
+        -0.082665,
+        0.043301,
+        -0.106283,
+        -0.006561,
+        0.119405,
+        0.066919,
+        -0.297856,
+        0.051174,
+        0.030179,
+        0.221752,
+        0.030179,
+        -0.169266,
+        -0.119405,
+        -0.080041,
+        0.276862
       ]
     },
     {
@@ -105561,7 +105815,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788717463,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -105708,6 +105962,7 @@
       ".github/workflows/frontier27-proof.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/kinetic-audio-multirate-proof.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -106661,6 +106916,7 @@
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
       "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
+      "docs/arena/kinetic-audio-multirate-donor.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -107189,6 +107445,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_kinetic_audio_multirate_donor.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -107197,8 +107454,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_kinetic_audio_multirate_donor.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/kinetic_audio_multirate_donor.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -265017,6 +265276,186 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#class:KineticAudioMultirateTests:aee452fb3c6f34df",
+        "name": "KineticAudioMultirateTests",
+        "kind": "class",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 48,
+        "end_line": 212,
+        "signature_hash": "b6b882058cf3a8bf",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#function:intent:5021374c4d412953",
+        "name": "intent",
+        "kind": "function",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 40,
+        "end_line": 45,
+        "signature_hash": "130d4649803283a9",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#function:owner:231bf2d56b3ab285",
+        "name": "owner",
+        "kind": "function",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 23,
+        "end_line": 37,
+        "signature_hash": "1e7a66aee8620294",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_confidence_hysteresis_emits_once_until_release:5f89d8e833551813",
+        "name": "KineticAudioMultirateTests.test_confidence_hysteresis_emits_once_until_release",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 49,
+        "end_line": 57,
+        "signature_hash": "90fe3072b8d124f0",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_graph_epoch_invalidation_reclaims_queue_capacity_immediately:1239fe6bb01bde23",
+        "name": "KineticAudioMultirateTests.test_graph_epoch_invalidation_reclaims_queue_capacity_immediately",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 162,
+        "end_line": 172,
+        "signature_hash": "67e5be96d78663d2",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_graph_epoch_mutation_invalidates_scheduled_permit:07ab1024a13096a2",
+        "name": "KineticAudioMultirateTests.test_graph_epoch_mutation_invalidates_scheduled_permit",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 103,
+        "end_line": 112,
+        "signature_hash": "c2ef93dd0bde628f",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_hard_transition_invalidates_other_old_timeline_permits:378dc2b92bdfb6e0",
+        "name": "KineticAudioMultirateTests.test_hard_transition_invalidates_other_old_timeline_permits",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 114,
+        "end_line": 126,
+        "signature_hash": "3f924225ae3b3fbb",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_hard_transition_uses_audio_owned_phrase_boundary:72cee2900ec76df4",
+        "name": "KineticAudioMultirateTests.test_hard_transition_uses_audio_owned_phrase_boundary",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 70,
+        "end_line": 79,
+        "signature_hash": "3ecc9aef366b4d93",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_identical_graph_write_advances_epoch_not_generation:08af665d62f1c3a4",
+        "name": "KineticAudioMultirateTests.test_identical_graph_write_advances_epoch_not_generation",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 81,
+        "end_line": 89,
+        "signature_hash": "7428333b2ff2512e",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_k27_all_27_project_to_bounded_controls_deterministically:6daeec12fe91222b",
+        "name": "KineticAudioMultirateTests.test_k27_all_27_project_to_bounded_controls_deterministically",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 137,
+        "end_line": 152,
+        "signature_hash": "ee283e07f7f1f1c6",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_malformed_control_schema_is_held:703cc45c3136021b",
+        "name": "KineticAudioMultirateTests.test_malformed_control_schema_is_held",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 174,
+        "end_line": 179,
+        "signature_hash": "2e1e5eff073a9072",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_membrane_keeps_gesture_work_outside_audio_owner_callback:a1885118f1d00f06",
+        "name": "KineticAudioMultirateTests.test_membrane_keeps_gesture_work_outside_audio_owner_callback",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 181,
+        "end_line": 191,
+        "signature_hash": "9b3155ddc78a2df0",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_out_of_bounds_control_is_held:7cc5d932145e2089",
+        "name": "KineticAudioMultirateTests.test_out_of_bounds_control_is_held",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 154,
+        "end_line": 160,
+        "signature_hash": "a4f1b7ba2bb52e46",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_projection_to_schedule_toctou_fails_closed:c6ab62c2e58a9140",
+        "name": "KineticAudioMultirateTests.test_projection_to_schedule_toctou_fails_closed",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 91,
+        "end_line": 101,
+        "signature_hash": "2e774c1b93b0f924",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_queue_capacity_fails_closed:f95c71bbc7a6da99",
+        "name": "KineticAudioMultirateTests.test_queue_capacity_fails_closed",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 128,
+        "end_line": 135,
+        "signature_hash": "1377a47513003d17",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_replay_is_deterministic:0fd31a8f5f309310",
+        "name": "KineticAudioMultirateTests.test_replay_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 193,
+        "end_line": 204,
+        "signature_hash": "fb7e36cd7f3bd3ff",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_soft_control_is_block_aligned_and_smoothed:8330245a727e5dc8",
+        "name": "KineticAudioMultirateTests.test_soft_control_is_block_aligned_and_smoothed",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 59,
+        "end_line": 68,
+        "signature_hash": "69169f71df4090ea",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_synthetic_callback_probe_has_explicit_nonhardware_ceiling:15bc09aa77ed4bc9",
+        "name": "KineticAudioMultirateTests.test_synthetic_callback_probe_has_explicit_nonhardware_ceiling",
+        "kind": "method",
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "line": 206,
+        "end_line": 212,
+        "signature_hash": "b405170b3c6bab06",
+        "file_digest8": "c8f3f65cd71c160d"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -265295,6 +265734,76 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:hs1000:b3cdca54451abbb3",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 176,
+        "end_line": 198,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "6c750ce334d7cbfd"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:k27_projection_root:9941396c6c9ad9cd",
+        "name": "k27_projection_root",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 254,
+        "end_line": 265,
+        "signature_hash": "1ff8a3f40d87ba98",
+        "file_digest8": "6c750ce334d7cbfd"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:main:0c9dd0db62c4412e",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 268,
+        "end_line": 290,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "6c750ce334d7cbfd"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:make_owner:cd44fb7ce7b6d5a4",
+        "name": "make_owner",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 67,
+        "end_line": 79,
+        "signature_hash": "dce070e9d205b70f",
+        "file_digest8": "6c750ce334d7cbfd"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:mk_intent:255a7afa32d65673",
+        "name": "mk_intent",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 82,
+        "end_line": 89,
+        "signature_hash": "fe30d6e3322b54b9",
+        "file_digest8": "6c750ce334d7cbfd"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:omega8_13d:e2bf17a8e2c4a13a",
+        "name": "omega8_13d",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 201,
+        "end_line": 251,
+        "signature_hash": "25f0909bce247acf",
+        "file_digest8": "6c750ce334d7cbfd"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:run_family:a261a63f39f7c169",
+        "name": "run_family",
+        "kind": "function",
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "line": 92,
+        "end_line": 173,
+        "signature_hash": "aa93281c0f6a2dbe",
+        "file_digest8": "6c750ce334d7cbfd"
       },
       {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
@@ -266405,6 +266914,616 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:AppliedEvent:846b95d8d72c084a",
+        "name": "AppliedEvent",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 108,
+        "end_line": 108,
+        "signature_hash": "7052a3afb80ac6f5",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:BlockReceipt:896b38207e893823",
+        "name": "BlockReceipt",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 110,
+        "end_line": 110,
+        "signature_hash": "e43ffffa3955126a",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:EpochBoundPermit:c3f0d3cbda10a7f8",
+        "name": "EpochBoundPermit",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 93,
+        "end_line": 99,
+        "signature_hash": "04615ef0477167d5",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:FixedEventQueue:86e0f4ea8ffe3a6d",
+        "name": "FixedEventQueue",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 112,
+        "end_line": 134,
+        "signature_hash": "627df619863f1b7d",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:GestureIntentCompiler:f58adc00ca858bdc",
+        "name": "GestureIntentCompiler",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 43,
+        "end_line": 56,
+        "signature_hash": "6de17e2d5859bcb8",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:GestureObservation:012f9f2384d2c100",
+        "name": "GestureObservation",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "650b129fdce0a46b",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:GraphWriteReceipt:09dcd44b10dda097",
+        "name": "GraphWriteReceipt",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 106,
+        "end_line": 106,
+        "signature_hash": "d2e54808756b4c04",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:K27ConstraintProjector:60be46278cc686b6",
+        "name": "K27ConstraintProjector",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 74,
+        "end_line": 90,
+        "signature_hash": "7c00836500be7981",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:K27Coordinate:57546b8418c7de0b",
+        "name": "K27Coordinate",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 21,
+        "end_line": 28,
+        "signature_hash": "e625b7dd5d6360b3",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:KineticAudioMembrane:97439764d1879621",
+        "name": "KineticAudioMembrane",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 203,
+        "end_line": 207,
+        "signature_hash": "1eb9fa9fe52f2119",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:KineticAudioOwner:e9bea57836b9950f",
+        "name": "KineticAudioOwner",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 136,
+        "end_line": 201,
+        "signature_hash": "03f186589283dd0c",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:OwnerSnapshot:b4d6c09c42c785eb",
+        "name": "OwnerSnapshot",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "62830e30135be7a8",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:ProjectedMusicalIntent:1dfdf6a149daf885",
+        "name": "ProjectedMusicalIntent",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 60,
+        "end_line": 67,
+        "signature_hash": "22aa276801dfcee3",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:RawGestureIntent:7d9639b81b2e1276",
+        "name": "RawGestureIntent",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 38,
+        "end_line": 41,
+        "signature_hash": "0b247128af350495",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:ScheduleReceipt:226ddb6fe132faab",
+        "name": "ScheduleReceipt",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 104,
+        "end_line": 104,
+        "signature_hash": "b39e8ac05014f81e",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:ScheduledEvent:6a68484fcc08a797",
+        "name": "ScheduledEvent",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 102,
+        "end_line": 102,
+        "signature_hash": "91f497ccf62f5a30",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:SyntheticBenchmark:642cf5e2de752bba",
+        "name": "SyntheticBenchmark",
+        "kind": "class",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 210,
+        "end_line": 211,
+        "signature_hash": "cacf46f32ceb4c21",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_align:e1b5d2308bddd0cd",
+        "name": "_align",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "23d236a038035dae",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_bounded:120b9d9713ed178e",
+        "name": "_bounded",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 14,
+        "end_line": 16,
+        "signature_hash": "263dd09329a43a22",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_ceil:7b73a9b2dbe3e61f",
+        "name": "_ceil",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "d0408af480ed5564",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_sha:7ae4e6f797b4b4cf",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "b593905b1b9d1f15",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:digest:501d7e167123583a",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "0bff111c4fc1adcb",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:replay_root:09b360588f007fd2",
+        "name": "replay_root",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 219,
+        "end_line": 225,
+        "signature_hash": "7b0299ddf9689281",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:stable:5398974cd9955995",
+        "name": "stable",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "6c4779cb279e35c8",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:synthetic_callback_benchmark:46e109096d749d91",
+        "name": "synthetic_callback_benchmark",
+        "kind": "function",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 213,
+        "end_line": 217,
+        "signature_hash": "0c322d3cc5ced08e",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:EpochBoundPermit.build:14eb3b75dc305a2d",
+        "name": "EpochBoundPermit.build",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 96,
+        "end_line": 98,
+        "signature_hash": "2d2be8b6a9c44de0",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:EpochBoundPermit.verify:b42b9eb12ee3fee2",
+        "name": "EpochBoundPermit.verify",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 99,
+        "end_line": 99,
+        "signature_hash": "771daa533e2dbc3d",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.__init__:d73f630d4028f194",
+        "name": "FixedEventQueue.__init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 113,
+        "end_line": 113,
+        "signature_hash": "dc6707c0fcbb10f8",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.__len__:92df6373f74c92d4",
+        "name": "FixedEventQueue.__len__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 114,
+        "end_line": 114,
+        "signature_hash": "faa6d593407c8ebc",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.drop_if:0958fa13a1b3256e",
+        "name": "FixedEventQueue.drop_if",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 127,
+        "end_line": 134,
+        "signature_hash": "aceee79de778b57d",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.ids:5bc06b9d1fb460d2",
+        "name": "FixedEventQueue.ids",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 126,
+        "end_line": 126,
+        "signature_hash": "4c155405759d619e",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.peek:45b77da174ac4e90",
+        "name": "FixedEventQueue.peek",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 120,
+        "end_line": 120,
+        "signature_hash": "b028cf3831d968ee",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.pop:a107d62c11971ece",
+        "name": "FixedEventQueue.pop",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "65327baec64b3380",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.push:5eda582718048af8",
+        "name": "FixedEventQueue.push",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 115,
+        "end_line": 119,
+        "signature_hash": "c71726ed9775763c",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:GestureIntentCompiler.__init__:e3789897e59d5331",
+        "name": "GestureIntentCompiler.__init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 44,
+        "end_line": 47,
+        "signature_hash": "3fe53de8f43227af",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:GestureIntentCompiler.observe:a58bffc802c27679",
+        "name": "GestureIntentCompiler.observe",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 48,
+        "end_line": 56,
+        "signature_hash": "289694e6a8a73bd2",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:GestureObservation.__post_init__:755657ea66726765",
+        "name": "GestureObservation.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27ConstraintProjector.clamp:becd36882cd2f205",
+        "name": "K27ConstraintProjector.clamp",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 77,
+        "end_line": 77,
+        "signature_hash": "68ef2953867d121c",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27ConstraintProjector.project:75ccde19e2650a1e",
+        "name": "K27ConstraintProjector.project",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 78,
+        "end_line": 90,
+        "signature_hash": "ca7d8d687d9d3ab2",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27Coordinate.__post_init__:801565ee99865509",
+        "name": "K27Coordinate.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27Coordinate.centered:38ea8b8141ebd011",
+        "name": "K27Coordinate.centered",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "c80056615cc731da",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27Coordinate.code:e27e5aac3a73e74a",
+        "name": "K27Coordinate.code",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "3ff53f2f93e184b5",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioMembrane.__init__:88042e129b761099",
+        "name": "KineticAudioMembrane.__init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 204,
+        "end_line": 204,
+        "signature_hash": "c0024884f61f7bda",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioMembrane.ingest:8dc111ac80bacac3",
+        "name": "KineticAudioMembrane.ingest",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 205,
+        "end_line": 207,
+        "signature_hash": "e4f953ea396a1062",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.__init__:7e1923305b24f197",
+        "name": "KineticAudioOwner.__init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 138,
+        "end_line": 144,
+        "signature_hash": "e315c3dab20ab2b8",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._apply:638cdb22fcb44fea",
+        "name": "KineticAudioOwner._apply",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 180,
+        "end_line": 188,
+        "signature_hash": "b0d8f2acc4ef98ab",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._current:56c48b1a7a7f496c",
+        "name": "KineticAudioOwner._current",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 152,
+        "end_line": 152,
+        "signature_hash": "bc7b15b9ea32ae6a",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._phrase_target:530408eba733df7c",
+        "name": "KineticAudioOwner._phrase_target",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 169,
+        "end_line": 170,
+        "signature_hash": "f9426d3319913805",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._proj:25609067acf87d79",
+        "name": "KineticAudioOwner._proj",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 149,
+        "end_line": 149,
+        "signature_hash": "a3c9206be5249ba2",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._state:f39d6f502fed02c7",
+        "name": "KineticAudioOwner._state",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 150,
+        "end_line": 150,
+        "signature_hash": "d47070b3c21ceeb5",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._validate:60f95118d9008485",
+        "name": "KineticAudioOwner._validate",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 158,
+        "end_line": 168,
+        "signature_hash": "08c2c9beda1e0191",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.governed_graph_write:d333f62252e40f99",
+        "name": "KineticAudioOwner.governed_graph_write",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 153,
+        "end_line": 157,
+        "signature_hash": "e099ed760440aa4c",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.graph_root:6e0e073a9c3ad267",
+        "name": "KineticAudioOwner.graph_root",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 148,
+        "end_line": 148,
+        "signature_hash": "c27b6cd6b569f63c",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.process_block:05414c28a8ca54ae",
+        "name": "KineticAudioOwner.process_block",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 189,
+        "end_line": 197,
+        "signature_hash": "b2dad15b466fc766",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.process_until:d0f70d6697d3c4c8",
+        "name": "KineticAudioOwner.process_until",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 198,
+        "end_line": 201,
+        "signature_hash": "b649d3ddd10c4525",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.queue_depth:6c47baee45f6f4ad",
+        "name": "KineticAudioOwner.queue_depth",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 146,
+        "end_line": 146,
+        "signature_hash": "8e58987c4dc915f3",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.schedule:7abd5c27455a3471",
+        "name": "KineticAudioOwner.schedule",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 171,
+        "end_line": 179,
+        "signature_hash": "06d141f3c1265a01",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.snapshot:953c9f9704167c52",
+        "name": "KineticAudioOwner.snapshot",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 151,
+        "end_line": 151,
+        "signature_hash": "6d0c0b0a811ae770",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:ProjectedMusicalIntent.__post_init__:c3bef430c196b9b1",
+        "name": "ProjectedMusicalIntent.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 63,
+        "end_line": 65,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:ProjectedMusicalIntent.intent_digest:83b4d7c0c54991ea",
+        "name": "ProjectedMusicalIntent.intent_digest",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 67,
+        "end_line": 67,
+        "signature_hash": "094e7fc587697264",
+        "file_digest8": "e86fef61c78aa7d3"
+      },
+      {
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:RawGestureIntent.build:63f48d47e1ecf2a6",
+        "name": "RawGestureIntent.build",
+        "kind": "method",
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "line": 41,
+        "end_line": 41,
+        "signature_hash": "42d8aed18889600a",
+        "file_digest8": "e86fef61c78aa7d3"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -267657,8 +268776,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "94993afc212dbe0b811dba6e03d84dc4",
+    "payload_hash": "8d10f591458eaa946ccf7a152f425f64"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,16 +268790,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1654,
+      "bytes": 26529951,
+      "tokens_est": 6622828,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 273,
+        "python_module": 1006,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -268367,16 +269486,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1654,
+    "total_bytes": 26529951,
+    "text_tokens_est": 6622828,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 273,
+      "python_module": 1006,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -269402,6 +270521,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 290,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:main:0c9dd0db62c4412e",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -274019,6 +275146,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_sha:7ae4e6f797b4b4cf",
+        "signature_hash": "b593905b1b9d1f15"
       }
     ],
     "_repo": [
@@ -280655,6 +281790,14 @@
         "end_line": 162,
         "semantic_id": "aura_relational_authority.py#function:_bounded:6181ac8a893cc053",
         "signature_hash": "3ed5252e1cd91972"
+      },
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 16,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_bounded:120b9d9713ed178e",
+        "signature_hash": "263dd09329a43a22"
       }
     ],
     "_safe": [
@@ -286090,6 +287233,14 @@
         "line": 21,
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
+        "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:digest:501d7e167123583a",
         "signature_hash": "0bff111c4fc1adcb"
       }
     ],
@@ -423647,6 +424798,186 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "owner": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 37,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#function:owner:231bf2d56b3ab285",
+        "signature_hash": "1e7a66aee8620294"
+      }
+    ],
+    "intent": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 45,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#function:intent:5021374c4d412953",
+        "signature_hash": "130d4649803283a9"
+      }
+    ],
+    "KineticAudioMultirateTests": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 212,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#class:KineticAudioMultirateTests:aee452fb3c6f34df",
+        "signature_hash": "b6b882058cf3a8bf"
+      }
+    ],
+    "KineticAudioMultirateTests.test_confidence_hysteresis_emits_once_until_release": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 57,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_confidence_hysteresis_emits_once_until_release:5f89d8e833551813",
+        "signature_hash": "90fe3072b8d124f0"
+      }
+    ],
+    "KineticAudioMultirateTests.test_soft_control_is_block_aligned_and_smoothed": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 68,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_soft_control_is_block_aligned_and_smoothed:8330245a727e5dc8",
+        "signature_hash": "69169f71df4090ea"
+      }
+    ],
+    "KineticAudioMultirateTests.test_hard_transition_uses_audio_owned_phrase_boundary": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 79,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_hard_transition_uses_audio_owned_phrase_boundary:72cee2900ec76df4",
+        "signature_hash": "3ecc9aef366b4d93"
+      }
+    ],
+    "KineticAudioMultirateTests.test_identical_graph_write_advances_epoch_not_generation": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 89,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_identical_graph_write_advances_epoch_not_generation:08af665d62f1c3a4",
+        "signature_hash": "7428333b2ff2512e"
+      }
+    ],
+    "KineticAudioMultirateTests.test_projection_to_schedule_toctou_fails_closed": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 101,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_projection_to_schedule_toctou_fails_closed:c6ab62c2e58a9140",
+        "signature_hash": "2e774c1b93b0f924"
+      }
+    ],
+    "KineticAudioMultirateTests.test_graph_epoch_mutation_invalidates_scheduled_permit": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 112,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_graph_epoch_mutation_invalidates_scheduled_permit:07ab1024a13096a2",
+        "signature_hash": "c2ef93dd0bde628f"
+      }
+    ],
+    "KineticAudioMultirateTests.test_hard_transition_invalidates_other_old_timeline_permits": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 126,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_hard_transition_invalidates_other_old_timeline_permits:378dc2b92bdfb6e0",
+        "signature_hash": "3f924225ae3b3fbb"
+      }
+    ],
+    "KineticAudioMultirateTests.test_queue_capacity_fails_closed": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 135,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_queue_capacity_fails_closed:f95c71bbc7a6da99",
+        "signature_hash": "1377a47513003d17"
+      }
+    ],
+    "KineticAudioMultirateTests.test_k27_all_27_project_to_bounded_controls_deterministically": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 152,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_k27_all_27_project_to_bounded_controls_deterministically:6daeec12fe91222b",
+        "signature_hash": "ee283e07f7f1f1c6"
+      }
+    ],
+    "KineticAudioMultirateTests.test_out_of_bounds_control_is_held": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 160,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_out_of_bounds_control_is_held:7cc5d932145e2089",
+        "signature_hash": "a4f1b7ba2bb52e46"
+      }
+    ],
+    "KineticAudioMultirateTests.test_graph_epoch_invalidation_reclaims_queue_capacity_immediately": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 172,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_graph_epoch_invalidation_reclaims_queue_capacity_immediately:1239fe6bb01bde23",
+        "signature_hash": "67e5be96d78663d2"
+      }
+    ],
+    "KineticAudioMultirateTests.test_malformed_control_schema_is_held": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 179,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_malformed_control_schema_is_held:703cc45c3136021b",
+        "signature_hash": "2e1e5eff073a9072"
+      }
+    ],
+    "KineticAudioMultirateTests.test_membrane_keeps_gesture_work_outside_audio_owner_callback": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 191,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_membrane_keeps_gesture_work_outside_audio_owner_callback:a1885118f1d00f06",
+        "signature_hash": "9b3155ddc78a2df0"
+      }
+    ],
+    "KineticAudioMultirateTests.test_replay_is_deterministic": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 204,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_replay_is_deterministic:0fd31a8f5f309310",
+        "signature_hash": "fb7e36cd7f3bd3ff"
+      }
+    ],
+    "KineticAudioMultirateTests.test_synthetic_callback_probe_has_explicit_nonhardware_ceiling": [
+      {
+        "file": "tests/test_kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 212,
+        "semantic_id": "tests/test_kinetic_audio_multirate_donor.py#method:KineticAudioMultirateTests.test_synthetic_callback_probe_has_explicit_nonhardware_ceiling:15bc09aa77ed4bc9",
+        "signature_hash": "b405170b3c6bab06"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -423905,6 +425236,66 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "make_owner": [
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 79,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:make_owner:cd44fb7ce7b6d5a4",
+        "signature_hash": "dce070e9d205b70f"
+      }
+    ],
+    "mk_intent": [
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 89,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:mk_intent:255a7afa32d65673",
+        "signature_hash": "fe30d6e3322b54b9"
+      }
+    ],
+    "run_family": [
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 173,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:run_family:a261a63f39f7c169",
+        "signature_hash": "aa93281c0f6a2dbe"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 198,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:hs1000:b3cdca54451abbb3",
+        "signature_hash": "cb33d0ed1005d09a"
+      }
+    ],
+    "omega8_13d": [
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 201,
+        "end_line": 251,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:omega8_13d:e2bf17a8e2c4a13a",
+        "signature_hash": "25f0909bce247acf"
+      }
+    ],
+    "k27_projection_root": [
+      {
+        "file": "tools/arena/campaign_kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 254,
+        "end_line": 265,
+        "semantic_id": "tools/arena/campaign_kinetic_audio_multirate_donor.py#function:k27_projection_root:9941396c6c9ad9cd",
+        "signature_hash": "1ff8a3f40d87ba98"
       }
     ],
     "AdmissionError": [
@@ -424204,6 +425595,14 @@
         "line": 17,
         "end_line": 18,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:stable:4c11bb77b3afc1de",
+        "signature_hash": "6c4779cb279e35c8"
+      },
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:stable:5398974cd9955995",
         "signature_hash": "6c4779cb279e35c8"
       }
     ],
@@ -424975,6 +426374,576 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "_ceil": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_ceil:7b73a9b2dbe3e61f",
+        "signature_hash": "d0408af480ed5564"
+      }
+    ],
+    "_align": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:_align:e1b5d2308bddd0cd",
+        "signature_hash": "23d236a038035dae"
+      }
+    ],
+    "K27Coordinate": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 28,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:K27Coordinate:57546b8418c7de0b",
+        "signature_hash": "e625b7dd5d6360b3"
+      }
+    ],
+    "K27Coordinate.__post_init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27Coordinate.__post_init__:801565ee99865509",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "K27Coordinate.code": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27Coordinate.code:e27e5aac3a73e74a",
+        "signature_hash": "3ff53f2f93e184b5"
+      }
+    ],
+    "K27Coordinate.centered": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27Coordinate.centered:38ea8b8141ebd011",
+        "signature_hash": "c80056615cc731da"
+      }
+    ],
+    "GestureObservation": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:GestureObservation:012f9f2384d2c100",
+        "signature_hash": "650b129fdce0a46b"
+      }
+    ],
+    "GestureObservation.__post_init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:GestureObservation.__post_init__:755657ea66726765",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RawGestureIntent": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 41,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:RawGestureIntent:7d9639b81b2e1276",
+        "signature_hash": "0b247128af350495"
+      }
+    ],
+    "RawGestureIntent.build": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 41,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:RawGestureIntent.build:63f48d47e1ecf2a6",
+        "signature_hash": "42d8aed18889600a"
+      }
+    ],
+    "GestureIntentCompiler": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 56,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:GestureIntentCompiler:f58adc00ca858bdc",
+        "signature_hash": "6de17e2d5859bcb8"
+      }
+    ],
+    "GestureIntentCompiler.__init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 47,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:GestureIntentCompiler.__init__:e3789897e59d5331",
+        "signature_hash": "3fe53de8f43227af"
+      }
+    ],
+    "GestureIntentCompiler.observe": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 56,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:GestureIntentCompiler.observe:a58bffc802c27679",
+        "signature_hash": "289694e6a8a73bd2"
+      }
+    ],
+    "ProjectedMusicalIntent": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 67,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:ProjectedMusicalIntent:1dfdf6a149daf885",
+        "signature_hash": "22aa276801dfcee3"
+      }
+    ],
+    "ProjectedMusicalIntent.__post_init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 65,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:ProjectedMusicalIntent.__post_init__:c3bef430c196b9b1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ProjectedMusicalIntent.intent_digest": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 67,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:ProjectedMusicalIntent.intent_digest:83b4d7c0c54991ea",
+        "signature_hash": "094e7fc587697264"
+      }
+    ],
+    "OwnerSnapshot": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:OwnerSnapshot:b4d6c09c42c785eb",
+        "signature_hash": "62830e30135be7a8"
+      }
+    ],
+    "K27ConstraintProjector": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 90,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:K27ConstraintProjector:60be46278cc686b6",
+        "signature_hash": "7c00836500be7981"
+      }
+    ],
+    "K27ConstraintProjector.clamp": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 77,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27ConstraintProjector.clamp:becd36882cd2f205",
+        "signature_hash": "68ef2953867d121c"
+      }
+    ],
+    "K27ConstraintProjector.project": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 90,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:K27ConstraintProjector.project:75ccde19e2650a1e",
+        "signature_hash": "ca7d8d687d9d3ab2"
+      }
+    ],
+    "EpochBoundPermit": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 93,
+        "end_line": 99,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:EpochBoundPermit:c3f0d3cbda10a7f8",
+        "signature_hash": "04615ef0477167d5"
+      }
+    ],
+    "EpochBoundPermit.build": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 98,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:EpochBoundPermit.build:14eb3b75dc305a2d",
+        "signature_hash": "2d2be8b6a9c44de0"
+      }
+    ],
+    "EpochBoundPermit.verify": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 99,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:EpochBoundPermit.verify:b42b9eb12ee3fee2",
+        "signature_hash": "771daa533e2dbc3d"
+      }
+    ],
+    "ScheduledEvent": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 102,
+        "end_line": 102,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:ScheduledEvent:6a68484fcc08a797",
+        "signature_hash": "91f497ccf62f5a30"
+      }
+    ],
+    "ScheduleReceipt": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 104,
+        "end_line": 104,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:ScheduleReceipt:226ddb6fe132faab",
+        "signature_hash": "b39e8ac05014f81e"
+      }
+    ],
+    "GraphWriteReceipt": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 106,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:GraphWriteReceipt:09dcd44b10dda097",
+        "signature_hash": "d2e54808756b4c04"
+      }
+    ],
+    "AppliedEvent": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 108,
+        "end_line": 108,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:AppliedEvent:846b95d8d72c084a",
+        "signature_hash": "7052a3afb80ac6f5"
+      }
+    ],
+    "BlockReceipt": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 110,
+        "end_line": 110,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:BlockReceipt:896b38207e893823",
+        "signature_hash": "e43ffffa3955126a"
+      }
+    ],
+    "FixedEventQueue": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 112,
+        "end_line": 134,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:FixedEventQueue:86e0f4ea8ffe3a6d",
+        "signature_hash": "627df619863f1b7d"
+      }
+    ],
+    "FixedEventQueue.__init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 113,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.__init__:d73f630d4028f194",
+        "signature_hash": "dc6707c0fcbb10f8"
+      }
+    ],
+    "FixedEventQueue.__len__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 114,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.__len__:92df6373f74c92d4",
+        "signature_hash": "faa6d593407c8ebc"
+      }
+    ],
+    "FixedEventQueue.push": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 119,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.push:5eda582718048af8",
+        "signature_hash": "c71726ed9775763c"
+      }
+    ],
+    "FixedEventQueue.peek": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 120,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.peek:45b77da174ac4e90",
+        "signature_hash": "b028cf3831d968ee"
+      }
+    ],
+    "FixedEventQueue.pop": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.pop:a107d62c11971ece",
+        "signature_hash": "65327baec64b3380"
+      }
+    ],
+    "FixedEventQueue.ids": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 126,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.ids:5bc06b9d1fb460d2",
+        "signature_hash": "4c155405759d619e"
+      }
+    ],
+    "FixedEventQueue.drop_if": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 134,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:FixedEventQueue.drop_if:0958fa13a1b3256e",
+        "signature_hash": "aceee79de778b57d"
+      }
+    ],
+    "KineticAudioOwner": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 136,
+        "end_line": 201,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:KineticAudioOwner:e9bea57836b9950f",
+        "signature_hash": "03f186589283dd0c"
+      }
+    ],
+    "KineticAudioOwner.__init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 144,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.__init__:7e1923305b24f197",
+        "signature_hash": "e315c3dab20ab2b8"
+      }
+    ],
+    "KineticAudioOwner.queue_depth": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 146,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.queue_depth:6c47baee45f6f4ad",
+        "signature_hash": "8e58987c4dc915f3"
+      }
+    ],
+    "KineticAudioOwner.graph_root": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 148,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.graph_root:6e0e073a9c3ad267",
+        "signature_hash": "c27b6cd6b569f63c"
+      }
+    ],
+    "KineticAudioOwner._proj": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 149,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._proj:25609067acf87d79",
+        "signature_hash": "a3c9206be5249ba2"
+      }
+    ],
+    "KineticAudioOwner._state": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 150,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._state:f39d6f502fed02c7",
+        "signature_hash": "d47070b3c21ceeb5"
+      }
+    ],
+    "KineticAudioOwner.snapshot": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 151,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.snapshot:953c9f9704167c52",
+        "signature_hash": "6d0c0b0a811ae770"
+      }
+    ],
+    "KineticAudioOwner._current": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 152,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._current:56c48b1a7a7f496c",
+        "signature_hash": "bc7b15b9ea32ae6a"
+      }
+    ],
+    "KineticAudioOwner.governed_graph_write": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 157,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.governed_graph_write:d333f62252e40f99",
+        "signature_hash": "e099ed760440aa4c"
+      }
+    ],
+    "KineticAudioOwner._validate": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 168,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._validate:60f95118d9008485",
+        "signature_hash": "08c2c9beda1e0191"
+      }
+    ],
+    "KineticAudioOwner._phrase_target": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 170,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._phrase_target:530408eba733df7c",
+        "signature_hash": "f9426d3319913805"
+      }
+    ],
+    "KineticAudioOwner.schedule": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 179,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.schedule:7abd5c27455a3471",
+        "signature_hash": "06d141f3c1265a01"
+      }
+    ],
+    "KineticAudioOwner._apply": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 188,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner._apply:638cdb22fcb44fea",
+        "signature_hash": "b0d8f2acc4ef98ab"
+      }
+    ],
+    "KineticAudioOwner.process_block": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 197,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.process_block:05414c28a8ca54ae",
+        "signature_hash": "b2dad15b466fc766"
+      }
+    ],
+    "KineticAudioOwner.process_until": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 201,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioOwner.process_until:d0f70d6697d3c4c8",
+        "signature_hash": "b649d3ddd10c4525"
+      }
+    ],
+    "KineticAudioMembrane": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 203,
+        "end_line": 207,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:KineticAudioMembrane:97439764d1879621",
+        "signature_hash": "1eb9fa9fe52f2119"
+      }
+    ],
+    "KineticAudioMembrane.__init__": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 204,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioMembrane.__init__:88042e129b761099",
+        "signature_hash": "c0024884f61f7bda"
+      }
+    ],
+    "KineticAudioMembrane.ingest": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 207,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#method:KineticAudioMembrane.ingest:8dc111ac80bacac3",
+        "signature_hash": "e4f953ea396a1062"
+      }
+    ],
+    "SyntheticBenchmark": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "class",
+        "line": 210,
+        "end_line": 211,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#class:SyntheticBenchmark:642cf5e2de752bba",
+        "signature_hash": "cacf46f32ceb4c21"
+      }
+    ],
+    "synthetic_callback_benchmark": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 213,
+        "end_line": 217,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:synthetic_callback_benchmark:46e109096d749d91",
+        "signature_hash": "0c322d3cc5ced08e"
+      }
+    ],
+    "replay_root": [
+      {
+        "file": "tools/arena/kinetic_audio_multirate_donor.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 225,
+        "semantic_id": "tools/arena/kinetic_audio_multirate_donor.py#function:replay_root:09b360588f007fd2",
+        "signature_hash": "7b0299ddf9689281"
       }
     ],
     "_coordinates": [
