@@ -16,6 +16,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sys
 from typing import Any, Iterable, Mapping, Sequence
 
 try:
@@ -239,7 +240,6 @@ class OwnerSourceAttestedService:
             identity.service_source_sha256,
             loaded_root,
         )
-        # Use the established PR #844 v1 service only after all outer owner-code checks pass.
         self._inner = IsolatedNativeAirLLMService(
             model_id,
             model_path,
@@ -287,8 +287,8 @@ def validate_owner_attested_status(
         raise IsolationBoundaryError("owner-attested child status schema is not exact")
     if status["pid"] != receipt.child_pid or receipt.parent_pid != os.getpid():
         raise IsolationBoundaryError("owner-attested process identity mismatch")
-    if receipt.start_method != "spawn" or receipt.generation <= 0:
-        raise IsolationBoundaryError("owner-attested receipt is not a current spawn session")
+    if receipt.start_method not in {"spawn", "subprocess-source-attested-v1"} or receipt.generation <= 0:
+        raise IsolationBoundaryError("owner-attested receipt is not a current isolated session")
     expected_fields = {
         "subject_generation": expected.subject_generation,
         "isolation_implementation_generation": expected.isolation_implementation_generation,
@@ -347,9 +347,22 @@ def launch_owner_attested_airllm(
         identity.service_source_sha256,
         owner_root,
     )
-    proxy = IsolatedObjectProxy(
+    try:
+        from .airllm_preimport_source_proxy import PreimportSourceObjectProxy
+    except ImportError:
+        from airllm_preimport_source_proxy import PreimportSourceObjectProxy
+    target_source_path = str(Path(__file__).resolve(strict=True))
+    target_source_sha256 = _stable_sha256(target_source_path)
+    import_roots = tuple(
+        str(Path(entry).resolve())
+        for entry in sys.path
+        if isinstance(entry, str) and entry and Path(entry).exists() and Path(entry).is_dir()
+    )
+    proxy = PreimportSourceObjectProxy(
         __name__,
         "OwnerSourceAttestedService",
+        target_source_path,
+        target_source_sha256,
         model_id,
         model_path,
         dict(model_allowlist),
@@ -370,6 +383,7 @@ def launch_owner_attested_airllm(
         loader_symbol=loader_symbol,
         transformers_symbol=transformers_symbol,
         wrapper_symbol=wrapper_symbol,
+        import_roots=import_roots,
         timeout_seconds=timeout_seconds,
     )
     try:
