@@ -5,9 +5,51 @@ from tools.arena.frontier27_runtime import FrontierOffload, LegacyOffload, Stora
 from tools.arena.worker_cells.gpt56sol_frontier27_numeric_preflight.transactional_preflight import (
     MAX_GOVERNED_INT,
     _finite_scalar,
+    _freeze_records,
     run_frontier_totalized,
     run_legacy_totalized,
 )
+
+
+class IterRaisesOnIter:
+    def __init__(self, exc):
+        self.exc = exc
+
+    def __iter__(self):
+        raise self.exc
+
+
+class IterRaisesOnNext:
+    def __init__(self, first, exc):
+        self.first = first
+        self.exc = exc
+        self.done = False
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if not self.done:
+            self.done = True
+            return self.first
+        raise self.exc
+
+
+class InfiniteRecords:
+    def __iter__(self):
+        while True:
+            yield (1,)
+
+
+class InfiniteItems:
+    def __iter__(self):
+        while True:
+            yield 1
+
+
+class ControlSignalOnIter:
+    def __iter__(self):
+        raise KeyboardInterrupt()
 
 
 class TransactionalPreflightTests(unittest.TestCase):
@@ -51,7 +93,7 @@ class TransactionalPreflightTests(unittest.TestCase):
         f = FrontierOffload(MAX_GOVERNED_INT, 4, self.tier(jpgb=1e308, capacity=MAX_GOVERNED_INT), 0.0, 10.0)
         before = self.state(f)
         with self.assertRaises(ValueError):
-            run_frontier_totalized(f, [(1,)], [()] )
+            run_frontier_totalized(f, [(1,)], [()])
         self.assertEqual(self.state(f), before)
 
     def test_nested_non_integer_route_rejected_before_mutation(self):
@@ -73,9 +115,11 @@ class TransactionalPreflightTests(unittest.TestCase):
         run_frontier_totalized(f, [(1,)], [()])
         before = self.state(f)
         original = f.run
+
         def boom(routes, preds):
             f.r.access(999)
             raise RuntimeError("synthetic owner failure")
+
         f.run = boom
         try:
             with self.assertRaises(RuntimeError):
@@ -88,9 +132,11 @@ class TransactionalPreflightTests(unittest.TestCase):
         f = FrontierOffload(1024, 4, self.tier(), 0.1, 10.0)
         before = self.state(f)
         original = f.run
+
         def bad_result(routes, preds):
             f.r.access(999)
             return {"bytes": 1, "seconds": math.inf, "energy_j": 0.0, "hit_rate": 0.0, "prefetch_transfers": 0}
+
         f.run = bad_result
         try:
             with self.assertRaises(ValueError):
@@ -125,6 +171,39 @@ class TransactionalPreflightTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             run_frontier_totalized(f, [()], [(1, 2)])
         self.assertEqual(self.state(f), before)
+
+    def test_outer_iter_runtimeerror_translated(self):
+        with self.assertRaises(ValueError):
+            _freeze_records(IterRaisesOnIter(RuntimeError("boom")), [], max_records=4, max_items_per_record=4)
+
+    def test_outer_next_keyerror_translated(self):
+        with self.assertRaises(ValueError):
+            _freeze_records(IterRaisesOnNext((1,), KeyError("boom")), [(1,)], max_records=4, max_items_per_record=4)
+
+    def test_inner_iter_lookuperror_translated(self):
+        with self.assertRaises(ValueError):
+            _freeze_records([IterRaisesOnIter(LookupError("boom"))], [(1,)], max_records=4, max_items_per_record=4)
+
+    def test_inner_next_runtimeerror_translated(self):
+        bad = IterRaisesOnNext(1, RuntimeError("boom"))
+        with self.assertRaises(ValueError):
+            _freeze_records([bad], [(1,)], max_records=4, max_items_per_record=4)
+
+    def test_infinite_outer_rejected_after_bounded_work(self):
+        with self.assertRaisesRegex(ValueError, "governed cardinality"):
+            _freeze_records(InfiniteRecords(), [(1,)] * 4, max_records=4, max_items_per_record=4)
+
+    def test_infinite_inner_rejected_after_bounded_work(self):
+        with self.assertRaisesRegex(ValueError, "governed cardinality"):
+            _freeze_records([InfiniteItems()], [(1,)], max_records=4, max_items_per_record=4)
+
+    def test_bool_expert_id_rejected(self):
+        with self.assertRaises(ValueError):
+            _freeze_records([(True,)], [(1,)], max_records=4, max_items_per_record=4)
+
+    def test_process_control_signal_not_swallowed(self):
+        with self.assertRaises(KeyboardInterrupt):
+            _freeze_records(ControlSignalOnIter(), [], max_records=4, max_items_per_record=4)
 
 
 if __name__ == "__main__":
