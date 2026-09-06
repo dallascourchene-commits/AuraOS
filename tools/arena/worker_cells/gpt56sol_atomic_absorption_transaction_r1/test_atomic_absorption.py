@@ -1,17 +1,21 @@
-import unittest,itertools
+import unittest, itertools
+from dataclasses import replace
 from atomic_absorption import *
 H='1'*64; T='2'*64
+
 def P(i='A',base=H,cons=None,files=None,auth=False,actor=None,lineage=None):
     cons=cons or (str((int(i.encode().hex(),16)%10))*64)
     if not HEX64.fullmatch(cons): cons=digest(cons)
     return Proposal(i,actor or 'agent-'+i,lineage or 'lin-'+i,base,cons,digest('r'+i),files or {f'tools/{i}.py':digest('b'+i)},auth)
+
 class Tst(unittest.TestCase):
     def s(self): return OwnerSnapshot(H,T)
     def test_disjoint_two_proposals_atomic(self):
-        q=plan(self.s(),[P('A'),P('B')]); self.assertEqual(q.disposition,Disposition.READY); r=commit(q,H); self.assertTrue(r.committed); self.assertEqual(r.write_count,2); self.assertEqual(r.lost_consequence_count,0)
+        ps=[P('A'),P('B')]; q=plan(self.s(),ps); self.assertEqual(q.disposition,Disposition.READY)
+        r=commit(q,H,snapshot=self.s(),proposals=ps); self.assertTrue(r.committed); self.assertEqual(r.write_count,2); self.assertEqual(r.lost_consequence_count,0)
     def test_stale_any_rebases_all(self): self.assertEqual(plan(self.s(),[P('A'),P('B',base='3'*64)]).disposition,Disposition.REBASE_REQUIRED)
     def test_cas_movement_zero_write(self):
-        q=plan(self.s(),[P('A')]); r=commit(q,'4'*64); self.assertFalse(r.committed); self.assertEqual(r.write_count,0); self.assertEqual(r.lost_consequence_count,1)
+        ps=[P('A')]; q=plan(self.s(),ps); r=commit(q,'4'*64,snapshot=self.s(),proposals=ps); self.assertFalse(r.committed); self.assertEqual(r.write_count,0); self.assertEqual(r.lost_consequence_count,1)
     def test_conflicting_path_holds(self):
         a=P('A',files={'x':digest('a')}); b=P('B',files={'x':digest('b')}); self.assertEqual(plan(self.s(),[a,b]).disposition,Disposition.CONFLICT_HOLD)
     def test_identical_path_blob_safe(self):
@@ -28,7 +32,13 @@ class Tst(unittest.TestCase):
     def test_no_proposals(self):
         with self.assertRaises(E): plan(self.s(),[])
     def test_hold_commit_no_write(self):
-        q=plan(self.s(),[P('A',base='3'*64)]); r=commit(q,H); self.assertFalse(r.committed); self.assertEqual(r.write_count,0)
+        ps=[P('A',base='3'*64)]; q=plan(self.s(),ps); r=commit(q,H,snapshot=self.s(),proposals=ps); self.assertFalse(r.committed); self.assertEqual(r.write_count,0)
+    def test_legacy_two_arg_commit_fails_closed(self):
+        q=plan(self.s(),[P('A')]); r=commit(q,H); self.assertFalse(r.committed); self.assertEqual(r.write_count,0)
+    def test_forged_ready_plan_fails_closed(self):
+        ps=[P('A')]; q=plan(self.s(),ps); forged=replace(q,writes=(('evil.py','f'*64),),manifest_root='e'*64,effect_authority=True,gate10=True)
+        r=commit(forged,H,snapshot=self.s(),proposals=ps); self.assertFalse(r.committed); self.assertEqual(r.write_count,0)
     def test_omega8_one_keeper(self): self.assertEqual(sum(omega8_keeper(x) for x in itertools.product(range(3),repeat=8)),1)
     def test_13d_no_repair(self): self.assertEqual(sum(context13_preserves_invalid((2,2,2,2,2,2,2,1),t) for t in itertools.product(range(3),repeat=5)),0)
+
 if __name__=='__main__': unittest.main()
