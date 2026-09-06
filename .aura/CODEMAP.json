@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1654,
+    "repo_file_count": 1657,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2687,6 +2687,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_frontier27_transactional_preflight.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_invocation_watchdog_canary.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -2700,6 +2701,8 @@
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
+      "tools/arena/worker_cells/gpt56sol_invocation_watchdog/README.md",
+      "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
       "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -104099,6 +104102,53 @@
       ]
     },
     {
+      "path": "tests/test_invocation_watchdog_canary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3766,
+      "lines": 80,
+      "tokens_est": 942,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "49a1180e050f22aa",
+      "vector": [
+        0.122346,
+        0.021442,
+        0.160185,
+        0.283792,
+        -0.145049,
+        0.147572,
+        0.250999,
+        -0.061804,
+        0.061804,
+        0.15514,
+        -0.127391,
+        0.074417,
+        -0.079462,
+        0.081984,
+        -0.256044,
+        -0.084507,
+        -0.023965,
+        -0.273702,
+        0.306496,
+        0.069371,
+        0.064326,
+        -0.278747,
+        0.22325,
+        0.041623,
+        -0.076939,
+        -0.301451,
+        -0.296405,
+        0.195501,
+        -0.061804,
+        0.228295,
+        0.180366,
+        -0.119823
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -104707,6 +104757,100 @@
         -0.148511,
         0.115244,
         0.062969
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 983,
+      "lines": 14,
+      "tokens_est": 246,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "47def46592a2b1d8",
+      "vector": [
+        0.117669,
+        0.236343,
+        -0.206172,
+        0.220252,
+        -0.11968,
+        -0.188069,
+        0.121692,
+        -0.169966,
+        -0.216229,
+        0.226286,
+        0.079452,
+        -0.214218,
+        0.244389,
+        0.165943,
+        0.242378,
+        0.206172,
+        -0.06336,
+        -0.212206,
+        -0.254446,
+        -0.180023,
+        0.07744,
+        -0.137783,
+        0.075429,
+        0.051292,
+        0.200138,
+        0.101577,
+        -0.202149,
+        0.167955,
+        -0.081463,
+        0.236343,
+        0.196115,
+        0.085486
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4191,
+      "lines": 107,
+      "tokens_est": 1048,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a587f69ac29f5a2e",
+      "vector": [
+        -0.272259,
+        0.300918,
+        -0.048199,
+        -0.246206,
+        -0.188888,
+        0.214941,
+        0.214941,
+        0.069042,
+        -0.332182,
+        -0.123754,
+        -0.066436,
+        -0.175861,
+        -0.01954,
+        -0.037778,
+        0.069042,
+        -0.061226,
+        -0.175861,
+        -0.056015,
+        0.121149,
+        -0.069042,
+        0.233179,
+        -0.209731,
+        0.102911,
+        0.016935,
+        -0.27747,
+        -0.061226,
+        -0.2436,
+        -0.006513,
+        0.326972,
+        0.139386,
+        0.175861,
+        0.089885
       ]
     },
     {
@@ -105801,7 +105945,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788704558,
+  "generated_at_unix": 1788705221,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107430,6 +107574,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_frontier27_transactional_preflight.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_invocation_watchdog_canary.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -107443,6 +107588,8 @@
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
       "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
+      "tools/arena/worker_cells/gpt56sol_invocation_watchdog/README.md",
+      "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
       "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -265742,6 +265889,146 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#class:WatchdogCanaryTests:7358c9b9b1afe48c",
+        "name": "WatchdogCanaryTests",
+        "kind": "class",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 9,
+        "end_line": 76,
+        "signature_hash": "4191fb5cd17ec6c0",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_01_finite_materialization_completes_after_ready:3e9e27283230c8dc",
+        "name": "WatchdogCanaryTests.test_01_finite_materialization_completes_after_ready",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 10,
+        "end_line": 16,
+        "signature_hash": "2905648255b30e85",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_02_ordinary_iterator_failure_is_governed_after_ready:af0b7d49f87b06d5",
+        "name": "WatchdogCanaryTests.test_02_ordinary_iterator_failure_is_governed_after_ready",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 18,
+        "end_line": 23,
+        "signature_hash": "c66916bd0f34cf4c",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_03_non_returning_next_is_bounded_after_ready:c954f1c687b8749f",
+        "name": "WatchdogCanaryTests.test_03_non_returning_next_is_bounded_after_ready",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 25,
+        "end_line": 32,
+        "signature_hash": "8b5989b4e8b1ea9c",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_04_parent_state_is_not_contaminated_by_timeout:b7614a6345d51ad4",
+        "name": "WatchdogCanaryTests.test_04_parent_state_is_not_contaminated_by_timeout",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "f741639a9d957ca2",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_05_repeated_ready_hangs_leave_no_active_child:6e0a9d512e6f6bf7",
+        "name": "WatchdogCanaryTests.test_05_repeated_ready_hangs_leave_no_active_child",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "701ed0d214451934",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_06_invalid_scenario_rejected_before_spawn:2879e7ecbb1e041d",
+        "name": "WatchdogCanaryTests.test_06_invalid_scenario_rejected_before_spawn",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "73245d841c97b379",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_07_invalid_startup_deadline_rejected:024f561c433d6c0f",
+        "name": "WatchdogCanaryTests.test_07_invalid_startup_deadline_rejected",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 52,
+        "end_line": 55,
+        "signature_hash": "83436dfe570ce936",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_08_invalid_execution_deadline_rejected:7ee0670b1027028f",
+        "name": "WatchdogCanaryTests.test_08_invalid_execution_deadline_rejected",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "d036b35a4d7155b3",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_09_invalid_cleanup_grace_rejected:420a5b7f19bc979e",
+        "name": "WatchdogCanaryTests.test_09_invalid_cleanup_grace_rejected",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "65b139b9285f3a29",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_10_non_float_deadline_rejected:e3b7bc6e32e49cde",
+        "name": "WatchdogCanaryTests.test_10_non_float_deadline_rejected",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "7fb480a59d94f054",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_11_unsupported_start_method_rejected:4f8f14d8fe8f8284",
+        "name": "WatchdogCanaryTests.test_11_unsupported_start_method_rejected",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "6c4aca60966cd4f6",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_12_stable_evidence_excludes_platform_exitcode:c1704d1d5c994b7f",
+        "name": "WatchdogCanaryTests.test_12_stable_evidence_excludes_platform_exitcode",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 69,
+        "end_line": 72,
+        "signature_hash": "be28510c0a19b9b5",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_13_finite_receipt_is_deterministic:b586ba69ee66f093",
+        "name": "WatchdogCanaryTests.test_13_finite_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "line": 74,
+        "end_line": 76,
+        "signature_hash": "dac0f9075fe80153",
+        "file_digest8": "49a1180e050f22aa"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -267512,6 +267799,76 @@
         "file_digest8": "9f54b2e7aaaf3f42"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:decision:186cbee63350fd43",
+        "name": "decision",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "6f198ab45717aad1",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:oracle:a5b4e70dab13e2b8",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "c3ee07f799b46306",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:real_process_campaign:8e4c608df81efb50",
+        "name": "real_process_campaign",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 49,
+        "end_line": 73,
+        "signature_hash": "592c1b4459400c6d",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:root:2d6244b3c49d1c25",
+        "name": "root",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "bc5eb26d40a6b4e7",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:run:91aeecd033676c0f",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 76,
+        "end_line": 102,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:stable:81b47570d8fbac2f",
+        "name": "stable",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "2ada6977dacc078c",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:state_campaign:072c31ba23b5efe3",
+        "name": "state_campaign",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "line": 28,
+        "end_line": 46,
+        "signature_hash": "8fe3af13e4fe9f15",
+        "file_digest8": "a587f69ac29f5a2e"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py#class:WatchdogReceipt:4c4b97339728acbe",
         "name": "WatchdogReceipt",
         "kind": "class",
@@ -268902,8 +269259,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3b79c77da56de6eb5253428f8eafcadb",
-    "payload_hash": "43a288138b8f172f07f304cd39c2537b"
+    "record_fingerprint": "5067d2de90da00c394420e14580bb9b0",
+    "payload_hash": "be213746fdcf3800b77781b29660db21"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268916,15 +269273,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1654,
-      "bytes": 26529517,
-      "tokens_est": 6622722,
+      "files": 1657,
+      "bytes": 26538457,
+      "tokens_est": 6624958,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 240,
+        "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1007,
+        "python_module": 1009,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -269612,15 +269969,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1654,
-    "total_bytes": 26529517,
-    "text_tokens_est": 6622722,
+    "file_count": 1657,
+    "total_bytes": 26538457,
+    "text_tokens_est": 6624958,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 240,
+      "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1007,
+      "python_module": 1009,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -270850,6 +271207,14 @@
         "end_line": 175,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py#function:run:f118f38240813797",
         "signature_hash": "2cff8d748c9457d2"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 102,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:run:91aeecd033676c0f",
+        "signature_hash": "26799ab4ad82cbfb"
       }
     ],
     "run.record": [
@@ -425404,6 +425769,146 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "WatchdogCanaryTests": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 76,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#class:WatchdogCanaryTests:7358c9b9b1afe48c",
+        "signature_hash": "4191fb5cd17ec6c0"
+      }
+    ],
+    "WatchdogCanaryTests.test_01_finite_materialization_completes_after_ready": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_01_finite_materialization_completes_after_ready:3e9e27283230c8dc",
+        "signature_hash": "2905648255b30e85"
+      }
+    ],
+    "WatchdogCanaryTests.test_02_ordinary_iterator_failure_is_governed_after_ready": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 23,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_02_ordinary_iterator_failure_is_governed_after_ready:af0b7d49f87b06d5",
+        "signature_hash": "c66916bd0f34cf4c"
+      }
+    ],
+    "WatchdogCanaryTests.test_03_non_returning_next_is_bounded_after_ready": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 32,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_03_non_returning_next_is_bounded_after_ready:c954f1c687b8749f",
+        "signature_hash": "8b5989b4e8b1ea9c"
+      }
+    ],
+    "WatchdogCanaryTests.test_04_parent_state_is_not_contaminated_by_timeout": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_04_parent_state_is_not_contaminated_by_timeout:b7614a6345d51ad4",
+        "signature_hash": "f741639a9d957ca2"
+      }
+    ],
+    "WatchdogCanaryTests.test_05_repeated_ready_hangs_leave_no_active_child": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_05_repeated_ready_hangs_leave_no_active_child:6e0a9d512e6f6bf7",
+        "signature_hash": "701ed0d214451934"
+      }
+    ],
+    "WatchdogCanaryTests.test_06_invalid_scenario_rejected_before_spawn": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_06_invalid_scenario_rejected_before_spawn:2879e7ecbb1e041d",
+        "signature_hash": "73245d841c97b379"
+      }
+    ],
+    "WatchdogCanaryTests.test_07_invalid_startup_deadline_rejected": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_07_invalid_startup_deadline_rejected:024f561c433d6c0f",
+        "signature_hash": "83436dfe570ce936"
+      }
+    ],
+    "WatchdogCanaryTests.test_08_invalid_execution_deadline_rejected": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_08_invalid_execution_deadline_rejected:7ee0670b1027028f",
+        "signature_hash": "d036b35a4d7155b3"
+      }
+    ],
+    "WatchdogCanaryTests.test_09_invalid_cleanup_grace_rejected": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_09_invalid_cleanup_grace_rejected:420a5b7f19bc979e",
+        "signature_hash": "65b139b9285f3a29"
+      }
+    ],
+    "WatchdogCanaryTests.test_10_non_float_deadline_rejected": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_10_non_float_deadline_rejected:e3b7bc6e32e49cde",
+        "signature_hash": "7fb480a59d94f054"
+      }
+    ],
+    "WatchdogCanaryTests.test_11_unsupported_start_method_rejected": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_11_unsupported_start_method_rejected:4f8f14d8fe8f8284",
+        "signature_hash": "6c4aca60966cd4f6"
+      }
+    ],
+    "WatchdogCanaryTests.test_12_stable_evidence_excludes_platform_exitcode": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 72,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_12_stable_evidence_excludes_platform_exitcode:c1704d1d5c994b7f",
+        "signature_hash": "be28510c0a19b9b5"
+      }
+    ],
+    "WatchdogCanaryTests.test_13_finite_receipt_is_deterministic": [
+      {
+        "file": "tests/test_invocation_watchdog_canary.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 76,
+        "semantic_id": "tests/test_invocation_watchdog_canary.py#method:WatchdogCanaryTests.test_13_finite_receipt_is_deterministic:b586ba69ee66f093",
+        "signature_hash": "dac0f9075fe80153"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -425969,6 +426474,14 @@
         "line": 13,
         "end_line": 13,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py#function:stable:751b48d5f026e48c",
+        "signature_hash": "2ada6977dacc078c"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:stable:81b47570d8fbac2f",
         "signature_hash": "2ada6977dacc078c"
       }
     ],
@@ -426740,6 +427253,14 @@
         "end_line": 14,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py#function:root:516d1c46cb9dad2d",
         "signature_hash": "bc5eb26d40a6b4e7"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:root:2d6244b3c49d1c25",
+        "signature_hash": "bc5eb26d40a6b4e7"
       }
     ],
     "_finite_add_sequence": [
@@ -426770,6 +427291,14 @@
         "end_line": 84,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py#function:oracle:bb71b19132f960e4",
         "signature_hash": "ab80ec7be9028ba6"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:oracle:a5b4e70dab13e2b8",
+        "signature_hash": "c3ee07f799b46306"
       }
     ],
     "random_case": [
@@ -427080,6 +427609,36 @@
         "end_line": 234,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py#function:run_frontier_totalized:5c7dac9b8de6764a",
         "signature_hash": "5fb132286b42501d"
+      }
+    ],
+    "decision": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:decision:186cbee63350fd43",
+        "signature_hash": "6f198ab45717aad1"
+      }
+    ],
+    "state_campaign": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 46,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:state_campaign:072c31ba23b5efe3",
+        "signature_hash": "8fe3af13e4fe9f15"
+      }
+    ],
+    "real_process_campaign": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 73,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py#function:real_process_campaign:8e4c608df81efb50",
+        "signature_hash": "592c1b4459400c6d"
       }
     ],
     "_RaisesOnNext": [

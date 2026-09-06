@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1654
-- **total_bytes**: 26529517
-- **text_tokens_est**: 6622722
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1657
+- **total_bytes**: 26538457
+- **text_tokens_est**: 6624958
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1654,
+  "repo_file_count": 1657,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1650,6 +1650,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frontier27_runtime.py",
     "tests/test_frontier27_transactional_preflight.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_invocation_watchdog_canary.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1663,6 +1664,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/README.md",
     "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/campaign.py",
     "tools/arena/worker_cells/gpt56sol_frontier27_numeric_preflight/transactional_preflight.py",
+    "tools/arena/worker_cells/gpt56sol_invocation_watchdog/README.md",
+    "tools/arena/worker_cells/gpt56sol_invocation_watchdog/campaign.py",
     "tools/arena/worker_cells/gpt56sol_invocation_watchdog/watchdog_canary.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
@@ -1794,15 +1797,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1654,
-  "bytes": 26529517,
-  "tokens_est": 6622722,
+  "files": 1657,
+  "bytes": 26538457,
+  "tokens_est": 6624958,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1007,
+    "python_module": 1009,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
