@@ -44,6 +44,8 @@ def _strict_text(value: object, name: str) -> str:
     return value
 
 
+
+
 def _sha256_file(path: str) -> str:
     try:
         resolved = Path(path).resolve(strict=True)
@@ -346,6 +348,7 @@ class DedicatedProcessService:
     ) -> "DedicatedProcessService":
         factory_spec = _strict_text(factory_spec, "factory_spec")
         parent_identity = factory_identity_for_spec(factory_spec, loaded=False)
+        # Fail before spawning if the construction payload itself cannot cross IPC.
         try:
             pickle.dumps((factory_spec, init_args, init_kwargs))
         except Exception as exc:
@@ -431,6 +434,8 @@ class DedicatedProcessService:
                     if self._conn.poll(5):
                         self._conn.recv()
                 except (BrokenPipeError, EOFError, OSError):
+                    # A protocol violation may already have terminated the worker.
+                    # Cleanup remains idempotent and must not widen that contained fault.
                     pass
         finally:
             self._closed = True
