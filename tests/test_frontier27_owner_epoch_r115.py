@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
+import re
 import threading
 import unittest
 
@@ -42,11 +44,50 @@ class FrontierOwnerEpochR115Tests(unittest.TestCase):
             self.assertFalse(hasattr(owner, "r"))
             self.assertEqual(owner.snapshot().mutation_epoch, 0)
 
+    def test_owner_incarnation_is_child_minted_and_stable(self):
+        with self.make() as owner:
+            a = owner.snapshot()
+            b = owner.snapshot()
+            self.assertRegex(a.owner_incarnation, r"^[0-9a-f]{64}$")
+            self.assertEqual(a.owner_incarnation, b.owner_incarnation)
+            self.assertEqual(owner.owner_incarnation, a.owner_incarnation)
+
+    def test_restart_same_source_same_state_rejects_stale_snapshot(self):
+        with self.make() as old:
+            stale = old.snapshot()
+        with self.make() as new:
+            current = new.snapshot()
+            self.assertEqual((stale.commit_generation, stale.mutation_epoch), (0, 0))
+            self.assertEqual((current.commit_generation, current.mutation_epoch), (0, 0))
+            self.assertEqual(stale.owner_source_root, current.owner_source_root)
+            self.assertEqual(stale.full_state_root, current.full_state_root)
+            self.assertEqual(stale.full_state, current.full_state)
+            self.assertNotEqual(stale.owner_incarnation, current.owner_incarnation)
+            receipt = new.commit(stale, current.full_state, None)
+            self.assertFalse(receipt.admitted)
+            self.assertEqual(receipt.reason, "HOLD_OWNER_INCARNATION")
+            self.assertEqual(receipt.owner_incarnation, current.owner_incarnation)
+
+    def test_source_root_precedes_incarnation_hold(self):
+        with self.make() as old, self.make() as new:
+            stale = old.snapshot()
+            current = new.snapshot()
+            forged = replace(stale, owner_source_root="0" * 64)
+            receipt = new.commit(forged, current.full_state, None)
+            self.assertFalse(receipt.admitted)
+            self.assertEqual(receipt.reason, "HOLD_SOURCE_ROOT")
+
+    def test_foreign_incarnation_cannot_project_on_new_owner(self):
+        with self.make() as old, self.make() as new:
+            with self.assertRaisesRegex(ValueError, "incarnation"):
+                new.project_pinned(old.snapshot(), [[1]], [[]])
+
     def test_identical_governed_write_advances_epoch(self):
         with self.make() as owner:
             s0 = owner.snapshot()
             s1 = owner.governed_write(s0.full_state)
             self.assertEqual(s1.full_state_root, s0.full_state_root)
+            self.assertEqual(s1.owner_incarnation, s0.owner_incarnation)
             self.assertEqual(s1.commit_generation, s0.commit_generation)
             self.assertEqual(s1.mutation_epoch, s0.mutation_epoch + 1)
 
@@ -60,6 +101,7 @@ class FrontierOwnerEpochR115Tests(unittest.TestCase):
             owner.governed_write(away)
             restored = owner.governed_write(snap.full_state)
             self.assertEqual(restored.full_state_root, snap.full_state_root)
+            self.assertEqual(restored.owner_incarnation, snap.owner_incarnation)
             self.assertEqual(restored.mutation_epoch, snap.mutation_epoch + 2)
             receipt = owner.commit(snap, post, result)
             self.assertFalse(receipt.admitted)
@@ -70,6 +112,7 @@ class FrontierOwnerEpochR115Tests(unittest.TestCase):
             before = owner.snapshot()
             receipt = owner.transact([[1, 2]], [[1]])
             self.assertTrue(receipt.admitted)
+            self.assertEqual(receipt.owner_incarnation, before.owner_incarnation)
             self.assertEqual(receipt.commit_generation, before.commit_generation + 1)
             self.assertEqual(receipt.mutation_epoch, before.mutation_epoch + 1)
             self.assertEqual(receipt.owner_source_root, EXPECTED_OWNER_SHA256)
@@ -78,6 +121,7 @@ class FrontierOwnerEpochR115Tests(unittest.TestCase):
         with self.make() as owner:
             before = owner.snapshot()
             _, after = owner.run([[1]], [[]])
+            self.assertEqual(after.owner_incarnation, before.owner_incarnation)
             self.assertEqual(after.commit_generation, before.commit_generation)
             self.assertGreater(after.mutation_epoch, before.mutation_epoch)
 
