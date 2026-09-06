@@ -1,0 +1,327 @@
+"""SQLite revision bindings for the recovered K27Path / FrameAddress runtime.
+
+Explicit local storage only; no providers, background sync, or inference calls.
+Each public mutation is one transaction. Exact revisions are immutable. Current
+objects carry state and a frame-qualified address; addresses need not be unique.
+"""
+from contextlib import contextmanager
+from hashlib import sha256
+import json
+import sqlite3
+from .coordinate_bridge import checked_address, checked_path, path_key, address_record, nonempty
+from .world_atlas import FrameAddress
+
+class MemoryConflict(ValueError): pass
+class StaleMemory(ValueError): pass
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False)
+
+EXPECTED_SCHEMA_OBJECTS = frozenset({
+    ('table', 'frames'),
+    ('table', 'revisions'),
+    ('table', 'objects'),
+    ('table', 'dependencies'),
+    ('index', 'dependency_reverse'),
+    ('index', 'city_prefix'),
+})
+
+class MemoryStore:
+    def __init__(self, filename):
+        self.db = sqlite3.connect(str(filename), timeout=5, isolation_level=None)
+        self.db.row_factory = sqlite3.Row
+        self.db.execute('PRAGMA foreign_keys=ON')
+        version = self.db.execute('PRAGMA user_version').fetchone()[0]
+        if version not in (0, 2):
+            self.db.close()
+            raise ValueError('unsupported memory schema version')
+        if version == 0:
+            names = self.db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").fetchall()
+            if names:
+                self.db.close()
+                raise ValueError('refusing to initialize an unrelated database')
+            self.db.executescript('''
+            BEGIN IMMEDIATE;
+            CREATE TABLE frames(frame_id TEXT PRIMARY KEY, generation TEXT NOT NULL);
+            CREATE TABLE revisions(revision_id TEXT PRIMARY KEY, object_id TEXT NOT NULL,
+                envelope TEXT NOT NULL, payload_sha256 TEXT NOT NULL);
+            CREATE TABLE objects(object_id TEXT PRIMARY KEY, current_rev TEXT NOT NULL REFERENCES revisions,
+                state TEXT NOT NULL CHECK(state IN ('fresh','stale','retracted')),
+                frame_id TEXT NOT NULL REFERENCES frames, frame_generation TEXT NOT NULL, path TEXT NOT NULL,
+                epoch INTEGER NOT NULL CHECK(epoch > 0));
+            CREATE TABLE dependencies(revision_id TEXT NOT NULL REFERENCES revisions,
+                source_object TEXT NOT NULL, source_rev TEXT NOT NULL REFERENCES revisions,
+                PRIMARY KEY(revision_id, source_object));
+            CREATE INDEX dependency_reverse ON dependencies(source_object,revision_id);
+            CREATE INDEX city_prefix ON objects(frame_id,frame_generation,path,state);
+            PRAGMA user_version=2;
+            COMMIT;
+            ''')
+        expected = {
+            'frames': ('frame_id','generation'),
+            'revisions': ('revision_id','object_id','envelope','payload_sha256'),
+            'objects': ('object_id','current_rev','state','frame_id','frame_generation','path','epoch'),
+            'dependencies': ('revision_id','source_object','source_rev'),
+        }
+        for table, columns in expected.items():
+            actual = tuple(row['name'] for row in self.db.execute(
+                'SELECT name FROM pragma_table_info(?) ORDER BY cid', (table,)))
+            if actual != columns:
+                self.db.close()
+                raise ValueError(f'incompatible memory schema table: {table}')
+        actual_objects = frozenset(
+            (row['type'], row['name']) for row in self.db.execute('''
+                SELECT type,name FROM sqlite_schema
+                WHERE name NOT LIKE 'sqlite_%' AND type IN ('table','index','trigger','view')
+                ORDER BY type,name''').fetchall()
+        )
+        if actual_objects != EXPECTED_SCHEMA_OBJECTS:
+            self.db.close()
+            raise ValueError('incompatible memory schema objects')
+    def close(self): self.db.close()
+    def __enter__(self): return self
+    def __exit__(self, *_): self.close()
+
+    def _verified_envelope(self, row):
+        """Return a canonical revision envelope only when both stored digests reprove."""
+        try:
+            envelope = json.loads(row['envelope'])
+        except (TypeError, json.JSONDecodeError) as exc:
+            raise MemoryConflict('revision envelope is invalid JSON') from exc
+        encoded = canonical(envelope)
+        if sha256(encoded.encode()).hexdigest() != row['revision_id']:
+            raise MemoryConflict('revision envelope digest mismatch')
+        if not isinstance(envelope, dict) or 'payload' not in envelope:
+            raise MemoryConflict('revision envelope payload missing')
+        payload_text = canonical(envelope['payload'])
+        if sha256(payload_text.encode()).hexdigest() != row['payload_sha256']:
+            raise MemoryConflict('revision payload digest mismatch')
+        return envelope
+
+    def _schema_snapshot(self):
+        rows = self.db.execute('''
+            SELECT type,name,tbl_name,sql FROM sqlite_schema
+            WHERE name NOT LIKE 'sqlite_%' AND type IN ('table','index','trigger','view')
+            ORDER BY type,name,tbl_name''').fetchall()
+        return [dict(row) for row in rows]
+
+    def _state_root_snapshot(self):
+        schema = self._schema_snapshot()
+        user_version = self.db.execute('PRAGMA user_version').fetchone()[0]
+        frames = [dict(r) for r in self.db.execute(
+            'SELECT frame_id,generation FROM frames ORDER BY frame_id').fetchall()]
+        revision_rows = self.db.execute(
+            'SELECT revision_id,object_id,envelope,payload_sha256 FROM revisions ORDER BY revision_id').fetchall()
+        revisions = []
+        for row in revision_rows:
+            envelope = self._verified_envelope(row)
+            revisions.append({
+                'revision_id': row['revision_id'],
+                'object_id': row['object_id'],
+                'envelope': envelope,
+                'payload_sha256': row['payload_sha256'],
+            })
+        objects = [dict(r) for r in self.db.execute('''SELECT object_id,current_rev,state,frame_id,
+            frame_generation,path,epoch FROM objects ORDER BY object_id''').fetchall()]
+        dependencies = [dict(r) for r in self.db.execute(
+            'SELECT revision_id,source_object,source_rev FROM dependencies ORDER BY revision_id,source_object').fetchall()]
+        return sha256(canonical({
+            'schema': schema,
+            'user_version': user_version,
+            'frames': frames,
+            'revisions': revisions,
+            'objects': objects,
+            'dependencies': dependencies,
+        }).encode()).hexdigest()
+
+    def state_root(self):
+        """Exact one-snapshot whole-store root; currentness/owner authority is not implied."""
+        if self.db.in_transaction:
+            return self._state_root_snapshot()
+        self.db.execute('BEGIN')
+        try:
+            root = self._state_root_snapshot()
+            self.db.execute('COMMIT')
+            return root
+        except BaseException:
+            self.db.execute('ROLLBACK')
+            raise
+
+    @contextmanager
+    def _write(self):
+        self.db.execute('BEGIN IMMEDIATE')
+        try:
+            yield
+            self.db.execute('COMMIT')
+        except BaseException:
+            self.db.execute('ROLLBACK')
+            raise
+
+    def _invalidate(self, roots):
+        pending, seen, affected = list(roots), set(roots), set()
+        while pending:
+            parent = pending.pop()
+            rows = self.db.execute('''SELECT o.object_id, o.state FROM dependencies d
+                JOIN objects o ON o.current_rev=d.revision_id WHERE d.source_object=?''', (parent,)).fetchall()
+            for row in rows:
+                key = row['object_id']
+                if key in seen: continue
+                seen.add(key); pending.append(key)
+                if row['state'] == 'fresh':
+                    self.db.execute("UPDATE objects SET state='stale',epoch=epoch+1 WHERE object_id=?", (key,))
+                    affected.add(key)
+        return affected
+
+    def register_frame(self, frame_id, generation, *, expected_generation=None):
+        nonempty(frame_id,'frame_id'); nonempty(generation,'generation')
+        with self._write():
+            old = self.db.execute('SELECT generation FROM frames WHERE frame_id=?',(frame_id,)).fetchone()
+            actual = old[0] if old else None
+            if actual != expected_generation:
+                raise MemoryConflict('frame generation changed; supply the observed generation')
+            if actual == generation: return []
+            self.db.execute('INSERT INTO frames VALUES(?,?) ON CONFLICT(frame_id) DO UPDATE SET generation=excluded.generation',(frame_id,generation))
+            roots = {r[0] for r in self.db.execute("SELECT object_id FROM objects WHERE frame_id=? AND state='fresh'",(frame_id,))}
+            self.db.execute("UPDATE objects SET state='stale',epoch=epoch+1 WHERE frame_id=? AND state='fresh'",(frame_id,))
+            return sorted(roots | self._invalidate(roots))
+
+    def _require_current(self, object_id, revision, epoch):
+        row = self.db.execute('''SELECT o.current_rev,o.state,o.frame_generation,f.generation,o.epoch
+            FROM objects o JOIN frames f USING(frame_id) WHERE object_id=?''',(object_id,)).fetchone()
+        if (not row or row['current_rev'] != revision or row['state'] != 'fresh'
+                or row['frame_generation'] != row['generation']
+                or type(epoch) is not int or row['epoch'] != epoch):
+            raise StaleMemory(f'input is missing, changed, retired, or stale: {object_id}')
+
+    def _check_cycle(self, object_id, dependencies):
+        pending, seen = list(dependencies), set()
+        while pending:
+            parent = pending.pop()
+            if parent == object_id: raise MemoryConflict('current object dependency cycle')
+            if parent in seen: continue
+            seen.add(parent)
+            pending.extend(r[0] for r in self.db.execute('''SELECT d.source_object FROM objects o
+                JOIN dependencies d ON d.revision_id=o.current_rev WHERE o.object_id=?''',(parent,)))
+
+    def publish(self, object_id, payload, address, *, source_url, source_version,
+                expected_revision=None, expected_epoch=None, dependencies=None, dependency_epochs=None,
+                expected_store_root=None):
+        nonempty(object_id,'object_id'); nonempty(source_url,'source_url'); nonempty(source_version,'source_version')
+        checked_address(address)
+        if address.canonical_ref != object_id: raise ValueError('address must bind the exact object identity')
+        if dependencies is None: dependencies = {}
+        if dependency_epochs is None: dependency_epochs = {}
+        if not isinstance(dependencies, dict): raise ValueError('dependencies must map object IDs to exact revisions')
+        if not isinstance(dependency_epochs, dict): raise ValueError('dependency_epochs must map object IDs to observed lifecycle epochs')
+        if set(dependency_epochs) != set(dependencies):
+            raise ValueError('each dependency requires its exact observed lifecycle epoch')
+        for key, rev in dependencies.items():
+            nonempty(key,'dependency object'); nonempty(rev,'dependency revision')
+            epoch = dependency_epochs[key]
+            if type(epoch) is not int or epoch <= 0:
+                raise ValueError('dependency epoch must be a positive int')
+        if expected_store_root is not None:
+            nonempty(expected_store_root,'expected_store_root')
+        payload_text = canonical(payload)
+        envelope = {'object_id':object_id, 'payload':json.loads(payload_text), 'address':address_record(address),
+                    'source_url':source_url, 'source_version':source_version,
+                    'dependencies':dict(sorted(dependencies.items())),
+                    'dependency_epochs':dict(sorted(dependency_epochs.items()))}
+        encoded = canonical(envelope)
+        revision = sha256(encoded.encode()).hexdigest()
+        with self._write():
+            if expected_store_root is not None and self.state_root() != expected_store_root:
+                raise MemoryConflict('registry state changed; reload before publishing')
+            frame = self.db.execute('SELECT generation FROM frames WHERE frame_id=?',(address.frame_id,)).fetchone()
+            if not frame or frame[0] != address.frame_generation: raise StaleMemory('address frame generation is not current')
+            prior = self.db.execute('SELECT current_rev,epoch FROM objects WHERE object_id=?',(object_id,)).fetchone()
+            if (prior[0] if prior else None) != expected_revision: raise MemoryConflict('object revision changed; reload before publishing')
+            if prior:
+                if type(expected_epoch) is not int or prior['epoch'] != expected_epoch:
+                    raise MemoryConflict('object lifecycle epoch changed; reload before publishing')
+            elif expected_epoch is not None:
+                raise MemoryConflict('new objects require expected_epoch=None')
+            for key, rev in dependencies.items(): self._require_current(key,rev,dependency_epochs[key])
+            self._check_cycle(object_id, dependencies)
+            self.db.execute('INSERT OR IGNORE INTO revisions VALUES(?,?,?,?)',
+                            (revision,object_id,encoded,sha256(payload_text.encode()).hexdigest()))
+            for key, rev in dependencies.items():
+                self.db.execute('INSERT OR IGNORE INTO dependencies VALUES(?,?,?)',(revision,key,rev))
+            epoch = prior['epoch'] + 1 if prior else 1
+            self.db.execute('''INSERT INTO objects VALUES(?,?,'fresh',?,?,?,?)
+                ON CONFLICT(object_id) DO UPDATE SET current_rev=excluded.current_rev,state='fresh',
+                frame_id=excluded.frame_id,frame_generation=excluded.frame_generation,path=excluded.path,epoch=excluded.epoch''',
+                (object_id,revision,address.frame_id,address.frame_generation,path_key(address.path),epoch))
+            affected = self._invalidate([object_id]) if prior else set()
+            return {'object_id':object_id,'revision_id':revision,'epoch':epoch,'invalidated':sorted(affected),
+                    'store_state_root':self.state_root()}
+
+    def get(self, object_id, *, allow_stale=False):
+        row = self.db.execute('''SELECT r.envelope,r.revision_id,r.payload_sha256,o.state,
+            o.frame_generation,f.generation,o.epoch FROM objects o JOIN revisions r ON r.revision_id=o.current_rev
+            JOIN frames f USING(frame_id) WHERE o.object_id=?''',(object_id,)).fetchone()
+        if row is None: return None
+        envelope = self._verified_envelope(row)
+        state = row['state'] if row['frame_generation'] == row['generation'] else ('retracted' if row['state']=='retracted' else 'stale')
+        if state != 'fresh' and not allow_stale: raise StaleMemory(f'{object_id}: {state}')
+        return {**envelope, 'revision_id':row['revision_id'], 'payload_sha256':row['payload_sha256'],
+                'state':state,'epoch':row['epoch'],'currentness_scope':'local registry consistency only'}
+
+    def history(self, object_id, revision_id):
+        row = self.db.execute('SELECT revision_id,envelope,payload_sha256 FROM revisions WHERE object_id=? AND revision_id=?',(object_id,revision_id)).fetchone()
+        if row is None: return None
+        envelope = self._verified_envelope(row)
+        return {**envelope,'revision_id':revision_id,'payload_sha256':row['payload_sha256'],'state':'historical; currentness not asserted'}
+
+    def retract(self, object_id, *, expected_revision, expected_epoch):
+        with self._write():
+            row = self.db.execute('SELECT current_rev,epoch FROM objects WHERE object_id=?',(object_id,)).fetchone()
+            if not row or row[0] != expected_revision or type(expected_epoch) is not int or row['epoch'] != expected_epoch:
+                raise MemoryConflict('retraction revision or lifecycle epoch changed')
+            self.db.execute("UPDATE objects SET state='retracted',epoch=epoch+1 WHERE object_id=?",(object_id,))
+            return sorted(self._invalidate([object_id]))
+
+    def under(self, frame_id, generation, prefix=()):
+        nonempty(frame_id,'frame_id'); nonempty(generation,'generation'); checked_path(prefix)
+        key = path_key(prefix)
+        # Current frame and revision data are resolved together by this one read statement.
+        rows = self.db.execute('''SELECT r.envelope,r.revision_id,r.payload_sha256,o.epoch FROM objects o
+            JOIN frames f USING(frame_id) JOIN revisions r ON r.revision_id=o.current_rev
+            WHERE o.frame_id=? AND o.frame_generation=? AND f.generation=?
+            AND o.path>=? AND o.path<? AND o.state='fresh' ORDER BY o.path,o.object_id''',
+            (frame_id,generation,generation,key,key+'\uffff')).fetchall()
+        out=[]
+        for r in rows:
+            row={'envelope':r[0],'revision_id':r[1],'payload_sha256':r[2]}
+            envelope=self._verified_envelope(row)
+            out.append({**envelope,'revision_id':r[1],'payload_sha256':r[2],'state':'fresh','epoch':r[3],
+                        'currentness_scope':'local registry consistency only'})
+        return out
+
+    def project(self, object_id, atlas, destination_frame):
+        # Pin source and destination registry state in the same SQLite snapshot.
+        self.db.execute('BEGIN')
+        try:
+            result = self._project_snapshot(object_id,atlas,destination_frame)
+            self.db.execute('COMMIT')
+            return result
+        except BaseException:
+            self.db.execute('ROLLBACK')
+            raise
+
+    def _project_snapshot(self, object_id, atlas, destination_frame):
+        record = self.get(object_id)
+        if record is None: return None
+        a = record['address']
+        addr = FrameAddress(a['frame_id'],a['frame_generation'],tuple(a['path']),object_id)
+        if addr.frame_id != destination_frame:
+            transform = atlas.transforms.get((addr.frame_id,destination_frame))
+            if transform is not None and (tuple(sorted(transform.axis_perm)) != (0,1,2)
+                or any(type(v) is not int for v in transform.axis_perm)
+                or len(transform.invert) != 3 or any(type(v) is not bool for v in transform.invert)):
+                raise ValueError('invalid axis permutation or inversion flags')
+        projected = atlas.project(addr,destination_frame)
+        checked_address(projected)
+        frame = self.db.execute('SELECT generation FROM frames WHERE frame_id=?',(destination_frame,)).fetchone()
+        if not frame or frame[0] != projected.frame_generation: raise StaleMemory('projected frame is not current in persistent registry')
+        return projected

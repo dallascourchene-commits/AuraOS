@@ -31,7 +31,32 @@
       "required_evidence": ["grounding_packet", "scene_digest"],
       "produced_evidence": ["immutable_scene"],
       "risk": "low",
-      "ui_label": "Compile Scene"
+      "ui_label": "Compile Scene",
+      "memory_city_binding": {
+        "binding_schema": "AURA-K27-SPATIAL-SEAM-v1",
+        "source_root": "outputs/k27_memory/",
+        "provenance_archive_sha256": "042e78055f23def062e07aaf412524be01a590f969d8f474c143b34f6b45c319",
+        "scene_source": "outputs/k27_memory/cold_sources/MC-SRC-O1O9.md",
+        "scene_source_sha256": "b2cb2a2c1ebe65848d61da4db6225dbce2c686357bb427e1584468c44787a5a7",
+        "embedded_scene_compiler": "o2/src/aura_xr/xr_scene.py",
+        "scene_schema": "AURA-XR-SCENE-v1",
+        "adapters": ["desktop_webgl", "webxr", "openxr"],
+        "projection_laws": ["SceneLabel!=CanonicalID", "Anchor!=Authority", "Visible!=Hydrated", "Gesture!=Effect"],
+        "read_apis": {
+          "CITY_K27_CONTEXT": "REVIEW_ONLY",
+          "CITY_SCENE_SHELL": "REVIEW_ONLY",
+          "CITY_ROUTE": "REVIEW_ONLY",
+          "CITY_WHY": "REVIEW_ONLY",
+          "CITY_ACTIVE_DOMAINS": "REVIEW_ONLY",
+          "CITY_INVALIDATION_CONE": "REVIEW_ONLY"
+        },
+        "strict_hold_unknown": true,
+        "projection_only": true,
+        "renderer_authority": false,
+        "execution_authority": false,
+        "effect_authority": false,
+        "gate10": false
+      }
     },
     {
       "transition_id": "SPATIAL.COMPILE_SCENE.PLAN_RENDER",
