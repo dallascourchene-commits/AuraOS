@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1651,6 +1651,12 @@
       "aura_intent_ingestion.py",
       "aura_intent_refinement.py",
       "aura_jspace_codec.py",
+      "aura_k27_memory_city/__init__.py",
+      "aura_k27_memory_city/coordinate_bridge.py",
+      "aura_k27_memory_city/k27_city.py",
+      "aura_k27_memory_city/persistent_memory.py",
+      "aura_k27_memory_city/world_atlas.py",
+      "aura_k27_memory_city_runtime.py",
       "aura_language_data_governance.py",
       "aura_language_learner_profile.py",
       "aura_language_privacy_policy.py",
@@ -2724,6 +2730,12 @@
       "aura_blockchain/memory_staking.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_k27_memory_city/__init__.py",
+      "aura_k27_memory_city/coordinate_bridge.py",
+      "aura_k27_memory_city/k27_city.py",
+      "aura_k27_memory_city/persistent_memory.py",
+      "aura_k27_memory_city/world_atlas.py",
+      "aura_k27_memory_city_runtime.py",
       "aura_spatial_importers/__init__.py",
       "aura_spatial_importers/contracts.py",
       "aura_spatial_importers/gaussian_gltf.py",
@@ -2806,13 +2818,7 @@
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
-      "tests/test_aura_bilateral_gate_dialogue.py",
-      "tests/test_aura_bilateral_live_repair_foundry.py",
-      "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-      "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_bilateral_gate_dialogue.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -43124,6 +43130,288 @@
         0.016063,
         -0.095309,
         0.116726
+      ]
+    },
+    {
+      "path": "aura_k27_memory_city/__init__.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 683,
+      "lines": 15,
+      "tokens_est": 171,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "393f95041f55e6c3",
+      "vector": [
+        -0.262927,
+        -0.283776,
+        -0.205014,
+        0.276827,
+        -0.123935,
+        0.177215,
+        0.28146,
+        0.191115,
+        0.172582,
+        0.293042,
+        -0.128568,
+        -0.126251,
+        -0.089187,
+        0.110036,
+        -0.149417,
+        -0.061388,
+        0.216597,
+        0.024324,
+        0.107719,
+        0.209647,
+        0.223546,
+        0.017374,
+        -0.161,
+        -0.251345,
+        0.059072,
+        -0.08687,
+        0.137834,
+        -0.068338,
+        0.015058,
+        0.024324,
+        0.21428,
+        -0.225863
+      ]
+    },
+    {
+      "path": "aura_k27_memory_city/coordinate_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2061,
+      "lines": 54,
+      "tokens_est": 516,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0c915b23ca1bbbbb",
+      "vector": [
+        0.166316,
+        0.247864,
+        0.050431,
+        0.234988,
+        -0.108374,
+        0.245718,
+        -0.003219,
+        -0.183484,
+        -0.26074,
+        -0.265032,
+        -0.059015,
+        -0.179192,
+        0.189922,
+        0.106228,
+        0.024679,
+        0.256448,
+        -0.254302,
+        -0.104082,
+        0.157732,
+        0.15344,
+        -0.074037,
+        0.159878,
+        -0.215674,
+        -0.21782,
+        -0.112666,
+        0.252156,
+        0.234988,
+        -0.1749,
+        -0.059015,
+        -0.022533,
+        0.093352,
+        -0.189922
+      ]
+    },
+    {
+      "path": "aura_k27_memory_city/k27_city.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3227,
+      "lines": 87,
+      "tokens_est": 807,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "debb9ea04b5742aa",
+      "vector": [
+        0.268044,
+        -0.109288,
+        0.106987,
+        0.272645,
+        -0.268044,
+        -0.037963,
+        0.155304,
+        -0.212824,
+        -0.155304,
+        -0.196719,
+        -0.116191,
+        0.274946,
+        -0.277247,
+        -0.148402,
+        0.100085,
+        0.120792,
+        -0.270344,
+        -0.00115,
+        -0.203621,
+        0.005752,
+        0.187515,
+        0.081679,
+        0.100085,
+        0.28645,
+        -0.194418,
+        -0.146101,
+        -0.240434,
+        -0.093183,
+        -0.031061,
+        0.063272,
+        0.132296,
+        0.125394
+      ]
+    },
+    {
+      "path": "aura_k27_memory_city/persistent_memory.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13963,
+      "lines": 226,
+      "tokens_est": 3491,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c6d0085c69c1e83a",
+      "vector": [
+        0.013732,
+        -0.193497,
+        0.213471,
+        -0.081144,
+        0.026216,
+        0.006242,
+        0.278387,
+        -0.088634,
+        0.151053,
+        0.173523,
+        -0.29087,
+        -0.29087,
+        0.198491,
+        -0.288374,
+        0.06117,
+        -0.106111,
+        -0.205981,
+        0.021222,
+        -0.240935,
+        0.171027,
+        -0.188504,
+        0.093628,
+        0.108608,
+        0.270896,
+        -0.071157,
+        0.071157,
+        0.205981,
+        0.223458,
+        -0.106111,
+        0.06866,
+        -0.086138,
+        -0.280883
+      ]
+    },
+    {
+      "path": "aura_k27_memory_city/world_atlas.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4162,
+      "lines": 107,
+      "tokens_est": 1041,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fd271fdb4c838dbd",
+      "vector": [
+        -0.04075,
+        -0.254415,
+        -0.109035,
+        -0.069386,
+        -0.254415,
+        -0.120049,
+        0.236793,
+        -0.205955,
+        0.25001,
+        0.280848,
+        -0.04075,
+        0.212563,
+        0.087008,
+        0.078197,
+        -0.093616,
+        -0.208158,
+        -0.137671,
+        0.179522,
+        -0.186131,
+        0.098021,
+        0.04075,
+        0.236793,
+        0.12886,
+        -0.188333,
+        -0.091413,
+        -0.267632,
+        0.120049,
+        0.100224,
+        0.276442,
+        -0.208158,
+        -0.232388,
+        0.042953
+      ]
+    },
+    {
+      "path": "aura_k27_memory_city_runtime.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9457,
+      "lines": 176,
+      "tokens_est": 2365,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3b92aaaabd724aed",
+      "vector": [
+        -0.134716,
+        -0.22981,
+        -0.245659,
+        0.200376,
+        -0.12566,
+        -0.064528,
+        -0.20264,
+        -0.236602,
+        0.046415,
+        -0.103018,
+        0.062264,
+        0.078113,
+        -0.223017,
+        0.256979,
+        0.238866,
+        -0.091698,
+        0.093962,
+        0.227546,
+        0.182263,
+        -0.053207,
+        -0.132452,
+        -0.216225,
+        0.055471,
+        0.209433,
+        0.078113,
+        0.259244,
+        -0.225282,
+        0.195848,
+        -0.216225,
+        0.232074,
+        -0.00566,
+        0.19132
       ]
     },
     {
@@ -105561,7 +105849,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788704030,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106154,6 +106442,12 @@
       "aura_intent_ingestion.py",
       "aura_intent_refinement.py",
       "aura_jspace_codec.py",
+      "aura_k27_memory_city/__init__.py",
+      "aura_k27_memory_city/coordinate_bridge.py",
+      "aura_k27_memory_city/k27_city.py",
+      "aura_k27_memory_city/persistent_memory.py",
+      "aura_k27_memory_city/world_atlas.py",
+      "aura_k27_memory_city_runtime.py",
       "aura_language_data_governance.py",
       "aura_language_learner_profile.py",
       "aura_language_privacy_policy.py",
@@ -159035,6 +159329,886 @@
         "end_line": 212,
         "signature_hash": "5c1a69a9659e2089",
         "file_digest8": "a2db25c1d3e926d8"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#class:DigestBucket:4cf83f4f9d0078ba",
+        "name": "DigestBucket",
+        "kind": "class",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 36,
+        "end_line": 38,
+        "signature_hash": "9a82b4f9d6fb0626",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:address_record:9ec4dcead883be7e",
+        "name": "address_record",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "7e619577113f8e4d",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_address:e47aa085ca7dbf60",
+        "name": "checked_address",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 23,
+        "end_line": 29,
+        "signature_hash": "b44017d75453b8c4",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_path:51ec4cf2fc34442a",
+        "name": "checked_path",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 16,
+        "end_line": 21,
+        "signature_hash": "c7213b19a299a76e",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:digest_bucket:ef77202b3b0f9b13",
+        "name": "digest_bucket",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "d4c268eb2a0a071b",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:local_octants:ad212a6e2e6a7818",
+        "name": "local_octants",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "0ddf9866087dade5",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:nonempty:7362cd205c1305a6",
+        "name": "nonempty",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 11,
+        "end_line": 14,
+        "signature_hash": "34d752deb11c7810",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:path_key:4c3e36fa1e3c830a",
+        "name": "path_key",
+        "kind": "function",
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "2243d6e827c8dc2d",
+        "file_digest8": "0c915b23ca1bbbbb"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:Cell:3c45f8bb03334811",
+        "name": "Cell",
+        "kind": "class",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 51,
+        "end_line": 56,
+        "signature_hash": "94b1bf27828222a5",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27City:94d9dc810a8aaad4",
+        "name": "K27City",
+        "kind": "class",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 58,
+        "end_line": 82,
+        "signature_hash": "7ffed6806ced0f4c",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27Path:ca1aec86223e9978",
+        "name": "K27Path",
+        "kind": "class",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 21,
+        "end_line": 40,
+        "signature_hash": "01b934ab05afc0c7",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:OverlayRule:73ed5d9c191d896f",
+        "name": "OverlayRule",
+        "kind": "class",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 43,
+        "end_line": 48,
+        "signature_hash": "945e01f50e05e753",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:digit_from_xyz:9b3264b9234c41a1",
+        "name": "digit_from_xyz",
+        "kind": "function",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 10,
+        "end_line": 13,
+        "signature_hash": "21e532a03fcd9d4a",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:scale_role:a06884df2273ffe4",
+        "name": "scale_role",
+        "kind": "function",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "ea2538d2c5c87c2a",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:xyz_from_digit:fca7cc2e3bc2dda7",
+        "name": "xyz_from_digit",
+        "kind": "function",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "26a5e6839e884f8c",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.__init__:842ddde81b5ba323",
+        "name": "K27City.__init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 59,
+        "end_line": 59,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.add:61fa6f5922050016",
+        "name": "K27City.add",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "fad192bd215a2445",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.effective_rules:651a6d1e1c38fa94",
+        "name": "K27City.effective_rules",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 69,
+        "end_line": 77,
+        "signature_hash": "51c9d0a462d39ba2",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.lineage:b7563dc8886dc2ec",
+        "name": "K27City.lineage",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 63,
+        "end_line": 68,
+        "signature_hash": "8587a99eb1947501",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.rename:eeaa8f5e876ace30",
+        "name": "K27City.rename",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 78,
+        "end_line": 78,
+        "signature_hash": "21c726bb7577b0e2",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.stable_identity:fb11f713b005693e",
+        "name": "K27City.stable_identity",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "b802a4246eedf13f",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.__post_init__:c75f2f399ca2c542",
+        "name": "K27Path.__post_init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.child:1b5414e9bbb42653",
+        "name": "K27Path.child",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 25,
+        "end_line": 25,
+        "signature_hash": "2918eac7ed434ab2",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.is_prefix_of:9f46ff4022795785",
+        "name": "K27Path.is_prefix_of",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "480118d01f204402",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.label:bc5cb3cd040f61bf",
+        "name": "K27Path.label",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 40,
+        "end_line": 40,
+        "signature_hash": "81706bbf3bf2d2ee",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.morton27:a76dce7b378fffd5",
+        "name": "K27Path.morton27",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "aefa43b5e4951b49",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.parent:fda292f8e3e0c036",
+        "name": "K27Path.parent",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "4f0520045efeadf4",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.xyz_trits:078f45cf77d3e1f9",
+        "name": "K27Path.xyz_trits",
+        "kind": "method",
+        "file": "aura_k27_memory_city/k27_city.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "1099addf70ed0fdd",
+        "file_digest8": "debb9ea04b5742aa"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#class:MemoryConflict:47e171b637455d36",
+        "name": "MemoryConflict",
+        "kind": "class",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "6a073dea98504382",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#class:MemoryStore:e8568d4c35a7e74e",
+        "name": "MemoryStore",
+        "kind": "class",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 20,
+        "end_line": 225,
+        "signature_hash": "9fbe44b9a6d5a329",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#class:StaleMemory:3f66813385daa310",
+        "name": "StaleMemory",
+        "kind": "class",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "08e156c1d1b5edee",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#function:canonical:695081a0ace03621",
+        "name": "canonical",
+        "kind": "function",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "1d37540cc7d21fba",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.__enter__:f60d04975b03df0c",
+        "name": "MemoryStore.__enter__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 71,
+        "end_line": 71,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.__exit__:cf69b99ac653c576",
+        "name": "MemoryStore.__exit__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 72,
+        "end_line": 72,
+        "signature_hash": "f86ce03f679b852e",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.__init__:8c4b70b44d3a4c32",
+        "name": "MemoryStore.__init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 21,
+        "end_line": 69,
+        "signature_hash": "51299e535b7d9e5a",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._check_cycle:8c398102f4121703",
+        "name": "MemoryStore._check_cycle",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 120,
+        "end_line": 128,
+        "signature_hash": "6f72a68ad11970c4",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._invalidate:702248eacc4bcd8c",
+        "name": "MemoryStore._invalidate",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 86,
+        "end_line": 99,
+        "signature_hash": "e5c5c14da1efa9d5",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._project_snapshot:56f3506a339563a0",
+        "name": "MemoryStore._project_snapshot",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 210,
+        "end_line": 225,
+        "signature_hash": "2c7de5bdd9b72c9a",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._require_current:22055627182f8aa1",
+        "name": "MemoryStore._require_current",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "2cef80459aa3ad0c",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._write:984930a56083550e",
+        "name": "MemoryStore._write",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 75,
+        "end_line": 84,
+        "signature_hash": "3074526ca10bcba2",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.close:fe6e5113e1b64a1e",
+        "name": "MemoryStore.close",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.get:9dfb80dce5c43ec5",
+        "name": "MemoryStore.get",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 167,
+        "end_line": 175,
+        "signature_hash": "3b3149f34d9ead8d",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.history:87373c9651c44f7d",
+        "name": "MemoryStore.history",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 177,
+        "end_line": 179,
+        "signature_hash": "28276bc3a7b41472",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.project:9985396ca4451738",
+        "name": "MemoryStore.project",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 200,
+        "end_line": 208,
+        "signature_hash": "c3f11cf18eb98568",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.publish:0779db3f41b0b55f",
+        "name": "MemoryStore.publish",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 130,
+        "end_line": 165,
+        "signature_hash": "f793384a946bb7ff",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.register_frame:6bc920eed8b3c8fa",
+        "name": "MemoryStore.register_frame",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 101,
+        "end_line": 112,
+        "signature_hash": "0b5dfb09a7b20b23",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.retract:09bab6b170efa74c",
+        "name": "MemoryStore.retract",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 181,
+        "end_line": 187,
+        "signature_hash": "d1c0034b45861949",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.under:2bfd1a6549ad1c71",
+        "name": "MemoryStore.under",
+        "kind": "method",
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "line": 189,
+        "end_line": 198,
+        "signature_hash": "ce53077ebacf14c4",
+        "file_digest8": "c6d0085c69c1e83a"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameAddress:a7e3ff317b0034b5",
+        "name": "FrameAddress",
+        "kind": "class",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 20,
+        "end_line": 26,
+        "signature_hash": "43730efa7becab06",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameAtlas:513bcb071a7b0bba",
+        "name": "FrameAtlas",
+        "kind": "class",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 57,
+        "end_line": 71,
+        "signature_hash": "da77a84bad87d2f1",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameTransform:cabf64e9afef00d9",
+        "name": "FrameTransform",
+        "kind": "class",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 29,
+        "end_line": 55,
+        "signature_hash": "f5a8aae8a5b3ddbf",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:PrefixCoverage:5865caabe75da91f",
+        "name": "PrefixCoverage",
+        "kind": "class",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 73,
+        "end_line": 95,
+        "signature_hash": "b8b4c7bde96ccdf1",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:WorldFrame:ed37779838f66b85",
+        "name": "WorldFrame",
+        "kind": "class",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 12,
+        "end_line": 17,
+        "signature_hash": "cd0cc5c1cf6aadf2",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:WorldPortal:4f0ce1fd4538436f",
+        "name": "WorldPortal",
+        "kind": "class",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 98,
+        "end_line": 103,
+        "signature_hash": "e665b86fec2c6947",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#function:validate_path:66c8e4ff42c90a83",
+        "name": "validate_path",
+        "kind": "function",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 7,
+        "end_line": 9,
+        "signature_hash": "d79ea0adbdd165e1",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#function:zoom_lineage:582b93f589168d71",
+        "name": "zoom_lineage",
+        "kind": "function",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 105,
+        "end_line": 106,
+        "signature_hash": "5341f1efd5d56c5e",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAddress.__post_init__:796c0f7f5805d111",
+        "name": "FrameAddress.__post_init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.__init__:5dcb2638238e8f48",
+        "name": "FrameAtlas.__init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.add_frame:0c96c28bb6d855e8",
+        "name": "FrameAtlas.add_frame",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 61,
+        "end_line": 61,
+        "signature_hash": "103108bdb74ae83c",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.add_transform:327f7f5b28b8fb64",
+        "name": "FrameAtlas.add_transform",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 62,
+        "end_line": 62,
+        "signature_hash": "c6151fcdc10d4ab7",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.project:ac1c5111284743f9",
+        "name": "FrameAtlas.project",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 63,
+        "end_line": 71,
+        "signature_hash": "73b4e28b150b99b3",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform._decode:626a65ebc9151525",
+        "name": "FrameTransform._decode",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "622b8d92c404387f",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform._encode:487032b3a1750bc4",
+        "name": "FrameTransform._encode",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "95d484141f1fca19",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform.apply:d5b15094c7069186",
+        "name": "FrameTransform.apply",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 52,
+        "end_line": 55,
+        "signature_hash": "e2fcd11ad2165068",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform.apply_digit:2e66d3811e310751",
+        "name": "FrameTransform.apply_digit",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 44,
+        "end_line": 51,
+        "signature_hash": "9e393a040f6ad7ed",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage.__init__:1ecaff2a85d64d0e",
+        "name": "PrefixCoverage.__init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "d09c716f77c491d1",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage._normalize:7f3ac559910a522a",
+        "name": "PrefixCoverage._normalize",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 77,
+        "end_line": 91,
+        "signature_hash": "268183e00740f091",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage.covers:a45e4402fa33a265",
+        "name": "PrefixCoverage.covers",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 92,
+        "end_line": 94,
+        "signature_hash": "905cc499a4637bb7",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage.records:2439d4bae86d1405",
+        "name": "PrefixCoverage.records",
+        "kind": "method",
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "line": 95,
+        "end_line": 95,
+        "signature_hash": "032cc51c44f83598",
+        "file_digest8": "fd271fdb4c838dbd"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#class:K27MemoryCityRuntime:8ae356591e8dd14b",
+        "name": "K27MemoryCityRuntime",
+        "kind": "class",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 94,
+        "end_line": 128,
+        "signature_hash": "1a31f25248244a8a",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#class:_Handler:6ec0c6a201cdb5a7",
+        "name": "_Handler",
+        "kind": "class",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 131,
+        "end_line": 149,
+        "signature_hash": "9302fa0795deba3b",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_read_payload_parts:5bbd51e2d2e8668b",
+        "name": "_read_payload_parts",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 52,
+        "end_line": 61,
+        "signature_hash": "8c33706d6e0b755b",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_semantic_root:7bee09b5442ad9d5",
+        "name": "_semantic_root",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 85,
+        "end_line": 91,
+        "signature_hash": "cf8b27055ce5dd4f",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_sha256:e97d9af53633f709",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 44,
+        "end_line": 49,
+        "signature_hash": "8b2fe119650f5918",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:default_registry:b61674b2d80ffea1",
+        "name": "default_registry",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 64,
+        "end_line": 82,
+        "signature_hash": "67ce1e6bf59f1c11",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:main:c2f845032b40d450",
+        "name": "main",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 168,
+        "end_line": 173,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:probe_url:15c86d8db9b4f55e",
+        "name": "probe_url",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 159,
+        "end_line": 165,
+        "signature_hash": "ef8d4737d8df5ae3",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:serve:b01ad249c84f1f47",
+        "name": "serve",
+        "kind": "function",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 152,
+        "end_line": 156,
+        "signature_hash": "fb3c216bc180186b",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__enter__:ca547557478dca5e",
+        "name": "K27MemoryCityRuntime.__enter__",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 117,
+        "end_line": 117,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__exit__:5f9278f55a89158d",
+        "name": "K27MemoryCityRuntime.__exit__",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 118,
+        "end_line": 118,
+        "signature_hash": "0644df2e0c6f4a60",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__init__:92ef84aed9418bf8",
+        "name": "K27MemoryCityRuntime.__init__",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 96,
+        "end_line": 113,
+        "signature_hash": "9fa82d519e5ff96b",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.close:98c66afb8f833a8e",
+        "name": "K27MemoryCityRuntime.close",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.get:c6fb8b8707531b0e",
+        "name": "K27MemoryCityRuntime.get",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 124,
+        "end_line": 125,
+        "signature_hash": "f56f42e058861db2",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.status:ae4c22ddeac3d8eb",
+        "name": "K27MemoryCityRuntime.status",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 119,
+        "end_line": 123,
+        "signature_hash": "5669d9fd37503ce9",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.under:2ae7e47528b1f177",
+        "name": "K27MemoryCityRuntime.under",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 126,
+        "end_line": 128,
+        "signature_hash": "2573d93320044ea7",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler._reply:a9c577f0d5bc1961",
+        "name": "_Handler._reply",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 134,
+        "end_line": 136,
+        "signature_hash": "29a6d9d291748eb2",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.do_GET:65541077dbc34047",
+        "name": "_Handler.do_GET",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 137,
+        "end_line": 149,
+        "signature_hash": "0f22ff7b0395d880",
+        "file_digest8": "3b92aaaabd724aed"
+      },
+      {
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.log_message:ce08628170a03a0a",
+        "name": "_Handler.log_message",
+        "kind": "method",
+        "file": "aura_k27_memory_city_runtime.py",
+        "line": 133,
+        "end_line": 133,
+        "signature_hash": "0588e7e4e10e6567",
+        "file_digest8": "3b92aaaabd724aed"
       },
       {
         "semantic_id": "aura_language_data_governance.py#class:DataAccessLevel:e9900e74a51db04a",
@@ -267657,8 +268831,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "1cda833bf5031f00fa07a40f81a11ac8",
+    "payload_hash": "9ace9cece61737016306bf081b115efd"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,15 +268845,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1655,
+      "bytes": 26516803,
+      "tokens_est": 6619544,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1009,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -268277,6 +269451,12 @@
         "aura_intent_ingestion.py",
         "aura_intent_refinement.py",
         "aura_jspace_codec.py",
+        "aura_k27_memory_city/__init__.py",
+        "aura_k27_memory_city/coordinate_bridge.py",
+        "aura_k27_memory_city/k27_city.py",
+        "aura_k27_memory_city/persistent_memory.py",
+        "aura_k27_memory_city/world_atlas.py",
+        "aura_k27_memory_city_runtime.py",
         "aura_language_data_governance.py",
         "aura_language_learner_profile.py",
         "aura_language_privacy_policy.py",
@@ -268354,28 +269534,22 @@
         "aura_persistence_registry.py",
         "aura_phase_c2_codemap_verify.py",
         "aura_phase_c3_trial_crucible.py",
-        "aura_phase_capsule.py",
-        "aura_planning_board.py",
-        "aura_planning_events.py",
-        "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_phase_capsule.py"
       ]
     }
   ],
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1655,
+    "total_bytes": 26516803,
+    "text_tokens_est": 6619544,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1009,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -268826,6 +270000,14 @@
         "line": 214,
         "end_line": 258,
         "semantic_id": "aura_indus_cortex.py#function:main:4e242c8fa1d1406e",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 173,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:main:c2f845032b40d450",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -276781,6 +277963,14 @@
         "signature_hash": "6144aae341e8e608"
       },
       {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 156,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:serve:b01ad249c84f1f47",
+        "signature_hash": "fb3c216bc180186b"
+      },
+      {
         "file": "aura_showcase_live_repair_server.py",
         "kind": "function",
         "line": 376,
@@ -279643,6 +280833,14 @@
         "end_line": 115,
         "semantic_id": "aura_gate_egress.py#function:_sha256:5e52aa401f9425c2",
         "signature_hash": "3107e85a33567466"
+      },
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 49,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_sha256:e97d9af53633f709",
+        "signature_hash": "8b2fe119650f5918"
       },
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
@@ -323837,6 +325035,864 @@
         "signature_hash": "72a55c0eba7c0b8b"
       }
     ],
+    "nonempty": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 14,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:nonempty:7362cd205c1305a6",
+        "signature_hash": "34d752deb11c7810"
+      }
+    ],
+    "checked_path": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 21,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_path:51ec4cf2fc34442a",
+        "signature_hash": "c7213b19a299a76e"
+      }
+    ],
+    "checked_address": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 29,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:checked_address:e47aa085ca7dbf60",
+        "signature_hash": "b44017d75453b8c4"
+      }
+    ],
+    "path_key": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:path_key:4c3e36fa1e3c830a",
+        "signature_hash": "2243d6e827c8dc2d"
+      }
+    ],
+    "DigestBucket": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 38,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#class:DigestBucket:4cf83f4f9d0078ba",
+        "signature_hash": "9a82b4f9d6fb0626"
+      }
+    ],
+    "digest_bucket": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:digest_bucket:ef77202b3b0f9b13",
+        "signature_hash": "d4c268eb2a0a071b"
+      }
+    ],
+    "local_octants": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:local_octants:ad212a6e2e6a7818",
+        "signature_hash": "0ddf9866087dade5"
+      }
+    ],
+    "address_record": [
+      {
+        "file": "aura_k27_memory_city/coordinate_bridge.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "aura_k27_memory_city/coordinate_bridge.py#function:address_record:9ec4dcead883be7e",
+        "signature_hash": "7e619577113f8e4d"
+      }
+    ],
+    "digit_from_xyz": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 13,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:digit_from_xyz:9b3264b9234c41a1",
+        "signature_hash": "21e532a03fcd9d4a"
+      }
+    ],
+    "xyz_from_digit": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:xyz_from_digit:fca7cc2e3bc2dda7",
+        "signature_hash": "26a5e6839e884f8c"
+      }
+    ],
+    "K27Path": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 40,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27Path:ca1aec86223e9978",
+        "signature_hash": "01b934ab05afc0c7"
+      }
+    ],
+    "K27Path.__post_init__": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.__post_init__:c75f2f399ca2c542",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "K27Path.child": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.child:1b5414e9bbb42653",
+        "signature_hash": "2918eac7ed434ab2"
+      }
+    ],
+    "K27Path.parent": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.parent:fda292f8e3e0c036",
+        "signature_hash": "4f0520045efeadf4"
+      }
+    ],
+    "K27Path.is_prefix_of": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.is_prefix_of:9f46ff4022795785",
+        "signature_hash": "480118d01f204402"
+      }
+    ],
+    "K27Path.xyz_trits": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.xyz_trits:078f45cf77d3e1f9",
+        "signature_hash": "1099addf70ed0fdd"
+      }
+    ],
+    "K27Path.morton27": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.morton27:a76dce7b378fffd5",
+        "signature_hash": "aefa43b5e4951b49"
+      }
+    ],
+    "K27Path.label": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 40,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27Path.label:bc5cb3cd040f61bf",
+        "signature_hash": "81706bbf3bf2d2ee"
+      }
+    ],
+    "OverlayRule": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 48,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:OverlayRule:73ed5d9c191d896f",
+        "signature_hash": "945e01f50e05e753"
+      }
+    ],
+    "Cell": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 56,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:Cell:3c45f8bb03334811",
+        "signature_hash": "94b1bf27828222a5"
+      }
+    ],
+    "K27City": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 82,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#class:K27City:94d9dc810a8aaad4",
+        "signature_hash": "7ffed6806ced0f4c"
+      }
+    ],
+    "K27City.__init__": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 59,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.__init__:842ddde81b5ba323",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "K27City.add": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.add:61fa6f5922050016",
+        "signature_hash": "fad192bd215a2445"
+      }
+    ],
+    "K27City.lineage": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.lineage:b7563dc8886dc2ec",
+        "signature_hash": "8587a99eb1947501"
+      }
+    ],
+    "K27City.effective_rules": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.effective_rules:651a6d1e1c38fa94",
+        "signature_hash": "51c9d0a462d39ba2"
+      }
+    ],
+    "K27City.rename": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 78,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.rename:eeaa8f5e876ace30",
+        "signature_hash": "21c726bb7577b0e2"
+      }
+    ],
+    "K27City.stable_identity": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#method:K27City.stable_identity:fb11f713b005693e",
+        "signature_hash": "b802a4246eedf13f"
+      }
+    ],
+    "scale_role": [
+      {
+        "file": "aura_k27_memory_city/k27_city.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "aura_k27_memory_city/k27_city.py#function:scale_role:a06884df2273ffe4",
+        "signature_hash": "ea2538d2c5c87c2a"
+      }
+    ],
+    "MemoryConflict": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#class:MemoryConflict:47e171b637455d36",
+        "signature_hash": "6a073dea98504382"
+      }
+    ],
+    "StaleMemory": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#class:StaleMemory:3f66813385daa310",
+        "signature_hash": "08e156c1d1b5edee"
+      }
+    ],
+    "canonical": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#function:canonical:695081a0ace03621",
+        "signature_hash": "1d37540cc7d21fba"
+      },
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 92,
+        "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
+        "signature_hash": "8405a7944186ce60"
+      }
+    ],
+    "MemoryStore": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 225,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#class:MemoryStore:e8568d4c35a7e74e",
+        "signature_hash": "9fbe44b9a6d5a329"
+      }
+    ],
+    "MemoryStore.__init__": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 69,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.__init__:8c4b70b44d3a4c32",
+        "signature_hash": "51299e535b7d9e5a"
+      }
+    ],
+    "MemoryStore.close": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.close:fe6e5113e1b64a1e",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "MemoryStore.__enter__": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 71,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.__enter__:f60d04975b03df0c",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "MemoryStore.__exit__": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 72,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.__exit__:cf69b99ac653c576",
+        "signature_hash": "f86ce03f679b852e"
+      }
+    ],
+    "MemoryStore._write": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 84,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._write:984930a56083550e",
+        "signature_hash": "3074526ca10bcba2"
+      }
+    ],
+    "MemoryStore._invalidate": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 99,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._invalidate:702248eacc4bcd8c",
+        "signature_hash": "e5c5c14da1efa9d5"
+      }
+    ],
+    "MemoryStore.register_frame": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 112,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.register_frame:6bc920eed8b3c8fa",
+        "signature_hash": "0b5dfb09a7b20b23"
+      }
+    ],
+    "MemoryStore._require_current": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._require_current:22055627182f8aa1",
+        "signature_hash": "2cef80459aa3ad0c"
+      }
+    ],
+    "MemoryStore._check_cycle": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 128,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._check_cycle:8c398102f4121703",
+        "signature_hash": "6f72a68ad11970c4"
+      }
+    ],
+    "MemoryStore.publish": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 165,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.publish:0779db3f41b0b55f",
+        "signature_hash": "f793384a946bb7ff"
+      }
+    ],
+    "MemoryStore.get": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 175,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.get:9dfb80dce5c43ec5",
+        "signature_hash": "3b3149f34d9ead8d"
+      }
+    ],
+    "MemoryStore.history": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 179,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.history:87373c9651c44f7d",
+        "signature_hash": "28276bc3a7b41472"
+      }
+    ],
+    "MemoryStore.retract": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 187,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.retract:09bab6b170efa74c",
+        "signature_hash": "d1c0034b45861949"
+      }
+    ],
+    "MemoryStore.under": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 198,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.under:2bfd1a6549ad1c71",
+        "signature_hash": "ce53077ebacf14c4"
+      }
+    ],
+    "MemoryStore.project": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 200,
+        "end_line": 208,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore.project:9985396ca4451738",
+        "signature_hash": "c3f11cf18eb98568"
+      }
+    ],
+    "MemoryStore._project_snapshot": [
+      {
+        "file": "aura_k27_memory_city/persistent_memory.py",
+        "kind": "method",
+        "line": 210,
+        "end_line": 225,
+        "semantic_id": "aura_k27_memory_city/persistent_memory.py#method:MemoryStore._project_snapshot:56f3506a339563a0",
+        "signature_hash": "2c7de5bdd9b72c9a"
+      }
+    ],
+    "validate_path": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 9,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#function:validate_path:66c8e4ff42c90a83",
+        "signature_hash": "d79ea0adbdd165e1"
+      }
+    ],
+    "WorldFrame": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 17,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:WorldFrame:ed37779838f66b85",
+        "signature_hash": "cd0cc5c1cf6aadf2"
+      }
+    ],
+    "FrameAddress": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 26,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameAddress:a7e3ff317b0034b5",
+        "signature_hash": "43730efa7becab06"
+      }
+    ],
+    "FrameAddress.__post_init__": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAddress.__post_init__:796c0f7f5805d111",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "FrameTransform": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 55,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameTransform:cabf64e9afef00d9",
+        "signature_hash": "f5a8aae8a5b3ddbf"
+      }
+    ],
+    "FrameTransform._decode": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform._decode:626a65ebc9151525",
+        "signature_hash": "622b8d92c404387f"
+      }
+    ],
+    "FrameTransform._encode": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform._encode:487032b3a1750bc4",
+        "signature_hash": "95d484141f1fca19"
+      }
+    ],
+    "FrameTransform.apply_digit": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 51,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform.apply_digit:2e66d3811e310751",
+        "signature_hash": "9e393a040f6ad7ed"
+      }
+    ],
+    "FrameTransform.apply": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameTransform.apply:d5b15094c7069186",
+        "signature_hash": "e2fcd11ad2165068"
+      }
+    ],
+    "FrameAtlas": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 71,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:FrameAtlas:513bcb071a7b0bba",
+        "signature_hash": "da77a84bad87d2f1"
+      }
+    ],
+    "FrameAtlas.__init__": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.__init__:5dcb2638238e8f48",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "FrameAtlas.add_frame": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 61,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.add_frame:0c96c28bb6d855e8",
+        "signature_hash": "103108bdb74ae83c"
+      }
+    ],
+    "FrameAtlas.add_transform": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 62,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.add_transform:327f7f5b28b8fb64",
+        "signature_hash": "c6151fcdc10d4ab7"
+      }
+    ],
+    "FrameAtlas.project": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 71,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:FrameAtlas.project:ac1c5111284743f9",
+        "signature_hash": "73b4e28b150b99b3"
+      }
+    ],
+    "PrefixCoverage": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 95,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:PrefixCoverage:5865caabe75da91f",
+        "signature_hash": "b8b4c7bde96ccdf1"
+      }
+    ],
+    "PrefixCoverage.__init__": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage.__init__:1ecaff2a85d64d0e",
+        "signature_hash": "d09c716f77c491d1"
+      }
+    ],
+    "PrefixCoverage._normalize": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 91,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage._normalize:7f3ac559910a522a",
+        "signature_hash": "268183e00740f091"
+      }
+    ],
+    "PrefixCoverage.covers": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 94,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage.covers:a45e4402fa33a265",
+        "signature_hash": "905cc499a4637bb7"
+      }
+    ],
+    "PrefixCoverage.records": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 95,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#method:PrefixCoverage.records:2439d4bae86d1405",
+        "signature_hash": "032cc51c44f83598"
+      }
+    ],
+    "WorldPortal": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "class",
+        "line": 98,
+        "end_line": 103,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#class:WorldPortal:4f0ce1fd4538436f",
+        "signature_hash": "e665b86fec2c6947"
+      }
+    ],
+    "zoom_lineage": [
+      {
+        "file": "aura_k27_memory_city/world_atlas.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 106,
+        "semantic_id": "aura_k27_memory_city/world_atlas.py#function:zoom_lineage:582b93f589168d71",
+        "signature_hash": "5341f1efd5d56c5e"
+      }
+    ],
+    "_read_payload_parts": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 61,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_read_payload_parts:5bbd51e2d2e8668b",
+        "signature_hash": "8c33706d6e0b755b"
+      }
+    ],
+    "default_registry": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 82,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:default_registry:b61674b2d80ffea1",
+        "signature_hash": "67ce1e6bf59f1c11"
+      }
+    ],
+    "_semantic_root": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 91,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:_semantic_root:7bee09b5442ad9d5",
+        "signature_hash": "cf8b27055ce5dd4f"
+      }
+    ],
+    "K27MemoryCityRuntime": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "class",
+        "line": 94,
+        "end_line": 128,
+        "semantic_id": "aura_k27_memory_city_runtime.py#class:K27MemoryCityRuntime:8ae356591e8dd14b",
+        "signature_hash": "1a31f25248244a8a"
+      }
+    ],
+    "K27MemoryCityRuntime.__init__": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 113,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__init__:92ef84aed9418bf8",
+        "signature_hash": "9fa82d519e5ff96b"
+      }
+    ],
+    "K27MemoryCityRuntime.close": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.close:98c66afb8f833a8e",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "K27MemoryCityRuntime.__enter__": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 117,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__enter__:ca547557478dca5e",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "K27MemoryCityRuntime.__exit__": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 118,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.__exit__:5f9278f55a89158d",
+        "signature_hash": "0644df2e0c6f4a60"
+      }
+    ],
+    "K27MemoryCityRuntime.status": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 123,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.status:ae4c22ddeac3d8eb",
+        "signature_hash": "5669d9fd37503ce9"
+      }
+    ],
+    "K27MemoryCityRuntime.get": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 125,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.get:c6fb8b8707531b0e",
+        "signature_hash": "f56f42e058861db2"
+      }
+    ],
+    "K27MemoryCityRuntime.under": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 128,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:K27MemoryCityRuntime.under:2ae7e47528b1f177",
+        "signature_hash": "2573d93320044ea7"
+      }
+    ],
+    "_Handler": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "class",
+        "line": 131,
+        "end_line": 149,
+        "semantic_id": "aura_k27_memory_city_runtime.py#class:_Handler:6ec0c6a201cdb5a7",
+        "signature_hash": "9302fa0795deba3b"
+      }
+    ],
+    "_Handler.log_message": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 133,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.log_message:ce08628170a03a0a",
+        "signature_hash": "0588e7e4e10e6567"
+      }
+    ],
+    "_Handler._reply": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 136,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler._reply:a9c577f0d5bc1961",
+        "signature_hash": "29a6d9d291748eb2"
+      }
+    ],
+    "_Handler.do_GET": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 149,
+        "semantic_id": "aura_k27_memory_city_runtime.py#method:_Handler.do_GET:65541077dbc34047",
+        "signature_hash": "0f22ff7b0395d880"
+      }
+    ],
+    "probe_url": [
+      {
+        "file": "aura_k27_memory_city_runtime.py",
+        "kind": "function",
+        "line": 159,
+        "end_line": 165,
+        "semantic_id": "aura_k27_memory_city_runtime.py#function:probe_url:15c86d8db9b4f55e",
+        "signature_hash": "ef8d4737d8df5ae3"
+      }
+    ],
     "DataAccessLevel": [
       {
         "file": "aura_language_data_governance.py",
@@ -340827,16 +342883,6 @@
         "end_line": 105,
         "semantic_id": "aura_vsa_encoding_profile.py#function:normalize:93d587660fe7068f",
         "signature_hash": "32dd81a814ea98ac"
-      }
-    ],
-    "canonical": [
-      {
-        "file": "aura_refactor_state_identity.py",
-        "kind": "function",
-        "line": 85,
-        "end_line": 92,
-        "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
-        "signature_hash": "8405a7944186ce60"
       }
     ],
     "tokens": [

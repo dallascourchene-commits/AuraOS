@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26483250
-- **text_tokens_est**: 6611153
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26516803
+- **text_tokens_est**: 6619544
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -614,6 +614,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_intent_ingestion.py",
     "aura_intent_refinement.py",
     "aura_jspace_codec.py",
+    "aura_k27_memory_city/__init__.py",
+    "aura_k27_memory_city/coordinate_bridge.py",
+    "aura_k27_memory_city/k27_city.py",
+    "aura_k27_memory_city/persistent_memory.py",
+    "aura_k27_memory_city/world_atlas.py",
+    "aura_k27_memory_city_runtime.py",
     "aura_language_data_governance.py",
     "aura_language_learner_profile.py",
     "aura_language_privacy_policy.py",
@@ -1687,6 +1693,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_blockchain/memory_staking.py",
     "aura_blockchain/node.py",
     "aura_blockchain/phasor_ledger.py",
+    "aura_k27_memory_city/__init__.py",
+    "aura_k27_memory_city/coordinate_bridge.py",
+    "aura_k27_memory_city/k27_city.py",
+    "aura_k27_memory_city/persistent_memory.py",
+    "aura_k27_memory_city/world_atlas.py",
+    "aura_k27_memory_city_runtime.py",
     "aura_spatial_importers/__init__.py",
     "aura_spatial_importers/contracts.py",
     "aura_spatial_importers/gaussian_gltf.py",
@@ -1769,13 +1781,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_bilateral_gate_dialogue.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1789,15 +1795,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26483250,
-  "tokens_est": 6611153,
+  "files": 1655,
+  "bytes": 26516803,
+  "tokens_est": 6619544,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
+    "python_module": 1009,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
@@ -2410,6 +2416,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_intent_ingestion.py",
     "aura_intent_refinement.py",
     "aura_jspace_codec.py",
+    "aura_k27_memory_city/__init__.py",
+    "aura_k27_memory_city/coordinate_bridge.py",
+    "aura_k27_memory_city/k27_city.py",
+    "aura_k27_memory_city/persistent_memory.py",
+    "aura_k27_memory_city/world_atlas.py",
+    "aura_k27_memory_city_runtime.py",
     "aura_language_data_governance.py",
     "aura_language_learner_profile.py",
     "aura_language_privacy_policy.py",
@@ -2487,13 +2499,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_persistence_registry.py",
     "aura_phase_c2_codemap_verify.py",
     "aura_phase_c3_trial_crucible.py",
-    "aura_phase_capsule.py",
-    "aura_planning_board.py",
-    "aura_planning_events.py",
-    "aura_planning_frontier.py",
-    "aura_planning_projector.py",
-    "aura_planning_regression.py",
-    "aura_plugin_registry.py"
+    "aura_phase_capsule.py"
   ]
 }
 ```
