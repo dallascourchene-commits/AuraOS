@@ -19,8 +19,8 @@ class T(unittest.TestCase):
         p=self.plan([cmd("NEW")],[rec("OLD",990_000,"RESULT","TERMINAL_SUCCESS")]); self.assertEqual(p.commands[0].state,CommandState.ADMISSION_STARVED)
     def test_receipt_before_command_does_not_count(self):
         p=self.plan([cmd("C",900_000)],[rec("C",899_999)]); self.assertEqual(p.commands[0].state,CommandState.ADMISSION_STARVED)
-    def test_future_receipt_fails_closed(self):
-        with self.assertRaisesRegex(E,"FUTURE_RECEIPT"): self.plan([cmd()],[rec(t=NOW+1,kind="RESULT",state="TERMINAL_SUCCESS")])
+    def test_future_bound_receipt_fails_closed(self):
+        with self.assertRaisesRegex(E,"FUTURE_RECEIPT"): self.plan([cmd()],[rec(t=NOW+1)])
     def test_ack_is_admitted_not_terminal(self):
         p=self.plan([cmd()],[rec()]); self.assertEqual(p.commands[0].state,CommandState.ADMITTED_NOT_TERMINAL)
     def test_old_ack_becomes_post_ack_reducer_stall(self):
@@ -35,44 +35,52 @@ class T(unittest.TestCase):
         p=self.plan([cmd(generation="GEN24")]); self.assertEqual(p.system_state,SystemState.CURRENTNESS_BLOCK)
     def test_same_generation_wrong_digest_is_stale(self):
         c=Command("C",900_000,"GEN25","wrong","READY",False); p=self.plan([c]); self.assertEqual(p.system_state,SystemState.CURRENTNESS_BLOCK)
-    def test_unobserved_consumer_never_authorizes_restart(self):
-        p=self.plan([cmd()]); self.assertEqual(p.restart_budget,0); self.assertNotIn("RESTART_AURA_PROJECT006_ONCE",p.recovery_steps)
-    def test_incomplete_consumer_observation_fails_closed(self):
-        with self.assertRaisesRegex(E,"INCOMPLETE_CONSUMER_OBSERVATION"): self.plan([cmd()],consumer=ConsumerObservation(True))
-    def test_observed_inactive_consumer_allows_one_restart(self):
-        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=False,lease_current=False)); self.assertEqual(p.restart_budget,1); self.assertEqual(p.recovery_steps.count("RESTART_AURA_PROJECT006_ONCE"),1)
-    def test_observed_active_current_consumer_no_restart(self):
-        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,lease_current=True)); self.assertEqual(p.restart_budget,0)
     def test_inactive_queue_never_creates_starvation(self):
         for q in INACTIVE_QUEUE_STATES:
             with self.subTest(q=q):
-                p=self.plan([cmd(queue=q)]); self.assertEqual(p.commands[0].state,CommandState.INACTIVE_QUEUE); self.assertEqual(p.system_state,SystemState.NO_ACTIVE_INGRESS); self.assertNotIn("RUN_EXACTLY_ONE_CONSUMER_ITERATION",p.recovery_steps)
+                p=self.plan([cmd(queue=q)]); self.assertEqual(p.commands[0].state,CommandState.INACTIVE_QUEUE); self.assertEqual(p.system_state,SystemState.NO_ACTIVE_INGRESS)
     def test_unknown_queue_requires_visibility(self):
         p=self.plan([cmd(queue="MYSTERY")]); self.assertEqual(p.commands[0].state,CommandState.UNKNOWN); self.assertEqual(p.system_state,SystemState.HOST_VISIBILITY_REQUIRED)
     def test_inactive_stale_head_does_not_create_currentness_block(self):
         p=self.plan([cmd(generation="GEN24",queue="CANCELLED")]); self.assertEqual(p.system_state,SystemState.NO_ACTIVE_INGRESS)
+    def test_unobserved_consumer_never_authorizes_restart(self):
+        p=self.plan([cmd()]); self.assertEqual(p.restart_budget,0); self.assertNotIn("RESTART_AURA_PROJECT006_ONCE",p.recovery_steps)
     def test_unobserved_consumer_cannot_smuggle_state(self):
         with self.assertRaisesRegex(E,"UNOBSERVED_CONSUMER_HAS_STATE"): self.plan([cmd()],consumer=ConsumerObservation(False,service_active=False))
+    def test_observed_consumer_requires_service_state(self):
+        with self.assertRaisesRegex(E,"INCOMPLETE_CONSUMER_OBSERVATION"): self.plan([cmd()],consumer=ConsumerObservation(True,service_active=None))
+    def test_lease_is_optional_advisory(self):
+        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,lease_current=None)); self.assertEqual(p.restart_budget,0)
+    def test_observed_inactive_consumer_allows_one_restart(self):
+        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=False)); self.assertEqual(p.restart_budget,1); self.assertEqual(p.recovery_steps.count("RESTART_AURA_PROJECT006_ONCE"),1)
+    def test_observed_active_unknown_progress_no_restart_yet(self):
+        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,progress_moved=None)); self.assertEqual(p.restart_budget,0); self.assertIn("COMPARE_CURSOR_STATE_RECEIPT_MOVEMENT",p.recovery_steps)
+    def test_observed_active_stuck_allows_one_restart(self):
+        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,progress_moved=False)); self.assertEqual(p.restart_budget,1)
+    def test_observed_active_progress_blocks_restart(self):
+        p=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,progress_moved=True)); self.assertEqual(p.restart_budget,0)
     def test_future_consumer_time_fails_closed(self):
-        with self.assertRaisesRegex(E,"FUTURE_CURSOR_TIME"): self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,lease_current=True,cursor_s=NOW+1))
+        with self.assertRaisesRegex(E,"FUTURE_CURSOR_TIME"): self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,cursor_s=NOW+1))
     def test_bad_consumer_bool_fails_closed(self):
         with self.assertRaisesRegex(E,"BAD_SERVICE_ACTIVE"): self.plan([cmd()],consumer=ConsumerObservation(True,service_active=1,lease_current=True))
-    def test_bad_receipt_state_fails_closed(self):
-        with self.assertRaisesRegex(E,"BAD_RECEIPT_STATE"): self.plan([cmd()],[Receipt("C1",950_000,"ACK",1)])
-    def test_bad_receipt_time_fails_closed_before_temporal_filter(self):
-        with self.assertRaisesRegex(E,"BAD_RECEIPT_TIME"): self.plan([cmd()],[Receipt("C1",-1,"ACK","ACK_ACCEPTED")])
     def test_duplicate_command_ids_fail_closed(self):
         with self.assertRaises(E): self.plan([cmd("X"),cmd("X")])
     def test_future_command_fails_closed(self):
         with self.assertRaises(E): self.plan([cmd(created=NOW+1)])
     def test_bad_bool_fails_closed(self):
         with self.assertRaises(E): self.plan([Command("C",900_000,"GEN25","d91e0a39358901c5","Q",1)])
+    def test_bad_receipt_state_fails_closed(self):
+        with self.assertRaisesRegex(E,"BAD_RECEIPT_STATE"): self.plan([cmd()],[Receipt("C1",950_000,"ACK",1)])
+    def test_bad_receipt_time_fails_closed_before_temporal_filter(self):
+        with self.assertRaisesRegex(E,"BAD_RECEIPT_TIME"): self.plan([cmd()],[Receipt("C1",-1,"ACK","ACK_ACCEPTED")])
     def test_recent_starved_command_requires_visibility_not_false_death(self):
         p=self.plan([cmd(created=NOW-100)],starve=1000); self.assertEqual(p.system_state,SystemState.HOST_VISIBILITY_REQUIRED)
     def test_empty_ingress(self):
         p=self.plan([]); self.assertEqual(p.system_state,SystemState.NO_ACTIVE_INGRESS)
     def test_receipt_root_deterministic(self):
         a=self.plan([cmd("A"),cmd("B",800_000)]); b=self.plan([cmd("A"),cmd("B",800_000)]); self.assertEqual(a.receipt_root,b.receipt_root)
+    def test_receipt_root_binds_consumer_observation(self):
+        a=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,progress_moved=False,evidence_root="a"*64)); b=self.plan([cmd()],consumer=ConsumerObservation(True,service_active=True,progress_moved=True,evidence_root="b"*64)); self.assertNotEqual(a.receipt_root,b.receipt_root)
     def test_omega8_exactly_one_keeper(self):
         import itertools
         self.assertEqual(sum(omega8_keeper(x) for x in itertools.product(range(3),repeat=8)),1)
