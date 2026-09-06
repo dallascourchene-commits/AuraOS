@@ -7,8 +7,10 @@ from __future__ import annotations
 
 from collections import OrderedDict, defaultdict, deque
 from dataclasses import dataclass
+from fractions import Fraction
 from hashlib import sha256
 import json
+import math
 import re
 import time
 from typing import Any, Iterable, Mapping, Sequence
@@ -31,6 +33,14 @@ def _sha256_text(v: object) -> bool:
 
 
 _MISSING = object()
+
+
+def _finite_number(v: object) -> bool:
+    return type(v) in (int, float) and math.isfinite(v)
+
+
+def _exact_number(v: int | float) -> Fraction:
+    return Fraction(v) if type(v) is int else Fraction.from_float(v)
 
 
 class HardFalseSecurityGate:
@@ -413,6 +423,12 @@ class NativeRouterAuthority:
 class WindowAwareBudget:
     @staticmethod
     def bytes(bandwidth: float, window_s: float, cap: int) -> int:
+        if not _finite_number(bandwidth) or bandwidth < 0:
+            raise ValueError("bandwidth must be a finite non-negative number")
+        if not _finite_number(window_s) or window_s < 0:
+            raise ValueError("window_s must be a finite non-negative number")
+        if type(cap) is not int or cap < 0:
+            raise ValueError("cap must be a non-negative integer")
         return min(cap, max(0, int(bandwidth * window_s)))
 
 
@@ -429,11 +445,41 @@ class StorageTier:
     bandwidth: float
     joules_per_gb: float
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.name, str) or not self.name:
+            raise ValueError("tier name required")
+        if type(self.capacity_bytes) is not int or self.capacity_bytes < 0:
+            raise ValueError("capacity_bytes must be a non-negative integer")
+        if not _finite_number(self.bandwidth) or self.bandwidth <= 0:
+            raise ValueError("bandwidth must be a finite positive number")
+        if not _finite_number(self.joules_per_gb) or self.joules_per_gb < 0:
+            raise ValueError("joules_per_gb must be a finite non-negative number")
+
 
 class TierEnergyAdmission:
     @staticmethod
-    def admit(t: StorageTier, n: int, budget_j: float) -> bool:
-        return n <= t.capacity_bytes and n / 1e9 * t.joules_per_gb <= budget_j
+    def energy_fraction(t: StorageTier, n: int) -> Fraction:
+        if type(n) is not int or n < 0:
+            raise ValueError("n must be a non-negative integer")
+        return Fraction(n, 1_000_000_000) * _exact_number(t.joules_per_gb)
+
+    @classmethod
+    def admit_cumulative(cls, t: StorageTier, n: int, spent_j: Fraction, budget_j: Fraction) -> bool:
+        if type(n) is not int or n < 0:
+            return False
+        if not isinstance(spent_j, Fraction) or not isinstance(budget_j, Fraction):
+            return False
+        if spent_j < 0 or budget_j < 0:
+            return False
+        return n <= t.capacity_bytes and spent_j + cls.energy_fraction(t, n) <= budget_j
+
+    @classmethod
+    def admit(cls, t: StorageTier, n: int, budget_j: float) -> bool:
+        if type(n) is not int or n < 0:
+            return False
+        if not _finite_number(budget_j) or budget_j < 0:
+            return False
+        return cls.admit_cumulative(t, n, Fraction(0), _exact_number(budget_j))
 
 
 class StorageTierPlacement:
@@ -516,11 +562,20 @@ FRONTIER_27 = (
 
 class LegacyOffload:
     def __init__(self, size: int, bandwidth: float, jpgb: float):
+        if type(size) is not int or size <= 0:
+            raise ValueError("size must be a positive integer")
+        if not _finite_number(bandwidth) or bandwidth <= 0:
+            raise ValueError("bandwidth must be a finite positive number")
+        if not _finite_number(jpgb) or jpgb < 0:
+            raise ValueError("jpgb must be a finite non-negative number")
         self.size = size
         self.bw = bandwidth
         self.jpgb = jpgb
 
     def run(self, routes, preds):
+        routes = tuple(routes); preds = tuple(preds)
+        if len(routes) != len(preds):
+            raise ValueError("routes and preds must have equal length")
         a = UsefulByteAccounting(); secs = energy = 0.0
         for route, pred in zip(routes, preds):
             n = len(route) * self.size
@@ -535,10 +590,25 @@ class LegacyOffload:
 class FrontierOffload:
     """Conservative serialized model: every actual prefetch/miss transfer counts time."""
     def __init__(self, size: int, capacity: int, tier: StorageTier, window_s: float, budget_j: float):
+        if type(size) is not int or size <= 0:
+            raise ValueError("size must be a positive integer")
+        if type(capacity) is not int or capacity < 0:
+            raise ValueError("capacity must be a non-negative integer")
+        if not isinstance(tier, StorageTier):
+            raise ValueError("tier must be a StorageTier")
+        if not _finite_number(window_s) or window_s < 0:
+            raise ValueError("window_s must be a finite non-negative number")
+        if not _finite_number(budget_j) or budget_j < 0:
+            raise ValueError("budget_j must be a finite non-negative number")
         self.size = size; self.r = ExpertResidencyLRU(capacity); self.t = tier; self.w = window_s; self.e = budget_j
 
     def run(self, routes, preds):
+        routes = tuple(routes); preds = tuple(preds)
+        if len(routes) != len(preds):
+            raise ValueError("routes and preds must have equal length")
         a = UsefulByteAccounting(); secs = energy = 0.0; prefetch_transfers = 0
+        speculative_spent = Fraction(0); speculative_budget = _exact_number(self.e)
+        start_hits, start_misses = self.r.hits, self.r.misses
         for route, pred in zip(routes, preds):
             native = NativeRouterAuthority.execute(route, ())
             budget = WindowAwareBudget.bytes(self.t.bandwidth, self.w, self.size * len(pred))
@@ -546,8 +616,12 @@ class FrontierOffload:
             rs = set(native); useful = sum(x in rs for x in plan) * self.size; wasted = sum(x not in rs for x in plan) * self.size
             missing_plan = [x for x in plan if not self.r.resident(x)]
             speculative_bytes = len(missing_plan) * self.size
-            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit(self.t, speculative_bytes, self.e)
+            plan_energy = TierEnergyAdmission.energy_fraction(self.t, speculative_bytes)
+            energy_ok = bool(missing_plan) and TierEnergyAdmission.admit_cumulative(
+                self.t, speculative_bytes, speculative_spent, speculative_budget
+            )
             if PrefetchWasteGuard.admit(useful, wasted) and energy_ok:
+                speculative_spent += plan_energy
                 for x in missing_plan:
                     self.r.prefetch(x); prefetch_transfers += 1
                     a.useful += self.size if x in rs else 0; a.wasted += self.size if x not in rs else 0
@@ -555,8 +629,9 @@ class FrontierOffload:
             for x in native:
                 if not self.r.access(x):
                     a.missed += self.size; secs += self.size / self.t.bandwidth; energy += self.size / 1e9 * self.t.joules_per_gb
-        total = self.r.hits + self.r.misses
-        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": self.r.hits / total, "prefetch_transfers": prefetch_transfers}
+        call_hits = self.r.hits - start_hits; call_misses = self.r.misses - start_misses
+        total = call_hits + call_misses
+        return {"bytes": a.total, "seconds": secs, "energy_j": energy, "hit_rate": call_hits / total if total else 0.0, "prefetch_transfers": prefetch_transfers}
 
 
 def security_campaign(n: int = 1000) -> dict[str, Any]:
