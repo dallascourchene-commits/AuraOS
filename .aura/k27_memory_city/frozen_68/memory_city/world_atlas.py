@@ -106,7 +106,7 @@ class FrameAtlas:
             raise ValueError('source address generation stale')
         if src.frame_id == dst.frame_id:
             return addr
-        t = self.transforms.get((src.frame_id, dst_frame_id))
+        t = self.transforms.get((src.frame_id, dst.frame_id))
         if not t or not t.current:
             raise ValueError('current explicit transform required')
         if t.src_generation != src.generation or t.dst_generation != dst.generation:
