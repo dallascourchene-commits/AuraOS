@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1659
-- **total_bytes**: 26598015
-- **text_tokens_est**: 6639848
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1661
+- **total_bytes**: 26609971
+- **text_tokens_est**: 6642838
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1015, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1659,
+  "repo_file_count": 1661,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1282,9 +1282,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "src/auraos/security/airllm_security_receipt.py",
     "src/auraos/security/airllm_security_reuse_gate.py",
     "src/auraos/security/airllm_source_manifest_guard.py",
+    "src/auraos/security/test_airllm_custom_generate_denial.py",
     "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
     "src/auraos/security/test_airllm_native_compat_wrapper.py",
     "src/auraos/security/test_airllm_secure_wrapper.py",
+    "src/auraos/security/test_airllm_security_reuse_gate.py",
     "src/auraos/security/test_airllm_source_manifest_guard.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
@@ -1744,9 +1746,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "src/auraos/security/airllm_security_receipt.py",
     "src/auraos/security/airllm_security_reuse_gate.py",
     "src/auraos/security/airllm_source_manifest_guard.py",
+    "src/auraos/security/test_airllm_custom_generate_denial.py",
     "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
     "src/auraos/security/test_airllm_native_compat_wrapper.py",
     "src/auraos/security/test_airllm_secure_wrapper.py",
+    "src/auraos/security/test_airllm_security_reuse_gate.py",
     "src/auraos/security/test_airllm_source_manifest_guard.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "test_support/__init__.py",
@@ -1783,9 +1787,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_connector_hardening.py",
     "tests/test_aura_arena_experience_ledger.py",
     "tests/test_aura_arena_live_cli.py",
-    "tests/test_aura_arena_persistence_adapters.py",
-    "tests/test_aura_arena_st3gg_shadow.py",
-    "tests/test_aura_arena_st3gg_shadow_hardening.py"
+    "tests/test_aura_arena_persistence_adapters.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1799,15 +1801,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1659,
-  "bytes": 26598015,
-  "tokens_est": 6639848,
+  "files": 1661,
+  "bytes": 26609971,
+  "tokens_est": 6642838,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1013,
+    "python_module": 1015,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
