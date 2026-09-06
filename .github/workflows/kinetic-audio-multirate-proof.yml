@@ -1,0 +1,61 @@
+name: Kinetic Audio Multirate D0 Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena/kinetic_audio_multirate_donor.py"
+      - "tools/arena/campaign_kinetic_audio_multirate_donor.py"
+      - "tests/test_kinetic_audio_multirate_donor.py"
+      - "docs/arena/kinetic-audio-multirate-donor.md"
+      - ".github/workflows/kinetic-audio-multirate-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-d0-proof:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile donor
+        run: |
+          python -m py_compile \
+            tools/arena/kinetic_audio_multirate_donor.py \
+            tools/arena/campaign_kinetic_audio_multirate_donor.py \
+            tests/test_kinetic_audio_multirate_donor.py
+      - name: Focused multirate proof
+        run: python -m unittest -q tests.test_kinetic_audio_multirate_donor
+      - name: HS1000 Omega8 13D K27 proof
+        run: |
+          python -m tools.arena.campaign_kinetic_audio_multirate_donor > kinetic-audio-proof.json
+          python - <<'PY'
+          import json
+          p = json.load(open("kinetic-audio-proof.json", encoding="utf-8"))
+          assert p["hs1000"]["cases"] == 1000
+          assert p["hs1000"]["oracle_mismatches"] == 0
+          assert p["hs1000"]["compound_root"] == "1e316c57a30d22d721a001dce7040355e96c85afcaafb31263f595d57dced8d7"
+          assert p["hs1000"]["stream_sha256"] == "e500b55c63f3cbef4338bf7c31fba5755db4dd24823c5ba77fcc2f5fdebe2d15"
+          assert p["k27"]["coordinates"] == 27
+          assert p["k27"]["projection_root"] == "52a65d2493cc3729052032688eb2ca73ff0bbf31467d04bdd57da4a11f4d6293"
+          assert p["lattice"]["omega8_states"] == 6561
+          assert p["lattice"]["omega8"]["READY"] == 1
+          assert p["lattice"]["states13d"] == 1594323
+          assert p["lattice"]["hard_invalid_repairs"] == 0
+          assert p["lattice"]["routing_decision_variations"] == 0
+          assert p["replay_equal"] is True
+          assert p["replay_root"] == "cfa734b726263be946c41f68e6ba101a6e8c553b776f8ff8fe8d11c082f02395"
+          assert p["deterministic_root"] == "614546716bc8e258f3f0f41dc48b3cb813ed03ba29adc324a6294546e466e505"
+          assert p["authority_ceiling"] == "D0_PROCESS_LEVEL_ONLY__NO_DEVICE_XRUN_CREDIT"
+          PY
+      - name: Verify proof leaves tracked tree clean
+        run: git diff --exit-code
