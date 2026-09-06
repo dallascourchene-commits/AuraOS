@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor
-from hashlib import sha256
 from itertools import product
 from pathlib import Path
 import json, tempfile, sys
@@ -9,7 +8,8 @@ sys.path.insert(0, str(ARENA))
 
 from k27_memory import FrameAddress, MemoryConflict, MemoryStore, StaleMemory
 from k27_memory.gate10_campaign_oracle import (
-    HOLD_STORE_ROOT_CONFLICT, HOLD_STALE_DEPENDENCY, classify_round, completion_fields, execution_fields, trace_entry,
+    HOLD_STORE_ROOT_CONFLICT, HOLD_STALE_DEPENDENCY, campaign_root_from_trace,
+    classify_round, completion_fields, execution_fields, trace_entry,
 )
 from consequence_admission_kernel import (
     AdmissionInput, AdmissionPolicy, AxisState, ConsequenceAdmissionKernel,
@@ -18,9 +18,6 @@ from consequence_admission_kernel import (
 
 WORKERS=5
 ROUNDS=750
-
-def canon(x):
-    return json.dumps(x, sort_keys=True, separators=(',',':'))
 
 def run():
     trace=[]
@@ -104,10 +101,6 @@ def run():
                 final_root=s.state_root()
             trace.append(trace_entry(r, win, dep_repaired['epoch'], final_root))
 
-    # Factorized 13D noncompensatory falsification against the canonical kernel.
-    # Layer A covers all 3^8 Omega8 states at antipodal routing tails.
-    # Layer B covers all 3^5 routing tails for each single-hard-invalid and
-    # single-unknown basis state, directly testing the reviewer-identified gap.
     kernel=ConsequenceAdmissionKernel()
     policy=AdmissionPolicy('gate10-epoch-campaign-v2', tuple(range(8)), ())
     source=SourceExit('campaign','arena-gate10','r2','semantic-root',True)
@@ -148,7 +141,7 @@ def run():
                     nonverified_repaired += 1
                     if kind == 'hard': hard_invalid_repaired += 1
                     else: unknown_repaired += 1
-    root=sha256(canon(trace).encode()).hexdigest()
+    root=campaign_root_from_trace(trace)
     completion=completion_fields(trace, round_failures, ROUNDS)
     work=execution_fields(
         rounds=ROUNDS, workers=WORKERS,
@@ -169,6 +162,8 @@ def run():
         'routing13_decision_variations':routing_decision_variations,
         'routing13_vectors_checked':vectors_checked,
         **completion, 'round_failure_details':round_failures,
+        'campaign_root_evidence_schema':'AURA-K27-GATE10-TRACE-v1',
+        'trace_entries':len(trace), 'trace':trace,
         'campaign_root':root,'final':trace[-1] if trace else None,
     }
 
