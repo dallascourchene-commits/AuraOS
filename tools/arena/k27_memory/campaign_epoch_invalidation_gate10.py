@@ -9,7 +9,7 @@ sys.path.insert(0, str(ARENA))
 
 from k27_memory import FrameAddress, MemoryConflict, MemoryStore, StaleMemory
 from k27_memory.gate10_campaign_oracle import (
-    HOLD_STORE_ROOT_CONFLICT, HOLD_STALE_DEPENDENCY, classify_round, completion_fields, trace_entry,
+    HOLD_STORE_ROOT_CONFLICT, HOLD_STALE_DEPENDENCY, classify_round, completion_fields, execution_fields, trace_entry,
 )
 from consequence_admission_kernel import (
     AdmissionInput, AdmissionPolicy, AxisState, ConsequenceAdmissionKernel,
@@ -30,6 +30,9 @@ def run():
     stale_dependency_violations=0
     stale_dependency_holds=0
     store_root_conflict_holds=0
+    concurrent_attempts_executed=0
+    stale_dependency_probes_executed=0
+    dependency_repairs_executed=0
     round_failures=[]
     with tempfile.TemporaryDirectory() as td:
         p=Path(td)/'campaign.sqlite'
@@ -37,7 +40,7 @@ def run():
             s.register_frame('f','g',expected_generation=None)
             src=s.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1')
             s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
-                          dependencies={'src':src['revision_id']}, dependency_epochs={'src':src['epoch']})
+                      dependencies={'src':src['revision_id']}, dependency_epochs={'src':src['epoch']})
         for r in range(ROUNDS):
             with MemoryStore(p) as s:
                 src_now=s.get('src')
@@ -55,6 +58,7 @@ def run():
                     return (HOLD_STALE_DEPENDENCY, worker, type(e).__name__)
             with ThreadPoolExecutor(max_workers=WORKERS) as ex:
                 results=list(ex.map(attempt, range(WORKERS)))
+            concurrent_attempts_executed += len(results)
             classified=classify_round(results, WORKERS, expected_hold=HOLD_STORE_ROOT_CONFLICT)
             store_root_conflict_holds += classified.hold_count
             false_accept += classified.false_accept_delta
@@ -64,6 +68,7 @@ def run():
                     'round':r, 'reason':classified.reason,
                     'win_count':classified.win_count, 'hold_count':classified.hold_count,
                     'unexpected_count':classified.unexpected_count,
+                    'malformed_count':classified.malformed_count,
                 })
                 break
             win=classified.winner
@@ -77,6 +82,7 @@ def run():
                 except StaleMemory:
                     pass
                 dep_stale=s.get('dep', allow_stale=True)
+                stale_dependency_probes_executed += 1
                 try:
                     s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
                               expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
@@ -87,57 +93,75 @@ def run():
                 except MemoryConflict:
                     stale_dependency_violations += 1
                 src_fresh=s.get('src')
+                dependency_repairs_executed += 1
                 dep_repaired=s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
                                        expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
                                        dependencies={'src':src_fresh['revision_id']}, dependency_epochs={'src':src_fresh['epoch']})
                 final_root=s.state_root()
             trace.append(trace_entry(r, win, dep_repaired['epoch'], final_root))
-    # 8-crystalline noncompensatory collapse: only all verified is a keeper.
-    # Factorized 13D falsification against the canonical consequence kernel.
-    # Layer A covers every Omega8 state at antipodal routing tails. Layer B
-    # covers every routing tail for each single-hard-invalid axis basis. This
-    # makes the routing check consequence-bearing rather than tautological.
+
+    # Factorized 13D noncompensatory falsification against the canonical kernel.
+    # Layer A covers all 3^8 Omega8 states at antipodal routing tails.
+    # Layer B covers all 3^5 routing tails for each single-hard-invalid and
+    # single-unknown basis state, directly testing the reviewer-identified gap.
     kernel=ConsequenceAdmissionKernel()
-    policy=AdmissionPolicy('gate10-epoch-campaign-v1', tuple(range(8)), ())
-    source=SourceExit('campaign','arena-gate10','r1','semantic-root',True)
-    keeper=0
+    policy=AdmissionPolicy('gate10-epoch-campaign-v2', tuple(range(8)), ())
+    source=SourceExit('campaign','arena-gate10','r2','semantic-root',True)
+    omega8_keepers=0
+    nonverified_repaired=0
     hard_invalid_repaired=0
+    unknown_repaired=0
     routing_decision_variations=0
     vectors_checked=0
-    tails=((0,0,0,0,0),(2,2,2,2,2))
+    antipodal=((0,0,0,0,0),(2,2,2,2,2))
     for axes in product((0,1,2), repeat=8):
         omega=tuple(AxisState(v) for v in axes)
         decisions=[]
-        for tail in tails:
+        for tail in antipodal:
             receipt=kernel.assess(AdmissionInput('GATE10_EPOCH',ConsequenceVector(omega,tail),policy,source))
             decisions.append(receipt.decision)
             vectors_checked += 1
-            if 0 in axes and receipt.decision == Decision.READY_NONAUTHORIZING:
-                hard_invalid_repaired += 1
+            if receipt.decision == Decision.READY_NONAUTHORIZING and any(v != 2 for v in axes):
+                nonverified_repaired += 1
+                if 0 in axes: hard_invalid_repaired += 1
+                elif 1 in axes: unknown_repaired += 1
         if decisions[0] != decisions[1]: routing_decision_variations += 1
-        if all(v==2 for v in axes) and decisions[0] == Decision.READY_NONAUTHORIZING:
-            keeper += 1
-    for hard_axis in range(8):
-        axes=[2]*8; axes[hard_axis]=0
-        omega=tuple(AxisState(v) for v in axes)
-        baseline=None
-        for tail in product((0,1,2), repeat=5):
-            receipt=kernel.assess(AdmissionInput('GATE10_EPOCH',ConsequenceVector(omega,tail),policy,source))
-            vectors_checked += 1
-            if receipt.decision == Decision.READY_NONAUTHORIZING:
-                hard_invalid_repaired += 1
-            if baseline is None: baseline=receipt.decision
-            elif receipt.decision != baseline: routing_decision_variations += 1
+        if all(v == 2 for v in axes) and decisions[0] == Decision.READY_NONAUTHORIZING:
+            omega8_keepers += 1
+    all_tails=tuple(product((0,1,2), repeat=5))
+    for basis_value, kind in ((0,'hard'),(1,'unknown')):
+        for axis in range(8):
+            axes=[2]*8; axes[axis]=basis_value
+            omega=tuple(AxisState(v) for v in axes)
+            baseline=None
+            for tail in all_tails:
+                receipt=kernel.assess(AdmissionInput('GATE10_EPOCH',ConsequenceVector(omega,tail),policy,source))
+                decision=receipt.decision
+                vectors_checked += 1
+                if baseline is None: baseline=decision
+                elif decision != baseline: routing_decision_variations += 1
+                if decision == Decision.READY_NONAUTHORIZING:
+                    nonverified_repaired += 1
+                    if kind == 'hard': hard_invalid_repaired += 1
+                    else: unknown_repaired += 1
     root=sha256(canon(trace).encode()).hexdigest()
     completion=completion_fields(trace, round_failures, ROUNDS)
+    work=execution_fields(
+        rounds=ROUNDS, workers=WORKERS,
+        concurrent_attempts=concurrent_attempts_executed,
+        stale_dependency_probes=stale_dependency_probes_executed,
+        dependency_repairs=dependency_repairs_executed,
+    )
     return {
-        'workers':WORKERS,'rounds':ROUNDS,'attempts':WORKERS*ROUNDS,
-        'stale_dependency_probes':ROUNDS, 'total_write_attempts':(WORKERS+1)*ROUNDS,
+        'workers':WORKERS,'rounds':ROUNDS, **work,
         'false_accept':false_accept,'false_hold':false_hold,
         'store_root_conflict_holds':store_root_conflict_holds,
         'stale_dependency_holds':stale_dependency_holds,
         'aba_violations':aba_violations,'stale_dependency_violations':stale_dependency_violations,
-        'omega8_keepers':keeper,'routing13_hard_invalid_repairs':hard_invalid_repaired,
+        'omega8_keepers':omega8_keepers,
+        'routing13_nonverified_repairs':nonverified_repaired,
+        'routing13_hard_invalid_repairs':hard_invalid_repaired,
+        'routing13_unknown_repairs':unknown_repaired,
         'routing13_decision_variations':routing_decision_variations,
         'routing13_vectors_checked':vectors_checked,
         **completion, 'round_failure_details':round_failures,
