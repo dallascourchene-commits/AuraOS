@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1659,
+    "repo_file_count": 1665,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2319,9 +2319,11 @@
       "src/auraos/security/airllm_security_receipt.py",
       "src/auraos/security/airllm_security_reuse_gate.py",
       "src/auraos/security/airllm_source_manifest_guard.py",
+      "src/auraos/security/test_airllm_custom_generate_denial.py",
       "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
       "src/auraos/security/test_airllm_native_compat_wrapper.py",
       "src/auraos/security/test_airllm_secure_wrapper.py",
+      "src/auraos/security/test_airllm_security_reuse_gate.py",
       "src/auraos/security/test_airllm_source_manifest_guard.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
@@ -2706,6 +2708,10 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/README.md",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -2781,9 +2787,11 @@
       "src/auraos/security/airllm_security_receipt.py",
       "src/auraos/security/airllm_security_reuse_gate.py",
       "src/auraos/security/airllm_source_manifest_guard.py",
+      "src/auraos/security/test_airllm_custom_generate_denial.py",
       "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
       "src/auraos/security/test_airllm_native_compat_wrapper.py",
       "src/auraos/security/test_airllm_secure_wrapper.py",
+      "src/auraos/security/test_airllm_security_reuse_gate.py",
       "src/auraos/security/test_airllm_source_manifest_guard.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "test_support/__init__.py",
@@ -2820,9 +2828,7 @@
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
-      "tests/test_aura_arena_persistence_adapters.py",
-      "tests/test_aura_arena_st3gg_shadow.py",
-      "tests/test_aura_arena_st3gg_shadow_hardening.py"
+      "tests/test_aura_arena_persistence_adapters.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -84581,47 +84587,47 @@
       "path": "src/auraos/security/airllm_native_compat_wrapper.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9130,
-      "lines": 202,
-      "tokens_est": 2283,
-      "symbol_count": 7,
+      "bytes": 11247,
+      "lines": 247,
+      "tokens_est": 2812,
+      "symbol_count": 9,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7c7ef902c61600e1",
+      "digest8": "6c070b02a3f801e4",
       "vector": [
-        -0.269164,
-        -0.162407,
-        -0.105621,
-        -0.116978,
-        0.216921,
-        -0.212378,
-        0.27825,
-        0.264621,
-        -0.176035,
-        0.132878,
-        -0.121521,
-        0.285064,
-        -0.105621,
-        0.05565,
-        0.032936,
-        -0.094264,
-        -0.169221,
-        -0.21465,
-        -0.228278,
-        0.046564,
-        0.107893,
-        -0.15105,
-        0.237364,
-        0.273707,
-        -0.275978,
-        -0.180578,
-        0.017036,
-        -0.001136,
-        -0.128336,
-        0.13515,
-        0.07155,
-        -0.155593
+        -0.014897,
+        0.033233,
+        -0.214293,
+        -0.118033,
+        -0.292218,
+        0.120325,
+        0.033233,
+        -0.104282,
+        0.118033,
+        -0.060735,
+        0.28305,
+        0.225752,
+        0.00573,
+        0.168455,
+        0.060735,
+        0.278466,
+        0.23492,
+        0.267007,
+        0.09053,
+        0.15012,
+        -0.035524,
+        -0.232628,
+        0.003438,
+        -0.257839,
+        0.088238,
+        -0.083654,
+        0.257839,
+        -0.163871,
+        -0.191374,
+        0.237212,
+        -0.255547,
+        -0.152412
       ]
     },
     {
@@ -84722,94 +84728,141 @@
       "path": "src/auraos/security/airllm_security_reuse_gate.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 10871,
-      "lines": 136,
-      "tokens_est": 2718,
-      "symbol_count": 30,
+      "bytes": 10999,
+      "lines": 202,
+      "tokens_est": 2750,
+      "symbol_count": 19,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a5d1ecccf9fb9503",
+      "digest8": "ddad2014cd2f0810",
       "vector": [
-        -0.091326,
-        -0.006088,
-        0.028006,
-        0.308071,
-        -0.213093,
-        0.108373,
-        -0.091326,
-        0.264235,
-        0.079149,
-        -0.291024,
-        -0.105938,
-        -0.286153,
-        0.152209,
-        0.113244,
-        -0.023136,
-        -0.142468,
-        0.171692,
-        0.174127,
-        0.047489,
-        -0.098632,
-        0.059666,
-        -0.030442,
-        -0.186304,
-        0.281283,
-        -0.22527,
-        -0.12542,
-        0.122985,
-        0.305636,
-        0.278847,
-        0.054795,
-        -0.271541,
-        -0.010959
+        -0.125967,
+        0.275343,
+        -0.172786,
+        0.125967,
+        0.237442,
+        -0.030098,
+        0.02118,
+        -0.261966,
+        -0.119278,
+        0.15718,
+        0.130426,
+        -0.24413,
+        0.061311,
+        0.119278,
+        0.217376,
+        0.032328,
+        -0.101442,
+        0.192852,
+        0.19954,
+        -0.105901,
+        0.043475,
+        0.261966,
+        0.219606,
+        0.250819,
+        -0.143803,
+        -0.228524,
+        -0.085836,
+        0.197311,
+        -0.219606,
+        0.282032,
+        -0.068,
+        -0.150491
       ]
     },
     {
       "path": "src/auraos/security/airllm_source_manifest_guard.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 10144,
-      "lines": 259,
-      "tokens_est": 2536,
+      "bytes": 10155,
+      "lines": 222,
+      "tokens_est": 2539,
       "symbol_count": 13,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "05f28bf14c7a8470",
+      "digest8": "e76b2873692e14f1",
       "vector": [
-        0.096589,
-        0.127497,
-        0.176435,
-        -0.122345,
-        0.279463,
-        0.279463,
-        0.1378,
-        0.114618,
-        0.068256,
-        -0.168708,
-        0.060529,
-        -0.006439,
-        0.279463,
-        0.166132,
-        0.055377,
-        -0.135224,
-        0.32325,
-        -0.235676,
-        -0.1378,
-        0.096589,
-        -0.075983,
-        -0.106891,
-        -0.318098,
-        0.135224,
-        0.057953,
-        0.225373,
-        0.163557,
-        0.011591,
-        -0.055377,
-        -0.142951,
-        -0.258857,
-        0.282039
+        0.176817,
+        0.167323,
+        0.274125,
+        -0.295485,
+        -0.219537,
+        0.229031,
+        0.022547,
+        -0.119855,
+        -0.19343,
+        -0.058148,
+        -0.195804,
+        0.297859,
+        0.162576,
+        0.100868,
+        -0.19343,
+        0.264631,
+        -0.122229,
+        0.072388,
+        -0.086628,
+        0.008307,
+        0.250391,
+        0.160203,
+        -0.005933,
+        0.089002,
+        -0.081881,
+        0.300232,
+        -0.119855,
+        0.086628,
+        -0.062894,
+        -0.107989,
+        -0.089002,
+        0.290739
+      ]
+    },
+    {
+      "path": "src/auraos/security/test_airllm_custom_generate_denial.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3579,
+      "lines": 100,
+      "tokens_est": 895,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "16944c7b26a95f26",
+      "vector": [
+        0.19555,
+        0.28656,
+        0.18817,
+        -0.198009,
+        -0.047965,
+        0.229986,
+        0.266882,
+        0.198009,
+        -0.134056,
+        0.008609,
+        0.225067,
+        -0.079942,
+        0.055344,
+        -0.158653,
+        -0.151274,
+        0.033207,
+        0.301319,
+        -0.008609,
+        -0.062723,
+        0.055344,
+        -0.229986,
+        -0.207848,
+        -0.215228,
+        0.175872,
+        -0.033207,
+        0.116838,
+        -0.29148,
+        -0.072562,
+        -0.045505,
+        0.215228,
+        0.202929,
+        0.215228
       ]
     },
     {
@@ -84954,50 +85007,97 @@
       ]
     },
     {
+      "path": "src/auraos/security/test_airllm_security_reuse_gate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6023,
+      "lines": 155,
+      "tokens_est": 1506,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2a0a4919fd812a6b",
+      "vector": [
+        0.17049,
+        0.149667,
+        0.035139,
+        0.238165,
+        0.022125,
+        -0.230356,
+        0.18871,
+        0.256385,
+        0.123638,
+        -0.134049,
+        0.175695,
+        -0.258988,
+        -0.042948,
+        -0.253782,
+        0.235562,
+        -0.157475,
+        0.100211,
+        -0.066374,
+        0.225151,
+        -0.214739,
+        0.144461,
+        0.066374,
+        -0.144461,
+        -0.238165,
+        -0.227753,
+        0.115829,
+        -0.105417,
+        -0.308443,
+        -0.037742,
+        -0.123638,
+        -0.102814,
+        0.212136
+      ]
+    },
+    {
       "path": "src/auraos/security/test_airllm_source_manifest_guard.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 5655,
-      "lines": 142,
-      "tokens_est": 1414,
+      "bytes": 5753,
+      "lines": 143,
+      "tokens_est": 1439,
       "symbol_count": 14,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "17ad5217f6cb3a1c",
+      "digest8": "9df25f04815c536d",
       "vector": [
-        -0.199131,
-        -0.06491,
-        0.19253,
-        0.042907,
-        -0.227735,
-        0.106716,
-        -0.069311,
-        0.049508,
-        0.278343,
-        -0.267341,
-        -0.19253,
-        -0.045107,
-        0.203531,
-        -0.097915,
-        0.119918,
-        -0.254139,
-        0.256339,
-        0.168326,
-        0.155124,
-        0.26294,
-        0.19473,
-        0.104516,
-        -0.265141,
-        0.071511,
-        0.018703,
-        -0.203531,
-        -0.06491,
-        -0.236536,
-        -0.095715,
-        0.276142,
-        -0.0011,
-        -0.172727
+        -0.020041,
+        -0.158995,
+        -0.046763,
+        0.129601,
+        0.193734,
+        -0.017369,
+        -0.185717,
+        -0.060124,
+        0.086846,
+        -0.049436,
+        0.297949,
+        -0.057452,
+        0.18839,
+        -0.244506,
+        -0.255194,
+        0.332688,
+        0.340705,
+        -0.022714,
+        0.113568,
+        0.020041,
+        -0.207095,
+        -0.076157,
+        0.297949,
+        -0.014697,
+        0.212439,
+        -0.199078,
+        -0.11624,
+        0.036075,
+        -0.332688,
+        0.167012,
+        0.004008,
+        0.022714
       ]
     },
     {
@@ -104997,6 +105097,194 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1566,
+      "lines": 14,
+      "tokens_est": 392,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "84736262f4ad315f",
+      "vector": [
+        -0.036966,
+        -0.248566,
+        0.110899,
+        -0.06501,
+        0.212874,
+        -0.207776,
+        0.246017,
+        0.289356,
+        -0.238368,
+        -0.057361,
+        -0.279159,
+        -0.06246,
+        -0.159337,
+        -0.210325,
+        0.011472,
+        -0.082855,
+        -0.156788,
+        0.27406,
+        0.034417,
+        0.23072,
+        0.164436,
+        -0.182282,
+        0.026769,
+        -0.156788,
+        -0.095602,
+        -0.098152,
+        -0.02167,
+        0.059911,
+        -0.271511,
+        0.06501,
+        -0.276609,
+        0.228171
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2432,
+      "lines": 74,
+      "tokens_est": 608,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "061d2a5cac8c0ab0",
+      "vector": [
+        -0.029887,
+        0.024689,
+        -0.201409,
+        0.281973,
+        0.294967,
+        -0.198811,
+        0.180619,
+        0.172822,
+        0.014294,
+        0.092259,
+        -0.292369,
+        0.115648,
+        0.258584,
+        -0.144235,
+        -0.087061,
+        -0.107852,
+        -0.144235,
+        0.206607,
+        0.02209,
+        0.13384,
+        -0.081863,
+        -0.001299,
+        0.079264,
+        -0.232595,
+        0.261183,
+        -0.279374,
+        0.237793,
+        -0.214404,
+        -0.014294,
+        0.019491,
+        -0.255985,
+        0.105253
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13343,
+      "lines": 361,
+      "tokens_est": 3336,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ae28809accb36178",
+      "vector": [
+        -0.096167,
+        0.259086,
+        -0.204779,
+        0.116532,
+        0.082591,
+        -0.218356,
+        -0.281713,
+        0.227407,
+        -0.283976,
+        -0.021496,
+        0.177626,
+        -0.09843,
+        -0.030547,
+        -0.048649,
+        -0.014708,
+        0.186677,
+        0.125583,
+        -0.204779,
+        0.231933,
+        -0.168575,
+        0.105218,
+        -0.238721,
+        0.071277,
+        0.245509,
+        0.211568,
+        0.112006,
+        -0.243246,
+        0.195728,
+        -0.191203,
+        0.179889,
+        -0.150473,
+        -0.046387
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6231,
+      "lines": 177,
+      "tokens_est": 1558,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0c5bb0af2bb9e8f6",
+      "vector": [
+        -0.295787,
+        0.016646,
+        -0.032012,
+        0.170301,
+        -0.044816,
+        -0.149814,
+        0.003841,
+        -0.259934,
+        0.259934,
+        0.188228,
+        -0.206154,
+        -0.285543,
+        0.090913,
+        0.30603,
+        0.05506,
+        -0.149814,
+        0.011524,
+        0.270177,
+        -0.085791,
+        0.108839,
+        0.067864,
+        -0.021768,
+        -0.27786,
+        -0.172862,
+        -0.029451,
+        0.295787,
+        -0.08323,
+        -0.126766,
+        0.08323,
+        0.226642,
+        -0.239446,
+        -0.065304
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -106041,7 +106329,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788652124,
+  "generated_at_unix": 1788655069,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107302,9 +107590,11 @@
       "src/auraos/security/airllm_security_receipt.py",
       "src/auraos/security/airllm_security_reuse_gate.py",
       "src/auraos/security/airllm_source_manifest_guard.py",
+      "src/auraos/security/test_airllm_custom_generate_denial.py",
       "src/auraos/security/test_airllm_manifest_pinned_wrapper.py",
       "src/auraos/security/test_airllm_native_compat_wrapper.py",
       "src/auraos/security/test_airllm_secure_wrapper.py",
+      "src/auraos/security/test_airllm_security_reuse_gate.py",
       "src/auraos/security/test_airllm_source_manifest_guard.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "staging/02_verification_and_falsification/INTERFACE_ZK_MERKLE_PROOF.json",
@@ -107689,6 +107979,10 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/README.md",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+      "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -208741,10 +209035,10 @@
         "name": "ManifestPinnedNativeAirLLMWrapper",
         "kind": "class",
         "file": "src/auraos/security/airllm_native_compat_wrapper.py",
-        "line": 158,
-        "end_line": 195,
+        "line": 201,
+        "end_line": 239,
         "signature_hash": "79f0537c27c04b8d",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#function:_resolve_transformers_module:4184554f34dbb894",
@@ -208754,7 +209048,7 @@
         "line": 65,
         "end_line": 72,
         "signature_hash": "d9d2cf56a100715c",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#function:_rewrite_trust_false:161d38150b81c1f6",
@@ -208764,7 +209058,7 @@
         "line": 75,
         "end_line": 103,
         "signature_hash": "921153f6f5681e42",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#function:force_false_native_compat_membrane:07bec22894701bcc",
@@ -208774,17 +209068,27 @@
         "line": 107,
         "end_line": 155,
         "signature_hash": "b4c76997439e7811",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#function:install_custom_generate_denial:9d6062cfb3916ede",
+        "name": "install_custom_generate_denial",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_native_compat_wrapper.py",
+        "line": 158,
+        "end_line": 198,
+        "signature_hash": "85bf38b923bac331",
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#method:ManifestPinnedNativeAirLLMWrapper.load:df803f72de99ca93",
         "name": "ManifestPinnedNativeAirLLMWrapper.load",
         "kind": "method",
         "file": "src/auraos/security/airllm_native_compat_wrapper.py",
-        "line": 161,
-        "end_line": 195,
+        "line": 204,
+        "end_line": 239,
         "signature_hash": "c92220f820f34acb",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#method:force_false_native_compat_membrane.deny_dynamic_module:729b1796d14b0ae0",
@@ -208794,7 +209098,7 @@
         "line": 142,
         "end_line": 143,
         "signature_hash": "5eb1726a4c2fb91b",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#method:force_false_native_compat_membrane.rewritten:9aee1c871046fa6e",
@@ -208804,7 +209108,17 @@
         "line": 127,
         "end_line": 133,
         "signature_hash": "d023241e92eea5d4",
-        "file_digest8": "7c7ef902c61600e1"
+        "file_digest8": "6c070b02a3f801e4"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#method:install_custom_generate_denial.deny_custom_generate:47eec6dd1e9bec5b",
+        "name": "install_custom_generate_denial.deny_custom_generate",
+        "kind": "method",
+        "file": "src/auraos/security/airllm_native_compat_wrapper.py",
+        "line": 182,
+        "end_line": 185,
+        "signature_hash": "3c77c61f993f7e19",
+        "file_digest8": "6c070b02a3f801e4"
       },
       {
         "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:AirLLMSecurityError:5f64aebd6742c5e0",
@@ -209501,430 +209815,510 @@
         "name": "SecurityReuseError",
         "kind": "class",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 11,
-        "end_line": 11,
+        "line": 21,
+        "end_line": 22,
         "signature_hash": "5db0ffce62a86652",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:SecurityReuseRequest:a8cdd562ccff8bd0",
         "name": "SecurityReuseRequest",
         "kind": "class",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 65,
-        "end_line": 72,
+        "line": 160,
+        "end_line": 173,
         "signature_hash": "7a5c371c71e61449",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:T:be4f76a14dd30588",
-        "name": "T",
-        "kind": "class",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 105,
-        "end_line": 134,
-        "signature_hash": "1a51332cd1dc4f10",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:TraceReuseContract:f284df77f23f70ef",
         "name": "TraceReuseContract",
         "kind": "class",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 35,
-        "end_line": 48,
+        "line": 110,
+        "end_line": 132,
         "signature_hash": "55ba0fc8071b09e6",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:WorkloadReuseContract:55d02c45344cd025",
         "name": "WorkloadReuseContract",
         "kind": "class",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 50,
-        "end_line": 63,
+        "line": 135,
+        "end_line": 157,
         "signature_hash": "d50e7fb6d1feb75b",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:_exact_string:df3ac3649c2624de",
+        "name": "_exact_string",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_security_reuse_gate.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "0f98e4bad39a5cc0",
+        "file_digest8": "ddad2014cd2f0810"
+      },
+      {
+        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:_valid_complete_leaves:be5b67bd5f296c3d",
+        "name": "_valid_complete_leaves",
+        "kind": "function",
+        "file": "src/auraos/security/airllm_security_reuse_gate.py",
+        "line": 36,
+        "end_line": 78,
+        "signature_hash": "afdb690c91ae855e",
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:admit:5406927319f45a80",
         "name": "admit",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 73,
-        "end_line": 88,
+        "line": 175,
+        "end_line": 191,
         "signature_hash": "d7f368c8d40c3906",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:br:b2a65b742ad6959d",
-        "name": "br",
-        "kind": "function",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 99,
-        "end_line": 100,
-        "signature_hash": "c1690a629e3b0706",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:canon:f762f392e428d761",
         "name": "canon",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 12,
-        "end_line": 12,
+        "line": 24,
+        "end_line": 25,
         "signature_hash": "ceba26963124d7c5",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:dig:4fbe08606c6d37c9",
         "name": "dig",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 13,
-        "end_line": 13,
+        "line": 26,
+        "end_line": 27,
         "signature_hash": "62c9dcdd21260497",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:generation_root:14f922448667e900",
         "name": "generation_root",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 30,
-        "end_line": 33,
+        "line": 103,
+        "end_line": 107,
         "signature_hash": "05fb2e8711620930",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:reqh:7746b34165721fcb",
         "name": "reqh",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 14,
-        "end_line": 16,
+        "line": 28,
+        "end_line": 31,
         "signature_hash": "9162da9dde467845",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:rq:f61adc2076bb416a",
-        "name": "rq",
-        "kind": "function",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 103,
-        "end_line": 104,
-        "signature_hash": "0b17a796748ed069",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:subject_root:9b6abd53fc6f065d",
         "name": "subject_root",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 26,
-        "end_line": 29,
+        "line": 98,
+        "end_line": 102,
         "signature_hash": "e3c497e683189374",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:tr:a40f5eb17dae2903",
-        "name": "tr",
-        "kind": "function",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 101,
-        "end_line": 101,
-        "signature_hash": "b4f049b43f23ecde",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:valid_receipt:b87953200c92571d",
         "name": "valid_receipt",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 17,
-        "end_line": 25,
+        "line": 80,
+        "end_line": 96,
         "signature_hash": "81f89c9b8061d9d2",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:verify:775da1f36f22b977",
         "name": "verify",
         "kind": "function",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 89,
-        "end_line": 95,
+        "line": 193,
+        "end_line": 199,
         "signature_hash": "48e9ad6fe022ec17",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:wl:30a9ccae4e708cb9",
-        "name": "wl",
-        "kind": "function",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 102,
-        "end_line": 102,
-        "signature_hash": "89aff2b640d7d00d",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:SecurityReuseRequest.__post_init__:d37192565b28637b",
         "name": "SecurityReuseRequest.__post_init__",
         "kind": "method",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 67,
-        "end_line": 72,
+        "line": 168,
+        "end_line": 173,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_13d:80a65a9418fc4a1a",
-        "name": "T.test_13d",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 132,
-        "end_line": 134,
-        "signature_hash": "17ba1143cd46a791",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_authority:6d4f6f6086b10534",
-        "name": "T.test_authority",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 116,
-        "end_line": 117,
-        "signature_hash": "9cf3f845aa3d43e7",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_green:892a91a96b4ab1b5",
-        "name": "T.test_green",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 106,
-        "end_line": 107,
-        "signature_hash": "82b22f88ea519775",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_hs1000:e06e132db55ead7f",
-        "name": "T.test_hs1000",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 125,
-        "end_line": 131,
-        "signature_hash": "9c1552482e070895",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_omega8:f510d860396247a9",
-        "name": "T.test_omega8",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 118,
-        "end_line": 124,
-        "signature_hash": "e3a9271fe0b6bc17",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_receipt_tamper:694f6de0410d6d95",
-        "name": "T.test_receipt_tamper",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 108,
-        "end_line": 109,
-        "signature_hash": "18d01daae388c8cc",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_trace:ee4997f77f4e7698",
-        "name": "T.test_trace",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 110,
-        "end_line": 112,
-        "signature_hash": "05e1c3a5d80c7d9d",
-        "file_digest8": "a5d1ecccf9fb9503"
-      },
-      {
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_workload:6b7fdded9322c3a6",
-        "name": "T.test_workload",
-        "kind": "method",
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 113,
-        "end_line": 115,
-        "signature_hash": "8b8e936090dbf0a9",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:TraceReuseContract.__post_init__:e534cbfc72b3b7ba",
         "name": "TraceReuseContract.__post_init__",
         "kind": "method",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 37,
-        "end_line": 40,
+        "line": 119,
+        "end_line": 124,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:TraceReuseContract.reasons:3de07275304f8f2a",
         "name": "TraceReuseContract.reasons",
         "kind": "method",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 41,
-        "end_line": 48,
+        "line": 125,
+        "end_line": 132,
         "signature_hash": "c7a2c50436e92d83",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:WorkloadReuseContract.__post_init__:c00b0262241101da",
         "name": "WorkloadReuseContract.__post_init__",
         "kind": "method",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 52,
-        "end_line": 55,
+        "line": 143,
+        "end_line": 149,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:WorkloadReuseContract.reasons:bb2b41bff0a3be4d",
         "name": "WorkloadReuseContract.reasons",
         "kind": "method",
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "line": 56,
-        "end_line": 63,
+        "line": 150,
+        "end_line": 157,
         "signature_hash": "c7a2c50436e92d83",
-        "file_digest8": "a5d1ecccf9fb9503"
+        "file_digest8": "ddad2014cd2f0810"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:InvalidManifestAllowlistError:b9c37a696c7b35cd",
         "name": "InvalidManifestAllowlistError",
         "kind": "class",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 44,
-        "end_line": 45,
+        "line": 45,
+        "end_line": 46,
         "signature_hash": "f1a4519dcb277d70",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:SourceManifestError:8ac50dbfca2b627c",
         "name": "SourceManifestError",
         "kind": "class",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 40,
-        "end_line": 41,
+        "line": 41,
+        "end_line": 42,
         "signature_hash": "96a89ecb07626868",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:SourceTreeIntegrityError:a1fd5bf433db279c",
         "name": "SourceTreeIntegrityError",
         "kind": "class",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 48,
-        "end_line": 49,
+        "line": 49,
+        "end_line": 50,
         "signature_hash": "6b924f28c1ff296a",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:VerifiedSourceManifest:f7aabe07dc9d2f23",
         "name": "VerifiedSourceManifest",
         "kind": "class",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 53,
-        "end_line": 58,
+        "line": 54,
+        "end_line": 59,
         "signature_hash": "736dc5aa513c02d8",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_assert_regular_file:bc964a530dda5979",
         "name": "_assert_regular_file",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 114,
-        "end_line": 123,
+        "line": 103,
+        "end_line": 112,
         "signature_hash": "ed6d169c1570b368",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_canonical_json:7245b3b63aa042a0",
         "name": "_canonical_json",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 61,
-        "end_line": 68,
+        "line": 62,
+        "end_line": 63,
         "signature_hash": "c6d0368c0d268d56",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_normalize_required_paths:a8d1bc632d599c4f",
         "name": "_normalize_required_paths",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 95,
-        "end_line": 111,
+        "line": 84,
+        "end_line": 100,
         "signature_hash": "29da2806c1b86efa",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_sha256_regular_file:9e46950ba9857a2c",
         "name": "_sha256_regular_file",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 126,
-        "end_line": 155,
+        "line": 115,
+        "end_line": 144,
         "signature_hash": "bc2b854d87ebcd9a",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_validate_digest:76361a7fe03395ca",
         "name": "_validate_digest",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 71,
-        "end_line": 76,
+        "line": 66,
+        "end_line": 69,
         "signature_hash": "fd1844698c2e2d63",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:build_source_manifest:bad111fa057969f2",
         "name": "build_source_manifest",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 158,
-        "end_line": 228,
+        "line": 147,
+        "end_line": 205,
         "signature_hash": "817bb83a6f634a9c",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:k27_for_manifest:e69acc0445dd394d",
         "name": "k27_for_manifest",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 244,
-        "end_line": 246,
+        "line": 216,
+        "end_line": 218,
         "signature_hash": "db0c338df45f5bf2",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:normalize_manifest_allowlist:67399564173c01dd",
         "name": "normalize_manifest_allowlist",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 79,
-        "end_line": 92,
+        "line": 72,
+        "end_line": 81,
         "signature_hash": "77971dbfd6369294",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
       },
       {
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:verify_source_manifest:bfa2680715a023c6",
         "name": "verify_source_manifest",
         "kind": "function",
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
-        "line": 231,
-        "end_line": 241,
+        "line": 208,
+        "end_line": 213,
         "signature_hash": "506b29f8a587aae7",
-        "file_digest8": "05f28bf14c7a8470"
+        "file_digest8": "e76b2873692e14f1"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:AirLLMGenerateDelegate:4020bb931ea68307",
+        "name": "AirLLMGenerateDelegate",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 32,
+        "end_line": 37,
+        "signature_hash": "516c22b11a18e69e",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:CustomGenerateDenialTests:2513022de294aded",
+        "name": "CustomGenerateDenialTests",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 49,
+        "end_line": 95,
+        "signature_hash": "e35bf996c2172a88",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:NonGenerativeResult:b44c02d233343d5e",
+        "name": "NonGenerativeResult",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "b50514c71ed5420f",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:UnguardableGenerativeModel:97fd04026cfb5000",
+        "name": "UnguardableGenerativeModel",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "f5076a914abfb6ec",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:VulnerableGenerationModel:9e682cad30638bee",
+        "name": "VulnerableGenerationModel",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 11,
+        "end_line": 29,
+        "signature_hash": "41a57cb0009c0d97",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:AirLLMGenerateDelegate.__init__:e336de9453e73a54",
+        "name": "AirLLMGenerateDelegate.__init__",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "96ecdc74dfe7317c",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:AirLLMGenerateDelegate.generate:de68510f22637ddc",
+        "name": "AirLLMGenerateDelegate.generate",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "0d62a7c781416812",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.setUp:fcacd70870782d7d",
+        "name": "CustomGenerateDenialTests.setUp",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.tearDown:764957422a2f20ad",
+        "name": "CustomGenerateDenialTests.tearDown",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_airllm_delegate_blocks_preconsent_cache_write:c9795b4c57b277b3",
+        "name": "CustomGenerateDenialTests.test_airllm_delegate_blocks_preconsent_cache_write",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "7bee0c1c53a471d4",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_direct_inner_generate_is_also_blocked_before_write:f94e827405153952",
+        "name": "CustomGenerateDenialTests.test_direct_inner_generate_is_also_blocked_before_write",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 65,
+        "end_line": 71,
+        "signature_hash": "ef4bd1a99d9b31c6",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_installation_is_idempotent:850980647ef594da",
+        "name": "CustomGenerateDenialTests.test_installation_is_idempotent",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 88,
+        "end_line": 95,
+        "signature_hash": "3ccf2845994c99e6",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_native_generation_remains_available:ebcabe1afb96d1ac",
+        "name": "CustomGenerateDenialTests.test_native_generation_remains_available",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "0fc8edeafe6d1c19",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_non_generative_result_is_unchanged:53a13c52e81ae87f",
+        "name": "CustomGenerateDenialTests.test_non_generative_result_is_unchanged",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 84,
+        "end_line": 86,
+        "signature_hash": "db40cf5396f69cda",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_unguardable_generative_target_fails_closed:928f4f926b36ba02",
+        "name": "CustomGenerateDenialTests.test_unguardable_generative_target_fails_closed",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "017555b24ec2e248",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:UnguardableGenerativeModel.generate:e951aa4ae820b1db",
+        "name": "UnguardableGenerativeModel.generate",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "0d62a7c781416812",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:VulnerableGenerationModel.__init__:cd6f4144127e9e2b",
+        "name": "VulnerableGenerationModel.__init__",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "d4ed8c553a75bd14",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:VulnerableGenerationModel.generate:beeb65789309af0c",
+        "name": "VulnerableGenerationModel.generate",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 23,
+        "end_line": 29,
+        "signature_hash": "600300aab6f50ec0",
+        "file_digest8": "16944c7b26a95f26"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:VulnerableGenerationModel.load_custom_generate:5e92ed0d6266bf00",
+        "name": "VulnerableGenerationModel.load_custom_generate",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "feaaee7d2b68f077",
+        "file_digest8": "16944c7b26a95f26"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_manifest_pinned_wrapper.py#class:FakeTransformers:fbab4858a4afbb9d",
@@ -210847,14 +211241,164 @@
         "file_digest8": "7463f3afc51c6511"
       },
       {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#class:SecurityReuseLeafTests:ec0006096f98e9bf",
+        "name": "SecurityReuseLeafTests",
+        "kind": "class",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 80,
+        "end_line": 150,
+        "signature_hash": "c82bf8ccaed8f275",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:full_receipt:f7bb00529febc4b2",
+        "name": "full_receipt",
+        "kind": "function",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 15,
+        "end_line": 56,
+        "signature_hash": "e406b5c8c3e98b20",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:generation:4fd8d5fdb0c5c4cd",
+        "name": "generation",
+        "kind": "function",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "3bf9842a875172b6",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:request:e10c19abc4dde03a",
+        "name": "request",
+        "kind": "function",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 70,
+        "end_line": 77,
+        "signature_hash": "e4f803e60ff2f10c",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:reseal:d07d4472b4652552",
+        "name": "reseal",
+        "kind": "function",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 59,
+        "end_line": 67,
+        "signature_hash": "9a59619353a91a4d",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_13d_trailing_context_never_repairs_proofless_core:1af363d99370e431",
+        "name": "SecurityReuseLeafTests.test_13d_trailing_context_never_repairs_proofless_core",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 145,
+        "end_line": 150,
+        "signature_hash": "de13d8af27c159e9",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_authority_request_never_reuses:9068b8af5bb4f762",
+        "name": "SecurityReuseLeafTests.test_authority_request_never_reuses",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 121,
+        "end_line": 123,
+        "signature_hash": "b1fa8b206de087a9",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_complete_canonical_receipt_reuses_locally:0734eebb8ff37078",
+        "name": "SecurityReuseLeafTests.test_complete_canonical_receipt_reuses_locally",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 81,
+        "end_line": 87,
+        "signature_hash": "e6e904c96d0274dd",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_current_generation_drift_fails:e23d997677c29d2f",
+        "name": "SecurityReuseLeafTests.test_current_generation_drift_fails",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 116,
+        "end_line": 119,
+        "signature_hash": "4f30f2b5a090dbf2",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_failed_or_missing_proof_fails:45ae559017866651",
+        "name": "SecurityReuseLeafTests.test_failed_or_missing_proof_fails",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 105,
+        "end_line": 109,
+        "signature_hash": "85b6291ce1fcf906",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_hs1000_malformed_leaf_mutations_zero_false_reuse:e2f511871a273500",
+        "name": "SecurityReuseLeafTests.test_hs1000_malformed_leaf_mutations_zero_false_reuse",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 125,
+        "end_line": 140,
+        "signature_hash": "a02bcd39d9e339e2",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_missing_duplicate_or_wrong_leaf_shape_fails:a1d3d7216270690d",
+        "name": "SecurityReuseLeafTests.test_missing_duplicate_or_wrong_leaf_shape_fails",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 96,
+        "end_line": 103,
+        "signature_hash": "b34c85f0379490de",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_omega8_has_one_all_hard_valid_keeper:3ff09dcbffaa160d",
+        "name": "SecurityReuseLeafTests.test_omega8_has_one_all_hard_valid_keeper",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 142,
+        "end_line": 143,
+        "signature_hash": "2628c992d8c12477",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_proof_generation_mismatch_fails:4f26caa24cdf03ef",
+        "name": "SecurityReuseLeafTests.test_proof_generation_mismatch_fails",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 111,
+        "end_line": 114,
+        "signature_hash": "5b7b1126d778bf71",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_proofless_receipt_fails_even_when_self_consistent:6e3c1e42af00db00",
+        "name": "SecurityReuseLeafTests.test_proofless_receipt_fails_even_when_self_consistent",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "line": 89,
+        "end_line": 94,
+        "signature_hash": "b52242f3a78e4f99",
+        "file_digest8": "2a0a4919fd812a6b"
+      },
+      {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#class:SourceManifestTests:edbb317cbfd9d36d",
         "name": "SourceManifestTests",
         "kind": "class",
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "line": 48,
-        "end_line": 137,
+        "end_line": 138,
         "signature_hash": "c91c2fcb6c63d74c",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#function:make_tree:1338a60c60c2cdd4",
@@ -210864,7 +211408,7 @@
         "line": 29,
         "end_line": 45,
         "signature_hash": "6a8d08e53548db06",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.setUp:a72e5002aaa40c3f",
@@ -210874,7 +211418,7 @@
         "line": 49,
         "end_line": 51,
         "signature_hash": "706017b0e7dd7cef",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.tearDown:24bdb039a88d4ad5",
@@ -210884,7 +211428,7 @@
         "line": 53,
         "end_line": 54,
         "signature_hash": "fa419c832f7fc8ab",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_01_manifest_is_deterministic_and_canonical:ffa2b048c7ff42e5",
@@ -210894,7 +211438,7 @@
         "line": 56,
         "end_line": 62,
         "signature_hash": "159eaa65df4af454",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_02_exact_allowlist_admits_and_k27_is_bounded:cabb87ea6ed90ed8",
@@ -210904,7 +211448,7 @@
         "line": 64,
         "end_line": 68,
         "signature_hash": "dd1a7346951ceef4",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_03_sibling_source_mutation_invalidates_loader_generation:e9404573fdfe1269",
@@ -210914,7 +211458,7 @@
         "line": 70,
         "end_line": 74,
         "signature_hash": "34dfa721ea754bb2",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_04_added_source_file_invalidates_manifest:66665c636edce0a0",
@@ -210924,7 +211468,7 @@
         "line": 76,
         "end_line": 80,
         "signature_hash": "665a09b29f8ba201",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_05_removed_required_execution_anchor_fails_closed:9c594030922468bc",
@@ -210934,7 +211478,7 @@
         "line": 82,
         "end_line": 85,
         "signature_hash": "067c90e45fd07e8c",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_06_symlink_anywhere_in_admitted_tree_is_rejected:c2190b13c1d27f0e",
@@ -210944,47 +211488,47 @@
         "line": 88,
         "end_line": 96,
         "signature_hash": "383e61cf054fcf4b",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
-        "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_07_pycache_and_pyc_are_nonsemantic_and_ignored:3383b467edca857b",
-        "name": "SourceManifestTests.test_07_pycache_and_pyc_are_nonsemantic_and_ignored",
+        "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_07_executable_bytecode_and_pycache_fail_closed:a67762fbf08da702",
+        "name": "SourceManifestTests.test_07_executable_bytecode_and_pycache_fail_closed",
         "kind": "method",
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "line": 98,
-        "end_line": 105,
-        "signature_hash": "f621b8f41715c96b",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "end_line": 107,
+        "signature_hash": "4749423cdacfe427",
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_08_allowlist_and_required_path_shapes_fail_closed:f5c9f407d23c471e",
         "name": "SourceManifestTests.test_08_allowlist_and_required_path_shapes_fail_closed",
         "kind": "method",
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
-        "line": 107,
-        "end_line": 112,
+        "line": 109,
+        "end_line": 114,
         "signature_hash": "cbc39b126ce7d97b",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_09_single_loader_file_hash_cannot_compensate_for_sibling_drift:f6282dad0e7bf36d",
         "name": "SourceManifestTests.test_09_single_loader_file_hash_cannot_compensate_for_sibling_drift",
         "kind": "method",
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
-        "line": 114,
-        "end_line": 121,
+        "line": 116,
+        "end_line": 123,
         "signature_hash": "26351ebc8f9d10bb",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_10_eight_axis_and_13d_noncompensation:74d2730f530d67d2",
         "name": "SourceManifestTests.test_10_eight_axis_and_13d_noncompensation",
         "kind": "method",
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
-        "line": 123,
-        "end_line": 137,
+        "line": 125,
+        "end_line": 138,
         "signature_hash": "b5a8f608c78dd7f8",
-        "file_digest8": "17ad5217f6cb3a1c"
+        "file_digest8": "9df25f04815c536d"
       },
       {
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:CandidateClosure:ec21c3b6b0262b12",
@@ -269197,6 +269741,516 @@
         "file_digest8": "b8e6e91c3558457f"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py#function:canonical:9a5d3986db22fb05",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "1d37540cc7d21fba",
+        "file_digest8": "061d2a5cac8c0ab0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py#function:run:7d1ed1e17eb348be",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+        "line": 17,
+        "end_line": 69,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "061d2a5cac8c0ab0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolatedSessionProxy:4c9c8a6585e91a0e",
+        "name": "IsolatedSessionProxy",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 180,
+        "end_line": 350,
+        "signature_hash": "6642bb7246e001a5",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationError:f9433d944c00f855",
+        "name": "IsolationError",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "8ede3f396e245f7d",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationProtocolError:5b18fd96b912861e",
+        "name": "IsolationProtocolError",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "12734ec35b2089c6",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationReceipt:d10b5a9cecff4439",
+        "name": "IsolationReceipt",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 155,
+        "end_line": 177,
+        "signature_hash": "43991893361cf607",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationTimeoutError:4776b69c34f9ea32",
+        "name": "IsolationTimeoutError",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "17fb864cd71c8c67",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationWorkerError:9468cfd5c2bb2c8e",
+        "name": "IsolationWorkerError",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "7c7268fc1309a238",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_canonical_json:f43536bba0e4bd28",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 32,
+        "end_line": 42,
+        "signature_hash": "caa6df7371712507",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_decode_json:01fac3dbdab50b08",
+        "name": "_decode_json",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 45,
+        "end_line": 51,
+        "signature_hash": "b054bcba611a2b81",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_normalize_methods:01e9141b13fd1899",
+        "name": "_normalize_methods",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 80,
+        "end_line": 95,
+        "signature_hash": "4362bf5dbabeb981",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_recv_json:38ab177e5a280f7d",
+        "name": "_recv_json",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "63da29df1096c7cf",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_resolve_qualname:16798039cd82708f",
+        "name": "_resolve_qualname",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 65,
+        "end_line": 77,
+        "signature_hash": "61706f7703134531",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_send_json:9414aee391fbb8c1",
+        "name": "_send_json",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "724213ddf1a8aa20",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_worker_main:9d80eed51606425d",
+        "name": "_worker_main",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 98,
+        "end_line": 151,
+        "signature_hash": "425f32414910b1ad",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.__enter__:5587f7b60c23db15",
+        "name": "IsolatedSessionProxy.__enter__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 346,
+        "end_line": 347,
+        "signature_hash": "70703c73fc87d8b5",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.__exit__:72accab8846156e6",
+        "name": "IsolatedSessionProxy.__exit__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 349,
+        "end_line": 350,
+        "signature_hash": "c1ffe2d5c68b9bfc",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.__init__:af4432ee8353518c",
+        "name": "IsolatedSessionProxy.__init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 187,
+        "end_line": 216,
+        "signature_hash": "6798b6f837052820",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy._terminate:ffbc2aafbc0b0d06",
+        "name": "IsolatedSessionProxy._terminate",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 327,
+        "end_line": 344,
+        "signature_hash": "e76ca589613e89e1",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.call:5c22bfaf365be32c",
+        "name": "IsolatedSessionProxy.call",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 280,
+        "end_line": 306,
+        "signature_hash": "082185c8708c7522",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.child_pid:c0606ccf852e4a6a",
+        "name": "IsolatedSessionProxy.child_pid",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 229,
+        "end_line": 230,
+        "signature_hash": "2246f05daadb3f72",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.close:df97a14a80f7d2ed",
+        "name": "IsolatedSessionProxy.close",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 308,
+        "end_line": 325,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.receipt:dd169369b1ff0b7b",
+        "name": "IsolatedSessionProxy.receipt",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 219,
+        "end_line": 226,
+        "signature_hash": "c724ebd1d568bc4d",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.start:f93668663a5c3284",
+        "name": "IsolatedSessionProxy.start",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 232,
+        "end_line": 278,
+        "signature_hash": "170718d83ad461c7",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolationReceipt.root:e6a19f22c600a0ec",
+        "name": "IsolationReceipt.root",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "line": 166,
+        "end_line": 177,
+        "signature_hash": "e3e717e8a95babdc",
+        "file_digest8": "ae28809accb36178"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#class:FakePatchedSession:df64767d0aa5ed48",
+        "name": "FakePatchedSession",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 21,
+        "end_line": 43,
+        "signature_hash": "697fc3ed15139b0d",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#class:IsolationTests:b85a21536d17392f",
+        "name": "IsolationTests",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 46,
+        "end_line": 172,
+        "signature_hash": "24016cbaba42e7e7",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.__init__:7c2c75f5753ae11f",
+        "name": "FakePatchedSession.__init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 22,
+        "end_line": 26,
+        "signature_hash": "159dec43f3bff22a",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.boundary:11c0f2829557900c",
+        "name": "FakePatchedSession.boundary",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "9ea98c34f43747e5",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.close:33df95e563e3f65a",
+        "name": "FakePatchedSession.close",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "818fdb66f3084fa5",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.fail:b23dd6de09d2cfff",
+        "name": "FakePatchedSession.fail",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "7f8204400d6d1111",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.generate_text:bc94b4931ef9c0aa",
+        "name": "FakePatchedSession.generate_text",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "733ef79dce6d1356",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.hang:3e387ada6106d7d8",
+        "name": "FakePatchedSession.hang",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "6a6b1006ec69417b",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.make_proxy:b6d4bfb7da176050",
+        "name": "IsolationTests.make_proxy",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 51,
+        "end_line": 57,
+        "signature_hash": "4a9b4556cebd8636",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.setUp:9ffeac46b7fe4e69",
+        "name": "IsolationTests.setUp",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 47,
+        "end_line": 49,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_01_child_pid_is_distinct_and_receipt_is_d0:cd3fc22c15e8310e",
+        "name": "IsolationTests.test_01_child_pid_is_distinct_and_receipt_is_d0",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 59,
+        "end_line": 66,
+        "signature_hash": "2546eb5f695aa39b",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_02_child_global_patch_is_invisible_to_host:b54026c25c6ad817",
+        "name": "IsolationTests.test_02_child_global_patch_is_invisible_to_host",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "bb6c04d112b74a8c",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_03_parallel_host_caller_never_observes_child_patch.host_reader:7bc349124b05e4bc",
+        "name": "IsolationTests.test_03_parallel_host_caller_never_observes_child_patch.host_reader",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "a778c71e5aff96cf",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_03_parallel_host_caller_never_observes_child_patch:dd7cdc4f1c5b0aaa",
+        "name": "IsolationTests.test_03_parallel_host_caller_never_observes_child_patch",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 73,
+        "end_line": 90,
+        "signature_hash": "2cf78e2a4f195cee",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_04_session_state_stays_in_child:76264612c043a39f",
+        "name": "IsolationTests.test_04_session_state_stays_in_child",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 92,
+        "end_line": 96,
+        "signature_hash": "fa531cb2c5cd724b",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_05_private_or_unlisted_method_fails_before_ipc:34ac9bb9c5921470",
+        "name": "IsolationTests.test_05_private_or_unlisted_method_fails_before_ipc",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 98,
+        "end_line": 103,
+        "signature_hash": "bfabaac4bb94b021",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_06_non_json_init_payload_fails_closed:4cb6d907c07ef1bd",
+        "name": "IsolationTests.test_06_non_json_init_payload_fails_closed",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 105,
+        "end_line": 107,
+        "signature_hash": "f90b95f49981ba27",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_07_non_json_call_payload_fails_closed:a4de2b4fd4a5ae4a",
+        "name": "IsolationTests.test_07_non_json_call_payload_fails_closed",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 109,
+        "end_line": 112,
+        "signature_hash": "c6178102e3238eb5",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_08_child_exception_is_nonreusable:5afbe7f92cdfd9d3",
+        "name": "IsolationTests.test_08_child_exception_is_nonreusable",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 114,
+        "end_line": 119,
+        "signature_hash": "8d18161d51922d9f",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_09_timeout_terminates_child:2a1179434e6503c7",
+        "name": "IsolationTests.test_09_timeout_terminates_child",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "91cdbb374d3e3036",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_10_close_is_idempotent_and_restores_host_state:060cc24343531969",
+        "name": "IsolationTests.test_10_close_is_idempotent_and_restores_host_state",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 127,
+        "end_line": 132,
+        "signature_hash": "5af4f9e3a4105c44",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_11_invalid_factory_qualname_fails_closed:96a35eb3df26dae0",
+        "name": "IsolationTests.test_11_invalid_factory_qualname_fails_closed",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 134,
+        "end_line": 141,
+        "signature_hash": "5348e4c84cf9c6c0",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_12_start_is_idempotent_while_alive:05bdadf44b118d69",
+        "name": "IsolationTests.test_12_start_is_idempotent_while_alive",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 143,
+        "end_line": 151,
+        "signature_hash": "39a3e170108cec1c",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_13_receipt_root_ignores_pid_and_timing:47481639df17665b",
+        "name": "IsolationTests.test_13_receipt_root_ignores_pid_and_timing",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 153,
+        "end_line": 156,
+        "signature_hash": "48ab116038cc4cd1",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_14_spawn_is_the_only_start_method:afb54e42b7dc66a6",
+        "name": "IsolationTests.test_14_spawn_is_the_only_start_method",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 158,
+        "end_line": 159,
+        "signature_hash": "045672f1630f4687",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_15_method_allowlist_is_order_canonical:3874102d8825d917",
+        "name": "IsolationTests.test_15_method_allowlist_is_order_canonical",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "line": 161,
+        "end_line": 172,
+        "signature_hash": "82e9da3d87fcde7a",
+        "file_digest8": "0c5bb0af2bb9e8f6"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -270447,8 +271501,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "2b1dbb214f4d1380414a125a3e059a6e",
-    "payload_hash": "6eb2f4c1c1dd0265e6e9b173a8de2915"
+    "record_fingerprint": "0c325ea604c718a77eac0268a271b3a2",
+    "payload_hash": "fbb99fca08cea7dd67a6dcffb4a1f24e"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270461,15 +271515,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1659,
-      "bytes": 26598015,
-      "tokens_est": 6639848,
+      "files": 1665,
+      "bytes": 26633543,
+      "tokens_est": 6648732,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1013,
+        "python_module": 1018,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -271157,15 +272211,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1659,
-    "total_bytes": 26598015,
-    "text_tokens_est": 6639848,
+    "file_count": 1665,
+    "total_bytes": 26633543,
+    "text_tokens_est": 6648732,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1013,
+      "python_module": 1018,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -272387,6 +273441,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 69,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py#function:run:7d1ed1e17eb348be",
+        "signature_hash": "26799ab4ad82cbfb"
       }
     ],
     "run.record": [
@@ -276819,10 +277881,18 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 61,
-        "end_line": 68,
+        "line": 62,
+        "end_line": 63,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_canonical_json:7245b3b63aa042a0",
         "signature_hash": "c6d0368c0d268d56"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 42,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_canonical_json:f43536bba0e4bd28",
+        "signature_hash": "caa6df7371712507"
       }
     ],
     "_sha": [
@@ -314983,6 +316053,14 @@
         "end_line": 90,
         "semantic_id": "aura_ephemeral_workspace_runtime_v2.py#function:_exact_string:e57ef1867e04c2cc",
         "signature_hash": "d11bc271404c170a"
+      },
+      {
+        "file": "src/auraos/security/airllm_security_reuse_gate.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:_exact_string:df3ac3649c2624de",
+        "signature_hash": "0f98e4bad39a5cc0"
       }
     ],
     "_exact_mapping": [
@@ -343651,6 +344729,14 @@
         "end_line": 92,
         "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
         "signature_hash": "8405a7944186ce60"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/campaign.py#function:canonical:9a5d3986db22fb05",
+        "signature_hash": "1d37540cc7d21fba"
       }
     ],
     "tokens": [
@@ -370533,8 +371619,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 12,
-        "end_line": 12,
+        "line": 24,
+        "end_line": 25,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:canon:f762f392e428d761",
         "signature_hash": "ceba26963124d7c5"
       }
@@ -371367,12 +372453,32 @@
         "signature_hash": "5eb1726a4c2fb91b"
       }
     ],
+    "install_custom_generate_denial": [
+      {
+        "file": "src/auraos/security/airllm_native_compat_wrapper.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 198,
+        "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#function:install_custom_generate_denial:9d6062cfb3916ede",
+        "signature_hash": "85bf38b923bac331"
+      }
+    ],
+    "install_custom_generate_denial.deny_custom_generate": [
+      {
+        "file": "src/auraos/security/airllm_native_compat_wrapper.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 185,
+        "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#method:install_custom_generate_denial.deny_custom_generate:47eec6dd1e9bec5b",
+        "signature_hash": "3c77c61f993f7e19"
+      }
+    ],
     "ManifestPinnedNativeAirLLMWrapper": [
       {
         "file": "src/auraos/security/airllm_native_compat_wrapper.py",
         "kind": "class",
-        "line": 158,
-        "end_line": 195,
+        "line": 201,
+        "end_line": 239,
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#class:ManifestPinnedNativeAirLLMWrapper:49e3d629a28783b3",
         "signature_hash": "79f0537c27c04b8d"
       }
@@ -371381,8 +372487,8 @@
       {
         "file": "src/auraos/security/airllm_native_compat_wrapper.py",
         "kind": "method",
-        "line": 161,
-        "end_line": 195,
+        "line": 204,
+        "end_line": 239,
         "semantic_id": "src/auraos/security/airllm_native_compat_wrapper.py#method:ManifestPinnedNativeAirLLMWrapper.load:df803f72de99ca93",
         "signature_hash": "c92220f820f34acb"
       }
@@ -371509,8 +372615,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 71,
-        "end_line": 76,
+        "line": 66,
+        "end_line": 69,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_validate_digest:76361a7fe03395ca",
         "signature_hash": "fd1844698c2e2d63"
       }
@@ -371557,8 +372663,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 126,
-        "end_line": 155,
+        "line": 115,
+        "end_line": 144,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_sha256_regular_file:9e46950ba9857a2c",
         "signature_hash": "bc2b854d87ebcd9a"
       }
@@ -372057,8 +373163,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "class",
-        "line": 11,
-        "end_line": 11,
+        "line": 21,
+        "end_line": 22,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:SecurityReuseError:a2a8765ac2563665",
         "signature_hash": "5db0ffce62a86652"
       }
@@ -372067,8 +373173,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 13,
-        "end_line": 13,
+        "line": 26,
+        "end_line": 27,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:dig:4fbe08606c6d37c9",
         "signature_hash": "62c9dcdd21260497"
       }
@@ -372077,18 +373183,28 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 14,
-        "end_line": 16,
+        "line": 28,
+        "end_line": 31,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:reqh:7746b34165721fcb",
         "signature_hash": "9162da9dde467845"
+      }
+    ],
+    "_valid_complete_leaves": [
+      {
+        "file": "src/auraos/security/airllm_security_reuse_gate.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 78,
+        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:_valid_complete_leaves:be5b67bd5f296c3d",
+        "signature_hash": "afdb690c91ae855e"
       }
     ],
     "valid_receipt": [
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 17,
-        "end_line": 25,
+        "line": 80,
+        "end_line": 96,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:valid_receipt:b87953200c92571d",
         "signature_hash": "81f89c9b8061d9d2"
       }
@@ -372097,8 +373213,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 26,
-        "end_line": 29,
+        "line": 98,
+        "end_line": 102,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:subject_root:9b6abd53fc6f065d",
         "signature_hash": "e3c497e683189374"
       }
@@ -372107,8 +373223,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 30,
-        "end_line": 33,
+        "line": 103,
+        "end_line": 107,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:generation_root:14f922448667e900",
         "signature_hash": "05fb2e8711620930"
       }
@@ -372117,8 +373233,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "class",
-        "line": 35,
-        "end_line": 48,
+        "line": 110,
+        "end_line": 132,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:TraceReuseContract:f284df77f23f70ef",
         "signature_hash": "55ba0fc8071b09e6"
       }
@@ -372127,8 +373243,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "method",
-        "line": 37,
-        "end_line": 40,
+        "line": 119,
+        "end_line": 124,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:TraceReuseContract.__post_init__:e534cbfc72b3b7ba",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -372137,8 +373253,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "method",
-        "line": 41,
-        "end_line": 48,
+        "line": 125,
+        "end_line": 132,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:TraceReuseContract.reasons:3de07275304f8f2a",
         "signature_hash": "c7a2c50436e92d83"
       }
@@ -372147,8 +373263,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "class",
-        "line": 50,
-        "end_line": 63,
+        "line": 135,
+        "end_line": 157,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:WorkloadReuseContract:55d02c45344cd025",
         "signature_hash": "d50e7fb6d1feb75b"
       }
@@ -372157,8 +373273,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "method",
-        "line": 52,
-        "end_line": 55,
+        "line": 143,
+        "end_line": 149,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:WorkloadReuseContract.__post_init__:c00b0262241101da",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -372167,8 +373283,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "method",
-        "line": 56,
-        "end_line": 63,
+        "line": 150,
+        "end_line": 157,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:WorkloadReuseContract.reasons:bb2b41bff0a3be4d",
         "signature_hash": "c7a2c50436e92d83"
       }
@@ -372177,8 +373293,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "class",
-        "line": 65,
-        "end_line": 72,
+        "line": 160,
+        "end_line": 173,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:SecurityReuseRequest:a8cdd562ccff8bd0",
         "signature_hash": "7a5c371c71e61449"
       }
@@ -372187,8 +373303,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "method",
-        "line": 67,
-        "end_line": 72,
+        "line": 168,
+        "end_line": 173,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:SecurityReuseRequest.__post_init__:d37192565b28637b",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -372197,8 +373313,8 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 73,
-        "end_line": 88,
+        "line": 175,
+        "end_line": 191,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:admit:5406927319f45a80",
         "signature_hash": "d7f368c8d40c3906"
       }
@@ -372207,156 +373323,18 @@
       {
         "file": "src/auraos/security/airllm_security_reuse_gate.py",
         "kind": "function",
-        "line": 89,
-        "end_line": 95,
+        "line": 193,
+        "end_line": 199,
         "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:verify:775da1f36f22b977",
         "signature_hash": "48e9ad6fe022ec17"
-      }
-    ],
-    "br": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "function",
-        "line": 99,
-        "end_line": 100,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:br:b2a65b742ad6959d",
-        "signature_hash": "c1690a629e3b0706"
-      }
-    ],
-    "tr": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "function",
-        "line": 101,
-        "end_line": 101,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:tr:a40f5eb17dae2903",
-        "signature_hash": "b4f049b43f23ecde"
-      }
-    ],
-    "wl": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "function",
-        "line": 102,
-        "end_line": 102,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:wl:30a9ccae4e708cb9",
-        "signature_hash": "89aff2b640d7d00d"
-      }
-    ],
-    "rq": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "function",
-        "line": 103,
-        "end_line": 104,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#function:rq:f61adc2076bb416a",
-        "signature_hash": "0b17a796748ed069"
-      }
-    ],
-    "T": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "class",
-        "line": 105,
-        "end_line": 134,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#class:T:be4f76a14dd30588",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tests/test_frontier27_runtime.py",
-        "kind": "class",
-        "line": 12,
-        "end_line": 115,
-        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
-        "signature_hash": "1a51332cd1dc4f10"
-      }
-    ],
-    "T.test_green": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 106,
-        "end_line": 107,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_green:892a91a96b4ab1b5",
-        "signature_hash": "82b22f88ea519775"
-      }
-    ],
-    "T.test_receipt_tamper": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 108,
-        "end_line": 109,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_receipt_tamper:694f6de0410d6d95",
-        "signature_hash": "18d01daae388c8cc"
-      }
-    ],
-    "T.test_trace": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 110,
-        "end_line": 112,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_trace:ee4997f77f4e7698",
-        "signature_hash": "05e1c3a5d80c7d9d"
-      }
-    ],
-    "T.test_workload": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 113,
-        "end_line": 115,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_workload:6b7fdded9322c3a6",
-        "signature_hash": "8b8e936090dbf0a9"
-      }
-    ],
-    "T.test_authority": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 116,
-        "end_line": 117,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_authority:6d4f6f6086b10534",
-        "signature_hash": "9cf3f845aa3d43e7"
-      }
-    ],
-    "T.test_omega8": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 118,
-        "end_line": 124,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_omega8:f510d860396247a9",
-        "signature_hash": "e3a9271fe0b6bc17"
-      }
-    ],
-    "T.test_hs1000": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 125,
-        "end_line": 131,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_hs1000:e06e132db55ead7f",
-        "signature_hash": "9c1552482e070895"
-      }
-    ],
-    "T.test_13d": [
-      {
-        "file": "src/auraos/security/airllm_security_reuse_gate.py",
-        "kind": "method",
-        "line": 132,
-        "end_line": 134,
-        "semantic_id": "src/auraos/security/airllm_security_reuse_gate.py#method:T.test_13d:80a65a9418fc4a1a",
-        "signature_hash": "17ba1143cd46a791"
       }
     ],
     "SourceManifestError": [
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "class",
-        "line": 40,
-        "end_line": 41,
+        "line": 41,
+        "end_line": 42,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:SourceManifestError:8ac50dbfca2b627c",
         "signature_hash": "96a89ecb07626868"
       }
@@ -372365,8 +373343,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "class",
-        "line": 44,
-        "end_line": 45,
+        "line": 45,
+        "end_line": 46,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:InvalidManifestAllowlistError:b9c37a696c7b35cd",
         "signature_hash": "f1a4519dcb277d70"
       }
@@ -372375,8 +373353,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "class",
-        "line": 48,
-        "end_line": 49,
+        "line": 49,
+        "end_line": 50,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:SourceTreeIntegrityError:a1fd5bf433db279c",
         "signature_hash": "6b924f28c1ff296a"
       }
@@ -372385,8 +373363,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "class",
-        "line": 53,
-        "end_line": 58,
+        "line": 54,
+        "end_line": 59,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#class:VerifiedSourceManifest:f7aabe07dc9d2f23",
         "signature_hash": "736dc5aa513c02d8"
       }
@@ -372395,8 +373373,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 79,
-        "end_line": 92,
+        "line": 72,
+        "end_line": 81,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:normalize_manifest_allowlist:67399564173c01dd",
         "signature_hash": "77971dbfd6369294"
       }
@@ -372405,8 +373383,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 95,
-        "end_line": 111,
+        "line": 84,
+        "end_line": 100,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_normalize_required_paths:a8d1bc632d599c4f",
         "signature_hash": "29da2806c1b86efa"
       }
@@ -372415,8 +373393,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 114,
-        "end_line": 123,
+        "line": 103,
+        "end_line": 112,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:_assert_regular_file:bc964a530dda5979",
         "signature_hash": "ed6d169c1570b368"
       }
@@ -372425,8 +373403,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 158,
-        "end_line": 228,
+        "line": 147,
+        "end_line": 205,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:build_source_manifest:bad111fa057969f2",
         "signature_hash": "817bb83a6f634a9c"
       }
@@ -372435,8 +373413,8 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 231,
-        "end_line": 241,
+        "line": 208,
+        "end_line": 213,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:verify_source_manifest:bfa2680715a023c6",
         "signature_hash": "506b29f8a587aae7"
       }
@@ -372445,10 +373423,200 @@
       {
         "file": "src/auraos/security/airllm_source_manifest_guard.py",
         "kind": "function",
-        "line": 244,
-        "end_line": 246,
+        "line": 216,
+        "end_line": 218,
         "semantic_id": "src/auraos/security/airllm_source_manifest_guard.py#function:k27_for_manifest:e69acc0445dd394d",
         "signature_hash": "db0c338df45f5bf2"
+      }
+    ],
+    "VulnerableGenerationModel": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 29,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:VulnerableGenerationModel:9e682cad30638bee",
+        "signature_hash": "41a57cb0009c0d97"
+      }
+    ],
+    "VulnerableGenerationModel.__init__": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:VulnerableGenerationModel.__init__:cd6f4144127e9e2b",
+        "signature_hash": "d4ed8c553a75bd14"
+      }
+    ],
+    "VulnerableGenerationModel.load_custom_generate": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:VulnerableGenerationModel.load_custom_generate:5e92ed0d6266bf00",
+        "signature_hash": "feaaee7d2b68f077"
+      }
+    ],
+    "VulnerableGenerationModel.generate": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 29,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:VulnerableGenerationModel.generate:beeb65789309af0c",
+        "signature_hash": "600300aab6f50ec0"
+      }
+    ],
+    "AirLLMGenerateDelegate": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 37,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:AirLLMGenerateDelegate:4020bb931ea68307",
+        "signature_hash": "516c22b11a18e69e"
+      }
+    ],
+    "AirLLMGenerateDelegate.__init__": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:AirLLMGenerateDelegate.__init__:e336de9453e73a54",
+        "signature_hash": "96ecdc74dfe7317c"
+      }
+    ],
+    "AirLLMGenerateDelegate.generate": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:AirLLMGenerateDelegate.generate:de68510f22637ddc",
+        "signature_hash": "0d62a7c781416812"
+      }
+    ],
+    "UnguardableGenerativeModel": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:UnguardableGenerativeModel:97fd04026cfb5000",
+        "signature_hash": "f5076a914abfb6ec"
+      }
+    ],
+    "UnguardableGenerativeModel.generate": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:UnguardableGenerativeModel.generate:e951aa4ae820b1db",
+        "signature_hash": "0d62a7c781416812"
+      }
+    ],
+    "NonGenerativeResult": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:NonGenerativeResult:b44c02d233343d5e",
+        "signature_hash": "b50514c71ed5420f"
+      }
+    ],
+    "CustomGenerateDenialTests": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 95,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#class:CustomGenerateDenialTests:2513022de294aded",
+        "signature_hash": "e35bf996c2172a88"
+      }
+    ],
+    "CustomGenerateDenialTests.setUp": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.setUp:fcacd70870782d7d",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "CustomGenerateDenialTests.tearDown": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.tearDown:764957422a2f20ad",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "CustomGenerateDenialTests.test_airllm_delegate_blocks_preconsent_cache_write": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_airllm_delegate_blocks_preconsent_cache_write:c9795b4c57b277b3",
+        "signature_hash": "7bee0c1c53a471d4"
+      }
+    ],
+    "CustomGenerateDenialTests.test_direct_inner_generate_is_also_blocked_before_write": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_direct_inner_generate_is_also_blocked_before_write:f94e827405153952",
+        "signature_hash": "ef4bd1a99d9b31c6"
+      }
+    ],
+    "CustomGenerateDenialTests.test_native_generation_remains_available": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_native_generation_remains_available:ebcabe1afb96d1ac",
+        "signature_hash": "0fc8edeafe6d1c19"
+      }
+    ],
+    "CustomGenerateDenialTests.test_unguardable_generative_target_fails_closed": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_unguardable_generative_target_fails_closed:928f4f926b36ba02",
+        "signature_hash": "017555b24ec2e248"
+      }
+    ],
+    "CustomGenerateDenialTests.test_non_generative_result_is_unchanged": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 86,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_non_generative_result_is_unchanged:53a13c52e81ae87f",
+        "signature_hash": "db40cf5396f69cda"
+      }
+    ],
+    "CustomGenerateDenialTests.test_installation_is_idempotent": [
+      {
+        "file": "src/auraos/security/test_airllm_custom_generate_denial.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 95,
+        "semantic_id": "src/auraos/security/test_airllm_custom_generate_denial.py#method:CustomGenerateDenialTests.test_installation_is_idempotent:850980647ef594da",
+        "signature_hash": "3ccf2845994c99e6"
       }
     ],
     "write_model": [
@@ -373353,6 +374521,172 @@
         "signature_hash": "cf35670db38fd7a4"
       }
     ],
+    "generation": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:generation:4fd8d5fdb0c5c4cd",
+        "signature_hash": "3bf9842a875172b6"
+      }
+    ],
+    "full_receipt": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 56,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:full_receipt:f7bb00529febc4b2",
+        "signature_hash": "e406b5c8c3e98b20"
+      }
+    ],
+    "reseal": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 67,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:reseal:d07d4472b4652552",
+        "signature_hash": "9a59619353a91a4d"
+      }
+    ],
+    "request": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 77,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#function:request:e10c19abc4dde03a",
+        "signature_hash": "e4f803e60ff2f10c"
+      },
+      {
+        "file": "tests/test_aura_forge.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_forge.py#function:request:c5b24e2ac94dd485",
+        "signature_hash": "0a92ba0bcaac69ef"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
+        "signature_hash": "9045b73142116e1c"
+      }
+    ],
+    "SecurityReuseLeafTests": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 150,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#class:SecurityReuseLeafTests:ec0006096f98e9bf",
+        "signature_hash": "c82bf8ccaed8f275"
+      }
+    ],
+    "SecurityReuseLeafTests.test_complete_canonical_receipt_reuses_locally": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 87,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_complete_canonical_receipt_reuses_locally:0734eebb8ff37078",
+        "signature_hash": "e6e904c96d0274dd"
+      }
+    ],
+    "SecurityReuseLeafTests.test_proofless_receipt_fails_even_when_self_consistent": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 94,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_proofless_receipt_fails_even_when_self_consistent:6e3c1e42af00db00",
+        "signature_hash": "b52242f3a78e4f99"
+      }
+    ],
+    "SecurityReuseLeafTests.test_missing_duplicate_or_wrong_leaf_shape_fails": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 103,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_missing_duplicate_or_wrong_leaf_shape_fails:a1d3d7216270690d",
+        "signature_hash": "b34c85f0379490de"
+      }
+    ],
+    "SecurityReuseLeafTests.test_failed_or_missing_proof_fails": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 109,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_failed_or_missing_proof_fails:45ae559017866651",
+        "signature_hash": "85b6291ce1fcf906"
+      }
+    ],
+    "SecurityReuseLeafTests.test_proof_generation_mismatch_fails": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 114,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_proof_generation_mismatch_fails:4f26caa24cdf03ef",
+        "signature_hash": "5b7b1126d778bf71"
+      }
+    ],
+    "SecurityReuseLeafTests.test_current_generation_drift_fails": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 119,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_current_generation_drift_fails:e23d997677c29d2f",
+        "signature_hash": "4f30f2b5a090dbf2"
+      }
+    ],
+    "SecurityReuseLeafTests.test_authority_request_never_reuses": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 123,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_authority_request_never_reuses:9068b8af5bb4f762",
+        "signature_hash": "b1fa8b206de087a9"
+      }
+    ],
+    "SecurityReuseLeafTests.test_hs1000_malformed_leaf_mutations_zero_false_reuse": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 140,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_hs1000_malformed_leaf_mutations_zero_false_reuse:e2f511871a273500",
+        "signature_hash": "a02bcd39d9e339e2"
+      }
+    ],
+    "SecurityReuseLeafTests.test_omega8_has_one_all_hard_valid_keeper": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 143,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_omega8_has_one_all_hard_valid_keeper:3ff09dcbffaa160d",
+        "signature_hash": "2628c992d8c12477"
+      }
+    ],
+    "SecurityReuseLeafTests.test_13d_trailing_context_never_repairs_proofless_core": [
+      {
+        "file": "src/auraos/security/test_airllm_security_reuse_gate.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 150,
+        "semantic_id": "src/auraos/security/test_airllm_security_reuse_gate.py#method:SecurityReuseLeafTests.test_13d_trailing_context_never_repairs_proofless_core:1af363d99370e431",
+        "signature_hash": "de13d8af27c159e9"
+      }
+    ],
     "make_tree": [
       {
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
@@ -373368,7 +374702,7 @@
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "kind": "class",
         "line": 48,
-        "end_line": 137,
+        "end_line": 138,
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#class:SourceManifestTests:edbb317cbfd9d36d",
         "signature_hash": "c91c2fcb6c63d74c"
       }
@@ -373453,22 +374787,22 @@
         "signature_hash": "383e61cf054fcf4b"
       }
     ],
-    "SourceManifestTests.test_07_pycache_and_pyc_are_nonsemantic_and_ignored": [
+    "SourceManifestTests.test_07_executable_bytecode_and_pycache_fail_closed": [
       {
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "kind": "method",
         "line": 98,
-        "end_line": 105,
-        "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_07_pycache_and_pyc_are_nonsemantic_and_ignored:3383b467edca857b",
-        "signature_hash": "f621b8f41715c96b"
+        "end_line": 107,
+        "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_07_executable_bytecode_and_pycache_fail_closed:a67762fbf08da702",
+        "signature_hash": "4749423cdacfe427"
       }
     ],
     "SourceManifestTests.test_08_allowlist_and_required_path_shapes_fail_closed": [
       {
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "kind": "method",
-        "line": 107,
-        "end_line": 112,
+        "line": 109,
+        "end_line": 114,
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_08_allowlist_and_required_path_shapes_fail_closed:f5c9f407d23c471e",
         "signature_hash": "cbc39b126ce7d97b"
       }
@@ -373477,8 +374811,8 @@
       {
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "kind": "method",
-        "line": 114,
-        "end_line": 121,
+        "line": 116,
+        "end_line": 123,
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_09_single_loader_file_hash_cannot_compensate_for_sibling_drift:f6282dad0e7bf36d",
         "signature_hash": "26351ebc8f9d10bb"
       }
@@ -373487,8 +374821,8 @@
       {
         "file": "src/auraos/security/test_airllm_source_manifest_guard.py",
         "kind": "method",
-        "line": 123,
-        "end_line": 137,
+        "line": 125,
+        "end_line": 138,
         "semantic_id": "src/auraos/security/test_airllm_source_manifest_guard.py#method:SourceManifestTests.test_10_eight_axis_and_13d_noncompensation:74d2730f530d67d2",
         "signature_hash": "b5a8f608c78dd7f8"
       }
@@ -407195,24 +408529,6 @@
         "signature_hash": "9817e92e7c3eb5d7"
       }
     ],
-    "request": [
-      {
-        "file": "tests/test_aura_forge.py",
-        "kind": "function",
-        "line": 149,
-        "end_line": 165,
-        "semantic_id": "tests/test_aura_forge.py#function:request:c5b24e2ac94dd485",
-        "signature_hash": "0a92ba0bcaac69ef"
-      },
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 187,
-        "end_line": 223,
-        "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
-        "signature_hash": "9045b73142116e1c"
-      }
-    ],
     "test_prepare_compiles_exact_evidence_contract": [
       {
         "file": "tests/test_aura_forge.py",
@@ -428231,6 +429547,16 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "T": [
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 115,
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
     "T.test_00_manifest": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -430029,6 +431355,486 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "IsolationError": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationError:f9433d944c00f855",
+        "signature_hash": "8ede3f396e245f7d"
+      }
+    ],
+    "IsolationProtocolError": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationProtocolError:5b18fd96b912861e",
+        "signature_hash": "12734ec35b2089c6"
+      }
+    ],
+    "IsolationWorkerError": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationWorkerError:9468cfd5c2bb2c8e",
+        "signature_hash": "7c7268fc1309a238"
+      }
+    ],
+    "IsolationTimeoutError": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationTimeoutError:4776b69c34f9ea32",
+        "signature_hash": "17fb864cd71c8c67"
+      }
+    ],
+    "_decode_json": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 51,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_decode_json:01fac3dbdab50b08",
+        "signature_hash": "b054bcba611a2b81"
+      }
+    ],
+    "_send_json": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_send_json:9414aee391fbb8c1",
+        "signature_hash": "724213ddf1a8aa20"
+      }
+    ],
+    "_recv_json": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_recv_json:38ab177e5a280f7d",
+        "signature_hash": "63da29df1096c7cf"
+      }
+    ],
+    "_resolve_qualname": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 77,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_resolve_qualname:16798039cd82708f",
+        "signature_hash": "61706f7703134531"
+      }
+    ],
+    "_normalize_methods": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 95,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_normalize_methods:01e9141b13fd1899",
+        "signature_hash": "4362bf5dbabeb981"
+      }
+    ],
+    "_worker_main": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 151,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#function:_worker_main:9d80eed51606425d",
+        "signature_hash": "425f32414910b1ad"
+      }
+    ],
+    "IsolationReceipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "class",
+        "line": 155,
+        "end_line": 177,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolationReceipt:d10b5a9cecff4439",
+        "signature_hash": "43991893361cf607"
+      }
+    ],
+    "IsolationReceipt.root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 177,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolationReceipt.root:e6a19f22c600a0ec",
+        "signature_hash": "e3e717e8a95babdc"
+      }
+    ],
+    "IsolatedSessionProxy": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "class",
+        "line": 180,
+        "end_line": 350,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#class:IsolatedSessionProxy:4c9c8a6585e91a0e",
+        "signature_hash": "6642bb7246e001a5"
+      }
+    ],
+    "IsolatedSessionProxy.__init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 216,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.__init__:af4432ee8353518c",
+        "signature_hash": "6798b6f837052820"
+      }
+    ],
+    "IsolatedSessionProxy.receipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 226,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.receipt:dd169369b1ff0b7b",
+        "signature_hash": "c724ebd1d568bc4d"
+      }
+    ],
+    "IsolatedSessionProxy.child_pid": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 230,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.child_pid:c0606ccf852e4a6a",
+        "signature_hash": "2246f05daadb3f72"
+      }
+    ],
+    "IsolatedSessionProxy.start": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 278,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.start:f93668663a5c3284",
+        "signature_hash": "170718d83ad461c7"
+      }
+    ],
+    "IsolatedSessionProxy.call": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 280,
+        "end_line": 306,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.call:5c22bfaf365be32c",
+        "signature_hash": "082185c8708c7522"
+      }
+    ],
+    "IsolatedSessionProxy.close": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 308,
+        "end_line": 325,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.close:df97a14a80f7d2ed",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "IsolatedSessionProxy._terminate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 327,
+        "end_line": 344,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy._terminate:ffbc2aafbc0b0d06",
+        "signature_hash": "e76ca589613e89e1"
+      }
+    ],
+    "IsolatedSessionProxy.__enter__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 346,
+        "end_line": 347,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.__enter__:5587f7b60c23db15",
+        "signature_hash": "70703c73fc87d8b5"
+      }
+    ],
+    "IsolatedSessionProxy.__exit__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py",
+        "kind": "method",
+        "line": 349,
+        "end_line": 350,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/process_isolation.py#method:IsolatedSessionProxy.__exit__:72accab8846156e6",
+        "signature_hash": "c1ffe2d5c68b9bfc"
+      }
+    ],
+    "FakePatchedSession": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 43,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#class:FakePatchedSession:df64767d0aa5ed48",
+        "signature_hash": "697fc3ed15139b0d"
+      }
+    ],
+    "FakePatchedSession.__init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 26,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.__init__:7c2c75f5753ae11f",
+        "signature_hash": "159dec43f3bff22a"
+      }
+    ],
+    "FakePatchedSession.boundary": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.boundary:11c0f2829557900c",
+        "signature_hash": "9ea98c34f43747e5"
+      }
+    ],
+    "FakePatchedSession.generate_text": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.generate_text:bc94b4931ef9c0aa",
+        "signature_hash": "733ef79dce6d1356"
+      }
+    ],
+    "FakePatchedSession.fail": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.fail:b23dd6de09d2cfff",
+        "signature_hash": "7f8204400d6d1111"
+      }
+    ],
+    "FakePatchedSession.hang": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.hang:3e387ada6106d7d8",
+        "signature_hash": "6a6b1006ec69417b"
+      }
+    ],
+    "FakePatchedSession.close": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:FakePatchedSession.close:33df95e563e3f65a",
+        "signature_hash": "818fdb66f3084fa5"
+      }
+    ],
+    "IsolationTests": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 172,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#class:IsolationTests:b85a21536d17392f",
+        "signature_hash": "24016cbaba42e7e7"
+      }
+    ],
+    "IsolationTests.setUp": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 49,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.setUp:9ffeac46b7fe4e69",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "IsolationTests.make_proxy": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 57,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.make_proxy:b6d4bfb7da176050",
+        "signature_hash": "4a9b4556cebd8636"
+      }
+    ],
+    "IsolationTests.test_01_child_pid_is_distinct_and_receipt_is_d0": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 66,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_01_child_pid_is_distinct_and_receipt_is_d0:cd3fc22c15e8310e",
+        "signature_hash": "2546eb5f695aa39b"
+      }
+    ],
+    "IsolationTests.test_02_child_global_patch_is_invisible_to_host": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_02_child_global_patch_is_invisible_to_host:b54026c25c6ad817",
+        "signature_hash": "bb6c04d112b74a8c"
+      }
+    ],
+    "IsolationTests.test_03_parallel_host_caller_never_observes_child_patch": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 90,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_03_parallel_host_caller_never_observes_child_patch:dd7cdc4f1c5b0aaa",
+        "signature_hash": "2cf78e2a4f195cee"
+      }
+    ],
+    "IsolationTests.test_03_parallel_host_caller_never_observes_child_patch.host_reader": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_03_parallel_host_caller_never_observes_child_patch.host_reader:7bc349124b05e4bc",
+        "signature_hash": "a778c71e5aff96cf"
+      }
+    ],
+    "IsolationTests.test_04_session_state_stays_in_child": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 96,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_04_session_state_stays_in_child:76264612c043a39f",
+        "signature_hash": "fa531cb2c5cd724b"
+      }
+    ],
+    "IsolationTests.test_05_private_or_unlisted_method_fails_before_ipc": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 103,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_05_private_or_unlisted_method_fails_before_ipc:34ac9bb9c5921470",
+        "signature_hash": "bfabaac4bb94b021"
+      }
+    ],
+    "IsolationTests.test_06_non_json_init_payload_fails_closed": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 107,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_06_non_json_init_payload_fails_closed:4cb6d907c07ef1bd",
+        "signature_hash": "f90b95f49981ba27"
+      }
+    ],
+    "IsolationTests.test_07_non_json_call_payload_fails_closed": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 112,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_07_non_json_call_payload_fails_closed:a4de2b4fd4a5ae4a",
+        "signature_hash": "c6178102e3238eb5"
+      }
+    ],
+    "IsolationTests.test_08_child_exception_is_nonreusable": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 119,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_08_child_exception_is_nonreusable:5afbe7f92cdfd9d3",
+        "signature_hash": "8d18161d51922d9f"
+      }
+    ],
+    "IsolationTests.test_09_timeout_terminates_child": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_09_timeout_terminates_child:2a1179434e6503c7",
+        "signature_hash": "91cdbb374d3e3036"
+      }
+    ],
+    "IsolationTests.test_10_close_is_idempotent_and_restores_host_state": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 132,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_10_close_is_idempotent_and_restores_host_state:060cc24343531969",
+        "signature_hash": "5af4f9e3a4105c44"
+      }
+    ],
+    "IsolationTests.test_11_invalid_factory_qualname_fails_closed": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 141,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_11_invalid_factory_qualname_fails_closed:96a35eb3df26dae0",
+        "signature_hash": "5348e4c84cf9c6c0"
+      }
+    ],
+    "IsolationTests.test_12_start_is_idempotent_while_alive": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 151,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_12_start_is_idempotent_while_alive:05bdadf44b118d69",
+        "signature_hash": "39a3e170108cec1c"
+      }
+    ],
+    "IsolationTests.test_13_receipt_root_ignores_pid_and_timing": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 156,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_13_receipt_root_ignores_pid_and_timing:47481639df17665b",
+        "signature_hash": "48ab116038cc4cd1"
+      }
+    ],
+    "IsolationTests.test_14_spawn_is_the_only_start_method": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 159,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_14_spawn_is_the_only_start_method:afb54e42b7dc66a6",
+        "signature_hash": "045672f1630f4687"
+      }
+    ],
+    "IsolationTests.test_15_method_allowlist_is_order_canonical": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 172,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_airllm_process_isolation/test_process_isolation.py#method:IsolationTests.test_15_method_allowlist_is_order_canonical:3874102d8825d917",
+        "signature_hash": "82e9da3d87fcde7a"
       }
     ],
     "_coordinates": [
