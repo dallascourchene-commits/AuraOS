@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1650
-- **total_bytes**: 26498319
-- **text_tokens_est**: 6614921
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1654
+- **total_bytes**: 26512587
+- **text_tokens_est**: 6618489
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1650,
+  "repo_file_count": 1654,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1659,7 +1659,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/j231_semantic_memory_currentness_donor/README.md",
+    "tools/arena/j231_semantic_memory_currentness_donor/campaign_j231_o5.py",
     "tools/arena/j231_semantic_memory_currentness_donor/j231_semantic_memory_donor.py",
+    "tools/arena/j231_semantic_memory_currentness_donor/test_j231_frontier27_integration.py",
+    "tools/arena/j231_semantic_memory_currentness_donor/test_j231_semantic_memory_donor.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1790,15 +1794,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1650,
-  "bytes": 26498319,
-  "tokens_est": 6614921,
+  "files": 1654,
+  "bytes": 26512587,
+  "tokens_est": 6618489,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1004,
+    "python_module": 1007,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
