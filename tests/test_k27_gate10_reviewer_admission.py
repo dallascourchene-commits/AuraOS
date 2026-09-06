@@ -2,6 +2,11 @@ from __future__ import annotations
 
 import unittest
 from hashlib import sha256
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 from tools.arena.k27_memory.gate10_reviewer_admission import (
     Decision, EXPECTED_ROUNDS, PROVENANCE_ARCHIVE_SHA256, PROVENANCE_MANIFEST_SHA256,
@@ -127,3 +132,7 @@ class Gate10ReviewerAdmissionTests(unittest.TestCase):
     def test_all_13_axes_are_noncompensatory(self):
         e = valid_evidence(); r = self.evaluate(e, terminal_for(e))
         self.assertEqual(len(r.axes), 13); self.assertTrue(all(r.axes.values()))
+
+
+if __name__ == "__main__":
+    unittest.main()
