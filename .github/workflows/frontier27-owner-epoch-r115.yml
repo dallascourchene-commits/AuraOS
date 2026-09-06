@@ -1,0 +1,57 @@
+name: Frontier-27 Owner Epoch R11.5 Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'tools/arena/frontier27_runtime.py'
+      - 'tools/arena/worker_cells/gpt56sol_frontier27_owner_epoch/**'
+      - 'tests/test_frontier27_owner_epoch_r115.py'
+      - '.github/workflows/frontier27-owner-epoch-r115.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owner-epoch-proof:
+    name: Exact owner source + ABA epoch + lattice (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.13']
+    env:
+      PYTHONHASHSEED: '0'
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile R11.5 donor
+        run: |
+          python -m py_compile \
+            tools/arena/worker_cells/gpt56sol_frontier27_owner_epoch/owner_epoch.py \
+            tools/arena/worker_cells/gpt56sol_frontier27_owner_epoch/campaign.py \
+            tests/test_frontier27_owner_epoch_r115.py
+      - name: Exact PR825 owner-source and ABA integration proof
+        run: python -m unittest -q tests.test_frontier27_owner_epoch_r115
+      - name: Omega8 HS1000 13D falsification
+        run: |
+          python - <<'PY'
+          from tools.arena.worker_cells.gpt56sol_frontier27_owner_epoch.campaign import run
+          r = run()
+          assert r['omega_states'] == 6561, r
+          assert r['omega_keepers'] == 1, r
+          assert r['routing_tails'] == 243, r
+          assert r['hard_invalid_repairs'] == 0, r
+          assert r['valid_tail_admits'] == 243, r
+          assert r['hs1000'] == 1000, r
+          assert r['false_promotions'] == 0, r
+          assert r['hs_root'] == '3cff84d35045fe9219010acb454170df9525806b20126254c9cde86fd1a84b8f', r
+          assert r['omega_root'] == '7f0efcabc9da31d6361a323d50f141077b85d52dc1b5818f3a5811fbd9c22492', r
+          print(r)
+          PY
+      - name: Verify proof did not dirty repository
+        run: test -z "$(git status --porcelain=v1)"
