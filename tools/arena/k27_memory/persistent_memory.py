@@ -177,7 +177,10 @@ class MemoryStore:
                 ON CONFLICT(object_id) DO UPDATE SET current_rev=excluded.current_rev,state='fresh',
                 frame_id=excluded.frame_id,frame_generation=excluded.frame_generation,path=excluded.path,epoch=excluded.epoch''',
                 (object_id,revision,address.frame_id,address.frame_generation,path_key(address.path),epoch))
-            affected = self._invalidate([object_id]) if prior and prior[0] != revision else set()
+            # Lifecycle epoch is part of dependency identity. Every republish advances
+            # the epoch, so dependents observed against the prior epoch must become
+            # stale even when the immutable revision bytes happen to be identical.
+            affected = self._invalidate([object_id]) if prior else set()
             return {'object_id':object_id,'revision_id':revision,'epoch':epoch,'invalidated':sorted(affected),
                     'store_state_root':self.state_root()}
 
