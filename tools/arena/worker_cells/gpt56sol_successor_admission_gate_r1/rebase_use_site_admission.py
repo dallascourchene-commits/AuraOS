@@ -3,7 +3,9 @@ from dataclasses import dataclass, asdict
 from hashlib import sha256
 from enum import Enum
 import json
-from typing import Any, Callable, Iterable, Mapping, Sequence
+from typing import Any, Iterable, Mapping
+
+from successor_parent_admission_r2 import admit_successor_pair
 
 D0='D0'
 KEEP='KEEP_CANDIDATE'
@@ -85,14 +87,18 @@ def compile_rebase_after_parent_admission(
     receipts:Iterable[ConveyorReceiptRef],
     bindings:Mapping[str,ReceiptParentBinding],
     ctx:Any,
-    admit_pair:Callable[[Sequence[Any],Any],Any],
 )->RebaseAdmissionReceipt:
-    """Non-owning use-site fence around the conveyor's historical compile_rebase predicate."""
+    """Canonical R1.1 use-site fence.
+
+    The caller supplies evidence, never a gate implementation or accepted result. The
+    consequential boundary replays the canonical successor-parent R2 gate itself.
+    A transport object or injected callable therefore cannot mint an objective seed.
+    """
     keep=sorted((r for r in receipts if r.disposition==KEEP and not r.effect_authority and not r.gate10), key=lambda r:(r.capsule_id,r.receipt_digest))
     holds=[]
     for i,a in enumerate(keep):
         for b in keep[i+1:]:
-            # Preserve the old cheap prefilter, but never let it mint by itself.
+            # Preserve the historical cheap prefilter, but never let it mint by itself.
             if a.lineage_id==b.lineage_id or a.consequence_fingerprint==b.consequence_fingerprint:
                 continue
             ba=bindings.get(a.receipt_digest); bb=bindings.get(b.receipt_digest)
@@ -102,7 +108,7 @@ def compile_rebase_after_parent_admission(
             rs=_binding_reasons(a,ba,'A')+_binding_reasons(b,bb,'B')
             if rs:
                 holds.extend(rs); continue
-            gate=admit_pair([ba.parent_evidence,bb.parent_evidence],ctx)
+            gate=admit_successor_pair([ba.parent_evidence,bb.parent_evidence],ctx)
             disp=getattr(getattr(gate,'disposition',None),'value',getattr(gate,'disposition',None))
             pair_root=getattr(gate,'pair_root',None)
             auth=getattr(gate,'authority_ceiling',D0)
