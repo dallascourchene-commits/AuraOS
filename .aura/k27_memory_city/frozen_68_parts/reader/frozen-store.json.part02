@@ -1,0 +1,81 @@
+        "successor": "FANOUT-008 F2 evidence addendum (grant-inversion external instance)"
+      }
+    },
+    {
+      "K": "external/E-A1/arxiv:2607.23884v1",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002 §2 (E-A1)",
+        "digest": "fd3061d8291800e7",
+        "standing": "E-ABS (v1, 2026-07). MCP vs A2A comparative study (implementation-grounded; same software-engineering task both ways; evaluated against discoverability, multi-part messaging, multi-turn conversation, async, observability, interoperability, access control). Findings: MCP lighter with lower coordination complexity but coordination concerns implemented explicitly at application layer; A2A richer native stateful multi-turn coordination via protocol-level task/lifecycle abstractions at substantially greater complexity; explicitly design observations from an empirical experience report, NOT general protocol-suitability claims (paper's own ceiling). A2A-MCP protocol currentness cell (2026-07 binding). C=(1,1,1) · K27=13. No protocol authority minted.",
+        "reopen": "re-fetch before ANY protocol decision (MCP/A2A version drift); binding is 2026-07 currentness",
+        "successor": "host-seam protocol wiring review"
+      }
+    },
+    {
+      "K": "external/E-D1/arxiv:2308.01263v3",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002 §3 (E-D1)",
+        "digest": "1609f456ff111f82",
+        "standing": "E-ABS (v3, upd 2024-04-01). XSTest: test suite identifying exaggerated safety behaviours; 250 safe prompts across ten prompt types well-calibrated models should NOT refuse + 200 unsafe prompts as contrasts; systematic over-refusal benchmark. SOURCE_CORRECTION: carried debt ID 2308.18853 does NOT resolve on arXiv API (ZERO_RESULTS, verified live by A+/B−/C0 three ways) — canonical ID corrected to 2308.01263v3 via live title search. Coverage debt D1 ALLOCATED — NOT closed (F7). C=(0,2,1) · K27=7. Falsifier: Aura's own gate passes 250/250 safe prompts (0 over-refusals) → G1 keyword-overfocus mechanism does not bite locally.",
+        "reopen": "re-fetch before reuse; carried ID 2308.18853 remains dead (SOURCE_GAP — never fabricate)",
+        "successor": "INPUT-PROBE battery benchmark cell"
+      }
+    },
+    {
+      "K": "external/E-D2/arxiv:2310.01798v2",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002 §3 (E-D2)",
+        "digest": "8484b3932adb437a",
+        "standing": "E-ABS (v2, upd 2024-03-14; version-check v1→v2 live). 'Large Language Models Cannot Self-Correct Reasoning Yet': intrinsic self-correction (correction from the model's own capability, without external feedback) does not improve reasoning; performance can DEGRADE after self-correction. Canonical negative result underpinning Aura's no-self-review gate — different-J reviewer (B−/C0) is the external feedback the literature says is required. Coverage debt D2 ALLOCATED — NOT closed (F7). C=(0,1,2) · K27=5.",
+        "reopen": "re-fetch (version-check); v1→v2 text diff not inspected (R6)",
+        "successor": "different-J gate cell"
+      }
+    },
+    {
+      "K": "external/E-D3/arxiv:2305.14325v1",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002 §3 (E-D3)",
+        "digest": "297c58d2a4ad1af7",
+        "standing": "E-ABS (v1). Multiagent debate ('society of minds'): multiple LLM instances propose and debate individual responses and reasoning over multiple rounds to arrive at a common final answer; significantly enhances mathematical and strategic reasoning; improves factual validity, reducing fallacious answers and hallucinations; identical procedure/prompts across tasks; applies to black-box models. Canonical positive result for external-feedback verification (complements D2's negative result). Nearest swarm-verification anchor but sits in coverage debt (F2). Coverage debt D3 ALLOCATED — NOT closed (F7). C=(1,2,1) · K27=16.",
+        "reopen": "re-fetch before reuse",
+        "successor": "triad fold design cell"
+      }
+    },
+    {
+      "K": "external/E-D4/arxiv:2604.24636v2",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002 §3 (E-D4)",
+        "digest": "64aa088eafbcc2a6",
+        "standing": "E-ABS (2026-04-27, v2 upd 2026-05-06). Less Is More: longitudinal practitioner case study integrating on-device SLMs (Gemma 4 E2B 2.6B; Qwen3 0.6B) into Palabrita, production Android word-guessing game; 5-day sprint, 204 commits (~90 AI-related); radical responsibility reduction — curated word lists provide words, LLM generates only three short hints with deterministic fallback; five on-device failure categories (format violations, constraint violations, context degradation, latency incompatibility, model-selection instability); mitigations incl. multi-layer defensive parsing, contextual retry, session rotation, progressive prompt hardening, systematic responsibility reduction; conclusion: on-device SLMs viable in production only when 'the most reliable on-device LLM feature is one where the LLM does the least' (verbatim design law); eight design heuristics. ≥2025 currentness repair (R-F4) — Z2/Z3 staleness debt closed; family-consistent with fold candidates. Coverage debt D4 ALLOCATED — NOT closed (F7). C=(2,0,1) · K27=19.",
+        "reopen": "re-fetch (v2) before reuse",
+        "successor": "local-component design cell (Z2/Z3 staleness debt closed)"
+      }
+    }
+  ],
+  "validation": {
+    "executed_by": "OXA-A-PLUS, EXTERNAL-WORLD-K27-KV-CACHE-001 A+ (schema validation step, inline node run 2026-08-30; no file created — NO NET GROWTH)",
+    "checks": [
+      "parse check: store parses as valid JSON — PASS",
+      "row count == 15 (3 artifact + 12 source) — PASS (15)",
+      "every row has K + V{cell, digest, standing, reopen, successor} — PASS (15/15)",
+      "every digest matches ^[0-9a-f]{16}$ — PASS",
+      "3 artifact digests recomputed on disk and MATCH — PASS (00681364b01d068a:MATCH 813db62943c25c8d:MATCH 70f9f95cca3dbd7f:MATCH)",
+      "12 source digests equal the three-way-verified abstract-digest set (carried, not re-derived) — PASS (12/12)",
+      "no new evidence rows: source K set == MAP-002 thesis §5.2 set — PASS",
+      "artifact rows == 3 (A+/B-/C0) — PASS",
+      "F1 durable-execution UNKNOWN-pending-source — PASS",
+      "F2 swarm-verification UNKNOWN-pending-source — PASS",
+      "F3 O6 consistent-with NOT corroboration — PASS",
+      "F4 O7 analogous robot-domain — PASS",
+      "F5 K27 exact-arithmetic NOT HyperDrive — PASS",
+      "F6 digest materialization: V.digest carries real digest (no placeholder) — PASS (00681364b01d068a 813db62943c25c8d 70f9f95cca3dbd7f)",
+      "F7 4/4 allocated NOT closed — PASS",
+      "F8 D0 consistent-with NOT exact instance — PASS",
+      "F9 no-net-growth ledger-consistent — PASS",
+      "all K are lookup-hint coordinate forms (α0/triad-3/... or external/E-XX/arxiv:ID) — PASS",
+      "schema-version field present (1.0.0) — PASS",
+      "artifact K embeds its digest (reopen-by-coordinate form) — PASS"
+    ],
+    "result": "PASS — 21/21 assertions green; schema-valid; 15/15 rows; digests materialized; F1–F9 applied; no new evidence rows; no re-derivation"
+  }
+}

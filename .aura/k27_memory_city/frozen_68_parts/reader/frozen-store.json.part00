@@ -1,0 +1,82 @@
+{
+  "schema": {
+    "name": "aura-coordinate-memory-kv-v1",
+    "version": "1.0.0",
+    "inherited_from": {
+      "manifest_schema": "EXTERNAL-WORLD-K27-KV-ALLOCATION-001 fold a1821da3044365d4 (K = canonical coordinate/address, lookup hint ONLY, never authority; V = allocation record)",
+      "row_shape": "EXTERNAL-WORLD-K27-MAP-002 C0 fold 70f9f95cca3dbd7f §3.13 — V = {cell, digest, standing, reopen, successor}",
+      "amended_standings": "EXTERNAL-WORLD-K27-MAP-002 C0 fold 70f9f95cca3dbd7f §4 (F1–F9 applied) + B- challenge 813db62943c25c8d (findings) + A+ thesis 00681364b01d068a §5 (row shapes)"
+    },
+    "K": "coordinate/addr — lookup/index hint only; never semantic identity, never evidence weight, never authority",
+    "V": {
+      "cell": "owning cell id (string)",
+      "digest": "sha256_16 — first 16 hex chars of SHA-256, lowercase (string)",
+      "standing": "amended standing — F1–F9 applied; E-ABS evidence class; paper claims labeled as paper claims (string)",
+      "reopen": "reopen conditions — what lawfully reopens this row's cone (string)",
+      "successor": "successor pointer — next lawful move (string)"
+    },
+    "digest_convention": "sha256_16 = sha256(file).hex.slice(0,16), lowercase (per KV-ALLOCATION-001 thesis a7c43d0cd638c8ec §1)",
+    "path_bases": {
+      "mirror": "C:\\Users\\pjtra\\aura-drive-mirror\\content\\<ARTIFACT-TYPE>-<CELL>-<digest16>.md",
+      "triad_temp": "C:\\Users\\pjtra\\AppData\\Local\\Temp\\triad\\"
+    }
+  },
+  "metadata": {
+    "cell": "EXTERNAL-WORLD-K27-KV-CACHE-001",
+    "role": "A+",
+    "agent": "OXA-A-PLUS",
+    "date": "2026-08-30",
+    "config": "triad-3 (39D)",
+    "branch": "TP-MAIN-20260823 @ TP-0006",
+    "status": "NONPROMOTING / NOT_GATE10 / D0-only / zero spend / allocation-wiring only",
+    "orientation_receipt": "α0/orientation/EXTERNAL-WORLD-K27-KV-CACHE-001/A+/58f3bfc6241c3324 (seq 6278/6279)",
+    "source_map": "EXTERNAL-WORLD-K27-MAP-002 — thesis 00681364b01d068a §5 (15 KV rows) × challenge 813db62943c25c8d (F1–F9) × fold 70f9f95cca3dbd7f §4 (amended standing; authoritative)",
+    "row_count": 15,
+    "artifact_rows": 3,
+    "source_rows": 12,
+    "digest_materialization": {
+      "A+_thesis": "00681364b01d068a (verified on disk 2026-08-30: temp + mirror byte-identical recompute MATCH)",
+      "B-_challenge": "813db62943c25c8d (verified on disk 2026-08-30: temp + mirror recompute MATCH)",
+      "C0_fold": "70f9f95cca3dbd7f (verified on disk 2026-08-30: temp + mirror recompute MATCH)",
+      "source_abstracts": "12/12 abstract-digests carried from three-way verification (A+ 00681364b01d068a §2/§3; B- 813db62943c25c8d §2 V4; C0 70f9f95cca3dbd7f §1 V3/V5) — NOT re-derived (creation contract: no re-derivation)"
+    },
+    "creation_contract": "C0 fold 70f9f95cca3dbd7f §7 NEXT OBJECTIVE — materialize the 15 amended rows into a machine-readable KV store; no re-derivation; no new evidence rows; schema-validated; effect ceiling allocation/wiring only",
+    "store_location": "runtime home: C:\\Users\\pjtra\\aura-drive-mirror\\kv-cache\\external-world-k27.json (local mirror, not Drive); working copy: %TEMP%\\triad\\EXTERNAL-WORLD-K27-KV-CACHE-001-store.json"
+  },
+  "rows": [
+    {
+      "K": "α0/triad-3/EXTERNAL-WORLD-K27-MAP-002/A+/00681364b01d068a",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002",
+        "digest": "00681364b01d068a",
+        "standing": "SUCCESSOR MAP V2 — AMENDED (C0 fold 70f9f95cca3dbd7f §4). Frontier covers [agent orchestration O1/O2/O4/O5/O6/O7 · A2A-MCP protocol currentness A1 · swarm design O5/O6]. durable execution = UNKNOWN-pending-source (F1); swarm verification = UNKNOWN-pending-source (F2). coverage debt 4/4 ALLOCATED, NOT closed (F7). R-12 slip DISCHARGED: C=(2,2,1)=25, C=(1,2,1)=16, 13/13 rows three-way verified. K27 exact-arithmetic verified (node integer arithmetic; NO HyperDrive receipt — F5, KV contract (iv) partial). O6 = consistent-with literature-gap statement, NOT corroboration (F3). O7 = externally analogous (robot-domain); pattern corroborated; text-domain transfer UNKNOWN (F4). D0 consistent-with regime-A, NOT exact instance (F8). no-net-growth asserted, ledger-consistent, baseline digests not carried (F9). NONPROMOTING / NOT_GATE10 / D0-only / zero spend.",
+        "reopen": "re-fetch any arXiv K before reuse (12/12 live-verified 2026-08-30T19:56Z+); O6 pool re-check on revision; O5 benchmark status re-check before any reuse",
+        "successor": "C0 fold 70f9f95cca3dbd7f → EXTERNAL-WORLD-K27-KV-CACHE-001 (this store) → MAP-003 (R1: durable-execution + swarm-verification sources; R5-b: Google Scholar pass)"
+      }
+    },
+    {
+      "K": "α0/triad-3/EXTERNAL-WORLD-K27-MAP-002/B-/813db62943c25c8d",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002",
+        "digest": "813db62943c25c8d",
+        "standing": "Independent challenge basis (identity-distinct). 0 FALSE / 8 AMEND (F1–F8) + 1 QUESTION (F9); all 9 UPHELD by C0 fold 70f9f95cca3dbd7f (8 AMEND + 1 QUESTION-with-note); 0 DEFEATED. Thesis claims tested: 19 SURVIVE / 8 AMEND / 0 DEFEATED-as-stated. B- body count 8 AMEND authoritative; footer '7 AMEND' is a B- artifact slip (C0 fold R4). Evidentiary spine verified: 12/12 sources resolve, 12/12 abstract-digest recomputes reproduce, 13/13 K27 rows correct, 3/3 HyperDrive receipts exact, D1 ID correction real (2308.18853 → ZERO_RESULTS).",
+        "reopen": "challenge any E/D entry abstract fidelity; any K27 value; any falsifier's Aura-side firing condition; O6 pool date re-check on revision",
+        "successor": "C0 fold 70f9f95cca3dbd7f"
+      }
+    },
+    {
+      "K": "α0/triad-3/EXTERNAL-WORLD-K27-MAP-002/C0/70f9f95cca3dbd7f",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002",
+        "digest": "70f9f95cca3dbd7f",
+        "standing": "TERMINAL SYNTHESIS — MAP-002 FIT TO SUPERSEDE MAP-001 WITH AMENDMENTS. §4 amended standing is the authoritative post-fold standing (carried into every row of this store). 9/9 B- findings UPHELD; 0 DEFEATED; 19 SURVIVE / 8 AMEND / 0 DEFEATED-as-stated. Residue R1–R6 preserved (R1: durable-execution + swarm-verification sources → MAP-003; R2: K27 receipt instrument gap; R3: no-net-growth baseline digests not carried; R4: B- footer slip; R5: different-J review + Google Scholar pass; R6: UNKNOWNs stay UNKNOWN). NEXT OBJECTIVE = EXTERNAL-WORLD-K27-KV-CACHE-001 (this store). Three-way verification = fidelity only, NOT paper-result verification, NOT Aura-side transfer measurement.",
+        "reopen": "reopen-by-coordinate: read fold §4 amended standing before reusing any MAP-002 entry; re-fetch any arXiv K before reuse; O6 pool / O5 validation re-checks per source row",
+        "successor": "EXTERNAL-WORLD-K27-KV-CACHE-001 (this store) → MAP-003 (R1 coverage gaps + R5-b Google Scholar pass)"
+      }
+    },
+    {
+      "K": "external/E-O1/arxiv:2608.25992v1",
+      "V": {
+        "cell": "EXTERNAL-WORLD-K27-MAP-002 §2 (E-O1)",
+        "digest": "b9553d0ff8652810",
+        "standing": "E-ABS (verified abstract, live arXiv fetch 2026-08-30T19:56Z+; version v1). ProgRouter: online progress-guided orchestration for multi-agent LLM workflows; multi-view task progress scorer (coarse outcome regimes + fine-grained subtask signals) + dual-path progress predictor + adaptive meta-gating; online step-wise routing decisions balancing progress gain, time budgets, long-term operating cost; evaluated on HumanEval Plus/MBPP/MATH-500/ASQA; cost reduction claimed vs baselines (PAPER CLAIM, not Aura-verified). Agent-orchestration coverage (F1 re-scope). C=(2,2,0) · K27=24 (three-way verified 13/13). Relevance: Aura dispatch/routing seams; cost-regime discipline. Falsifier (Aura-side): minimal Aura routing experiment shows no cost/quality coupling across steps, or progress estimator needs training data Aura cannot lawfully obtain.",

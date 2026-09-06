@@ -1,0 +1,96 @@
+name: K27 Memory City Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'aura_k27_memory_city/**'
+      - 'aura_k27_memory_city_runtime.py'
+      - '.aura/k27_memory_city/**'
+      - '.aura/runtime_profiles/k27_memory_city.v1.json'
+      - 'scripts/verify_k27_memory_city_candidate.py'
+      - 'scripts/k27_memory_city_cas_stress.py'
+      - 'tests/test_aura_k27_memory_city_runtime.py'
+      - '.github/workflows/k27-memory-city-candidate.yml'
+  push:
+    branches:
+      - 'feature/k27-memory-city-runtime-binding-e4b9'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-memory-city-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: '0'
+
+jobs:
+  verify:
+    name: Frozen 68 + registry oracle + logical rebuild + runtime (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 observed 2026-09-06
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact checkout identity
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1)"
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6 observed 2026-09-06
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6 observed 2026-09-06
+        with:
+          node-version: '22.16.0'
+      - name: Compile K27 runtime
+        run: |
+          python -m py_compile \
+            aura_k27_memory_city_runtime.py \
+            aura_k27_memory_city/*.py \
+            scripts/verify_k27_memory_city_candidate.py \
+            scripts/k27_memory_city_cas_stress.py \
+            tests/test_aura_k27_memory_city_runtime.py
+      - name: Frozen 68 file identities, 11-check oracle, recipe rebuild, runtime binding
+        run: python scripts/verify_k27_memory_city_candidate.py --repo-root .
+      - name: Verify candidate did not dirty repository
+        run: test -z "$(git status --porcelain=v1)"
+
+  cas-aba:
+    name: 5-worker CAS/ABA 750-round hosted replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 observed 2026-09-06
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact checkout identity
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1)"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6 observed 2026-09-06
+        with:
+          python-version: '3.13'
+      - name: Replay 750 rounds / 3,750 attempts
+        run: python scripts/k27_memory_city_cas_stress.py --rounds 750
+      - name: Verify candidate did not dirty repository
+        run: test -z "$(git status --porcelain=v1)"
