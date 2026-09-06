@@ -1,0 +1,76 @@
+name: PR863 K27 Gate10 Replay
+
+on:
+  push:
+    branches:
+      - arena/wave2-k27-runtime-binding-e4b9-addendum
+    paths:
+      - '.github/workflows/pr863-k27-gate10-replay.yml'
+      - 'tools/arena/k27_memory/**'
+      - 'tools/arena/k27_memory_runtime.py'
+      - 'tools/arena/k27_memory_city_spatial_seam/**'
+      - 'tests/test_k27_*.py'
+      - 'tests/test_frame_address_immutability.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr863-k27-gate10-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  epoch-cas-replay:
+    name: Gate10 epoch/CAS replay Python ${{ matrix.python }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Execute 5x750 Gate10 campaign
+        run: |
+          python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json
+          cat gate10-receipt.json
+      - name: Enforce hard invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('gate10-receipt.json').read_text())
+          expected = {
+              'workers': 5,
+              'rounds': 750,
+              'attempts': 3750,
+              'false_accept': 0,
+              'false_hold': 0,
+              'store_root_conflict_holds': 3000,
+              'revision_conflict_holds': 0,
+              'epoch_conflict_holds': 0,
+              'memory_conflict_holds': 0,
+              'stale_dependency_holds': 750,
+              'unclassified_errors': 0,
+              'stale_dependency_probes': 750,
+              'aba_violations': 0,
+              'stale_dependency_violations': 0,
+              'omega8_keepers': 1,
+              'routing13_hard_invalid_repairs': 0,
+              'routing13_decision_variations': 0,
+              'routing13_vectors_checked': 15066,
+          }
+          bad = {k: (r.get(k), v) for k, v in expected.items() if r.get(k) != v}
+          if bad:
+              raise SystemExit(f'Gate10 invariant failure: {bad}')
+          print('GATE10_EPOCH_CAS_REPLAY_PASS', r['campaign_root'])
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pr863-gate10-epoch-cas-py${{ matrix.python }}-${{ github.sha }}
+          path: gate10-receipt.json
+          if-no-files-found: error
+          retention-days: 30
