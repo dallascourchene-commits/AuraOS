@@ -33,6 +33,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      - name: Execute campaign-oracle regressions
+        run: python -m unittest -v tests.test_k27_gate10_campaign_oracle
       - name: Execute 5x750 Gate10 campaign
         run: |
           python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json
@@ -55,11 +57,19 @@ jobs:
               'routing13_hard_invalid_repairs': 0,
               'routing13_decision_variations': 0,
               'routing13_vectors_checked': 15066,
+              'campaign_complete': True,
+              'completed_rounds': 750,
+              'round_failures': 0,
           }
           bad = {k: (r.get(k), v) for k, v in expected.items() if r.get(k) != v}
           if bad:
               raise SystemExit(f'Gate10 invariant failure: {bad}')
-          print('GATE10_EPOCH_CAS_REPLAY_PASS', r['campaign_root'])
+          final = r.get('final') or {}
+          if final.get('root_scope') != 'POST_DEPENDENCY_REPAIR':
+              raise SystemExit(f"Gate10 root-scope failure: {final.get('root_scope')}")
+          if not isinstance(final.get('root'), str) or len(final['root']) != 64:
+              raise SystemExit('Gate10 final root is not one SHA-256 digest')
+          print('GATE10_EPOCH_CAS_REPLAY_PASS', r['campaign_root'], final['root'])
           PY
       - uses: actions/upload-artifact@v4
         with:
