@@ -16,8 +16,29 @@ from consequence_admission_kernel import (
 WORKERS=5
 ROUNDS=750
 
+HOLD_STORE_ROOT_CONFLICT='HOLD_STORE_ROOT_CONFLICT'
+HOLD_REVISION_CONFLICT='HOLD_REVISION_CONFLICT'
+HOLD_EPOCH_CONFLICT='HOLD_EPOCH_CONFLICT'
+HOLD_MEMORY_CONFLICT='HOLD_MEMORY_CONFLICT'
+HOLD_STALE_DEPENDENCY='HOLD_STALE_DEPENDENCY'
+ERROR_UNCLASSIFIED='ERROR_UNCLASSIFIED'
+
 def canon(x):
     return json.dumps(x, sort_keys=True, separators=(',',':'))
+
+def classify_hold(exc):
+    if isinstance(exc, StaleMemory):
+        return HOLD_STALE_DEPENDENCY
+    if isinstance(exc, MemoryConflict):
+        message=str(exc)
+        if message.startswith('registry state changed'):
+            return HOLD_STORE_ROOT_CONFLICT
+        if message.startswith('object revision changed'):
+            return HOLD_REVISION_CONFLICT
+        if message.startswith('object lifecycle epoch changed'):
+            return HOLD_EPOCH_CONFLICT
+        return HOLD_MEMORY_CONFLICT
+    return ERROR_UNCLASSIFIED
 
 def run():
     trace=[]
@@ -25,6 +46,14 @@ def run():
     false_hold=0
     aba_violations=0
     stale_dependency_violations=0
+    holds={
+        HOLD_STORE_ROOT_CONFLICT:0,
+        HOLD_REVISION_CONFLICT:0,
+        HOLD_EPOCH_CONFLICT:0,
+        HOLD_MEMORY_CONFLICT:0,
+        HOLD_STALE_DEPENDENCY:0,
+        ERROR_UNCLASSIFIED:0,
+    }
     with tempfile.TemporaryDirectory() as td:
         p=Path(td)/'campaign.sqlite'
         with MemoryStore(p) as s:
@@ -44,17 +73,47 @@ def run():
                                       expected_revision=observed_rev, expected_epoch=observed_epoch, expected_store_root=root)
                     return ('WIN', worker, out['revision_id'], out['epoch'], tuple(out['invalidated']), out['store_state_root'])
                 except (MemoryConflict, StaleMemory) as e:
-                    return ('HOLD_STALE_DEPENDENCY', worker, type(e).__name__)
+                    return (classify_hold(e), worker, type(e).__name__, str(e))
+                except BaseException as e:
+                    return (ERROR_UNCLASSIFIED, worker, type(e).__name__, str(e))
             with ThreadPoolExecutor(max_workers=WORKERS) as ex:
                 results=list(ex.map(attempt, range(WORKERS)))
             wins=[x for x in results if x[0]=='WIN']
-            holds=[x for x in results if x[0]!='WIN']
+            losses=[x for x in results if x[0]!='WIN']
+            for loss in losses:
+                holds[loss[0]] += 1
             if len(wins)!=1: false_accept += abs(len(wins)-1) or 1
-            if len(holds)!=WORKERS-1: false_hold += abs(len(holds)-(WORKERS-1)) or 1
+            if len(losses)!=WORKERS-1: false_hold += abs(len(losses)-(WORKERS-1)) or 1
+            if len(wins)!=1:
+                trace.append({'round':r,'results':results})
+                continue
             win=wins[0]
             if win[2] != observed_rev: aba_violations += 1
             if win[3] != observed_epoch+1: aba_violations += 1
             if 'dep' not in win[4]: stale_dependency_violations += 1
+
+            # Separate proof of true dependency staleness. This uses the old
+            # revision+epoch pair after src advanced and deliberately omits a
+            # store-root expectation, so a HOLD here must come from dependency
+            # currentness rather than the concurrent store-root CAS race.
+            probe_id=f'probe-{r}'
+            try:
+                with MemoryStore(p) as s:
+                    s.publish(probe_id, {'round':r}, FrameAddress('f','g',(3,r%27,(r//27)%27),probe_id),
+                              source_url='u', source_version='1',
+                              dependencies={'src':observed_rev}, dependency_epochs={'src':observed_epoch})
+                stale_probe='UNEXPECTED_ACCEPT'
+                stale_dependency_violations += 1
+            except (MemoryConflict, StaleMemory) as e:
+                stale_probe=classify_hold(e)
+                holds[stale_probe] += 1
+                if stale_probe != HOLD_STALE_DEPENDENCY:
+                    stale_dependency_violations += 1
+            except BaseException:
+                stale_probe=ERROR_UNCLASSIFIED
+                holds[ERROR_UNCLASSIFIED] += 1
+                stale_dependency_violations += 1
+
             with MemoryStore(p) as s:
                 try:
                     s.get('dep')
@@ -66,15 +125,16 @@ def run():
                 dep_repaired=s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
                                        expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
                                        dependencies={'src':src_fresh['revision_id']}, dependency_epochs={'src':src_fresh['epoch']})
-            trace.append({'round':r,'src_epoch':win[3],'dep_epoch':dep_repaired['epoch'],'root':win[5]})
+            trace.append({'round':r,'src_epoch':win[3],'dep_epoch':dep_repaired['epoch'],'root':win[5],
+                          'loser_holds':sorted(x[0] for x in losses),'stale_probe':stale_probe})
 
     # Factorized 13D falsification against the canonical consequence kernel.
     # Layer A covers every Omega8 state at antipodal routing tails. Layer B
     # covers every routing tail for each single-hard-invalid axis basis. This
     # makes the routing check consequence-bearing rather than tautological.
     kernel=ConsequenceAdmissionKernel()
-    policy=AdmissionPolicy('gate10-epoch-campaign-v1', tuple(range(8)), ())
-    source=SourceExit('campaign','arena-gate10','r1','semantic-root',True)
+    policy=AdmissionPolicy('gate10-epoch-campaign-v2', tuple(range(8)), ())
+    source=SourceExit('campaign','arena-gate10','r2','semantic-root',True)
     keeper=0
     hard_invalid_repaired=0
     routing_decision_variations=0
@@ -107,6 +167,13 @@ def run():
     return {
         'workers':WORKERS,'rounds':ROUNDS,'attempts':WORKERS*ROUNDS,
         'false_accept':false_accept,'false_hold':false_hold,
+        'store_root_conflict_holds':holds[HOLD_STORE_ROOT_CONFLICT],
+        'revision_conflict_holds':holds[HOLD_REVISION_CONFLICT],
+        'epoch_conflict_holds':holds[HOLD_EPOCH_CONFLICT],
+        'memory_conflict_holds':holds[HOLD_MEMORY_CONFLICT],
+        'stale_dependency_holds':holds[HOLD_STALE_DEPENDENCY],
+        'unclassified_errors':holds[ERROR_UNCLASSIFIED],
+        'stale_dependency_probes':ROUNDS,
         'aba_violations':aba_violations,'stale_dependency_violations':stale_dependency_violations,
         'omega8_keepers':keeper,'routing13_hard_invalid_repairs':hard_invalid_repaired,
         'routing13_decision_variations':routing_decision_variations,
