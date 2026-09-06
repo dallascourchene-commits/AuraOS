@@ -301,6 +301,8 @@ def commit_resource_absorption(
     """Authenticate plan provenance, CAS current state, then revalidate lease liveness."""
     if owner is None or registry is None or proposals is None or now_s is None:
         return _no_resource_commit(submitted, observed_owner_head, observed_lease_root)
+    if now_s < submitted.evaluated_at_s:
+        return _no_resource_commit(submitted, observed_owner_head, observed_lease_root)
     if observed_owner_head != owner.head or observed_lease_root != registry.root:
         return _no_resource_commit(submitted, observed_owner_head, observed_lease_root)
     if observed_owner_head != submitted.expected_owner_head or observed_lease_root != submitted.expected_lease_root:

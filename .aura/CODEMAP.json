@@ -1061,7 +1061,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1659,
+    "repo_file_count": 1667,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2701,12 +2701,20 @@
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/RESOURCE_LEASE_R3.md",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_absorption.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -104722,6 +104730,100 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6056,
+      "lines": 157,
+      "tokens_est": 1514,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d0387efb924fb72f",
+      "vector": [
+        -0.125444,
+        0.1233,
+        0.217651,
+        -0.224084,
+        -0.003217,
+        0.224084,
+        -0.247672,
+        -0.050392,
+        0.204785,
+        -0.224084,
+        -0.129733,
+        0.078269,
+        0.185486,
+        0.054681,
+        -0.168331,
+        0.001072,
+        -0.131877,
+        -0.108289,
+        0.215507,
+        0.067547,
+        -0.011794,
+        0.262682,
+        0.07398,
+        -0.245527,
+        0.121155,
+        -0.215507,
+        0.176908,
+        -0.269115,
+        0.262682,
+        -0.228373,
+        0.043959,
+        0.271259
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3442,
+      "lines": 56,
+      "tokens_est": 861,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f6458b68d53d95d5",
+      "vector": [
+        -0.157133,
+        0.009565,
+        0.034159,
+        -0.266443,
+        0.06422,
+        0.050556,
+        -0.296503,
+        0.258245,
+        -0.028694,
+        0.001366,
+        -0.143469,
+        0.140737,
+        -0.159866,
+        0.099745,
+        -0.04509,
+        -0.340227,
+        -0.200857,
+        0.225452,
+        0.348426,
+        0.151668,
+        0.072418,
+        0.135271,
+        -0.214521,
+        0.113409,
+        0.222719,
+        0.315633,
+        -0.069685,
+        0.091547,
+        0.053289,
+        -0.091547,
+        -0.118875,
+        -0.20359
+      ]
+    },
+    {
       "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
       "role": "python_module",
       "binary": false,
@@ -104816,50 +104918,191 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5726,
+      "lines": 159,
+      "tokens_est": 1432,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "95a663a3d45eb67a",
+      "vector": [
+        0.29939,
+        -0.150287,
+        0.034317,
+        -0.067452,
+        0.301757,
+        0.159754,
+        -0.176321,
+        -0.01775,
+        0.188154,
+        -0.249689,
+        0.112419,
+        0.076918,
+        0.235489,
+        0.136086,
+        -0.067452,
+        0.065085,
+        0.294657,
+        0.216555,
+        0.16922,
+        0.211821,
+        0.249689,
+        -0.226022,
+        0.034317,
+        -0.065085,
+        0.105319,
+        -0.053251,
+        0.282823,
+        -0.145553,
+        0.263889,
+        0.072185,
+        0.128986,
+        -0.048518
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8442,
+      "lines": 248,
+      "tokens_est": 2111,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0090e4fccccd305b",
+      "vector": [
+        0.060161,
+        -0.076204,
+        -0.324871,
+        0.159093,
+        -0.05214,
+        0.233961,
+        0.076204,
+        0.21257,
+        -0.311502,
+        0.191179,
+        0.084226,
+        0.172462,
+        0.001337,
+        0.110964,
+        0.0869,
+        0.209896,
+        -0.076204,
+        -0.092247,
+        -0.089573,
+        -0.068183,
+        0.33824,
+        -0.046792,
+        0.078878,
+        -0.020054,
+        -0.233961,
+        -0.020054,
+        -0.28209,
+        -0.26872,
+        0.196527,
+        0.020054,
+        0.284763,
+        0.199201
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6379,
+      "lines": 111,
+      "tokens_est": 1595,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b3dfc1bbb2df82ff",
+      "vector": [
+        -0.057388,
+        0.043334,
+        0.101893,
+        -0.003514,
+        -0.270544,
+        0.179192,
+        -0.083154,
+        0.125317,
+        0.296311,
+        0.270544,
+        -0.085497,
+        0.15811,
+        0.064415,
+        -0.031622,
+        -0.022253,
+        0.284599,
+        0.160453,
+        0.268202,
+        0.043334,
+        0.200273,
+        -0.092524,
+        0.221355,
+        0.249463,
+        -0.137029,
+        0.008198,
+        0.162795,
+        -0.151083,
+        0.242436,
+        0.083154,
+        -0.268202,
+        -0.298653,
+        -0.148741
+      ]
+    },
+    {
       "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 12578,
-      "lines": 343,
-      "tokens_est": 3145,
+      "bytes": 12707,
+      "lines": 345,
+      "tokens_est": 3177,
       "symbol_count": 23,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6a88b31950abe223",
+      "digest8": "5dbe9308dc09e1b3",
       "vector": [
-        0.080528,
-        -0.281263,
-        -0.199568,
-        -0.26259,
-        0.024508,
-        0.185563,
-        -0.152886,
-        0.239248,
-        -0.185563,
-        0.169224,
-        -0.103869,
-        -0.178561,
-        -0.110871,
-        -0.271926,
-        0.197234,
-        -0.04785,
-        0.150551,
-        -0.138881,
-        0.04785,
-        -0.117874,
-        0.26259,
-        -0.073525,
-        0.052518,
-        0.008169,
-        0.260256,
-        -0.225244,
-        -0.241583,
-        0.222909,
-        -0.033845,
-        -0.267258,
-        -0.092198,
-        0.117874
+        0.10624,
+        -0.171401,
+        -0.038247,
+        0.202565,
+        0.182733,
+        0.043913,
+        0.157236,
+        -0.035413,
+        0.301723,
+        0.03258,
+        -0.256393,
+        -0.22523,
+        0.145903,
+        -0.213897,
+        0.140237,
+        0.1884,
+        0.287557,
+        -0.205398,
+        0.177067,
+        0.137404,
+        -0.194066,
+        0.162902,
+        0.04108,
+        0.194066,
+        -0.024081,
+        0.344219,
+        0.089242,
+        0.04108,
+        -0.024081,
+        -0.012749,
+        -0.301723,
+        0.160069
       ]
     },
     {
@@ -104957,6 +105200,100 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7100,
+      "lines": 186,
+      "tokens_est": 1775,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f543b6202211bbb6",
+      "vector": [
+        0.25458,
+        0.036686,
+        -0.15008,
+        -0.138963,
+        0.192325,
+        0.083378,
+        -0.183431,
+        -0.205665,
+        0.127846,
+        -0.270144,
+        -0.018899,
+        0.274591,
+        -0.194548,
+        0.283485,
+        -0.13674,
+        0.121176,
+        -0.161197,
+        -0.190101,
+        0.03891,
+        0.210112,
+        0.054474,
+        -0.201218,
+        -0.072261,
+        0.047803,
+        0.279038,
+        -0.13674,
+        0.15008,
+        0.245687,
+        -0.205665,
+        -0.272368,
+        0.027793,
+        0.001112
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6789,
+      "lines": 98,
+      "tokens_est": 1698,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6482bebc1a930669",
+      "vector": [
+        0.224747,
+        0.295979,
+        -0.256679,
+        0.060178,
+        -0.006141,
+        -0.197728,
+        -0.065091,
+        0.070003,
+        -0.030703,
+        -0.303347,
+        0.138778,
+        0.065091,
+        0.126497,
+        -0.104391,
+        0.237028,
+        0.119128,
+        -0.072459,
+        0.11176,
+        -0.286154,
+        0.222291,
+        -0.163341,
+        -0.271416,
+        0.291066,
+        -0.070003,
+        0.227203,
+        -0.21001,
+        0.070003,
+        0.158428,
+        -0.057722,
+        -0.020878,
+        0.165797,
+        -0.185447
+      ]
+    },
+    {
       "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py",
       "role": "python_module",
       "binary": false,
@@ -105001,6 +105338,53 @@
         -0.279714,
         -0.212397,
         -0.089369
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3249,
+      "lines": 84,
+      "tokens_est": 813,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d878a800082999f0",
+      "vector": [
+        -0.051701,
+        -0.008042,
+        0.25391,
+        -0.005745,
+        0.219442,
+        0.258505,
+        0.001149,
+        0.242421,
+        0.178081,
+        -0.083871,
+        -0.187273,
+        -0.076977,
+        0.008042,
+        0.276888,
+        -0.260803,
+        0.125231,
+        0.224038,
+        -0.272292,
+        0.143614,
+        -0.058595,
+        0.047105,
+        -0.070084,
+        0.272292,
+        -0.205655,
+        0.224038,
+        -0.132125,
+        0.272292,
+        -0.044808,
+        0.226336,
+        0.214847,
+        0.01034,
+        -0.074679
       ]
     },
     {
@@ -106048,7 +106432,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788661611,
+  "generated_at_unix": 1788663175,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107690,12 +108074,20 @@
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/RESOURCE_LEASE_R3.md",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_absorption.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
       "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py",
+      "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -267124,6 +267516,86 @@
         "file_digest8": "ca2300bc8c5fe790"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:current_pair:0116ebb1424e46bf",
+        "name": "current_pair",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "line": 42,
+        "end_line": 45,
+        "signature_hash": "c2f25895b38ca245",
+        "file_digest8": "d0387efb924fb72f"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:decide:233572f250af5cf3",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "line": 48,
+        "end_line": 90,
+        "signature_hash": "db1ed4fc7c7cbdf0",
+        "file_digest8": "d0387efb924fb72f"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:fixture:cd7e7109085e1465",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "line": 31,
+        "end_line": 39,
+        "signature_hash": "7aa111fdcd89d936",
+        "file_digest8": "d0387efb924fb72f"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:run:07facc27764449fb",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "line": 93,
+        "end_line": 152,
+        "signature_hash": "2a6b862c860b9913",
+        "file_digest8": "d0387efb924fb72f"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:decide:fe635f6f6648e0dd",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "line": 19,
+        "end_line": 41,
+        "signature_hash": "a10f43209c691f4b",
+        "file_digest8": "f6458b68d53d95d5"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:fixture:3e234d157675a089",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "line": 10,
+        "end_line": 14,
+        "signature_hash": "7aa111fdcd89d936",
+        "file_digest8": "f6458b68d53d95d5"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:pair:0b761af9f235b11c",
+        "name": "pair",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "5f787079a487504d",
+        "file_digest8": "f6458b68d53d95d5"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:run:00e71f223c2594c2",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "line": 43,
+        "end_line": 54,
+        "signature_hash": "2a6b862c860b9913",
+        "file_digest8": "f6458b68d53d95d5"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py#function:P:3faaebae599e1f5d",
         "name": "P",
         "kind": "function",
@@ -267214,6 +267686,286 @@
         "file_digest8": "5e31fb8f44b7e41e"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py#function:make:3e5dfed4fd46b7e9",
+        "name": "make",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+        "line": 26,
+        "end_line": 36,
+        "signature_hash": "3d20d1caecb89ce9",
+        "file_digest8": "95a663a3d45eb67a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py#function:run:de8dc863966fa211",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+        "line": 39,
+        "end_line": 154,
+        "signature_hash": "2a6b862c860b9913",
+        "file_digest8": "95a663a3d45eb67a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#class:ClockAdmission:ef3d360590dfb86a",
+        "name": "ClockAdmission",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 29,
+        "end_line": 37,
+        "signature_hash": "bbc8d73f8ce5c7ba",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#class:ClockGuardReceipt:ce2ad1ddd662bd59",
+        "name": "ClockGuardReceipt",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 41,
+        "end_line": 49,
+        "signature_hash": "01a9fb3a8986065f",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#class:CommitTimeWitness:7334afd9b112e6c6",
+        "name": "CommitTimeWitness",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 19,
+        "end_line": 25,
+        "signature_hash": "18449557866129f7",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_hex64:0e14e491d66b2d45",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "f77e078e35b278b2",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_text:ce4b3c7aa69e8517",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "1873f07c3ac50f0b",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_validate_admission:5929d52cc51f8690",
+        "name": "_validate_admission",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 141,
+        "end_line": 162,
+        "signature_hash": "e7a201fa704869ff",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_validate_witness:68c5c12fd7fae6e6",
+        "name": "_validate_witness",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 125,
+        "end_line": 138,
+        "signature_hash": "4d3753337689c0c0",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:admission_payload:986d7813c1dce6a6",
+        "name": "admission_payload",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 76,
+        "end_line": 94,
+        "signature_hash": "8f8970a9edfddf91",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:context13_clock_admission_preserves_invalid:8057dbf9e9a4ac88",
+        "name": "context13_clock_admission_preserves_invalid",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 244,
+        "end_line": 247,
+        "signature_hash": "8e8b1abef76a84a8",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:guarded_resource_commit:44509bddc9589d10",
+        "name": "guarded_resource_commit",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 165,
+        "end_line": 237,
+        "signature_hash": "b3ac5ba0945197a0",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:make_admission:e8772383890387c1",
+        "name": "make_admission",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 97,
+        "end_line": 122,
+        "signature_hash": "b399f563e318d32b",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:make_witness:8bb0b7b0d81a3d8f",
+        "name": "make_witness",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 71,
+        "end_line": 73,
+        "signature_hash": "e0390ec5e12a0e6a",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:omega8_clock_admission_keeper:bff5f037d333a3ec",
+        "name": "omega8_clock_admission_keeper",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 240,
+        "end_line": 241,
+        "signature_hash": "b579889edbcf1d76",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:witness_payload:6338579a6cb3928e",
+        "name": "witness_payload",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "line": 60,
+        "end_line": 68,
+        "signature_hash": "65b994b746a9eb5e",
+        "file_digest8": "0090e4fccccd305b"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#class:ClockAdmissionRegistrySnapshot:fc5fdd5e4c4ce172",
+        "name": "ClockAdmissionRegistrySnapshot",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 23,
+        "end_line": 32,
+        "signature_hash": "a035e0807c400549",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#class:ClockRegistryGuardReceipt:f8a012eec866ad0c",
+        "name": "ClockRegistryGuardReceipt",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 35,
+        "end_line": 45,
+        "signature_hash": "e36d76c5aa315f33",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#class:TrustedClockAdmission:3f0df39c4e53578b",
+        "name": "TrustedClockAdmission",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 13,
+        "end_line": 20,
+        "signature_hash": "238ec9576a854301",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:_hex64:c309121c32866850",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "7c90a7b9d951f54a",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:_text:f8800188ec16b376",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "1e34d7da8ffbd738",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:_validate_registry:3f43478b6a12f538",
+        "name": "_validate_registry",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 54,
+        "end_line": 66,
+        "signature_hash": "2745097bf3b93556",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:collapse13_r43:9a7c3eb3c2b54e3b",
+        "name": "collapse13_r43",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 108,
+        "end_line": 110,
+        "signature_hash": "8092c98f1906b656",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:guarded_resource_commit_r43:b5465674a4956d8b",
+        "name": "guarded_resource_commit_r43",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 68,
+        "end_line": 105,
+        "signature_hash": "7d4dd5bf92141cb0",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:make_registry:d96eb8d0494c1bd7",
+        "name": "make_registry",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "a8ee9de2372bc06d",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:omega8_r43_keeper:495a2c8fbd57bae6",
+        "name": "omega8_r43_keeper",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 107,
+        "end_line": 107,
+        "signature_hash": "acff167cf1bd8f0c",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:trusted_entry:3c4863a97f3fd15d",
+        "name": "trusted_entry",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "83997e530a330465",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#method:ClockAdmissionRegistrySnapshot.root:71ea64fc19b0a4da",
+        "name": "ClockAdmissionRegistrySnapshot.root",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "e3e717e8a95babdc",
+        "file_digest8": "b3dfc1bbb2df82ff"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:Lease:b231092dc6e48754",
         "name": "Lease",
         "kind": "class",
@@ -267221,7 +267973,7 @@
         "line": 32,
         "end_line": 41,
         "signature_hash": "b01ce48758930cac",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:LeaseMode:aefb813c0770d4e5",
@@ -267231,7 +267983,7 @@
         "line": 12,
         "end_line": 14,
         "signature_hash": "a292716f4898fe70",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:LeaseRegistrySnapshot:e1d4dce3ab76bd32",
@@ -267241,7 +267993,7 @@
         "line": 45,
         "end_line": 59,
         "signature_hash": "cfe1b2863968fc8c",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:RequirementMode:3df463b5e150ac7d",
@@ -267251,7 +268003,7 @@
         "line": 17,
         "end_line": 19,
         "signature_hash": "c4915c205afefc9c",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:ResourceDisposition:3ff2cb2523d7be76",
@@ -267261,7 +268013,7 @@
         "line": 22,
         "end_line": 28,
         "signature_hash": "b7c0cead8fe7a662",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:ResourceError:3e9c8a02d042fbae",
@@ -267271,7 +268023,7 @@
         "line": 8,
         "end_line": 9,
         "signature_hash": "ab3d8f4a1a25c4ae",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:ResourceProposal:ed09141051e007f6",
@@ -267281,7 +268033,7 @@
         "line": 70,
         "end_line": 72,
         "signature_hash": "4ecf1b46de2e7993",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:ResourcePublicationPlan:b42c40f390f915fd",
@@ -267291,7 +268043,7 @@
         "line": 76,
         "end_line": 88,
         "signature_hash": "663be86a3707af22",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:ResourcePublicationReceipt:5033ce0bd6a6268f",
@@ -267301,7 +268053,7 @@
         "line": 92,
         "end_line": 103,
         "signature_hash": "5762e1f3035a5251",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#class:ResourceRequirement:133d0026d706a8b9",
@@ -267311,7 +268063,7 @@
         "line": 63,
         "end_line": 66,
         "signature_hash": "7a47a5fa88e7d36a",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_active:b3bd0851ea9b90b3",
@@ -267321,7 +268073,7 @@
         "line": 145,
         "end_line": 146,
         "signature_hash": "e2842c09077564ef",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_hold:07a78a79dfab4363",
@@ -267331,7 +268083,7 @@
         "line": 265,
         "end_line": 274,
         "signature_hash": "fb366f502f5cd596",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_match_requirement:af49e609572f312b",
@@ -267341,7 +268093,7 @@
         "line": 161,
         "end_line": 175,
         "signature_hash": "29259d6689d60ef3",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_nn:58e3205745cc5919",
@@ -267351,7 +268103,7 @@
         "line": 112,
         "end_line": 115,
         "signature_hash": "e47148eb94341dcf",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_no_resource_commit:fd5765f5eb407df6",
@@ -267361,7 +268113,7 @@
         "line": 277,
         "end_line": 288,
         "signature_hash": "6604df24db473a97",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_registry_conflicts:86ef80d44a2d25da",
@@ -267371,7 +268123,7 @@
         "line": 149,
         "end_line": 158,
         "signature_hash": "f26418f2c5e90cb8",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_text:60d3364e6cf9c81f",
@@ -267381,7 +268133,7 @@
         "line": 106,
         "end_line": 109,
         "signature_hash": "ae715139471b1694",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_validate_registry:f2717d06cbe5afce",
@@ -267391,7 +268143,7 @@
         "line": 118,
         "end_line": 142,
         "signature_hash": "2ae641c2435a7c38",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:commit_resource_absorption:204001c4dc6cda7e",
@@ -267399,29 +268151,29 @@
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
         "line": 291,
-        "end_line": 332,
+        "end_line": 334,
         "signature_hash": "384c4e5747ca9f1a",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:context13_resource_preserves_invalid:497706838591e05e",
         "name": "context13_resource_preserves_invalid",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
-        "line": 339,
-        "end_line": 342,
+        "line": 341,
+        "end_line": 344,
         "signature_hash": "22f2a81b503ebd21",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:omega8_resource_keeper:28c11d8054f2f19a",
         "name": "omega8_resource_keeper",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
-        "line": 335,
-        "end_line": 336,
+        "line": 337,
+        "end_line": 338,
         "signature_hash": "b73b4cc894b7a213",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:plan_resource_absorption:d6879c9590a9acf7",
@@ -267431,7 +268183,7 @@
         "line": 178,
         "end_line": 262,
         "signature_hash": "364ad681953f6e37",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#method:LeaseRegistrySnapshot.root:f4e172c9832b544c",
@@ -267441,7 +268193,7 @@
         "line": 52,
         "end_line": 59,
         "signature_hash": "e3e717e8a95babdc",
-        "file_digest8": "6a88b31950abe223"
+        "file_digest8": "5dbe9308dc09e1b3"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py#class:Tst:5bed94788974af6f",
@@ -267904,6 +268656,456 @@
         "file_digest8": "e7a14a11e2ae0435"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#class:ClockAdmissionR42Tests:9a11ff358f161a8b",
+        "name": "ClockAdmissionR42Tests",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 56,
+        "end_line": 181,
+        "signature_hash": "be34275754be9887",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#function:call:572048d210f50360",
+        "name": "call",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 41,
+        "end_line": 53,
+        "signature_hash": "280a997372d90690",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#function:fixture:56d1fd45cded34f0",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 31,
+        "end_line": 38,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.admitted:6beb902b5527fc3c",
+        "name": "ClockAdmissionR42Tests.admitted",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "1cec00a5efd055c1",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_01_current_admitted_forward_time_commits:ab6e43272f3cbf32",
+        "name": "ClockAdmissionR42Tests.test_01_current_admitted_forward_time_commits",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 62,
+        "end_line": 64,
+        "signature_hash": "7b1c5b0850eea541",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_02_exact_plan_time_commits:67836f253b70ec86",
+        "name": "ClockAdmissionR42Tests.test_02_exact_plan_time_commits",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "51d7e6e34267f6e0",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_03_current_admitted_expired_time_holds_downstream:87db051e446e88bd",
+        "name": "ClockAdmissionR42Tests.test_03_current_admitted_expired_time_holds_downstream",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 70,
+        "end_line": 74,
+        "signature_hash": "90740981caf2c624",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_04_stale_backdated_witness_rejected_by_new_expected_admission:23d91785f1cccdbe",
+        "name": "ClockAdmissionR42Tests.test_04_stale_backdated_witness_rejected_by_new_expected_admission",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 76,
+        "end_line": 83,
+        "signature_hash": "b4c846cbfc0e07ea",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_05_missing_witness_holds:6df1eeb778be2c45",
+        "name": "ClockAdmissionR42Tests.test_05_missing_witness_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 85,
+        "end_line": 89,
+        "signature_hash": "a67aac0140a8230d",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_06_missing_admission_holds:b9a359c20611c56b",
+        "name": "ClockAdmissionR42Tests.test_06_missing_admission_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 91,
+        "end_line": 95,
+        "signature_hash": "d57f8cbd245b365b",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_07_missing_expected_root_holds:8c5b388fdf7f5704",
+        "name": "ClockAdmissionR42Tests.test_07_missing_expected_root_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 97,
+        "end_line": 106,
+        "signature_hash": "48b531fc5fa249d7",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_08_witness_digest_mismatch_holds:1f697e87a15ac1f6",
+        "name": "ClockAdmissionR42Tests.test_08_witness_digest_mismatch_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 108,
+        "end_line": 113,
+        "signature_hash": "8b7e1a212bcfdde1",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_09_producer_mismatch_holds:9afaf6015d871929",
+        "name": "ClockAdmissionR42Tests.test_09_producer_mismatch_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "edc9f8383b8ab3c3",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_10_generation_mismatch_holds:d92cc4b02c1f0ca7",
+        "name": "ClockAdmissionR42Tests.test_10_generation_mismatch_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 122,
+        "end_line": 127,
+        "signature_hash": "9ce421ee1dfa0935",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_11_scope_mismatch_holds:3f80d532fc4ce690",
+        "name": "ClockAdmissionR42Tests.test_11_scope_mismatch_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 129,
+        "end_line": 134,
+        "signature_hash": "934260a4c6cb509e",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_12_witness_admission_binding_mismatch_holds:ea91afb588f819ed",
+        "name": "ClockAdmissionR42Tests.test_12_witness_admission_binding_mismatch_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 136,
+        "end_line": 141,
+        "signature_hash": "e94a195cb837b467",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_13_admission_root_tamper_holds:6ed8924bd24784ca",
+        "name": "ClockAdmissionR42Tests.test_13_admission_root_tamper_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 143,
+        "end_line": 148,
+        "signature_hash": "21f6aea1460b2843",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_14_authority_widening_holds:c085425427f4bd6b",
+        "name": "ClockAdmissionR42Tests.test_14_authority_widening_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 150,
+        "end_line": 155,
+        "signature_hash": "03a4e512d11295e4",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_15_gate10_holds:9cdf8eeeabf8d859",
+        "name": "ClockAdmissionR42Tests.test_15_gate10_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 157,
+        "end_line": 162,
+        "signature_hash": "4ba2cb0c792877f9",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_16_before_plan_holds:b006a84d0119a41a",
+        "name": "ClockAdmissionR42Tests.test_16_before_plan_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 164,
+        "end_line": 168,
+        "signature_hash": "743d4581c97367b7",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_17_observed_time_changes_witness_and_admission_roots:642d2b54c002c76e",
+        "name": "ClockAdmissionR42Tests.test_17_observed_time_changes_witness_and_admission_roots",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 170,
+        "end_line": 174,
+        "signature_hash": "ab4e339fdfb420d0",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_18_omega8_one_keeper:8df2e9d08b37e00d",
+        "name": "ClockAdmissionR42Tests.test_18_omega8_one_keeper",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 176,
+        "end_line": 177,
+        "signature_hash": "e3cc88990cddc956",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_19_13d_cannot_repair_bad_clock_admission_axis:8b4e25fd7cbc05c6",
+        "name": "ClockAdmissionR42Tests.test_19_13d_cannot_repair_bad_clock_admission_axis",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "line": 179,
+        "end_line": 181,
+        "signature_hash": "87a8d3b45ee654aa",
+        "file_digest8": "f543b6202211bbb6"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#class:ClockAdmissionRegistryR43Tests:8de7008cf2d01d81",
+        "name": "ClockAdmissionRegistryR43Tests",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 38,
+        "end_line": 96,
+        "signature_hash": "2870c2b4b196cde9",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#function:call:07082dcb421c2287",
+        "name": "call",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 31,
+        "end_line": 36,
+        "signature_hash": "a76fe1b44b3370b5",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#function:fixture:530af1d95a1c302b",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 19,
+        "end_line": 26,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#function:pair:b9dc74371c85ae80",
+        "name": "pair",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "630edb06ab50645d",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_01_valid_pretrusted_admission_commits_and_consumes:1c8dd593b4bde7e9",
+        "name": "ClockAdmissionRegistryR43Tests.test_01_valid_pretrusted_admission_commits_and_consumes",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 39,
+        "end_line": 43,
+        "signature_hash": "5dfd91ae3a05b537",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_02_current_r42_self_asserted_expected_root_accepts_without_registry:bbd7c061bb7f1487",
+        "name": "ClockAdmissionRegistryR43Tests.test_02_current_r42_self_asserted_expected_root_accepts_without_registry",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 44,
+        "end_line": 49,
+        "signature_hash": "6df5970b7997d648",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_03_r43_self_issued_unregistered_root_holds:8eb73c921d499771",
+        "name": "ClockAdmissionRegistryR43Tests.test_03_r43_self_issued_unregistered_root_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "4ecdc5cd4c8bc2fa",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_04_r43_has_no_expected_root_parameter:20238cf49d33e645",
+        "name": "ClockAdmissionRegistryR43Tests.test_04_r43_has_no_expected_root_parameter",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "4bfb9a4be9fb693c",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_05_registry_root_movement_holds:0d3e5adb1fffc16f",
+        "name": "ClockAdmissionRegistryR43Tests.test_05_registry_root_movement_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "3196d2da1bb83825",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_06_consumed_admission_replay_holds:4940321b7c85af7c",
+        "name": "ClockAdmissionRegistryR43Tests.test_06_consumed_admission_replay_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "30e223a7ca2cfc9f",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_07_success_next_registry_rejects_same_replay:f548aef803561df6",
+        "name": "ClockAdmissionRegistryR43Tests.test_07_success_next_registry_rejects_same_replay",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "ec920d5045d42d38",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_08_wrong_witness_for_registered_admission_holds:e7231104f1099893",
+        "name": "ClockAdmissionRegistryR43Tests.test_08_wrong_witness_for_registered_admission_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 64,
+        "end_line": 66,
+        "signature_hash": "f3117073709f94f8",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_09_registry_time_mismatch_holds:e56729504b710f66",
+        "name": "ClockAdmissionRegistryR43Tests.test_09_registry_time_mismatch_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "b1585a8e5c584ff3",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_10_duplicate_admission_root_rejected:edcb17006946b7de",
+        "name": "ClockAdmissionRegistryR43Tests.test_10_duplicate_admission_root_rejected",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "35a7ffd916f8c83b",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_11_registry_authority_widening_holds:b9caf0b014de08fb",
+        "name": "ClockAdmissionRegistryR43Tests.test_11_registry_authority_widening_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 73,
+        "end_line": 75,
+        "signature_hash": "2d960567b72a0cb6",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_12_registry_gate10_holds:12ccc5368efeffac",
+        "name": "ClockAdmissionRegistryR43Tests.test_12_registry_gate10_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "eceebb56c901a446",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_13_before_plan_does_not_consume:5abb42e76dc146ee",
+        "name": "ClockAdmissionRegistryR43Tests.test_13_before_plan_does_not_consume",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 79,
+        "end_line": 81,
+        "signature_hash": "9a86b88225738883",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_14_expiry_does_not_consume:4386697f9bc69e61",
+        "name": "ClockAdmissionRegistryR43Tests.test_14_expiry_does_not_consume",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 82,
+        "end_line": 84,
+        "signature_hash": "fb30c10a92809fee",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_15_multiple_entries_consume_only_exact_root:af06c0690897c333",
+        "name": "ClockAdmissionRegistryR43Tests.test_15_multiple_entries_consume_only_exact_root",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 85,
+        "end_line": 88,
+        "signature_hash": "f0f999225ad2ba28",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_16_missing_registry_holds:60f1258483d1a0c7",
+        "name": "ClockAdmissionRegistryR43Tests.test_16_missing_registry_holds",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 89,
+        "end_line": 94,
+        "signature_hash": "e59f0e7f891bebd0",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_17_omega8_one_keeper:54deb7492371e32d",
+        "name": "ClockAdmissionRegistryR43Tests.test_17_omega8_one_keeper",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 95,
+        "end_line": 95,
+        "signature_hash": "0f45587688af18c7",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_18_13d_no_repair:bf25e7e7c9f3c135",
+        "name": "ClockAdmissionRegistryR43Tests.test_18_13d_no_repair",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "line": 96,
+        "end_line": 96,
+        "signature_hash": "7be1b2159ee4fb63",
+        "file_digest8": "6482bebc1a930669"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py#class:Tests:cf92fe7affb5eaa4",
         "name": "Tests",
         "kind": "class",
@@ -268312,6 +269514,156 @@
         "end_line": 70,
         "signature_hash": "9781c291f9892c1b",
         "file_digest8": "84f8a927ea3804fd"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#class:ResourceMonotonicR41Tests:bb33c5ec4a8603f5",
+        "name": "ResourceMonotonicR41Tests",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 33,
+        "end_line": 79,
+        "signature_hash": "7ee8adb81a01e571",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#function:fixture:1d78e48cb2433e02",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 23,
+        "end_line": 30,
+        "signature_hash": "9d960ad07545a206",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.commit:e1c58ccf7f81c653",
+        "name": "ResourceMonotonicR41Tests.commit",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 34,
+        "end_line": 39,
+        "signature_hash": "8dc975400cfa85d4",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_01_exact_plan_time_commits:77365ff74b1afc65",
+        "name": "ResourceMonotonicR41Tests.test_01_exact_plan_time_commits",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "aaa102769d9f28c6",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_02_forward_before_expiry_commits:d346d6891f8c2a20",
+        "name": "ResourceMonotonicR41Tests.test_02_forward_before_expiry_commits",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "4ece6383c83435a9",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_03_expiry_boundary_fails:e6d7196e86d6640b",
+        "name": "ResourceMonotonicR41Tests.test_03_expiry_boundary_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "d0b8fd060ada9a91",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_04_forward_after_expiry_fails:157af85398a6322d",
+        "name": "ResourceMonotonicR41Tests.test_04_forward_after_expiry_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "c6a3af0d54d453c9",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_05_clock_rollback_after_issue_fails:c5924698c8925574",
+        "name": "ResourceMonotonicR41Tests.test_05_clock_rollback_after_issue_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "31265a1281e8569b",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_06_clock_rollback_to_issue_fails:a105226979539fa6",
+        "name": "ResourceMonotonicR41Tests.test_06_clock_rollback_to_issue_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "e3136fc7d8b04e10",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_07_clock_rollback_before_issue_fails_closed:173733fa17b7315a",
+        "name": "ResourceMonotonicR41Tests.test_07_clock_rollback_before_issue_fails_closed",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "48d6d5cecd3a4fa3",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_08_owner_move_fails:be4b3f46a14aa3ef",
+        "name": "ResourceMonotonicR41Tests.test_08_owner_move_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "d17c187c1a801336",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_09_registry_move_fails:3d77ec62d1fd08aa",
+        "name": "ResourceMonotonicR41Tests.test_09_registry_move_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 65,
+        "end_line": 69,
+        "signature_hash": "9fc2aea0613520b0",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_10_missing_sources_fails:db6889a74ef4c777",
+        "name": "ResourceMonotonicR41Tests.test_10_missing_sources_fails",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "f8620f47bca75c05",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_11_omega8_exactly_one_keeper:55d9889d03c3041f",
+        "name": "ResourceMonotonicR41Tests.test_11_omega8_exactly_one_keeper",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "515df3729bd2a7a4",
+        "file_digest8": "d878a800082999f0"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_12_13d_tail_cannot_repair_rollback_axis:6f2ec3235259c7ce",
+        "name": "ResourceMonotonicR41Tests.test_12_13d_tail_cannot_repair_rollback_axis",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "54378757b0c1caa6",
+        "file_digest8": "d878a800082999f0"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -269564,8 +270916,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "173272764e2b575636824e90cd80bb59",
-    "payload_hash": "80ff51925a5506d0c485df2f04b01b99"
+    "record_fingerprint": "02b95c84d87cd3c98a684f2b1748887e",
+    "payload_hash": "0a3fa93c4d10045c308a03c0a66e845e"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -269578,15 +270930,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1659,
-      "bytes": 26545321,
-      "tokens_est": 6626672,
+      "files": 1667,
+      "bytes": 26592633,
+      "tokens_est": 6638503,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1011,
+        "python_module": 1019,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -270274,15 +271626,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1659,
-    "total_bytes": 26545321,
-    "text_tokens_est": 6626672,
+    "file_count": 1667,
+    "total_bytes": 26592633,
+    "text_tokens_est": 6638503,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1011,
+      "python_module": 1019,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -271514,6 +272866,22 @@
         "signature_hash": "26799ab4ad82cbfb"
       },
       {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 152,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:run:07facc27764449fb",
+        "signature_hash": "2a6b862c860b9913"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:run:00e71f223c2594c2",
+        "signature_hash": "2a6b862c860b9913"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
         "kind": "function",
         "line": 29,
@@ -271527,6 +272895,14 @@
         "line": 32,
         "end_line": 55,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_absorption.py#function:run:3e6dfb4c7eca6464",
+        "signature_hash": "2a6b862c860b9913"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 154,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py#function:run:de8dc863966fa211",
         "signature_hash": "2a6b862c860b9913"
       }
     ],
@@ -282560,6 +283936,22 @@
         "end_line": 76,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py#function:_text:9126a53a07558829",
         "signature_hash": "e64e32ccb2d0588f"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_text:ce4b3c7aa69e8517",
+        "signature_hash": "1873f07c3ac50f0b"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:_text:f8800188ec16b376",
+        "signature_hash": "1e34d7da8ffbd738"
       },
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
@@ -336054,6 +337446,22 @@
         "end_line": 229,
         "semantic_id": "aura_pascal_spatial_presentation_part1.py#function:_hex64:aebaedfeb4247965",
         "signature_hash": "3956785c98c04eb6"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_hex64:0e14e491d66b2d45",
+        "signature_hash": "f77e078e35b278b2"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:_hex64:c309121c32866850",
+        "signature_hash": "7c90a7b9d951f54a"
       }
     ],
     "_utc_timestamp": [
@@ -381260,6 +382668,46 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 39,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:fixture:cd7e7109085e1465",
+        "signature_hash": "7aa111fdcd89d936"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 14,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:fixture:3e234d157675a089",
+        "signature_hash": "7aa111fdcd89d936"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 38,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#function:fixture:56d1fd45cded34f0",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 26,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#function:fixture:530af1d95a1c302b",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#function:fixture:1d78e48cb2433e02",
+        "signature_hash": "9d960ad07545a206"
       }
     ],
     "session": [
@@ -427114,6 +428562,52 @@
         "signature_hash": "504ce7f36e615917"
       }
     ],
+    "current_pair": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:current_pair:0116ebb1424e46bf",
+        "signature_hash": "c2f25895b38ca245"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 90,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_r42.py#function:decide:233572f250af5cf3",
+        "signature_hash": "db1ed4fc7c7cbdf0"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 41,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:decide:fe635f6f6648e0dd",
+        "signature_hash": "a10f43209c691f4b"
+      }
+    ],
+    "pair": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_clock_admission_registry_r43.py#function:pair:0b761af9f235b11c",
+        "signature_hash": "5f787079a487504d"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#function:pair:b9dc74371c85ae80",
+        "signature_hash": "630edb06ab50645d"
+      }
+    ],
     "hx": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
@@ -427188,6 +428682,244 @@
         "end_line": 30,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_absorption.py#function:classify:09f3a16acc44a698",
         "signature_hash": "0ecd44a2a546edce"
+      }
+    ],
+    "make": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 36,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_monotonic_r41.py#function:make:3e5dfed4fd46b7e9",
+        "signature_hash": "3d20d1caecb89ce9"
+      }
+    ],
+    "CommitTimeWitness": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 25,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#class:CommitTimeWitness:7334afd9b112e6c6",
+        "signature_hash": "18449557866129f7"
+      }
+    ],
+    "ClockAdmission": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 37,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#class:ClockAdmission:ef3d360590dfb86a",
+        "signature_hash": "bbc8d73f8ce5c7ba"
+      }
+    ],
+    "ClockGuardReceipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 49,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#class:ClockGuardReceipt:ce2ad1ddd662bd59",
+        "signature_hash": "01a9fb3a8986065f"
+      }
+    ],
+    "witness_payload": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 68,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:witness_payload:6338579a6cb3928e",
+        "signature_hash": "65b994b746a9eb5e"
+      }
+    ],
+    "make_witness": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:make_witness:8bb0b7b0d81a3d8f",
+        "signature_hash": "e0390ec5e12a0e6a"
+      }
+    ],
+    "admission_payload": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 94,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:admission_payload:986d7813c1dce6a6",
+        "signature_hash": "8f8970a9edfddf91"
+      }
+    ],
+    "make_admission": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 122,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:make_admission:e8772383890387c1",
+        "signature_hash": "b399f563e318d32b"
+      }
+    ],
+    "_validate_witness": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 138,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_validate_witness:68c5c12fd7fae6e6",
+        "signature_hash": "4d3753337689c0c0"
+      }
+    ],
+    "_validate_admission": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 162,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:_validate_admission:5929d52cc51f8690",
+        "signature_hash": "e7a201fa704869ff"
+      }
+    ],
+    "guarded_resource_commit": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 237,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:guarded_resource_commit:44509bddc9589d10",
+        "signature_hash": "b3ac5ba0945197a0"
+      }
+    ],
+    "omega8_clock_admission_keeper": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 240,
+        "end_line": 241,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:omega8_clock_admission_keeper:bff5f037d333a3ec",
+        "signature_hash": "b579889edbcf1d76"
+      }
+    ],
+    "context13_clock_admission_preserves_invalid": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py",
+        "kind": "function",
+        "line": 244,
+        "end_line": 247,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_r42.py#function:context13_clock_admission_preserves_invalid:8057dbf9e9a4ac88",
+        "signature_hash": "8e8b1abef76a84a8"
+      }
+    ],
+    "TrustedClockAdmission": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 20,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#class:TrustedClockAdmission:3f0df39c4e53578b",
+        "signature_hash": "238ec9576a854301"
+      }
+    ],
+    "ClockAdmissionRegistrySnapshot": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#class:ClockAdmissionRegistrySnapshot:fc5fdd5e4c4ce172",
+        "signature_hash": "a035e0807c400549"
+      }
+    ],
+    "ClockAdmissionRegistrySnapshot.root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#method:ClockAdmissionRegistrySnapshot.root:71ea64fc19b0a4da",
+        "signature_hash": "e3e717e8a95babdc"
+      }
+    ],
+    "ClockRegistryGuardReceipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 45,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#class:ClockRegistryGuardReceipt:f8a012eec866ad0c",
+        "signature_hash": "e36d76c5aa315f33"
+      }
+    ],
+    "trusted_entry": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:trusted_entry:3c4863a97f3fd15d",
+        "signature_hash": "83997e530a330465"
+      }
+    ],
+    "make_registry": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:make_registry:d96eb8d0494c1bd7",
+        "signature_hash": "a8ee9de2372bc06d"
+      }
+    ],
+    "_validate_registry": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 66,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:_validate_registry:3f43478b6a12f538",
+        "signature_hash": "2745097bf3b93556"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 142,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_validate_registry:f2717d06cbe5afce",
+        "signature_hash": "2ae641c2435a7c38"
+      }
+    ],
+    "guarded_resource_commit_r43": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 105,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:guarded_resource_commit_r43:b5465674a4956d8b",
+        "signature_hash": "7d4dd5bf92141cb0"
+      }
+    ],
+    "omega8_r43_keeper": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 107,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:omega8_r43_keeper:495a2c8fbd57bae6",
+        "signature_hash": "acff167cf1bd8f0c"
+      }
+    ],
+    "collapse13_r43": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 110,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/clock_admission_registry_r43.py#function:collapse13_r43:9a7c3eb3c2b54e3b",
+        "signature_hash": "8092c98f1906b656"
       }
     ],
     "ResourceError": [
@@ -427310,16 +429042,6 @@
         "signature_hash": "e47148eb94341dcf"
       }
     ],
-    "_validate_registry": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
-        "kind": "function",
-        "line": 118,
-        "end_line": 142,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:_validate_registry:f2717d06cbe5afce",
-        "signature_hash": "2ae641c2435a7c38"
-      }
-    ],
     "_active": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
@@ -427385,7 +429107,7 @@
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
         "kind": "function",
         "line": 291,
-        "end_line": 332,
+        "end_line": 334,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:commit_resource_absorption:204001c4dc6cda7e",
         "signature_hash": "384c4e5747ca9f1a"
       }
@@ -427394,8 +429116,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
         "kind": "function",
-        "line": 335,
-        "end_line": 336,
+        "line": 337,
+        "end_line": 338,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:omega8_resource_keeper:28c11d8054f2f19a",
         "signature_hash": "b73b4cc894b7a213"
       }
@@ -427404,8 +429126,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
         "kind": "function",
-        "line": 339,
-        "end_line": 342,
+        "line": 341,
+        "end_line": 344,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py#function:context13_resource_preserves_invalid:497706838591e05e",
         "signature_hash": "22f2a81b503ebd21"
       }
@@ -427868,6 +429590,424 @@
         "signature_hash": "21c549ed90d5e5ec"
       }
     ],
+    "call": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 53,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#function:call:572048d210f50360",
+        "signature_hash": "280a997372d90690"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 36,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#function:call:07082dcb421c2287",
+        "signature_hash": "a76fe1b44b3370b5"
+      }
+    ],
+    "ClockAdmissionR42Tests": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 181,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#class:ClockAdmissionR42Tests:9a11ff358f161a8b",
+        "signature_hash": "be34275754be9887"
+      }
+    ],
+    "ClockAdmissionR42Tests.admitted": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.admitted:6beb902b5527fc3c",
+        "signature_hash": "1cec00a5efd055c1"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_01_current_admitted_forward_time_commits": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 64,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_01_current_admitted_forward_time_commits:ab6e43272f3cbf32",
+        "signature_hash": "7b1c5b0850eea541"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_02_exact_plan_time_commits": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_02_exact_plan_time_commits:67836f253b70ec86",
+        "signature_hash": "51d7e6e34267f6e0"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_03_current_admitted_expired_time_holds_downstream": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 74,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_03_current_admitted_expired_time_holds_downstream:87db051e446e88bd",
+        "signature_hash": "90740981caf2c624"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_04_stale_backdated_witness_rejected_by_new_expected_admission": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 83,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_04_stale_backdated_witness_rejected_by_new_expected_admission:23d91785f1cccdbe",
+        "signature_hash": "b4c846cbfc0e07ea"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_05_missing_witness_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 89,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_05_missing_witness_holds:6df1eeb778be2c45",
+        "signature_hash": "a67aac0140a8230d"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_06_missing_admission_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 95,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_06_missing_admission_holds:b9a359c20611c56b",
+        "signature_hash": "d57f8cbd245b365b"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_07_missing_expected_root_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 106,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_07_missing_expected_root_holds:8c5b388fdf7f5704",
+        "signature_hash": "48b531fc5fa249d7"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_08_witness_digest_mismatch_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 113,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_08_witness_digest_mismatch_holds:1f697e87a15ac1f6",
+        "signature_hash": "8b7e1a212bcfdde1"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_09_producer_mismatch_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_09_producer_mismatch_holds:9afaf6015d871929",
+        "signature_hash": "edc9f8383b8ab3c3"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_10_generation_mismatch_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 127,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_10_generation_mismatch_holds:d92cc4b02c1f0ca7",
+        "signature_hash": "9ce421ee1dfa0935"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_11_scope_mismatch_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 134,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_11_scope_mismatch_holds:3f80d532fc4ce690",
+        "signature_hash": "934260a4c6cb509e"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_12_witness_admission_binding_mismatch_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 141,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_12_witness_admission_binding_mismatch_holds:ea91afb588f819ed",
+        "signature_hash": "e94a195cb837b467"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_13_admission_root_tamper_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 148,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_13_admission_root_tamper_holds:6ed8924bd24784ca",
+        "signature_hash": "21f6aea1460b2843"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_14_authority_widening_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 155,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_14_authority_widening_holds:c085425427f4bd6b",
+        "signature_hash": "03a4e512d11295e4"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_15_gate10_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 162,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_15_gate10_holds:9cdf8eeeabf8d859",
+        "signature_hash": "4ba2cb0c792877f9"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_16_before_plan_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 168,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_16_before_plan_holds:b006a84d0119a41a",
+        "signature_hash": "743d4581c97367b7"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_17_observed_time_changes_witness_and_admission_roots": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 174,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_17_observed_time_changes_witness_and_admission_roots:642d2b54c002c76e",
+        "signature_hash": "ab4e339fdfb420d0"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_18_omega8_one_keeper": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 177,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_18_omega8_one_keeper:8df2e9d08b37e00d",
+        "signature_hash": "e3cc88990cddc956"
+      }
+    ],
+    "ClockAdmissionR42Tests.test_19_13d_cannot_repair_bad_clock_admission_axis": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 181,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_r42.py#method:ClockAdmissionR42Tests.test_19_13d_cannot_repair_bad_clock_admission_axis:8b4e25fd7cbc05c6",
+        "signature_hash": "87a8d3b45ee654aa"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 96,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#class:ClockAdmissionRegistryR43Tests:8de7008cf2d01d81",
+        "signature_hash": "2870c2b4b196cde9"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_01_valid_pretrusted_admission_commits_and_consumes": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 43,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_01_valid_pretrusted_admission_commits_and_consumes:1c8dd593b4bde7e9",
+        "signature_hash": "5dfd91ae3a05b537"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_02_current_r42_self_asserted_expected_root_accepts_without_registry": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 49,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_02_current_r42_self_asserted_expected_root_accepts_without_registry:bbd7c061bb7f1487",
+        "signature_hash": "6df5970b7997d648"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_03_r43_self_issued_unregistered_root_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_03_r43_self_issued_unregistered_root_holds:8eb73c921d499771",
+        "signature_hash": "4ecdc5cd4c8bc2fa"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_04_r43_has_no_expected_root_parameter": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_04_r43_has_no_expected_root_parameter:20238cf49d33e645",
+        "signature_hash": "4bfb9a4be9fb693c"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_05_registry_root_movement_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_05_registry_root_movement_holds:0d3e5adb1fffc16f",
+        "signature_hash": "3196d2da1bb83825"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_06_consumed_admission_replay_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_06_consumed_admission_replay_holds:4940321b7c85af7c",
+        "signature_hash": "30e223a7ca2cfc9f"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_07_success_next_registry_rejects_same_replay": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_07_success_next_registry_rejects_same_replay:f548aef803561df6",
+        "signature_hash": "ec920d5045d42d38"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_08_wrong_witness_for_registered_admission_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 66,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_08_wrong_witness_for_registered_admission_holds:e7231104f1099893",
+        "signature_hash": "f3117073709f94f8"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_09_registry_time_mismatch_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_09_registry_time_mismatch_holds:e56729504b710f66",
+        "signature_hash": "b1585a8e5c584ff3"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_10_duplicate_admission_root_rejected": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_10_duplicate_admission_root_rejected:edcb17006946b7de",
+        "signature_hash": "35a7ffd916f8c83b"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_11_registry_authority_widening_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 75,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_11_registry_authority_widening_holds:b9caf0b014de08fb",
+        "signature_hash": "2d960567b72a0cb6"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_12_registry_gate10_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_12_registry_gate10_holds:12ccc5368efeffac",
+        "signature_hash": "eceebb56c901a446"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_13_before_plan_does_not_consume": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 81,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_13_before_plan_does_not_consume:5abb42e76dc146ee",
+        "signature_hash": "9a86b88225738883"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_14_expiry_does_not_consume": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 84,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_14_expiry_does_not_consume:4386697f9bc69e61",
+        "signature_hash": "fb30c10a92809fee"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_15_multiple_entries_consume_only_exact_root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 88,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_15_multiple_entries_consume_only_exact_root:af06c0690897c333",
+        "signature_hash": "f0f999225ad2ba28"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_16_missing_registry_holds": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 94,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_16_missing_registry_holds:60f1258483d1a0c7",
+        "signature_hash": "e59f0e7f891bebd0"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_17_omega8_one_keeper": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 95,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_17_omega8_one_keeper:54deb7492371e32d",
+        "signature_hash": "0f45587688af18c7"
+      }
+    ],
+    "ClockAdmissionRegistryR43Tests.test_18_13d_no_repair": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 96,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_clock_admission_registry_r43.py#method:ClockAdmissionRegistryR43Tests.test_18_13d_no_repair:bf25e7e7c9f3c135",
+        "signature_hash": "7be1b2159ee4fb63"
+      }
+    ],
     "lease": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py",
@@ -428266,6 +430406,146 @@
         "end_line": 70,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py#method:Tests.test_31_near_expiry_before_deadline_still_commits:d14273f3aa761cf4",
         "signature_hash": "9781c291f9892c1b"
+      }
+    ],
+    "ResourceMonotonicR41Tests": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 79,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#class:ResourceMonotonicR41Tests:bb33c5ec4a8603f5",
+        "signature_hash": "7ee8adb81a01e571"
+      }
+    ],
+    "ResourceMonotonicR41Tests.commit": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 39,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.commit:e1c58ccf7f81c653",
+        "signature_hash": "8dc975400cfa85d4"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_01_exact_plan_time_commits": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_01_exact_plan_time_commits:77365ff74b1afc65",
+        "signature_hash": "aaa102769d9f28c6"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_02_forward_before_expiry_commits": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_02_forward_before_expiry_commits:d346d6891f8c2a20",
+        "signature_hash": "4ece6383c83435a9"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_03_expiry_boundary_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_03_expiry_boundary_fails:e6d7196e86d6640b",
+        "signature_hash": "d0b8fd060ada9a91"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_04_forward_after_expiry_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_04_forward_after_expiry_fails:157af85398a6322d",
+        "signature_hash": "c6a3af0d54d453c9"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_05_clock_rollback_after_issue_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_05_clock_rollback_after_issue_fails:c5924698c8925574",
+        "signature_hash": "31265a1281e8569b"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_06_clock_rollback_to_issue_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_06_clock_rollback_to_issue_fails:a105226979539fa6",
+        "signature_hash": "e3136fc7d8b04e10"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_07_clock_rollback_before_issue_fails_closed": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_07_clock_rollback_before_issue_fails_closed:173733fa17b7315a",
+        "signature_hash": "48d6d5cecd3a4fa3"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_08_owner_move_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_08_owner_move_fails:be4b3f46a14aa3ef",
+        "signature_hash": "d17c187c1a801336"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_09_registry_move_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 69,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_09_registry_move_fails:3d77ec62d1fd08aa",
+        "signature_hash": "9fc2aea0613520b0"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_10_missing_sources_fails": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_10_missing_sources_fails:db6889a74ef4c777",
+        "signature_hash": "f8620f47bca75c05"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_11_omega8_exactly_one_keeper": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_11_omega8_exactly_one_keeper:55d9889d03c3041f",
+        "signature_hash": "515df3729bd2a7a4"
+      }
+    ],
+    "ResourceMonotonicR41Tests.test_12_13d_tail_cannot_repair_rollback_axis": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_monotonic_r41.py#method:ResourceMonotonicR41Tests.test_12_13d_tail_cannot_repair_rollback_axis:6f2ec3235259c7ce",
+        "signature_hash": "54378757b0c1caa6"
       }
     ],
     "_coordinates": [
