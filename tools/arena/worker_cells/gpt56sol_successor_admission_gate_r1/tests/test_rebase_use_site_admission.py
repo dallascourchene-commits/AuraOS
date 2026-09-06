@@ -1,50 +1,139 @@
+import inspect
 import unittest
-from dataclasses import dataclass,replace
+from dataclasses import replace
+
 from rebase_use_site_admission import *
+from successor_admission_gate import AdmissionContext, ARENA_TERMINAL, ParentArtifact, consequence_root
+from successor_parent_admission_r2 import ImmediateTerminalReceipt, ParentEvidence
 
-@dataclass(frozen=True)
-class IR:
-    receipt_root:str
-@dataclass(frozen=True)
-class PE:
-    immediate_receipt:IR|None
-@dataclass(frozen=True)
-class GD:
-    value:str
-@dataclass(frozen=True)
-class GR:
-    disposition:GD
-    pair_root:str
-    authority_ceiling:str='D0'
+CUT='2026-09-06T02:44:14.090Z'
+NOW='2026-09-06T02:50:00.000Z'
+CTX=AdmissionContext('GPT56SOL','pred-r42',CUT,NOW)
 
-def R(cid,line,cons,rd=None):return ConveyorReceiptRef(cid,line,cons,rd or digest(('r',cid)),KEEP)
-def B(r,term=None):
-    tr=term or digest(('terminal',r.capsule_id));return ReceiptParentBinding(r.receipt_digest,PE(IR(tr)),tr,'drive:'+r.capsule_id,digest(('rev',r.capsule_id)))
-def gate(status=ACCEPT,auth='D0',root=None): return lambda ev,ctx:GR(GD(status),root or digest(('pair',len(ev))),auth)
+
+def E(cid,actor,line,created='2026-09-06T02:46:00.000Z',cons='x',projection=None,ancestry=()):
+    p0=ParentArtifact(
+        cid,actor,digest(('line',line)),created,ARENA_TERMINAL,True,projection,
+        (f'axis-{cons}',),f'action-{cons}',f'delta-{cons}','0'*64,digest(('deriv',cid,cons)),''
+    )
+    r=ImmediateTerminalReceipt(
+        'receipt:'+cid,cid,actor,p0.lineage_root,created,ARENA_TERMINAL,True,projection,
+        consequence_root(p0),p0.derivation_root,'drive:'+cid,digest(('source-rev',cid,cons)),tuple(ancestry),D0
+    )
+    return ParentEvidence(replace(p0,receipt_root=r.receipt_root),r)
+
+
+def R(ev):
+    p=ev.parent; r=ev.immediate_receipt
+    return ConveyorReceiptRef(p.artifact_id,p.lineage_root,r.consequence_root,digest(('conveyor',p.artifact_id)),KEEP)
+
+
+def B(rr,ev):
+    r=ev.immediate_receipt
+    return ReceiptParentBinding(rr.receipt_digest,ev,r.receipt_root,r.source_owner_ref,r.source_revision_root)
+
+
+def pair(a=None,b=None):
+    ea=a or E('a','AGENT_A','L1',cons='c1')
+    eb=b or E('b','AGENT_B','L2',created='2026-09-06T02:47:00.000Z',cons='c2')
+    ra,rb=R(ea),R(eb)
+    return ea,eb,ra,rb,{ra.receipt_digest:B(ra,ea),rb.receipt_digest:B(rb,eb)}
+
+
 class Tests(unittest.TestCase):
- def test_valid_pair_mints_seed(self):
-  a,b=R('a','L1',digest('c1')),R('b','L2',digest('c2'));q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a),b.receipt_digest:B(b)},object(),gate());self.assertTrue(q.admitted);self.assertTrue(hex64(q.objective_seed));self.assertFalse(q.effect_authority)
- def test_old_distinct_labels_not_enough(self):
-  a,b=R('a','L1',digest('c1')),R('b','L2',digest('c2'));q=compile_rebase_after_parent_admission([a,b],{},object(),gate());self.assertFalse(q.admitted)
- def test_same_lineage_withheld_before_gate(self):
-  a,b=R('a','L','c'*64),R('b','L','d'*64);calls=[]
-  q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a),b.receipt_digest:B(b)},object(),lambda e,c:calls.append(1));self.assertFalse(q.admitted);self.assertFalse(calls)
- def test_same_consequence_withheld(self):
-  a,b=R('a','L1','c'*64),R('b','L2','c'*64);q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a),b.receipt_digest:B(b)},object(),gate());self.assertFalse(q.admitted)
- def test_foreign_ancestry_hold_from_gate_blocks(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a),b.receipt_digest:B(b)},object(),gate('FOREIGN_ANCESTRY_ONLY_HOLD'));self.assertFalse(q.admitted)
- def test_binding_receipt_mismatch_blocks(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);ba=replace(B(a),conveyor_receipt_digest='0'*64);q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:ba,b.receipt_digest:B(b)},object(),gate());self.assertFalse(q.admitted)
- def test_terminal_receipt_mismatch_blocks(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);ba=replace(B(a),terminal_receipt_root='0'*64);q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:ba,b.receipt_digest:B(b)},object(),gate());self.assertFalse(q.admitted)
- def test_missing_immediate_receipt_blocks(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);ba=replace(B(a),parent_evidence=PE(None));q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:ba,b.receipt_digest:B(b)},object(),gate());self.assertFalse(q.admitted)
- def test_gate_authority_widening_blocks(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a),b.receipt_digest:B(b)},object(),gate(auth='D1'));self.assertFalse(q.admitted)
- def test_effect_bearing_receipt_excluded(self):
-  a=replace(R('a','L1','c'*64),effect_authority=True);b=R('b','L2','d'*64);q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a),b.receipt_digest:B(b)},object(),gate());self.assertFalse(q.admitted)
- def test_pair_root_changes_seed(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);bs={a.receipt_digest:B(a),b.receipt_digest:B(b)};q1=compile_rebase_after_parent_admission([a,b],bs,object(),gate(root='1'*64));q2=compile_rebase_after_parent_admission([a,b],bs,object(),gate(root='2'*64));self.assertNotEqual(q1.objective_seed,q2.objective_seed)
- def test_deterministic_order(self):
-  a,b=R('a','L1','c'*64),R('b','L2','d'*64);bs={a.receipt_digest:B(a),b.receipt_digest:B(b)};self.assertEqual(compile_rebase_after_parent_admission([a,b],bs,object(),gate()).objective_seed,compile_rebase_after_parent_admission([b,a],bs,object(),gate()).objective_seed)
-if __name__=='__main__':unittest.main()
+    def test_valid_pair_mints_seed_through_canonical_r2(self):
+        ea,eb,a,b,bs=pair()
+        q=compile_rebase_after_parent_admission([a,b],bs,CTX)
+        self.assertTrue(q.admitted)
+        self.assertTrue(hex64(q.objective_seed))
+        self.assertEqual(q.disposition,ACCEPT)
+        self.assertFalse(q.effect_authority)
+
+    def test_no_gate_injection_parameter_exists(self):
+        self.assertEqual(tuple(inspect.signature(compile_rebase_after_parent_admission).parameters),('receipts','bindings','ctx'))
+        _,_,a,b,bs=pair()
+        with self.assertRaises(TypeError):
+            compile_rebase_after_parent_admission([a,b],bs,CTX,lambda *_: object())
+
+    def test_old_distinct_labels_not_enough_without_bindings(self):
+        _,_,a,b,_=pair()
+        q=compile_rebase_after_parent_admission([a,b],{},CTX)
+        self.assertFalse(q.admitted)
+
+    def test_same_lineage_withheld_before_gate(self):
+        eb=E('b','AGENT_B','L2',cons='c2')
+        ea=E('a','AGENT_A','L1',cons='c1')
+        ra,rb=R(ea),R(eb)
+        rb=replace(rb,lineage_id=ra.lineage_id)
+        q=compile_rebase_after_parent_admission([ra,rb],{ra.receipt_digest:B(ra,ea),rb.receipt_digest:B(rb,eb)},CTX)
+        self.assertFalse(q.admitted)
+
+    def test_same_consequence_withheld(self):
+        ea,eb,a,b,bs=pair()
+        b=replace(b,consequence_fingerprint=a.consequence_fingerprint)
+        q=compile_rebase_after_parent_admission([a,b],{a.receipt_digest:B(a,ea),b.receipt_digest:B(b,eb)},CTX)
+        self.assertFalse(q.admitted)
+
+    def test_same_actor_rejected_by_canonical_gate(self):
+        ea=E('a','AGENT_A','L1',cons='c1')
+        eb=E('b','AGENT_A','L2',created='2026-09-06T02:47:00.000Z',cons='c2')
+        _,_,a,b,bs=pair(ea,eb)
+        q=compile_rebase_after_parent_admission([a,b],bs,CTX)
+        self.assertFalse(q.admitted)
+
+    def test_current_actor_rejected_by_canonical_gate(self):
+        ea=E('a','GPT56SOL','L1',cons='c1')
+        _,_,a,b,bs=pair(ea,None)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_pre_cut_parent_rejected(self):
+        ea=E('a','AGENT_A','L1',created='2026-09-06T02:44:00.000Z',cons='c1')
+        _,_,a,b,bs=pair(ea,None)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_future_parent_rejected(self):
+        eb=E('b','AGENT_B','L2',created='2026-09-06T02:51:00.000Z',cons='c2')
+        _,_,a,b,bs=pair(None,eb)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_projection_parent_rejected(self):
+        eb=E('b','AGENT_B','L2',created='2026-09-06T02:47:00.000Z',cons='c2',projection='source-x')
+        _,_,a,b,bs=pair(None,eb)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_foreign_ancestry_on_same_actor_does_not_launder(self):
+        ea=E('a','GPT56SOL','L1',cons='c1',ancestry=('AGENT_A',))
+        _,_,a,b,bs=pair(ea,None)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_binding_receipt_mismatch_blocks(self):
+        ea,eb,a,b,bs=pair()
+        bs[a.receipt_digest]=replace(bs[a.receipt_digest],conveyor_receipt_digest='0'*64)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_terminal_receipt_mismatch_blocks(self):
+        ea,eb,a,b,bs=pair()
+        bs[a.receipt_digest]=replace(bs[a.receipt_digest],terminal_receipt_root='0'*64)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_missing_immediate_receipt_blocks(self):
+        ea,eb,a,b,bs=pair()
+        bs[a.receipt_digest]=replace(bs[a.receipt_digest],parent_evidence=ParentEvidence(ea.parent,None))
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_effect_bearing_receipt_excluded(self):
+        _,_,a,b,bs=pair(); a=replace(a,effect_authority=True)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_gate10_receipt_excluded(self):
+        _,_,a,b,bs=pair(); b=replace(b,gate10=True)
+        self.assertFalse(compile_rebase_after_parent_admission([a,b],bs,CTX).admitted)
+
+    def test_deterministic_order(self):
+        _,_,a,b,bs=pair()
+        q1=compile_rebase_after_parent_admission([a,b],bs,CTX)
+        q2=compile_rebase_after_parent_admission([b,a],bs,CTX)
+        self.assertEqual(q1.objective_seed,q2.objective_seed)
+        self.assertEqual(q1.parent_pair_root,q2.parent_pair_root)
+
+if __name__=='__main__': unittest.main()
