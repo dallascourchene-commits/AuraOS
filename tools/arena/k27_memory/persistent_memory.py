@@ -55,7 +55,8 @@ class MemoryStore:
             'dependencies': ('revision_id','source_object','source_rev'),
         }
         for table, columns in expected.items():
-            actual = tuple(row['name'] for row in self.db.execute(f'PRAGMA table_info({table})'))
+            actual = tuple(row['name'] for row in self.db.execute(
+                'SELECT name FROM pragma_table_info(?) ORDER BY cid', (table,)))
             if actual != columns:
                 self.db.close()
                 raise ValueError(f'incompatible memory schema table: {table}')
