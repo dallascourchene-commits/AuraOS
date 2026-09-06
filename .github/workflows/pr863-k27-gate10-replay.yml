@@ -71,6 +71,7 @@ jobs:
               'campaign_complete': True,
               'completed_rounds': 750,
               'round_failures': 0,
+              'round_identity_complete': True,
           }
           bad = {k: (r.get(k), v) for k, v in expected.items() if r.get(k) != v}
           if bad:
