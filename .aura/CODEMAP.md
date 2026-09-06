@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26503800
-- **text_tokens_est**: 6616292
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26513353
+- **text_tokens_est**: 6618681
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1662,7 +1662,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_city_spatial_seam/README.md",
     "tools/arena/k27_memory_city_spatial_seam/campaign.py",
     "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
+    "tools/arena/k27_memory_city_spatial_seam/pr859_provenance_hardening_donor.py",
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
+    "tools/arena/k27_memory_city_spatial_seam/test_pr859_provenance_hardening_donor.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1793,15 +1795,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26503800,
-  "tokens_est": 6616292,
+  "files": 1655,
+  "bytes": 26513353,
+  "tokens_est": 6618681,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1006,
+    "python_module": 1008,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
