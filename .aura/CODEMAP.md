@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1662
-- **total_bytes**: 26568872
-- **text_tokens_est**: 6632562
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1663
+- **total_bytes**: 26569602
+- **text_tokens_est**: 6632745
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1662,
+  "repo_file_count": 1663,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1668,6 +1668,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory/persistent_memory.py",
     "tools/arena/k27_memory/world_atlas.py",
     "tools/arena/k27_memory_city_spatial_seam/README.md",
+    "tools/arena/k27_memory_city_spatial_seam/__init__.py",
     "tools/arena/k27_memory_city_spatial_seam/campaign.py",
     "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
@@ -1802,15 +1803,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1662,
-  "bytes": 26568872,
-  "tokens_est": 6632562,
+  "files": 1663,
+  "bytes": 26569602,
+  "tokens_est": 6632745,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1013,
+    "python_module": 1014,
     "schema_or_lexicon": 274,
     "support_file": 49
   }
