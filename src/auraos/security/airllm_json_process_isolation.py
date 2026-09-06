@@ -31,7 +31,13 @@ class IsolationTimeoutError(IsolationError):
 
 def _canonical_json(value: Any) -> bytes:
     try:
-        return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
+        return json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        ).encode("ascii")
     except (TypeError, ValueError) as exc:
         raise IsolationProtocolError("process-isolation messages must be canonical JSON values") from exc
 
@@ -78,12 +84,25 @@ def _normalize_methods(methods: Iterable[str]) -> tuple[str, ...]:
     if not out:
         raise IsolationProtocolError("allowed_methods must not be empty")
     for method in out:
-        if not isinstance(method, str) or not method or method.strip() != method or method.startswith("_") or not method.replace("_", "a").isalnum():
+        if (
+            not isinstance(method, str)
+            or not method
+            or method.strip() != method
+            or method.startswith("_")
+            or not method.replace("_", "a").isalnum()
+        ):
             raise IsolationProtocolError("allowed method names must be exact public identifiers")
     return out
 
 
-def _worker_main(conn: Any, factory_module: str, factory_qualname: str, init_args: list[Any], init_kwargs: dict[str, Any], allowed_methods: tuple[str, ...]) -> None:
+def _worker_main(
+    conn: Any,
+    factory_module: str,
+    factory_qualname: str,
+    init_args: list[Any],
+    init_kwargs: dict[str, Any],
+    allowed_methods: tuple[str, ...],
+) -> None:
     session: Any = None
     try:
         factory = _resolve_qualname(factory_module, factory_qualname)
@@ -93,7 +112,10 @@ def _worker_main(conn: Any, factory_module: str, factory_qualname: str, init_arg
             request = _recv_json(conn)
             if not isinstance(request, dict) or set(request) != {"kind", "method", "args", "kwargs"}:
                 raise IsolationProtocolError("malformed isolation request")
-            kind, method, args, kwargs = request["kind"], request["method"], request["args"], request["kwargs"]
+            kind = request["kind"]
+            method = request["method"]
+            args = request["args"]
+            kwargs = request["kwargs"]
             if kind == "close":
                 close = getattr(session, "close", None)
                 if callable(close):
@@ -111,7 +133,15 @@ def _worker_main(conn: Any, factory_module: str, factory_qualname: str, init_arg
             _send_json(conn, {"kind": "result", "schema": _SCHEMA, "method": method, "result": result})
     except BaseException as exc:
         try:
-            _send_json(conn, {"kind": "error", "schema": _SCHEMA, "error_type": type(exc).__name__, "message": str(exc)})
+            _send_json(
+                conn,
+                {
+                    "kind": "error",
+                    "schema": _SCHEMA,
+                    "error_type": type(exc).__name__,
+                    "message": str(exc),
+                },
+            )
         except BaseException:
             pass
     finally:
@@ -134,12 +164,37 @@ class IsolationReceipt:
 
     @property
     def root(self) -> str:
-        payload = {"schema": self.schema, "factory_module": self.factory_module, "factory_qualname": self.factory_qualname, "allowed_methods": list(self.allowed_methods), "start_method": self.start_method, "authority": self.authority, "effect_authority": self.effect_authority, "gate10": self.gate10}
+        payload = {
+            "schema": self.schema,
+            "factory_module": self.factory_module,
+            "factory_qualname": self.factory_qualname,
+            "allowed_methods": list(self.allowed_methods),
+            "start_method": self.start_method,
+            "authority": self.authority,
+            "effect_authority": self.effect_authority,
+            "gate10": self.gate10,
+        }
         return sha256(_canonical_json(payload)).hexdigest()
 
 
 class IsolatedSessionProxy:
-    def __init__(self, *, factory_module: str, factory_qualname: str, allowed_methods: Iterable[str], init_args: list[Any] | None = None, init_kwargs: dict[str, Any] | None = None, startup_timeout: float = 10.0, call_timeout: float = 30.0) -> None:
+    """Keep patching/mutable runtime state in a dedicated spawned interpreter process.
+
+    The parent exchanges canonical JSON only. No loaded model object, monkey-patched class,
+    module global, or arbitrary pickle crosses back into the host interpreter.
+    """
+
+    def __init__(
+        self,
+        *,
+        factory_module: str,
+        factory_qualname: str,
+        allowed_methods: Iterable[str],
+        init_args: list[Any] | None = None,
+        init_kwargs: dict[str, Any] | None = None,
+        startup_timeout: float = 10.0,
+        call_timeout: float = 30.0,
+    ) -> None:
         self._factory_module = factory_module
         self._factory_qualname = factory_qualname
         self._allowed_methods = _normalize_methods(allowed_methods)
@@ -162,7 +217,13 @@ class IsolatedSessionProxy:
 
     @property
     def receipt(self) -> IsolationReceipt:
-        return IsolationReceipt(_SCHEMA, self._factory_module, self._factory_qualname, self._allowed_methods, "spawn")
+        return IsolationReceipt(
+            schema=_SCHEMA,
+            factory_module=self._factory_module,
+            factory_qualname=self._factory_qualname,
+            allowed_methods=self._allowed_methods,
+            start_method="spawn",
+        )
 
     @property
     def child_pid(self) -> int | None:
@@ -177,10 +238,22 @@ class IsolatedSessionProxy:
                     return self
                 raise IsolationWorkerError("isolated worker exited and must not be silently reused")
             parent_conn, child_conn = self._ctx.Pipe(duplex=True)
-            process = self._ctx.Process(target=_worker_main, args=(child_conn, self._factory_module, self._factory_qualname, self._init_args, self._init_kwargs, self._allowed_methods), daemon=True)
+            process = self._ctx.Process(
+                target=_worker_main,
+                args=(
+                    child_conn,
+                    self._factory_module,
+                    self._factory_qualname,
+                    self._init_args,
+                    self._init_kwargs,
+                    self._allowed_methods,
+                ),
+                daemon=True,
+            )
             process.start()
             child_conn.close()
-            self._parent_conn, self._process = parent_conn, process
+            self._parent_conn = parent_conn
+            self._process = process
             if not parent_conn.poll(self._startup_timeout):
                 self._poisoned = True
                 self._terminate()
@@ -189,8 +262,15 @@ class IsolatedSessionProxy:
             if response.get("kind") == "error":
                 self._poisoned = True
                 self._terminate()
-                raise IsolationWorkerError(f"worker startup failed: {response.get('error_type')}: {response.get('message')}")
-            if response.get("kind") != "ready" or response.get("schema") != _SCHEMA or not isinstance(response.get("child_pid"), int) or response["child_pid"] == os.getpid():
+                raise IsolationWorkerError(
+                    f"worker startup failed: {response.get('error_type')}: {response.get('message')}"
+                )
+            if (
+                response.get("kind") != "ready"
+                or response.get("schema") != _SCHEMA
+                or not isinstance(response.get("child_pid"), int)
+                or response["child_pid"] == os.getpid()
+            ):
                 self._poisoned = True
                 self._terminate()
                 raise IsolationProtocolError("worker readiness receipt is invalid")
@@ -202,7 +282,8 @@ class IsolatedSessionProxy:
             if method not in self._allowed_methods:
                 raise IsolationProtocolError("requested method is not admitted")
             self.start()
-            _send_json(self._parent_conn, {"kind": "call", "method": method, "args": list(args), "kwargs": kwargs})
+            request = {"kind": "call", "method": method, "args": list(args), "kwargs": kwargs}
+            _send_json(self._parent_conn, request)
             if not self._parent_conn.poll(self._call_timeout):
                 self._poisoned = True
                 self._terminate()
@@ -211,8 +292,14 @@ class IsolatedSessionProxy:
             if response.get("kind") == "error":
                 self._poisoned = True
                 self._terminate()
-                raise IsolationWorkerError(f"worker call failed: {response.get('error_type')}: {response.get('message')}")
-            if response.get("kind") != "result" or response.get("schema") != _SCHEMA or response.get("method") != method:
+                raise IsolationWorkerError(
+                    f"worker call failed: {response.get('error_type')}: {response.get('message')}"
+                )
+            if (
+                response.get("kind") != "result"
+                or response.get("schema") != _SCHEMA
+                or response.get("method") != method
+            ):
                 self._poisoned = True
                 self._terminate()
                 raise IsolationProtocolError("worker result receipt is invalid")
@@ -224,7 +311,10 @@ class IsolatedSessionProxy:
                 return
             if self._process.is_alive() and self._parent_conn is not None:
                 try:
-                    _send_json(self._parent_conn, {"kind": "close", "method": "close", "args": [], "kwargs": {}})
+                    _send_json(
+                        self._parent_conn,
+                        {"kind": "close", "method": "close", "args": [], "kwargs": {}},
+                    )
                     if self._parent_conn.poll(min(self._call_timeout, 5.0)):
                         response = _recv_json(self._parent_conn)
                         if response.get("kind") != "closed":
@@ -235,8 +325,10 @@ class IsolatedSessionProxy:
                 self._terminate()
 
     def _terminate(self) -> None:
-        process, conn = self._process, self._parent_conn
-        self._process = self._parent_conn = None
+        process = self._process
+        conn = self._parent_conn
+        self._process = None
+        self._parent_conn = None
         self._child_pid = None
         if conn is not None:
             try:
@@ -248,7 +340,8 @@ class IsolatedSessionProxy:
                 process.terminate()
             process.join(timeout=2.0)
             if process.is_alive():
-                process.kill(); process.join(timeout=2.0)
+                process.kill()
+                process.join(timeout=2.0)
 
     def __enter__(self) -> "IsolatedSessionProxy":
         return self.start()
@@ -257,4 +350,11 @@ class IsolatedSessionProxy:
         self.close()
 
 
-__all__ = ["IsolatedSessionProxy", "IsolationError", "IsolationProtocolError", "IsolationReceipt", "IsolationTimeoutError", "IsolationWorkerError"]
+__all__ = [
+    "IsolatedSessionProxy",
+    "IsolationError",
+    "IsolationProtocolError",
+    "IsolationReceipt",
+    "IsolationTimeoutError",
+    "IsolationWorkerError",
+]
