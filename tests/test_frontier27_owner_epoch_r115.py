@@ -4,11 +4,11 @@ from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
-import re
 import threading
 import unittest
 
 from tools.arena.worker_cells.gpt56sol_frontier27_owner_epoch.owner_epoch import FrontierEpochOwnerProcess
+from tools.arena.worker_cells.gpt56sol_frontier27_owner_epoch.campaign import run as run_campaign
 
 REPO = Path(__file__).resolve().parents[1]
 OWNER_SOURCE = REPO / "tools" / "arena" / "frontier27_runtime.py"
@@ -27,6 +27,9 @@ SPEC = {
     "window_s": 1.0,
     "budget_j": 10.0,
 }
+EXPECTED_HS_ROOT = "1a88fd0affed00c61c6274c706e28325675f304502cb8023a60893040ecab3bc"
+EXPECTED_OMEGA_ROOT = "f686082019497abe2ad835b52d311ce4efcb403602020dbb3f9ab54b9a0e5793"
+EXPECTED_CAMPAIGN_ROOT = "12400187ceb3161d48e675d1d32a9305af6e98512bdf5cca7d4a00f5c0e52fb8"
 
 
 class FrontierOwnerEpochR115Tests(unittest.TestCase):
@@ -148,6 +151,23 @@ class FrontierOwnerEpochR115Tests(unittest.TestCase):
             a = owner.project_pinned(snap, [[1, 2, 3]], [[1, 4]])
             b = owner.project_pinned(snap, [[1, 2, 3]], [[1, 4]])
             self.assertEqual(a, b)
+
+    def test_exact_source_restart_campaign(self):
+        source = OWNER_SOURCE.read_bytes()
+        self.assertEqual(hashlib.sha256(source).hexdigest(), EXPECTED_OWNER_SHA256)
+        r = run_campaign(source=source, source_root=EXPECTED_OWNER_SHA256, spec=SPEC)
+        self.assertIs(r["live_restart_probe"], True)
+        self.assertEqual(r["omega_states"], 6561)
+        self.assertEqual(r["omega_keepers"], 1)
+        self.assertEqual(r["omega_oracle_mismatches"], 0)
+        self.assertEqual(r["routing_tails"], 243)
+        self.assertEqual(r["hard_invalid_repairs"], 0)
+        self.assertEqual(r["valid_tail_admits"], 243)
+        self.assertEqual(r["hs1000"], 1000)
+        self.assertEqual(r["false_promotions"], 0)
+        self.assertEqual(r["hs_root"], EXPECTED_HS_ROOT)
+        self.assertEqual(r["omega_root"], EXPECTED_OMEGA_ROOT)
+        self.assertEqual(r["campaign_root"], EXPECTED_CAMPAIGN_ROOT)
 
 
 if __name__ == "__main__":
