@@ -5,7 +5,9 @@ from __future__ import annotations
 This adapter does not make a K27 coordinate authoritative. It binds every read
 to one exact local registry state, exposes review/projection reads, and forwards
 revision+epoch+store-root CAS mutations only when explicitly opened writable.
-External source currentness and consequence/effect authority remain elsewhere.
+A successful write consumes that runtime instance; continuing requires an exact
+state-root rebind. External source currentness and consequence/effect authority
+remain owned elsewhere.
 """
 
 from dataclasses import asdict, dataclass
@@ -46,8 +48,10 @@ SPATIAL_SEAM_SOURCE_BLOB = "c439b0e1e438299cd8a914aade89034342065dd3"
 SPATIAL_SEAM_MODULE_BLOB = "8983170b71dd962facb4eb586c002bd63948f2f8"
 SPATIAL_TRANSITION = "SPATIAL.GROUND.COMPILE_SCENE"
 
+
 class RuntimeBindingError(ValueError):
     pass
+
 
 @dataclass(frozen=True)
 class RuntimeMemoryBinding:
@@ -74,6 +78,7 @@ class RuntimeMemoryBinding:
     def canonical_ref(self) -> str:
         return f"aura://memory-city/{self.object_id}#K27:/" + "/".join(f"{d:02d}" for d in self.path)
 
+
 @dataclass(frozen=True)
 class RegistrySeal:
     database_sha256: str
@@ -86,17 +91,26 @@ class RegistrySeal:
     authority_minted: bool = False
     gate10: bool = False
 
-class K27MemoryRuntime:
-    """Adapter over an exact registry state with fail-closed mutation detection."""
 
-    def __init__(self, registry_path: str | Path, *, writable: bool = False):
+class K27MemoryRuntime:
+    """Adapter over one exact registry state with fail-closed mutation detection."""
+
+    def __init__(self, registry_path: str | Path, *, writable: bool = False,
+                 expected_working_state_root: str | None = None):
         self.path = Path(registry_path)
         if not self.path.is_file():
             raise RuntimeBindingError("registry file missing")
         self.writable = bool(writable)
-        self._seal = self._verify_seed_seal()
-        with MemoryStore(self.path) as store:
-            self._state_root = store.state_root()
+        self._consumed = False
+        if expected_working_state_root is None:
+            self._seal = self._verify_seed_seal()
+            with MemoryStore(self.path) as store:
+                self._state_root = store.state_root()
+        else:
+            if not isinstance(expected_working_state_root, str) or len(expected_working_state_root) != 64:
+                raise RuntimeBindingError("expected working state root must be one SHA-256 hex digest")
+            self._seal = self._verify_working_seal(expected_working_state_root)
+            self._state_root = expected_working_state_root
 
     @classmethod
     def from_environment(cls, *, writable: bool = False, env: Mapping[str, str] | None = None):
@@ -105,6 +119,17 @@ class K27MemoryRuntime:
         if not path:
             raise RuntimeBindingError("AURA_K27_MEMORY_REGISTRY_PATH is required")
         return cls(path, writable=writable)
+
+    @classmethod
+    def from_working_registry(cls, registry_path: str | Path, *, expected_state_root: str,
+                              writable: bool = False):
+        """Rebind a mutated local registry only to an exact previously observed state root.
+
+        This proves local state identity only. It does not authenticate an upstream
+        owner, mint currentness, or preserve a previous runtime's authority.
+        """
+        return cls(registry_path, writable=writable,
+                   expected_working_state_root=expected_state_root)
 
     @staticmethod
     def _coordinate_record(record: Mapping[str, Any]) -> dict[str, Any]:
@@ -137,18 +162,25 @@ class K27MemoryRuntime:
             raise RuntimeBindingError("registry semantic root mismatch")
         return RegistrySeal(raw_sha, semantic, len(rows), FRAME, GENERATION, integrity)
 
-    def _working_seal(self) -> RegistrySeal:
+    def _verify_working_seal(self, expected_state_root: str) -> RegistrySeal:
         raw_sha = sha256(self.path.read_bytes()).hexdigest()
         with MemoryStore(self.path) as store:
             integrity = store.db.execute("PRAGMA integrity_check").fetchone()[0]
             records = store.db.execute("SELECT COUNT(*) FROM objects").fetchone()[0]
             state_root = store.state_root()
         if integrity != "ok":
-            raise RuntimeBindingError("SQLite integrity check failed after mutation")
+            raise RuntimeBindingError("SQLite integrity check failed while rebinding working registry")
+        if state_root != expected_state_root:
+            raise RuntimeBindingError("working registry state was superseded before rebind")
         return RegistrySeal(raw_sha, state_root, records, FRAME, GENERATION, integrity,
                             seal_scope="working_registry_state")
 
+    def _assert_active(self) -> None:
+        if self._consumed:
+            raise RuntimeBindingError("runtime consumed by committed write; reopen against the committed state root")
+
     def _assert_registry_unchanged(self) -> None:
+        self._assert_active()
         if sha256(self.path.read_bytes()).hexdigest() != self._seal.database_sha256:
             raise RuntimeBindingError("registry changed outside the bound runtime state")
 
@@ -173,6 +205,10 @@ class K27MemoryRuntime:
     def seal(self) -> RegistrySeal:
         self._assert_registry_unchanged()
         return self._seal
+
+    @property
+    def consumed(self) -> bool:
+        return self._consumed
 
     @staticmethod
     def _binding_from_record(record: Mapping[str, Any]) -> RuntimeMemoryBinding:
@@ -219,7 +255,8 @@ class K27MemoryRuntime:
                     key = row["object_id"]
                     if key in seen:
                         continue
-                    seen.add(key); pending.append(key)
+                    seen.add(key)
+                    pending.append(key)
                     affected.append({"object_id": key, "path_key": row["path"]})
             return {
                 "root_object_id": object_id,
@@ -243,8 +280,11 @@ class K27MemoryRuntime:
             "prefix": list(prefix),
             "entities": [
                 {
-                    "object_id": b.object_id, "k27_path": list(b.path), "revision_id": b.revision_id,
-                    "epoch": b.epoch, "canonical_ref": b.canonical_ref,
+                    "object_id": b.object_id,
+                    "k27_path": list(b.path),
+                    "revision_id": b.revision_id,
+                    "epoch": b.epoch,
+                    "canonical_ref": b.canonical_ref,
                 }
                 for b in bindings
             ],
@@ -332,24 +372,41 @@ class K27MemoryRuntime:
         address = FrameAddress(binding.frame_id, binding.frame_generation, binding.path, object_id)
         with MemoryStore(self.path) as store:
             result = store.publish(
-                object_id, dict(payload), address,
-                source_url=source_url, source_version=source_version,
-                expected_revision=expected_revision, expected_epoch=expected_epoch,
+                object_id,
+                dict(payload),
+                address,
+                source_url=source_url,
+                source_version=source_version,
+                expected_revision=expected_revision,
+                expected_epoch=expected_epoch,
                 dependencies=None if dependencies is None else dict(dependencies),
                 dependency_epochs=None if dependency_epochs is None else dict(dependency_epochs),
                 expected_store_root=self._state_root,
             )
-        # The owned write is the sole allowed transition to a new bound local state.
-        self._seal = self._working_seal()
-        self._state_root = result["store_state_root"]
-        if self._seal.semantic_registry_root != self._state_root:
-            raise RuntimeBindingError("post-write state root mismatch")
+        # `store_state_root` was computed while BEGIN IMMEDIATE still protected
+        # the exact committed transition. Do not reopen/refresh after COMMIT:
+        # another writer may legitimately supersede it before any filesystem read.
+        # Instead consume this runtime and require an exact-root successor rebind.
+        committed_root = result["store_state_root"]
+        self._consumed = True
         return {
             **result,
+            "commit_status": "COMMITTED_REOPEN_REQUIRED",
+            "committed_store_state_root": committed_root,
             "target_k27": list(binding.path),
-            "invalidation_cone": self.invalidation_cone(object_id),
-            "registry_database_sha256": self._seal.database_sha256,
-            "registry_state_root": self._state_root,
+            "invalidation_cone": {
+                "root_object_id": object_id,
+                "root_path": list(binding.path),
+                "affected_objects": list(result.get("invalidated", [])),
+                "snapshot_scope": "write_transaction",
+                "bounded": True,
+                "mutation_performed": True,
+                "authority_minted": False,
+            },
+            "runtime_consumed": True,
+            "reopen_required": True,
+            "truth_authority": False,
+            "effect_authority": False,
             "authority_minted": False,
             "gate10": False,
         }
