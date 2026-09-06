@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Iterable, Sequence
+from hashlib import sha256
+import json
 import re
 
 SCHEMA = "AURA-K27-GATE10-CAMPAIGN-ORACLE-v1"
@@ -17,6 +19,30 @@ _EXPECTED_EXCEPTION = {
 
 class CampaignOracleError(ValueError):
     pass
+
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
+
+def campaign_root_from_trace(trace: Sequence[dict[str, Any]]) -> str:
+    rows = list(trace)
+    for expected_round, row in enumerate(rows):
+        if not isinstance(row, dict):
+            raise CampaignOracleError("trace rows must be dictionaries")
+        if set(row) != {"round", "src_epoch", "dep_epoch", "root", "root_scope"}:
+            raise CampaignOracleError("trace row has noncanonical fields")
+        if row.get("round") != expected_round:
+            raise CampaignOracleError("trace round identity must be contiguous from zero")
+        if type(row.get("src_epoch")) is not int or row["src_epoch"] <= 0:
+            raise CampaignOracleError("trace src_epoch must be a positive exact int")
+        if type(row.get("dep_epoch")) is not int or row["dep_epoch"] <= 0:
+            raise CampaignOracleError("trace dep_epoch must be a positive exact int")
+        if not _is_sha256(row.get("root")):
+            raise CampaignOracleError("trace root must be a lowercase SHA-256 digest")
+        if row.get("root_scope") != "POST_DEPENDENCY_REPAIR":
+            raise CampaignOracleError("trace root scope must be POST_DEPENDENCY_REPAIR")
+    return sha256(canonical_json(rows).encode()).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -96,7 +122,7 @@ def classify_round(
         row for row in rows
         if row and row[0] not in (WIN, expected_hold)
     )
-    exact_attempts = len(rows) + (0) == workers
+    exact_attempts = len(rows) == workers
     worker_ids = tuple(row[1] for row in wins + holds)
     exact_worker_set = (
         len(worker_ids) == workers
