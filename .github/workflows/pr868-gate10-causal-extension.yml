@@ -1,0 +1,34 @@
+name: PR868 Gate10 Causal Extension
+on:
+  push:
+    branches: [arena/pr863-gate10-verifier-integrity-r1]
+    paths:
+      - '.github/workflows/pr868-gate10-causal-extension.yml'
+      - 'tools/arena/k27_memory/gate10_causal_extension.py'
+      - 'tests/test_k27_gate10_causal_extension.py'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  causal-proof:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: {python: ['3.10', '3.12', '3.13']}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '${{ matrix.python }}'}
+      - run: python -m unittest -v tests.test_k27_gate10_causal_extension
+      - run: python tools/arena/k27_memory/gate10_causal_extension.py > gate10-causal.json
+      - name: Enforce causal invariants
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('gate10-causal.json'))
+          e={'rounds':750,'store_root_guard_probes':750,'store_root_guard_holds':750,'store_root_guard_violations':0,'store_root_guard_wrong_holds':0,'routing_nonhard_vectors_checked':62208,'routing_decision_variations':0,'routing_unknown_repairs':0,'routing_ready_tail_keepers':243,'truth_authority':False,'currentness_authority':False,'effect_authority':False,'gate10':False}
+          b={k:(r.get(k),v) for k,v in e.items() if r.get(k)!=v}
+          assert not b,b
+          print('GATE10_CAUSAL_EXTENSION_PASS')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with: {name: 'pr868-causal-py${{ matrix.python }}-${{ github.sha }}', path: gate10-causal.json, retention-days: 30}
