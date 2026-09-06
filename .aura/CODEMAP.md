@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1668
-- **total_bytes**: 26588852
-- **text_tokens_est**: 6637562
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1018, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1669
+- **total_bytes**: 26596199
+- **text_tokens_est**: 6639399
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1668,
+  "repo_file_count": 1669,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1652,6 +1652,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frame_address_immutability.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_epoch_invalidation.py",
     "tests/test_k27_epoch_republish_invalidation.py",
     "tests/test_k27_memory_runtime.py",
     "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -1808,15 +1809,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1668,
-  "bytes": 26588852,
-  "tokens_est": 6637562,
+  "files": 1669,
+  "bytes": 26596199,
+  "tokens_est": 6639399,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1018,
+    "python_module": 1019,
     "schema_or_lexicon": 275,
     "support_file": 49
   }

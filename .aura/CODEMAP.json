@@ -1063,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1668,
+    "repo_file_count": 1669,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2692,6 +2692,7 @@
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -104216,6 +104217,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_epoch_invalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7297,
+      "lines": 121,
+      "tokens_est": 1825,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c7bc2fa419de8277",
+      "vector": [
+        0.263103,
+        0.040578,
+        0.040578,
+        0.22907,
+        -0.095555,
+        -0.066758,
+        -0.098173,
+        -0.197655,
+        -0.265721,
+        -0.02487,
+        -0.25525,
+        -0.092937,
+        -0.142678,
+        0.121734,
+        -0.069376,
+        0.299755,
+        0.12697,
+        -0.03796,
+        -0.168857,
+        -0.234306,
+        0.328552,
+        -0.074611,
+        -0.276193,
+        0.017017,
+        -0.06414,
+        -0.197655,
+        -0.014399,
+        -0.202891,
+        0.079847,
+        -0.299755,
+        -0.092937,
+        -0.239542
+      ]
+    },
+    {
       "path": "tests/test_k27_epoch_republish_invalidation.py",
       "role": "python_module",
       "binary": false,
@@ -105065,47 +105113,47 @@
       "path": "tools/arena/k27_memory/persistent_memory.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 15065,
-      "lines": 240,
-      "tokens_est": 3767,
+      "bytes": 15115,
+      "lines": 241,
+      "tokens_est": 3779,
       "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "04c2ead9a559ce9f",
+      "digest8": "9ed775fe3b3f931a",
       "vector": [
-        0.138585,
-        -0.257034,
-        0.190703,
-        -0.008291,
-        0.050933,
-        0.181227,
-        0.08173,
-        -0.039088,
-        0.029612,
-        -0.039088,
-        -0.171751,
-        0.294938,
-        0.140954,
-        0.223868,
-        0.024874,
-        -0.178858,
-        0.259403,
-        -0.280724,
-        0.124371,
-        -0.223868,
-        -0.145692,
-        -0.233344,
-        0.183596,
-        -0.072254,
-        0.261772,
-        -0.138585,
-        -0.015398,
-        -0.235713,
-        -0.214392,
-        -0.036719,
-        0.278355,
-        -0.136216
+        -0.20758,
+        0.22987,
+        0.129563,
+        -0.174144,
+        0.196434,
+        -0.157426,
+        -0.257733,
+        -0.04876,
+        0.054333,
+        0.257733,
+        0.043188,
+        0.04876,
+        -0.238229,
+        0.137922,
+        -0.115632,
+        -0.296741,
+        0.009752,
+        0.299528,
+        -0.040401,
+        -0.149067,
+        -0.188076,
+        0.045974,
+        -0.04876,
+        0.045974,
+        0.268878,
+        -0.034829,
+        -0.065478,
+        -0.104486,
+        0.28281,
+        0.073837,
+        0.182503,
+        0.332963
       ]
     },
     {
@@ -106482,7 +106530,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788714151,
+  "generated_at_unix": 1788714326,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108113,6 +108161,7 @@
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -266067,6 +266116,116 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#class:EpochInvalidationTests:c825ebad3cc97fb7",
+        "name": "EpochInvalidationTests",
+        "kind": "class",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 20,
+        "end_line": 116,
+        "signature_hash": "559e3705c5fbb8d6",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#function:new_store:095f2eaba0bdd9d6",
+        "name": "new_store",
+        "kind": "function",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 14,
+        "end_line": 17,
+        "signature_hash": "15cadc8aa9aa9779",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_changed_revision_still_invalidates_dependent:a086502c360ee69f",
+        "name": "EpochInvalidationTests.test_changed_revision_still_invalidates_dependent",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 44,
+        "end_line": 54,
+        "signature_hash": "f6aaa11c89bba0cd",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_five_way_identical_republish_has_one_winner.attempt:5a08547a4dca4453",
+        "name": "EpochInvalidationTests.test_five_way_identical_republish_has_one_winner.attempt",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 93,
+        "end_line": 100,
+        "signature_hash": "b2d53f73bb2efd11",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_five_way_identical_republish_has_one_winner:a2df26100145b86c",
+        "name": "EpochInvalidationTests.test_five_way_identical_republish_has_one_winner",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 87,
+        "end_line": 104,
+        "signature_hash": "9fd45c521881c548",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_identical_republish_advances_epoch_and_invalidates_dependent:0fdcd302426b65df",
+        "name": "EpochInvalidationTests.test_identical_republish_advances_epoch_and_invalidates_dependent",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 28,
+        "end_line": 42,
+        "signature_hash": "d1267eff89eef869",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_invalidation_receipt_order_is_deterministic:54a10a93ff78c5f7",
+        "name": "EpochInvalidationTests.test_invalidation_receipt_order_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 106,
+        "end_line": 116,
+        "signature_hash": "76e7cf66444a2546",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_schema_probe_uses_parameterized_table_valued_pragma:970c3c7da986007a",
+        "name": "EpochInvalidationTests.test_schema_probe_uses_parameterized_table_valued_pragma",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 21,
+        "end_line": 26,
+        "signature_hash": "afc6ae6f6ba03bf8",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_stale_dependency_epoch_holds_even_when_revision_repeats:f8a0219c5509e153",
+        "name": "EpochInvalidationTests.test_stale_dependency_epoch_holds_even_when_revision_repeats",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 56,
+        "end_line": 66,
+        "signature_hash": "41f289356ddb0258",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_state_root_changes_on_epoch_only_transition:1ac904d36f601be5",
+        "name": "EpochInvalidationTests.test_state_root_changes_on_epoch_only_transition",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 68,
+        "end_line": 76,
+        "signature_hash": "0d0ae8eebcacce07",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_store_root_cas_rejects_unrelated_movement:cc68e0296a986349",
+        "name": "EpochInvalidationTests.test_store_root_cas_rejects_unrelated_movement",
+        "kind": "method",
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "line": 78,
+        "end_line": 85,
+        "signature_hash": "29f2cc7c1c39a6ab",
+        "file_digest8": "c7bc2fa419de8277"
+      },
+      {
         "semantic_id": "tests/test_k27_epoch_republish_invalidation.py#function:test_identical_source_republish_invalidates_dependents_on_epoch_advance:cdade265b2a4630d",
         "name": "test_identical_source_republish_invalidates_dependents_on_epoch_advance",
         "kind": "function",
@@ -268154,7 +268313,7 @@
         "line": 14,
         "end_line": 14,
         "signature_hash": "6a073dea98504382",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#class:MemoryStore:6fce8745f09429bd",
@@ -268162,9 +268321,9 @@
         "kind": "class",
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "line": 20,
-        "end_line": 239,
+        "end_line": 240,
         "signature_hash": "9fbe44b9a6d5a329",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#class:StaleMemory:3239a977ea5d8160",
@@ -268174,7 +268333,7 @@
         "line": 15,
         "end_line": 15,
         "signature_hash": "08e156c1d1b5edee",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#function:canonical:50b83d3c6fe26529",
@@ -268184,27 +268343,27 @@
         "line": 17,
         "end_line": 18,
         "signature_hash": "1d37540cc7d21fba",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.__enter__:c5cc24e38b74bbb9",
         "name": "MemoryStore.__enter__",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 63,
-        "end_line": 63,
+        "line": 64,
+        "end_line": 64,
         "signature_hash": "70703c73fc87d8b5",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.__exit__:ee1bf3e7133235af",
         "name": "MemoryStore.__exit__",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 64,
-        "end_line": 64,
+        "line": 65,
+        "end_line": 65,
         "signature_hash": "f86ce03f679b852e",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.__init__:ea64e8d3ef56e8a8",
@@ -268212,149 +268371,149 @@
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "line": 21,
-        "end_line": 61,
+        "end_line": 62,
         "signature_hash": "6040e886b8cbc7a9",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._check_cycle:746b65270014e976",
         "name": "MemoryStore._check_cycle",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 121,
-        "end_line": 129,
+        "line": 122,
+        "end_line": 130,
         "signature_hash": "6f72a68ad11970c4",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._invalidate:a4fc534ab3500c21",
         "name": "MemoryStore._invalidate",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 85,
-        "end_line": 98,
+        "line": 86,
+        "end_line": 99,
         "signature_hash": "e5c5c14da1efa9d5",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._project_snapshot:e12036d1e906a28c",
         "name": "MemoryStore._project_snapshot",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 230,
-        "end_line": 239,
+        "line": 231,
+        "end_line": 240,
         "signature_hash": "2c7de5bdd9b72c9a",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._require_current:72f68c654070e3bb",
         "name": "MemoryStore._require_current",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 113,
-        "end_line": 119,
+        "line": 114,
+        "end_line": 120,
         "signature_hash": "a5c15ffc1e1b63f1",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._write:ca8d84d00f8dc6dc",
         "name": "MemoryStore._write",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 76,
-        "end_line": 83,
+        "line": 77,
+        "end_line": 84,
         "signature_hash": "3074526ca10bcba2",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.close:b8dff2c13e58e175",
         "name": "MemoryStore.close",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 62,
-        "end_line": 62,
+        "line": 63,
+        "end_line": 63,
         "signature_hash": "818fdb66f3084fa5",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.get:6f44258eccf20705",
         "name": "MemoryStore.get",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 187,
-        "end_line": 195,
+        "line": 188,
+        "end_line": 196,
         "signature_hash": "3b3149f34d9ead8d",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.history:1c997b57afab3afa",
         "name": "MemoryStore.history",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 197,
-        "end_line": 199,
+        "line": 198,
+        "end_line": 200,
         "signature_hash": "28276bc3a7b41472",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.project:d875713314cb5efd",
         "name": "MemoryStore.project",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 220,
-        "end_line": 228,
+        "line": 221,
+        "end_line": 229,
         "signature_hash": "c3f11cf18eb98568",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.publish:40c10b16ead76eeb",
         "name": "MemoryStore.publish",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 131,
-        "end_line": 185,
+        "line": 132,
+        "end_line": 186,
         "signature_hash": "1339977f35adbc4e",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.register_frame:4380bd6b7de7543d",
         "name": "MemoryStore.register_frame",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 100,
-        "end_line": 111,
+        "line": 101,
+        "end_line": 112,
         "signature_hash": "0b5dfb09a7b20b23",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.retract:de98398046fcf8e1",
         "name": "MemoryStore.retract",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 201,
-        "end_line": 207,
+        "line": 202,
+        "end_line": 208,
         "signature_hash": "d1c0034b45861949",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.state_root:31bc72062b433207",
         "name": "MemoryStore.state_root",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 66,
-        "end_line": 73,
+        "line": 67,
+        "end_line": 74,
         "signature_hash": "36c7018b40b982e5",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.under:1076df927c94f781",
         "name": "MemoryStore.under",
         "kind": "method",
         "file": "tools/arena/k27_memory/persistent_memory.py",
-        "line": 209,
-        "end_line": 218,
+        "line": 210,
+        "end_line": 219,
         "signature_hash": "ce53077ebacf14c4",
-        "file_digest8": "04c2ead9a559ce9f"
+        "file_digest8": "9ed775fe3b3f931a"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:FrameAddress:3a00e45206011f7a",
@@ -270567,8 +270726,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "a475b3886680eebac6ab680bb0331650",
-    "payload_hash": "2c55a44e97d41ec187c1eba6d2b9be8c"
+    "record_fingerprint": "c1f726ac7a18c2395ba3dd22211657f5",
+    "payload_hash": "30b129ba26dd9ed900ab3fea0e0710e1"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270581,15 +270740,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1668,
-      "bytes": 26588852,
-      "tokens_est": 6637562,
+      "files": 1669,
+      "bytes": 26596199,
+      "tokens_est": 6639399,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
+        "python_module": 1019,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -271277,15 +271436,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1668,
-    "total_bytes": 26588852,
-    "text_tokens_est": 6637562,
+    "file_count": 1669,
+    "total_bytes": 26596199,
+    "text_tokens_est": 6639399,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
+      "python_module": 1019,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -426739,6 +426898,116 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "new_store": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 17,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#function:new_store:095f2eaba0bdd9d6",
+        "signature_hash": "15cadc8aa9aa9779"
+      }
+    ],
+    "EpochInvalidationTests": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 116,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#class:EpochInvalidationTests:c825ebad3cc97fb7",
+        "signature_hash": "559e3705c5fbb8d6"
+      }
+    ],
+    "EpochInvalidationTests.test_schema_probe_uses_parameterized_table_valued_pragma": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 26,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_schema_probe_uses_parameterized_table_valued_pragma:970c3c7da986007a",
+        "signature_hash": "afc6ae6f6ba03bf8"
+      }
+    ],
+    "EpochInvalidationTests.test_identical_republish_advances_epoch_and_invalidates_dependent": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 42,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_identical_republish_advances_epoch_and_invalidates_dependent:0fdcd302426b65df",
+        "signature_hash": "d1267eff89eef869"
+      }
+    ],
+    "EpochInvalidationTests.test_changed_revision_still_invalidates_dependent": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 54,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_changed_revision_still_invalidates_dependent:a086502c360ee69f",
+        "signature_hash": "f6aaa11c89bba0cd"
+      }
+    ],
+    "EpochInvalidationTests.test_stale_dependency_epoch_holds_even_when_revision_repeats": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 66,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_stale_dependency_epoch_holds_even_when_revision_repeats:f8a0219c5509e153",
+        "signature_hash": "41f289356ddb0258"
+      }
+    ],
+    "EpochInvalidationTests.test_state_root_changes_on_epoch_only_transition": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 76,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_state_root_changes_on_epoch_only_transition:1ac904d36f601be5",
+        "signature_hash": "0d0ae8eebcacce07"
+      }
+    ],
+    "EpochInvalidationTests.test_store_root_cas_rejects_unrelated_movement": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 85,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_store_root_cas_rejects_unrelated_movement:cc68e0296a986349",
+        "signature_hash": "29f2cc7c1c39a6ab"
+      }
+    ],
+    "EpochInvalidationTests.test_five_way_identical_republish_has_one_winner": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 104,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_five_way_identical_republish_has_one_winner:a2df26100145b86c",
+        "signature_hash": "9fd45c521881c548"
+      }
+    ],
+    "EpochInvalidationTests.test_five_way_identical_republish_has_one_winner.attempt": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 100,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_five_way_identical_republish_has_one_winner.attempt:5a08547a4dca4453",
+        "signature_hash": "b2d53f73bb2efd11"
+      }
+    ],
+    "EpochInvalidationTests.test_invalidation_receipt_order_is_deterministic": [
+      {
+        "file": "tests/test_k27_epoch_invalidation.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 116,
+        "semantic_id": "tests/test_k27_epoch_invalidation.py#method:EpochInvalidationTests.test_invalidation_receipt_order_is_deterministic:54a10a93ff78c5f7",
+        "signature_hash": "76e7cf66444a2546"
+      }
+    ],
     "test_identical_source_republish_invalidates_dependents_on_epoch_advance": [
       {
         "file": "tests/test_k27_epoch_republish_invalidation.py",
@@ -428724,7 +428993,7 @@
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "class",
         "line": 20,
-        "end_line": 239,
+        "end_line": 240,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#class:MemoryStore:6fce8745f09429bd",
         "signature_hash": "9fbe44b9a6d5a329"
       }
@@ -428734,7 +429003,7 @@
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
         "line": 21,
-        "end_line": 61,
+        "end_line": 62,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.__init__:ea64e8d3ef56e8a8",
         "signature_hash": "6040e886b8cbc7a9"
       }
@@ -428743,8 +429012,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 62,
-        "end_line": 62,
+        "line": 63,
+        "end_line": 63,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.close:b8dff2c13e58e175",
         "signature_hash": "818fdb66f3084fa5"
       }
@@ -428753,8 +429022,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 63,
-        "end_line": 63,
+        "line": 64,
+        "end_line": 64,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.__enter__:c5cc24e38b74bbb9",
         "signature_hash": "70703c73fc87d8b5"
       }
@@ -428763,8 +429032,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 64,
-        "end_line": 64,
+        "line": 65,
+        "end_line": 65,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.__exit__:ee1bf3e7133235af",
         "signature_hash": "f86ce03f679b852e"
       }
@@ -428773,8 +429042,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 66,
-        "end_line": 73,
+        "line": 67,
+        "end_line": 74,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.state_root:31bc72062b433207",
         "signature_hash": "36c7018b40b982e5"
       }
@@ -428783,8 +429052,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 76,
-        "end_line": 83,
+        "line": 77,
+        "end_line": 84,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._write:ca8d84d00f8dc6dc",
         "signature_hash": "3074526ca10bcba2"
       }
@@ -428793,8 +429062,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 85,
-        "end_line": 98,
+        "line": 86,
+        "end_line": 99,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._invalidate:a4fc534ab3500c21",
         "signature_hash": "e5c5c14da1efa9d5"
       }
@@ -428803,8 +429072,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 100,
-        "end_line": 111,
+        "line": 101,
+        "end_line": 112,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.register_frame:4380bd6b7de7543d",
         "signature_hash": "0b5dfb09a7b20b23"
       }
@@ -428813,8 +429082,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 113,
-        "end_line": 119,
+        "line": 114,
+        "end_line": 120,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._require_current:72f68c654070e3bb",
         "signature_hash": "a5c15ffc1e1b63f1"
       }
@@ -428823,8 +429092,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 121,
-        "end_line": 129,
+        "line": 122,
+        "end_line": 130,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._check_cycle:746b65270014e976",
         "signature_hash": "6f72a68ad11970c4"
       }
@@ -428833,8 +429102,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 131,
-        "end_line": 185,
+        "line": 132,
+        "end_line": 186,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.publish:40c10b16ead76eeb",
         "signature_hash": "1339977f35adbc4e"
       }
@@ -428843,8 +429112,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 187,
-        "end_line": 195,
+        "line": 188,
+        "end_line": 196,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.get:6f44258eccf20705",
         "signature_hash": "3b3149f34d9ead8d"
       }
@@ -428853,8 +429122,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 197,
-        "end_line": 199,
+        "line": 198,
+        "end_line": 200,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.history:1c997b57afab3afa",
         "signature_hash": "28276bc3a7b41472"
       }
@@ -428863,8 +429132,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 201,
-        "end_line": 207,
+        "line": 202,
+        "end_line": 208,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.retract:de98398046fcf8e1",
         "signature_hash": "d1c0034b45861949"
       }
@@ -428873,8 +429142,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 209,
-        "end_line": 218,
+        "line": 210,
+        "end_line": 219,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.under:1076df927c94f781",
         "signature_hash": "ce53077ebacf14c4"
       }
@@ -428883,8 +429152,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 220,
-        "end_line": 228,
+        "line": 221,
+        "end_line": 229,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore.project:d875713314cb5efd",
         "signature_hash": "c3f11cf18eb98568"
       }
@@ -428893,8 +429162,8 @@
       {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "method",
-        "line": 230,
-        "end_line": 239,
+        "line": 231,
+        "end_line": 240,
         "semantic_id": "tools/arena/k27_memory/persistent_memory.py#method:MemoryStore._project_snapshot:e12036d1e906a28c",
         "signature_hash": "2c7de5bdd9b72c9a"
       }
