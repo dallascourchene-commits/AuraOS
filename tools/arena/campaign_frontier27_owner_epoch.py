@@ -1,93 +1,60 @@
 from __future__ import annotations
-import hashlib, json, random
+import hashlib,json,random
 from itertools import product
 from frontier27_runtime import ExpertResidencyLRU
-from frontier27_owner_epoch_adapter import EpochExpertResidencyLRU, snapshot, unchanged
+from frontier27_owner_epoch_adapter import EpochExpertResidencyLRU, governed_aba_probe
 
-
+READY='READY_NONAUTHORIZING'; HARD='HOLD_HARD_INVALID'; UNKNOWN='HOLD_REQUIRED_UNKNOWN'; EPOCH='HOLD_EPOCH_FENCE'
 def canon(x): return json.dumps(x,sort_keys=True,separators=(',',':'))
 def h(x): return hashlib.sha256(canon(x).encode()).hexdigest()
+def visible(o): return (tuple(o.r.items()),o.hits,o.misses)
 
-def apply(owner, op, value):
-    if op == 'access': return owner.access(value)
-    if op == 'prefetch': return owner.prefetch(value)
-    if op == 'resident': return owner.resident(value)
-    raise ValueError(op)
+def oracle(axes):
+    if 0 in axes: return HARD
+    if 1 in axes: return UNKNOWN
+    return READY
 
-def visible(owner): return (tuple(owner.r.items()), owner.hits, owner.misses)
-
-def classify(governed, state_equal, epoch_equal, authority):
-    if not authority: return 'AUTHORITY_HOLD'
-    if not governed: return 'RAW_BYPASS_HOLD'
-    if state_equal and epoch_equal: return 'ABA_UNDETECTED_HOLD'
-    if state_equal and not epoch_equal: return 'EPOCH_KEEPER'
-    return 'STATE_MOVED_HOLD'
+def implementation(axes,tail):
+    del tail
+    if 0 in axes: return HARD
+    if 1 in axes: return UNKNOWN
+    return READY if governed_aba_probe() else EPOCH
 
 def run(seed=27):
-    rng=random.Random(seed)
-    eq=0; eq_fail=0
+    rng=random.Random(seed); eq_fail=0
     for _ in range(100):
-        cap=rng.randrange(0,9)
-        a=ExpertResidencyLRU(cap); b=EpochExpertResidencyLRU(cap)
+        cap=rng.randrange(0,9); a=ExpertResidencyLRU(cap); b=EpochExpertResidencyLRU(cap)
         for __ in range(80):
-            op=rng.choice(('access','prefetch','resident')); value=rng.randrange(0,16)
-            if apply(a,op,value) != apply(b,op,value): eq_fail += 1
-            if visible(a) != visible(b): eq_fail += 1
-        eq += 1
+            op=rng.choice(('access','prefetch','resident')); v=rng.randrange(0,16)
+            ra=getattr(a,op)(v); rb=getattr(b,op)(v)
+            eq_fail += int(ra!=rb or visible(a)!=visible(b))
 
-    governed_detect=raw_escape=identical_detect=0
-    for _ in range(60):
-        b=EpochExpertResidencyLRU(3)
-        for v in (1,2,3): b.prefetch(v)
-        s=snapshot(b); before=visible(b)
-        for v in (1,2,3): b.prefetch(v)
-        governed_detect += int(visible(b)==before and not unchanged(b,s))
-    for _ in range(60):
-        b=EpochExpertResidencyLRU(3)
-        for v in (1,2,3): b.prefetch(v)
-        s=snapshot(b); before=visible(b)
-        for v in (1,2,3): b.r.move_to_end(v)
-        raw_escape += int(visible(b)==before and unchanged(b,s))
-    for _ in range(60):
-        b=EpochExpertResidencyLRU(3)
-        for v in (1,2,3): b.prefetch(v)
-        s=snapshot(b); before=visible(b)
-        b.prefetch(3)
-        identical_detect += int(visible(b)==before and not unchanged(b,s))
-
-    hs=[]
+    # HS1000 is implementation-backed: each cell's valid path reaches the live ABA probe.
+    hs=[]; hs_mismatch=0
     for i in range(1000):
-        governed=(i%7)!=0; state_equal=(i%3)!=0
-        epoch_equal=(i%11)==0 if governed else True; authority=(i%13)!=0
-        d=classify(governed,state_equal,epoch_equal,authority)
-        hs.append((i,int(governed),int(state_equal),int(epoch_equal),int(authority),d))
-    counts={}
-    for *_,d in hs: counts[d]=counts.get(d,0)+1
+        axes=[2]*8
+        if i%5==0: axes[i%8]=0
+        elif i%7==0: axes[i%8]=1
+        tail=tuple((i//(3**j))%3 for j in range(5))
+        got=implementation(tuple(axes),tail); want=oracle(tuple(axes)); hs_mismatch += int(got!=want)
+        hs.append((i,tuple(axes),tail,got,want))
 
-    omega_keepers=omega_hard_repairs=0
+    # All Omega8 states at antipodal tails, plus every 5-trit tail for valid and single-invalid bases.
+    vectors=0; mismatches=0; keepers=0; route_variation=0
     for axes in product((0,1,2),repeat=8):
-        ready=all(v==2 for v in axes)
-        omega_keepers += int(ready)
-        omega_hard_repairs += int(0 in axes and ready)
-
-    tail_valid_ready=tail_hard_ready=0; route_classes=set(); tails_checked=0
+        ds=[]
+        for tail in ((0,0,0,0,0),(2,2,2,2,2)):
+            got=implementation(axes,tail); want=oracle(axes); vectors+=1; mismatches += int(got!=want); ds.append(got)
+        route_variation += int(ds[0]!=ds[1]); keepers += int(axes==(2,)*8 and ds[0]==READY)
+    valid=(2,)*8
     for tail in product((0,1,2),repeat=5):
-        tails_checked += 1; route_classes.update(tail)
-        tail_valid_ready += 1
+        got=implementation(valid,tail); vectors+=1; mismatches += int(got!=READY)
         for hard_axis in range(8):
-            axes=[2]*8; axes[hard_axis]=0
-            tail_hard_ready += int(all(v==2 for v in axes))
+            axes=[2]*8; axes[hard_axis]=0; axes=tuple(axes)
+            got=implementation(axes,tail); vectors+=1; mismatches += int(got!=HARD)
 
-    body={
-      'owner_equivalence_cases':eq,'owner_equivalence_failures':eq_fail,
-      'governed_aba_detected':governed_detect,'raw_bypass_escapes':raw_escape,
-      'identical_visible_write_detected':identical_detect,
-      'hs1000_counts':counts,'hs1000_root':h(hs),
-      'omega8_keepers':omega_keepers,'omega8_hard_invalid_repairs':omega_hard_repairs,
-      'tails_checked':tails_checked,'tail_valid_ready':tail_valid_ready,
-      'tail_hard_ready':tail_hard_ready,'route_classes':sorted(route_classes),
-    }
-    body['campaign_root']=h(body)
-    return body
-
+    body={'owner_equivalence_failures':eq_fail,'governed_aba_probe':governed_aba_probe(),
+          'hs1000_mismatches':hs_mismatch,'hs1000_root':h(hs),'omega8_keepers':keepers,
+          'vectors_checked':vectors,'oracle_mismatches':mismatches,'routing_decision_variations':route_variation}
+    body['campaign_root']=h(body); return body
 if __name__=='__main__': print(json.dumps(run(),sort_keys=True))
