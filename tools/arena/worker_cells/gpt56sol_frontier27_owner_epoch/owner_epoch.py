@@ -6,10 +6,11 @@ from hashlib import sha256
 import json
 import multiprocessing as mp
 from pathlib import Path
+import secrets
 import sys
 import threading
 import types
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 
 def _stable(value: Any) -> bytes:
@@ -99,6 +100,7 @@ def _apply_state(owner, module, state: Mapping[str, Any]) -> None:
 
 @dataclass(frozen=True)
 class FrontierSnapshot:
+    owner_incarnation: str
     commit_generation: int
     mutation_epoch: int
     full_state: dict[str, Any]
@@ -110,6 +112,7 @@ class FrontierSnapshot:
 class FrontierCommitReceipt:
     admitted: bool
     reason: str
+    owner_incarnation: str
     commit_generation: int
     mutation_epoch: int
     full_state_root: str
@@ -117,9 +120,10 @@ class FrontierCommitReceipt:
     result: Any = None
 
 
-def _snapshot_payload(owner, generation: int, epoch: int, source_root: str) -> dict[str, Any]:
+def _snapshot_payload(owner, incarnation: str, generation: int, epoch: int, source_root: str) -> dict[str, Any]:
     state = _capture_state(owner)
     return {
+        "owner_incarnation": incarnation,
         "commit_generation": generation,
         "mutation_epoch": epoch,
         "full_state": state,
@@ -131,6 +135,7 @@ def _snapshot_payload(owner, generation: int, epoch: int, source_root: str) -> d
 def _owner_process_main(conn, source: bytes, source_root: str, initial_spec: dict[str, Any]):
     module = _load_owner_module(source, source_root, f"_aura_frontier_owner_{id(conn)}")
     owner = _build_owner(module, _initial_state(initial_spec))
+    incarnation = secrets.token_hex(32)
     generation = 0
     epoch = 0
     try:
@@ -141,7 +146,7 @@ def _owner_process_main(conn, source: bytes, source_root: str, initial_spec: dic
                 conn.send({"ok": True})
                 return
             if op == "snapshot":
-                conn.send({"ok": True, "snapshot": _snapshot_payload(owner, generation, epoch, source_root)})
+                conn.send({"ok": True, "snapshot": _snapshot_payload(owner, incarnation, generation, epoch, source_root)})
                 continue
             if op == "run":
                 before = _capture_state(owner)
@@ -149,20 +154,21 @@ def _owner_process_main(conn, source: bytes, source_root: str, initial_spec: dic
                 after = _capture_state(owner)
                 if after != before:
                     epoch += 1
-                conn.send({"ok": True, "result": result, "snapshot": _snapshot_payload(owner, generation, epoch, source_root)})
+                conn.send({"ok": True, "result": result, "snapshot": _snapshot_payload(owner, incarnation, generation, epoch, source_root)})
                 continue
             if op == "governed_write":
-                # Every admitted governed persistent write advances the epoch, even if
-                # the final bytes equal the starting bytes.
                 _apply_state(owner, module, request["state"])
                 epoch += 1
-                conn.send({"ok": True, "snapshot": _snapshot_payload(owner, generation, epoch, source_root)})
+                conn.send({"ok": True, "snapshot": _snapshot_payload(owner, incarnation, generation, epoch, source_root)})
                 continue
             if op == "commit":
-                current = _snapshot_payload(owner, generation, epoch, source_root)
+                current = _snapshot_payload(owner, incarnation, generation, epoch, source_root)
                 expected = request["expected"]
                 if current["owner_source_root"] != expected["owner_source_root"]:
                     conn.send({"ok": True, "receipt": {**current, "admitted": False, "reason": "HOLD_SOURCE_ROOT", "result": None}})
+                    continue
+                if current["owner_incarnation"] != expected["owner_incarnation"]:
+                    conn.send({"ok": True, "receipt": {**current, "admitted": False, "reason": "HOLD_OWNER_INCARNATION", "result": None}})
                     continue
                 if current["commit_generation"] != expected["commit_generation"]:
                     conn.send({"ok": True, "receipt": {**current, "admitted": False, "reason": "HOLD_COMMIT_GENERATION", "result": None}})
@@ -176,7 +182,7 @@ def _owner_process_main(conn, source: bytes, source_root: str, initial_spec: dic
                 _apply_state(owner, module, request["post_state"])
                 generation += 1
                 epoch += 1
-                after = _snapshot_payload(owner, generation, epoch, source_root)
+                after = _snapshot_payload(owner, incarnation, generation, epoch, source_root)
                 conn.send({"ok": True, "receipt": {**after, "admitted": True, "reason": "COMMIT", "result": request.get("result")}})
                 continue
             conn.send({"ok": False, "error": f"unknown operation: {op}"})
@@ -199,6 +205,7 @@ def _transition_worker(conn, source: bytes, source_root: str, snapshot: dict[str
             "post_state": post_state,
             "post_state_root": _digest(post_state),
             "owner_source_root": source_root,
+            "owner_incarnation": snapshot["owner_incarnation"],
         })
     except Exception as exc:
         conn.send({"ok": False, "error": f"{type(exc).__name__}: {exc}"})
@@ -207,13 +214,9 @@ def _transition_worker(conn, source: bytes, source_root: str, snapshot: dict[str
 
 
 class FrontierEpochOwnerProcess:
-    """Process-owned Frontier state with a monotone lifecycle epoch.
+    """Process-owned Frontier state with owner-incarnation + mutation-epoch fencing."""
 
-    The raw FrontierOffload object exists only in the child process. Parent callers
-    receive snapshots/receipts, never a mutable owner reference.
-    """
-
-    __slots__ = ("__source", "__source_root", "__conn", "__process", "__rpc_lock")
+    __slots__ = ("__source", "__source_root", "__owner_incarnation", "__conn", "__process", "__rpc_lock")
 
     def __init__(self, source: bytes, expected_source_root: str, initial_spec: Mapping[str, Any]):
         observed = _source_digest(source)
@@ -221,6 +224,7 @@ class FrontierEpochOwnerProcess:
             raise ValueError("owner source root mismatch")
         self.__source = bytes(source)
         self.__source_root = expected_source_root
+        self.__owner_incarnation = ""
         ctx = mp.get_context("spawn")
         parent_conn, child_conn = ctx.Pipe()
         process = ctx.Process(
@@ -233,7 +237,8 @@ class FrontierEpochOwnerProcess:
         self.__conn = parent_conn
         self.__process = process
         self.__rpc_lock = threading.Lock()
-        self.snapshot()  # fail-fast boot check
+        boot = self.snapshot()
+        self.__owner_incarnation = boot.owner_incarnation
 
     @classmethod
     def from_canonical_file(cls, path: str | Path, expected_source_root: str, initial_spec: Mapping[str, Any]):
@@ -244,11 +249,17 @@ class FrontierEpochOwnerProcess:
     def owner_source_root(self) -> str:
         return self.__source_root
 
+    @property
+    def owner_incarnation(self) -> str:
+        return self.__owner_incarnation
+
     def _rpc(self, payload: dict[str, Any]) -> dict[str, Any]:
         with self.__rpc_lock:
             if not self.__process.is_alive():
                 raise RuntimeError("owner process is not alive")
             self.__conn.send(payload)
+            if not self.__conn.poll(30.0):
+                raise TimeoutError("owner process request timed out")
             reply = self.__conn.recv()
         if not reply.get("ok"):
             raise RuntimeError(reply.get("error", "owner process request failed"))
@@ -276,6 +287,7 @@ class FrontierEpochOwnerProcess:
         return FrontierCommitReceipt(
             admitted=reply["admitted"],
             reason=reply["reason"],
+            owner_incarnation=reply["owner_incarnation"],
             commit_generation=reply["commit_generation"],
             mutation_epoch=reply["mutation_epoch"],
             full_state_root=reply["full_state_root"],
@@ -286,6 +298,8 @@ class FrontierEpochOwnerProcess:
     def project_pinned(self, snapshot: FrontierSnapshot, routes, preds) -> tuple[Any, dict[str, Any], str]:
         if snapshot.owner_source_root != self.__source_root:
             raise ValueError("snapshot source root mismatch")
+        if self.__owner_incarnation and snapshot.owner_incarnation != self.__owner_incarnation:
+            raise ValueError("snapshot owner incarnation mismatch")
         ctx = mp.get_context("spawn")
         parent_conn, child_conn = ctx.Pipe(False)
         process = ctx.Process(
@@ -294,6 +308,9 @@ class FrontierEpochOwnerProcess:
         )
         process.start()
         child_conn.close()
+        if not parent_conn.poll(30.0):
+            process.terminate(); process.join(timeout=5)
+            raise TimeoutError("pinned transition worker timed out")
         reply = parent_conn.recv()
         process.join(timeout=30)
         if process.is_alive():
@@ -307,7 +324,7 @@ class FrontierEpochOwnerProcess:
         snap = self.snapshot()
         result, post_state, source_root = self.project_pinned(snap, routes, preds)
         if source_root != snap.owner_source_root:
-            return FrontierCommitReceipt(False, "HOLD_SOURCE_ROOT", snap.commit_generation, snap.mutation_epoch, snap.full_state_root, snap.owner_source_root)
+            return FrontierCommitReceipt(False, "HOLD_SOURCE_ROOT", snap.owner_incarnation, snap.commit_generation, snap.mutation_epoch, snap.full_state_root, snap.owner_source_root)
         return self.commit(snap, post_state, result)
 
     def close(self) -> None:
@@ -336,8 +353,4 @@ class FrontierEpochOwnerProcess:
         self.close()
 
 
-__all__ = [
-    "FrontierSnapshot",
-    "FrontierCommitReceipt",
-    "FrontierEpochOwnerProcess",
-]
+__all__ = ["FrontierSnapshot", "FrontierCommitReceipt", "FrontierEpochOwnerProcess"]
