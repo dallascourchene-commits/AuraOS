@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout candidate
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -43,18 +45,24 @@ jobs:
           p = json.load(open("kinetic-audio-proof.json", encoding="utf-8"))
           assert p["hs1000"]["cases"] == 1000
           assert p["hs1000"]["oracle_mismatches"] == 0
-          assert p["hs1000"]["compound_root"] == "1e316c57a30d22d721a001dce7040355e96c85afcaafb31263f595d57dced8d7"
-          assert p["hs1000"]["stream_sha256"] == "e500b55c63f3cbef4338bf7c31fba5755db4dd24823c5ba77fcc2f5fdebe2d15"
+          assert p["hs1000"]["compound_root"] == "2922afa6c2fade78f002dac0b988f07e0fce47bd027473a79b8e67ac637fa037"
+          assert p["hs1000"]["stream_sha256"] == "8a69834887323acca9f246892063cff39977b07a1168a40d6005847ac70a6c5b"
           assert p["k27"]["coordinates"] == 27
           assert p["k27"]["projection_root"] == "52a65d2493cc3729052032688eb2ca73ff0bbf31467d04bdd57da4a11f4d6293"
           assert p["lattice"]["omega8_states"] == 6561
           assert p["lattice"]["omega8"]["READY"] == 1
+          assert p["lattice"]["omega8_routing_variations"] == 0
+          assert p["lattice"]["omega8_root"] == "b8530f86db387c4cf4dabc48417a8c4b7e6b3c7ca032929f8e9ec4583c3656b3"
           assert p["lattice"]["states13d"] == 1594323
+          assert p["lattice"]["counts13d"]["READY"] == 1
           assert p["lattice"]["hard_invalid_repairs"] == 0
           assert p["lattice"]["routing_decision_variations"] == 0
+          assert p["lattice"]["root13d"] == "766d24a06f2cf2a160ec7b4f62c0d315665ea69e6456a460fd8e4e955a2b48bf"
           assert p["replay_equal"] is True
-          assert p["replay_root"] == "cfa734b726263be946c41f68e6ba101a6e8c553b776f8ff8fe8d11c082f02395"
-          assert p["deterministic_root"] == "614546716bc8e258f3f0f41dc48b3cb813ed03ba29adc324a6294546e466e505"
+          assert p["replay_root"] == "dee37b300c38283c57107ab1e75d7f6a99914872071ccb40b187285f459437b8"
+          assert p["deterministic_root"] == "90bf9361900b7dfcea1d06de270f05abdb861690c4d50e01d24268a63c91702d"
+          assert p["synthetic_callback_benchmark_empty"]["control_path_blocks"] == 0
+          assert p["synthetic_callback_benchmark_control"]["control_path_blocks"] == 5000
           assert p["authority_ceiling"] == "D0_PROCESS_LEVEL_ONLY__NO_DEVICE_XRUN_CREDIT"
           PY
       - name: Verify proof leaves tracked tree clean
