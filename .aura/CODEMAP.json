@@ -405,6 +405,9 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
+    "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json": [
+      ".github/workflows/pr863-k27-gate10-replay.yml"
+    ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
     ],
@@ -1060,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1667,
+    "repo_file_count": 1668,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1234,6 +1237,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr863-k27-gate10-replay.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -11787,6 +11791,59 @@
         0.087905,
         -0.204351,
         -0.156402
+      ]
+    },
+    {
+      "path": ".github/workflows/pr863-k27-gate10-replay.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2216,
+      "lines": 70,
+      "tokens_est": 554,
+      "symbol_count": 0,
+      "commands": [
+        "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json"
+      ],
+      "command_lines": {
+        "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json": [
+          38
+        ]
+      },
+      "topology": {},
+      "digest8": "9a985a480bb3e34e",
+      "vector": [
+        0.073705,
+        -0.050205,
+        0.139932,
+        -0.071568,
+        0.007477,
+        -0.118569,
+        -0.255296,
+        0.178387,
+        -0.255296,
+        0.073705,
+        -0.118569,
+        -0.197614,
+        -0.045932,
+        0.214705,
+        -0.101478,
+        0.201887,
+        0.169842,
+        0.242478,
+        -0.090796,
+        -0.099341,
+        -0.171978,
+        -0.167705,
+        0.257433,
+        -0.270251,
+        -0.212569,
+        -0.268115,
+        -0.221114,
+        -0.050205,
+        0.265978,
+        -0.216842,
+        0.157023,
+        0.139932
       ]
     },
     {
@@ -106425,7 +106482,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788714095,
+  "generated_at_unix": 1788714151,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106601,6 +106658,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr863-k27-gate10-replay.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -270510,7 +270568,7 @@
       }
     ],
     "record_fingerprint": "a475b3886680eebac6ab680bb0331650",
-    "payload_hash": "b188b6f99e5d8b5abe48bc448755dd18"
+    "payload_hash": "2c55a44e97d41ec187c1eba6d2b9be8c"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270523,16 +270581,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1667,
-      "bytes": 26586636,
-      "tokens_est": 6637008,
+      "files": 1668,
+      "bytes": 26588852,
+      "tokens_est": 6637562,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1018,
-        "schema_or_lexicon": 274,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -271219,16 +271277,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1667,
-    "total_bytes": 26586636,
-    "text_tokens_est": 6637008,
+    "file_count": 1668,
+    "total_bytes": 26588852,
+    "text_tokens_est": 6637562,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1018,
-      "schema_or_lexicon": 274,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
