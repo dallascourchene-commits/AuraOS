@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools' / 'arena'))
 
 from k27_memory.gate10_campaign_oracle import (
     CampaignOracleError, HOLD_STALE_DEPENDENCY, HOLD_STORE_ROOT_CONFLICT,
-    classify_round, completion_fields, execution_fields, trace_entry,
+    campaign_root_from_trace, classify_round, completion_fields, execution_fields, trace_entry,
 )
 
 REV = "1" * 64
@@ -129,6 +129,38 @@ class Gate10CampaignOracleTests(unittest.TestCase):
         self.assertEqual(out["completed_rounds"], 750)
         self.assertFalse(out["round_identity_complete"])
         self.assertFalse(out["campaign_complete"])
+
+    def canonical_trace(self):
+        return [
+            {"round": i, "src_epoch": i + 2, "dep_epoch": i + 2, "root": f"{i:064x}", "root_scope": "POST_DEPENDENCY_REPAIR"}
+            for i in range(4)
+        ]
+
+    def test_campaign_root_is_recomputable_from_complete_trace(self):
+        trace = self.canonical_trace()
+        root1 = campaign_root_from_trace(trace)
+        root2 = campaign_root_from_trace([dict(row) for row in trace])
+        self.assertEqual(root1, root2)
+        self.assertEqual(len(root1), 64)
+
+    def test_campaign_root_changes_when_evidence_changes(self):
+        trace = self.canonical_trace()
+        root1 = campaign_root_from_trace(trace)
+        changed = [dict(row) for row in trace]
+        changed[-1]["root"] = "f" * 64
+        self.assertNotEqual(root1, campaign_root_from_trace(changed))
+
+    def test_campaign_root_rejects_missing_or_duplicate_round(self):
+        trace = self.canonical_trace()
+        trace[2]["round"] = 1
+        with self.assertRaises(CampaignOracleError):
+            campaign_root_from_trace(trace)
+
+    def test_campaign_root_rejects_noncanonical_trace_row(self):
+        trace = self.canonical_trace()
+        trace[0]["extra"] = True
+        with self.assertRaises(CampaignOracleError):
+            campaign_root_from_trace(trace)
 
 
 if __name__ == "__main__":

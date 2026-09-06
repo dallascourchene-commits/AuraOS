@@ -42,8 +42,10 @@ jobs:
       - name: Enforce hard invariants
         run: |
           python - <<'PY'
-          import json
+          import json, sys
           from pathlib import Path
+          sys.path.insert(0, str(Path('tools/arena').resolve()))
+          from k27_memory.gate10_campaign_oracle import campaign_root_from_trace
           r = json.loads(Path('gate10-receipt.json').read_text())
           expected = {
               'workers': 5,
@@ -72,10 +74,20 @@ jobs:
               'completed_rounds': 750,
               'round_failures': 0,
               'round_identity_complete': True,
+              'trace_entries': 750,
+              'campaign_root_evidence_schema': 'AURA-K27-GATE10-TRACE-v1',
           }
           bad = {k: (r.get(k), v) for k, v in expected.items() if r.get(k) != v}
           if bad:
               raise SystemExit(f'Gate10 invariant failure: {bad}')
+          trace = r.get('trace')
+          if not isinstance(trace, list):
+              raise SystemExit('Gate10 receipt omits complete trace evidence')
+          recomputed = campaign_root_from_trace(trace)
+          if recomputed != r.get('campaign_root'):
+              raise SystemExit(f"Gate10 campaign-root mismatch: {recomputed} != {r.get('campaign_root')}")
+          if r.get('final') != trace[-1]:
+              raise SystemExit('Gate10 final row is not the final complete-trace row')
           final = r.get('final') or {}
           if final.get('root_scope') != 'POST_DEPENDENCY_REPAIR':
               raise SystemExit(f"Gate10 root-scope failure: {final.get('root_scope')}")
