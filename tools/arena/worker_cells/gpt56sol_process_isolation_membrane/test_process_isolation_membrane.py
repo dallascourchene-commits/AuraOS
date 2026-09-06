@@ -1,6 +1,10 @@
 import os
 import sys
 import unittest
+import importlib
+import tempfile
+from pathlib import Path
+from dataclasses import replace
 from types import ModuleType, SimpleNamespace
 
 from process_isolation_membrane import *
@@ -87,7 +91,56 @@ class T(unittest.TestCase):
         self.assertEqual(r.worker_pid, self.service.worker_pid)
         self.assertEqual(r.authority_ceiling, "D0_PROCESS_ISOLATION_ONLY")
         self.assertEqual(len(r.worker_nonce_root), 64)
+        self.assertEqual(len(r.factory_identity_root), 64)
+        self.assertEqual(len(r.factory_module_bytes_root), 64)
         self.assertEqual(len(r.receipt_root), 64)
+        self.assertTrue(r.verify())
+        expected = factory_identity_for_spec("process_isolation_membrane:IsolationProbe")
+        self.assertEqual(r.factory_identity_root, expected.identity_root)
+        self.assertEqual(r.factory_module_bytes_root, expected.module_bytes_root)
+
+    def test_receipt_factory_identity_tamper_fails_verification(self):
+        r = self.service.receipt
+        self.assertFalse(replace(r, factory_identity_root="f" * 64).verify())
+        self.assertFalse(replace(r, factory_module_bytes_root="e" * 64).verify())
+
+    def test_factory_identity_changes_when_module_bytes_move(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            module_name = "_aura_factory_identity_fixture"
+            path = root / f"{module_name}.py"
+            path.write_text("class Factory:\n    pass\n")
+            sys.path.insert(0, td)
+            try:
+                importlib.invalidate_caches()
+                first = factory_identity_for_spec(f"{module_name}:Factory")
+                path.write_text("class Factory:\n    marker = 2\n")
+                importlib.invalidate_caches()
+                second = factory_identity_for_spec(f"{module_name}:Factory")
+                self.assertNotEqual(first.module_bytes_root, second.module_bytes_root)
+                self.assertNotEqual(first.identity_root, second.identity_root)
+            finally:
+                sys.path.remove(td)
+                sys.modules.pop(module_name, None)
+
+    def test_factory_identity_same_for_parent_and_worker_receipt(self):
+        expected = factory_identity_for_spec("process_isolation_membrane:IsolationProbe")
+        self.assertEqual(self.service.receipt.factory_identity_root, expected.identity_root)
+        self.assertTrue(self.service.receipt.verify())
+
+    def test_factory_currentness_is_exact_only_for_same_identity(self):
+        current = factory_identity_for_spec("process_isolation_membrane:IsolationProbe")
+        self.assertEqual(factory_identity_currentness(current, current), "EXACT")
+        moved = FactoryIdentity.mint(
+            factory_spec=current.factory_spec,
+            module_bytes_root="a" * 64 if current.module_bytes_root != "a" * 64 else "b" * 64,
+        )
+        self.assertEqual(factory_identity_currentness(current, moved), "HOLD")
+
+    def test_factory_currentness_holds_tampered_identity(self):
+        current = factory_identity_for_spec("process_isolation_membrane:IsolationProbe")
+        tampered = replace(current, identity_root="0" * 64)
+        self.assertEqual(factory_identity_currentness(current, tampered), "HOLD")
 
     def test_bad_spec_fails_closed(self):
         with self.assertRaises(WorkerProtocolError):
