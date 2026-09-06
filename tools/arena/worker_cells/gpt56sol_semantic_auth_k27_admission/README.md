@@ -37,7 +37,7 @@ Final named bytes, three independently recreated stdlib-only virtual environment
 
 SHA-256 final bytes:
 - implementation `940424f4885de9d263a557228cd059037d9a254c47c4887227849e2c83f8fe4e`
-- tests `2e49540bf6414abd8b1598141a8b4ebd241e7518fb4433e25da360a188d74805`
+- tests `6b1af6ca0490edbdfe8de5d4ba757f285d69e4c0d6b9084a876e480829eb02f9`
 - campaign `cf090666b1ea78597f066b9c1a2223008993bdac948c641d6f9281e3a7c0c02d`
 
 ## Failure / repair scars
