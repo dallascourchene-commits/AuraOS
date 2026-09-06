@@ -36,8 +36,9 @@ READ_APIS = (
 )
 SPATIAL_SEAM_SCHEMA = "AURA-K27-SPATIAL-SEAM-v1"
 SPATIAL_SEAM_PARENT_SHA = "dedcb8d16ada00bb44ce71271175945a4b0a0fac"
-SPATIAL_ROUTE_BLOB = "f8786e59a7e9a14c14dafa587f948eafe9496ad6"
-SPATIAL_SEAM_MODULE_BLOB = "7356518021122491bd68e8a2f5e57433e0c833ad"
+SPATIAL_ROUTE_BLOB = "f8786e721813af7c81fca94eaeda08ec0b9598f3"
+SPATIAL_SEAM_SOURCE_BLOB = "c439b0e1e438299cd8a914aade89034342065dd3"
+SPATIAL_SEAM_MODULE_BLOB = "8983170b71dd962facb4eb586c002bd63948f2f8"
 SPATIAL_TRANSITION = "SPATIAL.GROUND.COMPILE_SCENE"
 
 class RuntimeBindingError(ValueError):
@@ -226,7 +227,6 @@ class K27MemoryRuntime:
             "gate10": False,
         }
 
-
     def spatial_seam_binding_receipt(self, spatial_manifest: Mapping[str, Any]) -> dict[str, Any]:
         """Validate PR #859's declaration-only Spatial seam against this store.
 
@@ -271,6 +271,7 @@ class K27MemoryRuntime:
             "spatial_seam_schema": SPATIAL_SEAM_SCHEMA,
             "spatial_seam_parent_sha": SPATIAL_SEAM_PARENT_SHA,
             "spatial_route_blob": SPATIAL_ROUTE_BLOB,
+            "spatial_seam_source_blob": SPATIAL_SEAM_SOURCE_BLOB,
             "spatial_seam_module_blob": SPATIAL_SEAM_MODULE_BLOB,
             "registry_sha256": self.seal.database_sha256,
             "semantic_registry_root": self.seal.semantic_registry_root,
