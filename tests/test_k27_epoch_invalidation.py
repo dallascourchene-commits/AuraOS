@@ -1,3 +1,4 @@
+import json
 import sys
 import tempfile
 import unittest
@@ -114,6 +115,61 @@ class EpochInvalidationTests(unittest.TestCase):
                 out = store.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1',
                                     expected_revision=src['revision_id'], expected_epoch=src['epoch'])
                 self.assertEqual(out['invalidated'], ['a','m','z'])
+
+    def test_state_root_rejects_ambient_payload_envelope_mutation(self):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / 'm.sqlite'
+            with new_store(p) as store:
+                src = store.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1')
+                env = json.loads(store.db.execute(
+                    'SELECT envelope FROM revisions WHERE revision_id=?', (src['revision_id'],)).fetchone()[0])
+                env['payload']['v'] = 999
+                store.db.execute('UPDATE revisions SET envelope=? WHERE revision_id=?',
+                                 (json.dumps(env, sort_keys=True, separators=(',',':')), src['revision_id']))
+                with self.assertRaisesRegex(MemoryConflict, 'revision envelope digest mismatch'):
+                    store.state_root()
+                with self.assertRaisesRegex(MemoryConflict, 'revision envelope digest mismatch'):
+                    store.get('src')
+
+    def test_state_root_rejects_ambient_source_metadata_mutation(self):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / 'm.sqlite'
+            with new_store(p) as store:
+                src = store.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1')
+                env = json.loads(store.db.execute(
+                    'SELECT envelope FROM revisions WHERE revision_id=?', (src['revision_id'],)).fetchone()[0])
+                env['source_version'] = 'forged'
+                store.db.execute('UPDATE revisions SET envelope=? WHERE revision_id=?',
+                                 (json.dumps(env, sort_keys=True, separators=(',',':')), src['revision_id']))
+                with self.assertRaises(MemoryConflict):
+                    store.history('src', src['revision_id'])
+
+    def test_dependency_edge_mutation_changes_whole_store_root(self):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / 'm.sqlite'
+            with new_store(p) as store:
+                src = store.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1')
+                dep = store.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
+                                    dependencies={'src':src['revision_id']}, dependency_epochs={'src':src['epoch']})
+                before = store.state_root()
+                store.db.execute('DELETE FROM dependencies WHERE revision_id=?', (dep['revision_id'],))
+                self.assertNotEqual(before, store.state_root())
+
+    def test_historical_revision_mutation_is_not_hidden_by_current_object(self):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / 'm.sqlite'
+            with new_store(p) as store:
+                first = store.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1')
+                second = store.publish('src', {'v':2}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='2',
+                                       expected_revision=first['revision_id'], expected_epoch=first['epoch'])
+                env = json.loads(store.db.execute(
+                    'SELECT envelope FROM revisions WHERE revision_id=?', (first['revision_id'],)).fetchone()[0])
+                env['source_url'] = 'forged'
+                store.db.execute('UPDATE revisions SET envelope=? WHERE revision_id=?',
+                                 (json.dumps(env, sort_keys=True, separators=(',',':')), first['revision_id']))
+                with self.assertRaises(MemoryConflict):
+                    store.state_root()
+                self.assertEqual(store.get('src')['revision_id'], second['revision_id'])
 
 
 if __name__ == '__main__':
