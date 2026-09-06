@@ -178,6 +178,8 @@ def main():
             if kind in ("domain", "projection", "generation_rebind"):
                 false_admission += 1
 
+    # Dedicated HS1000 generation-only challenge: prove that proof-neutral owner
+    # generation movement never becomes an unnecessary recomputation seed.
     generation_only_false_reproof = 0
     generation_only_false_reuse = 0
     for i in range(1000):
