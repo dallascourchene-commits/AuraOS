@@ -8,6 +8,10 @@ ARENA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ARENA))
 
 from k27_memory import FrameAddress, MemoryConflict, MemoryStore, StaleMemory
+from consequence_admission_kernel import (
+    AdmissionInput, AdmissionPolicy, AxisState, ConsequenceAdmissionKernel,
+    ConsequenceVector, Decision, SourceExit,
+)
 
 WORKERS=5
 ROUNDS=750
@@ -63,20 +67,50 @@ def run():
                                        expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
                                        dependencies={'src':src_fresh['revision_id']}, dependency_epochs={'src':src_fresh['epoch']})
             trace.append({'round':r,'src_epoch':win[3],'dep_epoch':dep_repaired['epoch'],'root':win[5]})
+
+    # Factorized 13D falsification against the canonical consequence kernel.
+    # Layer A covers every Omega8 state at antipodal routing tails. Layer B
+    # covers every routing tail for each single-hard-invalid axis basis. This
+    # makes the routing check consequence-bearing rather than tautological.
+    kernel=ConsequenceAdmissionKernel()
+    policy=AdmissionPolicy('gate10-epoch-campaign-v1', tuple(range(8)), ())
+    source=SourceExit('campaign','arena-gate10','r1','semantic-root',True)
     keeper=0
     hard_invalid_repaired=0
+    routing_decision_variations=0
+    vectors_checked=0
+    tails=((0,0,0,0,0),(2,2,2,2,2))
     for axes in product((0,1,2), repeat=8):
-        ok=all(x==2 for x in axes)
-        if ok: keeper += 1
-        for tail in product((0,1,2), repeat=5):
-            if 0 in axes and all(x==2 for x in tail) and ok:
+        omega=tuple(AxisState(v) for v in axes)
+        decisions=[]
+        for tail in tails:
+            receipt=kernel.assess(AdmissionInput('GATE10_EPOCH',ConsequenceVector(omega,tail),policy,source))
+            decisions.append(receipt.decision)
+            vectors_checked += 1
+            if 0 in axes and receipt.decision == Decision.READY_NONAUTHORIZING:
                 hard_invalid_repaired += 1
+        if decisions[0] != decisions[1]: routing_decision_variations += 1
+        if all(v==2 for v in axes) and decisions[0] == Decision.READY_NONAUTHORIZING:
+            keeper += 1
+    for hard_axis in range(8):
+        axes=[2]*8; axes[hard_axis]=0
+        omega=tuple(AxisState(v) for v in axes)
+        baseline=None
+        for tail in product((0,1,2), repeat=5):
+            receipt=kernel.assess(AdmissionInput('GATE10_EPOCH',ConsequenceVector(omega,tail),policy,source))
+            vectors_checked += 1
+            if receipt.decision == Decision.READY_NONAUTHORIZING:
+                hard_invalid_repaired += 1
+            if baseline is None: baseline=receipt.decision
+            elif receipt.decision != baseline: routing_decision_variations += 1
     root=sha256(canon(trace).encode()).hexdigest()
     return {
         'workers':WORKERS,'rounds':ROUNDS,'attempts':WORKERS*ROUNDS,
         'false_accept':false_accept,'false_hold':false_hold,
         'aba_violations':aba_violations,'stale_dependency_violations':stale_dependency_violations,
         'omega8_keepers':keeper,'routing13_hard_invalid_repairs':hard_invalid_repaired,
+        'routing13_decision_variations':routing_decision_variations,
+        'routing13_vectors_checked':vectors_checked,
         'campaign_root':root,'final':trace[-1],
     }
 
