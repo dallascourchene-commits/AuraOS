@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1666
-- **total_bytes**: 26580739
-- **text_tokens_est**: 6635533
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1017, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1667
+- **total_bytes**: 26586636
+- **text_tokens_est**: 6637008
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1018, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1666,
+  "repo_file_count": 1667,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1666,6 +1666,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/frontier27_runtime.py",
     "tools/arena/k27_memory/README.md",
     "tools/arena/k27_memory/__init__.py",
+    "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
     "tools/arena/k27_memory/coordinate_bridge.py",
     "tools/arena/k27_memory/k27_city.py",
     "tools/arena/k27_memory/persistent_memory.py",
@@ -1806,15 +1807,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1666,
-  "bytes": 26580739,
-  "tokens_est": 6635533,
+  "files": 1667,
+  "bytes": 26586636,
+  "tokens_est": 6637008,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1017,
+    "python_module": 1018,
     "schema_or_lexicon": 274,
     "support_file": 49
   }
