@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26483250
-- **text_tokens_est**: 6611153
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1660
+- **total_bytes**: 26533558
+- **text_tokens_est**: 6623736
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1660,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1659,6 +1659,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-4",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/README.md",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+    "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1789,17 +1800,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26483250,
-  "tokens_est": 6611153,
+  "files": 1660,
+  "bytes": 26533558,
+  "tokens_est": 6623736,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
+    "python_module": 1009,
     "schema_or_lexicon": 273,
-    "support_file": 49
+    "support_file": 53
   }
 }
 ```
