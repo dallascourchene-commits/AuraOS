@@ -1061,7 +1061,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1677,
+    "repo_file_count": 1678,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2338,6 +2338,7 @@
       "scripts/security_accuracy_pinned_fixture.json",
       "scripts/update_architect_benchmark_readme.py",
       "scripts/verify_k27_memory_city_candidate.py",
+      "scripts/verify_k27_memory_city_candidate_transport.py",
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
@@ -2816,6 +2817,7 @@
       "scripts/k27_memory_city_cas_stress.py",
       "scripts/update_architect_benchmark_readme.py",
       "scripts/verify_k27_memory_city_candidate.py",
+      "scripts/verify_k27_memory_city_candidate_transport.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
       "test_support/__init__.py",
       "test_support/aura_human_agent_arena_suite.py",
@@ -2840,8 +2842,7 @@
       "tests/test_aura_ai_router_dynamic.py",
       "tests/test_aura_amd_track3_demo.py",
       "tests/test_aura_arch_v2_3_capsule_validator.py",
-      "tests/test_aura_architect_benchmark_report_warning.py",
-      "tests/test_aura_architect_controls_vault_and_surfaces.py"
+      "tests/test_aura_architect_benchmark_report_warning.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -85644,6 +85645,53 @@
       ]
     },
     {
+      "path": "scripts/verify_k27_memory_city_candidate_transport.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7454,
+      "lines": 92,
+      "tokens_est": 1864,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5bc4bd909a1b1c53",
+      "vector": [
+        0.14791,
+        -0.017641,
+        -0.27818,
+        0.017641,
+        0.028496,
+        -0.207617,
+        0.066492,
+        -0.137054,
+        -0.131626,
+        -0.329745,
+        -0.047494,
+        0.218473,
+        -0.310747,
+        0.196761,
+        -0.153338,
+        0.210331,
+        -0.27818,
+        0.080061,
+        0.017641,
+        -0.172336,
+        0.153338,
+        -0.25104,
+        -0.166908,
+        -0.210331,
+        -0.096345,
+        0.023069,
+        -0.13434,
+        0.245612,
+        0.023069,
+        -0.139768,
+        -0.14791,
+        0.226615
+      ]
+    },
+    {
       "path": "setup.sh",
       "role": "operator_script",
       "binary": false,
@@ -106912,7 +106960,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788709634,
+  "generated_at_unix": 1788710006,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108191,6 +108239,7 @@
       "scripts/security_accuracy_pinned_fixture.json",
       "scripts/update_architect_benchmark_readme.py",
       "scripts/verify_k27_memory_city_candidate.py",
+      "scripts/verify_k27_memory_city_candidate_transport.py",
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
@@ -211906,6 +211955,36 @@
         "file_digest8": "099590ce1fbda8df"
       },
       {
+        "semantic_id": "scripts/verify_k27_memory_city_candidate_transport.py#function:main:dafa030adec73cea",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/verify_k27_memory_city_candidate_transport.py",
+        "line": 58,
+        "end_line": 89,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "5bc4bd909a1b1c53"
+      },
+      {
+        "semantic_id": "scripts/verify_k27_memory_city_candidate_transport.py#function:registry_oracle:ccb56347ef350ff8",
+        "name": "registry_oracle",
+        "kind": "function",
+        "file": "scripts/verify_k27_memory_city_candidate_transport.py",
+        "line": 20,
+        "end_line": 56,
+        "signature_hash": "2b6d89e4cc83f795",
+        "file_digest8": "5bc4bd909a1b1c53"
+      },
+      {
+        "semantic_id": "scripts/verify_k27_memory_city_candidate_transport.py#function:run:79359e4c325c280c",
+        "name": "run",
+        "kind": "function",
+        "file": "scripts/verify_k27_memory_city_candidate_transport.py",
+        "line": 14,
+        "end_line": 18,
+        "signature_hash": "92c8b0309c0d438f",
+        "file_digest8": "5bc4bd909a1b1c53"
+      },
+      {
         "semantic_id": "spatial_mapper.py#class:CodeTopologyMapper:6b11b766d4de3d35",
         "name": "CodeTopologyMapper",
         "kind": "class",
@@ -271586,8 +271665,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e00e7a26d7ea88d82c9582a60781af29",
-    "payload_hash": "417f4fd22be5d136fe02a74819b85ed3"
+    "record_fingerprint": "516595b535805a2b316b0cc59aee6e2d",
+    "payload_hash": "dcda341f731bf6cbff7bb6f2b90f179d"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271600,15 +271679,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1677,
-      "bytes": 26644999,
-      "tokens_est": 6651599,
+      "files": 1678,
+      "bytes": 26652453,
+      "tokens_est": 6653463,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1026,
+        "python_module": 1027,
         "schema_or_lexicon": 278,
         "support_file": 49
       }
@@ -272296,15 +272375,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1677,
-    "total_bytes": 26644999,
-    "text_tokens_est": 6651599,
+    "file_count": 1678,
+    "total_bytes": 26652453,
+    "text_tokens_est": 6653463,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1026,
+      "python_module": 1027,
       "schema_or_lexicon": 278,
       "support_file": 49
     },
@@ -275434,6 +275513,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "scripts/verify_k27_memory_city_candidate_transport.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 89,
+        "semantic_id": "scripts/verify_k27_memory_city_candidate_transport.py#function:main:dafa030adec73cea",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "spatial_mapper.py",
         "kind": "function",
         "line": 156,
@@ -275657,6 +275744,14 @@
         "line": 16,
         "end_line": 20,
         "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:run:5e423d46883445b0",
+        "signature_hash": "92c8b0309c0d438f"
+      },
+      {
+        "file": "scripts/verify_k27_memory_city_candidate_transport.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 18,
+        "semantic_id": "scripts/verify_k27_memory_city_candidate_transport.py#function:run:79359e4c325c280c",
         "signature_hash": "92c8b0309c0d438f"
       }
     ],
@@ -374537,6 +374632,14 @@
         "line": 23,
         "end_line": 65,
         "semantic_id": "scripts/verify_k27_memory_city_candidate.py#function:registry_oracle:ac4ddb206fa280c1",
+        "signature_hash": "2b6d89e4cc83f795"
+      },
+      {
+        "file": "scripts/verify_k27_memory_city_candidate_transport.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 56,
+        "semantic_id": "scripts/verify_k27_memory_city_candidate_transport.py#function:registry_oracle:ccb56347ef350ff8",
         "signature_hash": "2b6d89e4cc83f795"
       }
     ],

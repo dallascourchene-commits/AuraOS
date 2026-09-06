@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1677
-- **total_bytes**: 26644999
-- **text_tokens_est**: 6651599
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1678
+- **total_bytes**: 26652453
+- **text_tokens_est**: 6653463
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1677,
+  "repo_file_count": 1678,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1300,6 +1300,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/security_accuracy_pinned_fixture.json",
     "scripts/update_architect_benchmark_readme.py",
     "scripts/verify_k27_memory_city_candidate.py",
+    "scripts/verify_k27_memory_city_candidate_transport.py",
     "setup.sh",
     "setup_aura.sh",
     "spatial_mapper.py",
@@ -1778,6 +1779,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/k27_memory_city_cas_stress.py",
     "scripts/update_architect_benchmark_readme.py",
     "scripts/verify_k27_memory_city_candidate.py",
+    "scripts/verify_k27_memory_city_candidate_transport.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
     "test_support/__init__.py",
     "test_support/aura_human_agent_arena_suite.py",
@@ -1802,8 +1804,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_ai_router_dynamic.py",
     "tests/test_aura_amd_track3_demo.py",
     "tests/test_aura_arch_v2_3_capsule_validator.py",
-    "tests/test_aura_architect_benchmark_report_warning.py",
-    "tests/test_aura_architect_controls_vault_and_surfaces.py"
+    "tests/test_aura_architect_benchmark_report_warning.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1817,15 +1818,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1677,
-  "bytes": 26644999,
-  "tokens_est": 6651599,
+  "files": 1678,
+  "bytes": 26652453,
+  "tokens_est": 6653463,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1026,
+    "python_module": 1027,
     "schema_or_lexicon": 278,
     "support_file": 49
   }
