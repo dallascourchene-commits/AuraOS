@@ -11,9 +11,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1664
-- **total_bytes**: 26572047
-- **text_tokens_est**: 6633357
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 50}
+- **total_bytes**: 26575184
+- **text_tokens_est**: 6634142
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1015, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -267,7 +267,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "CODEMAP_SETUP_COMPLETE.md",
     "CODEMAP_TOOL_INTEGRATION_GUIDE.md",
     "DEEP_AUDIT_REPORT.md",
-    "DO_NOT_USE_PLACEHOLDER",
     "Dockerfile",
     "FRACTAL_LEDGER_IMPLEMENTATION.md",
     "GRAPH_REPORT.md",
@@ -1649,6 +1648,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_consequence_admission_kernel.py",
+    "tests/test_frame_address_immutability.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_k27_memory_runtime.py",
@@ -1805,16 +1805,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 {
   "ring": "repo",
   "files": 1664,
-  "bytes": 26572047,
-  "tokens_est": 6633357,
+  "bytes": 26575184,
+  "tokens_est": 6634142,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1014,
+    "python_module": 1015,
     "schema_or_lexicon": 274,
-    "support_file": 50
+    "support_file": 49
   }
 }
 ```

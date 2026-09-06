@@ -1304,7 +1304,6 @@
       "CODEMAP_SETUP_COMPLETE.md",
       "CODEMAP_TOOL_INTEGRATION_GUIDE.md",
       "DEEP_AUDIT_REPORT.md",
-      "DO_NOT_USE_PLACEHOLDER",
       "Dockerfile",
       "FRACTAL_LEDGER_IMPLEMENTATION.md",
       "GRAPH_REPORT.md",
@@ -2686,6 +2685,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_memory_runtime.py",
@@ -15969,53 +15969,6 @@
         0.218572,
         0.26446,
         -0.03502
-      ]
-    },
-    {
-      "path": "DO_NOT_USE_PLACEHOLDER",
-      "role": "support_file",
-      "binary": false,
-      "bytes": 0,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "e4a6a0577479b2b4",
-      "vector": [
-        0.174608,
-        0.212127,
-        -0.007215,
-        -0.342,
-        -0.26119,
-        -0.059165,
-        -0.030304,
-        -0.093798,
-        -0.212127,
-        -0.119772,
-        -0.269848,
-        -0.012987,
-        -0.096684,
-        -0.021646,
-        0.171722,
-        0.131317,
-        0.223671,
-        0.32757,
-        0.004329,
-        0.232329,
-        -0.111114,
-        -0.264076,
-        -0.024532,
-        0.036076,
-        -0.062051,
-        -0.183266,
-        -0.01876,
-        0.350658,
-        0.044734,
-        0.01876,
-        -0.215013,
-        0.18038
       ]
     },
     {
@@ -104062,6 +104015,53 @@
       ]
     },
     {
+      "path": "tests/test_frame_address_immutability.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3057,
+      "lines": 85,
+      "tokens_est": 765,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7520d314a2744460",
+      "vector": [
+        -0.246731,
+        0.008593,
+        -0.047873,
+        -0.202541,
+        -0.278647,
+        0.146075,
+        -0.082244,
+        -0.293377,
+        0.057693,
+        0.033143,
+        -0.295832,
+        0.16326,
+        -0.013503,
+        -0.006138,
+        0.092064,
+        0.087154,
+        -0.303197,
+        -0.214816,
+        -0.006138,
+        0.290922,
+        -0.234456,
+        0.035598,
+        -0.023323,
+        -0.150985,
+        0.305652,
+        0.155895,
+        0.042963,
+        0.224636,
+        0.074879,
+        -0.249187,
+        0.116614,
+        -0.123979
+      ]
+    },
+    {
       "path": "tests/test_frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -104911,47 +104911,47 @@
       "path": "tools/arena/k27_memory/world_atlas.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 5782,
-      "lines": 156,
-      "tokens_est": 1446,
+      "bytes": 5862,
+      "lines": 158,
+      "tokens_est": 1466,
       "symbol_count": 22,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "76eb4c4533d5d00a",
+      "digest8": "2e52bab109a2a534",
       "vector": [
-        -0.125819,
-        -0.209698,
-        0.123552,
-        0.082746,
-        0.010202,
-        -0.20063,
-        -0.230101,
-        0.055542,
-        -0.046474,
-        -0.289044,
-        -0.255038,
-        0.098615,
-        -0.06461,
-        0.053275,
-        0.123552,
-        0.103149,
-        0.123552,
-        0.225567,
-        0.159824,
-        -0.098615,
-        0.121285,
-        0.032872,
-        -0.198363,
-        0.248237,
-        -0.252771,
-        -0.236902,
-        -0.055542,
-        -0.257305,
-        0.259572,
-        0.273175,
-        -0.073678,
-        -0.270908
+        -0.195539,
+        0.240912,
+        0.264679,
+        0.03349,
+        -0.089667,
+        0.03349,
+        0.06806,
+        0.148004,
+        -0.180414,
+        0.13288,
+        0.247394,
+        -0.00108,
+        0.264679,
+        -0.193378,
+        0.223627,
+        0.145844,
+        0.113434,
+        0.117755,
+        0.23227,
+        0.238752,
+        0.135041,
+        0.236591,
+        0.00108,
+        -0.214985,
+        0.154486,
+        -0.184735,
+        0.202021,
+        -0.249555,
+        0.156647,
+        -0.214985,
+        -0.102631,
+        -0.078864
       ]
     },
     {
@@ -106281,7 +106281,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788712388,
+  "generated_at_unix": 1788712539,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107909,6 +107909,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_memory_runtime.py",
@@ -265272,6 +265273,116 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_frame_address_immutability.py#class:FrameAddressImmutabilityTests:29b7f1bfec59b129",
+        "name": "FrameAddressImmutabilityTests",
+        "kind": "class",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 14,
+        "end_line": 80,
+        "signature_hash": "36d12056e37f5162",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_bool_digit_still_rejected:89d8297f898ac1d6",
+        "name": "FrameAddressImmutabilityTests.test_bool_digit_still_rejected",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "af0016750b07e0a4",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_caller_mutation_cannot_change_address:1a3ca2820eb54303",
+        "name": "FrameAddressImmutabilityTests.test_caller_mutation_cannot_change_address",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "cf9ae5c8e0ab9bd8",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_generator_is_materialized_once:8837e6aaac2e317f",
+        "name": "FrameAddressImmutabilityTests.test_generator_is_materialized_once",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "3a86d5873ae6c927",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_hash_matches_equivalent_tuple_address:9382d757083a73c2",
+        "name": "FrameAddressImmutabilityTests.test_hash_matches_equivalent_tuple_address",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 26,
+        "end_line": 31,
+        "signature_hash": "16704b26ef341bb1",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_list_is_canonicalized_to_tuple:5648095d854cdf3b",
+        "name": "FrameAddressImmutabilityTests.test_list_is_canonicalized_to_tuple",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 15,
+        "end_line": 18,
+        "signature_hash": "7ea2c1cac364d5a5",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_out_of_range_still_rejected:18105f991cf6b42a",
+        "name": "FrameAddressImmutabilityTests.test_out_of_range_still_rejected",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 42,
+        "end_line": 45,
+        "signature_hash": "c7f7b40533b7e749",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_prefix_coverage_stable_after_caller_mutation:949f95db45cdc5c9",
+        "name": "FrameAddressImmutabilityTests.test_prefix_coverage_stable_after_caller_mutation",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 60,
+        "end_line": 66,
+        "signature_hash": "cb80a7a439241a18",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_projection_returns_immutable_address:85945972c247b866",
+        "name": "FrameAddressImmutabilityTests.test_projection_returns_immutable_address",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 47,
+        "end_line": 58,
+        "signature_hash": "c668c4317115412d",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_tuple_input_preserves_value_semantics:aa6df716e445bff6",
+        "name": "FrameAddressImmutabilityTests.test_tuple_input_preserves_value_semantics",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 76,
+        "end_line": 80,
+        "signature_hash": "916e57cb7c4f653a",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_zoom_lineage_stable_after_caller_mutation:f420a30f0d14c328",
+        "name": "FrameAddressImmutabilityTests.test_zoom_lineage_stable_after_caller_mutation",
+        "kind": "method",
+        "file": "tests/test_frame_address_immutability.py",
+        "line": 68,
+        "end_line": 74,
+        "signature_hash": "8be797a85b1bdcf9",
+        "file_digest8": "7520d314a2744460"
+      },
+      {
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "name": "T",
         "kind": "class",
@@ -267937,39 +268048,39 @@
         "kind": "class",
         "file": "tools/arena/k27_memory/world_atlas.py",
         "line": 20,
-        "end_line": 27,
+        "end_line": 29,
         "signature_hash": "43730efa7becab06",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:FrameAtlas:a9c6a384e555405e",
         "name": "FrameAtlas",
         "kind": "class",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 76,
-        "end_line": 105,
+        "line": 78,
+        "end_line": 107,
         "signature_hash": "da77a84bad87d2f1",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:FrameTransform:f10f1c1c4852c1b0",
         "name": "FrameTransform",
         "kind": "class",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 30,
-        "end_line": 74,
+        "line": 32,
+        "end_line": 76,
         "signature_hash": "f5a8aae8a5b3ddbf",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:PrefixCoverage:bcda3ac1fd339ad7",
         "name": "PrefixCoverage",
         "kind": "class",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 107,
-        "end_line": 142,
+        "line": 109,
+        "end_line": 144,
         "signature_hash": "b8b4c7bde96ccdf1",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:WorldFrame:e41a61fdb1c48d0d",
@@ -267979,17 +268090,17 @@
         "line": 12,
         "end_line": 17,
         "signature_hash": "cd0cc5c1cf6aadf2",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:WorldPortal:798d4d441c53d123",
         "name": "WorldPortal",
         "kind": "class",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 145,
-        "end_line": 151,
+        "line": 147,
+        "end_line": 153,
         "signature_hash": "e665b86fec2c6947",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#function:validate_path:2cabdbc66ec2fc53",
@@ -267999,17 +268110,17 @@
         "line": 7,
         "end_line": 9,
         "signature_hash": "d79ea0adbdd165e1",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#function:zoom_lineage:4340bfc04bddd1f9",
         "name": "zoom_lineage",
         "kind": "function",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 153,
-        "end_line": 155,
+        "line": 155,
+        "end_line": 157,
         "signature_hash": "5341f1efd5d56c5e",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAddress.__post_init__:1b36c16612220c60",
@@ -268017,139 +268128,139 @@
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
         "line": 26,
-        "end_line": 27,
+        "end_line": 29,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.__init__:d317cbcf1496238a",
         "name": "FrameAtlas.__init__",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 77,
-        "end_line": 79,
+        "line": 79,
+        "end_line": 81,
         "signature_hash": "3d77650513b79756",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.add_frame:d831a03fbe3312c2",
         "name": "FrameAtlas.add_frame",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 81,
-        "end_line": 82,
+        "line": 83,
+        "end_line": 84,
         "signature_hash": "103108bdb74ae83c",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.add_transform:86e5da76d92170ef",
         "name": "FrameAtlas.add_transform",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 84,
-        "end_line": 89,
+        "line": 86,
+        "end_line": 91,
         "signature_hash": "c6151fcdc10d4ab7",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.project:e473883965a078a6",
         "name": "FrameAtlas.project",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 91,
-        "end_line": 105,
+        "line": 93,
+        "end_line": 107,
         "signature_hash": "73b4e28b150b99b3",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform.__post_init__:7e5db7816c0d4788",
         "name": "FrameTransform.__post_init__",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 40,
-        "end_line": 47,
+        "line": 42,
+        "end_line": 49,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform._decode:d0f0765270e70a89",
         "name": "FrameTransform._decode",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 50,
-        "end_line": 53,
+        "line": 52,
+        "end_line": 55,
         "signature_hash": "622b8d92c404387f",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform._encode:426b4ce18e4df0bc",
         "name": "FrameTransform._encode",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 56,
-        "end_line": 58,
+        "line": 58,
+        "end_line": 60,
         "signature_hash": "95d484141f1fca19",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform.apply:16bff77eb744e1be",
         "name": "FrameTransform.apply",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 70,
-        "end_line": 74,
+        "line": 72,
+        "end_line": 76,
         "signature_hash": "e2fcd11ad2165068",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform.apply_digit:6937d98c1b2415ce",
         "name": "FrameTransform.apply_digit",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 60,
-        "end_line": 68,
+        "line": 62,
+        "end_line": 70,
         "signature_hash": "9e393a040f6ad7ed",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage.__init__:131caa7e9bb3062b",
         "name": "PrefixCoverage.__init__",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 109,
-        "end_line": 112,
+        "line": 111,
+        "end_line": 114,
         "signature_hash": "d09c716f77c491d1",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage._normalize:2bcf59ac893e184a",
         "name": "PrefixCoverage._normalize",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 115,
-        "end_line": 134,
+        "line": 117,
+        "end_line": 136,
         "signature_hash": "268183e00740f091",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage.covers:88b7aa2377a4dd2f",
         "name": "PrefixCoverage.covers",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 136,
-        "end_line": 139,
+        "line": 138,
+        "end_line": 141,
         "signature_hash": "905cc499a4637bb7",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage.records:d3660a81309625ec",
         "name": "PrefixCoverage.records",
         "kind": "method",
         "file": "tools/arena/k27_memory/world_atlas.py",
-        "line": 141,
-        "end_line": 142,
+        "line": 143,
+        "end_line": 144,
         "signature_hash": "032cc51c44f83598",
-        "file_digest8": "76eb4c4533d5d00a"
+        "file_digest8": "2e52bab109a2a534"
       },
       {
         "semantic_id": "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py#class:SeamDisposition:067d413b86e72e73",
@@ -270142,8 +270253,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "983f0ded7b526d271b65e516c3bdc282",
-    "payload_hash": "a57e20be5fa59cfe144f804bb0cdb985"
+    "record_fingerprint": "5d0ca5f2b370df6004e08ef9a55b0f1d",
+    "payload_hash": "3977ca3d43893cc06d8aa98a8a0a5ff0"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270157,16 +270268,16 @@
     {
       "ring": "repo",
       "files": 1664,
-      "bytes": 26572047,
-      "tokens_est": 6633357,
+      "bytes": 26575184,
+      "tokens_est": 6634142,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1014,
+        "python_module": 1015,
         "schema_or_lexicon": 274,
-        "support_file": 50
+        "support_file": 49
       }
     },
     {
@@ -270853,16 +270964,16 @@
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
     "file_count": 1664,
-    "total_bytes": 26572047,
-    "text_tokens_est": 6633357,
+    "total_bytes": 26575184,
+    "text_tokens_est": 6634142,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1014,
+      "python_module": 1015,
       "schema_or_lexicon": 274,
-      "support_file": 50
+      "support_file": 49
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -425684,6 +425795,116 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "FrameAddressImmutabilityTests": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 80,
+        "semantic_id": "tests/test_frame_address_immutability.py#class:FrameAddressImmutabilityTests:29b7f1bfec59b129",
+        "signature_hash": "36d12056e37f5162"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_list_is_canonicalized_to_tuple": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 18,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_list_is_canonicalized_to_tuple:5648095d854cdf3b",
+        "signature_hash": "7ea2c1cac364d5a5"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_caller_mutation_cannot_change_address": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_caller_mutation_cannot_change_address:1a3ca2820eb54303",
+        "signature_hash": "cf9ae5c8e0ab9bd8"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_hash_matches_equivalent_tuple_address": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 31,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_hash_matches_equivalent_tuple_address:9382d757083a73c2",
+        "signature_hash": "16704b26ef341bb1"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_generator_is_materialized_once": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_generator_is_materialized_once:8837e6aaac2e317f",
+        "signature_hash": "3a86d5873ae6c927"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_bool_digit_still_rejected": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_bool_digit_still_rejected:89d8297f898ac1d6",
+        "signature_hash": "af0016750b07e0a4"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_out_of_range_still_rejected": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_out_of_range_still_rejected:18105f991cf6b42a",
+        "signature_hash": "c7f7b40533b7e749"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_projection_returns_immutable_address": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 58,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_projection_returns_immutable_address:85945972c247b866",
+        "signature_hash": "c668c4317115412d"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_prefix_coverage_stable_after_caller_mutation": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 66,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_prefix_coverage_stable_after_caller_mutation:949f95db45cdc5c9",
+        "signature_hash": "cb80a7a439241a18"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_zoom_lineage_stable_after_caller_mutation": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 74,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_zoom_lineage_stable_after_caller_mutation:f420a30f0d14c328",
+        "signature_hash": "8be797a85b1bdcf9"
+      }
+    ],
+    "FrameAddressImmutabilityTests.test_tuple_input_preserves_value_semantics": [
+      {
+        "file": "tests/test_frame_address_immutability.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 80,
+        "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_tuple_input_preserves_value_semantics:aa6df716e445bff6",
+        "signature_hash": "916e57cb7c4f653a"
+      }
+    ],
     "T": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -428289,7 +428510,7 @@
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "class",
         "line": 20,
-        "end_line": 27,
+        "end_line": 29,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:FrameAddress:3a00e45206011f7a",
         "signature_hash": "43730efa7becab06"
       }
@@ -428299,7 +428520,7 @@
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
         "line": 26,
-        "end_line": 27,
+        "end_line": 29,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAddress.__post_init__:1b36c16612220c60",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -428308,8 +428529,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "class",
-        "line": 30,
-        "end_line": 74,
+        "line": 32,
+        "end_line": 76,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:FrameTransform:f10f1c1c4852c1b0",
         "signature_hash": "f5a8aae8a5b3ddbf"
       }
@@ -428318,8 +428539,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 40,
-        "end_line": 47,
+        "line": 42,
+        "end_line": 49,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform.__post_init__:7e5db7816c0d4788",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -428328,8 +428549,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 50,
-        "end_line": 53,
+        "line": 52,
+        "end_line": 55,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform._decode:d0f0765270e70a89",
         "signature_hash": "622b8d92c404387f"
       }
@@ -428338,8 +428559,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 56,
-        "end_line": 58,
+        "line": 58,
+        "end_line": 60,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform._encode:426b4ce18e4df0bc",
         "signature_hash": "95d484141f1fca19"
       }
@@ -428348,8 +428569,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 60,
-        "end_line": 68,
+        "line": 62,
+        "end_line": 70,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform.apply_digit:6937d98c1b2415ce",
         "signature_hash": "9e393a040f6ad7ed"
       }
@@ -428358,8 +428579,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 70,
-        "end_line": 74,
+        "line": 72,
+        "end_line": 76,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameTransform.apply:16bff77eb744e1be",
         "signature_hash": "e2fcd11ad2165068"
       }
@@ -428368,8 +428589,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "class",
-        "line": 76,
-        "end_line": 105,
+        "line": 78,
+        "end_line": 107,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:FrameAtlas:a9c6a384e555405e",
         "signature_hash": "da77a84bad87d2f1"
       }
@@ -428378,8 +428599,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 77,
-        "end_line": 79,
+        "line": 79,
+        "end_line": 81,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.__init__:d317cbcf1496238a",
         "signature_hash": "3d77650513b79756"
       }
@@ -428388,8 +428609,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 81,
-        "end_line": 82,
+        "line": 83,
+        "end_line": 84,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.add_frame:d831a03fbe3312c2",
         "signature_hash": "103108bdb74ae83c"
       }
@@ -428398,8 +428619,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 84,
-        "end_line": 89,
+        "line": 86,
+        "end_line": 91,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.add_transform:86e5da76d92170ef",
         "signature_hash": "c6151fcdc10d4ab7"
       }
@@ -428408,8 +428629,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 91,
-        "end_line": 105,
+        "line": 93,
+        "end_line": 107,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:FrameAtlas.project:e473883965a078a6",
         "signature_hash": "73b4e28b150b99b3"
       }
@@ -428418,8 +428639,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "class",
-        "line": 107,
-        "end_line": 142,
+        "line": 109,
+        "end_line": 144,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:PrefixCoverage:bcda3ac1fd339ad7",
         "signature_hash": "b8b4c7bde96ccdf1"
       }
@@ -428428,8 +428649,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 109,
-        "end_line": 112,
+        "line": 111,
+        "end_line": 114,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage.__init__:131caa7e9bb3062b",
         "signature_hash": "d09c716f77c491d1"
       }
@@ -428438,8 +428659,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 115,
-        "end_line": 134,
+        "line": 117,
+        "end_line": 136,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage._normalize:2bcf59ac893e184a",
         "signature_hash": "268183e00740f091"
       }
@@ -428448,8 +428669,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 136,
-        "end_line": 139,
+        "line": 138,
+        "end_line": 141,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage.covers:88b7aa2377a4dd2f",
         "signature_hash": "905cc499a4637bb7"
       }
@@ -428458,8 +428679,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "method",
-        "line": 141,
-        "end_line": 142,
+        "line": 143,
+        "end_line": 144,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#method:PrefixCoverage.records:d3660a81309625ec",
         "signature_hash": "032cc51c44f83598"
       }
@@ -428468,8 +428689,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "class",
-        "line": 145,
-        "end_line": 151,
+        "line": 147,
+        "end_line": 153,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#class:WorldPortal:798d4d441c53d123",
         "signature_hash": "e665b86fec2c6947"
       }
@@ -428478,8 +428699,8 @@
       {
         "file": "tools/arena/k27_memory/world_atlas.py",
         "kind": "function",
-        "line": 153,
-        "end_line": 155,
+        "line": 155,
+        "end_line": 157,
         "semantic_id": "tools/arena/k27_memory/world_atlas.py#function:zoom_lineage:4340bfc04bddd1f9",
         "signature_hash": "5341f1efd5d56c5e"
       }
