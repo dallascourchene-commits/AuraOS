@@ -1,0 +1,84 @@
+from concurrent.futures import ThreadPoolExecutor
+from hashlib import sha256
+from itertools import product
+from pathlib import Path
+import json, tempfile, sys
+
+ARENA = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ARENA))
+
+from k27_memory import FrameAddress, MemoryConflict, MemoryStore, StaleMemory
+
+WORKERS=5
+ROUNDS=750
+
+def canon(x):
+    return json.dumps(x, sort_keys=True, separators=(',',':'))
+
+def run():
+    trace=[]
+    false_accept=0
+    false_hold=0
+    aba_violations=0
+    stale_dependency_violations=0
+    with tempfile.TemporaryDirectory() as td:
+        p=Path(td)/'campaign.sqlite'
+        with MemoryStore(p) as s:
+            s.register_frame('f','g',expected_generation=None)
+            src=s.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1')
+            s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
+                      dependencies={'src':src['revision_id']}, dependency_epochs={'src':src['epoch']})
+        for r in range(ROUNDS):
+            with MemoryStore(p) as s:
+                src_now=s.get('src')
+                root=s.state_root()
+            observed_rev=src_now['revision_id']; observed_epoch=src_now['epoch']
+            def attempt(worker):
+                try:
+                    with MemoryStore(p) as s:
+                        out=s.publish('src', {'v':1}, FrameAddress('f','g',(1,),'src'), source_url='u', source_version='1',
+                                      expected_revision=observed_rev, expected_epoch=observed_epoch, expected_store_root=root)
+                    return ('WIN', worker, out['revision_id'], out['epoch'], tuple(out['invalidated']), out['store_state_root'])
+                except (MemoryConflict, StaleMemory) as e:
+                    return ('HOLD_STALE_DEPENDENCY', worker, type(e).__name__)
+            with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+                results=list(ex.map(attempt, range(WORKERS)))
+            wins=[x for x in results if x[0]=='WIN']
+            holds=[x for x in results if x[0]!='WIN']
+            if len(wins)!=1: false_accept += abs(len(wins)-1) or 1
+            if len(holds)!=WORKERS-1: false_hold += abs(len(holds)-(WORKERS-1)) or 1
+            win=wins[0]
+            if win[2] != observed_rev: aba_violations += 1
+            if win[3] != observed_epoch+1: aba_violations += 1
+            if 'dep' not in win[4]: stale_dependency_violations += 1
+            with MemoryStore(p) as s:
+                try:
+                    s.get('dep')
+                    stale_dependency_violations += 1
+                except StaleMemory:
+                    pass
+                dep_stale=s.get('dep', allow_stale=True)
+                src_fresh=s.get('src')
+                dep_repaired=s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
+                                       expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
+                                       dependencies={'src':src_fresh['revision_id']}, dependency_epochs={'src':src_fresh['epoch']})
+            trace.append({'round':r,'src_epoch':win[3],'dep_epoch':dep_repaired['epoch'],'root':win[5]})
+    keeper=0
+    hard_invalid_repaired=0
+    for axes in product((0,1,2), repeat=8):
+        ok=all(x==2 for x in axes)
+        if ok: keeper += 1
+        for tail in product((0,1,2), repeat=5):
+            if 0 in axes and all(x==2 for x in tail) and ok:
+                hard_invalid_repaired += 1
+    root=sha256(canon(trace).encode()).hexdigest()
+    return {
+        'workers':WORKERS,'rounds':ROUNDS,'attempts':WORKERS*ROUNDS,
+        'false_accept':false_accept,'false_hold':false_hold,
+        'aba_violations':aba_violations,'stale_dependency_violations':stale_dependency_violations,
+        'omega8_keepers':keeper,'routing13_hard_invalid_repairs':hard_invalid_repaired,
+        'campaign_root':root,'final':trace[-1],
+    }
+
+if __name__=='__main__':
+    print(json.dumps(run(),sort_keys=True))
