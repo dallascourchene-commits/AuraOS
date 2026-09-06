@@ -21,8 +21,10 @@ def xyz_from_digit(d:int)->Tuple[int,int,int]:
 class K27Path:
     digits: Tuple[int,...] = ()
     def __post_init__(self):
-        if any(type(d) is not int or not 0 <= d < 27 for d in self.digits):
+        frozen = tuple(self.digits)
+        if any(type(d) is not int or not 0 <= d < 27 for d in frozen):
             raise ValueError('bad K27 digit')
+        object.__setattr__(self, 'digits', frozen)
     def child(self, d:int)->'K27Path': return K27Path(self.digits+(d,))
     @property
     def parent(self)->Optional['K27Path']:
