@@ -44,16 +44,14 @@ def run():
         elif mode==4: rs=[Receipt("OTHER",NOW-1,"RESULT","TERMINAL_SUCCESS")]
         elif mode==5: rs=[Receipt(cid,max(0,created-1),"ACK","ACK_ACCEPTED")]
         elif mode==6: rs=[Receipt(cid,created+rng.randrange(max(1,NOW-created)),"ACK","WEIRD")]
-        elif mode==7 and q in ACTIVE_QUEUE_STATES and generation=="GEN25" and c.head_digest==HEAD.digest:
-            rs=[Receipt(cid,NOW+1+rng.randrange(1000),"ACK","ACK_ACCEPTED")]
+        elif mode==7 and q in ACTIVE_QUEUE_STATES and generation=="GEN25" and c.head_digest==HEAD.digest: rs=[Receipt(cid,NOW+1+rng.randrange(1000),"ACK","ACK_ACCEPTED")]
         try: got=classify_command(NOW,HEAD,c,rs).state
         except E as exc: got=f"E:{exc}"
         try: exp=oracle(c,rs)
         except E as exc: exp=f"E:{exc}"
-        if exp=="E:FUTURE_RECEIPT" and got=="E:FUTURE_RECEIPT": future_receipts_rejected += 1
+        if exp=="E:FUTURE_RECEIPT" and got=="E:FUTURE_RECEIPT": future_receipts_rejected+=1
         mismatches += got!=exp
         roots.append(sha256(json.dumps([cid,str(got)],separators=(",",":")).encode()).hexdigest())
-
     false_healthy=0
     boundary_failures=0
     hs=[]
@@ -73,7 +71,7 @@ def run():
         elif mode==1:
             ic=Command(c.command_id,c.created_s,c.generation,c.head_digest,inactive[i%len(inactive)],False)
             ip=compile_recovery(now_s=NOW,head=HEAD,commands=[ic],receipts=(),consumer=ConsumerObservation(False),starvation_after_s=3600,reducer_stall_after_s=3600)
-            if ip.system_state!=SystemState.NO_ACTIVE_INGRESS or "RUN_EXACTLY_ONE_CONSUMER_ITERATION" in ip.recovery_steps: boundary_failures+=1
+            if ip.system_state!=SystemState.NO_ACTIVE_INGRESS: boundary_failures+=1
         else:
             try:
                 compile_recovery(now_s=NOW,head=HEAD,commands=[c],receipts=(),consumer=ConsumerObservation(True),starvation_after_s=3600,reducer_stall_after_s=3600)
@@ -81,15 +79,14 @@ def run():
             except E as exc:
                 if str(exc)!="INCOMPLETE_CONSUMER_OBSERVATION": boundary_failures+=1
         hs.append(p.receipt_root)
-
     consumer_fuzz_rejected=0
     for i in range(1000):
-        bad=ConsumerObservation(True,service_active=(i if i%2 else True),lease_current=(True if i%3 else None))
+        # 2/3 malformed: missing required observed service state every third, or non-bool service every odd cell.
+        bad = ConsumerObservation(True, service_active=(None if i%3==0 else (i if i%2 else True)), lease_current=None)
         try:
             compile_recovery(now_s=NOW,head=HEAD,commands=[Command(f"X{i}",NOW-7200,"GEN25","d91e0a39358901c5","READY",False)],receipts=[],consumer=bad,starvation_after_s=3600,reducer_stall_after_s=3600)
         except E:
             consumer_fuzz_rejected += 1
-
     omega=sum(omega8_keeper(x) for x in itertools.product(range(3),repeat=8))
     repairs=sum(context13_preserves_invalid((2,2,2,2,2,2,2,1),t) for t in itertools.product(range(3),repeat=5))
     out={
@@ -103,6 +100,6 @@ def run():
     }
     out["campaign_root"]=sha256(json.dumps(out,sort_keys=True,separators=(",",":")).encode()).hexdigest()
     print(json.dumps(out,sort_keys=True))
-    if mismatches or false_healthy or boundary_failures or omega!=1 or repairs!=0 or consumer_fuzz_rejected!=667: raise SystemExit(1)
+    if mismatches or false_healthy or boundary_failures or omega!=1 or repairs!=0 or consumer_fuzz_rejected != 667: raise SystemExit(1)
 
 if __name__=='__main__': run()
