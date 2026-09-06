@@ -88,10 +88,14 @@ def run():
                               expected_revision=dep_stale['revision_id'], expected_epoch=dep_stale['epoch'],
                               dependencies={'src':observed_rev}, dependency_epochs={'src':observed_epoch})
                     stale_dependency_violations += 1
+                    round_failures.append({'round':r, 'reason':'STALE_DEPENDENCY_PROBE_ACCEPTED'})
+                    break
                 except StaleMemory:
                     stale_dependency_holds += 1
                 except MemoryConflict:
                     stale_dependency_violations += 1
+                    round_failures.append({'round':r, 'reason':'STALE_DEPENDENCY_PROBE_WRONG_HOLD'})
+                    break
                 src_fresh=s.get('src')
                 dependency_repairs_executed += 1
                 dep_repaired=s.publish('dep', {'v':1}, FrameAddress('f','g',(2,),'dep'), source_url='u', source_version='1',
