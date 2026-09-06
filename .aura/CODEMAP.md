@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1663
+- **file_count**: 1664
 - **total_bytes**: 26572047
 - **text_tokens_est**: 6633357
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 49}
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 50}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1663,
+  "repo_file_count": 1664,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -267,6 +267,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "CODEMAP_SETUP_COMPLETE.md",
     "CODEMAP_TOOL_INTEGRATION_GUIDE.md",
     "DEEP_AUDIT_REPORT.md",
+    "DO_NOT_USE_PLACEHOLDER",
     "Dockerfile",
     "FRACTAL_LEDGER_IMPLEMENTATION.md",
     "GRAPH_REPORT.md",
@@ -1803,7 +1804,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1663,
+  "files": 1664,
   "bytes": 26572047,
   "tokens_est": 6633357,
   "roles": {
@@ -1813,7 +1814,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "operator_script": 9,
     "python_module": 1014,
     "schema_or_lexicon": 274,
-    "support_file": 49
+    "support_file": 50
   }
 }
 ```
