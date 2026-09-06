@@ -40,6 +40,9 @@ def main():
             and service.receipt.parent_pid == os.getpid()
             and service.receipt.authority_ceiling == "D0_PROCESS_ISOLATION_ONLY"
             and len(service.receipt.worker_nonce_root) == 64
+            and len(service.receipt.factory_identity_root) == 64
+            and len(service.receipt.factory_module_bytes_root) == 64
+            and service.receipt.verify()
             and len(service.receipt.receipt_root) == 64
         )
         state, pid, aliases = service.call("isolation_state")
@@ -52,6 +55,41 @@ def main():
             expected += step
             value, pid = service.call("increment", step)
             rpc_mismatch += int(value != expected or pid != worker_pid)
+
+
+    # Implementation-currentness oracle: same textual factory name is not enough.
+    baseline_identity = factory_identity_for_spec("process_isolation_membrane:IsolationProbe")
+    factory_currentness_cases = 100000
+    factory_currentness_mismatches = 0
+    for i in range(factory_currentness_cases):
+        exact = (i % 4 == 0)
+        if exact:
+            candidate = baseline_identity
+            expected = "EXACT"
+        else:
+            root = sha256(f"factory-generation-{i}".encode()).hexdigest()
+            if root == baseline_identity.module_bytes_root:
+                root = sha256(f"factory-generation-alt-{i}".encode()).hexdigest()
+            candidate = FactoryIdentity.mint(
+                factory_spec=baseline_identity.factory_spec,
+                module_bytes_root=root,
+            )
+            expected = "HOLD"
+        got = factory_identity_currentness(baseline_identity, candidate)
+        factory_currentness_mismatches += int(got != expected)
+
+    factory_hs1000_false_exact = 0
+    for i in range(1000):
+        root = sha256(f"hs1000-stale-factory-{i}".encode()).hexdigest()
+        if root == baseline_identity.module_bytes_root:
+            root = sha256(f"hs1000-stale-factory-alt-{i}".encode()).hexdigest()
+        stale = FactoryIdentity.mint(
+            factory_spec=baseline_identity.factory_spec,
+            module_bytes_root=root,
+        )
+        factory_hs1000_false_exact += int(
+            factory_identity_currentness(baseline_identity, stale) == "EXACT"
+        )
 
     omega_admits = sum(omega8_admit(s) for s in product(range(3), repeat=8))
     hard_invalid_repairs = 0
@@ -72,6 +110,12 @@ def main():
         "worker_rpc_mismatches": rpc_mismatch,
         "worker_pid_distinct": worker_pid != os.getpid(),
         "worker_receipt_valid": worker_receipt_valid,
+        "factory_currentness_cases": factory_currentness_cases,
+        "factory_currentness_mismatches": factory_currentness_mismatches,
+        "factory_hs1000_cases": 1000,
+        "factory_hs1000_false_exact": factory_hs1000_false_exact,
+        "factory_identity_root": baseline_identity.identity_root,
+        "factory_module_bytes_root": baseline_identity.module_bytes_root,
         "omega8_states": 3**8,
         "omega8_admits": omega_admits,
         "states13_sampled": 100000,
