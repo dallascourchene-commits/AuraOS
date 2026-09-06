@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1653,
+    "repo_file_count": 1660,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2696,9 +2696,16 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-4",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/README.md",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -104521,191 +104528,520 @@
       ]
     },
     {
-      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/README.md",
-      "role": "knowledge_artifact",
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
+      "role": "support_file",
       "binary": false,
-      "bytes": 2323,
-      "lines": 26,
-      "tokens_est": 581,
+      "bytes": 92,
+      "lines": 1,
+      "tokens_est": 23,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e60591e002d429de",
+      "digest8": "8fddf5a1e0c5f1e1",
       "vector": [
-        -0.149982,
-        0.023681,
-        -0.253729,
-        -0.032703,
-        0.249218,
-        -0.019171,
-        0.13645,
-        -0.104875,
-        -0.271772,
-        -0.1996,
-        -0.055256,
-        0.246963,
-        0.186068,
-        0.04849,
-        0.235686,
-        -0.285304,
-        -0.122917,
-        0.147726,
-        0.041724,
-        -0.07781,
-        0.023681,
-        0.122917,
-        -0.075555,
-        -0.222154,
-        0.265006,
-        -0.143216,
-        0.147726,
-        0.285304,
-        -0.129684,
-        -0.219898,
-        -0.129684,
-        -0.276282
+        0.261737,
+        0.242958,
+        -0.247653,
+        -0.102113,
+        -0.066901,
+        0.111502,
+        -0.282864,
+        -0.156103,
+        0.015258,
+        0.142019,
+        -0.278169,
+        -0.043427,
+        0.045775,
+        -0.034038,
+        0.059859,
+        -0.010563,
+        0.203052,
+        0.052817,
+        -0.116197,
+        -0.088028,
+        -0.203052,
+        -0.257042,
+        0.238263,
+        0.064554,
+        0.001174,
+        0.282864,
+        0.052817,
+        0.118545,
+        0.294601,
+        0.16784,
+        -0.214789,
+        -0.285211
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 9,
+      "lines": 1,
+      "tokens_est": 3,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33b53d922e3b821d",
+      "vector": [
+        -0.013094,
+        -0.244027,
+        -0.09642,
+        -0.132132,
+        0.077374,
+        0.141655,
+        0.2845,
+        -0.136893,
+        -0.146416,
+        -0.18927,
+        0.234504,
+        -0.041663,
+        -0.108324,
+        0.194031,
+        0.072613,
+        0.115466,
+        0.201173,
+        -0.258311,
+        -0.272596,
+        0.034521,
+        0.115466,
+        -0.182127,
+        0.208316,
+        0.098801,
+        0.220219,
+        0.122609,
+        -0.272596,
+        0.132132,
+        0.148797,
+        -0.296403,
+        0.224981,
+        -0.086897
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 9,
+      "lines": 1,
+      "tokens_est": 3,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33b53d922e3b821d",
+      "vector": [
+        -0.03226,
+        -0.248713,
+        -0.244551,
+        0.040585,
+        -0.109267,
+        -0.073886,
+        -0.067642,
+        0.148812,
+        -0.24247,
+        -0.132162,
+        0.240388,
+        -0.01561,
+        -0.152974,
+        0.248713,
+        0.092617,
+        0.202925,
+        -0.061398,
+        -0.257039,
+        -0.127999,
+        0.127999,
+        0.240388,
+        -0.238307,
+        0.261201,
+        0.142568,
+        0.036422,
+        -0.132162,
+        0.219575,
+        0.111349,
+        0.232063,
+        -0.265364,
+        -0.042666,
+        -0.225819
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-4",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 9,
+      "lines": 1,
+      "tokens_est": 3,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33b53d922e3b821d",
+      "vector": [
+        0.175286,
+        0.133737,
+        -0.107769,
+        0.170093,
+        -0.211642,
+        -0.219432,
+        0.107769,
+        0.232417,
+        0.029864,
+        -0.086994,
+        0.242804,
+        0.125946,
+        0.014283,
+        -0.149318,
+        -0.250594,
+        0.331096,
+        0.162302,
+        0.045445,
+        -0.323306,
+        -0.066219,
+        -0.076607,
+        0.157108,
+        0.325903,
+        0.245401,
+        -0.110365,
+        0.255788,
+        0.029864,
+        0.029864,
+        -0.071413,
+        0.18827,
+        -0.118156,
+        0.076607
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3237,
+      "lines": 34,
+      "tokens_est": 810,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8fd20ef54a7844fe",
+      "vector": [
+        0.020456,
+        -0.234638,
+        0.138376,
+        -0.008423,
+        0.157629,
+        -0.289989,
+        0.208166,
+        0.111904,
+        -0.251484,
+        0.289989,
+        -0.097465,
+        0.090245,
+        0.126344,
+        -0.256297,
+        0.046928,
+        0.010829,
+        -0.304428,
+        0.039708,
+        -0.186507,
+        0.095059,
+        -0.200947,
+        0.025269,
+        0.258704,
+        0.05896,
+        -0.304428,
+        -0.123937,
+        -0.025269,
+        0.097465,
+        -0.179288,
+        0.220199,
+        0.148003,
+        -0.203353
       ]
     },
     {
       "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6292,
-      "lines": 109,
-      "tokens_est": 1573,
+      "bytes": 6337,
+      "lines": 106,
+      "tokens_est": 1585,
       "symbol_count": 2,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "29c2d8e26fc8699a",
+      "digest8": "c54bdcdb5d8b9bee",
       "vector": [
-        -0.048109,
-        -0.149528,
-        -0.292554,
-        -0.240545,
-        -0.313358,
-        -0.250947,
-        0.204138,
-        0.315959,
-        -0.26915,
-        -0.081915,
-        0.258748,
-        0.289954,
-        -0.022104,
-        0.188535,
-        0.022104,
-        -0.042908,
-        -0.084516,
-        0.100119,
-        -0.146927,
-        -0.019504,
-        0.196336,
-        0.123523,
-        0.110521,
-        -0.146927,
-        -0.144327,
-        0.061111,
-        -0.120922,
-        -0.222341,
-        -0.193736,
-        0.048109,
-        0.032506,
-        -0.066312
+        -0.12746,
+        0.03161,
+        0.223309,
+        0.260018,
+        -0.037728,
+        -0.153971,
+        0.206995,
+        0.145814,
+        0.237585,
+        0.00102,
+        0.245742,
+        -0.196798,
+        0.233506,
+        -0.086673,
+        0.223309,
+        -0.013256,
+        0.247782,
+        0.25186,
+        -0.12746,
+        -0.060161,
+        0.082594,
+        0.003059,
+        -0.227388,
+        0.255939,
+        -0.023453,
+        0.013256,
+        0.260018,
+        0.239624,
+        0.12542,
+        0.204955,
+        -0.217191,
+        -0.09483
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8366,
+      "lines": 217,
+      "tokens_est": 2092,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "971e08181f7a752c",
+      "vector": [
+        -0.148774,
+        -0.203783,
+        -0.206284,
+        0.263793,
+        0.06376,
+        0.18628,
+        -0.048758,
+        -0.086264,
+        -0.033755,
+        0.256292,
+        0.161276,
+        -0.128771,
+        -0.073762,
+        -0.111268,
+        0.168777,
+        0.128771,
+        -0.091265,
+        0.206284,
+        0.206284,
+        0.031255,
+        0.253791,
+        -0.191281,
+        -0.103767,
+        -0.3088,
+        -0.048758,
+        0.288797,
+        -0.193781,
+        -0.038756,
+        -0.096266,
+        -0.256292,
+        0.071262,
+        0.311301
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3561,
+      "lines": 62,
+      "tokens_est": 891,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4f2fa05bf24bb1b9",
+      "vector": [
+        0.057964,
+        -0.263796,
+        0.268528,
+        -0.171527,
+        0.26143,
+        0.124209,
+        -0.242503,
+        -0.162063,
+        0.183356,
+        -0.114745,
+        -0.202283,
+        0.169161,
+        0.249601,
+        -0.114745,
+        -0.050867,
+        -0.162063,
+        -0.072159,
+        0.043769,
+        -0.072159,
+        -0.022476,
+        0.294553,
+        0.162063,
+        -0.102916,
+        -0.244869,
+        0.055598,
+        0.190454,
+        -0.081623,
+        0.036671,
+        0.086355,
+        -0.157331,
+        0.292187,
+        -0.27326
       ]
     },
     {
       "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 12190,
-      "lines": 308,
-      "tokens_est": 3048,
-      "symbol_count": 26,
+      "bytes": 15298,
+      "lines": 279,
+      "tokens_est": 3825,
+      "symbol_count": 29,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7366ea4de9329a82",
+      "digest8": "29dacf509d482762",
       "vector": [
-        -0.277454,
-        -0.239992,
-        -0.272772,
-        -0.263406,
-        0.120581,
-        -0.092485,
-        -0.256382,
-        0.263406,
-        0.036292,
-        0.256382,
-        -0.230627,
-        0.029267,
-        -0.108875,
-        0.296186,
-        -0.200189,
-        0.115899,
-        0.001171,
-        0.146337,
-        0.207213,
-        -0.181458,
-        0.001171,
-        0.031609,
-        -0.132288,
-        0.10185,
-        -0.188482,
-        -0.216578,
-        0.008195,
-        -0.045657,
-        0.010536,
-        -0.27043,
-        -0.012878,
-        0.071412
+        0.073597,
+        0.093978,
+        0.275139,
+        0.263816,
+        -0.250229,
+        0.078126,
+        -0.189087,
+        -0.229849,
+        -0.062274,
+        -0.127945,
+        0.039629,
+        0.191352,
+        0.159649,
+        -0.15512,
+        0.223055,
+        0.182294,
+        -0.114358,
+        0.053216,
+        -0.218526,
+        0.019248,
+        0.266081,
+        -0.01019,
+        -0.159649,
+        -0.284197,
+        0.046423,
+        -0.191352,
+        -0.13021,
+        -0.266081,
+        -0.198145,
+        0.279668,
+        -0.0351,
+        -0.075861
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5507,
+      "lines": 67,
+      "tokens_est": 1377,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "de6e30c46391c379",
+      "vector": [
+        -0.021538,
+        0.196108,
+        0.114491,
+        0.085018,
+        -0.073682,
+        0.030607,
+        -0.275459,
+        -0.275459,
+        -0.035141,
+        0.284527,
+        -0.032874,
+        0.239184,
+        -0.023805,
+        0.28226,
+        0.289061,
+        -0.116758,
+        -0.28226,
+        0.09182,
+        0.053278,
+        0.105422,
+        0.119025,
+        0.048744,
+        -0.121292,
+        0.168903,
+        -0.073682,
+        -0.268657,
+        0.21878,
+        -0.098621,
+        -0.1553,
+        0.245986,
+        0.109957,
+        0.26639
       ]
     },
     {
       "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6984,
-      "lines": 85,
-      "tokens_est": 1746,
-      "symbol_count": 35,
+      "bytes": 7883,
+      "lines": 93,
+      "tokens_est": 1971,
+      "symbol_count": 39,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "003c44d3526a7936",
+      "digest8": "2630ed89a1cd55dd",
       "vector": [
-        0.299738,
-        -0.097175,
-        0.236779,
-        -0.012318,
-        -0.228567,
-        -0.042429,
-        -0.30795,
-        0.06159,
-        0.004106,
-        0.132761,
-        -0.190245,
-        -0.001369,
-        -0.277839,
-        -0.094438,
-        -0.045166,
-        0.162871,
-        0.067065,
-        0.302475,
-        0.108125,
-        0.149185,
-        0.067065,
-        0.157397,
-        -0.012318,
-        -0.036954,
-        -0.149185,
-        -0.310687,
-        -0.056115,
-        -0.121811,
-        0.116337,
-        0.324374,
-        0.310687,
-        0.10265
+        -0.038068,
+        0.105744,
+        0.080366,
+        0.289034,
+        -0.018329,
+        0.100105,
+        -0.1847,
+        -0.108564,
+        0.266475,
+        -0.18188,
+        -0.305953,
+        -0.241097,
+        0.269295,
+        0.148042,
+        0.00141,
+        -0.339791,
+        -0.071906,
+        0.066266,
+        -0.226998,
+        -0.018329,
+        0.102924,
+        -0.074726,
+        -0.00141,
+        0.283394,
+        -0.286214,
+        -0.026789,
+        -0.054987,
+        -0.043708,
+        -0.150862,
+        0.148042,
+        0.221358,
+        -0.19034
       ]
     },
     {
@@ -105753,7 +106089,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788656883,
+  "generated_at_unix": 1788657716,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107391,9 +107727,16 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-4",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/README.md",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+      "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -266610,7 +266953,7 @@
         "line": 9,
         "end_line": 26,
         "signature_hash": "bc7d7970d1d8f6c0",
-        "file_digest8": "29c2d8e26fc8699a"
+        "file_digest8": "c54bdcdb5d8b9bee"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:run:7377463e29869ad4",
@@ -266618,269 +266961,749 @@
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "line": 28,
-        "end_line": 106,
+        "end_line": 103,
         "signature_hash": "26799ab4ad82cbfb",
-        "file_digest8": "29c2d8e26fc8699a"
+        "file_digest8": "c54bdcdb5d8b9bee"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:HostSnapshot:75b83ad8685d1873",
+        "name": "HostSnapshot",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 41,
+        "end_line": 52,
+        "signature_hash": "8df2c62422f7b939",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:ProbePlan:ee6af48853e0a83c",
+        "name": "ProbePlan",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 29,
+        "end_line": 38,
+        "signature_hash": "6753e8e51dc899a8",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:ProbeStep:f9770747c906da01",
+        "name": "ProbeStep",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "f1a9e846b25a4497",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:SnapshotPair:4f5f2a72e7010aa2",
+        "name": "SnapshotPair",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "5f521cd0d45cd0c4",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_cj:d377b10a9e5befb5",
+        "name": "_cj",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "9e80690eb703fdf5",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_nonneg:176ef7e10d801ec5",
+        "name": "_nonneg",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "d9fbdb7f115dccb3",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_opt_bool:be7483b282844724",
+        "name": "_opt_bool",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 93,
+        "end_line": 96,
+        "signature_hash": "3cf0179990d3d9f9",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_opt_time:016420db640ab359",
+        "name": "_opt_time",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 85,
+        "end_line": 91,
+        "signature_hash": "096e16f2ea93fea0",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_root:c64c620aa1bf60b8",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 65,
+        "end_line": 66,
+        "signature_hash": "2e65e72bab661379",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_sha:80a275fda771d2f3",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 78,
+        "end_line": 83,
+        "signature_hash": "5f445bd7f74a6239",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_text:1836cae3d27a92ab",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "c380f3042bfa8f5b",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:assert_probe_read_only:c9d333cc8f5fdb51",
+        "name": "assert_probe_read_only",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 209,
+        "end_line": 216,
+        "signature_hash": "77f6aae008b35fb8",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:compare_snapshots:44d94a2c591151d8",
+        "name": "compare_snapshots",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 172,
+        "end_line": 193,
+        "signature_hash": "e2e42330b4d899a0",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:compile_read_only_probe:81b1792b508156c7",
+        "name": "compile_read_only_probe",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 99,
+        "end_line": 123,
+        "signature_hash": "6c21f4f959985227",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:service_active:da63d67143ef7a8e",
+        "name": "service_active",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 168,
+        "end_line": 169,
+        "signature_hash": "fff56796b93b033a",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:single_snapshot_observation:f833e80f3e052ab6",
+        "name": "single_snapshot_observation",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 196,
+        "end_line": 206,
+        "signature_hash": "bfb5117f6f79f50f",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:validate_snapshot:bb4f1dd00ff51182",
+        "name": "validate_snapshot",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "line": 126,
+        "end_line": 165,
+        "signature_hash": "e8150d135e519512",
+        "file_digest8": "971e08181f7a752c"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:oracle_move:c4a72bcf6b0312ae",
+        "name": "oracle_move",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "10bccb5c919ada73",
+        "file_digest8": "4f2fa05bf24bb1b9"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:run:5e54aa4b95795b0d",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+        "line": 17,
+        "end_line": 59,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "4f2fa05bf24bb1b9"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:s:8db8e0e7f698eac9",
+        "name": "s",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+        "line": 9,
+        "end_line": 12,
+        "signature_hash": "f1b4e3cc000172c2",
+        "file_digest8": "4f2fa05bf24bb1b9"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:Command:db3376efe8ecc184",
         "name": "Command",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 38,
-        "end_line": 44,
+        "line": 53,
+        "end_line": 59,
         "signature_hash": "1c4a89ec8bfab6d9",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:CommandDisposition:47d7a00ff15085ec",
         "name": "CommandDisposition",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 62,
-        "end_line": 67,
+        "line": 93,
+        "end_line": 100,
         "signature_hash": "2c5aa255284f4430",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:CommandState:3107d7f7367d0465",
         "name": "CommandState",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 15,
-        "end_line": 22,
+        "line": 25,
+        "end_line": 33,
         "signature_hash": "9ae8bcf8c130262b",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:ConsumerObservation:e22b39014f4eff80",
         "name": "ConsumerObservation",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 54,
-        "end_line": 59,
+        "line": 73,
+        "end_line": 80,
         "signature_hash": "edb86c653360e549",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:E:cf943465e10f0870",
         "name": "E",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 12,
-        "end_line": 13,
+        "line": 14,
+        "end_line": 14,
         "signature_hash": "1d79b2fd5a5693b8",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:EventClass:b6fddb83701a653c",
+        "name": "EventClass",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "line": 17,
+        "end_line": 22,
+        "signature_hash": "a19610f9b74e89df",
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:Head:1a46c753132a40b4",
         "name": "Head",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 33,
-        "end_line": 35,
+        "line": 47,
+        "end_line": 49,
         "signature_hash": "8d907cae4acea8fb",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:Receipt:dad8b92df2190aaa",
-        "name": "Receipt",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:LedgerProjection:651e1c6038b1b542",
+        "name": "LedgerProjection",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 47,
-        "end_line": 51,
-        "signature_hash": "c1403e8b6159bae1",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 84,
+        "end_line": 89,
+        "signature_hash": "1356b75af6100708",
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:RecoveryPlan:89c5883ff9dc42be",
         "name": "RecoveryPlan",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 70,
-        "end_line": 77,
+        "line": 104,
+        "end_line": 111,
         "signature_hash": "0ca4003764dff849",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:SystemState:695e59216d7c82aa",
         "name": "SystemState",
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 24,
-        "end_line": 30,
+        "line": 36,
+        "end_line": 43,
         "signature_hash": "d28cfb56819497d3",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_bool:5f214a931b4cdc06",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:TypedReceipt:101546395eb87f67",
+        "name": "TypedReceipt",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "line": 63,
+        "end_line": 69,
+        "signature_hash": "cab414750bbf41e0",
+        "file_digest8": "29dacf509d482762"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_bool:22b780abdffebb35",
         "name": "_bool",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 99,
-        "end_line": 102,
-        "signature_hash": "45fb4cb872c2c527",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 133,
+        "end_line": 135,
+        "signature_hash": "7a2c42f21478b5b7",
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_cj:f28d55fba5acde26",
         "name": "_cj",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 80,
-        "end_line": 81,
+        "line": 116,
+        "end_line": 117,
         "signature_hash": "9e80690eb703fdf5",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_dig:66019a2ef6692017",
         "name": "_dig",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 83,
-        "end_line": 84,
+        "line": 120,
+        "end_line": 120,
         "signature_hash": "b6a59051ed2ad26c",
-        "file_digest8": "7366ea4de9329a82"
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_bool:2734f1e94e94b645",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "line": 128,
+        "end_line": 130,
+        "signature_hash": "0c3f98b7c2640bed",
+        "file_digest8": "29dacf509d482762"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_bool:10efe65aa77a01dd",
         "name": "_opt_bool",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 104,
-        "end_line": 107,
-        "signature_hash": "b9141f22a68d953f",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 138,
+        "end_line": 140,
+        "signature_hash": "bdc74abbb753caa4",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_time:c35c92c9606cd2cf",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_time:366f106454ce7a74",
         "name": "_opt_time",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 109,
-        "end_line": 115,
-        "signature_hash": "57897ce4cf896508",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "7f51bd39ab4abd12",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_queue_class:5a3a311ba30765c5",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_queue_class:0415bf95db98b292",
         "name": "_queue_class",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 129,
-        "end_line": 134,
-        "signature_hash": "f0a889eb84cd51b9",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 150,
+        "end_line": 153,
+        "signature_hash": "51cf3684c6251ae6",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_valid_id:3e08f87a3d9fa539",
-        "name": "_valid_id",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_semantic_key:ee7644c1895cd105",
+        "name": "_semantic_key",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 91,
-        "end_line": 92,
-        "signature_hash": "e7b70ab502afaf4a",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 173,
+        "end_line": 174,
+        "signature_hash": "1df9c7d1be3d5f61",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_valid_nonneg:61d753f400d1206a",
-        "name": "_valid_nonneg",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_text:2409cd184d286296",
+        "name": "_text",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 94,
-        "end_line": 97,
-        "signature_hash": "d125a1e0ced48d6a",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "2ca04f52499b2177",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_valid_text:93e2c4f514a09280",
-        "name": "_valid_text",
-        "kind": "function",
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 86,
-        "end_line": 89,
-        "signature_hash": "8dcb2fcfc6c6d03c",
-        "file_digest8": "7366ea4de9329a82"
-      },
-      {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_bound_receipt:c66286acff00c624",
-        "name": "_validate_bound_receipt",
-        "kind": "function",
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 136,
-        "end_line": 142,
-        "signature_hash": "bbe829bcb861e5bc",
-        "file_digest8": "7366ea4de9329a82"
-      },
-      {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_command:665f28ba660b17b5",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_command:aa6aa5b036306e17",
         "name": "_validate_command",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 121,
-        "end_line": 127,
-        "signature_hash": "c74dd2037a24fa71",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 157,
+        "end_line": 158,
+        "signature_hash": "5162fb169d3bca77",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_consumer:2859f31cfe567c3e",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_consumer:105fe1a11d73edf0",
         "name": "_validate_consumer",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 144,
-        "end_line": 155,
-        "signature_hash": "b7178f0c57b85fe8",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 159,
+        "end_line": 163,
+        "signature_hash": "61620edf037468fc",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_head:d20dfca8a6fa7aa0",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_head:f23152691d91189e",
         "name": "_validate_head",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 117,
-        "end_line": 119,
-        "signature_hash": "501231d242bb1efa",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 156,
+        "end_line": 156,
+        "signature_hash": "b80bd04ef4db1e6a",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:classify_command:e30fe4396edd46d2",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_receipt:b65228a16df0e8c4",
+        "name": "_validate_receipt",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "line": 166,
+        "end_line": 170,
+        "signature_hash": "3efab16e74ad8260",
+        "file_digest8": "29dacf509d482762"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:classify_command:1cacbd4f1b7da187",
         "name": "classify_command",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 158,
-        "end_line": 194,
-        "signature_hash": "9bd3bcc58840182f",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 214,
+        "end_line": 236,
+        "signature_hash": "c700e06d25f47f65",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:compile_recovery:0d694c04932b9447",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:compile_recovery:a4cc3430a7ea05b2",
         "name": "compile_recovery",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 197,
-        "end_line": 298,
-        "signature_hash": "0c10faf18d14fb7e",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 239,
+        "end_line": 272,
+        "signature_hash": "2d3b45833af3628b",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:context13_preserves_invalid:297782ce58e54010",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:context13_preserves_invalid:8fc916e8283ae17b",
         "name": "context13_preserves_invalid",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 304,
-        "end_line": 307,
-        "signature_hash": "e9f144491cfb20f8",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 276,
+        "end_line": 278,
+        "signature_hash": "6576780be1531849",
+        "file_digest8": "29dacf509d482762"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:omega8_keeper:869a54d6ae5416e1",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:omega8_keeper:b8e3b950cfb97c71",
         "name": "omega8_keeper",
         "kind": "function",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "line": 301,
-        "end_line": 302,
-        "signature_hash": "62a1fc6d5e820411",
-        "file_digest8": "7366ea4de9329a82"
+        "line": 275,
+        "end_line": 275,
+        "signature_hash": "c99187ee65645eb4",
+        "file_digest8": "29dacf509d482762"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:project_receipt_ledger:b4e09455fab6ddc6",
+        "name": "project_receipt_ledger",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "line": 177,
+        "end_line": 211,
+        "signature_hash": "48b1206479511596",
+        "file_digest8": "29dacf509d482762"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#class:T:67711ac0c485bf46",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 20,
+        "end_line": 64,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#function:snap:69586c35689ae609",
+        "name": "snap",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "34b0d76dc2107925",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#function:starved_command:6c365545cfb3a4cc",
+        "name": "starved_command",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "fffe0ddfacb36a62",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.plan_for:ffb63834f1915f34",
+        "name": "T.plan_for",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "e111a32ce10e046c",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_active_requires_pid:0230cf1d1701c6e5",
+        "name": "T.test_active_requires_pid",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "a9afb12e21241047",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_bad_sha_rejected:25566dccb0815363",
+        "name": "T.test_bad_sha_rejected",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "25bf0fa9aa95175f",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_cursor_movement_counts:400df89d165e864e",
+        "name": "T.test_cursor_movement_counts",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "c5a2a70cab3f60bd",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_evidence_root_binds_observation:1725dba6e9b3e16a",
+        "name": "T.test_evidence_root_binds_observation",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "156f135809483aeb",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_exact_command_receipt_movement_counts:99e6885c6a5e6f9e",
+        "name": "T.test_exact_command_receipt_movement_counts",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "e94d6e86bc4b015d",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_future_cursor_rejected:50630318d4fa2904",
+        "name": "T.test_future_cursor_rejected",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "426fd0283a80a4cf",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_future_snapshot_rejected:935f50633ddfe64f",
+        "name": "T.test_future_snapshot_rejected",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "1ef5d5456106db19",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_inactive_observation_allows_one_restart:8660efe932e17f0b",
+        "name": "T.test_inactive_observation_allows_one_restart",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "7103675d2e2cd080",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_last_scan_movement_counts:3fecfbcccbd2764e",
+        "name": "T.test_last_scan_movement_counts",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "c128fb820c67ef2e",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_lease_is_advisory_not_restart_authority:7092d23f878d16d6",
+        "name": "T.test_lease_is_advisory_not_restart_authority",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "9d3fccbe24663e6d",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_no_progress_after_iteration_allows_one_restart:383cd7ee8df7f44e",
+        "name": "T.test_no_progress_after_iteration_allows_one_restart",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "e16247c74302bd6b",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_probe_plan_is_read_only:53537a752b1dbb25",
+        "name": "T.test_probe_plan_is_read_only",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "5afd9442503d6a3a",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_probe_plan_pins_exact_owner_host_paths:72aef261bbc69ade",
+        "name": "T.test_probe_plan_pins_exact_owner_host_paths",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "00c96a905aad4a72",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_probe_plan_rejects_wrong_head:1a2fc5f1d4effbba",
+        "name": "T.test_probe_plan_rejects_wrong_head",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "e669c2a9ec6bb904",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_provider_fanout_always_false:5057011aed553121",
+        "name": "T.test_provider_fanout_always_false",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "5f4c21bb91a5fbf1",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_receipt_inventory_movement_alone_does_not_count:489f4697baad0725",
+        "name": "T.test_receipt_inventory_movement_alone_does_not_count",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "f413421c9be7e6e5",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_reversed_snapshot_time_rejected:02aa61b1c1305ddb",
+        "name": "T.test_reversed_snapshot_time_rejected",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "c77157f719d839e9",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_single_active_observation_does_not_authorize_restart:ce996e017b8dbd15",
+        "name": "T.test_single_active_observation_does_not_authorize_restart",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "0a083fd61f058f8a",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_snapshot_root_changes_with_consumer_bytes:b5cda423f54e0ca8",
+        "name": "T.test_snapshot_root_changes_with_consumer_bytes",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "ec37f0db4526ccf1",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_snapshot_root_deterministic:49c2d1de742deab9",
+        "name": "T.test_snapshot_root_deterministic",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "83f7b850d4a28f27",
+        "file_digest8": "de6e30c46391c379"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_state_movement_prevents_restart:c8401d04d338dc6d",
+        "name": "T.test_state_movement_prevents_restart",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "7d825eaa90e89713",
+        "file_digest8": "de6e30c46391c379"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#class:T:8f95aedea5c120a7",
@@ -266888,9 +267711,9 @@
         "kind": "class",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "line": 13,
-        "end_line": 82,
+        "end_line": 90,
         "signature_hash": "1a51332cd1dc4f10",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#function:cmd:88965f1a9e98bd2a",
@@ -266900,7 +267723,7 @@
         "line": 7,
         "end_line": 8,
         "signature_hash": "ae9ef5d7d34d4e73",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#function:rec:70d2926a66519539",
@@ -266910,7 +267733,7 @@
         "line": 10,
         "end_line": 11,
         "signature_hash": "f9dd0c62e1a82f2d",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.plan:aafa3b2ba89dd6e6",
@@ -266920,17 +267743,17 @@
         "line": 14,
         "end_line": 15,
         "signature_hash": "4536570362728c97",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_13d_tail_cannot_repair_invalid_core:f6693cb8868c1d87",
         "name": "T.test_13d_tail_cannot_repair_invalid_core",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 79,
-        "end_line": 82,
+        "line": 87,
+        "end_line": 90,
         "signature_hash": "a18bebaafdbf6310",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_ack_is_admitted_not_terminal:3834dbbe01c8e536",
@@ -266940,67 +267763,67 @@
         "line": 24,
         "end_line": 25,
         "signature_hash": "ba848dbab40901fc",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_bool_fails_closed:85af02db99dd8a95",
         "name": "T.test_bad_bool_fails_closed",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 68,
-        "end_line": 69,
+        "line": 70,
+        "end_line": 71,
         "signature_hash": "e682aebbffe623f0",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_consumer_bool_fails_closed:4bc7d0047ba25c57",
         "name": "T.test_bad_consumer_bool_fails_closed",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 58,
-        "end_line": 59,
+        "line": 64,
+        "end_line": 65,
         "signature_hash": "fddebe43ca530884",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_receipt_state_fails_closed:812b7c3cb9ed29ac",
         "name": "T.test_bad_receipt_state_fails_closed",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 60,
-        "end_line": 61,
+        "line": 72,
+        "end_line": 73,
         "signature_hash": "6c0b27ba529d6ef1",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_receipt_time_fails_closed_before_temporal_filter:25cb4c19d741006c",
         "name": "T.test_bad_receipt_time_fails_closed_before_temporal_filter",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 62,
-        "end_line": 63,
+        "line": 74,
+        "end_line": 75,
         "signature_hash": "c364c147d514c9a9",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_duplicate_command_ids_fail_closed:4477ef038513d5fa",
         "name": "T.test_duplicate_command_ids_fail_closed",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 64,
-        "end_line": 65,
+        "line": 66,
+        "end_line": 67,
         "signature_hash": "ec6b4ceac059956d",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_empty_ingress:3d8c95c749af9f6d",
         "name": "T.test_empty_ingress",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 72,
-        "end_line": 73,
+        "line": 78,
+        "end_line": 79,
         "signature_hash": "43b56e43336f9164",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_error_terminal:8e9e859d6b37398b",
@@ -267010,67 +267833,67 @@
         "line": 30,
         "end_line": 31,
         "signature_hash": "78c0efb4d18f5dcb",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_bound_receipt_fails_closed:d068d2cf38f27136",
+        "name": "T.test_future_bound_receipt_fails_closed",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "7524001704a21012",
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_command_fails_closed:e82dbfa28d4a75cd",
         "name": "T.test_future_command_fails_closed",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 66,
-        "end_line": 67,
+        "line": 68,
+        "end_line": 69,
         "signature_hash": "dd8963f0742a05e7",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_consumer_time_fails_closed:e646858bb698ee37",
         "name": "T.test_future_consumer_time_fails_closed",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 56,
-        "end_line": 57,
+        "line": 62,
+        "end_line": 63,
         "signature_hash": "10709193d78f6443",
-        "file_digest8": "003c44d3526a7936"
-      },
-      {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_receipt_fails_closed:6f32b5c2bb431855",
-        "name": "T.test_future_receipt_fails_closed",
-        "kind": "method",
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 22,
-        "end_line": 23,
-        "signature_hash": "57ffd1e397a7ab41",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_inactive_queue_never_creates_starvation:8f546e03a4cb0f0b",
         "name": "T.test_inactive_queue_never_creates_starvation",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 46,
-        "end_line": 49,
+        "line": 38,
+        "end_line": 41,
         "signature_hash": "eb22cd545c27dc51",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_inactive_stale_head_does_not_create_currentness_block:c0d7742d0a21c705",
         "name": "T.test_inactive_stale_head_does_not_create_currentness_block",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 52,
-        "end_line": 53,
+        "line": 44,
+        "end_line": 45,
         "signature_hash": "44006db490241199",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_incomplete_consumer_observation_fails_closed:b83db1fbedc4a272",
-        "name": "T.test_incomplete_consumer_observation_fails_closed",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_lease_is_optional_advisory:f7712dc957338c26",
+        "name": "T.test_lease_is_optional_advisory",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 40,
-        "end_line": 41,
-        "signature_hash": "fe6367acecf4eeef",
-        "file_digest8": "003c44d3526a7936"
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "e63520b3f16ea37a",
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_no_receipt_old_command_is_starved:adad26be75b27b78",
@@ -267080,27 +267903,57 @@
         "line": 16,
         "end_line": 17,
         "signature_hash": "a616fa1fa0396878",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_current_consumer_no_restart:702b1b545d5d57b9",
-        "name": "T.test_observed_active_current_consumer_no_restart",
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_progress_blocks_restart:a02f0bf3c9b13f0f",
+        "name": "T.test_observed_active_progress_blocks_restart",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 44,
-        "end_line": 45,
-        "signature_hash": "45ea6429a4178e2b",
-        "file_digest8": "003c44d3526a7936"
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "6d8b749bd2b2c45a",
+        "file_digest8": "2630ed89a1cd55dd"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_stuck_allows_one_restart:d053b9c13fe3fe5f",
+        "name": "T.test_observed_active_stuck_allows_one_restart",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "b4866f02dce68ad8",
+        "file_digest8": "2630ed89a1cd55dd"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_unknown_progress_no_restart_yet:b96144a8bf4c1d00",
+        "name": "T.test_observed_active_unknown_progress_no_restart_yet",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "15392790a7d91024",
+        "file_digest8": "2630ed89a1cd55dd"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_consumer_requires_service_state:41ae2fec4b9c85f5",
+        "name": "T.test_observed_consumer_requires_service_state",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "a91c19f7f74904ee",
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_inactive_consumer_allows_one_restart:8ceb41038a13c12e",
         "name": "T.test_observed_inactive_consumer_allows_one_restart",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 42,
-        "end_line": 43,
+        "line": 54,
+        "end_line": 55,
         "signature_hash": "5ff489a927fde265",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_old_ack_becomes_post_ack_reducer_stall:21f040a1722dbfc3",
@@ -267110,17 +267963,17 @@
         "line": 26,
         "end_line": 27,
         "signature_hash": "439f2a9bb5d9ce41",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_omega8_exactly_one_keeper:8bfe31d3e1c6d4a4",
         "name": "T.test_omega8_exactly_one_keeper",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 76,
-        "end_line": 78,
+        "line": 84,
+        "end_line": 86,
         "signature_hash": "0d657a4d96e134fb",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_receipt_before_command_does_not_count:797e79e6bb40e8f7",
@@ -267130,27 +267983,37 @@
         "line": 20,
         "end_line": 21,
         "signature_hash": "941c54d17611b03a",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_receipt_root_binds_consumer_observation:9476decb781fd0a1",
+        "name": "T.test_receipt_root_binds_consumer_observation",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "b391b9591566480d",
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_receipt_root_deterministic:63a73a8e526e3ec1",
         "name": "T.test_receipt_root_deterministic",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 74,
-        "end_line": 75,
+        "line": 80,
+        "end_line": 81,
         "signature_hash": "bb47afa9c82fe574",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_recent_starved_command_requires_visibility_not_false_death:793e1761a78749fa",
         "name": "T.test_recent_starved_command_requires_visibility_not_false_death",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 70,
-        "end_line": 71,
+        "line": 76,
+        "end_line": 77,
         "signature_hash": "590a1cd20089dde7",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_result_terminal:621775b33d6be8fb",
@@ -267160,7 +268023,7 @@
         "line": 28,
         "end_line": 29,
         "signature_hash": "7fe0efb9b410f3c5",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_same_generation_wrong_digest_is_stale:d9d7fd9d891db496",
@@ -267170,7 +268033,7 @@
         "line": 36,
         "end_line": 37,
         "signature_hash": "df760b231efc4cb8",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_stale_head_precedes_liveness:23a58cd8371d6da2",
@@ -267180,7 +268043,7 @@
         "line": 34,
         "end_line": 35,
         "signature_hash": "ce205be030bf8859",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_typed_rejection:a1d6a17128ce879c",
@@ -267190,37 +268053,37 @@
         "line": 32,
         "end_line": 33,
         "signature_hash": "8d7ff617d97f538b",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unknown_queue_requires_visibility:d199c01dc63e553b",
         "name": "T.test_unknown_queue_requires_visibility",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 50,
-        "end_line": 51,
+        "line": 42,
+        "end_line": 43,
         "signature_hash": "7367471a277d0831",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unobserved_consumer_cannot_smuggle_state:aa8d1ddcd86945bb",
         "name": "T.test_unobserved_consumer_cannot_smuggle_state",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 54,
-        "end_line": 55,
+        "line": 48,
+        "end_line": 49,
         "signature_hash": "544e798469e26957",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unobserved_consumer_never_authorizes_restart:0b5759030ff2d6ab",
         "name": "T.test_unobserved_consumer_never_authorizes_restart",
         "kind": "method",
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "line": 38,
-        "end_line": 39,
+        "line": 46,
+        "end_line": 47,
         "signature_hash": "70e2e61e682e35be",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unrelated_old_bus_activity_never_satisfies_command:3f5fb4940b6c97a2",
@@ -267230,7 +268093,7 @@
         "line": 18,
         "end_line": 19,
         "signature_hash": "2fdd1cb1c507eeab",
-        "file_digest8": "003c44d3526a7936"
+        "file_digest8": "2630ed89a1cd55dd"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -268483,8 +269346,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "57ce2cb0c9753abeef6529402032e04a",
-    "payload_hash": "917b58d3526da5c1e6b834c2ef985b3d"
+    "record_fingerprint": "ba1e0b78ca5307bc8e546194cff46ed8",
+    "payload_hash": "008c1c8883376dfbdd45d84690ce505c"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268497,17 +269360,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1653,
-      "bytes": 26511039,
-      "tokens_est": 6618101,
+      "files": 1660,
+      "bytes": 26533558,
+      "tokens_est": 6623736,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
+        "python_module": 1009,
         "schema_or_lexicon": 273,
-        "support_file": 49
+        "support_file": 53
       }
     },
     {
@@ -269193,17 +270056,17 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1653,
-    "total_bytes": 26511039,
-    "text_tokens_est": 6618101,
+    "file_count": 1660,
+    "total_bytes": 26533558,
+    "text_tokens_est": 6623736,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
+      "python_module": 1009,
       "schema_or_lexicon": 273,
-      "support_file": 49
+      "support_file": 53
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -270428,8 +271291,16 @@
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 28,
-        "end_line": 106,
+        "end_line": 103,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:run:7377463e29869ad4",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 59,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:run:5e54aa4b95795b0d",
         "signature_hash": "26799ab4ad82cbfb"
       }
     ],
@@ -274853,6 +275724,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 83,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_sha:80a275fda771d2f3",
+        "signature_hash": "5f445bd7f74a6239"
       }
     ],
     "_repo": [
@@ -281439,6 +282318,22 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_text:1836cae3d27a92ab",
+        "signature_hash": "c380f3042bfa8f5b"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_text:2409cd184d286296",
+        "signature_hash": "2ca04f52499b2177"
       }
     ],
     "_bounded": [
@@ -284543,14 +285438,6 @@
         "end_line": 305,
         "semantic_id": "aura_arena_wfst_compiler.py#function:_valid_id:3e616a243f533804",
         "signature_hash": "5ab673f9f1ed8aa3"
-      },
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 91,
-        "end_line": 92,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_valid_id:3e08f87a3d9fa539",
-        "signature_hash": "e7b70ab502afaf4a"
       }
     ],
     "_failed": [
@@ -291099,10 +291986,10 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 99,
-        "end_line": 102,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_bool:5f214a931b4cdc06",
-        "signature_hash": "45fb4cb872c2c527"
+        "line": 133,
+        "end_line": 135,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_bool:22b780abdffebb35",
+        "signature_hash": "7a2c42f21478b5b7"
       }
     ],
     "_snapshot": [
@@ -366265,6 +367152,14 @@
         "end_line": 618,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_root:953ced6073ce4465",
         "signature_hash": "359c484fcebcc325"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_root:c64c620aa1bf60b8",
+        "signature_hash": "2e65e72bab661379"
       }
     ],
     "_iter_nul_records": [
@@ -368401,10 +369296,10 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 121,
-        "end_line": 127,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_command:665f28ba660b17b5",
-        "signature_hash": "c74dd2037a24fa71"
+        "line": 157,
+        "end_line": 158,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_command:aa6aa5b036306e17",
+        "signature_hash": "5162fb169d3bca77"
       }
     ],
     "_validate_env": [
@@ -424035,10 +424930,18 @@
         "signature_hash": "1a51332cd1dc4f10"
       },
       {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 64,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#class:T:67711ac0c485bf46",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "class",
         "line": 13,
-        "end_line": 82,
+        "end_line": 90,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#class:T:8f95aedea5c120a7",
         "signature_hash": "1a51332cd1dc4f10"
       }
@@ -425853,22 +426756,216 @@
         "signature_hash": "bc7d7970d1d8f6c0"
       }
     ],
+    "ProbeStep": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:ProbeStep:f9770747c906da01",
+        "signature_hash": "f1a9e846b25a4497"
+      }
+    ],
+    "ProbePlan": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 38,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:ProbePlan:ee6af48853e0a83c",
+        "signature_hash": "6753e8e51dc899a8"
+      }
+    ],
+    "HostSnapshot": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 52,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:HostSnapshot:75b83ad8685d1873",
+        "signature_hash": "8df2c62422f7b939"
+      }
+    ],
+    "SnapshotPair": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#class:SnapshotPair:4f5f2a72e7010aa2",
+        "signature_hash": "5f521cd0d45cd0c4"
+      }
+    ],
+    "_cj": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_cj:d377b10a9e5befb5",
+        "signature_hash": "9e80690eb703fdf5"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 117,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_cj:f28d55fba5acde26",
+        "signature_hash": "9e80690eb703fdf5"
+      }
+    ],
+    "_nonneg": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_nonneg:176ef7e10d801ec5",
+        "signature_hash": "d9fbdb7f115dccb3"
+      }
+    ],
+    "_opt_time": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 91,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_opt_time:016420db640ab359",
+        "signature_hash": "096e16f2ea93fea0"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_time:366f106454ce7a74",
+        "signature_hash": "7f51bd39ab4abd12"
+      }
+    ],
+    "_opt_bool": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 96,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_opt_bool:be7483b282844724",
+        "signature_hash": "3cf0179990d3d9f9"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 140,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_bool:10efe65aa77a01dd",
+        "signature_hash": "bdc74abbb753caa4"
+      }
+    ],
+    "compile_read_only_probe": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 123,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:compile_read_only_probe:81b1792b508156c7",
+        "signature_hash": "6c21f4f959985227"
+      }
+    ],
+    "validate_snapshot": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 165,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:validate_snapshot:bb4f1dd00ff51182",
+        "signature_hash": "e8150d135e519512"
+      }
+    ],
+    "service_active": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 169,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:service_active:da63d67143ef7a8e",
+        "signature_hash": "fff56796b93b033a"
+      }
+    ],
+    "compare_snapshots": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 172,
+        "end_line": 193,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:compare_snapshots:44d94a2c591151d8",
+        "signature_hash": "e2e42330b4d899a0"
+      }
+    ],
+    "single_snapshot_observation": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 206,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:single_snapshot_observation:f833e80f3e052ab6",
+        "signature_hash": "bfb5117f6f79f50f"
+      }
+    ],
+    "assert_probe_read_only": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
+        "kind": "function",
+        "line": 209,
+        "end_line": 216,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:assert_probe_read_only:c9d333cc8f5fdb51",
+        "signature_hash": "77f6aae008b35fb8"
+      }
+    ],
+    "s": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 12,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:s:8db8e0e7f698eac9",
+        "signature_hash": "f1b4e3cc000172c2"
+      }
+    ],
+    "oracle_move": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:oracle_move:c4a72bcf6b0312ae",
+        "signature_hash": "10bccb5c919ada73"
+      }
+    ],
     "E": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 12,
-        "end_line": 13,
+        "line": 14,
+        "end_line": 14,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:E:cf943465e10f0870",
         "signature_hash": "1d79b2fd5a5693b8"
+      }
+    ],
+    "EventClass": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 22,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:EventClass:b6fddb83701a653c",
+        "signature_hash": "a19610f9b74e89df"
       }
     ],
     "CommandState": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 15,
-        "end_line": 22,
+        "line": 25,
+        "end_line": 33,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:CommandState:3107d7f7367d0465",
         "signature_hash": "9ae8bcf8c130262b"
       }
@@ -425877,8 +426974,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 24,
-        "end_line": 30,
+        "line": 36,
+        "end_line": 43,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:SystemState:695e59216d7c82aa",
         "signature_hash": "d28cfb56819497d3"
       }
@@ -425887,8 +426984,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 33,
-        "end_line": 35,
+        "line": 47,
+        "end_line": 49,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:Head:1a46c753132a40b4",
         "signature_hash": "8d907cae4acea8fb"
       }
@@ -425897,38 +426994,48 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 38,
-        "end_line": 44,
+        "line": 53,
+        "end_line": 59,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:Command:db3376efe8ecc184",
         "signature_hash": "1c4a89ec8bfab6d9"
       }
     ],
-    "Receipt": [
+    "TypedReceipt": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 47,
-        "end_line": 51,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:Receipt:dad8b92df2190aaa",
-        "signature_hash": "c1403e8b6159bae1"
+        "line": 63,
+        "end_line": 69,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:TypedReceipt:101546395eb87f67",
+        "signature_hash": "cab414750bbf41e0"
       }
     ],
     "ConsumerObservation": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 54,
-        "end_line": 59,
+        "line": 73,
+        "end_line": 80,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:ConsumerObservation:e22b39014f4eff80",
         "signature_hash": "edb86c653360e549"
+      }
+    ],
+    "LedgerProjection": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 89,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:LedgerProjection:651e1c6038b1b542",
+        "signature_hash": "1356b75af6100708"
       }
     ],
     "CommandDisposition": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 62,
-        "end_line": 67,
+        "line": 93,
+        "end_line": 100,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:CommandDisposition:47d7a00ff15085ec",
         "signature_hash": "2c5aa255284f4430"
       }
@@ -425937,150 +427044,370 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "class",
-        "line": 70,
-        "end_line": 77,
+        "line": 104,
+        "end_line": 111,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#class:RecoveryPlan:89c5883ff9dc42be",
         "signature_hash": "0ca4003764dff849"
-      }
-    ],
-    "_cj": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 80,
-        "end_line": 81,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_cj:f28d55fba5acde26",
-        "signature_hash": "9e80690eb703fdf5"
       }
     ],
     "_dig": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 83,
-        "end_line": 84,
+        "line": 120,
+        "end_line": 120,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_dig:66019a2ef6692017",
         "signature_hash": "b6a59051ed2ad26c"
       }
     ],
-    "_valid_text": [
+    "_nn": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 86,
-        "end_line": 89,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_valid_text:93e2c4f514a09280",
-        "signature_hash": "8dcb2fcfc6c6d03c"
-      }
-    ],
-    "_valid_nonneg": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 94,
-        "end_line": 97,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_valid_nonneg:61d753f400d1206a",
-        "signature_hash": "d125a1e0ced48d6a"
-      }
-    ],
-    "_opt_bool": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 104,
-        "end_line": 107,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_bool:2734f1e94e94b645",
-        "signature_hash": "b9141f22a68d953f"
-      }
-    ],
-    "_opt_time": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 109,
-        "end_line": 115,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_opt_time:c35c92c9606cd2cf",
-        "signature_hash": "57897ce4cf896508"
-      }
-    ],
-    "_validate_head": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 117,
-        "end_line": 119,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_head:d20dfca8a6fa7aa0",
-        "signature_hash": "501231d242bb1efa"
+        "line": 128,
+        "end_line": 130,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
+        "signature_hash": "0c3f98b7c2640bed"
       }
     ],
     "_queue_class": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 129,
-        "end_line": 134,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_queue_class:5a3a311ba30765c5",
-        "signature_hash": "f0a889eb84cd51b9"
+        "line": 150,
+        "end_line": 153,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_queue_class:0415bf95db98b292",
+        "signature_hash": "51cf3684c6251ae6"
       }
     ],
-    "_validate_bound_receipt": [
+    "_validate_head": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 136,
-        "end_line": 142,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_bound_receipt:c66286acff00c624",
-        "signature_hash": "bbe829bcb861e5bc"
+        "line": 156,
+        "end_line": 156,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_head:f23152691d91189e",
+        "signature_hash": "b80bd04ef4db1e6a"
       }
     ],
     "_validate_consumer": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 144,
-        "end_line": 155,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_consumer:2859f31cfe567c3e",
-        "signature_hash": "b7178f0c57b85fe8"
+        "line": 159,
+        "end_line": 163,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_consumer:105fe1a11d73edf0",
+        "signature_hash": "61620edf037468fc"
+      }
+    ],
+    "_validate_receipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 170,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_validate_receipt:b65228a16df0e8c4",
+        "signature_hash": "3efab16e74ad8260"
+      }
+    ],
+    "_semantic_key": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 174,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_semantic_key:ee7644c1895cd105",
+        "signature_hash": "1df9c7d1be3d5f61"
+      }
+    ],
+    "project_receipt_ledger": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 177,
+        "end_line": 211,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:project_receipt_ledger:b4e09455fab6ddc6",
+        "signature_hash": "48b1206479511596"
       }
     ],
     "classify_command": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 158,
-        "end_line": 194,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:classify_command:e30fe4396edd46d2",
-        "signature_hash": "9bd3bcc58840182f"
+        "line": 214,
+        "end_line": 236,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:classify_command:1cacbd4f1b7da187",
+        "signature_hash": "c700e06d25f47f65"
       }
     ],
     "compile_recovery": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 197,
-        "end_line": 298,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:compile_recovery:0d694c04932b9447",
-        "signature_hash": "0c10faf18d14fb7e"
+        "line": 239,
+        "end_line": 272,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:compile_recovery:a4cc3430a7ea05b2",
+        "signature_hash": "2d3b45833af3628b"
       }
     ],
     "omega8_keeper": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 301,
-        "end_line": 302,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:omega8_keeper:869a54d6ae5416e1",
-        "signature_hash": "62a1fc6d5e820411"
+        "line": 275,
+        "end_line": 275,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:omega8_keeper:b8e3b950cfb97c71",
+        "signature_hash": "c99187ee65645eb4"
       }
     ],
     "context13_preserves_invalid": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
         "kind": "function",
-        "line": 304,
-        "end_line": 307,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:context13_preserves_invalid:297782ce58e54010",
-        "signature_hash": "e9f144491cfb20f8"
+        "line": 276,
+        "end_line": 278,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:context13_preserves_invalid:8fc916e8283ae17b",
+        "signature_hash": "6576780be1531849"
+      }
+    ],
+    "snap": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#function:snap:69586c35689ae609",
+        "signature_hash": "34b0d76dc2107925"
+      }
+    ],
+    "starved_command": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#function:starved_command:6c365545cfb3a4cc",
+        "signature_hash": "fffe0ddfacb36a62"
+      }
+    ],
+    "T.plan_for": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.plan_for:ffb63834f1915f34",
+        "signature_hash": "e111a32ce10e046c"
+      }
+    ],
+    "T.test_probe_plan_is_read_only": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_probe_plan_is_read_only:53537a752b1dbb25",
+        "signature_hash": "5afd9442503d6a3a"
+      }
+    ],
+    "T.test_probe_plan_pins_exact_owner_host_paths": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_probe_plan_pins_exact_owner_host_paths:72aef261bbc69ade",
+        "signature_hash": "00c96a905aad4a72"
+      }
+    ],
+    "T.test_probe_plan_rejects_wrong_head": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_probe_plan_rejects_wrong_head:1a2fc5f1d4effbba",
+        "signature_hash": "e669c2a9ec6bb904"
+      }
+    ],
+    "T.test_snapshot_root_deterministic": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_snapshot_root_deterministic:49c2d1de742deab9",
+        "signature_hash": "83f7b850d4a28f27"
+      }
+    ],
+    "T.test_snapshot_root_changes_with_consumer_bytes": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_snapshot_root_changes_with_consumer_bytes:b5cda423f54e0ca8",
+        "signature_hash": "ec37f0db4526ccf1"
+      }
+    ],
+    "T.test_future_snapshot_rejected": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_future_snapshot_rejected:935f50633ddfe64f",
+        "signature_hash": "1ef5d5456106db19"
+      }
+    ],
+    "T.test_future_cursor_rejected": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_future_cursor_rejected:50630318d4fa2904",
+        "signature_hash": "426fd0283a80a4cf"
+      }
+    ],
+    "T.test_bad_sha_rejected": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_bad_sha_rejected:25566dccb0815363",
+        "signature_hash": "25bf0fa9aa95175f"
+      }
+    ],
+    "T.test_active_requires_pid": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_active_requires_pid:0230cf1d1701c6e5",
+        "signature_hash": "a9afb12e21241047"
+      }
+    ],
+    "T.test_single_active_observation_does_not_authorize_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_single_active_observation_does_not_authorize_restart:ce996e017b8dbd15",
+        "signature_hash": "0a083fd61f058f8a"
+      }
+    ],
+    "T.test_inactive_observation_allows_one_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_inactive_observation_allows_one_restart:8660efe932e17f0b",
+        "signature_hash": "7103675d2e2cd080"
+      }
+    ],
+    "T.test_no_progress_after_iteration_allows_one_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_no_progress_after_iteration_allows_one_restart:383cd7ee8df7f44e",
+        "signature_hash": "e16247c74302bd6b"
+      }
+    ],
+    "T.test_state_movement_prevents_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_state_movement_prevents_restart:c8401d04d338dc6d",
+        "signature_hash": "7d825eaa90e89713"
+      }
+    ],
+    "T.test_receipt_inventory_movement_alone_does_not_count": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_receipt_inventory_movement_alone_does_not_count:489f4697baad0725",
+        "signature_hash": "f413421c9be7e6e5"
+      }
+    ],
+    "T.test_exact_command_receipt_movement_counts": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_exact_command_receipt_movement_counts:99e6885c6a5e6f9e",
+        "signature_hash": "e94d6e86bc4b015d"
+      }
+    ],
+    "T.test_cursor_movement_counts": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_cursor_movement_counts:400df89d165e864e",
+        "signature_hash": "c5a2a70cab3f60bd"
+      }
+    ],
+    "T.test_last_scan_movement_counts": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_last_scan_movement_counts:3fecfbcccbd2764e",
+        "signature_hash": "c128fb820c67ef2e"
+      }
+    ],
+    "T.test_reversed_snapshot_time_rejected": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_reversed_snapshot_time_rejected:02aa61b1c1305ddb",
+        "signature_hash": "c77157f719d839e9"
+      }
+    ],
+    "T.test_evidence_root_binds_observation": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_evidence_root_binds_observation:1725dba6e9b3e16a",
+        "signature_hash": "156f135809483aeb"
+      }
+    ],
+    "T.test_lease_is_advisory_not_restart_authority": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_lease_is_advisory_not_restart_authority:7092d23f878d16d6",
+        "signature_hash": "9d3fccbe24663e6d"
+      }
+    ],
+    "T.test_provider_fanout_always_false": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#method:T.test_provider_fanout_always_false:5057011aed553121",
+        "signature_hash": "5f4c21bb91a5fbf1"
       }
     ],
     "cmd": [
@@ -426143,14 +427470,14 @@
         "signature_hash": "941c54d17611b03a"
       }
     ],
-    "T.test_future_receipt_fails_closed": [
+    "T.test_future_bound_receipt_fails_closed": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
         "line": 22,
         "end_line": 23,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_receipt_fails_closed:6f32b5c2bb431855",
-        "signature_hash": "57ffd1e397a7ab41"
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_bound_receipt_fails_closed:d068d2cf38f27136",
+        "signature_hash": "7524001704a21012"
       }
     ],
     "T.test_ack_is_admitted_not_terminal": [
@@ -426223,52 +427550,12 @@
         "signature_hash": "df760b231efc4cb8"
       }
     ],
-    "T.test_unobserved_consumer_never_authorizes_restart": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "method",
-        "line": 38,
-        "end_line": 39,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unobserved_consumer_never_authorizes_restart:0b5759030ff2d6ab",
-        "signature_hash": "70e2e61e682e35be"
-      }
-    ],
-    "T.test_incomplete_consumer_observation_fails_closed": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "method",
-        "line": 40,
-        "end_line": 41,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_incomplete_consumer_observation_fails_closed:b83db1fbedc4a272",
-        "signature_hash": "fe6367acecf4eeef"
-      }
-    ],
-    "T.test_observed_inactive_consumer_allows_one_restart": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "method",
-        "line": 42,
-        "end_line": 43,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_inactive_consumer_allows_one_restart:8ceb41038a13c12e",
-        "signature_hash": "5ff489a927fde265"
-      }
-    ],
-    "T.test_observed_active_current_consumer_no_restart": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "method",
-        "line": 44,
-        "end_line": 45,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_current_consumer_no_restart:702b1b545d5d57b9",
-        "signature_hash": "45ea6429a4178e2b"
-      }
-    ],
     "T.test_inactive_queue_never_creates_starvation": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 46,
-        "end_line": 49,
+        "line": 38,
+        "end_line": 41,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_inactive_queue_never_creates_starvation:8f546e03a4cb0f0b",
         "signature_hash": "eb22cd545c27dc51"
       }
@@ -426277,8 +427564,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 50,
-        "end_line": 51,
+        "line": 42,
+        "end_line": 43,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unknown_queue_requires_visibility:d199c01dc63e553b",
         "signature_hash": "7367471a277d0831"
       }
@@ -426287,28 +427574,98 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 52,
-        "end_line": 53,
+        "line": 44,
+        "end_line": 45,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_inactive_stale_head_does_not_create_currentness_block:c0d7742d0a21c705",
         "signature_hash": "44006db490241199"
+      }
+    ],
+    "T.test_unobserved_consumer_never_authorizes_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unobserved_consumer_never_authorizes_restart:0b5759030ff2d6ab",
+        "signature_hash": "70e2e61e682e35be"
       }
     ],
     "T.test_unobserved_consumer_cannot_smuggle_state": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 54,
-        "end_line": 55,
+        "line": 48,
+        "end_line": 49,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_unobserved_consumer_cannot_smuggle_state:aa8d1ddcd86945bb",
         "signature_hash": "544e798469e26957"
+      }
+    ],
+    "T.test_observed_consumer_requires_service_state": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_consumer_requires_service_state:41ae2fec4b9c85f5",
+        "signature_hash": "a91c19f7f74904ee"
+      }
+    ],
+    "T.test_lease_is_optional_advisory": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_lease_is_optional_advisory:f7712dc957338c26",
+        "signature_hash": "e63520b3f16ea37a"
+      }
+    ],
+    "T.test_observed_inactive_consumer_allows_one_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_inactive_consumer_allows_one_restart:8ceb41038a13c12e",
+        "signature_hash": "5ff489a927fde265"
+      }
+    ],
+    "T.test_observed_active_unknown_progress_no_restart_yet": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_unknown_progress_no_restart_yet:b96144a8bf4c1d00",
+        "signature_hash": "15392790a7d91024"
+      }
+    ],
+    "T.test_observed_active_stuck_allows_one_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_stuck_allows_one_restart:d053b9c13fe3fe5f",
+        "signature_hash": "b4866f02dce68ad8"
+      }
+    ],
+    "T.test_observed_active_progress_blocks_restart": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_observed_active_progress_blocks_restart:a02f0bf3c9b13f0f",
+        "signature_hash": "6d8b749bd2b2c45a"
       }
     ],
     "T.test_future_consumer_time_fails_closed": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 56,
-        "end_line": 57,
+        "line": 62,
+        "end_line": 63,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_consumer_time_fails_closed:e646858bb698ee37",
         "signature_hash": "10709193d78f6443"
       }
@@ -426317,38 +427674,18 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 58,
-        "end_line": 59,
+        "line": 64,
+        "end_line": 65,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_consumer_bool_fails_closed:4bc7d0047ba25c57",
         "signature_hash": "fddebe43ca530884"
-      }
-    ],
-    "T.test_bad_receipt_state_fails_closed": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "method",
-        "line": 60,
-        "end_line": 61,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_receipt_state_fails_closed:812b7c3cb9ed29ac",
-        "signature_hash": "6c0b27ba529d6ef1"
-      }
-    ],
-    "T.test_bad_receipt_time_fails_closed_before_temporal_filter": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "method",
-        "line": 62,
-        "end_line": 63,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_receipt_time_fails_closed_before_temporal_filter:25cb4c19d741006c",
-        "signature_hash": "c364c147d514c9a9"
       }
     ],
     "T.test_duplicate_command_ids_fail_closed": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 64,
-        "end_line": 65,
+        "line": 66,
+        "end_line": 67,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_duplicate_command_ids_fail_closed:4477ef038513d5fa",
         "signature_hash": "ec6b4ceac059956d"
       }
@@ -426357,8 +427694,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 66,
-        "end_line": 67,
+        "line": 68,
+        "end_line": 69,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_future_command_fails_closed:e82dbfa28d4a75cd",
         "signature_hash": "dd8963f0742a05e7"
       }
@@ -426367,18 +427704,38 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 68,
-        "end_line": 69,
+        "line": 70,
+        "end_line": 71,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_bool_fails_closed:85af02db99dd8a95",
         "signature_hash": "e682aebbffe623f0"
+      }
+    ],
+    "T.test_bad_receipt_state_fails_closed": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 73,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_receipt_state_fails_closed:812b7c3cb9ed29ac",
+        "signature_hash": "6c0b27ba529d6ef1"
+      }
+    ],
+    "T.test_bad_receipt_time_fails_closed_before_temporal_filter": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_bad_receipt_time_fails_closed_before_temporal_filter:25cb4c19d741006c",
+        "signature_hash": "c364c147d514c9a9"
       }
     ],
     "T.test_recent_starved_command_requires_visibility_not_false_death": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 70,
-        "end_line": 71,
+        "line": 76,
+        "end_line": 77,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_recent_starved_command_requires_visibility_not_false_death:793e1761a78749fa",
         "signature_hash": "590a1cd20089dde7"
       }
@@ -426387,8 +427744,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 72,
-        "end_line": 73,
+        "line": 78,
+        "end_line": 79,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_empty_ingress:3d8c95c749af9f6d",
         "signature_hash": "43b56e43336f9164"
       }
@@ -426397,18 +427754,28 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 74,
-        "end_line": 75,
+        "line": 80,
+        "end_line": 81,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_receipt_root_deterministic:63a73a8e526e3ec1",
         "signature_hash": "bb47afa9c82fe574"
+      }
+    ],
+    "T.test_receipt_root_binds_consumer_observation": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_receipt_root_binds_consumer_observation:9476decb781fd0a1",
+        "signature_hash": "b391b9591566480d"
       }
     ],
     "T.test_omega8_exactly_one_keeper": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 76,
-        "end_line": 78,
+        "line": 84,
+        "end_line": 86,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_omega8_exactly_one_keeper:8bfe31d3e1c6d4a4",
         "signature_hash": "0d657a4d96e134fb"
       }
@@ -426417,8 +427784,8 @@
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
         "kind": "method",
-        "line": 79,
-        "end_line": 82,
+        "line": 87,
+        "end_line": 90,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#method:T.test_13d_tail_cannot_repair_invalid_core:f6693cb8868c1d87",
         "signature_hash": "a18bebaafdbf6310"
       }
