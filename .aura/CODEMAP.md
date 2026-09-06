@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1669
-- **total_bytes**: 26607108
-- **text_tokens_est**: 6642125
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1671
+- **total_bytes**: 26624193
+- **text_tokens_est**: 6646398
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1669,
+  "repo_file_count": 1671,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1654,6 +1654,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_huggingface_space_deployment.py",
     "tests/test_k27_epoch_invalidation.py",
     "tests/test_k27_epoch_republish_invalidation.py",
+    "tests/test_k27_gate10_campaign_oracle.py",
     "tests/test_k27_memory_runtime.py",
     "tests/test_k27_spatial_nonfinite_canonicalization.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1670,6 +1671,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory/__init__.py",
     "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
     "tools/arena/k27_memory/coordinate_bridge.py",
+    "tools/arena/k27_memory/gate10_campaign_oracle.py",
     "tools/arena/k27_memory/k27_city.py",
     "tools/arena/k27_memory/persistent_memory.py",
     "tools/arena/k27_memory/world_atlas.py",
@@ -1809,15 +1811,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1669,
-  "bytes": 26607108,
-  "tokens_est": 6642125,
+  "files": 1671,
+  "bytes": 26624193,
+  "tokens_est": 6646398,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1019,
+    "python_module": 1021,
     "schema_or_lexicon": 275,
     "support_file": 49
   }
