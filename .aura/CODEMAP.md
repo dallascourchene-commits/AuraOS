@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1655
-- **total_bytes**: 26508007
-- **text_tokens_est**: 6617345
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1659
+- **total_bytes**: 26532730
+- **text_tokens_est**: 6623526
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1655,
+  "repo_file_count": 1659,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1660,11 +1660,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/README.md",
+    "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/RESOURCE_LEASE_R3.md",
     "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/atomic_absorption.py",
     "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign.py",
     "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_r2.py",
+    "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/campaign_resource_absorption.py",
+    "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/resource_absorption.py",
     "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption.py",
     "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_atomic_absorption_r2.py",
+    "tools/arena/worker_cells/gpt56sol_atomic_absorption_transaction_r1/test_resource_absorption.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1795,15 +1799,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1655,
-  "bytes": 26508007,
-  "tokens_est": 6617345,
+  "files": 1659,
+  "bytes": 26532730,
+  "tokens_est": 6623526,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
+    "python_module": 1011,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
