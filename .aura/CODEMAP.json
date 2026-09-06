@@ -405,6 +405,10 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
+    "python -m unittest": [
+      ".github/workflows/pr863-k27-gate10-replay.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
     "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json": [
       ".github/workflows/pr863-k27-gate10-replay.yml"
     ],
@@ -1027,9 +1031,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -11799,53 +11800,57 @@
       "path": ".github/workflows/pr863-k27-gate10-replay.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2652,
-      "lines": 77,
-      "tokens_est": 663,
+      "bytes": 2797,
+      "lines": 80,
+      "tokens_est": 700,
       "symbol_count": 0,
       "commands": [
+        "python -m unittest",
         "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json"
       ],
       "command_lines": {
-        "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json": [
+        "python -m unittest": [
           38
+        ],
+        "python tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py > gate10-receipt.json": [
+          41
         ]
       },
       "topology": {},
-      "digest8": "a242acf5a37b6f53",
+      "digest8": "1ae87f45fe349f98",
       "vector": [
-        0.282695,
-        0.010136,
-        -0.248907,
-        0.145289,
-        -0.237644,
-        0.170067,
-        -0.203856,
-        0.147542,
-        -0.235391,
-        0.264675,
-        0.082218,
-        -0.037167,
-        0.061945,
-        0.138532,
-        0.280442,
-        0.122764,
-        0.152047,
-        0.197098,
-        0.043925,
-        -0.152047,
-        -0.219624,
-        0.005631,
-        -0.064198,
-        0.217371,
-        0.005631,
-        -0.161057,
-        -0.070955,
-        -0.003379,
-        0.237644,
-        -0.260169,
-        -0.280442,
-        0.131774
+        0.023548,
+        -0.281458,
+        -0.214177,
+        -0.012335,
+        -0.07513,
+        0.144654,
+        -0.025791,
+        -0.21642,
+        0.225391,
+        -0.068402,
+        0.234361,
+        0.032519,
+        0.238847,
+        0.25006,
+        0.283701,
+        -0.12447,
+        0.086344,
+        -0.059431,
+        0.131198,
+        -0.209692,
+        0.243332,
+        0.21642,
+        -0.187265,
+        -0.218663,
+        -0.259031,
+        0.072888,
+        -0.037004,
+        0.007849,
+        0.27473,
+        -0.171566,
+        -0.128955,
+        0.128955
       ]
     },
     {
@@ -106578,7 +106583,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788730648,
+  "generated_at_unix": 1788730964,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -270956,7 +270961,7 @@
       }
     ],
     "record_fingerprint": "59759493fb96e6b14c3a35e454cdaee4",
-    "payload_hash": "a89404f53f0d60d1a6b37cc56527b7b6"
+    "payload_hash": "2744e0ca9cf9b730cfeb2ae28974c767"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270970,8 +270975,8 @@
     {
       "ring": "repo",
       "files": 1670,
-      "bytes": 26612540,
-      "tokens_est": 6643484,
+      "bytes": 26612685,
+      "tokens_est": 6643521,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
@@ -271666,8 +271671,8 @@
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
     "file_count": 1670,
-    "total_bytes": 26612540,
-    "text_tokens_est": 6643484,
+    "total_bytes": 26612685,
+    "text_tokens_est": 6643521,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
