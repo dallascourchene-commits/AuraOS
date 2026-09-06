@@ -55,7 +55,8 @@ class MemoryStore:
             'dependencies': ('revision_id','source_object','source_rev'),
         }
         for table, columns in expected.items():
-            actual = tuple(row['name'] for row in self.db.execute(f'PRAGMA table_info({table})'))
+            actual = tuple(row['name'] for row in self.db.execute(
+                'SELECT name FROM pragma_table_info(?) ORDER BY cid', (table,)))
             if actual != columns:
                 self.db.close()
                 raise ValueError(f'incompatible memory schema table: {table}')
@@ -177,7 +178,10 @@ class MemoryStore:
                 ON CONFLICT(object_id) DO UPDATE SET current_rev=excluded.current_rev,state='fresh',
                 frame_id=excluded.frame_id,frame_generation=excluded.frame_generation,path=excluded.path,epoch=excluded.epoch''',
                 (object_id,revision,address.frame_id,address.frame_generation,path_key(address.path),epoch))
-            affected = self._invalidate([object_id]) if prior and prior[0] != revision else set()
+            # Every existing-object publish advances the lifecycle epoch, even if
+            # the immutable revision digest is unchanged. Dependents bind both
+            # revision and observed epoch, so any such transition invalidates them.
+            affected = self._invalidate([object_id]) if prior else set()
             return {'object_id':object_id,'revision_id':revision,'epoch':epoch,'invalidated':sorted(affected),
                     'store_state_root':self.state_root()}
 
