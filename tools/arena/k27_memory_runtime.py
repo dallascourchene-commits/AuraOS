@@ -2,25 +2,30 @@ from __future__ import annotations
 
 """Source-bound K27 Memory City adapter for the existing AuraOS arena plane.
 
-This adapter does not make a K27 coordinate authoritative.  It verifies one
-sealed registry snapshot, exposes review/projection reads, and forwards exact
-revision+epoch CAS mutations only when explicitly opened writable.  External
-source currentness and consequence/effect authority remain owned elsewhere.
+This adapter does not make a K27 coordinate authoritative. It binds every read
+to one exact local registry state, exposes review/projection reads, and forwards
+revision+epoch+store-root CAS mutations only when explicitly opened writable.
+External source currentness and consequence/effect authority remain elsewhere.
 """
 
 from dataclasses import asdict, dataclass
-from hashlib import sha256
+from hashlib import sha1, sha256
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
-import json
+from typing import Any, Callable, Mapping, Sequence
 import os
 
 try:  # package import
     from .k27_memory import FrameAddress, K27Path, MemoryConflict, MemoryStore, StaleMemory
     from .k27_memory.persistent_memory import canonical
+    from .k27_memory_city_spatial_seam.k27_memory_city_spatial_seam import (
+        SeamDisposition, validate_spatial_seam,
+    )
 except ImportError:  # direct tools/arena import in existing harnesses
     from k27_memory import FrameAddress, K27Path, MemoryConflict, MemoryStore, StaleMemory
     from k27_memory.persistent_memory import canonical
+    from k27_memory_city_spatial_seam.k27_memory_city_spatial_seam import (
+        SeamDisposition, validate_spatial_seam,
+    )
 
 SCHEMA = "AURA-K27-MEMORY-RUNTIME-BINDING-v1"
 SCENE_SCHEMA = "AURA-XR-SCENE-v1"
@@ -77,18 +82,21 @@ class RegistrySeal:
     frame: str
     generation: str
     sqlite_integrity: str
+    seal_scope: str = "canonical_seed"
     authority_minted: bool = False
     gate10: bool = False
 
 class K27MemoryRuntime:
-    """Read-mostly adapter over one exact Memory City registry snapshot."""
+    """Adapter over an exact registry state with fail-closed mutation detection."""
 
     def __init__(self, registry_path: str | Path, *, writable: bool = False):
         self.path = Path(registry_path)
         if not self.path.is_file():
             raise RuntimeBindingError("registry file missing")
         self.writable = bool(writable)
-        self._seal = self._verify_seal()
+        self._seal = self._verify_seed_seal()
+        with MemoryStore(self.path) as store:
+            self._state_root = store.state_root()
 
     @classmethod
     def from_environment(cls, *, writable: bool = False, env: Mapping[str, str] | None = None):
@@ -108,7 +116,11 @@ class K27MemoryRuntime:
             "epoch": record["epoch"],
         }
 
-    def _verify_seal(self) -> RegistrySeal:
+    @staticmethod
+    def _git_blob_sha1(data: bytes) -> str:
+        return sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+
+    def _verify_seed_seal(self) -> RegistrySeal:
         raw_sha = sha256(self.path.read_bytes()).hexdigest()
         if raw_sha != REGISTRY_SHA256:
             raise RuntimeBindingError("registry byte SHA-256 mismatch")
@@ -125,30 +137,42 @@ class K27MemoryRuntime:
             raise RuntimeBindingError("registry semantic root mismatch")
         return RegistrySeal(raw_sha, semantic, len(rows), FRAME, GENERATION, integrity)
 
+    def _working_seal(self) -> RegistrySeal:
+        raw_sha = sha256(self.path.read_bytes()).hexdigest()
+        with MemoryStore(self.path) as store:
+            integrity = store.db.execute("PRAGMA integrity_check").fetchone()[0]
+            records = store.db.execute("SELECT COUNT(*) FROM objects").fetchone()[0]
+            state_root = store.state_root()
+        if integrity != "ok":
+            raise RuntimeBindingError("SQLite integrity check failed after mutation")
+        return RegistrySeal(raw_sha, state_root, records, FRAME, GENERATION, integrity,
+                            seal_scope="working_registry_state")
+
+    def _assert_registry_unchanged(self) -> None:
+        if sha256(self.path.read_bytes()).hexdigest() != self._seal.database_sha256:
+            raise RuntimeBindingError("registry changed outside the bound runtime state")
+
+    def _read_snapshot(self, operation: Callable[[MemoryStore], Any]) -> Any:
+        self._assert_registry_unchanged()
+        with MemoryStore(self.path) as store:
+            store.db.execute("BEGIN")
+            try:
+                if store.state_root() != self._state_root:
+                    raise RuntimeBindingError("registry state root changed before read")
+                result = operation(store)
+                if store.state_root() != self._state_root:
+                    raise RuntimeBindingError("registry state changed during read")
+                store.db.execute("COMMIT")
+            except BaseException:
+                store.db.execute("ROLLBACK")
+                raise
+        self._assert_registry_unchanged()
+        return result
+
     @property
     def seal(self) -> RegistrySeal:
+        self._assert_registry_unchanged()
         return self._seal
-
-    def read(self, object_id: str) -> tuple[RuntimeMemoryBinding, dict[str, Any]]:
-        with MemoryStore(self.path) as store:
-            record = store.get(object_id)
-        if record is None:
-            raise KeyError(object_id)
-        a = record["address"]
-        binding = RuntimeMemoryBinding(
-            object_id=record["object_id"], revision_id=record["revision_id"], epoch=record["epoch"],
-            frame_id=a["frame_id"], frame_generation=a["frame_generation"], path=tuple(a["path"]),
-            payload_sha256=record["payload_sha256"], state=record["state"],
-            local_registry_current=(record["state"] == "fresh" and a["frame_generation"] == GENERATION),
-        )
-        return binding, record
-
-    def under(self, prefix: Sequence[int] = ()) -> list[RuntimeMemoryBinding]:
-        p = tuple(prefix)
-        K27Path(p)
-        with MemoryStore(self.path) as store:
-            rows = store.under(FRAME, GENERATION, p)
-        return [self._binding_from_record(r) for r in rows]
 
     @staticmethod
     def _binding_from_record(record: Mapping[str, Any]) -> RuntimeMemoryBinding:
@@ -160,10 +184,27 @@ class K27MemoryRuntime:
             local_registry_current=(record["state"] == "fresh" and a["frame_generation"] == GENERATION),
         )
 
+    def _read_record(self, object_id: str, *, allow_stale: bool = False):
+        def op(store: MemoryStore):
+            return store.get(object_id, allow_stale=allow_stale)
+        record = self._read_snapshot(op)
+        if record is None:
+            raise KeyError(object_id)
+        return self._binding_from_record(record), record
+
+    def read(self, object_id: str) -> tuple[RuntimeMemoryBinding, dict[str, Any]]:
+        return self._read_record(object_id)
+
+    def under(self, prefix: Sequence[int] = ()) -> list[RuntimeMemoryBinding]:
+        p = tuple(prefix)
+        K27Path(p)
+        rows = self._read_snapshot(lambda store: store.under(FRAME, GENERATION, p))
+        return [self._binding_from_record(r) for r in rows]
+
     def invalidation_cone(self, object_id: str) -> dict[str, Any]:
-        """Read-only dependency closure.  No stale marks are written."""
-        with MemoryStore(self.path) as store:
-            root = store.get(object_id)
+        """One-snapshot dependency closure; no stale marks are written."""
+        def op(store: MemoryStore):
+            root = store.get(object_id, allow_stale=True)
             if root is None:
                 raise KeyError(object_id)
             pending, seen, affected = [object_id], {object_id}, []
@@ -180,14 +221,15 @@ class K27MemoryRuntime:
                         continue
                     seen.add(key); pending.append(key)
                     affected.append({"object_id": key, "path_key": row["path"]})
-        return {
-            "root_object_id": object_id,
-            "root_path": root["address"]["path"],
-            "affected": affected,
-            "bounded": True,
-            "mutation_performed": False,
-            "authority_minted": False,
-        }
+            return {
+                "root_object_id": object_id,
+                "root_path": root["address"]["path"],
+                "affected": affected,
+                "bounded": True,
+                "mutation_performed": False,
+                "authority_minted": False,
+            }
+        return self._read_snapshot(op)
 
     def scene_shell(self, prefix: Sequence[int] = (2,), *, limit: int = 64) -> dict[str, Any]:
         if type(limit) is not int or not 1 <= limit <= 1024:
@@ -222,61 +264,39 @@ class K27MemoryRuntime:
             "binding": asdict(binding),
             "payload": record["payload"],
             "dependencies": record["dependencies"],
+            "dependency_epochs": record.get("dependency_epochs"),
             "review_only": True,
             "execution_authority": False,
             "gate10": False,
         }
 
-    def spatial_seam_binding_receipt(self, spatial_manifest: Mapping[str, Any]) -> dict[str, Any]:
-        """Validate PR #859's declaration-only Spatial seam against this store.
-
-        This is a structural use-site binding only. It does not authenticate the
-        upstream source owner, mint currentness, or convert a projection into
-        truth/effect authority.
-        """
-        transitions = spatial_manifest.get("transitions")
-        if not isinstance(transitions, list):
-            raise RuntimeBindingError("spatial transitions missing")
-        matches = [t for t in transitions if isinstance(t, Mapping) and t.get("transition_id") == SPATIAL_TRANSITION]
-        if len(matches) != 1:
-            raise RuntimeBindingError("expected exactly one Spatial COMPILE_SCENE transition")
-        binding = matches[0].get("memory_city_binding")
-        if not isinstance(binding, Mapping):
-            raise RuntimeBindingError("Memory City Spatial seam missing")
-        if binding.get("binding_schema") != SPATIAL_SEAM_SCHEMA:
-            raise RuntimeBindingError("Spatial seam schema mismatch")
-        if binding.get("provenance_archive_sha256") != PROVENANCE_ARCHIVE_SHA256:
-            raise RuntimeBindingError("Spatial seam provenance root mismatch")
-        if binding.get("scene_schema") != SCENE_SCHEMA:
-            raise RuntimeBindingError("Spatial scene schema mismatch")
-        read_apis = binding.get("read_apis")
-        if not isinstance(read_apis, Mapping) or set(read_apis) != set(READ_APIS):
-            raise RuntimeBindingError("Spatial seam read API set mismatch")
-        if any(read_apis.get(name) != "REVIEW_ONLY" for name in READ_APIS):
-            raise RuntimeBindingError("Spatial seam widened a read API")
-        for key in ("projection_only", "strict_hold_unknown"):
-            if binding.get(key) is not True:
-                raise RuntimeBindingError(f"Spatial seam {key} must be true")
-        for key in ("renderer_authority", "execution_authority", "effect_authority", "gate10"):
-            if binding.get(key) is not False:
-                raise RuntimeBindingError(f"Spatial seam {key} must remain false")
-        authority = spatial_manifest.get("authority")
-        if not isinstance(authority, Mapping):
-            raise RuntimeBindingError("spatial authority block missing")
-        if authority.get("execution_authority") is not False or authority.get("automatic_merge") is not False:
-            raise RuntimeBindingError("Spatial arena authority ceiling widened")
+    def spatial_seam_binding_receipt(self, route_bytes: bytes,
+                                     provenance_manifest: Mapping[str, Any]) -> dict[str, Any]:
+        """Bind exactly the canonical route bytes to the canonical seam validator."""
+        if self.seal.seal_scope != "canonical_seed":
+            raise RuntimeBindingError("Spatial seam receipt requires the exact sealed seed registry")
+        if not isinstance(route_bytes, bytes):
+            raise RuntimeBindingError("Spatial route must be supplied as exact bytes")
+        route_blob = self._git_blob_sha1(route_bytes)
+        if route_blob != SPATIAL_ROUTE_BLOB:
+            raise RuntimeBindingError("Spatial route Git blob mismatch")
+        structural = validate_spatial_seam(route_bytes, provenance_manifest)
+        if structural.disposition is not SeamDisposition.READY_FOR_INDEPENDENT_REVIEW:
+            raise RuntimeBindingError("Spatial seam failed canonical structural validation: " + ",".join(structural.reasons))
         return {
-            "schema": "AURA-K27-MEMORY-SPATIAL-RUNTIME-BINDING-RECEIPT-v1",
+            "schema": "AURA-K27-MEMORY-SPATIAL-RUNTIME-BINDING-RECEIPT-v2",
             "spatial_transition": SPATIAL_TRANSITION,
             "spatial_seam_schema": SPATIAL_SEAM_SCHEMA,
             "spatial_seam_parent_sha": SPATIAL_SEAM_PARENT_SHA,
-            "spatial_route_blob": SPATIAL_ROUTE_BLOB,
+            "spatial_route_blob": route_blob,
             "spatial_seam_source_blob": SPATIAL_SEAM_SOURCE_BLOB,
             "spatial_seam_module_blob": SPATIAL_SEAM_MODULE_BLOB,
             "registry_sha256": self.seal.database_sha256,
             "semantic_registry_root": self.seal.semantic_registry_root,
             "records": self.seal.records,
-            "read_apis": list(READ_APIS),
+            "read_apis": list(structural.read_apis),
+            "route_structural_receipt_root": structural.receipt_root,
+            "provider_bytes_bound": False,
             "projection_only": True,
             "review_only": True,
             "truth_authority": False,
@@ -286,12 +306,8 @@ class K27MemoryRuntime:
             "gate10": False,
         }
 
-    def consequence_source_exit(self, object_id: str, *, external_currentness_confirmed: bool = False):
-        """Build the existing consequence-kernel SourceExit without minting currentness.
-
-        `external_currentness_confirmed` must come from the upstream owner.  K27
-        local registry consistency never turns it true by itself.
-        """
+    def consequence_source_exit(self, object_id: str):
+        """Return a non-current source projection; this adapter cannot authenticate owner currentness."""
         binding, _ = self.read(object_id)
         try:
             from .consequence_admission_kernel import SourceExit
@@ -302,15 +318,17 @@ class K27MemoryRuntime:
             owner_ref="AURAOS:K27_MEMORY_RUNTIME:LOCAL_REGISTRY_PROJECTION",
             generation=f"{binding.frame_generation}:epoch:{binding.epoch}",
             semantic_root=binding.revision_id,
-            current=bool(binding.local_registry_current and external_currentness_confirmed),
+            current=False,
         )
 
     def publish_cas(self, object_id: str, payload: Mapping[str, Any], *, source_url: str,
                     source_version: str, expected_revision: str, expected_epoch: int,
-                    dependencies: Mapping[str, str] | None = None) -> dict[str, Any]:
+                    dependencies: Mapping[str, str] | None = None,
+                    dependency_epochs: Mapping[str, int] | None = None) -> dict[str, Any]:
         if not self.writable:
             raise PermissionError("runtime registry opened read-only")
-        binding, _ = self.read(object_id)
+        self._assert_registry_unchanged()
+        binding, _ = self._read_record(object_id, allow_stale=True)
         address = FrameAddress(binding.frame_id, binding.frame_generation, binding.path, object_id)
         with MemoryStore(self.path) as store:
             result = store.publish(
@@ -318,11 +336,20 @@ class K27MemoryRuntime:
                 source_url=source_url, source_version=source_version,
                 expected_revision=expected_revision, expected_epoch=expected_epoch,
                 dependencies=None if dependencies is None else dict(dependencies),
+                dependency_epochs=None if dependency_epochs is None else dict(dependency_epochs),
+                expected_store_root=self._state_root,
             )
+        # The owned write is the sole allowed transition to a new bound local state.
+        self._seal = self._working_seal()
+        self._state_root = result["store_state_root"]
+        if self._seal.semantic_registry_root != self._state_root:
+            raise RuntimeBindingError("post-write state root mismatch")
         return {
             **result,
             "target_k27": list(binding.path),
             "invalidation_cone": self.invalidation_cone(object_id),
+            "registry_database_sha256": self._seal.database_sha256,
+            "registry_state_root": self._state_root,
             "authority_minted": False,
             "gate10": False,
         }
