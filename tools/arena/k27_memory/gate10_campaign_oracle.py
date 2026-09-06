@@ -165,10 +165,13 @@ def completion_fields(trace: Sequence[dict[str, Any]], failures: Sequence[dict[s
         raise CampaignOracleError("rounds must be a positive exact int")
     completed = len(trace)
     failure_count = len(failures)
+    round_ids = tuple(row.get("round") if isinstance(row, dict) else None for row in trace)
+    round_identity_complete = round_ids == tuple(range(rounds))
     return {
-        "campaign_complete": completed == rounds and failure_count == 0,
+        "campaign_complete": completed == rounds and failure_count == 0 and round_identity_complete,
         "completed_rounds": completed,
         "round_failures": failure_count,
+        "round_identity_complete": round_identity_complete,
     }
 
 
