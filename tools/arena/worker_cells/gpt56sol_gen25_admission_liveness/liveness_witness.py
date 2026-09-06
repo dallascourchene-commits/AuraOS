@@ -5,7 +5,7 @@ from hashlib import sha256
 import json
 from typing import Iterable, Sequence
 
-SCHEMA = "AURA-GEN25-ADMISSION-LIVENESS-WITNESS-v1"
+SCHEMA = "AURA-GEN25-ADMISSION-LIVENESS-WITNESS-v2"
 
 class E(ValueError):
     pass
@@ -80,10 +80,13 @@ def _cj(v) -> bytes:
 def _dig(v) -> str:
     return sha256(_cj(v)).hexdigest()
 
-def _valid_id(x: str) -> str:
-    if not isinstance(x, str) or not x or len(x) > 256 or any(ord(c) < 32 for c in x):
-        raise E("BAD_COMMAND_ID")
+def _valid_text(x: str, name: str, *, max_len: int = 512) -> str:
+    if not isinstance(x, str) or not x or len(x) > max_len or any(ord(c) < 32 for c in x):
+        raise E(name)
     return x
+
+def _valid_id(x: str) -> str:
+    return _valid_text(x, "BAD_COMMAND_ID", max_len=256)
 
 def _valid_nonneg(x: int, name: str) -> int:
     if type(x) is not int or x < 0:
@@ -95,21 +98,67 @@ def _bool(x, name: str) -> bool:
         raise E(name)
     return x
 
+def _opt_bool(x, name: str) -> bool | None:
+    if x is not None and type(x) is not bool:
+        raise E(name)
+    return x
+
+def _opt_time(x, name: str, now_s: int) -> int | None:
+    if x is None:
+        return None
+    _valid_nonneg(x, name)
+    if x > now_s:
+        raise E(f"FUTURE_{name}")
+    return x
+
+def _validate_head(head: Head) -> None:
+    _valid_text(head.generation, "BAD_HEAD_GENERATION", max_len=128)
+    _valid_text(head.digest, "BAD_HEAD_DIGEST", max_len=256)
+
+def _validate_command(command: Command) -> None:
+    _valid_id(command.command_id)
+    _valid_nonneg(command.created_s, "BAD_CREATED")
+    _valid_text(command.generation, "BAD_COMMAND_GENERATION", max_len=128)
+    _valid_text(command.head_digest, "BAD_COMMAND_HEAD_DIGEST", max_len=256)
+    _valid_text(command.queue_state, "BAD_QUEUE_STATE", max_len=256)
+    _bool(command.execution_authorized, "BAD_EXEC_AUTH")
+
+def _validate_bound_receipt(receipt: Receipt, now_s: int) -> None:
+    _valid_id(receipt.command_id)
+    _valid_nonneg(receipt.observed_s, "BAD_RECEIPT_TIME")
+    if receipt.observed_s > now_s:
+        raise E("FUTURE_RECEIPT")
+    _valid_text(receipt.kind, "BAD_RECEIPT_KIND", max_len=64)
+    _valid_text(receipt.state, "BAD_RECEIPT_STATE", max_len=256)
+
+def _validate_consumer(consumer: ConsumerObservation, now_s: int) -> None:
+    _bool(consumer.observed, "BAD_CONSUMER_OBSERVED")
+    _opt_bool(consumer.service_active, "BAD_SERVICE_ACTIVE")
+    _opt_bool(consumer.lease_current, "BAD_LEASE_CURRENT")
+    _opt_time(consumer.cursor_s, "CURSOR_TIME", now_s)
+    _opt_time(consumer.last_scan_s, "LAST_SCAN_TIME", now_s)
+    if not consumer.observed:
+        if any(v is not None for v in (consumer.service_active, consumer.cursor_s, consumer.last_scan_s, consumer.lease_current)):
+            raise E("UNOBSERVED_CONSUMER_HAS_STATE")
+    else:
+        if consumer.service_active is None or consumer.lease_current is None:
+            raise E("INCOMPLETE_CONSUMER_OBSERVATION")
+
 
 def classify_command(now_s: int, head: Head, command: Command, receipts: Sequence[Receipt]) -> CommandDisposition:
     now_s = _valid_nonneg(now_s, "BAD_NOW")
-    _valid_id(command.command_id)
-    _valid_nonneg(command.created_s, "BAD_CREATED")
-    _bool(command.execution_authorized, "BAD_EXEC_AUTH")
+    _validate_head(head)
+    _validate_command(command)
     if command.created_s > now_s:
         raise E("FUTURE_COMMAND")
     age = now_s - command.created_s
     if command.generation != head.generation or command.head_digest != head.digest:
         return CommandDisposition(command.command_id, CommandState.STALE_HEAD, "COMMAND_HEAD_DIFFERS_FROM_CURRENT_HEAD", age, None)
 
-    bound = [r for r in receipts if r.command_id == command.command_id and r.observed_s >= command.created_s]
-    for r in bound:
-        _valid_nonneg(r.observed_s, "BAD_RECEIPT_TIME")
+    matching = [r for r in receipts if r.command_id == command.command_id]
+    for r in matching:
+        _validate_bound_receipt(r, now_s)
+    bound = [r for r in matching if r.observed_s >= command.created_s]
     bound.sort(key=lambda r: (r.observed_s, r.kind, r.state))
     if not bound:
         return CommandDisposition(command.command_id, CommandState.ADMISSION_STARVED, "NO_COMMAND_BOUND_TYPED_RECEIPT", age, None)
@@ -141,9 +190,10 @@ def compile_recovery(
     reducer_stall_after_s: int,
 ) -> RecoveryPlan:
     now_s = _valid_nonneg(now_s, "BAD_NOW")
+    _validate_head(head)
     starvation_after_s = _valid_nonneg(starvation_after_s, "BAD_STARVATION_THRESHOLD")
     reducer_stall_after_s = _valid_nonneg(reducer_stall_after_s, "BAD_REDUCER_THRESHOLD")
-    _bool(consumer.observed, "BAD_CONSUMER_OBSERVED")
+    _validate_consumer(consumer, now_s)
     cmds = tuple(commands)
     ids = [_valid_id(c.command_id) for c in cmds]
     if len(set(ids)) != len(ids):
@@ -178,7 +228,7 @@ def compile_recovery(
             restart_needed = (consumer.service_active is False) or (consumer.lease_current is False)
             steps = (
                 "CAPTURE_PRE_STATE",
-                *( ("RESTART_AURA_PROJECT006_ONCE",) if restart_needed else () ),
+                *(("RESTART_AURA_PROJECT006_ONCE",) if restart_needed else ()),
                 "REUSE_EXISTING_EXECUTION_FALSE_CANARY",
                 "RUN_EXACTLY_ONE_CONSUMER_ITERATION",
                 "CAPTURE_POST_STATE_AND_LOCAL_RECEIPTS",
@@ -203,7 +253,6 @@ def compile_recovery(
         steps = ()
         restart_budget = 0
 
-    # This D0 witness may prove local progress but never self-authorizes provider/model fanout.
     progress = any(d.state in {CommandState.TERMINAL, CommandState.ADMITTED_NOT_TERMINAL, CommandState.TYPED_REJECTED} for d in dispositions)
     fanout = False
     payload = {
