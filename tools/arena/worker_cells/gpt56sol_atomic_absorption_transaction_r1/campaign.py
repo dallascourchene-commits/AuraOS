@@ -10,7 +10,7 @@ def mk(i,mode):
     return Proposal(f'P{i}',f'agent{i}',f'lin{i}',base,digest(('c',i)),digest(('r',i)),files,auth)
 
 def run():
-    counts={'cases':0,'bad_ready':0,'cas_lost':0,'conflict_escape':0,'debris_escape':0,'authority_escape':0}
+    counts={'cases':0,'bad_ready':0,'cas_lost':0,'conflict_escape':0,'debris_escape':0,'authority_escape':0,'consequence_divergence_escape':0}
     snap=OwnerSnapshot(H,T)
     for i in range(100000):
         mode=rng.randrange(6); a=mk(i,0)
@@ -28,6 +28,7 @@ def run():
         if mode==2 and q.disposition!=Disposition.DEBRIS_HOLD: counts['debris_escape']+=1
         if mode==3 and q.disposition!=Disposition.AUTHORITY_HOLD: counts['authority_escape']+=1
         if mode==4 and q.disposition!=Disposition.CONFLICT_HOLD: counts['conflict_escape']+=1
+        if mode==5 and q.disposition!=Disposition.CONFLICT_HOLD: counts['consequence_divergence_escape']+=1
     hs_false=0
     for i in range(1000):
         q=plan(snap,[mk(i,0)]); r=commit(q,('4'*64 if i%2==0 else H))
@@ -38,6 +39,6 @@ def run():
     out={**counts,'hs1000_false':hs_false,'omega8_keepers':omega,'13d_repairs':repairs}
     out['campaign_root']=digest(out)
     print(json.dumps(out,sort_keys=True))
-    assert not any(out[k] for k in ('bad_ready','cas_lost','conflict_escape','debris_escape','authority_escape','hs1000_false'))
+    assert not any(out[k] for k in ('bad_ready','cas_lost','conflict_escape','debris_escape','authority_escape','consequence_divergence_escape','hs1000_false'))
     assert omega==1 and repairs==0
 if __name__=='__main__': run()
