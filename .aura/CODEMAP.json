@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1652,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2684,6 +2684,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frontier27_owner_epoch_adapter.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -2694,7 +2695,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_frontier27_owner_epoch.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/frontier27_owner_epoch_adapter.py",
       "tools/arena/frontier27_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -9808,53 +9811,53 @@
       "path": ".github/workflows/frontier27-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2494,
-      "lines": 62,
-      "tokens_est": 624,
+      "bytes": 3747,
+      "lines": 85,
+      "tokens_est": 937,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile"
       ],
       "command_lines": {
         "python -m py_compile": [
-          47
+          50
         ]
       },
       "topology": {},
-      "digest8": "8ada24a9d439b7b8",
+      "digest8": "a9de79fc7770061f",
       "vector": [
-        -0.186158,
-        -0.091427,
-        -0.109051,
-        -0.278686,
-        -0.003305,
-        0.126675,
-        -0.225813,
-        -0.062787,
-        0.236828,
-        0.071599,
-        -0.24564,
-        0.104645,
-        0.042959,
-        0.183955,
-        0.276483,
-        0.177345,
-        -0.109051,
-        0.186158,
-        -0.190564,
-        -0.16633,
-        -0.155315,
-        -0.228016,
-        -0.073802,
-        -0.078208,
-        -0.243437,
-        0.203782,
-        0.131081,
-        0.157518,
-        0.258858,
-        0.051772,
-        0.203782,
-        0.261061
+        -0.001238,
+        0.233997,
+        0.162188,
+        0.179521,
+        -0.048285,
+        -0.134951,
+        -0.167141,
+        0.102761,
+        -0.194378,
+        0.199331,
+        -0.224092,
+        0.12257,
+        -0.273615,
+        -0.070571,
+        -0.120094,
+        0.060666,
+        -0.31571,
+        -0.285996,
+        -0.026,
+        -0.221616,
+        0.102761,
+        -0.048285,
+        -0.258759,
+        0.31571,
+        -0.211712,
+        0.060666,
+        -0.194378,
+        0.095332,
+        0.162188,
+        -0.226568,
+        -0.055714,
+        0.008667
       ]
     },
     {
@@ -103953,6 +103956,53 @@
       ]
     },
     {
+      "path": "tests/test_frontier27_owner_epoch_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3141,
+      "lines": 62,
+      "tokens_est": 786,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c2038eca99ad0643",
+      "vector": [
+        -0.179523,
+        -0.015876,
+        -0.243027,
+        0.208832,
+        -0.201505,
+        -0.201505,
+        0.267452,
+        -0.050071,
+        0.27478,
+        -0.001221,
+        0.213717,
+        0.150213,
+        -0.030531,
+        -0.25524,
+        0.233257,
+        0.072053,
+        -0.074496,
+        0.208832,
+        0.191735,
+        0.277222,
+        -0.296762,
+        0.269895,
+        0.172195,
+        0.008549,
+        0.003664,
+        0.140443,
+        0.140443,
+        -0.001221,
+        -0.18685,
+        -0.052513,
+        -0.094036,
+        -0.028089
+      ]
+    },
+    {
       "path": "tests/test_frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -104423,6 +104473,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_frontier27_owner_epoch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2827,
+      "lines": 61,
+      "tokens_est": 707,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "47689ca80959ad55",
+      "vector": [
+        -0.013828,
+        -0.164684,
+        -0.038971,
+        -0.189827,
+        0.184798,
+        0.267769,
+        -0.260226,
+        0.313026,
+        0.167198,
+        -0.277826,
+        -0.018857,
+        0.217484,
+        -0.270283,
+        -0.139542,
+        0.290397,
+        -0.17977,
+        0.076685,
+        0.164684,
+        -0.17977,
+        -0.066628,
+        0.111885,
+        -0.036457,
+        0.174741,
+        -0.167198,
+        -0.094285,
+        -0.119427,
+        0.101828,
+        -0.169713,
+        -0.167198,
+        0.111885,
+        -0.016343,
+        0.237598
+      ]
+    },
+    {
       "path": "tools/arena/consequence_admission_kernel.py",
       "role": "python_module",
       "binary": false,
@@ -104467,6 +104564,53 @@
         0.17504,
         0.005646,
         -0.077921
+      ]
+    },
+    {
+      "path": "tools/arena/frontier27_owner_epoch_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3537,
+      "lines": 111,
+      "tokens_est": 885,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "336deec91878aae0",
+      "vector": [
+        -0.251675,
+        0.269205,
+        -0.209103,
+        -0.043824,
+        -0.018782,
+        0.121455,
+        -0.159019,
+        0.116447,
+        0.008765,
+        -0.241658,
+        0.184061,
+        0.216616,
+        -0.143993,
+        0.211607,
+        -0.251675,
+        0.251675,
+        0.259188,
+        0.048832,
+        -0.281726,
+        0.053841,
+        0.204095,
+        0.011269,
+        -0.058849,
+        0.066362,
+        0.286734,
+        0.211607,
+        0.021286,
+        0.001252,
+        -0.028799,
+        -0.051337,
+        -0.164027,
+        0.271709
       ]
     },
     {
@@ -105561,7 +105705,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788650090,
+  "generated_at_unix": 1788715789,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107187,6 +107331,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_frontier27_owner_epoch_adapter.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -107197,7 +107342,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_frontier27_owner_epoch.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/frontier27_owner_epoch_adapter.py",
       "tools/arena/frontier27_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -264537,6 +264684,116 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#class:FrontierOwnerEpochAdapterTests:5b9b0d073ebab908",
+        "name": "FrontierOwnerEpochAdapterTests",
+        "kind": "class",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 7,
+        "end_line": 59,
+        "signature_hash": "c9598697e957bcba",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_access_equivalence:a60947e540be0340",
+        "name": "FrontierOwnerEpochAdapterTests.test_access_equivalence",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 14,
+        "end_line": 18,
+        "signature_hash": "c32aaca196dcf884",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_empty_run_no_epoch:b0191f62c5b5555b",
+        "name": "FrontierOwnerEpochAdapterTests.test_empty_run_no_epoch",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "e2d1629e16931f19",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_frontier_result_equivalence:580e3bed06c5c835",
+        "name": "FrontierOwnerEpochAdapterTests.test_frontier_result_equivalence",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "8491bfb49436f875",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_governed_aba_detected:931ffbad0fb3d8b6",
+        "name": "FrontierOwnerEpochAdapterTests.test_governed_aba_detected",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "d7b73a7fc8ccb57b",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_identical_visible_write_advances:8b97fc22bd19c164",
+        "name": "FrontierOwnerEpochAdapterTests.test_identical_visible_write_advances",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 20,
+        "end_line": 26,
+        "signature_hash": "b1f0f5c2fc9db744",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_prefetch_equivalence:9a5ca5bf772871df",
+        "name": "FrontierOwnerEpochAdapterTests.test_prefetch_equivalence",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 8,
+        "end_line": 12,
+        "signature_hash": "88bda75629d02370",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_public_counters_are_read_only:3d238d847ea2e119",
+        "name": "FrontierOwnerEpochAdapterTests.test_public_counters_are_read_only",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 35,
+        "end_line": 39,
+        "signature_hash": "7151eb499cf659bd",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_public_residency_is_read_only:6ae95b0b167203a7",
+        "name": "FrontierOwnerEpochAdapterTests.test_public_residency_is_read_only",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "31acfe0340c5e030",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_rejected_stream_no_epoch:8343cf35830c4937",
+        "name": "FrontierOwnerEpochAdapterTests.test_rejected_stream_no_epoch",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 52,
+        "end_line": 55,
+        "signature_hash": "61812c770958f4a8",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_resident_read_no_epoch:4cfe0ca9696c9184",
+        "name": "FrontierOwnerEpochAdapterTests.test_resident_read_no_epoch",
+        "kind": "method",
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "abe8fdf6080c19fa",
+        "file_digest8": "c2038eca99ad0643"
+      },
+      {
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "name": "T",
         "kind": "class",
@@ -265357,6 +265614,66 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:canon:7d1ae1562e1bf3ea",
+        "name": "canon",
+        "kind": "function",
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "ceba26963124d7c5",
+        "file_digest8": "47689ca80959ad55"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:h:7b238b5903903bfa",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "47689ca80959ad55"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:implementation:28493a313dfee0c3",
+        "name": "implementation",
+        "kind": "function",
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "ab40a6af040cee04",
+        "file_digest8": "47689ca80959ad55"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:oracle:cd4b0bd1323231d1",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "8e5e77637b650969",
+        "file_digest8": "47689ca80959ad55"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:run:a3d45d62c924bc9f",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "line": 23,
+        "end_line": 59,
+        "signature_hash": "df83ff9079525b0a",
+        "file_digest8": "47689ca80959ad55"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:visible:19bf7c75a1a038e1",
+        "name": "visible",
+        "kind": "function",
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "6a1da80d7f9377c1",
+        "file_digest8": "47689ca80959ad55"
+      },
+      {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
         "name": "AdmissionError",
         "kind": "class",
@@ -265665,6 +265982,166 @@
         "end_line": 74,
         "signature_hash": "6cca0427257ffe2f",
         "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#class:EpochExpertResidencyLRU:0b36681155a8ef2b",
+        "name": "EpochExpertResidencyLRU",
+        "kind": "class",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 16,
+        "end_line": 70,
+        "signature_hash": "ad7be9ea0c5d4006",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#class:EpochFrontierOffload:f7090bfb5629a7e9",
+        "name": "EpochFrontierOffload",
+        "kind": "class",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 73,
+        "end_line": 77,
+        "signature_hash": "011c98449e9ec6e9",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#class:ResidencyEpochSnapshot:a7bfae2f07bfb0e2",
+        "name": "ResidencyEpochSnapshot",
+        "kind": "class",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 81,
+        "end_line": 85,
+        "signature_hash": "4d892ae6e2d58081",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#function:governed_aba_probe:0d78711cc56a7ae8",
+        "name": "governed_aba_probe",
+        "kind": "function",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 101,
+        "end_line": 110,
+        "signature_hash": "c8b364863c2b1395",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#function:snapshot:8657b1adbafe0520",
+        "name": "snapshot",
+        "kind": "function",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 88,
+        "end_line": 89,
+        "signature_hash": "4dcf096ca297b43b",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#function:unchanged:4e3fedf08dd829ab",
+        "name": "unchanged",
+        "kind": "function",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 92,
+        "end_line": 98,
+        "signature_hash": "9a0002703155e862",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.__init__:83693e5718616468",
+        "name": "EpochExpertResidencyLRU.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 19,
+        "end_line": 26,
+        "signature_hash": "7c467261b38d8808",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU._advance_epoch:e7c6091068253690",
+        "name": "EpochExpertResidencyLRU._advance_epoch",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "d639c6ebfc3784d0",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.access:e9d22983ee380ef3",
+        "name": "EpochExpertResidencyLRU.access",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 47,
+        "end_line": 58,
+        "signature_hash": "3614244069c79e5e",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.hits:07a691aba5d7dc11",
+        "name": "EpochExpertResidencyLRU.hits",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "1b0c9df7e83eaa92",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.misses:4ec713d30f42cb29",
+        "name": "EpochExpertResidencyLRU.misses",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "12ad26a5178e35ad",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.mutation_epoch:a07e496cc523c077",
+        "name": "EpochExpertResidencyLRU.mutation_epoch",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "0f42bc68247cb87b",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.prefetch:23117dad810caee6",
+        "name": "EpochExpertResidencyLRU.prefetch",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 63,
+        "end_line": 70,
+        "signature_hash": "42dadbccea95086c",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.r:4fa094fac2940b61",
+        "name": "EpochExpertResidencyLRU.r",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "4f871b9015c64960",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.resident:538e24aa147fd1dd",
+        "name": "EpochExpertResidencyLRU.resident",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "2a5af01d4eb654a2",
+        "file_digest8": "336deec91878aae0"
+      },
+      {
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochFrontierOffload.__init__:6eb8b7917970fd77",
+        "name": "EpochFrontierOffload.__init__",
+        "kind": "method",
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "3b94fb4fff337e36",
+        "file_digest8": "336deec91878aae0"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
@@ -267717,8 +268194,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ec7410f1587002ad976cf99d6cda8da9",
-    "payload_hash": "54e705bf388e26294653cd45b5963409"
+    "record_fingerprint": "692b96873c545adcf5c2eb51c03e5d1e",
+    "payload_hash": "bfbac16924962ba1c63e6996c502cf4c"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267731,15 +268208,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26489667,
-      "tokens_est": 6612758,
+      "files": 1652,
+      "bytes": 26500425,
+      "tokens_est": 6615449,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1006,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -268427,15 +268904,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26489667,
-    "text_tokens_est": 6612758,
+    "file_count": 1652,
+    "total_bytes": 26500425,
+    "text_tokens_est": 6615449,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1006,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -269657,6 +270134,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 59,
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:run:a3d45d62c924bc9f",
+        "signature_hash": "df83ff9079525b0a"
       }
     ],
     "run.record": [
@@ -367775,6 +368260,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_security_accuracy_harness.py#function:canon:11bd004c7cfedf61",
         "signature_hash": "013604bc627266a0"
+      },
+      {
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:canon:7d1ae1562e1bf3ea",
+        "signature_hash": "ceba26963124d7c5"
       }
     ],
     "load_fixture": [
@@ -423235,6 +423728,116 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "FrontierOwnerEpochAdapterTests": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 59,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#class:FrontierOwnerEpochAdapterTests:5b9b0d073ebab908",
+        "signature_hash": "c9598697e957bcba"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_prefetch_equivalence": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 12,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_prefetch_equivalence:9a5ca5bf772871df",
+        "signature_hash": "88bda75629d02370"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_access_equivalence": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 18,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_access_equivalence:a60947e540be0340",
+        "signature_hash": "c32aaca196dcf884"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_identical_visible_write_advances": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 26,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_identical_visible_write_advances:8b97fc22bd19c164",
+        "signature_hash": "b1f0f5c2fc9db744"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_governed_aba_detected": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_governed_aba_detected:931ffbad0fb3d8b6",
+        "signature_hash": "d7b73a7fc8ccb57b"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_public_residency_is_read_only": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_public_residency_is_read_only:6ae95b0b167203a7",
+        "signature_hash": "31acfe0340c5e030"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_public_counters_are_read_only": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 39,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_public_counters_are_read_only:3d238d847ea2e119",
+        "signature_hash": "7151eb499cf659bd"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_resident_read_no_epoch": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_resident_read_no_epoch:4cfe0ca9696c9184",
+        "signature_hash": "abe8fdf6080c19fa"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_frontier_result_equivalence": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_frontier_result_equivalence:580e3bed06c5c835",
+        "signature_hash": "8491bfb49436f875"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_rejected_stream_no_epoch": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_rejected_stream_no_epoch:8343cf35830c4937",
+        "signature_hash": "61812c770958f4a8"
+      }
+    ],
+    "FrontierOwnerEpochAdapterTests.test_empty_run_no_epoch": [
+      {
+        "file": "tests/test_frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tests/test_frontier27_owner_epoch_adapter.py#method:FrontierOwnerEpochAdapterTests.test_empty_run_no_epoch:b0191f62c5b5555b",
+        "signature_hash": "e2d1629e16931f19"
+      }
+    ],
     "T": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -424035,6 +424638,46 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "h": [
+      {
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:h:7b238b5903903bfa",
+        "signature_hash": "8ddde6051957f4eb"
+      }
+    ],
+    "visible": [
+      {
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:visible:19bf7c75a1a038e1",
+        "signature_hash": "6a1da80d7f9377c1"
+      }
+    ],
+    "oracle": [
+      {
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:oracle:cd4b0bd1323231d1",
+        "signature_hash": "8e5e77637b650969"
+      }
+    ],
+    "implementation": [
+      {
+        "file": "tools/arena/campaign_frontier27_owner_epoch.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/arena/campaign_frontier27_owner_epoch.py#function:implementation:28493a313dfee0c3",
+        "signature_hash": "ab40a6af040cee04"
+      }
+    ],
     "AdmissionError": [
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -424323,6 +424966,166 @@
         "end_line": 268,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
         "signature_hash": "033c7cd0343e1003"
+      }
+    ],
+    "EpochExpertResidencyLRU": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 70,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#class:EpochExpertResidencyLRU:0b36681155a8ef2b",
+        "signature_hash": "ad7be9ea0c5d4006"
+      }
+    ],
+    "EpochExpertResidencyLRU.__init__": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 26,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.__init__:83693e5718616468",
+        "signature_hash": "7c467261b38d8808"
+      }
+    ],
+    "EpochExpertResidencyLRU.r": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.r:4fa094fac2940b61",
+        "signature_hash": "4f871b9015c64960"
+      }
+    ],
+    "EpochExpertResidencyLRU.hits": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.hits:07a691aba5d7dc11",
+        "signature_hash": "1b0c9df7e83eaa92"
+      }
+    ],
+    "EpochExpertResidencyLRU.misses": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.misses:4ec713d30f42cb29",
+        "signature_hash": "12ad26a5178e35ad"
+      }
+    ],
+    "EpochExpertResidencyLRU.mutation_epoch": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.mutation_epoch:a07e496cc523c077",
+        "signature_hash": "0f42bc68247cb87b"
+      }
+    ],
+    "EpochExpertResidencyLRU._advance_epoch": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU._advance_epoch:e7c6091068253690",
+        "signature_hash": "d639c6ebfc3784d0"
+      }
+    ],
+    "EpochExpertResidencyLRU.access": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 58,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.access:e9d22983ee380ef3",
+        "signature_hash": "3614244069c79e5e"
+      }
+    ],
+    "EpochExpertResidencyLRU.resident": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.resident:538e24aa147fd1dd",
+        "signature_hash": "2a5af01d4eb654a2"
+      }
+    ],
+    "EpochExpertResidencyLRU.prefetch": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 70,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochExpertResidencyLRU.prefetch:23117dad810caee6",
+        "signature_hash": "42dadbccea95086c"
+      }
+    ],
+    "EpochFrontierOffload": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 77,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#class:EpochFrontierOffload:f7090bfb5629a7e9",
+        "signature_hash": "011c98449e9ec6e9"
+      }
+    ],
+    "EpochFrontierOffload.__init__": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#method:EpochFrontierOffload.__init__:6eb8b7917970fd77",
+        "signature_hash": "3b94fb4fff337e36"
+      }
+    ],
+    "ResidencyEpochSnapshot": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 85,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#class:ResidencyEpochSnapshot:a7bfae2f07bfb0e2",
+        "signature_hash": "4d892ae6e2d58081"
+      }
+    ],
+    "snapshot": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 89,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#function:snapshot:8657b1adbafe0520",
+        "signature_hash": "4dcf096ca297b43b"
+      }
+    ],
+    "unchanged": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 98,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#function:unchanged:4e3fedf08dd829ab",
+        "signature_hash": "9a0002703155e862"
+      }
+    ],
+    "governed_aba_probe": [
+      {
+        "file": "tools/arena/frontier27_owner_epoch_adapter.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 110,
+        "semantic_id": "tools/arena/frontier27_owner_epoch_adapter.py#function:governed_aba_probe:0d78711cc56a7ae8",
+        "signature_hash": "c8b364863c2b1395"
       }
     ],
     "stable": [
