@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1686,
+    "repo_file_count": 1694,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1214,6 +1214,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -1341,6 +1342,9 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/o21_installed_runtime_bound_delegation/CREATION_LEDGER.md",
+      "artifacts/arena/o21_installed_runtime_bound_delegation/FROZEN_PROPOSALS.md",
+      "artifacts/arena/o21_installed_runtime_bound_delegation/LOCAL_PROOF_RECEIPT_O21.json",
       "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
       "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
@@ -2699,6 +2703,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_installed_runtime_bound_delegation.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -2707,8 +2712,11 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/installed_runtime_bound_delegation.py",
+      "tools/arena/proof_o21_runtime_bound_delegation.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -10303,6 +10311,53 @@
       ]
     },
     {
+      "path": ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2844,
+      "lines": 63,
+      "tokens_est": 711,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7a2163023d630709",
+      "vector": [
+        -0.11926,
+        0.083121,
+        -0.066256,
+        -0.196358,
+        -0.184311,
+        0.208404,
+        0.025298,
+        -0.066256,
+        -0.258999,
+        0.242134,
+        -0.092758,
+        0.254181,
+        -0.220451,
+        -0.254181,
+        -0.198767,
+        -0.013251,
+        0.15299,
+        0.237316,
+        -0.030116,
+        -0.191539,
+        -0.251771,
+        -0.18672,
+        0.140944,
+        -0.078302,
+        0.037344,
+        -0.039753,
+        -0.215632,
+        -0.213223,
+        0.218041,
+        0.020479,
+        0.165037,
+        -0.299957
+      ]
+    },
+    {
       "path": ".github/workflows/o5-consequence-admission-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17872,6 +17927,147 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/o21_installed_runtime_bound_delegation/CREATION_LEDGER.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 942,
+      "lines": 12,
+      "tokens_est": 231,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5231179165b524f2",
+      "vector": [
+        0.046531,
+        -0.099026,
+        -0.048917,
+        0.184929,
+        -0.254128,
+        -0.172998,
+        -0.108571,
+        -0.144364,
+        -0.079937,
+        -0.294693,
+        -0.06562,
+        0.025055,
+        -0.110957,
+        -0.09664,
+        -0.118116,
+        0.275604,
+        -0.294693,
+        -0.084709,
+        -0.213563,
+        -0.256514,
+        -0.192087,
+        0.039372,
+        0.287535,
+        -0.189701,
+        -0.005965,
+        0.087096,
+        0.297079,
+        0.251742,
+        0.24697,
+        -0.072778,
+        -0.144364,
+        0.075165
+      ]
+    },
+    {
+      "path": "artifacts/arena/o21_installed_runtime_bound_delegation/FROZEN_PROPOSALS.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1087,
+      "lines": 14,
+      "tokens_est": 272,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0cf77d94bbcb5d8f",
+      "vector": [
+        -0.006472,
+        0.081542,
+        -0.226506,
+        0.27569,
+        0.086719,
+        -0.014238,
+        0.265336,
+        0.267924,
+        -0.006472,
+        -0.151436,
+        -0.117783,
+        -0.169556,
+        -0.063422,
+        0.210974,
+        0.029769,
+        -0.234272,
+        -0.14367,
+        -0.322286,
+        0.166967,
+        0.156613,
+        0.053067,
+        0.231683,
+        0.112606,
+        0.14367,
+        -0.286045,
+        0.169556,
+        -0.231683,
+        -0.078954,
+        -0.210974,
+        0.213563,
+        0.055656,
+        -0.125549
+      ]
+    },
+    {
+      "path": "artifacts/arena/o21_installed_runtime_bound_delegation/LOCAL_PROOF_RECEIPT_O21.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1518,
+      "lines": 13,
+      "tokens_est": 380,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "761fd6528004b6bc",
+      "vector": [
+        0.239416,
+        0.098863,
+        -0.079805,
+        -0.270385,
+        -0.241798,
+        0.260856,
+        -0.229887,
+        0.2013,
+        0.208447,
+        -0.008338,
+        0.237034,
+        -0.258474,
+        0.096481,
+        -0.077423,
+        -0.144126,
+        -0.017867,
+        0.075041,
+        0.153655,
+        0.139362,
+        0.005956,
+        0.129833,
+        0.086952,
+        -0.187007,
+        0.01072,
+        0.022631,
+        -0.25371,
+        0.015485,
+        0.279914,
+        0.220358,
+        0.25371,
+        -0.053601,
+        -0.251327
       ]
     },
     {
@@ -104535,6 +104731,53 @@
       ]
     },
     {
+      "path": "tests/test_installed_runtime_bound_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7850,
+      "lines": 71,
+      "tokens_est": 1963,
+      "symbol_count": 37,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "121c221d0ee30e23",
+      "vector": [
+        0.041221,
+        0.017968,
+        -0.077157,
+        -0.144802,
+        0.05179,
+        0.079271,
+        0.134232,
+        -0.14903,
+        0.220902,
+        -0.26318,
+        -0.136346,
+        -0.246269,
+        -0.199763,
+        0.142688,
+        0.220902,
+        0.246269,
+        -0.039107,
+        -0.153257,
+        -0.242041,
+        0.104638,
+        0.121549,
+        0.170169,
+        -0.21456,
+        -0.161713,
+        -0.26318,
+        0.015854,
+        -0.26318,
+        0.218788,
+        -0.26318,
+        -0.250497,
+        -0.104638,
+        0.121549
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -104911,6 +105154,53 @@
       ]
     },
     {
+      "path": "tools/arena/attenuated_stable_operation_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3891,
+      "lines": 51,
+      "tokens_est": 973,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d730a72516c3e290",
+      "vector": [
+        0.123378,
+        -0.120982,
+        0.037133,
+        -0.164105,
+        -0.295868,
+        -0.092234,
+        0.132961,
+        -0.092234,
+        0.037133,
+        0.204832,
+        -0.097026,
+        -0.243163,
+        0.173688,
+        0.010781,
+        0.075464,
+        0.051507,
+        -0.18327,
+        -0.21681,
+        -0.264724,
+        -0.037133,
+        0.28389,
+        -0.293472,
+        0.204832,
+        0.300659,
+        0.06109,
+        -0.223997,
+        0.288681,
+        -0.235976,
+        -0.029946,
+        0.041925,
+        -0.130565,
+        0.073069
+      ]
+    },
+    {
       "path": "tools/arena/consequence_admission_kernel.py",
       "role": "python_module",
       "binary": false,
@@ -105002,6 +105292,100 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/installed_runtime_bound_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5914,
+      "lines": 136,
+      "tokens_est": 1479,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3201f370aedea55c",
+      "vector": [
+        0.256018,
+        -0.076113,
+        -0.172985,
+        -0.319676,
+        0.336283,
+        0.112094,
+        0.192359,
+        -0.106559,
+        0.172985,
+        0.186824,
+        0.120397,
+        -0.062275,
+        0.197895,
+        0.084417,
+        0.078881,
+        0.261553,
+        -0.139772,
+        0.208966,
+        -0.120397,
+        -0.30307,
+        0.184056,
+        0.206198,
+        0.236643,
+        -0.053971,
+        -0.123165,
+        -0.137004,
+        -0.197895,
+        0.125933,
+        0.037365,
+        0.128701,
+        -0.029061,
+        -0.076113
+      ]
+    },
+    {
+      "path": "tools/arena/proof_o21_runtime_bound_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10041,
+      "lines": 140,
+      "tokens_est": 2511,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9db895ee972d6f68",
+      "vector": [
+        0.154134,
+        0.114613,
+        -0.20683,
+        0.088265,
+        0.185752,
+        0.164673,
+        0.25689,
+        0.027665,
+        0.061917,
+        0.291143,
+        -0.20156,
+        0.159404,
+        -0.233177,
+        -0.188386,
+        -0.296412,
+        -0.077726,
+        -0.264795,
+        -0.111978,
+        0.309586,
+        0.177847,
+        0.022396,
+        0.098804,
+        0.009222,
+        0.20683,
+        -0.111978,
+        0.312221,
+        0.093534,
+        -0.101439,
+        -0.040839,
+        0.175212,
+        -0.117247,
+        -0.08563
       ]
     },
     {
@@ -107365,7 +107749,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788788859,
+  "generated_at_unix": 1788793772,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107517,6 +107901,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -107644,6 +108029,9 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/o21_installed_runtime_bound_delegation/CREATION_LEDGER.md",
+      "artifacts/arena/o21_installed_runtime_bound_delegation/FROZEN_PROPOSALS.md",
+      "artifacts/arena/o21_installed_runtime_bound_delegation/LOCAL_PROOF_RECEIPT_O21.json",
       "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
       "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
@@ -109002,6 +109390,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_installed_runtime_bound_delegation.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -109010,8 +109399,11 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/installed_runtime_bound_delegation.py",
+      "tools/arena/proof_o21_runtime_bound_delegation.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -266858,6 +267250,376 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#class:O21Tests:54e9457b2cd285a1",
+        "name": "O21Tests",
+        "kind": "class",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 11,
+        "end_line": 68,
+        "signature_hash": "90b7728f88e40e48",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#function:h:2d23dc699aa82249",
+        "name": "h",
+        "kind": "function",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "b3e37fefbbbd45d5",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.call:d714b3af5c6e14f4",
+        "name": "O21Tests.call",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "c38a5b7c05643912",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.setUp:aa022396fc788613",
+        "name": "O21Tests.setUp",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 12,
+        "end_line": 21,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_01_happy:5585cb1cedb863d8",
+        "name": "O21Tests.test_01_happy",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 25,
+        "end_line": 25,
+        "signature_hash": "b9361d5869f4547d",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_02_no_effect_authority:8c059063148b84c7",
+        "name": "O21Tests.test_02_no_effect_authority",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "1cd48e4f16745998",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_03_no_training_authority:e57c5fff3d5a6201",
+        "name": "O21Tests.test_03_no_training_authority",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "2e68ef4a793638b2",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_04_no_checkpoint_authority:a118956e0b52739d",
+        "name": "O21Tests.test_04_no_checkpoint_authority",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "60d77fdb2f6b49b6",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_05_gate10_false:09a9fdf21835caec",
+        "name": "O21Tests.test_05_gate10_false",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 29,
+        "end_line": 29,
+        "signature_hash": "fb1692f8b6ae227f",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_06_nonattenuating_scope:bc55f91465e72d80",
+        "name": "O21Tests.test_06_nonattenuating_scope",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "5d6d249672eda068",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_07_nonattenuating_budget:b96918ba231a0095",
+        "name": "O21Tests.test_07_nonattenuating_budget",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "e13571102f639b1b",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_08_stale_hop:6efd62715cf95fdd",
+        "name": "O21Tests.test_08_stale_hop",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "119ccc272763cfd8",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_09_stale_workcell:8074d3f0eba8a609",
+        "name": "O21Tests.test_09_stale_workcell",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "2cfdc6ca7735b719",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_10_stale_lease:d1248024ace01c7e",
+        "name": "O21Tests.test_10_stale_lease",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 37,
+        "end_line": 37,
+        "signature_hash": "60901a6e7de643b3",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_11_scope_excess:b5a6e64ab7d17301",
+        "name": "O21Tests.test_11_scope_excess",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 38,
+        "end_line": 38,
+        "signature_hash": "ecd6bebee036277c",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_12_budget_excess:26d5f297f498d161",
+        "name": "O21Tests.test_12_budget_excess",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 39,
+        "end_line": 39,
+        "signature_hash": "6e94a29fe0bd43ff",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_13_unmeasured_owner_true:346b4218f6b4244f",
+        "name": "O21Tests.test_13_unmeasured_owner_true",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 40,
+        "end_line": 40,
+        "signature_hash": "47338965dc63180d",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_14_owner_stale_no_measurement:1f7a81a25cbda6e4",
+        "name": "O21Tests.test_14_owner_stale_no_measurement",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 41,
+        "end_line": 41,
+        "signature_hash": "5688b9f138d448e4",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_15_stale_head:f85307b890362302",
+        "name": "O21Tests.test_15_stale_head",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "ad4a023d677708b1",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_16_mixed_generation:de4ec733482781f6",
+        "name": "O21Tests.test_16_mixed_generation",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "378e6fa54db445f6",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_17_unauthenticated:6153a0bfa2ad9fa6",
+        "name": "O21Tests.test_17_unauthenticated",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 46,
+        "end_line": 46,
+        "signature_hash": "0e2aec5e213e1821",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_18_nonindependent:84b3d65f69cc659a",
+        "name": "O21Tests.test_18_nonindependent",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 47,
+        "end_line": 47,
+        "signature_hash": "8e4086052b622f7d",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_19_source_unreproducible:ceff6a2198cd9ba1",
+        "name": "O21Tests.test_19_source_unreproducible",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 48,
+        "end_line": 48,
+        "signature_hash": "4c8a669ca0121f24",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_20_host_unbound:70cf0a8c68760d2d",
+        "name": "O21Tests.test_20_host_unbound",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 49,
+        "end_line": 49,
+        "signature_hash": "329c56336be2dc65",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_21_expired:6b8a620bd7a6c0d6",
+        "name": "O21Tests.test_21_expired",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 50,
+        "end_line": 50,
+        "signature_hash": "cd65f14ee10dd353",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_22_measurement_too_old:d19dce54a9dfddf7",
+        "name": "O21Tests.test_22_measurement_too_old",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 51,
+        "end_line": 51,
+        "signature_hash": "e3edda8b981caa07",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_23_release_operation_swap:cb7d10801de7ab4c",
+        "name": "O21Tests.test_23_release_operation_swap",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "57c95b3c6a155f6e",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_24_source_cross_binding:1f0a1fab470e09c2",
+        "name": "O21Tests.test_24_source_cross_binding",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "0162340e80e9eb67",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_25_target_release:45d01dd3be25a433",
+        "name": "O21Tests.test_25_target_release",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 56,
+        "end_line": 56,
+        "signature_hash": "78bae86f0e8526f9",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_26_target_host:d309453abfbe7de0",
+        "name": "O21Tests.test_26_target_host",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 57,
+        "end_line": 57,
+        "signature_hash": "52ebb500026baef8",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_27_target_incarnation:a440de123d438131",
+        "name": "O21Tests.test_27_target_incarnation",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 58,
+        "end_line": 58,
+        "signature_hash": "3e16b1a25f32110e",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_28_k27_rebind_is_identity_invariant:c42747ef0cb6362c",
+        "name": "O21Tests.test_28_k27_rebind_is_identity_invariant",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "fd31a3b8b9369aa3",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_29_host_incarnation_rotates_permit:690194af0f51011b",
+        "name": "O21Tests.test_29_host_incarnation_rotates_permit",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "55e27e195e9ef649",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_30_workcell_attempt_rotates_permit:140f905262251360",
+        "name": "O21Tests.test_30_workcell_attempt_rotates_permit",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "edc4ef8f57f6dce1",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_31_owner_report_does_not_override_exact_measurement:736481d5b603599b",
+        "name": "O21Tests.test_31_owner_report_does_not_override_exact_measurement",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 65,
+        "end_line": 65,
+        "signature_hash": "f0b0612e487acf48",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_32_observer_same_as_verifier_rejected:8ebec8da730b7c9d",
+        "name": "O21Tests.test_32_observer_same_as_verifier_rejected",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "b9b4826889cd2328",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_33_k27_not_in_permit_root_directly:c3e59d561584b276",
+        "name": "O21Tests.test_33_k27_not_in_permit_root_directly",
+        "kind": "method",
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "line": 68,
+        "end_line": 68,
+        "signature_hash": "55fd775d2286e523",
+        "file_digest8": "121c221d0ee30e23"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -267136,6 +267898,126 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:AttemptContext:6847d935983b4fdb",
+        "name": "AttemptContext",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "9d588f6e1da056fb",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Decision:7421ccf8778ece80",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DelegationHop:b8597b67fcf4bcb3",
+        "name": "DelegationHop",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "04fed0f44a8e7da0",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DomainAdmission:b4d6da1f9599c65a",
+        "name": "DomainAdmission",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "1567db25bd643d11",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:StableOperation:0acd80f66c1361b3",
+        "name": "StableOperation",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "eef650876707d887",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:chain_root:232f4d967a5b1d7b",
+        "name": "chain_root",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "c634720bdb02b011",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:decide:d192c6b1807fc94b",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 33,
+        "end_line": 50,
+        "signature_hash": "306b985492635361",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:digest:7c883a12673963ba",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:effective_authority:14b32987c6441933",
+        "name": "effective_authority",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "75554ec478f5044d",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:StableOperation.root:105f94d9b26981b0",
+        "name": "StableOperation.root",
+        "kind": "method",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "e3e717e8a95babdc",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:decide.hold:9f985eecf31e7bac",
+        "name": "decide.hold",
+        "kind": "method",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 35,
+        "end_line": 35,
+        "signature_hash": "2ed02c47fa2448ff",
+        "file_digest8": "d730a72516c3e290"
       },
       {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
@@ -268246,6 +269128,166 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#class:PermitDisposition:ccd842666594358b",
+        "name": "PermitDisposition",
+        "kind": "class",
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "line": 15,
+        "end_line": 24,
+        "signature_hash": "8e4f36e77c0ebcb4",
+        "file_digest8": "3201f370aedea55c"
+      },
+      {
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#class:RuntimeBoundPermit:ee120f36744f5924",
+        "name": "RuntimeBoundPermit",
+        "kind": "class",
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "line": 33,
+        "end_line": 48,
+        "signature_hash": "389d11a6004891fa",
+        "file_digest8": "3201f370aedea55c"
+      },
+      {
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#class:RuntimeTarget:5ccd3e5ac87b3507",
+        "name": "RuntimeTarget",
+        "kind": "class",
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "81034ffff60894d0",
+        "file_digest8": "3201f370aedea55c"
+      },
+      {
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#function:_root:1b8e320f97e4fc10",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "769522c3b4bdf5c3",
+        "file_digest8": "3201f370aedea55c"
+      },
+      {
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#function:bind_at_use:e47a5d7bfaa3c912",
+        "name": "bind_at_use",
+        "kind": "function",
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "line": 51,
+        "end_line": 135,
+        "signature_hash": "f5d3c6414106b32d",
+        "file_digest8": "3201f370aedea55c"
+      },
+      {
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#method:bind_at_use.hold:7844ad5a0bcb5c32",
+        "name": "bind_at_use.hold",
+        "kind": "method",
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "line": 77,
+        "end_line": 90,
+        "signature_hash": "6d226ce24f1a20e6",
+        "file_digest8": "3201f370aedea55c"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:campaign:6ea070b1ae101c9f",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 59,
+        "end_line": 71,
+        "signature_hash": "5d0d5d85b7f484a4",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:fixture:5367571277f0b622",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 16,
+        "end_line": 26,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:h:bbbb243ecf850600",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "b3e37fefbbbd45d5",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:hs1000:1b496e14f350397d",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 115,
+        "end_line": 124,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:main:d5e0f878bc3804a6",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 126,
+        "end_line": 138,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:mutation_matrix:544d66d4af88c730",
+        "name": "mutation_matrix",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 73,
+        "end_line": 96,
+        "signature_hash": "4b02434e43eacf6c",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:omega8:2e45427703ddbcf3",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 98,
+        "end_line": 104,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:run_case:2b2ceb8d0b8a6e7a",
+        "name": "run_case",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 28,
+        "end_line": 57,
+        "signature_hash": "a42793ef1dade152",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:sha_file:3fc3d9aef97017ac",
+        "name": "sha_file",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "fb1239bc11cbfa7a",
+        "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:sweep13d:3aef56943f259f9a",
+        "name": "sweep13d",
+        "kind": "function",
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "line": 106,
+        "end_line": 112,
+        "signature_hash": "fbf5850ecd742466",
+        "file_digest8": "9db895ee972d6f68"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
@@ -272458,8 +273500,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e282f528f7870f441a700d196e0157d5",
-    "payload_hash": "1f9275a9d7c698332d86fa702bbc471f"
+    "record_fingerprint": "4b931e734eca9eee9ed5ecbfaf955185",
+    "payload_hash": "551cf0a316db71608bee344b0550e152"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272472,16 +273514,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1686,
-      "bytes": 26633439,
-      "tokens_est": 6648714,
+      "files": 1694,
+      "bytes": 26667526,
+      "tokens_est": 6657234,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 240,
+        "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1026,
-        "schema_or_lexicon": 282,
+        "python_module": 1030,
+        "schema_or_lexicon": 284,
         "support_file": 53
       }
     },
@@ -272601,6 +273643,8 @@
         "USER_GUIDE.md",
         "VSA_RENDERING_IMPLEMENTATION.md",
         "VSA_TEST_PLAN.md",
+        "artifacts/arena/o21_installed_runtime_bound_delegation/CREATION_LEDGER.md",
+        "artifacts/arena/o21_installed_runtime_bound_delegation/FROZEN_PROPOSALS.md",
         "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
         "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
         "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -272754,9 +273798,7 @@
         "docs/AURA_TOKEN_ECONOMY_STACK.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-        "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
       ]
     },
     {
@@ -273168,16 +274210,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1686,
-    "total_bytes": 26633439,
-    "text_tokens_est": 6648714,
+    "file_count": 1694,
+    "total_bytes": 26667526,
+    "text_tokens_est": 6657234,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 240,
+      "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1026,
-      "schema_or_lexicon": 282,
+      "python_module": 1030,
+      "schema_or_lexicon": 284,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -274206,6 +275248,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 138,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:main:d5e0f878bc3804a6",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/project006/project006_consumer_outbox_wrapper.py",
         "kind": "function",
         "line": 209,
@@ -274473,6 +275523,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
         "signature_hash": "9386d60514f2578d"
       }
     ],
@@ -290956,6 +292014,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
         "signature_hash": "bd189b17ea870e50"
+      },
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:digest:7c883a12673963ba",
+        "signature_hash": "6845cd2b39857deb"
       },
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -327284,6 +328350,14 @@
         "end_line": 252,
         "semantic_id": "aura_multistep_refactor_benchmark.py#function:run_case:8f56487c03e4894e",
         "signature_hash": "5fc40d14048d2de1"
+      },
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 57,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:run_case:2b2ceb8d0b8a6e7a",
+        "signature_hash": "a42793ef1dade152"
       }
     ],
     "AuraHyperdimensionalProbeBridge": [
@@ -370330,6 +371404,14 @@
         "signature_hash": "359c484fcebcc325"
       },
       {
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#function:_root:1b8e320f97e4fc10",
+        "signature_hash": "769522c3b4bdf5c3"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
         "kind": "function",
         "line": 65,
@@ -384217,6 +385299,14 @@
         "line": 23,
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 26,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:fixture:5367571277f0b622",
         "signature_hash": "c73d3075455b50af"
       }
     ],
@@ -428624,6 +429714,384 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "h": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#function:h:2d23dc699aa82249",
+        "signature_hash": "b3e37fefbbbd45d5"
+      },
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:h:bbbb243ecf850600",
+        "signature_hash": "b3e37fefbbbd45d5"
+      }
+    ],
+    "O21Tests": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 68,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#class:O21Tests:54e9457b2cd285a1",
+        "signature_hash": "90b7728f88e40e48"
+      }
+    ],
+    "O21Tests.setUp": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 21,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.setUp:aa022396fc788613",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "O21Tests.call": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.call:d714b3af5c6e14f4",
+        "signature_hash": "c38a5b7c05643912"
+      }
+    ],
+    "O21Tests.test_01_happy": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_01_happy:5585cb1cedb863d8",
+        "signature_hash": "b9361d5869f4547d"
+      }
+    ],
+    "O21Tests.test_02_no_effect_authority": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_02_no_effect_authority:8c059063148b84c7",
+        "signature_hash": "1cd48e4f16745998"
+      }
+    ],
+    "O21Tests.test_03_no_training_authority": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_03_no_training_authority:e57c5fff3d5a6201",
+        "signature_hash": "2e68ef4a793638b2"
+      }
+    ],
+    "O21Tests.test_04_no_checkpoint_authority": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_04_no_checkpoint_authority:a118956e0b52739d",
+        "signature_hash": "60d77fdb2f6b49b6"
+      }
+    ],
+    "O21Tests.test_05_gate10_false": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 29,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_05_gate10_false:09a9fdf21835caec",
+        "signature_hash": "fb1692f8b6ae227f"
+      }
+    ],
+    "O21Tests.test_06_nonattenuating_scope": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_06_nonattenuating_scope:bc55f91465e72d80",
+        "signature_hash": "5d6d249672eda068"
+      }
+    ],
+    "O21Tests.test_07_nonattenuating_budget": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_07_nonattenuating_budget:b96918ba231a0095",
+        "signature_hash": "e13571102f639b1b"
+      }
+    ],
+    "O21Tests.test_08_stale_hop": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_08_stale_hop:6efd62715cf95fdd",
+        "signature_hash": "119ccc272763cfd8"
+      }
+    ],
+    "O21Tests.test_09_stale_workcell": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_09_stale_workcell:8074d3f0eba8a609",
+        "signature_hash": "2cfdc6ca7735b719"
+      }
+    ],
+    "O21Tests.test_10_stale_lease": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 37,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_10_stale_lease:d1248024ace01c7e",
+        "signature_hash": "60901a6e7de643b3"
+      }
+    ],
+    "O21Tests.test_11_scope_excess": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 38,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_11_scope_excess:b5a6e64ab7d17301",
+        "signature_hash": "ecd6bebee036277c"
+      }
+    ],
+    "O21Tests.test_12_budget_excess": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 39,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_12_budget_excess:26d5f297f498d161",
+        "signature_hash": "6e94a29fe0bd43ff"
+      }
+    ],
+    "O21Tests.test_13_unmeasured_owner_true": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 40,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_13_unmeasured_owner_true:346b4218f6b4244f",
+        "signature_hash": "47338965dc63180d"
+      }
+    ],
+    "O21Tests.test_14_owner_stale_no_measurement": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 41,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_14_owner_stale_no_measurement:1f7a81a25cbda6e4",
+        "signature_hash": "5688b9f138d448e4"
+      }
+    ],
+    "O21Tests.test_15_stale_head": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_15_stale_head:f85307b890362302",
+        "signature_hash": "ad4a023d677708b1"
+      }
+    ],
+    "O21Tests.test_16_mixed_generation": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_16_mixed_generation:de4ec733482781f6",
+        "signature_hash": "378e6fa54db445f6"
+      }
+    ],
+    "O21Tests.test_17_unauthenticated": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 46,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_17_unauthenticated:6153a0bfa2ad9fa6",
+        "signature_hash": "0e2aec5e213e1821"
+      }
+    ],
+    "O21Tests.test_18_nonindependent": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 47,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_18_nonindependent:84b3d65f69cc659a",
+        "signature_hash": "8e4086052b622f7d"
+      }
+    ],
+    "O21Tests.test_19_source_unreproducible": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 48,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_19_source_unreproducible:ceff6a2198cd9ba1",
+        "signature_hash": "4c8a669ca0121f24"
+      }
+    ],
+    "O21Tests.test_20_host_unbound": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 49,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_20_host_unbound:70cf0a8c68760d2d",
+        "signature_hash": "329c56336be2dc65"
+      }
+    ],
+    "O21Tests.test_21_expired": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 50,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_21_expired:6b8a620bd7a6c0d6",
+        "signature_hash": "cd65f14ee10dd353"
+      }
+    ],
+    "O21Tests.test_22_measurement_too_old": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 51,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_22_measurement_too_old:d19dce54a9dfddf7",
+        "signature_hash": "e3edda8b981caa07"
+      }
+    ],
+    "O21Tests.test_23_release_operation_swap": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_23_release_operation_swap:cb7d10801de7ab4c",
+        "signature_hash": "57c95b3c6a155f6e"
+      }
+    ],
+    "O21Tests.test_24_source_cross_binding": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_24_source_cross_binding:1f0a1fab470e09c2",
+        "signature_hash": "0162340e80e9eb67"
+      }
+    ],
+    "O21Tests.test_25_target_release": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 56,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_25_target_release:45d01dd3be25a433",
+        "signature_hash": "78bae86f0e8526f9"
+      }
+    ],
+    "O21Tests.test_26_target_host": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 57,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_26_target_host:d309453abfbe7de0",
+        "signature_hash": "52ebb500026baef8"
+      }
+    ],
+    "O21Tests.test_27_target_incarnation": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 58,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_27_target_incarnation:a440de123d438131",
+        "signature_hash": "3e16b1a25f32110e"
+      }
+    ],
+    "O21Tests.test_28_k27_rebind_is_identity_invariant": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_28_k27_rebind_is_identity_invariant:c42747ef0cb6362c",
+        "signature_hash": "fd31a3b8b9369aa3"
+      }
+    ],
+    "O21Tests.test_29_host_incarnation_rotates_permit": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_29_host_incarnation_rotates_permit:690194af0f51011b",
+        "signature_hash": "55e27e195e9ef649"
+      }
+    ],
+    "O21Tests.test_30_workcell_attempt_rotates_permit": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_30_workcell_attempt_rotates_permit:140f905262251360",
+        "signature_hash": "edc4ef8f57f6dce1"
+      }
+    ],
+    "O21Tests.test_31_owner_report_does_not_override_exact_measurement": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 65,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_31_owner_report_does_not_override_exact_measurement:736481d5b603599b",
+        "signature_hash": "f0b0612e487acf48"
+      }
+    ],
+    "O21Tests.test_32_observer_same_as_verifier_rejected": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_32_observer_same_as_verifier_rejected:8ebec8da730b7c9d",
+        "signature_hash": "b9b4826889cd2328"
+      }
+    ],
+    "O21Tests.test_33_k27_not_in_permit_root_directly": [
+      {
+        "file": "tests/test_installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 68,
+        "semantic_id": "tests/test_installed_runtime_bound_delegation.py#method:O21Tests.test_33_k27_not_in_permit_root_directly:c3e59d561584b276",
+        "signature_hash": "55fd775d2286e523"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -428884,6 +430352,114 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "StableOperation": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:StableOperation:0acd80f66c1361b3",
+        "signature_hash": "eef650876707d887"
+      }
+    ],
+    "StableOperation.root": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:StableOperation.root:105f94d9b26981b0",
+        "signature_hash": "e3e717e8a95babdc"
+      }
+    ],
+    "DelegationHop": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DelegationHop:b8597b67fcf4bcb3",
+        "signature_hash": "04fed0f44a8e7da0"
+      }
+    ],
+    "DomainAdmission": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DomainAdmission:b4d6da1f9599c65a",
+        "signature_hash": "1567db25bd643d11"
+      }
+    ],
+    "AttemptContext": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:AttemptContext:6847d935983b4fdb",
+        "signature_hash": "9d588f6e1da056fb"
+      }
+    ],
+    "Decision": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Decision:7421ccf8778ece80",
+        "signature_hash": "fc4b98c490ac6e3c"
+      },
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
+        "signature_hash": "d6a166dc8cfde9f6"
+      }
+    ],
+    "chain_root": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:chain_root:232f4d967a5b1d7b",
+        "signature_hash": "c634720bdb02b011"
+      }
+    ],
+    "effective_authority": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:effective_authority:14b32987c6441933",
+        "signature_hash": "75554ec478f5044d"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 50,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:decide:d192c6b1807fc94b",
+        "signature_hash": "306b985492635361"
+      }
+    ],
+    "decide.hold": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 35,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:decide.hold:9f985eecf31e7bac",
+        "signature_hash": "2ed02c47fa2448ff"
+      }
+    ],
     "AdmissionError": [
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -428902,16 +430478,6 @@
         "end_line": 25,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AxisState:ddf7497f0d0e8cf6",
         "signature_hash": "218775d645e58673"
-      }
-    ],
-    "Decision": [
-      {
-        "file": "tools/arena/consequence_admission_kernel.py",
-        "kind": "class",
-        "line": 27,
-        "end_line": 34,
-        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
-        "signature_hash": "d6a166dc8cfde9f6"
       }
     ],
     "ConsequenceVector": [
@@ -429952,6 +431518,172 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "PermitDisposition": [
+      {
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 24,
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#class:PermitDisposition:ccd842666594358b",
+        "signature_hash": "8e4f36e77c0ebcb4"
+      }
+    ],
+    "RuntimeTarget": [
+      {
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#class:RuntimeTarget:5ccd3e5ac87b3507",
+        "signature_hash": "81034ffff60894d0"
+      }
+    ],
+    "RuntimeBoundPermit": [
+      {
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 48,
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#class:RuntimeBoundPermit:ee120f36744f5924",
+        "signature_hash": "389d11a6004891fa"
+      }
+    ],
+    "bind_at_use": [
+      {
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 135,
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#function:bind_at_use:e47a5d7bfaa3c912",
+        "signature_hash": "f5d3c6414106b32d"
+      }
+    ],
+    "bind_at_use.hold": [
+      {
+        "file": "tools/arena/installed_runtime_bound_delegation.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 90,
+        "semantic_id": "tools/arena/installed_runtime_bound_delegation.py#method:bind_at_use.hold:7844ad5a0bcb5c32",
+        "signature_hash": "6d226ce24f1a20e6"
+      }
+    ],
+    "sha_file": [
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:sha_file:3fc3d9aef97017ac",
+        "signature_hash": "fb1239bc11cbfa7a"
+      }
+    ],
+    "campaign": [
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 71,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:campaign:6ea070b1ae101c9f",
+        "signature_hash": "5d0d5d85b7f484a4"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/project006/proof_o20.py#function:campaign:231643048102be38",
+        "signature_hash": "5d0d5d85b7f484a4"
+      }
+    ],
+    "mutation_matrix": [
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 96,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:mutation_matrix:544d66d4af88c730",
+        "signature_hash": "4b02434e43eacf6c"
+      }
+    ],
+    "omega8": [
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 104,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:omega8:2e45427703ddbcf3",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 15,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:omega8:4762b29dbf9ff32c",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/project006/proof_o20.py#function:omega8:e237c92f4cf60566",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_physical_wake_o19.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:omega8:cf5e45886f4d7602",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 20,
+        "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:omega8:1352668bf00264d9",
+        "signature_hash": "779fe12d7757e6f1"
+      }
+    ],
+    "sweep13d": [
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 112,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:sweep13d:3aef56943f259f9a",
+        "signature_hash": "fbf5850ecd742466"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 124,
+        "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:hs1000:1b496e14f350397d",
+        "signature_hash": "cb33d0ed1005d09a"
+      },
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 34,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:hs1000:8405f5b6f2b68b0f",
+        "signature_hash": "cb33d0ed1005d09a"
+      },
+      {
+        "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:hs1000:4311e3dfcdc56259",
+        "signature_hash": "cb33d0ed1005d09a"
       }
     ],
     "oracle": [
@@ -431498,40 +433230,6 @@
         "signature_hash": "493c3741ecc7660a"
       }
     ],
-    "omega8": [
-      {
-        "file": "tools/project006/proof_aura_interaction_o18.py",
-        "kind": "function",
-        "line": 11,
-        "end_line": 15,
-        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:omega8:4762b29dbf9ff32c",
-        "signature_hash": "779fe12d7757e6f1"
-      },
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 5,
-        "end_line": 9,
-        "semantic_id": "tools/project006/proof_o20.py#function:omega8:e237c92f4cf60566",
-        "signature_hash": "779fe12d7757e6f1"
-      },
-      {
-        "file": "tools/project006/proof_physical_wake_o19.py",
-        "kind": "function",
-        "line": 5,
-        "end_line": 9,
-        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:omega8:cf5e45886f4d7602",
-        "signature_hash": "779fe12d7757e6f1"
-      },
-      {
-        "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
-        "kind": "function",
-        "line": 7,
-        "end_line": 20,
-        "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:omega8:1352668bf00264d9",
-        "signature_hash": "779fe12d7757e6f1"
-      }
-    ],
     "factored13d": [
       {
         "file": "tools/project006/proof_aura_interaction_o18.py",
@@ -431548,24 +433246,6 @@
         "end_line": 39,
         "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:factored13d:0b1e0878fa4606bd",
         "signature_hash": "465a1a1f10add68b"
-      }
-    ],
-    "hs1000": [
-      {
-        "file": "tools/project006/proof_aura_interaction_o18.py",
-        "kind": "function",
-        "line": 25,
-        "end_line": 34,
-        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:hs1000:8405f5b6f2b68b0f",
-        "signature_hash": "cb33d0ed1005d09a"
-      },
-      {
-        "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
-        "kind": "function",
-        "line": 41,
-        "end_line": 51,
-        "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:hs1000:4311e3dfcdc56259",
-        "signature_hash": "cb33d0ed1005d09a"
       }
     ],
     "keeper": [
@@ -431594,16 +433274,6 @@
         "end_line": 16,
         "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:d13:66792b044ab2b756",
         "signature_hash": "6b299e931f9d9f0d"
-      }
-    ],
-    "campaign": [
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 21,
-        "semantic_id": "tools/project006/proof_o20.py#function:campaign:231643048102be38",
-        "signature_hash": "5d0d5d85b7f484a4"
       }
     ],
     "hs": [
