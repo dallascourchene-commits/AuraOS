@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1664,
+    "repo_file_count": 1669,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1336,6 +1336,7 @@
       "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
       "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
       "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
+      "artifacts/arena/astra_effect_realisability_r1/UNCERTAINTY_BOUNDED_EVIDENCE_CHOREOGRAPHY_PROOF_RECEIPT.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2399,6 +2400,7 @@
       "tests/test_astra_clock_uncertainty_geometry_r1.py",
       "tests/test_astra_effect_realisability_r1.py",
       "tests/test_astra_temporal_repair_budget_r1.py",
+      "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2711,6 +2713,9 @@
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
       "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+      "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_hs1000_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -2793,6 +2798,7 @@
       "tests/test_astra_clock_uncertainty_geometry_r1.py",
       "tests/test_astra_effect_realisability_r1.py",
       "tests/test_astra_temporal_repair_budget_r1.py",
+      "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2826,8 +2832,7 @@
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
-      "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-      "tests/test_aura_bilateral_planning_enforcement.py"
+      "tests/test_aura_bilateral_live_repair_foundry_hardening.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -17775,6 +17780,53 @@
         -0.193122,
         0.282648,
         0.218701
+      ]
+    },
+    {
+      "path": "artifacts/arena/astra_effect_realisability_r1/UNCERTAINTY_BOUNDED_EVIDENCE_CHOREOGRAPHY_PROOF_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2924,
+      "lines": 17,
+      "tokens_est": 731,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "31e05d69b1c3df9c",
+      "vector": [
+        -0.125662,
+        -0.098044,
+        0.144994,
+        0.040046,
+        0.205754,
+        0.236134,
+        0.202992,
+        0.073188,
+        0.244419,
+        -0.238896,
+        0.244419,
+        0.006904,
+        -0.026237,
+        -0.09252,
+        0.258228,
+        0.283084,
+        0.009666,
+        0.09252,
+        -0.296893,
+        -0.167089,
+        0.078711,
+        0.147756,
+        0.269275,
+        0.161565,
+        -0.026237,
+        0.04557,
+        0.310702,
+        0.031761,
+        -0.073188,
+        -0.150518,
+        0.139471,
+        -0.274799
       ]
     },
     {
@@ -90573,6 +90625,53 @@
       ]
     },
     {
+      "path": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3823,
+      "lines": 33,
+      "tokens_est": 956,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3a31b2159891a18b",
+      "vector": [
+        0.042909,
+        -0.079317,
+        0.105323,
+        0.196343,
+        0.328972,
+        -0.276961,
+        -0.261357,
+        -0.04551,
+        0.258757,
+        -0.003901,
+        0.256156,
+        -0.027306,
+        0.040309,
+        -0.266559,
+        -0.201544,
+        -0.201544,
+        0.126128,
+        0.331573,
+        -0.081918,
+        -0.035108,
+        -0.120927,
+        0.074116,
+        -0.006501,
+        0.232751,
+        -0.084519,
+        0.240553,
+        -0.219748,
+        -0.032507,
+        0.058513,
+        -0.08972,
+        -0.253556,
+        -0.037708
+      ]
+    },
+    {
       "path": "tests/test_aura_adaptive_execution.py",
       "role": "python_module",
       "binary": false,
@@ -105237,6 +105336,147 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_hs1000_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1472,
+      "lines": 12,
+      "tokens_est": 368,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "53980644d4cd56e0",
+      "vector": [
+        0.288533,
+        0.26969,
+        0.008244,
+        -0.246137,
+        -0.118946,
+        0.189608,
+        -0.08126,
+        -0.043574,
+        0.283823,
+        -0.078905,
+        0.060062,
+        0.213161,
+        0.10717,
+        -0.095393,
+        -0.123657,
+        -0.154277,
+        0.090682,
+        -0.17312,
+        -0.102459,
+        -0.215517,
+        -0.182542,
+        0.078905,
+        -0.154277,
+        0.199029,
+        -0.253203,
+        0.064773,
+        -0.288533,
+        0.184897,
+        -0.199029,
+        -0.069484,
+        -0.116591,
+        -0.295599
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7940,
+      "lines": 131,
+      "tokens_est": 1985,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f8adefbfd9f86032",
+      "vector": [
+        -0.045909,
+        0.005886,
+        -0.201293,
+        -0.220127,
+        0.295465,
+        -0.069452,
+        -0.19423,
+        0.262505,
+        -0.24367,
+        0.206002,
+        0.052972,
+        0.274276,
+        0.264859,
+        0.078869,
+        0.114184,
+        -0.163624,
+        -0.085932,
+        0.14479,
+        0.048263,
+        0.260151,
+        0.24367,
+        0.222482,
+        0.255442,
+        0.064743,
+        0.109475,
+        0.267213,
+        0.14479,
+        -0.173041,
+        0.015303,
+        0.022366,
+        0.00824,
+        -0.048263
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5246,
+      "lines": 68,
+      "tokens_est": 1312,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "983b8ad088f3e495",
+      "vector": [
+        -0.16965,
+        -0.02319,
+        0.213588,
+        -0.030513,
+        0.184296,
+        0.240439,
+        0.220911,
+        -0.211147,
+        -0.093979,
+        -0.086656,
+        0.118389,
+        -0.277054,
+        -0.176973,
+        0.259967,
+        0.123271,
+        -0.274613,
+        -0.035395,
+        -0.010985,
+        -0.206265,
+        -0.230675,
+        0.091538,
+        0.103743,
+        0.26729,
+        -0.050041,
+        -0.233116,
+        0.186737,
+        -0.213588,
+        0.015867,
+        0.164768,
+        0.125712,
+        -0.272172,
+        -0.003662
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -106281,7 +106521,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788741031,
+  "generated_at_unix": 1788741348,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106559,6 +106799,7 @@
       "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
       "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
       "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
+      "artifacts/arena/astra_effect_realisability_r1/UNCERTAINTY_BOUNDED_EVIDENCE_CHOREOGRAPHY_PROOF_RECEIPT.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -107622,6 +107863,7 @@
       "tests/test_astra_clock_uncertainty_geometry_r1.py",
       "tests/test_astra_effect_realisability_r1.py",
       "tests/test_astra_temporal_repair_budget_r1.py",
+      "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -107934,6 +108176,9 @@
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
       "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+      "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_hs1000_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -220292,6 +220537,166 @@
         "file_digest8": "c395eed3645f0ae3"
       },
       {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#class:TestChoreo:317ce033ed89a4f9",
+        "name": "TestChoreo",
+        "kind": "class",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 5,
+        "end_line": 31,
+        "signature_hash": "c0c402677f0185c3",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#function:T:a84efcd3d72e814e",
+        "name": "T",
+        "kind": "function",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 4,
+        "end_line": 4,
+        "signature_hash": "72175a789d4d5879",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.q:9d6082f7b44200aa",
+        "name": "TestChoreo.q",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "d6eae947f2620065",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.ref:411cd6cef243ab62",
+        "name": "TestChoreo.ref",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "821f9b3a2546fd3a",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_bad_truth_shape:1650c3146376386b",
+        "name": "TestChoreo.test_bad_truth_shape",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "655ddcd789c36655",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_exact_private_premise:c10d4eaccde592c6",
+        "name": "TestChoreo.test_exact_private_premise",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "45c73a84ff1cc10f",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_k27_nonauthority:60f60c292f21fbd1",
+        "name": "TestChoreo.test_k27_nonauthority",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "72691611d2324b99",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_midpoint_false_ready:ee93af2799d6278c",
+        "name": "TestChoreo.test_midpoint_false_ready",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "9e26558848e94dd9",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_negative_avoids_private:a7ec950c98ab8177",
+        "name": "TestChoreo.test_negative_avoids_private",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "6316f4cdee8559e6",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_permutation_invariant:cfb8f46493072746",
+        "name": "TestChoreo.test_permutation_invariant",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "0ea39272131c76ec",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_positive_refresh:ba22c8acb0d149f0",
+        "name": "TestChoreo.test_positive_refresh",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "09f082560219f720",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_robust_ready_all_traces:8f037984d0e9b1a3",
+        "name": "TestChoreo.test_robust_ready_all_traces",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "829e7c000f228c67",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_stale_needed_query_holds:e7c0c13d45c3a91d",
+        "name": "TestChoreo.test_stale_needed_query_holds",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "0bd8bc25feac5c62",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_stale_refresh_holds:030c328c747c4173",
+        "name": "TestChoreo.test_stale_refresh_holds",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "e3876fcbcb4d43a1",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_stale_unused_query_ok:7505da863fa60026",
+        "name": "TestChoreo.test_stale_unused_query_ok",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "b309adf03a89a411",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_weighted_avoids_irrelevant_expensive:aa63740e37491aa9",
+        "name": "TestChoreo.test_weighted_avoids_irrelevant_expensive",
+        "kind": "method",
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "18713e8dc2a83524",
+        "file_digest8": "3a31b2159891a18b"
+      },
+      {
         "semantic_id": "tests/test_aura_adaptive_execution.py#class:Egress.__call__.Endpoint:698212a0a7fff320",
         "name": "Egress.__call__.Endpoint",
         "kind": "class",
@@ -268242,6 +268647,316 @@
         "file_digest8": "deddfeffd8967b09"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:ChoreographyPlan:2138d80a301e9e70",
+        "name": "ChoreographyPlan",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "917944bc3050a722",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:DurationInterval:ac3aece676600445",
+        "name": "DurationInterval",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 13,
+        "end_line": 19,
+        "signature_hash": "f0fc6800bbdc9376",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:EvidenceQuery:66fbdbacf4512f16",
+        "name": "EvidenceQuery",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 22,
+        "end_line": 27,
+        "signature_hash": "d517b538f62acbc7",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:RefreshAction:1cd87d15aa376062",
+        "name": "RefreshAction",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "30a8c130febc7aba",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:TreeNode:5dac10eca803e768",
+        "name": "TreeNode",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "07ed92383d5bc730",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:_Candidate:a48867dd9c4a6324",
+        "name": "_Candidate",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "d78f62add89196be",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_assignments:a1a18b2b46beb323",
+        "name": "_assignments",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 47,
+        "end_line": 54,
+        "signature_hash": "af8c0bb588b898ad",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_canon:d4de5097a5fec026",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "670c69469c93ee5a",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_legal_query:2e07d0fde44e6303",
+        "name": "_legal_query",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "f16e4981db79ddb5",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_pick:cc88d19a865663ac",
+        "name": "_pick",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "7ca56856bdfc99f5",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_tree_obj:74f5658b8da54738",
+        "name": "_tree_obj",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "dbf3c298efbf36e8",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_truth:23db05d1079a642c",
+        "name": "_truth",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 56,
+        "end_line": 56,
+        "signature_hash": "1420b13f6d1fad5c",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:compile_choreography:32677ced4ec8f1f4",
+        "name": "compile_choreography",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 72,
+        "end_line": 105,
+        "signature_hash": "af578e099d023df6",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:digest:87993f47f840dd15",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:robustly_safe:97206eebcc994fa3",
+        "name": "robustly_safe",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 130,
+        "end_line": 130,
+        "signature_hash": "705be9f8efd3364f",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:uniform_decision:10fd0783c7128813",
+        "name": "uniform_decision",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "b28d869ea9e76729",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:validate_tree:6740682485ee8d3a",
+        "name": "validate_tree",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 107,
+        "end_line": 128,
+        "signature_hash": "dec98ca27bb9524a",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:DurationInterval.__post_init__:0c17b5aefcb8c9ef",
+        "name": "DurationInterval.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:DurationInterval.add:2b5b37d7d0e83ee3",
+        "name": "DurationInterval.add",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "2c1e250f308f6fd9",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:DurationInterval.midpoint:80ca268610851140",
+        "name": "DurationInterval.midpoint",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "c004e3637e2ccce4",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:EvidenceQuery.__post_init__:ba7f9ab6fbb4528c",
+        "name": "EvidenceQuery.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:RefreshAction.__post_init__:d1fc749753bb3d34",
+        "name": "RefreshAction.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:compile_choreography.fits:918297035fbb59bf",
+        "name": "compile_choreography.fits",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 80,
+        "end_line": 80,
+        "signature_hash": "1c7ccd56cef4766d",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:compile_choreography.solve:386e9a0e99e7a0af",
+        "name": "compile_choreography.solve",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "line": 82,
+        "end_line": 101,
+        "signature_hash": "4689dcaea7dd4ebc",
+        "file_digest8": "f8adefbfd9f86032"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:make_truth:162b42e2b0ebe189",
+        "name": "make_truth",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "90efe5a3364610ce",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:oracle_min_cost:ef6f881569354cb5",
+        "name": "oracle_min_cost",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 21,
+        "end_line": 38,
+        "signature_hash": "d16e9f72a6b09f9f",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:q:ac040d6af74cdc17",
+        "name": "q",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "5fbe21ee1942fdcb",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:ref:266d16f6d07d1cef",
+        "name": "ref",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "83dc100eb19c55c2",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:run:30b5b2570767a5ef",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 39,
+        "end_line": 66,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:uniform_ref:c86084530c32e9eb",
+        "name": "uniform_ref",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 15,
+        "end_line": 20,
+        "signature_hash": "f36b58f8bee55c34",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#method:oracle_min_cost.rec:e359d246eb1ce50c",
+        "name": "oracle_min_cost.rec",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "line": 22,
+        "end_line": 37,
+        "signature_hash": "a843084b124b72ed",
+        "file_digest8": "983b8ad088f3e495"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -269492,8 +270207,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "7b8c1e47302818482762ba8c670ff317",
-    "payload_hash": "1d810f701fcc5a2d27734146a5e04863"
+    "record_fingerprint": "a4dfc87b970b299b7538500d90bab546",
+    "payload_hash": "a0e0c7a42443c62aab6341919f73f87d"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -269506,16 +270221,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1664,
-      "bytes": 26535524,
-      "tokens_est": 6624223,
+      "files": 1669,
+      "bytes": 26556929,
+      "tokens_est": 6629575,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1013,
-        "schema_or_lexicon": 277,
+        "python_module": 1017,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -270202,16 +270917,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1664,
-    "total_bytes": 26535524,
-    "text_tokens_est": 6624223,
+    "file_count": 1669,
+    "total_bytes": 26556929,
+    "text_tokens_est": 6629575,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1013,
-      "schema_or_lexicon": 277,
+      "python_module": 1017,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -271456,6 +272171,14 @@
         "end_line": 39,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py#function:run:1e04104f9a0219f9",
         "signature_hash": "32e187127794ef19"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 66,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:run:30b5b2570767a5ef",
+        "signature_hash": "26799ab4ad82cbfb"
       }
     ],
     "run.record": [
@@ -287973,6 +288696,14 @@
         "line": 12,
         "end_line": 12,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:digest:015545c1f6b88066",
+        "signature_hash": "6845cd2b39857deb"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:digest:87993f47f840dd15",
         "signature_hash": "6845cd2b39857deb"
       }
     ],
@@ -381584,6 +382315,174 @@
         "signature_hash": "5dc21fad911a2f1e"
       }
     ],
+    "T": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#function:T:a84efcd3d72e814e",
+        "signature_hash": "72175a789d4d5879"
+      },
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 115,
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "TestChoreo": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 31,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#class:TestChoreo:317ce033ed89a4f9",
+        "signature_hash": "c0c402677f0185c3"
+      }
+    ],
+    "TestChoreo.q": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.q:9d6082f7b44200aa",
+        "signature_hash": "d6eae947f2620065"
+      }
+    ],
+    "TestChoreo.ref": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.ref:411cd6cef243ab62",
+        "signature_hash": "821f9b3a2546fd3a"
+      }
+    ],
+    "TestChoreo.test_exact_private_premise": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_exact_private_premise:c10d4eaccde592c6",
+        "signature_hash": "45c73a84ff1cc10f"
+      }
+    ],
+    "TestChoreo.test_negative_avoids_private": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_negative_avoids_private:a7ec950c98ab8177",
+        "signature_hash": "6316f4cdee8559e6"
+      }
+    ],
+    "TestChoreo.test_positive_refresh": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_positive_refresh:ba22c8acb0d149f0",
+        "signature_hash": "09f082560219f720"
+      }
+    ],
+    "TestChoreo.test_midpoint_false_ready": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_midpoint_false_ready:ee93af2799d6278c",
+        "signature_hash": "9e26558848e94dd9"
+      }
+    ],
+    "TestChoreo.test_robust_ready_all_traces": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_robust_ready_all_traces:8f037984d0e9b1a3",
+        "signature_hash": "829e7c000f228c67"
+      }
+    ],
+    "TestChoreo.test_stale_needed_query_holds": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_stale_needed_query_holds:e7c0c13d45c3a91d",
+        "signature_hash": "0bd8bc25feac5c62"
+      }
+    ],
+    "TestChoreo.test_stale_unused_query_ok": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_stale_unused_query_ok:7505da863fa60026",
+        "signature_hash": "b309adf03a89a411"
+      }
+    ],
+    "TestChoreo.test_stale_refresh_holds": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_stale_refresh_holds:030c328c747c4173",
+        "signature_hash": "e3876fcbcb4d43a1"
+      }
+    ],
+    "TestChoreo.test_k27_nonauthority": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_k27_nonauthority:60f60c292f21fbd1",
+        "signature_hash": "72691611d2324b99"
+      }
+    ],
+    "TestChoreo.test_weighted_avoids_irrelevant_expensive": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_weighted_avoids_irrelevant_expensive:aa63740e37491aa9",
+        "signature_hash": "18713e8dc2a83524"
+      }
+    ],
+    "TestChoreo.test_permutation_invariant": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_permutation_invariant:cfb8f46493072746",
+        "signature_hash": "0ea39272131c76ec"
+      }
+    ],
+    "TestChoreo.test_bad_truth_shape": [
+      {
+        "file": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py#method:TestChoreo.test_bad_truth_shape:1650c3146376386b",
+        "signature_hash": "655ddcd789c36655"
+      }
+    ],
     "Store": [
       {
         "file": "tests/test_aura_adaptive_execution.py",
@@ -401712,6 +402611,14 @@
         "end_line": 54,
         "semantic_id": "tests/test_aura_ephemeral_workspace_contracts.py#function:ref:7784776e3e5784e6",
         "signature_hash": "5eb9a6a3260f067b"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:ref:266d16f6d07d1cef",
+        "signature_hash": "83dc100eb19c55c2"
       }
     ],
     "project": [
@@ -425428,16 +426335,6 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
-    "T": [
-      {
-        "file": "tests/test_frontier27_runtime.py",
-        "kind": "class",
-        "line": 12,
-        "end_line": 115,
-        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
-        "signature_hash": "1a51332cd1dc4f10"
-      }
-    ],
     "T.test_00_manifest": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -427270,6 +428167,14 @@
         "end_line": 11,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_canon:df6d10a0589b9b38",
         "signature_hash": "670c69469c93ee5a"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_canon:d4de5097a5fec026",
+        "signature_hash": "670c69469c93ee5a"
       }
     ],
     "TimeInterval": [
@@ -427888,6 +428793,276 @@
         "end_line": 147,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:plan_root:31c898292a6d82f3",
         "signature_hash": "6c0d676e8be65815"
+      }
+    ],
+    "DurationInterval": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 19,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:DurationInterval:ac3aece676600445",
+        "signature_hash": "f0fc6800bbdc9376"
+      }
+    ],
+    "DurationInterval.__post_init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:DurationInterval.__post_init__:0c17b5aefcb8c9ef",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "DurationInterval.midpoint": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:DurationInterval.midpoint:80ca268610851140",
+        "signature_hash": "c004e3637e2ccce4"
+      }
+    ],
+    "DurationInterval.add": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:DurationInterval.add:2b5b37d7d0e83ee3",
+        "signature_hash": "2c1e250f308f6fd9"
+      }
+    ],
+    "EvidenceQuery": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 27,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:EvidenceQuery:66fbdbacf4512f16",
+        "signature_hash": "d517b538f62acbc7"
+      }
+    ],
+    "EvidenceQuery.__post_init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:EvidenceQuery.__post_init__:ba7f9ab6fbb4528c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RefreshAction": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:RefreshAction:1cd87d15aa376062",
+        "signature_hash": "30a8c130febc7aba"
+      }
+    ],
+    "RefreshAction.__post_init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:RefreshAction.__post_init__:d1fc749753bb3d34",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TreeNode": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:TreeNode:5dac10eca803e768",
+        "signature_hash": "07ed92383d5bc730"
+      }
+    ],
+    "ChoreographyPlan": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:ChoreographyPlan:2138d80a301e9e70",
+        "signature_hash": "917944bc3050a722"
+      }
+    ],
+    "_Candidate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#class:_Candidate:a48867dd9c4a6324",
+        "signature_hash": "d78f62add89196be"
+      }
+    ],
+    "_assignments": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_assignments:a1a18b2b46beb323",
+        "signature_hash": "af8c0bb588b898ad"
+      }
+    ],
+    "_truth": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 56,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_truth:23db05d1079a642c",
+        "signature_hash": "1420b13f6d1fad5c"
+      }
+    ],
+    "uniform_decision": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:uniform_decision:10fd0783c7128813",
+        "signature_hash": "b28d869ea9e76729"
+      }
+    ],
+    "_legal_query": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_legal_query:2e07d0fde44e6303",
+        "signature_hash": "f16e4981db79ddb5"
+      }
+    ],
+    "_tree_obj": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_tree_obj:74f5658b8da54738",
+        "signature_hash": "dbf3c298efbf36e8"
+      }
+    ],
+    "_pick": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:_pick:cc88d19a865663ac",
+        "signature_hash": "7ca56856bdfc99f5"
+      }
+    ],
+    "compile_choreography": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 105,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:compile_choreography:32677ced4ec8f1f4",
+        "signature_hash": "af578e099d023df6"
+      }
+    ],
+    "compile_choreography.fits": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 80,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:compile_choreography.fits:918297035fbb59bf",
+        "signature_hash": "1c7ccd56cef4766d"
+      }
+    ],
+    "compile_choreography.solve": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 101,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#method:compile_choreography.solve:386e9a0e99e7a0af",
+        "signature_hash": "4689dcaea7dd4ebc"
+      }
+    ],
+    "validate_tree": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 128,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:validate_tree:6740682485ee8d3a",
+        "signature_hash": "dec98ca27bb9524a"
+      }
+    ],
+    "robustly_safe": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+        "kind": "function",
+        "line": 130,
+        "end_line": 130,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py#function:robustly_safe:97206eebcc994fa3",
+        "signature_hash": "705be9f8efd3364f"
+      }
+    ],
+    "make_truth": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:make_truth:162b42e2b0ebe189",
+        "signature_hash": "90efe5a3364610ce"
+      }
+    ],
+    "q": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:q:ac040d6af74cdc17",
+        "signature_hash": "5fbe21ee1942fdcb"
+      }
+    ],
+    "uniform_ref": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 20,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:uniform_ref:c86084530c32e9eb",
+        "signature_hash": "f36b58f8bee55c34"
+      }
+    ],
+    "oracle_min_cost": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 38,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#function:oracle_min_cost:ef6f881569354cb5",
+        "signature_hash": "d16e9f72a6b09f9f"
+      }
+    ],
+    "oracle_min_cost.rec": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 37,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py#method:oracle_min_cost.rec:e359d246eb1ce50c",
+        "signature_hash": "a843084b124b72ed"
       }
     ],
     "_coordinates": [
