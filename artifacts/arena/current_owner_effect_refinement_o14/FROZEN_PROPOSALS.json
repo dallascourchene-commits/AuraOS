@@ -1,0 +1,13 @@
+{
+  "objective": "Close the current-owner read-to-effect refinement gap without reconstructing read ownership",
+  "frozen_before_implementation": true,
+  "proposals": [
+    {"id":"A","primitive":"thin post-PR889 effect-refinement seal","consequence":"preserve PR889 T1 owner currentness and bind PR887 effect subclass before TECC"},
+    {"id":"B","primitive":"TECC-owned effect refinement","consequence":"delete the Memory City refinement seal and make TECC fetch obligations at verification"},
+    {"id":"C","primitive":"single effect-contract object","consequence":"collapse read, intent, obligation, and mutation evidence into one commit object"},
+    {"id":"D","primitive":"delete Memory City effect capsule entirely","consequence":"Memory City ends at read proof and TECC owns all effect compilation and authorization"}
+  ],
+  "selected": "A",
+  "kill_shot_if_redundant": "D",
+  "authority": "D0_NONPROMOTING_GATE10_FALSE"
+}
