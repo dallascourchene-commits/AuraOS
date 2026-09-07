@@ -13,6 +13,20 @@ on:
       - "tools/arena/effect_return_atomicity.py"
       - "tests/test_project006_effect_attempt_recovery_o11.py"
       - ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml"
+  push:
+    branches:
+      - "project006/effect-attempt-recovery-o11-gpt56sol-20260907"
+    paths:
+      - "tools/project006/terminal_outbox.py"
+      - "tools/project006/project006_consumer_outbox_wrapper.py"
+      - "tools/project006/effect_attempt_recovery.py"
+      - "tools/project006/campaign_effect_attempt_recovery_o11.py"
+      - "tools/project006/o11_effect_attempt_lattice8.py"
+      - "tools/project006/o11_effect_attempt_factored13d.py"
+      - "tools/project006/o11_effect_attempt_hs1000.py"
+      - "tools/arena/effect_return_atomicity.py"
+      - "tests/test_project006_effect_attempt_recovery_o11.py"
+      - ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml"
 
 permissions:
   contents: read
@@ -21,14 +35,14 @@ jobs:
   exact-three-venv-proof:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout exact pull-request head
+      - name: Checkout exact semantic event head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Verify exact checkout identity
         shell: bash
         env:
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           actual="$(git rev-parse HEAD)"
