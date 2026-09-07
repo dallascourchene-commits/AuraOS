@@ -362,6 +362,7 @@
     "python -m venv": [
       ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       "README.md"
     ],
     "python aura_router.py route --help": [
@@ -1062,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1685,
+    "repo_file_count": 1696,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1237,6 +1238,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1341,6 +1343,10 @@
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/PROOF_RECEIPT_MC_O14R.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/RESULT_MC_O14R.json",
+      "artifacts/arena/project006_o17_transport_source_identity/FROZEN_PROPOSALS_O17.json",
+      "artifacts/arena/project006_o17_transport_source_identity/PHYSICAL_R3_SOURCE_PREIMAGE_EVIDENCE.json",
+      "artifacts/arena/project006_o17_transport_source_identity/PROOF_RECEIPT_O17.json",
+      "artifacts/arena/project006_o17_transport_source_identity/RESULT_O17.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2699,6 +2705,7 @@
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_tecc_effect_admission_bridge.py",
+      "tests/test_transport_source_identity_bridge_hosted.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -2723,6 +2730,7 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/campaign_effect_attempt_recovery_o11.py",
       "tools/project006/campaign_tecc_effect_admission_bridge.py",
+      "tools/project006/campaign_transport_source_identity_bridge.py",
       "tools/project006/effect_attempt_recovery.py",
       "tools/project006/mc_o14_hs1000.py",
       "tools/project006/mc_o14_lattice8.py",
@@ -2730,11 +2738,15 @@
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o17_hs1000.py",
+      "tools/project006/o17_lattice8.py",
+      "tools/project006/o17_sweep13d.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/tecc_effect_admission_bridge.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_wake_broker.py",
+      "tools/project006/transport_source_identity_bridge.py",
       "tools/project006/windows_wake_broker.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -11869,6 +11881,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2486,
+      "lines": 57,
+      "tokens_est": 622,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          25
+        ]
+      },
+      "topology": {},
+      "digest8": "e309fe0e53f331b9",
+      "vector": [
+        0.294994,
+        0.165855,
+        -0.191177,
+        -0.07723,
+        -0.231691,
+        0.317784,
+        -0.160791,
+        -0.11268,
+        0.246884,
+        0.216498,
+        -0.305123,
+        -0.062037,
+        -0.024055,
+        0.312719,
+        -0.294994,
+        0.10002,
+        0.10002,
+        -0.264609,
+        0.021523,
+        -0.132937,
+        -0.155727,
+        -0.115212,
+        0.046845,
+        0.036716,
+        -0.097487,
+        0.062037,
+        -0.04178,
+        0.087359,
+        -0.046845,
+        -0.25448,
+        0.074698,
+        -0.122809
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17951,6 +18016,194 @@
         -0.162497,
         0.208925,
         0.067623
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o17_transport_source_identity/FROZEN_PROPOSALS_O17.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1331,
+      "lines": 15,
+      "tokens_est": 333,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a5c9d41597cddb82",
+      "vector": [
+        0.091395,
+        -0.11916,
+        -0.292694,
+        0.096022,
+        -0.181632,
+        -0.232535,
+        -0.149239,
+        0.232535,
+        -0.112219,
+        0.197829,
+        -0.190887,
+        -0.188574,
+        -0.177005,
+        -0.024295,
+        0.040491,
+        0.035864,
+        -0.130729,
+        -0.170063,
+        -0.179318,
+        -0.22328,
+        0.193201,
+        -0.075198,
+        -0.202456,
+        -0.130729,
+        -0.065943,
+        0.200142,
+        0.114532,
+        0.276497,
+        0.065943,
+        -0.288066,
+        0.255673,
+        -0.211711
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o17_transport_source_identity/PHYSICAL_R3_SOURCE_PREIMAGE_EVIDENCE.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1435,
+      "lines": 25,
+      "tokens_est": 359,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "24dfbba613e3c30d",
+      "vector": [
+        0.229549,
+        -0.123935,
+        -0.151955,
+        -0.054963,
+        -0.218772,
+        -0.100226,
+        -0.039875,
+        -0.031253,
+        -0.024787,
+        -0.175665,
+        0.216617,
+        -0.218772,
+        -0.029098,
+        -0.074361,
+        0.240326,
+        0.100226,
+        0.011855,
+        0.175665,
+        -0.184286,
+        -0.266191,
+        -0.022632,
+        -0.044186,
+        -0.244637,
+        0.227394,
+        -0.259725,
+        0.061429,
+        0.272657,
+        0.272657,
+        0.264036,
+        -0.244637,
+        -0.048496,
+        -0.207995
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o17_transport_source_identity/PROOF_RECEIPT_O17.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1557,
+      "lines": 25,
+      "tokens_est": 390,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "21b833ce76270040",
+      "vector": [
+        -0.029292,
+        0.124761,
+        -0.222401,
+        0.185515,
+        0.007594,
+        0.209382,
+        -0.218061,
+        0.016273,
+        0.077027,
+        0.209382,
+        -0.061838,
+        -0.218061,
+        0.248438,
+        0.055329,
+        -0.270136,
+        0.239759,
+        -0.196364,
+        0.148629,
+        0.035801,
+        0.198533,
+        0.103064,
+        -0.202873,
+        0.027122,
+        0.064008,
+        -0.179006,
+        -0.222401,
+        -0.129101,
+        0.248438,
+        -0.23108,
+        0.272305,
+        -0.237589,
+        -0.098724
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o17_transport_source_identity/RESULT_O17.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2206,
+      "lines": 48,
+      "tokens_est": 552,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7e2cf43a4c675be7",
+      "vector": [
+        0.170138,
+        0.032884,
+        -0.044322,
+        0.235905,
+        -0.193013,
+        -0.190154,
+        0.084354,
+        -0.098651,
+        -0.070057,
+        0.087213,
+        0.132965,
+        0.141543,
+        -0.230186,
+        0.310251,
+        0.1587,
+        0.335986,
+        -0.081494,
+        0.147262,
+        0.161559,
+        0.204451,
+        -0.098651,
+        -0.115808,
+        0.20731,
+        -0.138684,
+        0.064338,
+        0.224467,
+        0.241624,
+        0.018586,
+        0.047181,
+        -0.1587,
+        0.298813,
+        -0.270218
       ]
     },
     {
@@ -104614,6 +104867,53 @@
       ]
     },
     {
+      "path": "tests/test_transport_source_identity_bridge_hosted.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3710,
+      "lines": 33,
+      "tokens_est": 928,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1a3a8212f5926533",
+      "vector": [
+        -0.212499,
+        -0.07431,
+        0.06388,
+        -0.220321,
+        0.194248,
+        0.019555,
+        -0.308971,
+        0.121242,
+        0.056058,
+        0.332437,
+        -0.212499,
+        0.009126,
+        -0.032592,
+        -0.050843,
+        -0.173389,
+        0.136886,
+        0.071702,
+        0.262039,
+        0.136886,
+        0.204677,
+        0.092561,
+        0.322008,
+        -0.136886,
+        -0.06388,
+        0.311578,
+        0.032592,
+        0.071702,
+        0.116027,
+        -0.040414,
+        0.048236,
+        0.327223,
+        -0.199462
+      ]
+    },
+    {
       "path": "third_party/pascal/LICENSE",
       "role": "support_file",
       "binary": false,
@@ -105742,6 +106042,53 @@
       ]
     },
     {
+      "path": "tools/project006/campaign_transport_source_identity_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3817,
+      "lines": 68,
+      "tokens_est": 955,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "710513eaa41326c2",
+      "vector": [
+        0.09295,
+        -0.075032,
+        -0.023518,
+        0.265412,
+        -0.180301,
+        -0.126547,
+        -0.18926,
+        -0.157904,
+        0.110868,
+        -0.039196,
+        -0.263173,
+        0.267652,
+        -0.086231,
+        0.19598,
+        -0.254214,
+        0.113108,
+        -0.090711,
+        -0.110868,
+        -0.036956,
+        -0.166863,
+        -0.281091,
+        0.164623,
+        -0.164623,
+        0.148944,
+        -0.245254,
+        -0.025757,
+        -0.124307,
+        0.260933,
+        -0.209418,
+        -0.281091,
+        0.218377,
+        -0.086231
+      ]
+    },
+    {
       "path": "tools/project006/effect_attempt_recovery.py",
       "role": "python_module",
       "binary": false,
@@ -106071,6 +106418,147 @@
       ]
     },
     {
+      "path": "tools/project006/o17_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1706,
+      "lines": 18,
+      "tokens_est": 427,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "770a6e3b3a2939b2",
+      "vector": [
+        0.277006,
+        -0.277006,
+        0.187353,
+        -0.127584,
+        -0.198847,
+        0.159767,
+        -0.099998,
+        -0.290799,
+        0.120687,
+        0.024137,
+        0.067815,
+        0.113791,
+        -0.150572,
+        0.283903,
+        -0.168962,
+        -0.047126,
+        -0.05862,
+        -0.242524,
+        0.182755,
+        -0.194249,
+        0.182755,
+        -0.086205,
+        0.049424,
+        0.242524,
+        -0.247122,
+        0.010345,
+        -0.097699,
+        -0.277006,
+        -0.010345,
+        -0.065516,
+        0.164365,
+        0.233329
+      ]
+    },
+    {
+      "path": "tools/project006/o17_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1274,
+      "lines": 32,
+      "tokens_est": 319,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe492186dfc3030c",
+      "vector": [
+        0.096653,
+        0.337623,
+        0.083413,
+        -0.00662,
+        0.284663,
+        -0.054284,
+        0.210518,
+        0.083413,
+        0.311143,
+        0.064877,
+        0.048988,
+        0.001324,
+        -0.054284,
+        0.184038,
+        0.070173,
+        0.154909,
+        0.064877,
+        0.266126,
+        -0.0331,
+        -0.184038,
+        -0.252886,
+        0.125781,
+        -0.178742,
+        -0.109893,
+        -0.030452,
+        0.165502,
+        -0.289959,
+        -0.305847,
+        0.030452,
+        0.009268,
+        0.231702,
+        0.266126
+      ]
+    },
+    {
+      "path": "tools/project006/o17_sweep13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1198,
+      "lines": 21,
+      "tokens_est": 300,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d4539746213ad99b",
+      "vector": [
+        -0.285648,
+        -0.126553,
+        -0.143426,
+        0.047005,
+        -0.075932,
+        -0.232616,
+        0.095216,
+        -0.247079,
+        0.145837,
+        0.097626,
+        -0.162711,
+        -0.165121,
+        0.20369,
+        0.177174,
+        0.133784,
+        -0.225384,
+        0.124142,
+        -0.138605,
+        -0.013258,
+        0.049416,
+        0.2061,
+        -0.307342,
+        -0.061468,
+        -0.227795,
+        0.259132,
+        0.0687,
+        0.162711,
+        -0.119321,
+        0.256721,
+        -0.2977,
+        -0.008437,
+        -0.162711
+      ]
+    },
+    {
       "path": "tools/project006/project006_consumer_outbox_wrapper.py",
       "role": "python_module",
       "binary": false,
@@ -106303,6 +106791,53 @@
         0.156594,
         0.129161,
         -0.08344
+      ]
+    },
+    {
+      "path": "tools/project006/transport_source_identity_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9817,
+      "lines": 242,
+      "tokens_est": 2455,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6af00ceb410e5264",
+      "vector": [
+        -0.26614,
+        0.051956,
+        -0.109213,
+        -0.225848,
+        0.143143,
+        -0.16859,
+        -0.240692,
+        -0.013784,
+        -0.102851,
+        -0.223727,
+        0.26826,
+        0.107092,
+        -0.261898,
+        0.007422,
+        0.223727,
+        -0.187676,
+        0.179194,
+        -0.049835,
+        -0.221606,
+        -0.051956,
+        0.26614,
+        -0.160108,
+        0.149505,
+        -0.208882,
+        0.261898,
+        -0.003181,
+        0.151625,
+        0.213124,
+        0.128298,
+        0.049835,
+        0.225848,
+        -0.051956
       ]
     },
     {
@@ -107303,7 +107838,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788785913,
+  "generated_at_unix": 1788787628,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107480,6 +108015,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -107584,6 +108120,10 @@
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/PROOF_RECEIPT_MC_O14R.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/RESULT_MC_O14R.json",
+      "artifacts/arena/project006_o17_transport_source_identity/FROZEN_PROPOSALS_O17.json",
+      "artifacts/arena/project006_o17_transport_source_identity/PHYSICAL_R3_SOURCE_PREIMAGE_EVIDENCE.json",
+      "artifacts/arena/project006_o17_transport_source_identity/PROOF_RECEIPT_O17.json",
+      "artifacts/arena/project006_o17_transport_source_identity/RESULT_O17.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108942,6 +109482,7 @@
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_tecc_effect_admission_bridge.py",
+      "tests/test_transport_source_identity_bridge_hosted.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -108966,6 +109507,7 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/campaign_effect_attempt_recovery_o11.py",
       "tools/project006/campaign_tecc_effect_admission_bridge.py",
+      "tools/project006/campaign_transport_source_identity_bridge.py",
       "tools/project006/effect_attempt_recovery.py",
       "tools/project006/mc_o14_hs1000.py",
       "tools/project006/mc_o14_lattice8.py",
@@ -108973,11 +109515,15 @@
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o17_hs1000.py",
+      "tools/project006/o17_lattice8.py",
+      "tools/project006/o17_sweep13d.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/tecc_effect_admission_bridge.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_wake_broker.py",
+      "tools/project006/transport_source_identity_bridge.py",
       "tools/project006/windows_wake_broker.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -267825,6 +268371,156 @@
         "file_digest8": "4341386db833cd7d"
       },
       {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#class:T:2c9669701b281082",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 19,
+        "end_line": 31,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:fixture:e11220ceea6bac0d",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 12,
+        "end_line": 18,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:r:79f33ab10596e11d",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_digest_claim_alone_does_not_bind:f96e57cab8ab36d4",
+        "name": "T.test_digest_claim_alone_does_not_bind",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 25,
+        "end_line": 25,
+        "signature_hash": "323a1b6166b93335",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_forged_proof_shape_holds:008faa9dc7186ea2",
+        "name": "T.test_forged_proof_shape_holds",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "da4dd7bc18fcf1f9",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_forged_training_shape_holds:4971895cb4afeb71",
+        "name": "T.test_forged_training_shape_holds",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 29,
+        "end_line": 29,
+        "signature_hash": "36b797c20ca81ef1",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_k27_context_cannot_compensate:18c32240e729dd5e",
+        "name": "T.test_k27_context_cannot_compensate",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 31,
+        "end_line": 31,
+        "signature_hash": "d03257d8bac0301d",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_missing_preimage_contract_holds:a105a2a486a714d1",
+        "name": "T.test_missing_preimage_contract_holds",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 24,
+        "end_line": 24,
+        "signature_hash": "77a86c2e59e94045",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_physical_authority_remains_false:2e3232e9c4531dff",
+        "name": "T.test_physical_authority_remains_false",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 22,
+        "end_line": 22,
+        "signature_hash": "6c512aa1eab7941f",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_physical_declared_text_roots_do_not_match_reported_digest:398e1e2b0eb258fc",
+        "name": "T.test_physical_declared_text_roots_do_not_match_reported_digest",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "ce3d46349beba352",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_physical_evidence_is_fail_closed:2d47d3525a7af8f3",
+        "name": "T.test_physical_evidence_is_fail_closed",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "2daa72ce06a665b0",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_same_bytes_new_file_changes_source_identity:830ada0835f73ed3",
+        "name": "T.test_same_bytes_new_file_changes_source_identity",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "3711ee34772ea1cf",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_same_bytes_new_revision_changes_source_identity:0590bb6bf6bf0380",
+        "name": "T.test_same_bytes_new_revision_changes_source_identity",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "3d03b89c1c663c5b",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_stale_workcell_rebinds:88d143217afe1601",
+        "name": "T.test_stale_workcell_rebinds",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 30,
+        "end_line": 30,
+        "signature_hash": "6bceafec0d61af97",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_synthetic_exact_preimage_binds_d0:fb7a42ae85c992c6",
+        "name": "T.test_synthetic_exact_preimage_binds_d0",
+        "kind": "method",
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "84b89b40ca797f4b",
+        "file_digest8": "1a3a8212f5926533"
+      },
+      {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
         "name": "AdmissionError",
         "kind": "class",
@@ -270465,6 +271161,56 @@
         "file_digest8": "4da39f666ec24fbd"
       },
       {
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:base:797ccecf323f25be",
+        "name": "base",
+        "kind": "function",
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "line": 12,
+        "end_line": 19,
+        "signature_hash": "fc255db21ad827bd",
+        "file_digest8": "710513eaa41326c2"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:mutate:be98d8c6c09fdd0d",
+        "name": "mutate",
+        "kind": "function",
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "line": 21,
+        "end_line": 46,
+        "signature_hash": "6f15dd8196fb6381",
+        "file_digest8": "710513eaa41326c2"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:oracle:26868b50c367f71e",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "4df0604ad91753f1",
+        "file_digest8": "710513eaa41326c2"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:r:7e46b8b13331afec",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "710513eaa41326c2"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:run:816f91f741cdc870",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "line": 51,
+        "end_line": 66,
+        "signature_hash": "0de24ced4c8c2bef",
+        "file_digest8": "710513eaa41326c2"
+      },
+      {
         "semantic_id": "tools/project006/effect_attempt_recovery.py#class:EffectAttemptJournal:42cd651adebb3c5d",
         "name": "EffectAttemptJournal",
         "kind": "class",
@@ -270803,6 +271549,56 @@
         "end_line": 16,
         "signature_hash": "26799ab4ad82cbfb",
         "file_digest8": "bb991eb805c3f3e2"
+      },
+      {
+        "semantic_id": "tools/project006/o17_hs1000.py#function:build:4b7ac1f3007e5345",
+        "name": "build",
+        "kind": "function",
+        "file": "tools/project006/o17_hs1000.py",
+        "line": 6,
+        "end_line": 16,
+        "signature_hash": "15e439a6c9e8da54",
+        "file_digest8": "770a6e3b3a2939b2"
+      },
+      {
+        "semantic_id": "tools/project006/o17_hs1000.py#function:h:1ef5fbb01f68bb3d",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/project006/o17_hs1000.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "b307e9c3443f5155",
+        "file_digest8": "770a6e3b3a2939b2"
+      },
+      {
+        "semantic_id": "tools/project006/o17_lattice8.py#function:decide:a1ed58c3c54d4b9a",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/project006/o17_lattice8.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "a4332d849df2fd41",
+        "file_digest8": "fe492186dfc3030c"
+      },
+      {
+        "semantic_id": "tools/project006/o17_lattice8.py#function:run:604c34ca9f9c03dc",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/o17_lattice8.py",
+        "line": 23,
+        "end_line": 30,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "fe492186dfc3030c"
+      },
+      {
+        "semantic_id": "tools/project006/o17_sweep13d.py#function:run:d8e97d39d4ed3062",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/o17_sweep13d.py",
+        "line": 10,
+        "end_line": 19,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "d4539746213ad99b"
       },
       {
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:_changed:fb5eb9317f79eb5e",
@@ -271763,6 +272559,216 @@
         "end_line": 18,
         "signature_hash": "487e6a3eff28e114",
         "file_digest8": "e1271709652ae37a"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:AdmissionContext:76b3d16433392f8d",
+        "name": "AdmissionContext",
+        "kind": "class",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 140,
+        "end_line": 160,
+        "signature_hash": "f1a7be373d59cd5e",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:DigestPreimageContract:0b6b8d3b23d6ffaa",
+        "name": "DigestPreimageContract",
+        "kind": "class",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 116,
+        "end_line": 126,
+        "signature_hash": "b5e76466e556ed49",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:Disposition:a92180360a463b54",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 163,
+        "end_line": 167,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:DriveSourceIncarnation:87ea1746e8ce912d",
+        "name": "DriveSourceIncarnation",
+        "kind": "class",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 38,
+        "end_line": 63,
+        "signature_hash": "12463424c0120794",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:SourceAdmissionDecision:b061bc159f04c825",
+        "name": "SourceAdmissionDecision",
+        "kind": "class",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 171,
+        "end_line": 188,
+        "signature_hash": "460899ae0615fcf9",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:TransportCallback:16e44d230b78e8f5",
+        "name": "TransportCallback",
+        "kind": "class",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 67,
+        "end_line": 88,
+        "signature_hash": "1adee417aba4b1fe",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:_id:877170d5464829fe",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:_root:2767fe5ace6eb794",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:canon:07e88cd27c4bd735",
+        "name": "canon",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "bea1420d5b9f5038",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:digest:17c04b5ca2cad798",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:parse_callback:5e2b661501b70829",
+        "name": "parse_callback",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 91,
+        "end_line": 112,
+        "signature_hash": "a38c37738cf3e277",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:recompute_transport_digest:74831c44a8b80a1c",
+        "name": "recompute_transport_digest",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 129,
+        "end_line": 136,
+        "signature_hash": "74ddafd7ec7920e1",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:root_bytes:9fc00a1b3f90a6d9",
+        "name": "root_bytes",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "3c38ff144a63ee0c",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:validate_source_admission:bcd0f3c8688f7924",
+        "name": "validate_source_admission",
+        "kind": "function",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 191,
+        "end_line": 241,
+        "signature_hash": "bc2ea724074afc8e",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:AdmissionContext.__post_init__:7fac3b9ba47d58ca",
+        "name": "AdmissionContext.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 153,
+        "end_line": 160,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DigestPreimageContract.__post_init__:3082144b4dbb3a09",
+        "name": "DigestPreimageContract.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 121,
+        "end_line": 126,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DriveSourceIncarnation.__post_init__:d5cae9cfbd331f85",
+        "name": "DriveSourceIncarnation.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DriveSourceIncarnation.export_root:f2e8690afa37d7cb",
+        "name": "DriveSourceIncarnation.export_root",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "1d221d52545e1d61",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DriveSourceIncarnation.incarnation_root:9f75dbeea082a8e2",
+        "name": "DriveSourceIncarnation.incarnation_root",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 55,
+        "end_line": 63,
+        "signature_hash": "04a65750ca6a162b",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:SourceAdmissionDecision.__post_init__:f3b3ccf7454eabcd",
+        "name": "SourceAdmissionDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 182,
+        "end_line": 188,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6af00ceb410e5264"
+      },
+      {
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:TransportCallback.__post_init__:9a234b689f7d3608",
+        "name": "TransportCallback.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "line": 80,
+        "end_line": 88,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "6af00ceb410e5264"
       },
       {
         "semantic_id": "tools/project006/windows_wake_broker.py#class:WakeStore:599280b26954c786",
@@ -273095,8 +274101,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f1119114b71c2e0a0f0471ed9d23299d",
-    "payload_hash": "4a078fc6619f941c074777025a404631"
+    "record_fingerprint": "78f2673fc4d84ccbd0df1b24bc8e774b",
+    "payload_hash": "fffbb67a3e2bcf5047a97cdd3d94e4a5"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273109,16 +274115,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1685,
-      "bytes": 26696700,
-      "tokens_est": 6664531,
+      "files": 1696,
+      "bytes": 26727237,
+      "tokens_est": 6672171,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 280,
+        "python_module": 1033,
+        "schema_or_lexicon": 285,
         "support_file": 53
       }
     },
@@ -273805,16 +274811,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1685,
-    "total_bytes": 26696700,
-    "text_tokens_est": 6664531,
+    "file_count": 1696,
+    "total_bytes": 26727237,
+    "text_tokens_est": 6672171,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 280,
+      "python_module": 1033,
+      "schema_or_lexicon": 285,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -275085,6 +276091,14 @@
         "signature_hash": "0de24ced4c8c2bef"
       },
       {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 66,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:run:816f91f741cdc870",
+        "signature_hash": "0de24ced4c8c2bef"
+      },
+      {
         "file": "tools/project006/mc_o14_lattice8.py",
         "kind": "function",
         "line": 10,
@@ -275098,6 +276112,22 @@
         "line": 9,
         "end_line": 16,
         "semantic_id": "tools/project006/mc_o14_sweep13d.py#function:run:22a0a8cc1d55b803",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/project006/o17_lattice8.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "tools/project006/o17_lattice8.py#function:run:604c34ca9f9c03dc",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/project006/o17_sweep13d.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 19,
+        "semantic_id": "tools/project006/o17_sweep13d.py#function:run:d8e97d39d4ed3062",
         "signature_hash": "26799ab4ad82cbfb"
       }
     ],
@@ -275126,6 +276156,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "class",
+        "line": 163,
+        "end_line": 167,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:Disposition:a92180360a463b54",
         "signature_hash": "9386d60514f2578d"
       }
     ],
@@ -291641,6 +292679,14 @@
         "end_line": 24,
         "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:digest:3527e7ff872ba5d6",
         "signature_hash": "cf8a82ff0ebb16a7"
+      },
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:digest:17c04b5ca2cad798",
+        "signature_hash": "1191bf18035c2e8c"
       }
     ],
     "_runtime_binding_digest": [
@@ -306013,6 +307059,14 @@
         "end_line": 36,
         "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_id:7d7af6a606b0f9f1",
         "signature_hash": "2d513146cbdc39e3"
+      },
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:_id:877170d5464829fe",
+        "signature_hash": "d64cfb03b3a12a79"
       }
     ],
     "_privacy": [
@@ -371037,6 +372091,14 @@
         "end_line": 30,
         "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_root:852574b4b062362d",
         "signature_hash": "eee57e80860c0825"
+      },
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:_root:2767fe5ace6eb794",
+        "signature_hash": "9af4f640541857b1"
       }
     ],
     "_iter_nul_records": [
@@ -373345,6 +374407,14 @@
         "end_line": 20,
         "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:canon:6d48e304e5f09f81",
         "signature_hash": "012e45cec7f5be52"
+      },
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:canon:07e88cd27c4bd735",
+        "signature_hash": "bea1420d5b9f5038"
       }
     ],
     "load_fixture": [
@@ -384910,6 +385980,14 @@
         "line": 23,
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 18,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:fixture:e11220ceea6bac0d",
         "signature_hash": "c73d3075455b50af"
       }
     ],
@@ -428839,6 +429917,14 @@
         "signature_hash": "1a51332cd1dc4f10"
       },
       {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 31,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#class:T:2c9669701b281082",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
         "kind": "class",
         "line": 20,
@@ -430023,11 +431109,27 @@
         "signature_hash": "7ce5d2fd5d4c523a"
       },
       {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:r:79f33ab10596e11d",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
         "file": "tools/project006/campaign_tecc_effect_admission_bridge.py",
         "kind": "function",
         "line": 10,
         "end_line": 10,
         "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#function:r:bb6955a17d0a3bff",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:r:7e46b8b13331afec",
         "signature_hash": "e5a2d5a687fa3045"
       }
     ],
@@ -430329,6 +431431,126 @@
         "end_line": 136,
         "semantic_id": "tests/test_tecc_effect_admission_bridge.py#method:T.test_real_pr899_v3_owner:cf507999099b0462",
         "signature_hash": "8874952747f7a66d"
+      }
+    ],
+    "T.test_physical_evidence_is_fail_closed": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_physical_evidence_is_fail_closed:2d47d3525a7af8f3",
+        "signature_hash": "2daa72ce06a665b0"
+      }
+    ],
+    "T.test_physical_declared_text_roots_do_not_match_reported_digest": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_physical_declared_text_roots_do_not_match_reported_digest:398e1e2b0eb258fc",
+        "signature_hash": "ce3d46349beba352"
+      }
+    ],
+    "T.test_physical_authority_remains_false": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 22,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_physical_authority_remains_false:2e3232e9c4531dff",
+        "signature_hash": "6c512aa1eab7941f"
+      }
+    ],
+    "T.test_synthetic_exact_preimage_binds_d0": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_synthetic_exact_preimage_binds_d0:fb7a42ae85c992c6",
+        "signature_hash": "84b89b40ca797f4b"
+      }
+    ],
+    "T.test_missing_preimage_contract_holds": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 24,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_missing_preimage_contract_holds:a105a2a486a714d1",
+        "signature_hash": "77a86c2e59e94045"
+      }
+    ],
+    "T.test_digest_claim_alone_does_not_bind": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_digest_claim_alone_does_not_bind:f96e57cab8ab36d4",
+        "signature_hash": "323a1b6166b93335"
+      }
+    ],
+    "T.test_same_bytes_new_revision_changes_source_identity": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_same_bytes_new_revision_changes_source_identity:0590bb6bf6bf0380",
+        "signature_hash": "3d03b89c1c663c5b"
+      }
+    ],
+    "T.test_same_bytes_new_file_changes_source_identity": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_same_bytes_new_file_changes_source_identity:830ada0835f73ed3",
+        "signature_hash": "3711ee34772ea1cf"
+      }
+    ],
+    "T.test_forged_proof_shape_holds": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_forged_proof_shape_holds:008faa9dc7186ea2",
+        "signature_hash": "da4dd7bc18fcf1f9"
+      }
+    ],
+    "T.test_forged_training_shape_holds": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 29,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_forged_training_shape_holds:4971895cb4afeb71",
+        "signature_hash": "36b797c20ca81ef1"
+      }
+    ],
+    "T.test_stale_workcell_rebinds": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 30,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_stale_workcell_rebinds:88d143217afe1601",
+        "signature_hash": "6bceafec0d61af97"
+      }
+    ],
+    "T.test_k27_context_cannot_compensate": [
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 31,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#method:T.test_k27_context_cannot_compensate:18c32240e729dd5e",
+        "signature_hash": "d03257d8bac0301d"
       }
     ],
     "AdmissionError": [
@@ -431665,6 +432887,14 @@
         "end_line": 26,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
         "signature_hash": "bc7d7970d1d8f6c0"
+      },
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:oracle:26868b50c367f71e",
+        "signature_hash": "4df0604ad91753f1"
       }
     ],
     "ProbeStep": [
@@ -432759,6 +433989,24 @@
         "end_line": 52,
         "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#function:mutate:cd751cbd080af9fc",
         "signature_hash": "6f15dd8196fb6381"
+      },
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 46,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:mutate:be98d8c6c09fdd0d",
+        "signature_hash": "6f15dd8196fb6381"
+      }
+    ],
+    "base": [
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 19,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:base:797ccecf323f25be",
+        "signature_hash": "fc255db21ad827bd"
       }
     ],
     "ProviderActionPermit": [
@@ -433029,6 +434277,14 @@
         "end_line": 5,
         "semantic_id": "tools/project006/mc_o14_hs1000.py#function:h:1a91973143c1aa98",
         "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/project006/o17_hs1000.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/project006/o17_hs1000.py#function:h:1ef5fbb01f68bb3d",
+        "signature_hash": "b307e9c3443f5155"
       }
     ],
     "build": [
@@ -433038,6 +434294,14 @@
         "line": 6,
         "end_line": 16,
         "semantic_id": "tools/project006/mc_o14_hs1000.py#function:build:6e87a1a9fd4993cf",
+        "signature_hash": "15e439a6c9e8da54"
+      },
+      {
+        "file": "tools/project006/o17_hs1000.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 16,
+        "semantic_id": "tools/project006/o17_hs1000.py#function:build:4b7ac1f3007e5345",
         "signature_hash": "15e439a6c9e8da54"
       }
     ],
@@ -433049,6 +434313,16 @@
         "end_line": 9,
         "semantic_id": "tools/project006/mc_o14_lattice8.py#function:hard_decision:4a2a1663ed5987af",
         "signature_hash": "469f4ee8f1880dc9"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/project006/o17_lattice8.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/project006/o17_lattice8.py#function:decide:a1ed58c3c54d4b9a",
+        "signature_hash": "a4332d849df2fd41"
       }
     ],
     "_first_text": [
@@ -433929,6 +435203,166 @@
         "end_line": 18,
         "semantic_id": "tools/project006/test_windows_wake_broker.py#method:WakeBrokerTests.test_hash_fallback_stable:3bb0985930287dd6",
         "signature_hash": "487e6a3eff28e114"
+      }
+    ],
+    "root_bytes": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:root_bytes:9fc00a1b3f90a6d9",
+        "signature_hash": "3c38ff144a63ee0c"
+      }
+    ],
+    "DriveSourceIncarnation": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 63,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:DriveSourceIncarnation:87ea1746e8ce912d",
+        "signature_hash": "12463424c0120794"
+      }
+    ],
+    "DriveSourceIncarnation.__post_init__": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DriveSourceIncarnation.__post_init__:d5cae9cfbd331f85",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "DriveSourceIncarnation.export_root": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DriveSourceIncarnation.export_root:f2e8690afa37d7cb",
+        "signature_hash": "1d221d52545e1d61"
+      }
+    ],
+    "DriveSourceIncarnation.incarnation_root": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 63,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DriveSourceIncarnation.incarnation_root:9f75dbeea082a8e2",
+        "signature_hash": "04a65750ca6a162b"
+      }
+    ],
+    "TransportCallback": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 88,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:TransportCallback:16e44d230b78e8f5",
+        "signature_hash": "1adee417aba4b1fe"
+      }
+    ],
+    "TransportCallback.__post_init__": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 88,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:TransportCallback.__post_init__:9a234b689f7d3608",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "parse_callback": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 112,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:parse_callback:5e2b661501b70829",
+        "signature_hash": "a38c37738cf3e277"
+      }
+    ],
+    "DigestPreimageContract": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "class",
+        "line": 116,
+        "end_line": 126,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:DigestPreimageContract:0b6b8d3b23d6ffaa",
+        "signature_hash": "b5e76466e556ed49"
+      }
+    ],
+    "DigestPreimageContract.__post_init__": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 126,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:DigestPreimageContract.__post_init__:3082144b4dbb3a09",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "recompute_transport_digest": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 136,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:recompute_transport_digest:74831c44a8b80a1c",
+        "signature_hash": "74ddafd7ec7920e1"
+      }
+    ],
+    "AdmissionContext": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "class",
+        "line": 140,
+        "end_line": 160,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:AdmissionContext:76b3d16433392f8d",
+        "signature_hash": "f1a7be373d59cd5e"
+      }
+    ],
+    "AdmissionContext.__post_init__": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 160,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:AdmissionContext.__post_init__:7fac3b9ba47d58ca",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SourceAdmissionDecision": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "class",
+        "line": 171,
+        "end_line": 188,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#class:SourceAdmissionDecision:b061bc159f04c825",
+        "signature_hash": "460899ae0615fcf9"
+      }
+    ],
+    "SourceAdmissionDecision.__post_init__": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 188,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#method:SourceAdmissionDecision.__post_init__:f3b3ccf7454eabcd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "validate_source_admission": [
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 191,
+        "end_line": 241,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:validate_source_admission:bcd0f3c8688f7924",
+        "signature_hash": "bc2ea724074afc8e"
       }
     ],
     "WakeStore": [
