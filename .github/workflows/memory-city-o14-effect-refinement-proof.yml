@@ -12,13 +12,16 @@ on:
       - '.github/workflows/memory-city-o14-effect-refinement-proof.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   proof:
     runs-on: ubuntu-latest
     env:
       EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: exact head checkout identity
@@ -48,6 +51,7 @@ jobs:
           campaign=json.load(open('o14-campaign-1.json'))
           lattice=json.load(open('o14-lattice-1.json'))
           sweep=json.load(open('o14-13d-1.json'))
+          hs=json.load(open('o14-hs1000-1.json'))
           assert campaign['counts']['false_tecc']==0
           assert campaign['counts']['false_hold']==0
           assert campaign['counts']['refined_collision_pairs']==0
@@ -57,6 +61,8 @@ jobs:
           assert lattice['counts']['effect_ready']==0
           assert sweep['hard_invalid_repairs']==0
           assert sweep['effect_ready']==0
+          assert hs['cells']==1000
+          assert hs['groups']==9
           PY
       - name: source syntax and clean tracked checkout
         run: |
