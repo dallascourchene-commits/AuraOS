@@ -31,6 +31,13 @@ class TransitionTest(unittest.TestCase):
     def verify(self,ack=None,result=None,**kw):
         if ack is None or result is None: ack,result=self.pair()
         args=dict(core=self.core,env=self.env,permit=self.permit,admission_resolver=self.resolver,trace_authority=self.trace,ack=ack,result=result,independently_recomputed_source_digest=self.env.source_envelope_digest,now=13,observed_source_root=self.semantic.source_root,observed_target_topology_root=self.semantic.target_topology_root); args.update(kw); return verify_transition(**args)
+    def verify_rebound_core(self,core):
+        intent=replace(self.intent,to_adapter_root=core.identity_root)
+        permit=self.resolver.issue_transition_permit(self.receipt,transition_root=intent.intent_root,transition_subject_root=core.identity_root,deployment_generation='dep-1',now=12,ttl=20,observed_source_root=self.semantic.source_root,observed_adapter_root=self.semantic.adapter_root,observed_runtime_root=self.semantic.runtime_root,observed_target_topology_root=self.semantic.target_topology_root)
+        env=TransitionEnvelope(intent,permit.permit_root)
+        common=dict(command_id='cmd-rebound',attempt_id='att-rebound',idempotency_key='idem-rebound',source_envelope_digest=env.source_envelope_digest,transition_root=env.transition_root,admission_permit_root=env.admission_permit_root,adapter_core_root=core.identity_root,runtime_root=env.intent.inference_runtime_root)
+        ack=self.trace.issue_ack(AckPayload(**common,ordinal=1)); result=self.trace.issue_result(ResultPayload(**common,ordinal=2,provider_success=True))
+        return verify_transition(core=core,env=env,permit=permit,admission_resolver=self.resolver,trace_authority=self.trace,ack=ack,result=result,independently_recomputed_source_digest=env.source_envelope_digest,now=13,observed_source_root=self.semantic.source_root,observed_target_topology_root=self.semantic.target_topology_root)
     def test_valid(self): self.assertEqual(self.verify(),'ADMIT_D0_PROOF_CARRYING_TRANSITION')
     def test_empty_ids_rejected(self):
         with self.assertRaises(ValueError): AckPayload('', 'a','i',R('s'),R('t'),R('p'),R('a'),R('r'),1)
@@ -63,6 +70,10 @@ class TransitionTest(unittest.TestCase):
         a,r=self.pair(); bad=self.trace.issue_result(replace(r.payload,command_id='cmd-2')); self.assertEqual(self.verify(ack=a,result=bad),'HOLD_COMMAND_BINDING_MISMATCH')
     def test_temporal(self):
         a,r=self.pair(); bad=self.trace.issue_result(replace(r.payload,ordinal=0)); self.assertEqual(self.verify(ack=a,result=bad),'HOLD_TEMPORAL_ORDER')
+    def test_core_source_bound_to_authenticated_observation(self):
+        self.assertEqual(self.verify_rebound_core(replace(self.core,source_root=R('detached-source'))),'HOLD_SOURCE_BINDING')
+    def test_core_target_topology_bound_to_authenticated_observation(self):
+        self.assertEqual(self.verify_rebound_core(replace(self.core,target_topology_root=R('detached-topology'))),'HOLD_TARGET_TOPOLOGY_BINDING')
     def test_qwen38(self): self.assertEqual(self.core.model_family,'qwen3_8_dense')
     def test_omega(self): self.assertEqual(1,sum(omega8(s)=='KEEPER' for s in itertools.product(range(3),repeat=8)))
     def test_13d(self): self.assertEqual(1,sum(factored13d(s)=='KEEPER' for s in itertools.product(range(3),repeat=13)))
