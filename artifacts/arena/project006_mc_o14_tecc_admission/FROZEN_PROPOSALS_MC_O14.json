@@ -1,0 +1,13 @@
+{
+  "schema": "AURA-MC-O14-FROZEN-PROPOSALS-v1",
+  "objective": "OWNER_PRODUCED_TECC_ADMISSION_INTO_DURABLE_EFFECT_ATTEMPT",
+  "parent_cut": "PR899@489cc1cfde1c28974a12e71fccec309dad0a4925",
+  "alternatives": [
+    {"id":"A","design":"patch current effect-attempt owner to store TECC proof columns atomically","status":"DEFER_OWNER_INTEGRATION","reason":"strongest physical atomicity but mutates another active owner"},
+    {"id":"B","design":"non-owning proof-bound sidecar membrane over current effect-attempt journal","status":"SELECTED","reason":"smallest owner-safe falsifiable seam; legacy row alone remains fail-closed through membrane"},
+    {"id":"C","design":"make TECC verifier own the effect-attempt row","status":"REJECTED","reason":"collapses verification and effect-journal ownership"},
+    {"id":"D","design":"replace Project006 effect/return owners with one lifecycle ledger","status":"REJECTED","reason":"duplicates and destabilizes current PR899/PR901 ownership split"}
+  ],
+  "authority": "D0_NONPROMOTING",
+  "gate10": false
+}
