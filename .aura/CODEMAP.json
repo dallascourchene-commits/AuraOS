@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788794293,
+  "generated_at_unix": 1788795067,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1700,
+    "repo_file_count": 1706,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -161,6 +161,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o22-effect-time-loaded-adapter-transition-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -298,6 +299,7 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/o22_effect_time_loaded_adapter_transition/FROZEN_PROPOSALS_O22.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -1662,6 +1664,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_o22_effect_time_loaded_adapter_transition.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1670,6 +1673,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/effect_time_loaded_process_currentness.py",
       "tools/awj032/README.md",
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
@@ -1686,6 +1690,8 @@
       "tools/awj032/training_o1_reference/__init__.py",
       "tools/awj032/training_o1_reference/test_training_admission.py",
       "tools/awj032/training_o1_reference/training_admission.py",
+      "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+      "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
       "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
       "tools/awj032/training_o2_transition_reference/transition_envelope.py",
       "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
@@ -1816,16 +1822,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1700,
-      "bytes": 26641495,
-      "tokens_est": 6650777,
+      "files": 1706,
+      "bytes": 26678439,
+      "tokens_est": 6660016,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 287,
+        "python_module": 1031,
+        "schema_or_lexicon": 289,
         "support_file": 49
       }
     },
@@ -3546,6 +3552,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 177,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:main:7ed06fb74e8b4dcc",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3781,6 +3795,22 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Disposition:9ddb38ddfe3aaf4b",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#class:Disposition:9765da5ad77e8728",
         "signature_hash": "9386d60514f2578d"
       }
     ],
@@ -4446,6 +4476,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:_digest:bc7886e6aab76e9c",
+        "signature_hash": "d42d4b0e624983a0"
       }
     ],
     "_token_proxy": [
@@ -20264,6 +20302,14 @@
         "end_line": 14,
         "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:digest:5e1afc8ed4c10faa",
         "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:digest:7dca12121e1213e4",
+        "signature_hash": "6845cd2b39857deb"
       }
     ],
     "_runtime_binding_digest": [
@@ -157898,6 +157944,296 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "R": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#function:R:7cdce8d3cea5f249",
+        "signature_hash": "cbf5bf69a1600679"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 224,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#class:O22EffectTimeLoadedAdapterTransitionTest:02eae5aa9367ce4c",
+        "signature_hash": "e6019b19d4e3cfbb"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.setUp": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 75,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.setUp:30493a82d50c5651",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.decide": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 95,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.decide:fb3078d508759150",
+        "signature_hash": "68d802aac248eab4"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.process_with_units": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 104,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.process_with_units:dba1d654c5c84a60",
+        "signature_hash": "2be848d11638631c"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_valid": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 109,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_valid:5f1fdfc609127cc9",
+        "signature_hash": "5ed9c72955b811a9"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_adapter_core_holds_even_when_process_is_current": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 113,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_adapter_core_holds_even_when_process_is_current:b6bd03b33ca6ca6d",
+        "signature_hash": "33b79d8d8355c1db"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_source_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 117,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_source_holds:018034682f16f9f1",
+        "signature_hash": "3aa42ccdaa07dbfd"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_topology_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 121,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_topology_holds:6c58356318b574c4",
+        "signature_hash": "7c5e83926faa78da"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_runtime_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_runtime_holds:96fd7dfb1292f727",
+        "signature_hash": "87d8a9a0f2623e79"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_missing_required_loaded_unit_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 129,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_missing_required_loaded_unit_holds:ee633d6ef8b3b19e",
+        "signature_hash": "bd2214b843b6fb5b"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_duplicate_loaded_unit_name_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 135,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_duplicate_loaded_unit_name_holds:7628afc61125ce41",
+        "signature_hash": "9817c55ef97b05ba"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_dispatch_holds_even_when_process_parent_passes": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 140,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_dispatch_holds_even_when_process_parent_passes:697b25f269b67d9e",
+        "signature_hash": "ba27f2f6f9544b16"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_different_installed_runtime_holds_even_if_process_parent_matches_it": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 147,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_different_installed_runtime_holds_even_if_process_parent_matches_it:e1572f23f394f104",
+        "signature_hash": "925d558fb105c31c"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_stale_installed_process_parent_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 151,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_stale_installed_process_parent_holds:6166b0d5c4487c90",
+        "signature_hash": "638d311ff76da68b"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_expired_process_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 155,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_expired_process_holds:df9a75e394bba87b",
+        "signature_hash": "c082a2e465f04797"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_process_reissue_rotates_activation_witness": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 164,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_process_reissue_rotates_activation_witness:1a2dc55664ebd213",
+        "signature_hash": "76a3f26137b3f7da"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_load_reissue_rotates_activation_witness": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 172,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_load_reissue_rotates_activation_witness:bf6d96c3f79682b2",
+        "signature_hash": "b18250b781393916"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_worker_reissue_rotates_activation_witness": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 180,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_worker_reissue_rotates_activation_witness:24c163f51f488959",
+        "signature_hash": "5403ffe18ffbeb91"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_unobservable_mutation_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 184,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_unobservable_mutation_holds:5c398ff81d782942",
+        "signature_hash": "b98e6d592a2be13f"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_mutation_generation_move_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 186,
+        "end_line": 188,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_mutation_generation_move_holds:2f522b974dd7f286",
+        "signature_hash": "3a0c3a92275dc887"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_unresolved_lazy_unit_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 192,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_unresolved_lazy_unit_holds:ee604ed1e6668748",
+        "signature_hash": "2e44ee4a21621392"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_incomplete_population_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 196,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_incomplete_population_holds:ecb451ada7e8c4a1",
+        "signature_hash": "8bea72e9dc01ecb0"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_transition_bad_result_signature_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 200,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_bad_result_signature_holds:55b3958f16de19ab",
+        "signature_hash": "86a9b837965ed4e3"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_transition_source_recompute_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 203,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_source_recompute_holds:47ac6befa3473862",
+        "signature_hash": "b1bb94148c590d76"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_source_move_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 206,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_source_move_holds:17ae3a3195045d59",
+        "signature_hash": "a4e59928570b412c"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_topology_move_holds": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 209,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_topology_move_holds:f53537143435438d",
+        "signature_hash": "f3bed86fb72e2d0f"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_extra_nonrequired_loaded_unit_is_identity_bearing_but_not_rejected": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 216,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_extra_nonrequired_loaded_unit_is_identity_bearing_but_not_rejected:3bb33fe7955b565f",
+        "signature_hash": "a37cf9159084bf07"
+      }
+    ],
+    "O22EffectTimeLoadedAdapterTransitionTest.test_authority_ceiling": [
+      {
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 224,
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_authority_ceiling:ce5ecb34d4d66d0f",
+        "signature_hash": "1714946bf0778d30"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -158156,6 +158492,106 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "MutationModel": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:MutationModel:3a11c089a61893e5",
+        "signature_hash": "b997e4d4b7d1769f"
+      }
+    ],
+    "InstalledRuntimeAttestation": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:InstalledRuntimeAttestation:499f25f59f70a3ce",
+        "signature_hash": "a061e0a3a4f42397"
+      }
+    ],
+    "LoadedProcessWitness": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 71,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:LoadedProcessWitness:6aec458517d64fe2",
+        "signature_hash": "1d989e603d868667"
+      }
+    ],
+    "LoadedProcessWitness.loaded_units_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.loaded_units_root:0fccd18bbd944c79",
+        "signature_hash": "e0c5f04e07a29504"
+      }
+    ],
+    "LoadedProcessWitness.binding_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 71,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.binding_root:5d5c0b112bcd0bfd",
+        "signature_hash": "8f6c876409ac77f8"
+      }
+    ],
+    "AtUseObservation": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 88,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:AtUseObservation:7b892d7ba080092b",
+        "signature_hash": "4214cfc71b14d3d7"
+      }
+    ],
+    "Decision": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Decision:a64674c43d355396",
+        "signature_hash": "fc4b98c490ac6e3c"
+      }
+    ],
+    "installed_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:installed_root:7a4f49f9179c3340",
+        "signature_hash": "49867ce218d6ec11"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 142,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:decide:c90040d898e3dfac",
+        "signature_hash": "1f8dd72eb8d750f7"
+      }
+    ],
+    "decide.hold": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 108,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:decide.hold:68a5e162292797cf",
+        "signature_hash": "2ed02c47fa2448ff"
       }
     ],
     "InspectedTreeRemediationReceipt": [
@@ -160328,6 +160764,14 @@
         "signature_hash": "bcd40329825ec898"
       },
       {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:omega8:9cd07ee964bf92b4",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
         "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
         "kind": "function",
         "line": 215,
@@ -160350,6 +160794,106 @@
         "end_line": 139,
         "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#function:omega8:2c371f14cf4e0351",
         "signature_hash": "b9a7dd18e91d0be6"
+      }
+    ],
+    "ActivationDecision": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#class:ActivationDecision:5c2fad140623b680",
+        "signature_hash": "b5a7deda2209ae87"
+      }
+    ],
+    "activation_dispatch_root": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:activation_dispatch_root:e3475b9867df439e",
+        "signature_hash": "faf391853f34caa0"
+      }
+    ],
+    "required_loaded_units": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:required_loaded_units:f670dedede30defe",
+        "signature_hash": "06ac17083b98bc54"
+      }
+    ],
+    "bind_effect_time_activation": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:bind_effect_time_activation:6e19460d5a56f343",
+        "signature_hash": "21190dbb4dac10ad"
+      }
+    ],
+    "bind_effect_time_activation.hold": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#method:bind_effect_time_activation.hold:703e596db9b9ef46",
+        "signature_hash": "5eda6e3c28a174f0"
+      }
+    ],
+    "file_sha": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:file_sha:5f42a3994074c846",
+        "signature_hash": "0153e275a61b8759"
+      }
+    ],
+    "campaign": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:campaign:01dcaa29bc5d355c",
+        "signature_hash": "101bde732963efb2"
+      }
+    ],
+    "mutation_falsifier": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 91,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:mutation_falsifier:8a2f2d67b77df9f0",
+        "signature_hash": "6b63761ff92e7302"
+      }
+    ],
+    "sweep13d": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:sweep13d:2510ca3f9db4a09f",
+        "signature_hash": "fbf5850ecd742466"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:hs1000:ac55bc293b23e2cb",
+        "signature_hash": "cb33d0ed1005d09a"
       }
     ],
     "o1_fixture": [
@@ -174054,6 +174598,53 @@
       ]
     },
     {
+      "path": ".github/workflows/o22-effect-time-loaded-adapter-transition-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3195,
+      "lines": 65,
+      "tokens_est": 799,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e002956989a29bc2",
+      "vector": [
+        -0.131734,
+        -0.14887,
+        -0.08461,
+        -0.215273,
+        0.133876,
+        -0.187427,
+        0.082468,
+        -0.026775,
+        -0.011781,
+        0.189569,
+        0.240977,
+        0.202421,
+        0.121024,
+        0.110314,
+        0.082468,
+        0.249545,
+        0.181001,
+        -0.174575,
+        -0.234551,
+        -0.236693,
+        -0.266682,
+        -0.236693,
+        -0.228125,
+        -0.266682,
+        -0.024633,
+        0.039627,
+        0.065332,
+        0.091036,
+        0.255971,
+        -0.264539,
+        -0.187427,
+        0.0739
+      ]
+    },
+    {
       "path": ".github/workflows/p1-1-authority-contracts.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -182055,6 +182646,53 @@
         -0.265364,
         0.047575,
         0.165985
+      ]
+    },
+    {
+      "path": "artifacts/arena/o22_effect_time_loaded_adapter_transition/FROZEN_PROPOSALS_O22.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1649,
+      "lines": 49,
+      "tokens_est": 413,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9286e33b36823772",
+      "vector": [
+        0.03686,
+        0.284182,
+        -0.034482,
+        -0.003567,
+        -0.089179,
+        -0.191437,
+        0.086801,
+        0.155765,
+        0.296073,
+        0.260402,
+        0.077288,
+        0.117716,
+        0.300829,
+        0.110581,
+        -0.200949,
+        -0.005945,
+        0.260402,
+        0.296073,
+        0.082044,
+        -0.1629,
+        0.155765,
+        0.203327,
+        0.043995,
+        0.193815,
+        0.034482,
+        -0.017836,
+        0.153387,
+        -0.241377,
+        0.186681,
+        -0.191437,
+        -0.210462,
+        -0.170034
       ]
     },
     {
@@ -269030,6 +269668,53 @@
       ]
     },
     {
+      "path": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10477,
+      "lines": 229,
+      "tokens_est": 2620,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "68876e34846116e5",
+      "vector": [
+        0.156711,
+        -0.299631,
+        0.063938,
+        -0.141667,
+        0.061431,
+        0.086504,
+        0.076475,
+        0.156711,
+        0.17677,
+        -0.206859,
+        0.03385,
+        0.264528,
+        0.221903,
+        -0.121608,
+        0.134145,
+        0.066445,
+        -0.169248,
+        0.144174,
+        -0.104056,
+        0.231932,
+        0.284587,
+        -0.011283,
+        -0.106563,
+        -0.229425,
+        -0.302139,
+        0.058923,
+        0.279572,
+        -0.166741,
+        -0.209366,
+        0.03385,
+        -0.257006,
+        -0.131637
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -269403,6 +270088,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/arena/effect_time_loaded_process_currentness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6821,
+      "lines": 143,
+      "tokens_est": 1706,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f0d236fb89710737",
+      "vector": [
+        0.10315,
+        -0.141689,
+        0.257308,
+        0.180229,
+        -0.021537,
+        0.153025,
+        -0.259575,
+        0.116752,
+        -0.245973,
+        -0.207433,
+        -0.094082,
+        -0.055542,
+        0.218769,
+        0.230104,
+        0.214234,
+        0.189297,
+        0.046474,
+        0.243706,
+        -0.057809,
+        -0.085014,
+        -0.223303,
+        -0.261842,
+        -0.128087,
+        0.091815,
+        -0.284512,
+        -0.109951,
+        0.200632,
+        0.023804,
+        -0.282245,
+        -0.073679,
+        0.150758,
+        -0.10315
       ]
     },
     {
@@ -270177,6 +270909,100 @@
         0.05106,
         -0.248783,
         0.205327
+      ]
+    },
+    {
+      "path": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6476,
+      "lines": 176,
+      "tokens_est": 1619,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2d953f0fc3bc6c81",
+      "vector": [
+        -0.033681,
+        -0.103539,
+        0.016217,
+        -0.018712,
+        0.046156,
+        -0.056135,
+        0.263213,
+        -0.315606,
+        -0.128488,
+        0.038671,
+        0.051146,
+        0.155932,
+        -0.001247,
+        -0.148447,
+        -0.145952,
+        -0.088569,
+        0.303131,
+        0.071105,
+        0.098549,
+        -0.273192,
+        -0.008732,
+        -0.116013,
+        -0.293151,
+        0.20583,
+        -0.278182,
+        0.165911,
+        0.165911,
+        0.273192,
+        0.230779,
+        0.143457,
+        0.298141,
+        0.155932
+      ]
+    },
+    {
+      "path": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8326,
+      "lines": 182,
+      "tokens_est": 2082,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "293c4734e1072431",
+      "vector": [
+        -0.006592,
+        -0.188542,
+        0.236007,
+        -0.025051,
+        0.019777,
+        -0.006592,
+        -0.32039,
+        -0.196453,
+        0.270288,
+        0.109434,
+        0.162173,
+        0.175357,
+        -0.288746,
+        0.22546,
+        -0.109434,
+        0.288746,
+        -0.220186,
+        0.193816,
+        -0.286109,
+        0.003955,
+        -0.030325,
+        0.312479,
+        -0.04351,
+        0.040873,
+        -0.030325,
+        -0.009229,
+        0.040873,
+        -0.056694,
+        -0.022414,
+        -0.061968,
+        -0.267651,
+        0.207001
       ]
     },
     {
@@ -294460,16 +295286,16 @@
     }
   },
   "summary": {
-    "file_count": 1700,
-    "total_bytes": 26641495,
-    "text_tokens_est": 6650777,
+    "file_count": 1706,
+    "total_bytes": 26678439,
+    "text_tokens_est": 6660016,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 287,
+      "python_module": 1031,
+      "schema_or_lexicon": 289,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294640,6 +295466,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o22-effect-time-loaded-adapter-transition-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -294777,6 +295604,7 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/o22_effect_time_loaded_adapter_transition/FROZEN_PROPOSALS_O22.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -296141,6 +296969,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_o22_effect_time_loaded_adapter_transition.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -296149,6 +296978,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/effect_time_loaded_process_currentness.py",
       "tools/awj032/README.md",
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
@@ -296165,6 +296995,8 @@
       "tools/awj032/training_o1_reference/__init__.py",
       "tools/awj032/training_o1_reference/test_training_admission.py",
       "tools/awj032/training_o1_reference/training_admission.py",
+      "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+      "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
       "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
       "tools/awj032/training_o2_transition_reference/transition_envelope.py",
       "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
@@ -453979,6 +454811,296 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#class:O22EffectTimeLoadedAdapterTransitionTest:02eae5aa9367ce4c",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest",
+        "kind": "class",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 24,
+        "end_line": 224,
+        "signature_hash": "e6019b19d4e3cfbb",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#function:R:7cdce8d3cea5f249",
+        "name": "R",
+        "kind": "function",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "cbf5bf69a1600679",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.decide:fb3078d508759150",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.decide",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 77,
+        "end_line": 95,
+        "signature_hash": "68d802aac248eab4",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.process_with_units:dba1d654c5c84a60",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.process_with_units",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 97,
+        "end_line": 104,
+        "signature_hash": "2be848d11638631c",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.setUp:30493a82d50c5651",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.setUp",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 25,
+        "end_line": 75,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_authority_ceiling:ce5ecb34d4d66d0f",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_authority_ceiling",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 218,
+        "end_line": 224,
+        "signature_hash": "1714946bf0778d30",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_different_installed_runtime_holds_even_if_process_parent_matches_it:e1572f23f394f104",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_different_installed_runtime_holds_even_if_process_parent_matches_it",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 142,
+        "end_line": 147,
+        "signature_hash": "925d558fb105c31c",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_duplicate_loaded_unit_name_holds:7628afc61125ce41",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_duplicate_loaded_unit_name_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 131,
+        "end_line": 135,
+        "signature_hash": "9817c55ef97b05ba",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_expired_process_holds:df9a75e394bba87b",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_expired_process_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 153,
+        "end_line": 155,
+        "signature_hash": "c082a2e465f04797",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_extra_nonrequired_loaded_unit_is_identity_bearing_but_not_rejected:3bb33fe7955b565f",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_extra_nonrequired_loaded_unit_is_identity_bearing_but_not_rejected",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 211,
+        "end_line": 216,
+        "signature_hash": "a37cf9159084bf07",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_incomplete_population_holds:ecb451ada7e8c4a1",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_incomplete_population_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 194,
+        "end_line": 196,
+        "signature_hash": "8bea72e9dc01ecb0",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_load_reissue_rotates_activation_witness:bf6d96c3f79682b2",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_load_reissue_rotates_activation_witness",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 166,
+        "end_line": 172,
+        "signature_hash": "b18250b781393916",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_missing_required_loaded_unit_holds:ee633d6ef8b3b19e",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_missing_required_loaded_unit_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 127,
+        "end_line": 129,
+        "signature_hash": "bd2214b843b6fb5b",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_mutation_generation_move_holds:2f522b974dd7f286",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_mutation_generation_move_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 186,
+        "end_line": 188,
+        "signature_hash": "3a0c3a92275dc887",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_process_reissue_rotates_activation_witness:1a2dc55664ebd213",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_process_reissue_rotates_activation_witness",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 157,
+        "end_line": 164,
+        "signature_hash": "76a3f26137b3f7da",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_stale_installed_process_parent_holds:6166b0d5c4487c90",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_stale_installed_process_parent_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 149,
+        "end_line": 151,
+        "signature_hash": "638d311ff76da68b",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_bad_result_signature_holds:55b3958f16de19ab",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_transition_bad_result_signature_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 198,
+        "end_line": 200,
+        "signature_hash": "86a9b837965ed4e3",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_source_move_holds:17ae3a3195045d59",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_source_move_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 205,
+        "end_line": 206,
+        "signature_hash": "a4e59928570b412c",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_topology_move_holds:f53537143435438d",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_transition_observed_topology_move_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 208,
+        "end_line": 209,
+        "signature_hash": "f3bed86fb72e2d0f",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_transition_source_recompute_holds:47ac6befa3473862",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_transition_source_recompute_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 202,
+        "end_line": 203,
+        "signature_hash": "b1bb94148c590d76",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_unobservable_mutation_holds:5c398ff81d782942",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_unobservable_mutation_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 182,
+        "end_line": 184,
+        "signature_hash": "b98e6d592a2be13f",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_unresolved_lazy_unit_holds:ee604ed1e6668748",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_unresolved_lazy_unit_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 190,
+        "end_line": 192,
+        "signature_hash": "2e44ee4a21621392",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_valid:5f1fdfc609127cc9",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_valid",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 106,
+        "end_line": 109,
+        "signature_hash": "5ed9c72955b811a9",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_worker_reissue_rotates_activation_witness:24c163f51f488959",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_worker_reissue_rotates_activation_witness",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 174,
+        "end_line": 180,
+        "signature_hash": "5403ffe18ffbeb91",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_dispatch_holds_even_when_process_parent_passes:697b25f269b67d9e",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_dispatch_holds_even_when_process_parent_passes",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 137,
+        "end_line": 140,
+        "signature_hash": "ba27f2f6f9544b16",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_adapter_core_holds_even_when_process_is_current:b6bd03b33ca6ca6d",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_adapter_core_holds_even_when_process_is_current",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 111,
+        "end_line": 113,
+        "signature_hash": "33b79d8d8355c1db",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_runtime_holds:96fd7dfb1292f727",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_runtime_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "87d8a9a0f2623e79",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_source_holds:018034682f16f9f1",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_source_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 115,
+        "end_line": 117,
+        "signature_hash": "3aa42ccdaa07dbfd",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
+        "semantic_id": "tests/test_o22_effect_time_loaded_adapter_transition.py#method:O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_topology_holds:6c58356318b574c4",
+        "name": "O22EffectTimeLoadedAdapterTransitionTest.test_wrong_loaded_topology_holds",
+        "kind": "method",
+        "file": "tests/test_o22_effect_time_loaded_adapter_transition.py",
+        "line": 119,
+        "end_line": 121,
+        "signature_hash": "7c5e83926faa78da",
+        "file_digest8": "68876e34846116e5"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -454257,6 +455379,126 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:AtUseObservation:7b892d7ba080092b",
+        "name": "AtUseObservation",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 74,
+        "end_line": 88,
+        "signature_hash": "4214cfc71b14d3d7",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Decision:a64674c43d355396",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 91,
+        "end_line": 100,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Disposition:9ddb38ddfe3aaf4b",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:InstalledRuntimeAttestation:499f25f59f70a3ce",
+        "name": "InstalledRuntimeAttestation",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "a061e0a3a4f42397",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:LoadedProcessWitness:6aec458517d64fe2",
+        "name": "LoadedProcessWitness",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 32,
+        "end_line": 71,
+        "signature_hash": "1d989e603d868667",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:MutationModel:3a11c089a61893e5",
+        "name": "MutationModel",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "b997e4d4b7d1769f",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:decide:c90040d898e3dfac",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 106,
+        "end_line": 142,
+        "signature_hash": "1f8dd72eb8d750f7",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:digest:7dca12121e1213e4",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:installed_root:7a4f49f9179c3340",
+        "name": "installed_root",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "49867ce218d6ec11",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.binding_root:5d5c0b112bcd0bfd",
+        "name": "LoadedProcessWitness.binding_root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 53,
+        "end_line": 71,
+        "signature_hash": "8f6c876409ac77f8",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.loaded_units_root:0fccd18bbd944c79",
+        "name": "LoadedProcessWitness.loaded_units_root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "e0c5f04e07a29504",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:decide.hold:68a5e162292797cf",
+        "name": "decide.hold",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 108,
+        "end_line": 108,
+        "signature_hash": "2ed02c47fa2448ff",
+        "file_digest8": "f0d236fb89710737"
       },
       {
         "semantic_id": "tools/awj032/airllm_hard_false_inspected_tree.py#class:InspectedTreeRemediationReceipt:844e8fce144c81b7",
@@ -456537,6 +457779,146 @@
         "end_line": 304,
         "signature_hash": "a80d2bab9a0c1d18",
         "file_digest8": "9285851b91baf19a"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#class:ActivationDecision:5c2fad140623b680",
+        "name": "ActivationDecision",
+        "kind": "class",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 39,
+        "end_line": 51,
+        "signature_hash": "b5a7deda2209ae87",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#class:Disposition:9765da5ad77e8728",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:_digest:bc7886e6aab76e9c",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "d42d4b0e624983a0",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:activation_dispatch_root:e3475b9867df439e",
+        "name": "activation_dispatch_root",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 54,
+        "end_line": 63,
+        "signature_hash": "faf391853f34caa0",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:bind_effect_time_activation:6e19460d5a56f343",
+        "name": "bind_effect_time_activation",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 75,
+        "end_line": 175,
+        "signature_hash": "21190dbb4dac10ad",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#function:required_loaded_units:f670dedede30defe",
+        "name": "required_loaded_units",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 66,
+        "end_line": 72,
+        "signature_hash": "06ac17083b98bc54",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py#method:bind_effect_time_activation.hold:703e596db9b9ef46",
+        "name": "bind_effect_time_activation.hold",
+        "kind": "method",
+        "file": "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+        "line": 107,
+        "end_line": 115,
+        "signature_hash": "5eda6e3c28a174f0",
+        "file_digest8": "2d953f0fc3bc6c81"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:campaign:01dcaa29bc5d355c",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 21,
+        "end_line": 65,
+        "signature_hash": "101bde732963efb2",
+        "file_digest8": "293c4734e1072431"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:file_sha:5f42a3994074c846",
+        "name": "file_sha",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "0153e275a61b8759",
+        "file_digest8": "293c4734e1072431"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:hs1000:ac55bc293b23e2cb",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 112,
+        "end_line": 137,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "293c4734e1072431"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:main:7ed06fb74e8b4dcc",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 140,
+        "end_line": 177,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "293c4734e1072431"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:mutation_falsifier:8a2f2d67b77df9f0",
+        "name": "mutation_falsifier",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 68,
+        "end_line": 91,
+        "signature_hash": "6b63761ff92e7302",
+        "file_digest8": "293c4734e1072431"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:omega8:9cd07ee964bf92b4",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 94,
+        "end_line": 100,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "293c4734e1072431"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o22_effect_time_activation/proof_o22.py#function:sweep13d:2510ca3f9db4a09f",
+        "name": "sweep13d",
+        "kind": "function",
+        "file": "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
+        "line": 103,
+        "end_line": 109,
+        "signature_hash": "fbf5850ecd742466",
+        "file_digest8": "293c4734e1072431"
       },
       {
         "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:TransitionTest:1059fd4de905c58f",
@@ -459609,7 +460991,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0b0dfca1e3af46955389923afa535582",
-    "payload_hash": "2c5920530e8d8bc150ee0a2c2d767699"
+    "record_fingerprint": "c5a6dbd8282bd4514557584a60810357",
+    "payload_hash": "2dc2d9730bffdb9289396b762ada2380"
   }
 }
