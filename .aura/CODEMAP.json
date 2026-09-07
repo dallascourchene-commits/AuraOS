@@ -1063,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1696,
+    "repo_file_count": 1697,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2715,6 +2715,7 @@
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/source_incarnation_stable_operation.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -105337,6 +105338,53 @@
       ]
     },
     {
+      "path": "tools/arena/source_incarnation_stable_operation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10031,
+      "lines": 265,
+      "tokens_est": 2508,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4e236ec20e0c1056",
+      "vector": [
+        0.104748,
+        0.177373,
+        -0.085195,
+        -0.135474,
+        -0.062849,
+        -0.182959,
+        0.168993,
+        -0.001397,
+        -0.33659,
+        0.051676,
+        0.082402,
+        -0.110334,
+        0.02095,
+        0.127094,
+        -0.317037,
+        0.241618,
+        -0.037709,
+        -0.227652,
+        0.258378,
+        -0.060055,
+        -0.009776,
+        -0.115921,
+        0.305864,
+        -0.115921,
+        0.230445,
+        -0.009776,
+        0.219272,
+        -0.107541,
+        0.344969,
+        -0.205306,
+        -0.182959,
+        0.062849
+      ]
+    },
+    {
       "path": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "role": "support_file",
       "binary": false,
@@ -107838,7 +107886,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788787628,
+  "generated_at_unix": 1788788572,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -109492,6 +109540,7 @@
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/source_incarnation_stable_operation.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -269901,6 +269950,256 @@
         "file_digest8": "b8e6e91c3558457f"
       },
       {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:AdmissionClaim:fdc12e060245e139",
+        "name": "AdmissionClaim",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 122,
+        "end_line": 141,
+        "signature_hash": "b5067cc6f6c09e86",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:AttemptDecision:c498b43f96b94272",
+        "name": "AttemptDecision",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 179,
+        "end_line": 194,
+        "signature_hash": "5c32d751b3864b92",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:Disposition:05630070c8a182f8",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 171,
+        "end_line": 175,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:SourceIncarnationLike:cb387d456a3931f7",
+        "name": "SourceIncarnationLike",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 38,
+        "end_line": 44,
+        "signature_hash": "d170e384092c7173",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:SourceIncarnationProjection:b6df87541a8e31ab",
+        "name": "SourceIncarnationProjection",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 48,
+        "end_line": 59,
+        "signature_hash": "a282125e9aed62d9",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:StableOperationIntent:37c7ff11852a2ee3",
+        "name": "StableOperationIntent",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 82,
+        "end_line": 93,
+        "signature_hash": "adb0331ebad5934e",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:StableSourceOperation:cc936aac96ef308f",
+        "name": "StableSourceOperation",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 97,
+        "end_line": 103,
+        "signature_hash": "a5c5fb28f2e59c83",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:VerifiedAdmission:217b21099c265a47",
+        "name": "VerifiedAdmission",
+        "kind": "class",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 145,
+        "end_line": 165,
+        "signature_hash": "7a5671e82676a507",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:_id:cabd035451f7c01c",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:_root:a85af8e36823ccd2",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:_verified_claim_root:da7915727d720cc1",
+        "name": "_verified_claim_root",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 197,
+        "end_line": 211,
+        "signature_hash": "7dfa9a8a39ea740a",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:canon:2c4ff1d10c46b65f",
+        "name": "canon",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "bea1420d5b9f5038",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:compile_attempt:d6f25c6faee2dfc3",
+        "name": "compile_attempt",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 214,
+        "end_line": 254,
+        "signature_hash": "803304fe31097030",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:compile_stable_operation:2eb487c45610c78e",
+        "name": "compile_stable_operation",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 106,
+        "end_line": 118,
+        "signature_hash": "4efb79eb0e270443",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:digest:ad623ca6c26e6f0d",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:make_test_verified_admission:b68c124a0e6c39d6",
+        "name": "make_test_verified_admission",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 257,
+        "end_line": 264,
+        "signature_hash": "f9a436390b176295",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:project_source_incarnation:d8a10afefc4c4547",
+        "name": "project_source_incarnation",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 62,
+        "end_line": 78,
+        "signature_hash": "b59ac522af91ecd0",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:root_bytes:288b67bc30c22ef4",
+        "name": "root_bytes",
+        "kind": "function",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "3c38ff144a63ee0c",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:AdmissionClaim.__post_init__:54f793db1fdcfba1",
+        "name": "AdmissionClaim.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 134,
+        "end_line": 141,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:AttemptDecision.__post_init__:e1dc144f02525a08",
+        "name": "AttemptDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 189,
+        "end_line": 194,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:SourceIncarnationLike.incarnation_root:7efe25762f4a978e",
+        "name": "SourceIncarnationLike.incarnation_root",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 44,
+        "end_line": 44,
+        "signature_hash": "04a65750ca6a162b",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:SourceIncarnationProjection.__post_init__:88a6aab05a674d76",
+        "name": "SourceIncarnationProjection.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:StableOperationIntent.__post_init__:b9b476b68dc2cde8",
+        "name": "StableOperationIntent.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 89,
+        "end_line": 93,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:StableSourceOperation.__post_init__:57007491a02e095c",
+        "name": "StableSourceOperation.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 102,
+        "end_line": 103,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:VerifiedAdmission.__post_init__:2aeffb89ad35f3ae",
+        "name": "VerifiedAdmission.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "line": 161,
+        "end_line": 165,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4e236ec20e0c1056"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
         "name": "oracle",
         "kind": "function",
@@ -274101,8 +274400,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "78f2673fc4d84ccbd0df1b24bc8e774b",
-    "payload_hash": "fffbb67a3e2bcf5047a97cdd3d94e4a5"
+    "record_fingerprint": "f4d1f54dcd32e6f5051b2bb2a25b3d7a",
+    "payload_hash": "4c341a375cc2d500a45823dc48676e94"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274115,15 +274414,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1696,
-      "bytes": 26727237,
-      "tokens_est": 6672171,
+      "files": 1697,
+      "bytes": 26737268,
+      "tokens_est": 6674679,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1033,
+        "python_module": 1034,
         "schema_or_lexicon": 285,
         "support_file": 53
       }
@@ -274811,15 +275110,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1696,
-    "total_bytes": 26727237,
-    "text_tokens_est": 6672171,
+    "file_count": 1697,
+    "total_bytes": 26737268,
+    "text_tokens_est": 6674679,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1033,
+      "python_module": 1034,
       "schema_or_lexicon": 285,
       "support_file": 53
     },
@@ -276156,6 +276455,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 171,
+        "end_line": 175,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:Disposition:05630070c8a182f8",
         "signature_hash": "9386d60514f2578d"
       },
       {
@@ -292665,6 +292972,14 @@
         "signature_hash": "0bff111c4fc1adcb"
       },
       {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:digest:ad623ca6c26e6f0d",
+        "signature_hash": "1191bf18035c2e8c"
+      },
+      {
         "file": "tools/project006/effect_attempt_recovery.py",
         "kind": "function",
         "line": 36,
@@ -307042,6 +307357,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "tools/arena/effect_return_atomicity.py#function:_id:47c3fe8fd9dba651",
+        "signature_hash": "d64cfb03b3a12a79"
+      },
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:_id:cabd035451f7c01c",
         "signature_hash": "d64cfb03b3a12a79"
       },
       {
@@ -372069,6 +372392,14 @@
         "signature_hash": "9af4f640541857b1"
       },
       {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:_root:a85af8e36823ccd2",
+        "signature_hash": "9af4f640541857b1"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
         "kind": "function",
         "line": 65,
@@ -374399,6 +374730,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_security_accuracy_harness.py#function:canon:11bd004c7cfedf61",
         "signature_hash": "013604bc627266a0"
+      },
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:canon:2c4ff1d10c46b65f",
+        "signature_hash": "bea1420d5b9f5038"
       },
       {
         "file": "tools/project006/tecc_effect_admission_bridge.py",
@@ -432879,6 +433218,214 @@
         "signature_hash": "0d9f06875821b0a4"
       }
     ],
+    "root_bytes": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:root_bytes:288b67bc30c22ef4",
+        "signature_hash": "3c38ff144a63ee0c"
+      },
+      {
+        "file": "tools/project006/transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:root_bytes:9fc00a1b3f90a6d9",
+        "signature_hash": "3c38ff144a63ee0c"
+      }
+    ],
+    "SourceIncarnationLike": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 44,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:SourceIncarnationLike:cb387d456a3931f7",
+        "signature_hash": "d170e384092c7173"
+      }
+    ],
+    "SourceIncarnationLike.incarnation_root": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 44,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:SourceIncarnationLike.incarnation_root:7efe25762f4a978e",
+        "signature_hash": "04a65750ca6a162b"
+      }
+    ],
+    "SourceIncarnationProjection": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 59,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:SourceIncarnationProjection:b6df87541a8e31ab",
+        "signature_hash": "a282125e9aed62d9"
+      }
+    ],
+    "SourceIncarnationProjection.__post_init__": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:SourceIncarnationProjection.__post_init__:88a6aab05a674d76",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "project_source_incarnation": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 78,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:project_source_incarnation:d8a10afefc4c4547",
+        "signature_hash": "b59ac522af91ecd0"
+      }
+    ],
+    "StableOperationIntent": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 82,
+        "end_line": 93,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:StableOperationIntent:37c7ff11852a2ee3",
+        "signature_hash": "adb0331ebad5934e"
+      }
+    ],
+    "StableOperationIntent.__post_init__": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 93,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:StableOperationIntent.__post_init__:b9b476b68dc2cde8",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "StableSourceOperation": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 97,
+        "end_line": 103,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:StableSourceOperation:cc936aac96ef308f",
+        "signature_hash": "a5c5fb28f2e59c83"
+      }
+    ],
+    "StableSourceOperation.__post_init__": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 103,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:StableSourceOperation.__post_init__:57007491a02e095c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "compile_stable_operation": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 118,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:compile_stable_operation:2eb487c45610c78e",
+        "signature_hash": "4efb79eb0e270443"
+      }
+    ],
+    "AdmissionClaim": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 141,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:AdmissionClaim:fdc12e060245e139",
+        "signature_hash": "b5067cc6f6c09e86"
+      }
+    ],
+    "AdmissionClaim.__post_init__": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 141,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:AdmissionClaim.__post_init__:54f793db1fdcfba1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "VerifiedAdmission": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 145,
+        "end_line": 165,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:VerifiedAdmission:217b21099c265a47",
+        "signature_hash": "7a5671e82676a507"
+      }
+    ],
+    "VerifiedAdmission.__post_init__": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 165,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:VerifiedAdmission.__post_init__:2aeffb89ad35f3ae",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AttemptDecision": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "class",
+        "line": 179,
+        "end_line": 194,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#class:AttemptDecision:c498b43f96b94272",
+        "signature_hash": "5c32d751b3864b92"
+      }
+    ],
+    "AttemptDecision.__post_init__": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 194,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#method:AttemptDecision.__post_init__:e1dc144f02525a08",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_verified_claim_root": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 211,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:_verified_claim_root:da7915727d720cc1",
+        "signature_hash": "7dfa9a8a39ea740a"
+      }
+    ],
+    "compile_attempt": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 214,
+        "end_line": 254,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:compile_attempt:d6f25c6faee2dfc3",
+        "signature_hash": "803304fe31097030"
+      }
+    ],
+    "make_test_verified_admission": [
+      {
+        "file": "tools/arena/source_incarnation_stable_operation.py",
+        "kind": "function",
+        "line": 257,
+        "end_line": 264,
+        "semantic_id": "tools/arena/source_incarnation_stable_operation.py#function:make_test_verified_admission:b68c124a0e6c39d6",
+        "signature_hash": "f9a436390b176295"
+      }
+    ],
     "oracle": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
@@ -435203,16 +435750,6 @@
         "end_line": 18,
         "semantic_id": "tools/project006/test_windows_wake_broker.py#method:WakeBrokerTests.test_hash_fallback_stable:3bb0985930287dd6",
         "signature_hash": "487e6a3eff28e114"
-      }
-    ],
-    "root_bytes": [
-      {
-        "file": "tools/project006/transport_source_identity_bridge.py",
-        "kind": "function",
-        "line": 21,
-        "end_line": 22,
-        "semantic_id": "tools/project006/transport_source_identity_bridge.py#function:root_bytes:9fc00a1b3f90a6d9",
-        "signature_hash": "3c38ff144a63ee0c"
       }
     ],
     "DriveSourceIncarnation": [
