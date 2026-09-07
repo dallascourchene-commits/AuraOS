@@ -1,0 +1,49 @@
+name: Project006 O18 proof-carrying Aura interaction contract
+
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/aura_interaction_contract.py'
+      - 'tools/project006/test_aura_interaction_contract.py'
+      - 'tools/project006/proof_aura_interaction_o18.py'
+      - '.github/workflows/project006-o18-aura-interaction-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Recreate proof in three venvs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/project006
+          rm -rf .o18-env-1 .o18-env-2 .o18-env-3
+          for n in 1 2 3; do
+            python -m venv ".o18-env-$n"
+            ".o18-env-$n/bin/python" -m py_compile aura_interaction_contract.py test_aura_interaction_contract.py proof_aura_interaction_o18.py
+            ".o18-env-$n/bin/python" -m unittest -v test_aura_interaction_contract.py
+            ".o18-env-$n/bin/python" proof_aura_interaction_o18.py > ".o18-proof-$n.json"
+          done
+          cmp .o18-proof-1.json .o18-proof-2.json
+          cmp .o18-proof-1.json .o18-proof-3.json
+          sha256sum .o18-proof-1.json .o18-proof-2.json .o18-proof-3.json
+          python - <<'PY'
+          import json
+          p=json.load(open('.o18-proof-1.json'))
+          assert p['omega8']=={'invalid_accepts':0,'keepers':1,'root':'f64a672c049b6b287fac0f151dbefec8cc9abcdc133aebd9db55dfb4a5ef25c9','states':6561}
+          assert p['factored13d']['states']==1594323
+          assert p['factored13d']['hard_invalid_contextual_repairs']==0
+          assert p['hs1000']['frozen_candidates']==1000
+          assert p['hs1000']['claimed_breakthroughs']==0
+          print('PROJECT006_O18_EXACT_HEAD_PROOF=PASS')
+          PY
