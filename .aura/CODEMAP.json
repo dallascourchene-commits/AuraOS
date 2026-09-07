@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788795191,
+  "generated_at_unix": 1788797949,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1700,
+    "repo_file_count": 1703,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1674,12 +1675,14 @@
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
       "tools/awj032/airllm_runtime_hard_false.py",
+      "tools/awj032/airllm_scope_aware_source_admission.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
       "tools/awj032/test_airllm_runtime_hard_false.py",
+      "tools/awj032/test_airllm_scope_aware_source_admission.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/training_o1_reference/README.md",
       "tools/awj032/training_o1_reference/REPRODUCE.md",
@@ -1816,16 +1819,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1700,
-      "bytes": 26639312,
-      "tokens_est": 6650226,
+      "files": 1703,
+      "bytes": 26662672,
+      "tokens_est": 6656068,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 287,
+        "python_module": 1029,
+        "schema_or_lexicon": 288,
         "support_file": 49
       }
     },
@@ -3527,6 +3530,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 296,
+        "end_line": 304,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:main:093621e31008d5e6",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -158574,6 +158585,130 @@
         "signature_hash": "6d3bf55244b424d5"
       }
     ],
+    "ScopeAwareSourceAdmissionReceipt": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#class:ScopeAwareSourceAdmissionReceipt:736c52452185b9c5",
+        "signature_hash": "faccc3dd1cc5627e"
+      }
+    ],
+    "ScopeAwareSourceAdmissionReceipt.to_dict": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#method:ScopeAwareSourceAdmissionReceipt.to_dict:fb76e1ac4a5ef092",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_direct_scope_nodes": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_direct_scope_nodes:2446d3407286840c",
+        "signature_hash": "48338a0ca258e5a7"
+      }
+    ],
+    "_lexical_scopes": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_lexical_scopes:51d155084d442a6f",
+        "signature_hash": "306bd827148f2a26"
+      }
+    ],
+    "_static_bindings": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 118,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_static_bindings:b1d3bc3da5473d1e",
+        "signature_hash": "15d0541bd349088b"
+      },
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_static_bindings:c6b1ea39ad66ec49",
+        "signature_hash": "b295a7e4f9b836d4"
+      }
+    ],
+    "_opaque_mutation_names": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 190,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_opaque_mutation_names:e838eac7623ba651",
+        "signature_hash": "89d3f8184bda20b9"
+      }
+    ],
+    "_safe_opaque_loader_keys": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 193,
+        "end_line": 236,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_safe_opaque_loader_keys:2849163468c1afc6",
+        "signature_hash": "e36d0a32a90cd3ba"
+      }
+    ],
+    "_dischargeable_findings": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 239,
+        "end_line": 245,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_dischargeable_findings:312ec44e2c24a02c",
+        "signature_hash": "0deca2ae018b6c7f"
+      }
+    ],
+    "audit_airllm_source": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 248,
+        "end_line": 282,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:audit_airllm_source:5cbc587bb488a336",
+        "signature_hash": "290228e2f6f1d36b"
+      },
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 403,
+        "end_line": 463,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:audit_airllm_source:81f138e057323380",
+        "signature_hash": "d633a6e011cb4876"
+      }
+    ],
+    "require_admitted": [
+      {
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 285,
+        "end_line": 293,
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:require_admitted:c868194cab3b6c40",
+        "signature_hash": "36e7b848b7b5cef6"
+      },
+      {
+        "file": "tools/awj032/airllm_source_admission.py",
+        "kind": "function",
+        "line": 466,
+        "end_line": 471,
+        "semantic_id": "tools/awj032/airllm_source_admission.py#function:require_admitted:ba38ad2827581a4a",
+        "signature_hash": "46b37ab1f36534cb"
+      }
+    ],
     "Finding": [
       {
         "file": "tools/awj032/airllm_source_admission.py",
@@ -158634,16 +158769,6 @@
         "signature_hash": "8c2713617c73bfd4"
       }
     ],
-    "_static_bindings": [
-      {
-        "file": "tools/awj032/airllm_source_admission.py",
-        "kind": "function",
-        "line": 86,
-        "end_line": 140,
-        "semantic_id": "tools/awj032/airllm_source_admission.py#function:_static_bindings:c6b1ea39ad66ec49",
-        "signature_hash": "b295a7e4f9b836d4"
-      }
-    ],
     "_mapping_trust_state": [
       {
         "file": "tools/awj032/airllm_source_admission.py",
@@ -158682,26 +158807,6 @@
         "end_line": 400,
         "semantic_id": "tools/awj032/airllm_source_admission.py#function:_safe_source_file:a3d5eb9d77967c48",
         "signature_hash": "0d3bfb8f2a947d11"
-      }
-    ],
-    "audit_airllm_source": [
-      {
-        "file": "tools/awj032/airllm_source_admission.py",
-        "kind": "function",
-        "line": 403,
-        "end_line": 463,
-        "semantic_id": "tools/awj032/airllm_source_admission.py#function:audit_airllm_source:81f138e057323380",
-        "signature_hash": "d633a6e011cb4876"
-      }
-    ],
-    "require_admitted": [
-      {
-        "file": "tools/awj032/airllm_source_admission.py",
-        "kind": "function",
-        "line": 466,
-        "end_line": 471,
-        "semantic_id": "tools/awj032/airllm_source_admission.py#function:require_admitted:ba38ad2827581a4a",
-        "signature_hash": "46b37ab1f36534cb"
       }
     ],
     "_versions": [
@@ -159356,12 +159461,140 @@
     ],
     "make_tree": [
       {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#function:make_tree:93613d927db1e66e",
+        "signature_hash": "cd18f3fad3902505"
+      },
+      {
         "file": "tools/awj032/test_airllm_source_admission.py",
         "kind": "function",
         "line": 8,
         "end_line": 21,
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#function:make_tree:42bbbeee2e1240a1",
         "signature_hash": "258e8fddc4e5cf01"
+      }
+    ],
+    "LexicalScopeGateTest": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#class:LexicalScopeGateTest:5c851987c8b6ba16",
+        "signature_hash": "1f3d4de3770528a9"
+      }
+    ],
+    "LexicalScopeGateTest.audit": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.audit:c99aec27a6d682db",
+        "signature_hash": "5fecb9d20edc9636"
+      }
+    ],
+    "LexicalScopeGateTest.test_cross_scope_same_name_false_positive_is_discharged": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_cross_scope_same_name_false_positive_is_discharged:005ac1dc0fecc6af",
+        "signature_hash": "5dbdf3ec94775bb4"
+      }
+    ],
+    "LexicalScopeGateTest.test_line_movement_does_not_change_structural_discharge": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_line_movement_does_not_change_structural_discharge:18ab179a01863513",
+        "signature_hash": "862bbb10fe154a24"
+      }
+    ],
+    "LexicalScopeGateTest.test_same_scope_caller_kwargs_remains_blocked": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_same_scope_caller_kwargs_remains_blocked:41c5052293db1d2c",
+        "signature_hash": "5585182eed76a0a2"
+      }
+    ],
+    "LexicalScopeGateTest.test_same_scope_opaque_mapping_parameter_remains_blocked": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_same_scope_opaque_mapping_parameter_remains_blocked:03fa6b6e098bede2",
+        "signature_hash": "3a92fd7ab5dcfed6"
+      }
+    ],
+    "LexicalScopeGateTest.test_local_true_mapping_is_never_discharged": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_local_true_mapping_is_never_discharged:9a5120b7ccb50da6",
+        "signature_hash": "8e28fbeb3f7bc9cf"
+      }
+    ],
+    "LexicalScopeGateTest.test_local_dynamic_mapping_is_never_discharged": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_local_dynamic_mapping_is_never_discharged:19530af113a0c598",
+        "signature_hash": "efa659f23a5bb974"
+      }
+    ],
+    "LexicalScopeGateTest.test_same_scope_opaque_update_remains_blocked": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_same_scope_opaque_update_remains_blocked:0827ea8067ca20cf",
+        "signature_hash": "ab6b6d3956c2e2aa"
+      }
+    ],
+    "LexicalScopeGateTest.test_alias_opaque_mutation_remains_blocked": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_alias_opaque_mutation_remains_blocked:181c69c3a8625c8d",
+        "signature_hash": "1ca97ce3c829f57c"
+      }
+    ],
+    "LexicalScopeGateTest.test_non_remote_findings_are_never_discharged": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 113,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_non_remote_findings_are_never_discharged:623dc615912ba4eb",
+        "signature_hash": "ced654b4a187fc77"
+      }
+    ],
+    "LexicalScopeGateTest.test_receipt_preserves_source_identity": [
+      {
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_receipt_preserves_source_identity:820b72ba22b067d0",
+        "signature_hash": "ccd1c0c2d1e41f76"
       }
     ],
     "GateTests": [
@@ -163103,11 +163336,14 @@
     "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
-    "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
-      ".github/workflows/awj032-airllm-tiny-runtime.yml"
-    ],
     "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
+    ],
+    "python -m venv": [
+      ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
+      "README.md",
+      "examples/arena_navigation_domain_lens/README.md",
+      "examples/mini_aura_reference_arena/README.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -163442,11 +163678,6 @@
     ],
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
-    ],
-    "python -m venv": [
-      "README.md",
-      "examples/arena_navigation_domain_lens/README.md",
-      "examples/mini_aura_reference_arena/README.md"
     ],
     "python mini_aura_reference.py --out results_local.json": [
       "README.md",
@@ -172913,13 +173144,12 @@
       "path": ".github/workflows/awj032-airllm-tiny-runtime.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 11150,
-      "lines": 255,
-      "tokens_est": 2788,
+      "bytes": 11798,
+      "lines": 264,
+      "tokens_est": 2950,
       "symbol_count": 0,
       "commands": [
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json",
-        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json",
         "python -m pip",
         "python tools/awj032/airllm_tiny_fixture_probe.py \\"
       ],
@@ -172927,54 +173157,104 @@
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
           102
         ],
-        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
-          143
-        ],
         "python -m pip": [
-          201,
-          202,
+          210,
           211,
-          212
+          220,
+          221
         ],
         "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
-          218
+          227
         ]
       },
       "topology": {},
-      "digest8": "d57d22c661e4843e",
+      "digest8": "5ada33a058653266",
       "vector": [
-        -0.086488,
-        -0.061777,
-        0.017847,
-        0.157874,
-        0.270445,
-        0.232006,
-        -0.308884,
-        -0.094724,
-        -0.108453,
-        -0.113944,
-        0.171602,
-        -0.245735,
-        0.015101,
-        -0.105707,
-        -0.080996,
-        -0.325358,
-        0.102961,
-        -0.196313,
-        -0.262208,
-        0.289665,
-        -0.100216,
-        -0.130418,
-        0.218278,
-        -0.026084,
-        -0.059031,
-        0.127672,
-        -0.256717,
-        -0.264954,
-        -0.048049,
-        -0.064522,
-        0.226515,
-        -0.05354
+        0.160043,
+        0.169389,
+        0.258172,
+        0.146025,
+        -0.101633,
+        0.239481,
+        0.239481,
+        0.185744,
+        0.234808,
+        0.066587,
+        0.153034,
+        -0.160043,
+        -0.223126,
+        -0.274527,
+        0.047896,
+        0.022196,
+        0.015187,
+        -0.160043,
+        0.178734,
+        0.136679,
+        -0.136679,
+        0.101633,
+        -0.288545,
+        -0.211444,
+        -0.064251,
+        -0.27219,
+        0.099297,
+        -0.054905,
+        -0.176398,
+        0.267518,
+        -0.174062,
+        0.064251
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5109,
+      "lines": 104,
+      "tokens_est": 1278,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          48
+        ]
+      },
+      "topology": {},
+      "digest8": "38a195b380a6ea2c",
+      "vector": [
+        0.264708,
+        0.146803,
+        0.241589,
+        -0.010403,
+        -0.114437,
+        0.204599,
+        -0.123684,
+        0.00578,
+        0.174545,
+        0.260084,
+        0.146803,
+        -0.16761,
+        -0.137555,
+        -0.213847,
+        0.116749,
+        -0.135244,
+        -0.280891,
+        0.190728,
+        0.158362,
+        0.003468,
+        -0.137555,
+        0.253148,
+        0.239277,
+        -0.144491,
+        0.091318,
+        -0.028898,
+        0.290138,
+        -0.065888,
+        -0.21847,
+        0.276267,
+        0.038146,
+        -0.102878
       ]
     },
     {
@@ -269265,6 +269545,53 @@
       ]
     },
     {
+      "path": "tools/awj032/airllm_scope_aware_source_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12257,
+      "lines": 309,
+      "tokens_est": 3065,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "deea499c22a01d4f",
+      "vector": [
+        0.260541,
+        -0.104468,
+        0.028949,
+        0.124606,
+        0.30837,
+        0.288231,
+        0.247954,
+        0.27061,
+        0.210195,
+        0.101951,
+        -0.255506,
+        0.01888,
+        0.195091,
+        0.026432,
+        0.026432,
+        -0.026432,
+        -0.028949,
+        -0.217747,
+        -0.192574,
+        -0.021397,
+        0.278162,
+        0.144745,
+        0.049087,
+        0.212712,
+        -0.036501,
+        -0.008811,
+        0.006293,
+        0.217747,
+        0.24292,
+        -0.142228,
+        -0.220264,
+        0.152297
+      ]
+    },
+    {
       "path": "tools/awj032/airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -269544,6 +269871,53 @@
         -0.02995,
         -0.037138,
         0.212044
+      ]
+    },
+    {
+      "path": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5346,
+      "lines": 126,
+      "tokens_est": 1337,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f9ebd66214acf92a",
+      "vector": [
+        -0.249126,
+        0.292038,
+        -0.072711,
+        0.132311,
+        0.160919,
+        -0.003576,
+        -0.151383,
+        -0.036952,
+        0.065559,
+        -0.091783,
+        0.29919,
+        0.165687,
+        -0.158535,
+        -0.072711,
+        -0.115623,
+        0.077479,
+        -0.237206,
+        0.058408,
+        -0.110855,
+        0.230054,
+        0.141847,
+        -0.187143,
+        -0.225286,
+        0.001192,
+        -0.036952,
+        -0.29919,
+        0.21575,
+        0.179991,
+        0.234822,
+        -0.184759,
+        0.237206,
+        0.232438
       ]
     },
     {
@@ -294121,16 +294495,16 @@
     }
   },
   "summary": {
-    "file_count": 1700,
-    "total_bytes": 26639312,
-    "text_tokens_est": 6650226,
+    "file_count": 1703,
+    "total_bytes": 26662672,
+    "text_tokens_est": 6656068,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 287,
+      "python_module": 1029,
+      "schema_or_lexicon": 288,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294288,6 +294662,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -295814,12 +296189,14 @@
       "tools/awj032/airllm_hard_false_inspected_tree.py",
       "tools/awj032/airllm_hard_false_remediation.py",
       "tools/awj032/airllm_runtime_hard_false.py",
+      "tools/awj032/airllm_scope_aware_source_admission.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
       "tools/awj032/test_airllm_runtime_hard_false.py",
+      "tools/awj032/test_airllm_scope_aware_source_admission.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/training_o1_reference/README.md",
       "tools/awj032/training_o1_reference/REPRODUCE.md",
@@ -454380,6 +454757,116 @@
         "file_digest8": "64cb0100e324d7d7"
       },
       {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#class:ScopeAwareSourceAdmissionReceipt:736c52452185b9c5",
+        "name": "ScopeAwareSourceAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 28,
+        "end_line": 45,
+        "signature_hash": "faccc3dd1cc5627e",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_direct_scope_nodes:2446d3407286840c",
+        "name": "_direct_scope_nodes",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 48,
+        "end_line": 58,
+        "signature_hash": "48338a0ca258e5a7",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_dischargeable_findings:312ec44e2c24a02c",
+        "name": "_dischargeable_findings",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 239,
+        "end_line": 245,
+        "signature_hash": "0deca2ae018b6c7f",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_lexical_scopes:51d155084d442a6f",
+        "name": "_lexical_scopes",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 61,
+        "end_line": 67,
+        "signature_hash": "306bd827148f2a26",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_opaque_mutation_names:e838eac7623ba651",
+        "name": "_opaque_mutation_names",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 121,
+        "end_line": 190,
+        "signature_hash": "89d3f8184bda20b9",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_safe_opaque_loader_keys:2849163468c1afc6",
+        "name": "_safe_opaque_loader_keys",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 193,
+        "end_line": 236,
+        "signature_hash": "e36d0a32a90cd3ba",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:_static_bindings:b1d3bc3da5473d1e",
+        "name": "_static_bindings",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 70,
+        "end_line": 118,
+        "signature_hash": "15d0541bd349088b",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:audit_airllm_source:5cbc587bb488a336",
+        "name": "audit_airllm_source",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 248,
+        "end_line": 282,
+        "signature_hash": "290228e2f6f1d36b",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:main:093621e31008d5e6",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 296,
+        "end_line": 304,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#function:require_admitted:c868194cab3b6c40",
+        "name": "require_admitted",
+        "kind": "function",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 285,
+        "end_line": 293,
+        "signature_hash": "36e7b848b7b5cef6",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
+        "semantic_id": "tools/awj032/airllm_scope_aware_source_admission.py#method:ScopeAwareSourceAdmissionReceipt.to_dict:fb76e1ac4a5ef092",
+        "name": "ScopeAwareSourceAdmissionReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/airllm_scope_aware_source_admission.py",
+        "line": 41,
+        "end_line": 45,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "deea499c22a01d4f"
+      },
+      {
         "semantic_id": "tools/awj032/airllm_source_admission.py#class:Finding:bf46a0e466c67b5f",
         "name": "Finding",
         "kind": "class",
@@ -455258,6 +455745,136 @@
         "end_line": 23,
         "signature_hash": "8601faf30a49dc2b",
         "file_digest8": "6e48f7cb22c158be"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#class:LexicalScopeGateTest:5c851987c8b6ba16",
+        "name": "LexicalScopeGateTest",
+        "kind": "class",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 20,
+        "end_line": 122,
+        "signature_hash": "1f3d4de3770528a9",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#function:make_tree:93613d927db1e66e",
+        "name": "make_tree",
+        "kind": "function",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 9,
+        "end_line": 17,
+        "signature_hash": "cd18f3fad3902505",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.audit:c99aec27a6d682db",
+        "name": "LexicalScopeGateTest.audit",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "5fecb9d20edc9636",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_alias_opaque_mutation_remains_blocked:181c69c3a8625c8d",
+        "name": "LexicalScopeGateTest.test_alias_opaque_mutation_remains_blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 96,
+        "end_line": 105,
+        "signature_hash": "1ca97ce3c829f57c",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_cross_scope_same_name_false_positive_is_discharged:005ac1dc0fecc6af",
+        "name": "LexicalScopeGateTest.test_cross_scope_same_name_false_positive_is_discharged",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 26,
+        "end_line": 36,
+        "signature_hash": "5dbdf3ec94775bb4",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_line_movement_does_not_change_structural_discharge:18ab179a01863513",
+        "name": "LexicalScopeGateTest.test_line_movement_does_not_change_structural_discharge",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 38,
+        "end_line": 49,
+        "signature_hash": "862bbb10fe154a24",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_local_dynamic_mapping_is_never_discharged:19530af113a0c598",
+        "name": "LexicalScopeGateTest.test_local_dynamic_mapping_is_never_discharged",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 77,
+        "end_line": 84,
+        "signature_hash": "efa659f23a5bb974",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_local_true_mapping_is_never_discharged:9a5120b7ccb50da6",
+        "name": "LexicalScopeGateTest.test_local_true_mapping_is_never_discharged",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "8e28fbeb3f7bc9cf",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_non_remote_findings_are_never_discharged:623dc615912ba4eb",
+        "name": "LexicalScopeGateTest.test_non_remote_findings_are_never_discharged",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 107,
+        "end_line": 113,
+        "signature_hash": "ced654b4a187fc77",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_receipt_preserves_source_identity:820b72ba22b067d0",
+        "name": "LexicalScopeGateTest.test_receipt_preserves_source_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 115,
+        "end_line": 122,
+        "signature_hash": "ccd1c0c2d1e41f76",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_same_scope_caller_kwargs_remains_blocked:41c5052293db1d2c",
+        "name": "LexicalScopeGateTest.test_same_scope_caller_kwargs_remains_blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 51,
+        "end_line": 58,
+        "signature_hash": "5585182eed76a0a2",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_same_scope_opaque_mapping_parameter_remains_blocked:03fa6b6e098bede2",
+        "name": "LexicalScopeGateTest.test_same_scope_opaque_mapping_parameter_remains_blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 60,
+        "end_line": 66,
+        "signature_hash": "3a92fd7ab5dcfed6",
+        "file_digest8": "f9ebd66214acf92a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_airllm_scope_aware_source_admission.py#method:LexicalScopeGateTest.test_same_scope_opaque_update_remains_blocked:0827ea8067ca20cf",
+        "name": "LexicalScopeGateTest.test_same_scope_opaque_update_remains_blocked",
+        "kind": "method",
+        "file": "tools/awj032/test_airllm_scope_aware_source_admission.py",
+        "line": 86,
+        "end_line": 94,
+        "signature_hash": "ab6b6d3956c2e2aa",
+        "file_digest8": "f9ebd66214acf92a"
       },
       {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
@@ -458960,7 +459577,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8f312181e9e11d770b13fc3057133852",
-    "payload_hash": "ef157376d4a7375bfcb78e818515338e"
+    "record_fingerprint": "e0e13594adf2372eda545da67497ad3a",
+    "payload_hash": "3890dac818bc486a30e672af285728af"
   }
 }

@@ -135,12 +135,13 @@ jobs:
           print('REMEDIATION_EDITS', receipt['total_edits'])
           PY
 
-      - name: Re-audit remediated source and admit only exact known scanner residuals
+      - name: Re-audit remediated source with lexical-scope gate
         shell: bash
         run: |
           set -euo pipefail
           set +e
-          python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json
+          PYTHONPATH=. python -m tools.awj032.airllm_scope_aware_source_admission \
+            airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json
           rc=$?
           set -e
           test "$rc" -eq 0 -o "$rc" -eq 2
@@ -150,48 +151,56 @@ jobs:
 
           r = json.loads(Path('.awj032/remediated_source_admission.json').read_text())
           findings = r['findings']
+          discharged = r['discharged_findings']
           allowed = {
               ('NESTED_PIP_MUTATION', 'air_llm/setup.py', 29, 'pip install'),
               ('NESTED_PIP_MUTATION', 'air_llm/airllm/airllm_base.py', 124, 'pip install'),
-              ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/airllm_base.py', 298,
-               'from_config receives opaque **kwargs without explicit trust_remote_code=False'),
               ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/auto_model.py', 60,
                'get_module_class receives opaque **kwargs without explicit trust_remote_code=False'),
           }
+          retired = (
+              'REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/airllm_base.py', 298,
+              'from_config receives opaque **kwargs without explicit trust_remote_code=False'
+          )
           observed = {(f['code'], f['path'], f['line'], f['detail']) for f in findings}
+          discharged_set = {(f['code'], f['path'], f['line'], f['detail']) for f in discharged}
           unexpected = observed - allowed
           assert not unexpected, {'unexpected_findings': sorted(unexpected), 'all_findings': findings}
           assert observed <= allowed, findings
+          assert retired not in observed, {'retired_false_positive_reappeared': retired, 'all': findings}
+          assert retired in discharged_set, {'structural_discharge_missing': retired, 'discharged': discharged}
 
-          # Midway Customs oracle self-falsification: preserve coarse finding class but move
-          # the exact identity by one line. The exact-fixture oracle must reject it.
-          known_wrong = {
-              ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/airllm_base.py', 299,
-               'from_config receives opaque **kwargs without explicit trust_remote_code=False'),
-          }
-          assert known_wrong - allowed, 'fixture residual oracle accepted known-wrong identity'
+          # Structural self-falsification: the same coarse finding at a different line is not
+          # discharged merely because it resembles today's fixture scar.
+          known_wrong = (
+              'REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/airllm_base.py', 299,
+              'from_config receives opaque **kwargs without explicit trust_remote_code=False'
+          )
+          assert known_wrong not in discharged_set, 'scope gate discharged line-drift by identity allowlist'
 
           adjudication = {
-              'schema': 'AWJ032_FIXTURE_SOURCE_ADJUDICATION_V1',
+              'schema': 'AWJ032_FIXTURE_SOURCE_ADJUDICATION_V2_LEXICAL_SCOPE',
               'base_source_gate_status': r['status'],
               'source_digest': r['source_digest'],
               'known_scanner_residuals': findings,
+              'structurally_discharged_findings': discharged,
               'unexpected_findings': [],
               'fixture_path_admitted': True,
-              'oracle_self_falsification': 'PASS_EXACT_IDENTITY_REJECTS_LINE_DRIFT',
+              'structural_self_falsification': 'PASS_NO_LINE_IDENTITY_ALLOWLIST',
               'reason': (
                   'two NESTED_PIP matches are non-executing text in the exact pinned source; '
-                  'the airllm_base.py from_config finding expands a remediated local kwargs mapping '
-                  'whose trust_remote_code value is forced to literal False, while get_module_class '
-                  'is an internal AirLLM routing method; actual Transformers loader boundaries are '
-                  'independently enforced by RuntimeHardFalseGuard'
+                  'the airllm_base.py from_config false positive is discharged only because lexical-scope '
+                  'analysis proves the remediated local kwargs mapping is mutation-bounded with '
+                  'trust_remote_code literal False; caller-supplied same-scope kwargs at auto_model.py '
+                  'remain opaque and explicitly adjudicated as an internal AirLLM routing boundary; '
+                  'actual Transformers loader boundaries are independently enforced by RuntimeHardFalseGuard'
               ),
               'claim_ceiling': 'PINNED_TINY_FIXTURE_PATH_ONLY_NOT_GENERAL_SOURCE_GATE_PASS',
           }
           Path('.awj032/remediated_fixture_adjudication.json').write_text(
               json.dumps(adjudication, sort_keys=True, indent=2), encoding='utf-8'
           )
-          print('REMEDIATED_FIXTURE_SOURCE_ADMITTED', r['source_digest'], len(findings))
+          print('REMEDIATED_FIXTURE_SOURCE_ADMITTED', r['source_digest'], len(findings), len(discharged))
           PY
 
       - name: Install isolated AirLLM runtime dependencies
