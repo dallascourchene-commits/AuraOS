@@ -1,4 +1,5 @@
-import os, tempfile, unittest
+import os, subprocess, tempfile, unittest
+import unittest.mock as mock
 from tools.project006.terminal_outbox import *
 
 class TerminalOutboxTests(unittest.TestCase):
@@ -35,6 +36,14 @@ class TerminalOutboxTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"IDEMPOTENCY_CONFLICT"): j.ingest(CommandIdentity("C","OTHER","FILE","REV","d"*64))
     def test_all_negative_kinds(self):
         for k in sorted(NEGATIVE_KINDS): TerminalResponse(self.ident(k),k,provider_request_count=0).canonical()
+    def test_exact_writer_line_protocol(self):
+        payload=TerminalResponse(self.ident(),"COMMAND_BLOCKED","X").canonical()
+        cp=subprocess.CompletedProcess([],0,"BUS_WRITE_OK=True\nFILE_ID=DRIVE-X\nFILE_NAME=AURA_BUS_X_COMMAND_BLOCKED.json\nCHANNEL=01_AURA_TO_SWARM\nBYTES=10\nWRITE_SCOPE=AURA_DRIVE\n","")
+        with mock.patch("tools.project006.terminal_outbox.subprocess.run", return_value=cp) as run:
+            ref=AuraDriveBusWriterV1("/venv/bin/python","/writer.py")(payload)
+        self.assertEqual(ref,"DRIVE-X")
+        self.assertEqual(run.call_args.args[0],["/venv/bin/python","/writer.py","--channel","aura_to_swarm","--kind","COMMAND_BLOCKED","--objective","C"])
+        self.assertIn('"provider_request_count":0',run.call_args.kwargs["input"])
     def test_bad_kind(self):
         with self.assertRaisesRegex(ValueError,"UNSUPPORTED_TERMINAL_KIND"): TerminalResponse(self.ident(),"MYSTERY").canonical()
 if __name__=="__main__":unittest.main()
