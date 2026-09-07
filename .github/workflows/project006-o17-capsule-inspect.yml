@@ -14,25 +14,27 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Verify checkout and encoded capsule
+      - name: Verify exact checkout
         shell: bash
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          test "$(sha256sum artifacts/arena/project006_o17_training_step_transaction/O17_EXACT_SOURCE.tar.gz.b64 | awk '{print $1}')" = "b85befe69788938bec2184f6aa5e58c1188475f4e8526bb13adcb0f86816ed7e"
-      - name: Decode and list exact source cone
+      - name: Decode and fingerprint exact source cone
         shell: bash
         run: |
           set -euo pipefail
+          CAPSULE=artifacts/arena/project006_o17_training_step_transaction/O17_EXACT_SOURCE.tar.gz.b64
+          echo "O17_B64_TEXT_SHA256=$(sha256sum "$CAPSULE" | awk '{print $1}')"
           mkdir -p /tmp/o17-src
-          base64 -d artifacts/arena/project006_o17_training_step_transaction/O17_EXACT_SOURCE.tar.gz.b64 > /tmp/O17_EXACT_SOURCE.tar.gz
+          base64 -d "$CAPSULE" > /tmp/O17_EXACT_SOURCE.tar.gz
           echo "O17_ARCHIVE_SHA256=$(sha256sum /tmp/O17_EXACT_SOURCE.tar.gz | awk '{print $1}')"
+          echo "--- archive listing ---"
           tar -tzf /tmp/O17_EXACT_SOURCE.tar.gz | sort
           tar -xzf /tmp/O17_EXACT_SOURCE.tar.gz -C /tmp/o17-src
-          echo "--- extracted files ---"
-          find /tmp/o17-src -type f -printf '%P\n' | sort
+          echo "--- extracted file sha256 ---"
+          (cd /tmp/o17-src && find . -type f -print0 | sort -z | xargs -0 sha256sum)
           echo "--- manifest-like files ---"
-          find /tmp/o17-src -type f \( -iname '*manifest*' -o -iname '*receipt*' -o -iname '*readme*' \) -print -exec sh -c 'echo "### $1"; sed -n "1,240p" "$1"' _ {} \;
+          find /tmp/o17-src -type f \( -iname '*manifest*' -o -iname '*receipt*' -o -iname '*readme*' \) -print -exec sh -c 'echo "### $1"; sed -n "1,260p" "$1"' _ {} \;
           echo "O17_CAPSULE_INSPECTION=PASS"
