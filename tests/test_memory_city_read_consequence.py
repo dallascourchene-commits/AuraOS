@@ -15,8 +15,8 @@ def cov(pos=('w0','w1'), neg=()):
         positive=tuple(PositiveTrace(x,p,d,g,r('trace-'+x)) for x in pos),
         negative=tuple(NegativeProof(x,p,d,g,r('neg-'+x)) for x in neg))
 
-def wp(w, hyd=('a','b'), rep=('a','c'), trust='trust', current=True, k=()):
-    return ReadWorldProjection(w,r('root-'+w),hyd,rep,r(trust),current,k)
+def wp(w, hyd=('a','b'), rep=('a','c'), trust='trust', projection='projection', current=True, k=()):
+    return ReadWorldProjection(w,r('root-'+w),hyd,rep,r(trust),r(projection+'-'+w),current,k)
 
 class Tests(unittest.TestCase):
     def test_distinct_world_roots_same_consequence_ready(self):
@@ -42,19 +42,24 @@ class Tests(unittest.TestCase):
         self.assertEqual(a.receipt_root,b.receipt_root)
     def test_active_member_ready(self):
         cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1')))
-        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w1',active_world_root=r('root-w1'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.READY)
+        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w1',active_world_root=r('root-w1'),active_projection_root=r('projection-w1'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.READY)
     def test_unknown_member_holds(self):
         cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1')))
-        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w2',active_world_root=r('root-w2'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_MEMBER)
+        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w2',active_world_root=r('root-w2'),active_projection_root=r('projection-w2'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_MEMBER)
     def test_trust_move_at_use_holds(self):
         cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1')))
-        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w0',active_world_root=r('root-w0'),read_obligation_root=r('moved')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_TRUST_IDENTITY)
+        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w0',active_world_root=r('root-w0'),active_projection_root=r('projection-w0'),read_obligation_root=r('moved')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_TRUST_IDENTITY)
     def test_coverage_move_at_use_holds(self):
         cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1'))); moved=cov(('w0',),('w1',))
-        u=validate_read_consequence_at_use(c,coverage=moved,active_world_id='w0',active_world_root=r('root-w0'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_COVERAGE_IDENTITY)
+        u=validate_read_consequence_at_use(c,coverage=moved,active_world_id='w0',active_world_root=r('root-w0'),active_projection_root=r('projection-w0'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_COVERAGE_IDENTITY)
+    def test_projection_move_at_use_holds(self):
+        cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1')))
+        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w0',active_world_root=r('root-w0'),active_projection_root=r('repaired-projection'),read_obligation_root=r('trust')); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_PROJECTION_IDENTITY)
+    def test_projection_roots_may_differ_across_equivalent_worlds(self):
+        cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0',projection='p0'),wp('w1',projection='p1'))); self.assertEqual(c.disposition,ReadConsequenceDisposition.READY); self.assertNotEqual(c.member_projection_roots[0],c.member_projection_roots[1])
     def test_mutation_always_holds(self):
         cv=cov(); c=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1')))
-        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w0',active_world_root=r('root-w0'),read_obligation_root=r('trust'),mutation_requested=True); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_MUTATION); self.assertFalse(u.mutation_authority)
+        u=validate_read_consequence_at_use(c,coverage=cv,active_world_id='w0',active_world_root=r('root-w0'),active_projection_root=r('projection-w0'),read_obligation_root=r('trust'),mutation_requested=True); self.assertEqual(u.disposition,ReadConsequenceDisposition.HOLD_MUTATION); self.assertFalse(u.mutation_authority)
     def test_projection_order_canonical(self):
         cv=cov(); a=compile_read_consequence_certificate(coverage=cv,projections=(wp('w0'),wp('w1'))); b=compile_read_consequence_certificate(coverage=cv,projections=(wp('w1'),wp('w0'))); self.assertEqual(a.receipt_root,b.receipt_root)
     def test_no_positive_world_holds(self):
