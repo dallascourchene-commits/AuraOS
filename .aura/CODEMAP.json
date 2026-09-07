@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788795191,
+  "generated_at_unix": 1788796502,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1700,
+    "repo_file_count": 1704,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -298,6 +298,8 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+      "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -1676,6 +1678,8 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+      "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1816,16 +1820,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1700,
-      "bytes": 26639312,
-      "tokens_est": 6650226,
+      "files": 1704,
+      "bytes": 26659887,
+      "tokens_est": 6655371,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 287,
+        "python_module": 1029,
+        "schema_or_lexicon": 289,
         "support_file": 49
       }
     },
@@ -137844,6 +137848,14 @@
         "end_line": 182,
         "semantic_id": "tests/test_aura_gate_adapters.py#function:runtime:d91911e46a3286e0",
         "signature_hash": "e672a1fd71dad185"
+      },
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:runtime:61a795c8f8b6c254",
+        "signature_hash": "44929c6e64fccad5"
       }
     ],
     "adapter": [
@@ -158724,6 +158736,380 @@
         "signature_hash": "8da6b94eb23fc2af"
       }
     ],
+    "ModelFamily": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ModelFamily:52f4c5a0f2a12adb",
+        "signature_hash": "97630aabe75031f7"
+      }
+    ],
+    "Operation": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Operation:28d0f4505c7ae057",
+        "signature_hash": "53e5aa0f0ec78f71"
+      }
+    ],
+    "Decision": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Decision:d2a9d7d52b7bc5a0",
+        "signature_hash": "d6a166dc8cfde9f6"
+      }
+    ],
+    "SourceBinding": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:SourceBinding:dd246ce80b24419d",
+        "signature_hash": "6d1250ea5ac06cd3"
+      }
+    ],
+    "SourceBinding.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:SourceBinding.canonical:2c07112f15d94cdb",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "RuntimeProof": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:RuntimeProof:80ffbcf518183daf",
+        "signature_hash": "99c2b15cf8f08cc0"
+      }
+    ],
+    "RuntimeProof.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:RuntimeProof.canonical:77c704a2f2239a12",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "AdapterIdentity": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdapterIdentity:0ebd397490a13c9d",
+        "signature_hash": "aadd7f818b8ece00"
+      }
+    ],
+    "AdapterIdentity.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:AdapterIdentity.canonical:3e94f3eb61bb8365",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "PrefetchContract": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:PrefetchContract:26f74af7b9720691",
+        "signature_hash": "019748e77c467c38"
+      }
+    ],
+    "PrefetchContract.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:PrefetchContract.canonical:d4400e63d41a3e6b",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "ExternalEvidenceCard": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ExternalEvidenceCard:67f561ad5068e74c",
+        "signature_hash": "3236a49127fddccf"
+      }
+    ],
+    "ExternalEvidenceCard.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:ExternalEvidenceCard.canonical:37285fef830b863e",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "CapabilityRequest": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 119,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:CapabilityRequest:6027c546ce637ff8",
+        "signature_hash": "1160361a5cbe27da"
+      }
+    ],
+    "AdmissionReceipt": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 131,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdmissionReceipt:422517ec2ce376a3",
+        "signature_hash": "cdf4b6f2ba88559d"
+      },
+      {
+        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#class:AdmissionReceipt:bde8947bedc6abfb",
+        "signature_hash": "cdf4b6f2ba88559d"
+      }
+    ],
+    "_stable_hash": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 152,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_stable_hash:766ecee54857713f",
+        "signature_hash": "4c70f6bac2b29ae9"
+      }
+    ],
+    "_valid_nonempty": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_valid_nonempty:177ed8397e8e6e3c",
+        "signature_hash": "4b4f5fde86d6a598"
+      }
+    ],
+    "_external_digest": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 159,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_external_digest:32fd271cf7d9c6fc",
+        "signature_hash": "40933a182d47fc4c"
+      }
+    ],
+    "_diagnostic_k27": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 172,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_diagnostic_k27:2f4dcc0922cbf32c",
+        "signature_hash": "c9cd5c1228852979"
+      }
+    ],
+    "_build_y13": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 192,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_build_y13:d0a911ef80b9fb17",
+        "signature_hash": "5cdd2da5f2f76c3d"
+      }
+    ],
+    "admit": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 294,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:admit:9cd7ef77f2db2da6",
+        "signature_hash": "df08b11b09768619"
+      },
+      {
+        "file": "tools/awj032/training_o1_reference/training_admission.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 146,
+        "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:admit:3ce0a4835494bb01",
+        "signature_hash": "bb676c9171dd8b32"
+      }
+    ],
+    "source": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:source:a7f99045190d9a4b",
+        "signature_hash": "a1a8ec6d00f701b6"
+      },
+      {
+        "file": "tools/awj032/training_o1_reference/test_training_admission.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#function:source:d20b030a7d1d5d46",
+        "signature_hash": "4b1eb2b86e3ed8a1"
+      }
+    ],
+    "qwen_adapter": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:qwen_adapter:2dd0fe6bcab5b627",
+        "signature_hash": "7ab715906e0f2b77"
+      }
+    ],
+    "glm_prefetch": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:glm_prefetch:22ba8cbfcc2b2e77",
+        "signature_hash": "7e71af77cff19d5a"
+      }
+    ],
+    "CapabilityMembraneTests": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#class:CapabilityMembraneTests:bfca3dd096da902e",
+        "signature_hash": "9f1a1ea99c5af809"
+      }
+    ],
+    "CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter:7031ce3c48435be7",
+        "signature_hash": "adf182f01b3217a4"
+      }
+    ],
+    "CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter:8822f47e58236815",
+        "signature_hash": "2e847af37e5675ee"
+      }
+    ],
+    "CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract:4f5fde90bb5e7f0c",
+        "signature_hash": "e959d4f2af38087d"
+      }
+    ],
+    "CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission:167ed5385ff7cda4",
+        "signature_hash": "e14f2d7bae8f8ee6"
+      }
+    ],
+    "CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness:5d46e631df54d307",
+        "signature_hash": "0c78debc06725b21"
+      }
+    ],
+    "CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change:628998bc873ad029",
+        "signature_hash": "659644543c8a55c9"
+      }
+    ],
+    "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training:16fdcbe23bf525ac",
+        "signature_hash": "a08df9754f2e1279"
+      }
+    ],
+    "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 148,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch:f7a19e776040aee8",
+        "signature_hash": "f252910f619b8dfc"
+      }
+    ],
+    "CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 173,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission:04dc331161f3d9f1",
+        "signature_hash": "8150b93704c9021c"
+      }
+    ],
+    "CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest:0fce6aaa64f14c97",
+        "signature_hash": "cfa541084510cdf0"
+      }
+    ],
     "BindingMutationSoundnessTests": [
       {
         "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
@@ -159724,16 +160110,6 @@
         "signature_hash": "c812ef0f49389e60"
       }
     ],
-    "source": [
-      {
-        "file": "tools/awj032/training_o1_reference/test_training_admission.py",
-        "kind": "function",
-        "line": 13,
-        "end_line": 13,
-        "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#function:source:d20b030a7d1d5d46",
-        "signature_hash": "4b1eb2b86e3ed8a1"
-      }
-    ],
     "man": [
       {
         "file": "tools/awj032/training_o1_reference/test_training_admission.py",
@@ -160394,16 +160770,6 @@
         "end_line": 127,
         "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:audit_source:4ef38074559b0bd9",
         "signature_hash": "c7b40fbb1465d640"
-      }
-    ],
-    "admit": [
-      {
-        "file": "tools/awj032/training_o1_reference/training_admission.py",
-        "kind": "function",
-        "line": 129,
-        "end_line": 146,
-        "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:admit:3ce0a4835494bb01",
-        "signature_hash": "bb676c9171dd8b32"
       }
     ],
     "admit.out": [
@@ -161518,16 +161884,6 @@
         "end_line": 29,
         "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#method:AdmissionSemantic.semantic_root:484c15911828cb07",
         "signature_hash": "7de05f9ff73621d7"
-      }
-    ],
-    "AdmissionReceipt": [
-      {
-        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
-        "kind": "class",
-        "line": 32,
-        "end_line": 40,
-        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#class:AdmissionReceipt:bde8947bedc6abfb",
-        "signature_hash": "cdf4b6f2ba88559d"
       }
     ],
     "AdmissionReceipt.__post_init__": [
@@ -181716,6 +182072,100 @@
         0.059949,
         0.003827,
         -0.264032
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1075,
+      "lines": 23,
+      "tokens_est": 269,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c0e1041ffc7800b3",
+      "vector": [
+        -0.270381,
+        -0.022433,
+        -0.253851,
+        -0.23496,
+        0.005904,
+        -0.036602,
+        -0.272743,
+        0.041325,
+        -0.152311,
+        0.272743,
+        0.064939,
+        -0.21843,
+        0.140504,
+        0.135781,
+        0.211346,
+        -0.03424,
+        0.293995,
+        0.074384,
+        0.282188,
+        -0.029518,
+        -0.005904,
+        0.090914,
+        -0.135781,
+        -0.022433,
+        -0.206623,
+        -0.060216,
+        -0.227876,
+        0.142865,
+        0.246767,
+        0.149949,
+        -0.057855,
+        0.30108
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1693,
+      "lines": 38,
+      "tokens_est": 424,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "df95eeb13345e6f6",
+      "vector": [
+        -0.12629,
+        -0.242522,
+        0.106173,
+        -0.255934,
+        0.112879,
+        0.246993,
+        -0.242522,
+        0.139702,
+        -0.26711,
+        0.217935,
+        0.217935,
+        -0.083821,
+        -0.162054,
+        0.077115,
+        0.204524,
+        -0.115114,
+        0.077115,
+        0.021235,
+        0.186642,
+        -0.276051,
+        0.063704,
+        0.175466,
+        0.083821,
+        0.068175,
+        -0.148643,
+        0.253699,
+        -0.2157,
+        -0.034646,
+        0.052528,
+        -0.246993,
+        0.27158,
+        0.007823
       ]
     },
     {
@@ -269359,6 +269809,100 @@
       ]
     },
     {
+      "path": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10069,
+      "lines": 295,
+      "tokens_est": 2518,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f4550bdb0a52c39e",
+      "vector": [
+        0.261884,
+        0.123443,
+        0.23881,
+        0.222659,
+        -0.146517,
+        0.028842,
+        0.171897,
+        0.130365,
+        -0.188049,
+        0.294187,
+        0.167283,
+        -0.102677,
+        -0.153439,
+        -0.273421,
+        -0.086526,
+        0.040379,
+        0.065759,
+        0.111906,
+        0.10037,
+        0.215737,
+        -0.005768,
+        -0.2042,
+        -0.174205,
+        0.104984,
+        -0.155746,
+        0.185741,
+        0.224966,
+        0.164975,
+        0.178819,
+        0.264191,
+        -0.252654,
+        -0.118828
+      ]
+    },
+    {
+      "path": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7738,
+      "lines": 189,
+      "tokens_est": 1934,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f78aaacfcfbade3b",
+      "vector": [
+        -0.276772,
+        -0.191788,
+        0.109101,
+        0.090726,
+        0.279069,
+        0.242319,
+        -0.042492,
+        -0.292851,
+        0.076945,
+        -0.187195,
+        -0.070054,
+        -0.13896,
+        -0.081539,
+        -0.274476,
+        0.074648,
+        -0.242319,
+        -0.16882,
+        -0.210163,
+        0.233132,
+        0.251507,
+        -0.122882,
+        -0.083836,
+        0.044789,
+        -0.267585,
+        -0.081539,
+        -0.111398,
+        0.274476,
+        0.136664,
+        -0.120586,
+        0.005742,
+        0.104507,
+        -0.079242
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "role": "python_module",
       "binary": false,
@@ -294121,16 +294665,16 @@
     }
   },
   "summary": {
-    "file_count": 1700,
-    "total_bytes": 26639312,
-    "text_tokens_est": 6650226,
+    "file_count": 1704,
+    "total_bytes": 26659887,
+    "text_tokens_est": 6655371,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 287,
+      "python_module": 1029,
+      "schema_or_lexicon": 289,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294438,6 +294982,8 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+      "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -295816,6 +296362,8 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+      "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -454610,6 +455158,366 @@
         "file_digest8": "ea7fae03964050af"
       },
       {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdapterIdentity:0ebd397490a13c9d",
+        "name": "AdapterIdentity",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 67,
+        "end_line": 79,
+        "signature_hash": "aadd7f818b8ece00",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdmissionReceipt:422517ec2ce376a3",
+        "name": "AdmissionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 131,
+        "end_line": 138,
+        "signature_hash": "cdf4b6f2ba88559d",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:CapabilityRequest:6027c546ce637ff8",
+        "name": "CapabilityRequest",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 119,
+        "end_line": 127,
+        "signature_hash": "1160361a5cbe27da",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Decision:d2a9d7d52b7bc5a0",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ExternalEvidenceCard:67f561ad5068e74c",
+        "name": "ExternalEvidenceCard",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 101,
+        "end_line": 115,
+        "signature_hash": "3236a49127fddccf",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ModelFamily:52f4c5a0f2a12adb",
+        "name": "ModelFamily",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 10,
+        "end_line": 14,
+        "signature_hash": "97630aabe75031f7",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Operation:28d0f4505c7ae057",
+        "name": "Operation",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "53e5aa0f0ec78f71",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:PrefetchContract:26f74af7b9720691",
+        "name": "PrefetchContract",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 83,
+        "end_line": 97,
+        "signature_hash": "019748e77c467c38",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:RuntimeProof:80ffbcf518183daf",
+        "name": "RuntimeProof",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 51,
+        "end_line": 63,
+        "signature_hash": "99c2b15cf8f08cc0",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:SourceBinding:dd246ce80b24419d",
+        "name": "SourceBinding",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 33,
+        "end_line": 47,
+        "signature_hash": "6d1250ea5ac06cd3",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_build_y13:d0a911ef80b9fb17",
+        "name": "_build_y13",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 175,
+        "end_line": 192,
+        "signature_hash": "5cdd2da5f2f76c3d",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_diagnostic_k27:2f4dcc0922cbf32c",
+        "name": "_diagnostic_k27",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 166,
+        "end_line": 172,
+        "signature_hash": "c9cd5c1228852979",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_external_digest:32fd271cf7d9c6fc",
+        "name": "_external_digest",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 159,
+        "end_line": 163,
+        "signature_hash": "40933a182d47fc4c",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_stable_hash:766ecee54857713f",
+        "name": "_stable_hash",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 150,
+        "end_line": 152,
+        "signature_hash": "4c70f6bac2b29ae9",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_valid_nonempty:177ed8397e8e6e3c",
+        "name": "_valid_nonempty",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 155,
+        "end_line": 156,
+        "signature_hash": "4b4f5fde86d6a598",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:admit:9cd7ef77f2db2da6",
+        "name": "admit",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 195,
+        "end_line": 294,
+        "signature_hash": "df08b11b09768619",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:AdapterIdentity.canonical:3e94f3eb61bb8365",
+        "name": "AdapterIdentity.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 73,
+        "end_line": 79,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:ExternalEvidenceCard.canonical:37285fef830b863e",
+        "name": "ExternalEvidenceCard.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 108,
+        "end_line": 115,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:PrefetchContract.canonical:d4400e63d41a3e6b",
+        "name": "PrefetchContract.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 90,
+        "end_line": 97,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:RuntimeProof.canonical:77c704a2f2239a12",
+        "name": "RuntimeProof.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:SourceBinding.canonical:2c07112f15d94cdb",
+        "name": "SourceBinding.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#class:CapabilityMembraneTests:bfca3dd096da902e",
+        "name": "CapabilityMembraneTests",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 55,
+        "end_line": 184,
+        "signature_hash": "9f1a1ea99c5af809",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:glm_prefetch:22ba8cbfcc2b2e77",
+        "name": "glm_prefetch",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 45,
+        "end_line": 52,
+        "signature_hash": "7e71af77cff19d5a",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:qwen_adapter:2dd0fe6bcab5b627",
+        "name": "qwen_adapter",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "7ab715906e0f2b77",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:runtime:61a795c8f8b6c254",
+        "name": "runtime",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "44929c6e64fccad5",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:source:a7f99045190d9a4b",
+        "name": "source",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "a1a8ec6d00f701b6",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch:f7a19e776040aee8",
+        "name": "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 134,
+        "end_line": 148,
+        "signature_hash": "f252910f619b8dfc",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training:16fdcbe23bf525ac",
+        "name": "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 121,
+        "end_line": 132,
+        "signature_hash": "a08df9754f2e1279",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission:167ed5385ff7cda4",
+        "name": "CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 86,
+        "end_line": 102,
+        "signature_hash": "e14f2d7bae8f8ee6",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest:0fce6aaa64f14c97",
+        "name": "CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 175,
+        "end_line": 184,
+        "signature_hash": "cfa541084510cdf0",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract:4f5fde90bb5e7f0c",
+        "name": "CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 72,
+        "end_line": 84,
+        "signature_hash": "e959d4f2af38087d",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter:8822f47e58236815",
+        "name": "CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 64,
+        "end_line": 70,
+        "signature_hash": "2e847af37e5675ee",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission:04dc331161f3d9f1",
+        "name": "CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 150,
+        "end_line": 173,
+        "signature_hash": "8150b93704c9021c",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change:628998bc873ad029",
+        "name": "CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 116,
+        "end_line": 119,
+        "signature_hash": "659644543c8a55c9",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter:7031ce3c48435be7",
+        "name": "CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 56,
+        "end_line": 62,
+        "signature_hash": "adf182f01b3217a4",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness:5d46e631df54d307",
+        "name": "CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 104,
+        "end_line": 114,
+        "signature_hash": "0c78debc06725b21",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#class:BindingMutationSoundnessTests:7ab077d5ce2a6ac6",
         "name": "BindingMutationSoundnessTests",
         "kind": "class",
@@ -458960,7 +459868,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8f312181e9e11d770b13fc3057133852",
-    "payload_hash": "ef157376d4a7375bfcb78e818515338e"
+    "record_fingerprint": "5ced694b32e56c862b0ed41026cfa270",
+    "payload_hash": "42a6c03d87e7468157e4efc288a5fa1f"
   }
 }

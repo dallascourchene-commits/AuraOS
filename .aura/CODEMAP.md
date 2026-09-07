@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1700
-- **total_bytes**: 26639312
-- **text_tokens_est**: 6650226
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 287, 'support_file': 49}
+- **file_count**: 1704
+- **total_bytes**: 26659887
+- **text_tokens_est**: 6655371
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1029, 'schema_or_lexicon': 289, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1700,
+  "repo_file_count": 1704,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -316,6 +316,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+    "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+    "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1694,6 +1696,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_runtime_hard_false.py",
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/airllm_tiny_fixture_probe.py",
+    "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+    "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
     "tools/awj032/test_airllm_binding_mutation_soundness.py",
     "tools/awj032/test_airllm_hard_false_inspected_tree.py",
     "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1840,16 +1844,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1700,
-  "bytes": 26639312,
-  "tokens_est": 6650226,
+  "files": 1704,
+  "bytes": 26659887,
+  "tokens_est": 6655371,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1027,
-    "schema_or_lexicon": 287,
+    "python_module": 1029,
+    "schema_or_lexicon": 289,
     "support_file": 49
   }
 }
