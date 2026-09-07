@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1659
-- **total_bytes**: 26517607
-- **text_tokens_est**: 6619743
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 276, 'support_file': 49}
+- **file_count**: 1660
+- **total_bytes**: 26523587
+- **text_tokens_est**: 6621238
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1659,
+  "repo_file_count": 1660,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1665,6 +1665,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1.py",
     "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
     "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
     "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
@@ -1799,15 +1800,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1659,
-  "bytes": 26517607,
-  "tokens_est": 6619743,
+  "files": 1660,
+  "bytes": 26523587,
+  "tokens_est": 6621238,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1009,
+    "python_module": 1010,
     "schema_or_lexicon": 276,
     "support_file": 49
   }
