@@ -1,0 +1,54 @@
+name: O5 Source Incarnation Stable Operation Proof
+on:
+  pull_request:
+    paths:
+      - 'tools/arena/source_incarnation_stable_operation.py'
+      - 'tools/arena/campaign_source_incarnation_stable_operation.py'
+      - 'tests/test_source_incarnation_stable_operation.py'
+      - 'artifacts/arena/o5_source_incarnation_stable_operation/**'
+      - '.github/workflows/o5-source-incarnation-stable-operation-proof.yml'
+permissions:
+  contents: read
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify frozen source bytes
+        run: |
+          echo '273aef1a0ace81e7becf49651faf5451efc50b9a6e940580e9b2639af1c0aaea  tools/arena/source_incarnation_stable_operation.py' | sha256sum -c -
+          echo '2f1f82c3619e661947b8f2db27a0cd2fe596f6d2702ed8587cb54be6ecaf8076  tests/test_source_incarnation_stable_operation.py' | sha256sum -c -
+          echo 'd3b4c21b2e7d13356233bee6c469db08d8c5d0d7709d607b203bb750de129dec  tools/arena/campaign_source_incarnation_stable_operation.py' | sha256sum -c -
+      - name: Three fresh venv proof
+        run: |
+          set -euo pipefail
+          mkdir -p proof
+          for n in 1 2 3; do
+            python -m venv ".venv$n"
+            PYTHONPATH=. ".venv$n/bin/python" -m unittest -q tests.test_source_incarnation_stable_operation
+            PYTHONPATH=. ".venv$n/bin/python" -m tools.arena.campaign_source_incarnation_stable_operation --mode all > "proof/out$n.json"
+          done
+          cmp proof/out1.json proof/out2.json
+          cmp proof/out1.json proof/out3.json
+          echo '3c6373a5ae5c8b871511d80c5af3249c91f3697cca26d457ff1beadd1b429024  proof/out1.json' | sha256sum -c -
+          python - <<'PY'
+          import json
+          x=json.load(open('proof/out1.json'))
+          assert x['campaign']['oracle_mismatches']==0
+          assert x['campaign']['false_ready']==0 and x['campaign']['false_hold']==0
+          assert x['campaign']['source_semantic_failures_to_rotate']==0
+          assert x['omega8']['states']==6561 and x['omega8']['keepers']==1 and x['omega8']['invalid_ready']==0
+          assert x['full13d']['cartesian_projected_states']==1594323
+          assert x['full13d']['hard_invalid_contextual_repairs']==0 and x['full13d']['keeper_context_holds']==0
+          assert x['hs1000']['frozen_candidates']==1000 and x['hs1000']['claimed_breakthroughs']==0
+          print('O5_EXACT_HEAD_PROOF=PASS')
+          PY
