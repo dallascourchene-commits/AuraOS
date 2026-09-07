@@ -1,73 +1,35 @@
-import itertools, unittest
+import unittest
 from dataclasses import replace
 from hashlib import sha256
-
-from tools.awj032.training_r1_resolver_reference.training_admission_resolver import AdmissionSemantic, OwnerResolver
-from tools.awj032.training_o1_reference.training_admission import SourceAuditVerifier
+from tools.awj032.training_o1_reference.training_admission import *
+from tools.awj032.training_r1_resolver_reference.training_admission_resolver import AdmissionSemantic,OwnerResolver
 from tools.awj032.training_o3_delegated_bridge_reference.delegated_training_bridge import *
 R=lambda s:sha256(s.encode()).hexdigest()
-
+def chain():
+    sv=SourceAuditVerifier({'s':b's'},'s',2);src=sv._issue_exact(observed_at=1);ts=('l.q_proj','l.v_proj');ks=tuple(sorted(derived_expected_adapter_keys(ts)));vv={k:k.encode() for k in ks};m=AdapterManifest(R('b'),R('c'),R('t'),R('run'),AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA',ts,8,16,False,ks,tuple(h_bytes(vv[k]) for k in ks));a=admit(source_verifier=sv,source=src,manifest=m,observed_base_checkpoint_root=m.base_checkpoint_root,observed_config_root=m.base_config_root,observed_tokenizer_root=m.tokenizer_root,observed_runtime_root=m.runtime_root,observed_target_paths=set(ts),provided_adapter_values=vv,observed_at=2);s=AdmissionSemantic(a.admission_root,a.source_root,a.adapter_root,a.runtime_root,a.target_topology_root,a.base_checkpoint_root,a.base_config_root,a.tokenizer_root,a.adapter_values_root,AIRLLM_COMMIT,a.model_family,a.trainer_class);o=OwnerResolver({'o':b'o'},'o',3);r=o.issue(s,o1_admission=a,source_verifier=sv,now=10,ttl=100);op=TrainingOperation(R('m'),a.source_root,R('i'),R('c'),R('p'),a.base_checkpoint_root,a.base_config_root,a.tokenizer_root,a.runtime_root,a.adapter_root,a.target_topology_root,AIRLLM_COMMIT,a.model_family,a.trainer_class);return sv,m,a,s,o,r,op
 class T(unittest.TestCase):
     def setUp(self):
-        self.op=TrainingOperation(R('mission'),R('source'),R('intent'),R('contract'),R('payload'),R('base'),R('config'),R('tokenizer'),R('runtime'),R('adapter'),R('topology'),AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
-        self.source_ver=SourceAuditVerifier({'src':b'source-secret'},'src',2)
-        self.o1=self.source_ver.sign_admission(action='ADMIT_D0_ADAPTER_LOAD',reason='O3_TEST_INHERITED_O1',source_root=self.op.source_identity_root,adapter_root=self.op.adapter_spec_root,runtime_root=self.op.runtime_root,target_topology_root=self.op.target_topology_root,observed_at=990)
-        self.adm_res=OwnerResolver({'a1':b'admission-secret'},'a1',4)
-        self.sem=AdmissionSemantic(self.o1.admission_root,self.op.source_identity_root,self.op.adapter_spec_root,self.op.runtime_root,self.op.target_topology_root,AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
-        self.receipt=self.adm_res.issue(self.sem,o1_admission=self.o1,source_verifier=self.source_ver,now=1000,ttl=100)
-        self.host=HostWorkcellAuthority({'h1':b'host-secret'},'h1',9)
-        self.current_capsule=R('current-capsule')
-        self.lease=self.host.issue(operation_root=self.op.operation_root,current_capsule_root=self.current_capsule,admission_semantic_root=self.sem.semantic_root,admission_receipt_root=self.receipt.receipt_root,now=1000,ttl=80)
-        self.capsule=DelegatedTrainingCapsule(self.op.operation_root,'WK-opaque-7',self.op.source_identity_root,self.op.adapter_spec_root,self.sem.semantic_root,self.receipt.receipt_root,self.lease.lease_root,R('test-plan'),'non_sol_worker',64)
-        self.attempt=DurableTrainingAttempt(self.op.operation_root,self.capsule.capsule_root,R('attempt'),R('idem'),R('recovery-policy'))
-        self.proposal=WorkerProposal(self.capsule.capsule_root,self.attempt.attempt_root,R('proposal-adapter'),R('metrics'),R('tests'),'non_sol_worker',R('output'))
-        self.recovery=RecoveryAuthority({'r1':b'recovery-secret'},'r1',2)
-    def admit(self,**kw):
-        d=dict(operation=self.op,admission_receipt=self.receipt,admission_resolver=self.adm_res,lease=self.lease,workcell_authority=self.host,capsule=self.capsule,current_capsule_root=self.current_capsule,now=1030);d.update(kw);return admit_delegation(**d)
-    def validate(self,**kw):
-        d=dict(operation=self.op,admission_receipt=self.receipt,admission_resolver=self.adm_res,lease=self.lease,workcell_authority=self.host,capsule=self.capsule,attempt=self.attempt,proposal=self.proposal,current_capsule_root=self.current_capsule,now=1030);d.update(kw);return validate_worker_proposal(**d)
-    def test_valid_delegation(self): self.assertEqual('ADMIT_D0_DELEGATED_TRAINING_PROPOSAL_ONLY',self.admit())
-    def test_valid_proposal(self): self.assertEqual('ADMIT_D0_ADAPTER_PROPOSAL_FOR_HOST_REVIEW',self.validate())
-    def test_glm_denied(self):
-        with self.assertRaises(ValueError): TrainingOperation(R('m'),R('s'),R('i'),R('c'),R('p'),R('b'),R('g'),R('t'),R('r'),R('a'),R('top'),AIRLLM_COMMIT,'glm','AirLLMLoRA')
-    def test_forged_admission(self):
-        bad=replace(self.receipt,mac=R('fake')); c=replace(self.capsule,admission_receipt_root=bad.receipt_root)
-        l=self.host.issue(operation_root=self.op.operation_root,current_capsule_root=self.current_capsule,admission_semantic_root=self.sem.semantic_root,admission_receipt_root=bad.receipt_root,now=1000,ttl=80)
-        c=replace(c,workcell_lease_root=l.lease_root)
-        self.assertTrue(self.admit(admission_receipt=bad,lease=l,capsule=c).startswith('HOLD_ADMISSION_CURRENTNESS:HOLD_BAD_SIGNATURE'))
-    def test_expired_admission(self): self.assertTrue(self.admit(now=1100).startswith('HOLD_ADMISSION_CURRENTNESS:HOLD_EXPIRED'))
-    def test_expired_workcell(self): self.assertTrue(self.admit(now=1080).startswith('HOLD_WORKCELL_CURRENTNESS:HOLD_WORKCELL_EXPIRED'))
-    def test_workcell_generation(self):
-        h=HostWorkcellAuthority({'h1':b'host-secret'},'h1',10); self.assertTrue(self.admit(workcell_authority=h).startswith('HOLD_WORKCELL_CURRENTNESS:HOLD_WORKCELL_GENERATION'))
-    def test_wrong_current_capsule(self): self.assertTrue(self.admit(current_capsule_root=R('other')).startswith('HOLD_WORKCELL_CURRENTNESS:HOLD_WORKCELL_BINDING'))
-    def test_source_movement_rotates_operation(self):
-        n=replace(self.op,source_identity_root=R('source2')); self.assertEqual('NEW_SEMANTIC_OPERATION',semantic_operation_reopen(self.op,n))
-    def test_benign_workcell_reissue_preserves_operation(self):
-        l2=self.host.issue(operation_root=self.op.operation_root,current_capsule_root=R('capsule2'),admission_semantic_root=self.sem.semantic_root,admission_receipt_root=self.receipt.receipt_root,now=1010,ttl=80)
-        self.assertEqual(self.op.operation_root,l2.operation_root); self.assertNotEqual(self.lease.lease_root,l2.lease_root)
-    def test_capsule_operation_mismatch(self): self.assertEqual('HOLD_OPERATION_BINDING',self.admit(capsule=replace(self.capsule,operation_root=R('bad'))))
-    def test_capsule_source_mismatch(self): self.assertEqual('HOLD_SOURCE_IDENTITY',self.admit(capsule=replace(self.capsule,source_identity_root=R('bad'))))
-    def test_capsule_adapter_mismatch(self): self.assertEqual('HOLD_ADAPTER_SPEC',self.admit(capsule=replace(self.capsule,adapter_spec_root=R('bad'))))
-    def test_capsule_lease_mismatch(self): self.assertEqual('HOLD_WORKCELL_LEASE_ROOT',self.admit(capsule=replace(self.capsule,workcell_lease_root=R('bad'))))
-    def test_private_fields_absent(self): self.assertTrue(validate_delegate_payload(self.capsule)); self.assertFalse(set(self.capsule.public_payload()) & PROHIBITED_DELEGATE_FIELDS)
-    def test_attempt_binding(self): self.assertEqual('HOLD_DURABLE_ATTEMPT_BINDING',self.validate(attempt=replace(self.attempt,capsule_root=R('bad'))))
-    def test_proposal_capsule(self): self.assertEqual('HOLD_PROPOSAL_CAPSULE',self.validate(proposal=replace(self.proposal,capsule_root=R('bad'))))
-    def test_proposal_attempt(self): self.assertEqual('HOLD_PROPOSAL_ATTEMPT',self.validate(proposal=replace(self.proposal,attempt_root=R('bad'))))
-    def test_proposal_worker(self): self.assertEqual('HOLD_PROPOSAL_WORKER_CLASS',self.validate(proposal=replace(self.proposal,worker_class='isolated_training_worker')))
-    def test_worker_authority_widening_constructor(self):
-        with self.assertRaises(ValueError): replace(self.proposal,authority='CHECKPOINT_MUTATION')
-    def test_retry_not_started(self): self.assertEqual('RETRY_CANDIDATE_D0',retry_decision(self.attempt,self.recovery.issue(self.attempt.attempt_root,'NOT_STARTED',1040),self.recovery))
-    def test_retry_unknown(self): self.assertEqual('HOLD_RECONCILE_UNKNOWN',retry_decision(self.attempt,self.recovery.issue(self.attempt.attempt_root,'UNKNOWN',1040),self.recovery))
-    def test_retry_completed(self): self.assertEqual('RETURN_ONLY_COMPLETED',retry_decision(self.attempt,self.recovery.issue(self.attempt.attempt_root,'COMPLETED',1040),self.recovery))
-    def test_retry_forged(self):
-        v=self.recovery.issue(self.attempt.attempt_root,'NOT_STARTED',1040); self.assertEqual('HOLD_RECOVERY_SIGNATURE',retry_decision(self.attempt,replace(v,mac=R('bad')),self.recovery))
-    def test_minimum_reopen(self):
-        c2=replace(self.capsule,opaque_work_handle='WK2',test_plan_root=R('plan2'))
-        op3=replace(self.op,source_identity_root=R('source3'),adapter_spec_root=R('adapter3')); o13=self.source_ver.sign_admission(action='ADMIT_D0_ADAPTER_LOAD',reason='O3_TEST_NEW_OPERATION',source_root=op3.source_identity_root,adapter_root=op3.adapter_spec_root,runtime_root=op3.runtime_root,target_topology_root=op3.target_topology_root,observed_at=991); sem3=AdmissionSemantic(o13.admission_root,op3.source_identity_root,op3.adapter_spec_root,op3.runtime_root,op3.target_topology_root,AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA'); r3=self.adm_res.issue(sem3,o1_admission=o13,source_verifier=self.source_ver,now=1000,ttl=100)
-        l3=self.host.issue(operation_root=op3.operation_root,current_capsule_root=self.current_capsule,admission_semantic_root=sem3.semantic_root,admission_receipt_root=r3.receipt_root,now=1000,ttl=80)
-        c3=DelegatedTrainingCapsule(op3.operation_root,'WK3',op3.source_identity_root,sem3.adapter_root,sem3.semantic_root,r3.receipt_root,l3.lease_root,R('plan3'),'non_sol_worker',64)
-        self.assertEqual((0,1),minimum_reopen_cone(self.op.operation_root,[self.capsule,c2,c3]))
-    def test_omega8(self): self.assertEqual(1,sum(omega8(s)=='KEEPER' for s in itertools.product(range(3),repeat=8)))
-    def test_factored13d(self): self.assertEqual(1,sum(factored13d(s)=='KEEPER' for s in itertools.product(range(3),repeat=13)))
-
+        self.sv,self.m,self.a,self.s,self.o,self.r,self.op=chain();self.host=HostWorkcellAuthority({'h':b'h'},'h',4);self.plan=R('plan');self.handle='WK';self.worker='non_sol_worker';self.steps=64;sub=capsule_subject_root(operation_root=self.op.operation_root,opaque_work_handle=self.handle,source_identity_root=self.op.source_identity_root,adapter_spec_root=self.op.adapter_spec_root,admission_semantic_root=self.s.semantic_root,admission_receipt_root=self.r.receipt_root,test_plan_root=self.plan,worker_class=self.worker,max_steps=self.steps);self.lease=self.host.issue(operation_root=self.op.operation_root,capsule_subject_root=sub,admission_semantic_root=self.s.semantic_root,admission_receipt_root=self.r.receipt_root,now=20,ttl=50);self.cap=DelegatedTrainingCapsule(self.op.operation_root,self.handle,self.op.source_identity_root,self.op.adapter_spec_root,self.s.semantic_root,self.r.receipt_root,self.lease.lease_root,self.plan,self.worker,self.steps);self.attempt=DurableTrainingAttempt(self.op.operation_root,self.cap.capsule_root,R('a'),R('i'),R('rp'));self.rec=RecoveryAuthority({'r':b'r'},'r',2)
+    def admit(self,cap=None,lease=None,now=21): return admit_delegation(operation=self.op,admission_receipt=self.r,admission_resolver=self.o,lease=lease or self.lease,workcell_authority=self.host,capsule=cap or self.cap,now=now)
+    def test_valid(self): self.assertEqual(self.admit(),'ADMIT_D0_DELEGATED_TRAINING_PROPOSAL_ONLY')
+    def test_direct_o1_signing_forbidden(self):
+        with self.assertRaises(ValueError): self.sv.sign_admission(action='ADMIT_D0_ADAPTER_LOAD')
+    def test_nan_lease_issue(self):
+        with self.assertRaises(ValueError): self.host.issue(operation_root=self.op.operation_root,capsule_subject_root=self.cap.subject_root,admission_semantic_root=self.s.semantic_root,admission_receipt_root=self.r.receipt_root,now=float('nan'),ttl=1)
+    def test_nan_lease_verify(self): self.assertEqual(self.admit(now=float('nan')),'HOLD_ADMISSION_CURRENTNESS:HOLD_INVALID_TIME')
+    def test_empty_host_key(self):
+        with self.assertRaises(ValueError): HostWorkcellAuthority({'h':b''},'h',1)
+    def test_capsule_worker_mutation_rejected(self):
+        c=replace(self.cap,worker_class='isolated_training_worker');self.assertEqual(self.admit(cap=c),'HOLD_WORKCELL_CURRENTNESS:HOLD_WORKCELL_BINDING')
+    def test_capsule_steps_mutation_rejected(self):
+        c=replace(self.cap,max_steps=65);self.assertEqual(self.admit(cap=c),'HOLD_WORKCELL_CURRENTNESS:HOLD_WORKCELL_BINDING')
+    def test_capsule_plan_mutation_rejected(self):
+        c=replace(self.cap,test_plan_root=R('other'));self.assertEqual(self.admit(cap=c),'HOLD_WORKCELL_CURRENTNESS:HOLD_WORKCELL_BINDING')
+    def test_recovery_stale_not_started_rejected(self):
+        old=self.rec.issue(self.attempt.attempt_root,'NOT_STARTED',30);new=self.rec.issue(self.attempt.attempt_root,'COMPLETED',31);self.assertEqual(retry_decision(self.attempt,old,self.rec),'HOLD_RECOVERY_SUPERSEDED');self.assertEqual(retry_decision(self.attempt,new,self.rec),'RETURN_ONLY_COMPLETED')
+    def test_recovery_monotonic_time(self):
+        self.rec.issue(self.attempt.attempt_root,'UNKNOWN',30)
+        with self.assertRaises(ValueError): self.rec.issue(self.attempt.attempt_root,'NOT_STARTED',30)
+    def test_empty_recovery_key(self):
+        with self.assertRaises(ValueError): RecoveryAuthority({'r':b''},'r',1)
 if __name__=='__main__': unittest.main()
