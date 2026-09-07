@@ -1,0 +1,103 @@
+{
+  "authority_ceiling": {
+    "canonical_promotion_claimed": false,
+    "effect_authority": false,
+    "gate10": false,
+    "merge_deploy_claimed": false,
+    "mutation_authority": false,
+    "tecc_verification_claimed": false,
+    "upstream_ecf_authentication_claimed": false
+  },
+  "campaign": {
+    "campaign_root": "7fc3a160213982f38686c3f9da5179a23c46c9f8e644aa6b9cd717060786adc4",
+    "cases": 20000,
+    "counts": {
+      "HOLD_BINDING_ENVELOPE_D0": 1666,
+      "PARTIAL_HOLD_D0": 15001,
+      "READY_REFINED_D0": 3333
+    },
+    "false_hold": 0,
+    "oracle_mismatches": 0,
+    "per_mode": {
+      "admitted_witness_not_owner_admitted": 1666,
+      "coherent_cut_moved": 1666,
+      "detached_read_binding": 1666,
+      "intent_moved": 1667,
+      "jurisdiction_generation_moved": 1667,
+      "nuisance_only_moved": 1666,
+      "obligation_moved": 1667,
+      "owner_not_admitted": 1667,
+      "producer_incarnation_moved": 1667,
+      "producer_registry_moved": 1667,
+      "source_observation_moved": 1667,
+      "valid": 1667
+    },
+    "schema": "AURA-O10R1-ECF-REFINEMENT-CAMPAIGN-v1",
+    "unsafe_self_attested_baseline_ready": 15001,
+    "upstream_ecf_owner_authentication_claimed": false
+  },
+  "hyper_scaling": {
+    "hs1000": {
+      "cells": 1000,
+      "consequence_groups": [
+        "PARTIAL_HOLD_D0",
+        "READY_REFINED_D0"
+      ],
+      "freeze_root": "a5e69d17fcfc86d73e94aa99f0185b8f1b98cb7aa48a1a65c44d678672b3f204",
+      "quotient_root": "20a3b1721bc7eb3597ce297e24b4e1c47c0832406d37221d2c876cf2bf8ad71b"
+    },
+    "omega8": {
+      "keepers": 1,
+      "root": "7b8c3bd626b16e3e50cf353a0f52dd6fc13f8965b50cd694c239bface29902bc",
+      "states": 6561
+    },
+    "recursion13d": {
+      "cartesian_states": 1594323,
+      "context_states_on_hard_keeper": 243,
+      "hard_invalid_context_repairs": 0,
+      "hard_nonkeepers": 6560,
+      "hard_states": 6561,
+      "root": "2b673c0ffcf3ee2b2d0b9da8e3716a8681e28c3dd7dba1b619ce650aa67c60d5",
+      "valid_context_plan_roots": 1,
+      "valid_context_statuses": [
+        "READY_REFINED_D0"
+      ]
+    },
+    "upstream_ecf_owner_authentication_claimed": false
+  },
+  "keeper_laws": [
+    "CallerBoolean != ECFAdmissionResult",
+    "ECFAdmissionResult != UpstreamECFOwnerAuthentication",
+    "AdmittedEffectObligationEvidence != EffectAuthority",
+    "NuisanceConfiguration != EffectEvidenceIdentity"
+  ],
+  "objective": "O10R1_CANONICAL_EFFECT_OBLIGATION_EVIDENCE_SEAL",
+  "owner_boundary": {
+    "fabricated_owner_admission_set_canary": "READY_REFINED_D0 by construction when owner boundary itself is impersonated; this is explicit out-of-scope evidence, not proof credit",
+    "required_trust_input": "ECFAdmissionIndex.admitted_witness_roots supplied by rightful upstream ECF owner",
+    "upstream_owner_authentication_proven_here": false
+  },
+  "proof_receipt_root": "5576dbc102cd2606fda248fddd7c3c11ca54751f378258bf290f50d24941c3ee",
+  "publishable_sha256": {
+    "campaign": "3fa61f05cf98800a56223bd6163ae7fc48cf83469ee51b885d5bf811c10bb84b",
+    "hyperscale": "a802d485982fe3d66b23e12c7b1ee475f23252d1439aac7bb9489e60099d45cf",
+    "source": "a517f38beb5c616c84f768a3e2447cb4665ad925b65ad12e2caefd949190215e",
+    "tests": "1af31ef023f1dc51293c2efe356aed3315c813dc6d5e0b10c0302faa7cc3b8bc"
+  },
+  "schema": "AURA-ARENA-PROOF-RECEIPT-O10R1-v1",
+  "status": "D0_VERIFIED_DONOR_NONPROMOTING",
+  "three_fresh_venvs": {
+    "campaign_output_sha256": "5903ea5be4e0b68fe45056cfc1c3bc11c5717de40af75621be1606adc4bf0138",
+    "environments": 3,
+    "focused_failures_total": 0,
+    "focused_tests_per_env": 15,
+    "focused_tests_total": 45,
+    "hyperscale_output_sha256": "e20bfa0797833ffee5afbe67abd9d6da85e218c9e389835f3efd8ea3842359c1",
+    "semantic_outputs_byte_identical": true,
+    "test_transcript_bytes_claimed_identical": false
+  },
+  "zero_credit_scars": [
+    "Initial fixture stored binding objects where the actual O8 owner contract requires binding_roots as exact SHA roots; tests failed before ECF semantics and received zero credit.",
+    "Exploratory multi-binding evidence_set_root preserved caller observation order; canonical status ordering was added before the frozen proof campaign."
+  ]
+}
