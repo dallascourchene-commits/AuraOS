@@ -18,26 +18,34 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
       - name: Three fresh Python 3.13 environments
         shell: bash
         run: |
           set -euo pipefail
-          PY=$(command -v python3.13 || command -v python3)
+          PY=$(command -v python3.13)
           "$PY" --version
+          "$PY" - <<'PY'
+          import sys
+          assert sys.version_info[:2] == (3, 13), sys.version
+          PY
           mkdir -p /tmp/o21-receipts
           for i in 1 2 3; do
             rm -rf "/tmp/o21-venv-$i"
             "$PY" -m venv "/tmp/o21-venv-$i"
             "/tmp/o21-venv-$i/bin/python" -m unittest -q tests/test_installed_runtime_bound_delegation.py
             rm -f artifacts/arena/o21_installed_runtime_bound_delegation/PROOF_RECEIPT_O21.json
-            "/tmp/o21-venv-$i/bin/python" tools/arena/proof_o21_runtime_bound_delegation.py > "/tmp/o21-receipts/proof-$i.json"
+            "/tmp/o21-venv-$i/bin/python" -m tools.arena.proof_o21_runtime_bound_delegation > "/tmp/o21-receipts/proof-$i.json"
             cp artifacts/arena/o21_installed_runtime_bound_delegation/PROOF_RECEIPT_O21.json "/tmp/o21-receipts/file-$i.json"
             cmp "/tmp/o21-receipts/proof-$i.json" "/tmp/o21-receipts/file-$i.json"
           done
           cmp /tmp/o21-receipts/proof-1.json /tmp/o21-receipts/proof-2.json
           cmp /tmp/o21-receipts/proof-1.json /tmp/o21-receipts/proof-3.json
           echo "O21_PROOF_SHA256=$(sha256sum /tmp/o21-receipts/proof-1.json | awk '{print $1}')"
-          python3 - <<'PY'
+          "$PY" - <<'PY'
           import json
           p=json.load(open('/tmp/o21-receipts/proof-1.json'))
           assert p['campaign']['cases']==30000
