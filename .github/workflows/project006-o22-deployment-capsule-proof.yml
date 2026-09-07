@@ -1,0 +1,38 @@
+name: project006-o22-deployment-capsule-proof
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/deployment_capsule_admission.py'
+      - 'tests/test_project006_deployment_capsule_o22.py'
+      - 'tools/project006/o22_reference/proof_o22.py'
+      - 'artifacts/arena/project006_o22_deployment_capsule/PROOF_RECEIPT_O22.json'
+      - '.github/workflows/project006-o22-deployment-capsule-proof.yml'
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Measure exact published bytes
+        shell: bash
+        run: |
+          sha256sum tools/project006/deployment_capsule_admission.py tests/test_project006_deployment_capsule_o22.py tools/project006/o22_reference/proof_o22.py | tee o22-published-sha256.txt
+      - name: Three fresh venvs and deterministic proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE/tools/project006:$GITHUB_WORKSPACE"
+          for i in 1 2 3; do
+            rm -rf ".o22-venv-$i"
+            python -m venv ".o22-venv-$i"
+            ".o22-venv-$i/bin/python" -m unittest -q tests/test_project006_deployment_capsule_o22.py
+            ".o22-venv-$i/bin/python" tools/project006/o22_reference/proof_o22.py > "o22-proof-$i.json"
+          done
+          cmp o22-proof-1.json o22-proof-2.json
+          cmp o22-proof-1.json o22-proof-3.json
+          printf '%s  %s\n' 'ccf41076b46eeb734a8caa5aa4576a6b6a40f9723172b1d1c6d730e803c85b9b' o22-proof-1.json | sha256sum -c -
+          echo O22_EXACT_HEAD_PROOF=PASS
