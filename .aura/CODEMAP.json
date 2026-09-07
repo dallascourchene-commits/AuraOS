@@ -365,6 +365,21 @@
     "python aura_router.py fusion --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
     ],
+    "python -m venv": [
+      ".github/workflows/o7-effect-time-release-bound-execution-proof.yml",
+      ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
+      ".github/workflows/project006-o18-aura-interaction-proof.yml",
+      ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
+      ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
+      "README.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/o7-effect-time-release-bound-execution-proof.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python -m tools.arena.proof_o7_effect_time_release_bound_execution": [
+      ".github/workflows/o7-effect-time-release-bound-execution-proof.yml"
+    ],
     "python aura_qdkt_inventory.py \\": [
       ".github/workflows/p6-2-qdkt-compatibility.yml"
     ],
@@ -404,13 +419,6 @@
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
-    ],
-    "python -m venv": [
-      ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
-      ".github/workflows/project006-o18-aura-interaction-proof.yml",
-      ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
-      ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
-      "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
@@ -1029,9 +1037,6 @@
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
     ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
-    ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
     ],
@@ -1064,7 +1069,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1694,
+    "repo_file_count": 1699,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1216,6 +1221,7 @@
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
+      ".github/workflows/o7-effect-time-release-bound-execution-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -2701,6 +2707,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_time_release_bound_execution.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_installed_runtime_bound_delegation.py",
@@ -2714,9 +2721,12 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_time_loaded_process_currentness.py",
+      "tools/arena/effect_time_release_bound_execution.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/installed_runtime_bound_delegation.py",
       "tools/arena/proof_o21_runtime_bound_delegation.py",
+      "tools/arena/proof_o7_effect_time_release_bound_execution.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -10408,6 +10418,67 @@
         0.223934,
         0.24,
         -0.237992
+      ]
+    },
+    {
+      "path": ".github/workflows/o7-effect-time-release-bound-execution-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1711,
+      "lines": 48,
+      "tokens_est": 428,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv",
+        "python -m unittest",
+        "python -m tools.arena.proof_o7_effect_time_release_bound_execution"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          37
+        ],
+        "python -m unittest": [
+          39
+        ],
+        "python -m tools.arena.proof_o7_effect_time_release_bound_execution": [
+          40
+        ]
+      },
+      "topology": {},
+      "digest8": "57517698338a172f",
+      "vector": [
+        0.112952,
+        0.140259,
+        0.222179,
+        0.234592,
+        0.199837,
+        -0.120399,
+        0.224662,
+        0.21225,
+        0.162601,
+        -0.18246,
+        -0.214732,
+        0.006206,
+        -0.199837,
+        0.299135,
+        -0.316513,
+        0.110469,
+        -0.003724,
+        -0.165083,
+        0.035996,
+        0.117916,
+        -0.026066,
+        0.162601,
+        0.249486,
+        -0.063303,
+        -0.142741,
+        -0.053373,
+        0.261899,
+        -0.04096,
+        0.117916,
+        -0.249486,
+        -0.085645,
+        0.229627
       ]
     },
     {
@@ -104637,6 +104708,53 @@
       ]
     },
     {
+      "path": "tests/test_effect_time_release_bound_execution.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6409,
+      "lines": 110,
+      "tokens_est": 1603,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a2481773d98517f5",
+      "vector": [
+        0.203445,
+        -0.131216,
+        -0.246782,
+        -0.179369,
+        0.176961,
+        0.278082,
+        0.097509,
+        0.201037,
+        0.06621,
+        0.039726,
+        -0.097509,
+        0.254005,
+        0.220298,
+        -0.128808,
+        -0.111955,
+        -0.201037,
+        -0.051764,
+        -0.003611,
+        0.126401,
+        0.225114,
+        -0.167331,
+        0.001204,
+        0.304566,
+        -0.160108,
+        -0.179369,
+        -0.19863,
+        0.304566,
+        -0.11677,
+        0.172146,
+        0.241967,
+        -0.049356,
+        0.085471
+      ]
+    },
+    {
       "path": "tests/test_frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105248,6 +105366,100 @@
       ]
     },
     {
+      "path": "tools/arena/effect_time_loaded_process_currentness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6821,
+      "lines": 143,
+      "tokens_est": 1706,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f0d236fb89710737",
+      "vector": [
+        0.10315,
+        -0.141689,
+        0.257308,
+        0.180229,
+        -0.021537,
+        0.153025,
+        -0.259575,
+        0.116752,
+        -0.245973,
+        -0.207433,
+        -0.094082,
+        -0.055542,
+        0.218769,
+        0.230104,
+        0.214234,
+        0.189297,
+        0.046474,
+        0.243706,
+        -0.057809,
+        -0.085014,
+        -0.223303,
+        -0.261842,
+        -0.128087,
+        0.091815,
+        -0.284512,
+        -0.109951,
+        0.200632,
+        0.023804,
+        -0.282245,
+        -0.073679,
+        0.150758,
+        -0.10315
+      ]
+    },
+    {
+      "path": "tools/arena/effect_time_release_bound_execution.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7171,
+      "lines": 153,
+      "tokens_est": 1793,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1d2b3ba9711e8827",
+      "vector": [
+        0.117434,
+        0.12954,
+        -0.117434,
+        -0.243342,
+        -0.289347,
+        -0.284504,
+        0.29419,
+        0.12954,
+        -0.071429,
+        -0.20218,
+        0.039952,
+        0.236078,
+        -0.05448,
+        -0.042373,
+        0.136804,
+        -0.076271,
+        -0.066586,
+        0.127119,
+        -0.197337,
+        0.161017,
+        0.071429,
+        -0.291768,
+        -0.260291,
+        0.265134,
+        -0.161017,
+        -0.12954,
+        0.12954,
+        0.177967,
+        0.228814,
+        0.01816,
+        0.194916,
+        -0.015739
+      ]
+    },
+    {
       "path": "tools/arena/frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105386,6 +105598,53 @@
         0.175212,
         -0.117247,
         -0.08563
+      ]
+    },
+    {
+      "path": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7969,
+      "lines": 125,
+      "tokens_est": 1993,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b26038c6468428f5",
+      "vector": [
+        -0.095978,
+        -0.280996,
+        0.1908,
+        0.241679,
+        -0.206989,
+        -0.132981,
+        -0.021971,
+        -0.230116,
+        -0.220865,
+        -0.008095,
+        0.049724,
+        0.005782,
+        -0.024284,
+        0.035847,
+        0.017345,
+        0.093665,
+        0.285621,
+        -0.181549,
+        0.262494,
+        -0.253243,
+        0.183861,
+        -0.010407,
+        0.271745,
+        -0.151483,
+        0.269432,
+        -0.211614,
+        -0.084414,
+        -0.197738,
+        -0.262494,
+        0.079789,
+        -0.045098,
+        0.146858
       ]
     },
     {
@@ -107749,7 +108008,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788793772,
+  "generated_at_unix": 1788795457,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107903,6 +108162,7 @@
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
+      ".github/workflows/o7-effect-time-release-bound-execution-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
       ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -109388,6 +109648,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_time_release_bound_execution.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_installed_runtime_bound_delegation.py",
@@ -109401,9 +109662,12 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_time_loaded_process_currentness.py",
+      "tools/arena/effect_time_release_bound_execution.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/installed_runtime_bound_delegation.py",
       "tools/arena/proof_o21_runtime_bound_delegation.py",
+      "tools/arena/proof_o7_effect_time_release_bound_execution.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -266770,6 +267034,186 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#class:O7Tests:92e5d0846162689e",
+        "name": "O7Tests",
+        "kind": "class",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 45,
+        "end_line": 107,
+        "signature_hash": "a9176bfbbcfbbe67",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#function:fixture:d34381239da0459e",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 15,
+        "end_line": 37,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#function:run:aa8a12755e0aaff3",
+        "name": "run",
+        "kind": "function",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 39,
+        "end_line": 43,
+        "signature_hash": "88ef8f3b7fcca916",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_authority_ceiling:23c9c23c64d6723d",
+        "name": "O7Tests.test_authority_ceiling",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 106,
+        "end_line": 107,
+        "signature_hash": "1714946bf0778d30",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_direct_parent_dual_pass_wrong_bytes_is_closed:9c9e0de743be6f9e",
+        "name": "O7Tests.test_direct_parent_dual_pass_wrong_bytes_is_closed",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 49,
+        "end_line": 57,
+        "signature_hash": "3b0ac4b9fac04dab",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_dispatch_move_holds:1311327312c67a85",
+        "name": "O7Tests.test_dispatch_move_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 89,
+        "end_line": 91,
+        "signature_hash": "aa18a69934cf5710",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_duplicate_loaded_unit_holds:0fceb92446a9ec2f",
+        "name": "O7Tests.test_duplicate_loaded_unit_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "60a2dbd807345515",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_duplicate_scope_holds:0bc5fdd1f4c5d380",
+        "name": "O7Tests.test_duplicate_scope_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "7a00caafc47d1ed5",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_extra_loaded_unit_holds:d9107417ea3af52c",
+        "name": "O7Tests.test_extra_loaded_unit_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 63,
+        "end_line": 65,
+        "signature_hash": "e7304b956a677ddb",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_future_process_witness_holds:a5b3339fbe755457",
+        "name": "O7Tests.test_future_process_witness_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 81,
+        "end_line": 83,
+        "signature_hash": "2c2ba1c02d2b7f88",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_k27_navigation_does_not_rotate_permit:b1a0fc4a94f8608a",
+        "name": "O7Tests.test_k27_navigation_does_not_rotate_permit",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 101,
+        "end_line": 104,
+        "signature_hash": "1cbb3454a71a836c",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_missing_loaded_unit_holds:c349c74df5fc1dbc",
+        "name": "O7Tests.test_missing_loaded_unit_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "c4d17dba87e47eb9",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_parent_runtime_bound_hold_propagates:07cbf1a927c69c49",
+        "name": "O7Tests.test_parent_runtime_bound_hold_propagates",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 93,
+        "end_line": 95,
+        "signature_hash": "0eb22ff8f94dc9b8",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_process_restart_holds:8d250fc37ff61906",
+        "name": "O7Tests.test_process_restart_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "44e4e6157611cc04",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_same_cut_required:bec1990d89111129",
+        "name": "O7Tests.test_same_cut_required",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "1e79daae4bbbc086",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_scope_missing_from_manifest_holds:e45fe13c5b7f31c8",
+        "name": "O7Tests.test_scope_missing_from_manifest_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "5f2d7a3faf0601d1",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_stale_measurement_holds:3e3ac81ec4104c5a",
+        "name": "O7Tests.test_stale_measurement_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 97,
+        "end_line": 99,
+        "signature_hash": "9836548436dd38c7",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_valid:e45c19611fe3182e",
+        "name": "O7Tests.test_valid",
+        "kind": "method",
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "5ed9c72955b811a9",
+        "file_digest8": "a2481773d98517f5"
+      },
+      {
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "name": "T",
         "kind": "class",
@@ -268330,6 +268774,206 @@
         "file_digest8": "1397bda28a709ec7"
       },
       {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:AtUseObservation:7b892d7ba080092b",
+        "name": "AtUseObservation",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 74,
+        "end_line": 88,
+        "signature_hash": "4214cfc71b14d3d7",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Decision:a64674c43d355396",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 91,
+        "end_line": 100,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Disposition:9ddb38ddfe3aaf4b",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:InstalledRuntimeAttestation:499f25f59f70a3ce",
+        "name": "InstalledRuntimeAttestation",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "a061e0a3a4f42397",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:LoadedProcessWitness:6aec458517d64fe2",
+        "name": "LoadedProcessWitness",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 32,
+        "end_line": 71,
+        "signature_hash": "1d989e603d868667",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:MutationModel:3a11c089a61893e5",
+        "name": "MutationModel",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "b997e4d4b7d1769f",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:decide:c90040d898e3dfac",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 106,
+        "end_line": 142,
+        "signature_hash": "1f8dd72eb8d750f7",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:digest:7dca12121e1213e4",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:installed_root:7a4f49f9179c3340",
+        "name": "installed_root",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "49867ce218d6ec11",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.binding_root:5d5c0b112bcd0bfd",
+        "name": "LoadedProcessWitness.binding_root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 53,
+        "end_line": 71,
+        "signature_hash": "8f6c876409ac77f8",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.loaded_units_root:0fccd18bbd944c79",
+        "name": "LoadedProcessWitness.loaded_units_root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "e0c5f04e07a29504",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:decide.hold:68a5e162292797cf",
+        "name": "decide.hold",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 108,
+        "end_line": 108,
+        "signature_hash": "2ed02c47fa2448ff",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#class:EffectTimeExecutionPermit:7e405a10b74f5616",
+        "name": "EffectTimeExecutionPermit",
+        "kind": "class",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 44,
+        "end_line": 58,
+        "signature_hash": "ee6f2e1ed3e4e7d5",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#class:ExecutableScope:5cdb39f9f67b5792",
+        "name": "ExecutableScope",
+        "kind": "class",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 31,
+        "end_line": 41,
+        "signature_hash": "cf4202d95ca94d11",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#class:ExecutionDisposition:a45545e6dab435b5",
+        "name": "ExecutionDisposition",
+        "kind": "class",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 20,
+        "end_line": 28,
+        "signature_hash": "c0dfeec98157c58c",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#function:_root:678b5502a3544c09",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "769522c3b4bdf5c3",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#function:bind_effect_time:ed86bfc7e0c29c20",
+        "name": "bind_effect_time",
+        "kind": "function",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 60,
+        "end_line": 152,
+        "signature_hash": "c99964dbefdcc12a",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#method:ExecutableScope.root:bc61ca1ac953fa09",
+        "name": "ExecutableScope.root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "6a398e9907d51ebc",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#method:ExecutableScope.validate:278d6992422fbbd9",
+        "name": "ExecutableScope.validate",
+        "kind": "method",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 33,
+        "end_line": 38,
+        "signature_hash": "27da2e1f5dccccdd",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#method:bind_effect_time.hold:c7f124c514700beb",
+        "name": "bind_effect_time.hold",
+        "kind": "method",
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "line": 80,
+        "end_line": 88,
+        "signature_hash": "5da675b849dfa3e5",
+        "file_digest8": "1d2b3ba9711e8827"
+      },
+      {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
         "name": "CapabilityManifest",
         "kind": "class",
@@ -269288,6 +269932,106 @@
         "end_line": 112,
         "signature_hash": "fbf5850ecd742466",
         "file_digest8": "9db895ee972d6f68"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:call:00096de9eacb9001",
+        "name": "call",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 34,
+        "end_line": 36,
+        "signature_hash": "34af4608b7317097",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:campaign:1059555dc82e1691",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 78,
+        "end_line": 86,
+        "signature_hash": "1c596d2f6aadb9f8",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:d13:18814b9743691f6e",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 88,
+        "end_line": 99,
+        "signature_hash": "079b6323b7205c92",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:fixture:fae1c1b52dd86125",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 18,
+        "end_line": 32,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:hs1000:cab81b2f643e7f1f",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 101,
+        "end_line": 107,
+        "signature_hash": "8a77309486277e8f",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:main:997044914e6f424f",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 115,
+        "end_line": 122,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:mutate:277183d8e5d9af4a",
+        "name": "mutate",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 38,
+        "end_line": 60,
+        "signature_hash": "8d499f1f16b1cded",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:omega8:54fe952aab991c24",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 68,
+        "end_line": 76,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:oracle_self_falsification:704871bf75bd0178",
+        "name": "oracle_self_falsification",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 109,
+        "end_line": 113,
+        "signature_hash": "8196454d3cc4db0b",
+        "file_digest8": "b26038c6468428f5"
+      },
+      {
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:parent_dual_pass:261be54f608c608b",
+        "name": "parent_dual_pass",
+        "kind": "function",
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "970adb0364d6eb4e",
+        "file_digest8": "b26038c6468428f5"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
@@ -273500,8 +274244,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4b931e734eca9eee9ed5ecbfaf955185",
-    "payload_hash": "551cf0a316db71608bee344b0550e152"
+    "record_fingerprint": "774982cb43c339e57a3e68b5dee6afbd",
+    "payload_hash": "f80364f906bb2c9b783d65b010bb7e66"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273514,16 +274258,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1694,
-      "bytes": 26667526,
-      "tokens_est": 6657234,
+      "files": 1699,
+      "bytes": 26697607,
+      "tokens_est": 6664757,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1030,
-        "schema_or_lexicon": 284,
+        "python_module": 1034,
+        "schema_or_lexicon": 285,
         "support_file": 53
       }
     },
@@ -274210,16 +274954,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1694,
-    "total_bytes": 26667526,
-    "text_tokens_est": 6657234,
+    "file_count": 1699,
+    "total_bytes": 26697607,
+    "text_tokens_est": 6664757,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1030,
-      "schema_or_lexicon": 284,
+      "python_module": 1034,
+      "schema_or_lexicon": 285,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -275256,6 +276000,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 122,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:main:997044914e6f424f",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/project006/project006_consumer_outbox_wrapper.py",
         "kind": "function",
         "line": 209,
@@ -275482,6 +276234,14 @@
         "signature_hash": "d981aa5a48724e5c"
       },
       {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 43,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#function:run:aa8a12755e0aaff3",
+        "signature_hash": "88ef8f3b7fcca916"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 28,
@@ -275531,6 +276291,14 @@
         "line": 9,
         "end_line": 10,
         "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Disposition:9ddb38ddfe3aaf4b",
         "signature_hash": "9386d60514f2578d"
       }
     ],
@@ -292030,6 +292798,14 @@
         "end_line": 51,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#function:digest:e9b0dbc6797652bb",
         "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:digest:7dca12121e1213e4",
+        "signature_hash": "6845cd2b39857deb"
       },
       {
         "file": "tools/arena/frontier27_runtime.py",
@@ -371404,6 +372180,14 @@
         "signature_hash": "359c484fcebcc325"
       },
       {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#function:_root:678b5502a3544c09",
+        "signature_hash": "769522c3b4bdf5c3"
+      },
+      {
         "file": "tools/arena/installed_runtime_bound_delegation.py",
         "kind": "function",
         "line": 12,
@@ -385302,11 +386086,27 @@
         "signature_hash": "c73d3075455b50af"
       },
       {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 37,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#function:fixture:d34381239da0459e",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
         "file": "tools/arena/proof_o21_runtime_bound_delegation.py",
         "kind": "function",
         "line": 16,
         "end_line": 26,
         "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:fixture:5367571277f0b622",
+        "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 32,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:fixture:fae1c1b52dd86125",
         "signature_hash": "c73d3075455b50af"
       }
     ],
@@ -429218,6 +430018,166 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "O7Tests": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 107,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#class:O7Tests:92e5d0846162689e",
+        "signature_hash": "a9176bfbbcfbbe67"
+      }
+    ],
+    "O7Tests.test_valid": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_valid:e45c19611fe3182e",
+        "signature_hash": "5ed9c72955b811a9"
+      }
+    ],
+    "O7Tests.test_direct_parent_dual_pass_wrong_bytes_is_closed": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 57,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_direct_parent_dual_pass_wrong_bytes_is_closed:9c9e0de743be6f9e",
+        "signature_hash": "3b0ac4b9fac04dab"
+      }
+    ],
+    "O7Tests.test_missing_loaded_unit_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_missing_loaded_unit_holds:c349c74df5fc1dbc",
+        "signature_hash": "c4d17dba87e47eb9"
+      }
+    ],
+    "O7Tests.test_extra_loaded_unit_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 65,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_extra_loaded_unit_holds:d9107417ea3af52c",
+        "signature_hash": "e7304b956a677ddb"
+      }
+    ],
+    "O7Tests.test_duplicate_loaded_unit_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_duplicate_loaded_unit_holds:0fceb92446a9ec2f",
+        "signature_hash": "60a2dbd807345515"
+      }
+    ],
+    "O7Tests.test_scope_missing_from_manifest_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_scope_missing_from_manifest_holds:e45fe13c5b7f31c8",
+        "signature_hash": "5f2d7a3faf0601d1"
+      }
+    ],
+    "O7Tests.test_duplicate_scope_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_duplicate_scope_holds:0bc5fdd1f4c5d380",
+        "signature_hash": "7a00caafc47d1ed5"
+      }
+    ],
+    "O7Tests.test_same_cut_required": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_same_cut_required:bec1990d89111129",
+        "signature_hash": "1e79daae4bbbc086"
+      }
+    ],
+    "O7Tests.test_future_process_witness_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 83,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_future_process_witness_holds:a5b3339fbe755457",
+        "signature_hash": "2c2ba1c02d2b7f88"
+      }
+    ],
+    "O7Tests.test_process_restart_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_process_restart_holds:8d250fc37ff61906",
+        "signature_hash": "44e4e6157611cc04"
+      }
+    ],
+    "O7Tests.test_dispatch_move_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 91,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_dispatch_move_holds:1311327312c67a85",
+        "signature_hash": "aa18a69934cf5710"
+      }
+    ],
+    "O7Tests.test_parent_runtime_bound_hold_propagates": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 95,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_parent_runtime_bound_hold_propagates:07cbf1a927c69c49",
+        "signature_hash": "0eb22ff8f94dc9b8"
+      }
+    ],
+    "O7Tests.test_stale_measurement_holds": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 99,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_stale_measurement_holds:3e3ac81ec4104c5a",
+        "signature_hash": "9836548436dd38c7"
+      }
+    ],
+    "O7Tests.test_k27_navigation_does_not_rotate_permit": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 104,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_k27_navigation_does_not_rotate_permit:b1a0fc4a94f8608a",
+        "signature_hash": "1cbb3454a71a836c"
+      }
+    ],
+    "O7Tests.test_authority_ceiling": [
+      {
+        "file": "tests/test_effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 107,
+        "semantic_id": "tests/test_effect_time_release_bound_execution.py#method:O7Tests.test_authority_ceiling:23c9c23c64d6723d",
+        "signature_hash": "1714946bf0778d30"
+      }
+    ],
     "T": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -430418,6 +431378,14 @@
         "end_line": 34,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
         "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Decision:a64674c43d355396",
+        "signature_hash": "fc4b98c490ac6e3c"
       }
     ],
     "chain_root": [
@@ -430448,6 +431416,14 @@
         "end_line": 50,
         "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:decide:d192c6b1807fc94b",
         "signature_hash": "306b985492635361"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 142,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:decide:c90040d898e3dfac",
+        "signature_hash": "1f8dd72eb8d750f7"
       }
     ],
     "decide.hold": [
@@ -430457,6 +431433,14 @@
         "line": 35,
         "end_line": 35,
         "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:decide.hold:9f985eecf31e7bac",
+        "signature_hash": "2ed02c47fa2448ff"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 108,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:decide.hold:68a5e162292797cf",
         "signature_hash": "2ed02c47fa2448ff"
       }
     ],
@@ -430738,6 +431722,146 @@
         "end_line": 268,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
         "signature_hash": "033c7cd0343e1003"
+      }
+    ],
+    "MutationModel": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:MutationModel:3a11c089a61893e5",
+        "signature_hash": "b997e4d4b7d1769f"
+      }
+    ],
+    "InstalledRuntimeAttestation": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:InstalledRuntimeAttestation:499f25f59f70a3ce",
+        "signature_hash": "a061e0a3a4f42397"
+      }
+    ],
+    "LoadedProcessWitness": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 71,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:LoadedProcessWitness:6aec458517d64fe2",
+        "signature_hash": "1d989e603d868667"
+      }
+    ],
+    "LoadedProcessWitness.loaded_units_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.loaded_units_root:0fccd18bbd944c79",
+        "signature_hash": "e0c5f04e07a29504"
+      }
+    ],
+    "LoadedProcessWitness.binding_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 71,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.binding_root:5d5c0b112bcd0bfd",
+        "signature_hash": "8f6c876409ac77f8"
+      }
+    ],
+    "AtUseObservation": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 88,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:AtUseObservation:7b892d7ba080092b",
+        "signature_hash": "4214cfc71b14d3d7"
+      }
+    ],
+    "installed_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:installed_root:7a4f49f9179c3340",
+        "signature_hash": "49867ce218d6ec11"
+      }
+    ],
+    "ExecutionDisposition": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 28,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#class:ExecutionDisposition:a45545e6dab435b5",
+        "signature_hash": "c0dfeec98157c58c"
+      }
+    ],
+    "ExecutableScope": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 41,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#class:ExecutableScope:5cdb39f9f67b5792",
+        "signature_hash": "cf4202d95ca94d11"
+      }
+    ],
+    "ExecutableScope.validate": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 38,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#method:ExecutableScope.validate:278d6992422fbbd9",
+        "signature_hash": "27da2e1f5dccccdd"
+      }
+    ],
+    "ExecutableScope.root": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#method:ExecutableScope.root:bc61ca1ac953fa09",
+        "signature_hash": "6a398e9907d51ebc"
+      }
+    ],
+    "EffectTimeExecutionPermit": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 58,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#class:EffectTimeExecutionPermit:7e405a10b74f5616",
+        "signature_hash": "ee6f2e1ed3e4e7d5"
+      }
+    ],
+    "bind_effect_time": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 152,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#function:bind_effect_time:ed86bfc7e0c29c20",
+        "signature_hash": "c99964dbefdcc12a"
+      }
+    ],
+    "bind_effect_time.hold": [
+      {
+        "file": "tools/arena/effect_time_release_bound_execution.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 88,
+        "semantic_id": "tools/arena/effect_time_release_bound_execution.py#method:bind_effect_time.hold:c7f124c514700beb",
+        "signature_hash": "5da675b849dfa3e5"
       }
     ],
     "stable": [
@@ -431590,6 +432714,14 @@
         "signature_hash": "5d0d5d85b7f484a4"
       },
       {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 86,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:campaign:1059555dc82e1691",
+        "signature_hash": "1c596d2f6aadb9f8"
+      },
+      {
         "file": "tools/project006/proof_o20.py",
         "kind": "function",
         "line": 17,
@@ -431615,6 +432747,14 @@
         "line": 98,
         "end_line": 104,
         "semantic_id": "tools/arena/proof_o21_runtime_bound_delegation.py#function:omega8:2e45427703ddbcf3",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 76,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:omega8:54fe952aab991c24",
         "signature_hash": "779fe12d7757e6f1"
       },
       {
@@ -431670,6 +432810,14 @@
         "signature_hash": "cb33d0ed1005d09a"
       },
       {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 107,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:hs1000:cab81b2f643e7f1f",
+        "signature_hash": "8a77309486277e8f"
+      },
+      {
         "file": "tools/project006/proof_aura_interaction_o18.py",
         "kind": "function",
         "line": 25,
@@ -431684,6 +432832,72 @@
         "end_line": 51,
         "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:hs1000:4311e3dfcdc56259",
         "signature_hash": "cb33d0ed1005d09a"
+      }
+    ],
+    "call": [
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 36,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:call:00096de9eacb9001",
+        "signature_hash": "34af4608b7317097"
+      }
+    ],
+    "mutate": [
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 60,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:mutate:277183d8e5d9af4a",
+        "signature_hash": "8d499f1f16b1cded"
+      }
+    ],
+    "parent_dual_pass": [
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:parent_dual_pass:261be54f608c608b",
+        "signature_hash": "970adb0364d6eb4e"
+      }
+    ],
+    "d13": [
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 99,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:d13:18814b9743691f6e",
+        "signature_hash": "079b6323b7205c92"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tools/project006/proof_o20.py#function:d13:7dcfbf966e72af5d",
+        "signature_hash": "6b299e931f9d9f0d"
+      },
+      {
+        "file": "tools/project006/proof_physical_wake_o19.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:d13:66792b044ab2b756",
+        "signature_hash": "6b299e931f9d9f0d"
+      }
+    ],
+    "oracle_self_falsification": [
+      {
+        "file": "tools/arena/proof_o7_effect_time_release_bound_execution.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 113,
+        "semantic_id": "tools/arena/proof_o7_effect_time_release_bound_execution.py#function:oracle_self_falsification:704871bf75bd0178",
+        "signature_hash": "8196454d3cc4db0b"
       }
     ],
     "oracle": [
@@ -433256,24 +434470,6 @@
         "end_line": 4,
         "semantic_id": "tools/project006/proof_o20.py#function:keeper:d522d355cdb440cc",
         "signature_hash": "25d67670486c403b"
-      }
-    ],
-    "d13": [
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 16,
-        "semantic_id": "tools/project006/proof_o20.py#function:d13:7dcfbf966e72af5d",
-        "signature_hash": "6b299e931f9d9f0d"
-      },
-      {
-        "file": "tools/project006/proof_physical_wake_o19.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 16,
-        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:d13:66792b044ab2b756",
-        "signature_hash": "6b299e931f9d9f0d"
       }
     ],
     "hs": [
