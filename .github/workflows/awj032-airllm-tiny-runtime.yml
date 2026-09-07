@@ -46,6 +46,40 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Materialize pinned streamed-training source and prove O1 exact-source suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --no-tags https://github.com/lyogavin/airllm.git .awj032_airllm_upstream_fixture
+          git -C .awj032_airllm_upstream_fixture checkout --detach 55e435087d951da8c25ab3672e969025241a398e
+          test "$(git -C .awj032_airllm_upstream_fixture rev-parse HEAD)" = "55e435087d951da8c25ab3672e969025241a398e"
+          python - <<'PY'
+          import json
+          import unittest
+          from pathlib import Path
+          from tools.awj032.training_o1_reference import test_training_admission as mod
+
+          suite = unittest.defaultTestLoader.loadTestsFromModule(mod)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          assert result.wasSuccessful(), result
+          assert result.testsRun == 16, result.testsRun
+          assert not result.skipped, result.skipped
+          receipt = {
+              'schema': 'AWJ032_O1_EXACT_SOURCE_SUITE_V1',
+              'airllm_commit': '55e435087d951da8c25ab3672e969025241a398e',
+              'tests_run': result.testsRun,
+              'skipped': len(result.skipped),
+              'failures': len(result.failures),
+              'errors': len(result.errors),
+              'status': 'PASS',
+              'claim_ceiling': 'PINNED_TRAINING_SOURCE_AND_D0_CONTRACT_TEST_ONLY_NOT_RUNTIME_TRAINING_PROOF',
+          }
+          Path('.awj032/o1_exact_source_suite.json').write_text(
+              json.dumps(receipt, sort_keys=True, indent=2), encoding='utf-8'
+          )
+          print('O1_EXACT_SOURCE_SUITE_PASS', receipt)
+          PY
+
       - name: Materialize pinned stock AirLLM v3.3.0
         shell: bash
         run: |
