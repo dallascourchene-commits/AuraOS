@@ -4,6 +4,7 @@ import unittest
 from tools.arena.k27_memory_navigator.route_card_admission import (
     CapacityEnvelope, Disposition, Polarity, ProofReceipt, RouteIdentity,
     TemporalRequirement, TimingMode, UseContext, admit, canonical_receipt_root,
+    temporal_contract_root,
 )
 
 H = "0" * 64
@@ -37,7 +38,8 @@ def receipt(polarity=Polarity.POSITIVE, **kw):
     return ProofReceipt(polarity=polarity,
                         route_identity=kw.pop("route_identity", identity()),
                         certified_envelope=kw.pop("certified_envelope", envelope()),
-                        temporal_mode=t.mode, event_time=t.event_time, **kw)
+                        temporal_mode=t.mode, event_time=t.event_time,
+                        temporal_contract_root=temporal_contract_root(t), **kw)
 
 
 def use(**kw):
@@ -52,6 +54,8 @@ def reference(r, u):
             or not u.local_knowledge_sufficient or not u.capability_current
             or not u.disclosure_budget_ok or not u.temporal.deadline_safe):
         return Disposition.HOLD
+    if r.temporal_contract_root != temporal_contract_root(u.temporal):
+        return Disposition.REPROVE
     hard = r.route_identity.hard_roots() != u.identity.hard_roots()
     if r.polarity is Polarity.NEGATIVE:
         if hard or not u.envelope.no_wider_than(r.certified_envelope) or mode is not r.temporal_mode:
@@ -115,7 +119,7 @@ class NavigatorRouteAdmissionTests(unittest.TestCase):
         self.assertEqual(admit(r, use(identity=identity(dependency_root="3" * 64))).disposition, Disposition.REPROVE)
 
     def test_k27_move_does_not_mint_or_block(self):
-        result = admit(receipt(), use(identity=identity(k27=(2, 2, 2))))
+        result = admit(receipt(), use(identity=identity(k27=(2, 12, 26))))
         self.assertEqual(result.disposition, Disposition.READY_D0)
         self.assertFalse(result.effect_authority)
         self.assertFalse(result.gate10)
@@ -125,6 +129,12 @@ class NavigatorRouteAdmissionTests(unittest.TestCase):
 
     def test_unknown_deadline_finish_holds(self):
         self.assertEqual(admit(receipt(), use(temporal=temporal(worst_case_finish=None))).disposition, Disposition.HOLD)
+
+    def test_event_after_finish_holds(self):
+        self.assertEqual(admit(receipt(), use(temporal=temporal(event_time=125, worst_case_finish=120))).disposition, Disposition.HOLD)
+
+    def test_temporal_contract_change_reproves(self):
+        self.assertEqual(admit(receipt(), use(temporal=temporal(phase_tolerance=0))).disposition, Disposition.REPROVE)
 
     def test_causal_mode(self):
         self.assertEqual(temporal(deadline=None, worst_case_finish=None,
@@ -146,9 +156,16 @@ class NavigatorRouteAdmissionTests(unittest.TestCase):
     def test_irreversible_already_committed_holds(self):
         self.assertEqual(admit(receipt(), use(irreversible_effect_already_committed=True)).disposition, Disposition.HOLD)
 
+    def test_truthy_string_gate_rejected(self):
+        with self.assertRaises(ValueError):
+            use(current_source="false")
+
     def test_bool_k27_rejected(self):
         with self.assertRaises(ValueError):
             identity(k27=(True, 0, 1))
+
+    def test_base27_k27_is_accepted(self):
+        self.assertEqual(identity(k27=(3, 12, 26)).k27, (3, 12, 26))
 
     def test_receipt_cannot_mint_authority(self):
         with self.assertRaises(ValueError):
@@ -168,7 +185,7 @@ class NavigatorRouteAdmissionTests(unittest.TestCase):
                 lifecycle_epoch=7 + int(rng.random() < 0.05),
                 owner_incarnation="boot-b" if rng.random() < 0.04 else "boot-a",
                 dependency_root="3" * 64 if rng.random() < 0.04 else B,
-                k27=(rng.randrange(3), rng.randrange(3), rng.randrange(3)),
+                k27=(rng.randrange(27), rng.randrange(27), rng.randrange(27)),
             )
             cap = CapacityEnvelope(
                 9 + rng.choice([-2, -1, 0, 0, 0, 1]),
