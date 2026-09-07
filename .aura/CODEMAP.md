@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1690
-- **total_bytes**: 26573839
-- **text_tokens_est**: 6633861
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 250, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1023, 'schema_or_lexicon': 283, 'support_file': 49}
+- **file_count**: 1693
+- **total_bytes**: 26589648
+- **text_tokens_est**: 6637815
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 250, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1024, 'schema_or_lexicon': 285, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1690,
+  "repo_file_count": 1693,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,6 +166,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-airllm-exact-head-verify.yml",
     ".github/workflows/awj032-airllm-g1-source-contract.yml",
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
+    ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -310,6 +311,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
     "artifacts/arena/awj032_airllm_training_o2/PROOF_RECEIPT_O2.json",
     "artifacts/arena/awj032_airllm_training_o2/README.md",
+    "artifacts/arena/awj032_o17_runtime_delegated_training/PROOF_RECEIPT_O17.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1688,6 +1690,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_runtime_hard_false.py",
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/airllm_tiny_fixture_probe.py",
+    "tools/awj032/o17_runtime_delegated_training_reference.py",
     "tools/awj032/test_airllm_binding_mutation_soundness.py",
     "tools/awj032/test_airllm_hard_false_inspected_tree.py",
     "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1830,16 +1833,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1690,
-  "bytes": 26573839,
-  "tokens_est": 6633861,
+  "files": 1693,
+  "bytes": 26589648,
+  "tokens_est": 6637815,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 250,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1023,
-    "schema_or_lexicon": 283,
+    "python_module": 1024,
+    "schema_or_lexicon": 285,
     "support_file": 49
   }
 }
