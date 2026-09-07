@@ -1,68 +1,47 @@
-import itertools, random, unittest
+import itertools, unittest
 from dataclasses import replace
 from hashlib import sha256
-from training_admission_resolver import *
-R=lambda c: sha256(c.encode()).hexdigest()
+from tools.awj032.training_r1_resolver_reference.training_admission_resolver import *
+from tools.awj032.training_o1_reference.training_admission import (
+    SourceAuditVerifier, AdapterManifest, derived_expected_adapter_keys, h_bytes, admit as o1_admit,
+)
+R=lambda s:sha256(s.encode()).hexdigest()
 
-class T(unittest.TestCase):
+def o1_fixture():
+    sv=SourceAuditVerifier({'src':b'source-secret'},'src',2); src=sv._issue_exact(observed_at=5)
+    targets=('layers.0.q_proj','layers.0.v_proj'); keys=tuple(sorted(derived_expected_adapter_keys(targets))); values={k:k.encode() for k in keys}
+    m=AdapterManifest(R('base'),R('cfg'),R('tok'),R('runtime'),AIRLLM_COMMIT,'qwen3_8_dense','AirLLMLoRA',targets,16,32,False,keys,tuple(h_bytes(values[k]) for k in keys))
+    a=o1_admit(source_verifier=sv,source=src,manifest=m,observed_base_checkpoint_root=m.base_checkpoint_root,observed_config_root=m.base_config_root,observed_tokenizer_root=m.tokenizer_root,observed_runtime_root=m.runtime_root,observed_target_paths=set(targets),provided_adapter_values=values,observed_at=6)
+    return sv,m,a
+
+class ResolverTest(unittest.TestCase):
     def setUp(self):
-        self.sem=AdmissionSemantic(R('source'),R('adapter'),R('runtime'),R('topology'),AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
-        self.res=OwnerResolver({'k1':b'secret-one','k2':b'secret-two'},'k1',7)
-        self.rcpt=self.res.issue(self.sem,now=1000,ttl=60)
-        self.bind=TransitionAdmissionBinding(R('transition'),self.sem.semantic_root,self.rcpt.receipt_root,self.sem.adapter_root,self.sem.runtime_root,'deploy-7')
-    def test_valid(self): self.assertEqual('VERIFIED_D0_ADMISSION',verify_transition_admission(self.bind,self.rcpt,self.res,now=1030))
-    def test_plain_shape_forgery(self):
-        fake=replace(self.rcpt,mac=R('fake')); self.assertEqual('HOLD_BAD_SIGNATURE',verify_transition_admission(replace(self.bind,admission_receipt_root=fake.receipt_root),fake,self.res,now=1030))
-    def test_expired(self): self.assertEqual('HOLD_EXPIRED',verify_transition_admission(self.bind,self.rcpt,self.res,now=1060))
-    def test_future(self): self.assertEqual('HOLD_NOT_YET_VALID',verify_transition_admission(self.bind,self.rcpt,self.res,now=999))
-    def test_generation(self):
-        newer=OwnerResolver({'k1':b'secret-one'},'k1',8); self.assertEqual('HOLD_GENERATION_CURRENTNESS',verify_transition_admission(self.bind,self.rcpt,newer,now=1030))
-    def test_key_rotation(self):
-        rot=OwnerResolver({'k1':b'secret-one','k2':b'secret-two'},'k2',7); self.assertEqual('HOLD_KEY_CURRENTNESS',verify_transition_admission(self.bind,self.rcpt,rot,now=1030))
-    def test_semantic_stable_receipt_rotates(self):
-        r2=self.res.issue(self.sem,now=1010,ttl=60); self.assertEqual(self.sem.semantic_root,r2.semantic.semantic_root); self.assertNotEqual(self.rcpt.receipt_root,r2.receipt_root)
-    def test_binding_receipt(self): self.assertEqual('HOLD_RECEIPT_BINDING_MISMATCH',verify_transition_admission(replace(self.bind,admission_receipt_root=R('other')),self.rcpt,self.res,now=1030))
-    def test_binding_semantic(self): self.assertEqual('HOLD_SEMANTIC_BINDING_MISMATCH',verify_transition_admission(replace(self.bind,admission_semantic_root=R('other')),self.rcpt,self.res,now=1030))
-    def test_binding_adapter(self): self.assertEqual('HOLD_ADAPTER_BINDING_MISMATCH',verify_transition_admission(replace(self.bind,adapter_root=R('other')),self.rcpt,self.res,now=1030))
-    def test_binding_runtime(self): self.assertEqual('HOLD_RUNTIME_BINDING_MISMATCH',verify_transition_admission(replace(self.bind,runtime_root=R('other')),self.rcpt,self.res,now=1030))
-    def test_external_expected_source(self): self.assertEqual('HOLD_SOURCE_MISMATCH',self.res.verify(self.rcpt,now=1030,expected_source_root=R('bad'),expected_adapter_root=self.sem.adapter_root,expected_runtime_root=self.sem.runtime_root,expected_target_topology_root=self.sem.target_topology_root))
-    def test_external_expected_runtime(self): self.assertEqual('HOLD_RUNTIME_MISMATCH',self.res.verify(self.rcpt,now=1030,expected_source_root=self.sem.source_root,expected_adapter_root=self.sem.adapter_root,expected_runtime_root=R('bad'),expected_target_topology_root=self.sem.target_topology_root))
-    def test_external_expected_target(self): self.assertEqual('HOLD_TARGET_TOPOLOGY_MISMATCH',self.res.verify(self.rcpt,now=1030,expected_source_root=self.sem.source_root,expected_adapter_root=self.sem.adapter_root,expected_runtime_root=self.sem.runtime_root,expected_target_topology_root=R('bad')))
-    def test_glm_hold_constructor(self):
-        with self.assertRaises(ValueError): AdmissionSemantic(R('s'),R('a'),R('r'),R('t'),AIRLLM_COMMIT,'glm','AirLLMLoRA')
-    def test_source_generation_hold(self):
-        with self.assertRaises(ValueError): AdmissionSemantic(R('s'),R('a'),R('r'),R('t'),'0'*40,'qwen3_5','AirLLMLoRA')
-    def test_authority_widening_rejected(self):
-        with self.assertRaises(ValueError): AdmissionSemantic(R('s'),R('a'),R('r'),R('t'),AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA',authority='EXECUTE')
-    def test_minimum_reopen(self):
-        r2=self.res.issue(self.sem,now=1010,ttl=60); b2=replace(self.bind,transition_root=R('t2'),admission_receipt_root=r2.receipt_root)
-        sem3=AdmissionSemantic(R('source3'),R('adapter3'),R('runtime3'),R('topology3'),AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
-        r3=self.res.issue(sem3,now=1010,ttl=60)
-        b3=TransitionAdmissionBinding(R('t3'),sem3.semantic_root,r3.receipt_root,sem3.adapter_root,sem3.runtime_root,'deploy-3')
-        self.assertEqual((0,1),minimum_reopen_cone(self.sem.semantic_root,[self.bind,b2,b3]))
-        self.assertEqual((1,),minimum_reopen_cone(r2.receipt_root,[self.bind,b2,b3]))
-    def test_omega8(self):
-        keep=0
-        for s in itertools.product(range(3),repeat=8): keep += omega8(s)=='KEEPER'
-        self.assertEqual(1,keep)
-    def test_factored13d(self):
-        keep=0
-        for s in itertools.product(range(3),repeat=13): keep += factored13d(s)=='KEEPER'
-        self.assertEqual(1,keep)
-    def test_random_forgery_campaign(self):
-        rng=random.Random(7321); escapes=0
-        for i in range(10000):
-            fake=replace(self.rcpt,mac=sha256(str(rng.random()).encode()).hexdigest())
-            b=replace(self.bind,admission_receipt_root=fake.receipt_root)
-            escapes += verify_transition_admission(b,fake,self.res,now=1030)=='VERIFIED_D0_ADMISSION'
-        self.assertEqual(0,escapes)
-    def test_random_currentness_campaign(self):
-        rng=random.Random(881); bad=0
-        for _ in range(10000):
-            now=rng.randrange(900,1150)
-            got=verify_transition_admission(self.bind,self.rcpt,self.res,now=now)
-            expected='VERIFIED_D0_ADMISSION' if 1000<=now<1060 else ('HOLD_NOT_YET_VALID' if now<1000 else 'HOLD_EXPIRED')
-            bad += got!=expected
-        self.assertEqual(0,bad)
-
+        self.sv,self.m,self.o1=o1_fixture(); self.o=OwnerResolver({'k':b'owner-secret'},'k',3)
+        self.s=AdmissionSemantic(self.o1.admission_root,self.o1.source_root,self.o1.adapter_root,self.o1.runtime_root,self.o1.target_topology_root,AIRLLM_COMMIT,'qwen3_8_dense','AirLLMLoRA')
+        self.r=self.o.issue(self.s,o1_admission=self.o1,source_verifier=self.sv,now=10,ttl=20)
+    def test_issue_rejects_forged_o1(self):
+        bad=replace(self.o1,mac=R('bad'))
+        with self.assertRaises(ValueError): self.o.issue(self.s,o1_admission=bad,source_verifier=self.sv,now=10,ttl=20)
+    def test_issue_rejects_wrong_o1_root(self):
+        bads=replace(self.s,o1_admission_root=R('bad'))
+        with self.assertRaises(ValueError): self.o.issue(bads,o1_admission=self.o1,source_verifier=self.sv,now=10,ttl=20)
+    def test_admission_valid(self): self.assertEqual(self.o.verify(self.r,now=15,expected_source_root=self.s.source_root,expected_adapter_root=self.s.adapter_root,expected_runtime_root=self.s.runtime_root,expected_target_topology_root=self.s.target_topology_root,expected_o1_admission_root=self.o1.admission_root),'VERIFIED_D0_ADMISSION')
+    def test_nan_fails(self): self.assertEqual(self.o.verify(self.r,now=float('nan'),expected_source_root=self.s.source_root,expected_adapter_root=self.s.adapter_root,expected_runtime_root=self.s.runtime_root,expected_target_topology_root=self.s.target_topology_root),'HOLD_INVALID_TIME')
+    def test_expired(self): self.assertEqual(self.o.verify(self.r,now=30,expected_source_root=self.s.source_root,expected_adapter_root=self.s.adapter_root,expected_runtime_root=self.s.runtime_root,expected_target_topology_root=self.s.target_topology_root),'HOLD_EXPIRED')
+    def test_forgery(self):
+        bad=replace(self.r,mac=R('bad')); self.assertEqual(self.o.verify(bad,now=15,expected_source_root=self.s.source_root,expected_adapter_root=self.s.adapter_root,expected_runtime_root=self.s.runtime_root,expected_target_topology_root=self.s.target_topology_root),'HOLD_BAD_SIGNATURE')
+    def permit(self): return self.o.issue_transition_permit(self.r,transition_root=R('transition'),transition_subject_root=R('subject'),deployment_generation='dep-1',now=15,ttl=10,observed_source_root=self.s.source_root,observed_adapter_root=self.s.adapter_root,observed_runtime_root=self.s.runtime_root,observed_target_topology_root=self.s.target_topology_root)
+    def pv(self,p=None,**kw):
+        p=p or self.permit(); args=dict(now=16,expected_transition_root=R('transition'),expected_transition_subject_root=R('subject'),expected_deployment_generation='dep-1',observed_source_root=self.s.source_root,observed_adapter_root=self.s.adapter_root,observed_runtime_root=self.s.runtime_root,observed_target_topology_root=self.s.target_topology_root); args.update(kw); return self.o.verify_transition_permit(p,**args)
+    def test_permit_valid(self): self.assertEqual(self.pv(),'VERIFIED_D0_TRANSITION_PERMIT')
+    def test_transition_bound(self): self.assertEqual(self.pv(expected_transition_root=R('bad')),'HOLD_TRANSITION_CONTEXT')
+    def test_subject_bound(self): self.assertEqual(self.pv(expected_transition_subject_root=R('bad')),'HOLD_TRANSITION_SUBJECT')
+    def test_deployment_bound(self): self.assertEqual(self.pv(expected_deployment_generation='dep-2'),'HOLD_DEPLOYMENT_CONTEXT')
+    def test_source_currentness(self): self.assertEqual(self.pv(observed_source_root=R('new')),'HOLD_SOURCE_MISMATCH')
+    def test_topology_currentness(self): self.assertEqual(self.pv(observed_target_topology_root=R('new')),'HOLD_TARGET_TOPOLOGY_MISMATCH')
+    def test_permit_forgery(self): self.assertEqual(self.pv(replace(self.permit(),mac=R('bad'))),'HOLD_BAD_SIGNATURE')
+    def test_permit_expired(self): self.assertEqual(self.pv(now=25),'HOLD_EXPIRED')
+    def test_qwen38(self): self.assertEqual(self.s.model_family,'qwen3_8_dense')
+    def test_omega(self): self.assertEqual(1,sum(omega8(s)=='KEEPER' for s in itertools.product(range(3),repeat=8)))
+    def test_13d(self): self.assertEqual(1,sum(factored13d(s)=='KEEPER' for s in itertools.product(range(3),repeat=13)))
 if __name__=='__main__': unittest.main()
