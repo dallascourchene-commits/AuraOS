@@ -1,0 +1,53 @@
+name: Project006 O17 non-admin Windows liveness proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/Install-AuraProject006Wake.ps1'
+      - 'tools/project006/windows_reconcile_guardian.ps1'
+      - 'tools/project006/windows_liveness_contract.py'
+      - 'tools/project006/test_windows_liveness_fallback.py'
+      - 'tools/project006/proof_windows_liveness_fallback_o17.py'
+      - '.github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Three fresh environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/project006
+          rm -rf .o17-proof-env-1 .o17-proof-env-2 .o17-proof-env-3
+          for n in 1 2 3; do
+            python -m venv ".o17-proof-env-$n"
+            ".o17-proof-env-$n/bin/python" -m py_compile windows_liveness_contract.py test_windows_liveness_fallback.py proof_windows_liveness_fallback_o17.py
+            ".o17-proof-env-$n/bin/python" -m unittest -v test_windows_liveness_fallback.py
+            ".o17-proof-env-$n/bin/python" proof_windows_liveness_fallback_o17.py > ".o17-proof-$n.json"
+          done
+          sha256sum .o17-proof-1.json .o17-proof-2.json .o17-proof-3.json
+          cmp .o17-proof-1.json .o17-proof-2.json
+          cmp .o17-proof-1.json .o17-proof-3.json
+          python - <<'PY'
+          import json
+          p=json.load(open('.o17-proof-1.json'))
+          assert p['omega8']['states'] == 6561
+          assert p['omega8']['keepers'] == 2
+          assert p['omega8']['invalid_accepts'] == 0
+          assert p['factored13d']['states'] == 1594323
+          assert p['factored13d']['hard_invalid_contextual_repairs'] == 0
+          assert p['hs1000']['frozen_candidates'] == 1000
+          assert p['hs1000']['claimed_breakthroughs'] == 0
+          print('PROJECT006_O17_EXACT_HEAD_PROOF=PASS')
+          PY
