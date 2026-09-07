@@ -66,9 +66,25 @@ class InvariantSupport:
     def __post_init__(self) -> None:
         if type(self.generation) is not int or self.generation < 0:
             raise NavigatorError("support generation must be nonnegative")
+        normalized=[]
         for edge in self.hyperedges:
             if len(edge) < 2 or len(set(edge)) != len(edge):
                 raise NavigatorError("hard-invariant hyperedge must contain >=2 distinct items")
+            normalized.append(tuple(sorted(edge)))
+        if len(set(normalized)) != len(normalized):
+            raise NavigatorError("duplicate hard-invariant hyperedge")
+
+    @property
+    def normalized_hyperedges(self) -> tuple[tuple[str, ...], ...]:
+        return tuple(sorted(tuple(sorted(edge)) for edge in self.hyperedges))
+
+    @property
+    def support_root(self) -> str:
+        return digest({
+            "schema":"AURA-MEMORY-CITY-INVARIANT-SUPPORT-v1",
+            "generation":self.generation,
+            "hyperedges":[list(edge) for edge in self.normalized_hyperedges],
+        })
 
 
 @dataclass(frozen=True)
@@ -86,6 +102,7 @@ class BranchPlan:
 class ContingentHydrationStrategy:
     disposition: StrategyDisposition
     support_generation: int
+    support_root: str
     prefetch_components: tuple[tuple[str, ...], ...]
     prefetch_item_ids: tuple[str, ...]
     prefetch_bytes: int
@@ -126,6 +143,7 @@ def _canonical_items(items: tuple[HydrationItem, ...]) -> dict[str, HydrationIte
 
 
 def invariant_components(item_ids: tuple[str, ...], support: InvariantSupport) -> tuple[tuple[str, ...], ...]:
+    """Return exact connected components induced only by hard-invariant hyperedges."""
     ids = tuple(sorted(set(item_ids)))
     if len(ids) != len(item_ids):
         raise NavigatorError("duplicate item id in universe")
@@ -251,6 +269,7 @@ def compile_contingent_hydration(
             "schema": SCHEMA,
             "disposition": StrategyDisposition.HOLD_NO_CONTROLLABLE_POLICY.value,
             "support_generation": support.generation,
+            "support_root": support.support_root,
             "max_resident_bytes": max_resident_bytes,
             "reveal_tick": reveal_tick,
             "deadline_tick": deadline_tick,
@@ -262,7 +281,7 @@ def compile_contingent_hydration(
             "authority_minted": False,
         }
         return ContingentHydrationStrategy(
-            StrategyDisposition.HOLD_NO_CONTROLLABLE_POLICY, support.generation,
+            StrategyDisposition.HOLD_NO_CONTROLLABLE_POLICY, support.generation, support.support_root,
             (), (), 0, 0, max_resident_bytes, reveal_tick, deadline_tick, (),
             ("NO_NONANTICIPATORY_POLICY_FOR_ALL_BRANCHES",), digest(payload)
         )
@@ -283,6 +302,7 @@ def compile_contingent_hydration(
         "schema": SCHEMA,
         "disposition": StrategyDisposition.READY.value,
         "support_generation": support.generation,
+        "support_root": support.support_root,
         "prefetch_components": [list(c) for c in sorted(pset)],
         "prefetch_items": list(prefetch_items),
         "prefetch_bytes": sum(comp_bytes[c] for c in pset),
@@ -302,7 +322,7 @@ def compile_contingent_hydration(
         "authority_minted": False,
     }
     return ContingentHydrationStrategy(
-        StrategyDisposition.READY, support.generation, tuple(sorted(pset)),
+        StrategyDisposition.READY, support.generation, support.support_root, tuple(sorted(pset)),
         prefetch_items, sum(comp_bytes[c] for c in pset), pticks,
         max_resident_bytes, reveal_tick, deadline_tick, tuple(plans), (),
         digest(payload)
@@ -313,12 +333,17 @@ def validate_strategy_at_use(
     strategy: ContingentHydrationStrategy,
     *,
     branch_id: str,
-    support_generation: int,
+    support: InvariantSupport,
 ) -> StrategyUseDecision:
-    if support_generation != strategy.support_generation:
+    if support.generation != strategy.support_generation:
         return StrategyUseDecision(
             StrategyDisposition.HOLD_SUPPORT_GENERATION, branch_id, (),
             "support_generation_changed"
+        )
+    if support.support_root != strategy.support_root:
+        return StrategyUseDecision(
+            StrategyDisposition.HOLD_SUPPORT_GENERATION, branch_id, (),
+            "support_identity_changed_same_generation"
         )
     if strategy.disposition is not StrategyDisposition.READY:
         return StrategyUseDecision(
