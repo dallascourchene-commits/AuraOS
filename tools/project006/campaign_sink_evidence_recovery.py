@@ -11,6 +11,7 @@ def make(seed_i):
     return op, CurrentOwnerContext(op,op.authorization_root,op.proof_semantics_root,op.fence_root)
 
 def oracle(state,op,cur,cap,evidence,now):
+    # independently stated semantic oracle; signature verification is delegated to exact HMAC formula.
     terminal = state in (NativeState.RESULT_OBSERVED, NativeState.ERROR_TERMINAL)
     if state is NativeState.RETURN_WRITTEN: return RecoveryAction.DONE
     if terminal: return RecoveryAction.RETRY_RETURN_WRITER_ONLY
@@ -60,6 +61,7 @@ def run(cases=20000):
         actions[d.action.value]=actions.get(d.action.value,0)+1
         if state is NativeState.COMPLETION_AMBIGUOUS and evidence is not None and evidence.disposition is SinkDisposition.ACCEPTED:
             counts['accepted_provider_replays'] += int(d.action in (RecoveryAction.START_PROVIDER_ONCE,RecoveryAction.RETRY_PROVIDER_SAME_OPERATION_ID))
+        # unsafe baseline: ambiguous -> retry whenever not locally terminal, ignoring evidence/currentness/capability.
         if state is NativeState.COMPLETION_AMBIGUOUS and o not in (RecoveryAction.RETRY_PROVIDER_SAME_OPERATION_ID,):
             counts['unsafe_naive_replays'] += 1
     counts['actions']=dict(sorted(actions.items()))
