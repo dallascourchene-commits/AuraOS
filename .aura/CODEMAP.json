@@ -411,6 +411,7 @@
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
       ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
       ".github/workflows/project006-o21-byte-verified-update-proof.yml",
+      ".github/workflows/project006-o22-deployment-capsule-proof.yml",
       "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
@@ -1065,7 +1066,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1691,
+    "repo_file_count": 1696,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1244,6 +1245,7 @@
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
       ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
       ".github/workflows/project006-o21-byte-verified-update-proof.yml",
+      ".github/workflows/project006-o22-deployment-capsule-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1348,6 +1350,7 @@
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
       "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
       "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
+      "artifacts/arena/project006_o22_deployment_capsule/PROOF_RECEIPT_O22.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2704,6 +2707,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_atomic_runtime_update_o21.py",
+      "tests/test_project006_deployment_capsule_o22.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2728,8 +2732,10 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/atomic_runtime_update.py",
       "tools/project006/aura_interaction_contract.py",
+      "tools/project006/deployment_capsule_admission.py",
       "tools/project006/installed_runtime_attestation.py",
       "tools/project006/o21_reference/proof_o21.py",
+      "tools/project006/o22_reference/proof_o22.py",
       "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/proof_aura_interaction_o18.py",
@@ -12084,6 +12090,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o22-deployment-capsule-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1720,
+      "lines": 39,
+      "tokens_est": 430,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          31
+        ]
+      },
+      "topology": {},
+      "digest8": "b1c42ccdf94bbc0e",
+      "vector": [
+        0.328341,
+        -0.174474,
+        -0.221184,
+        0.001374,
+        0.171727,
+        -0.072812,
+        0.122269,
+        0.270641,
+        0.157988,
+        0.114026,
+        -0.050831,
+        0.07556,
+        0.284379,
+        -0.14425,
+        0.265146,
+        0.168979,
+        -0.045336,
+        -0.210193,
+        -0.226679,
+        -0.072812,
+        -0.267894,
+        -0.050831,
+        0.138755,
+        0.19096,
+        -0.204698,
+        0.009617,
+        0.289875,
+        -0.07556,
+        0.256903,
+        -0.042588,
+        -0.059074,
+        0.083803
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -18166,6 +18225,53 @@
         -0.071472,
         -0.064442,
         0.141771
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o22_deployment_capsule/PROOF_RECEIPT_O22.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3135,
+      "lines": 33,
+      "tokens_est": 784,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4a37b9d2c064d1af",
+      "vector": [
+        -0.110421,
+        0.16619,
+        -0.219727,
+        0.110421,
+        -0.19742,
+        0.25988,
+        0.139421,
+        0.262111,
+        -0.117113,
+        0.230881,
+        0.16842,
+        -0.284418,
+        0.266572,
+        0.056884,
+        -0.04573,
+        0.201881,
+        -0.210804,
+        -0.255419,
+        0.07696,
+        0.282188,
+        -0.163959,
+        0.07473,
+        -0.005577,
+        0.155036,
+        -0.16842,
+        0.255419,
+        0.148344,
+        -0.094806,
+        0.054653,
+        -0.103729,
+        -0.10596,
+        0.101498
       ]
     },
     {
@@ -104735,6 +104841,53 @@
       ]
     },
     {
+      "path": "tests/test_project006_deployment_capsule_o22.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4461,
+      "lines": 47,
+      "tokens_est": 1116,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "98269244b7588ab2",
+      "vector": [
+        -0.149037,
+        0.236584,
+        -0.215739,
+        0.174051,
+        0.255344,
+        0.115686,
+        0.144868,
+        -0.001042,
+        -0.063575,
+        0.051069,
+        0.188642,
+        0.023971,
+        -0.257428,
+        0.171966,
+        -0.217824,
+        -0.048984,
+        -0.159459,
+        -0.259512,
+        -0.240753,
+        -0.253259,
+        -0.182388,
+        0.090673,
+        0.017718,
+        0.224077,
+        -0.001042,
+        -0.180304,
+        -0.247006,
+        0.232415,
+        0.023971,
+        -0.111517,
+        -0.238668,
+        -0.180304
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -105863,6 +106016,53 @@
       ]
     },
     {
+      "path": "tools/project006/deployment_capsule_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10723,
+      "lines": 151,
+      "tokens_est": 2681,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e76ea58d45d0424a",
+      "vector": [
+        -0.045901,
+        -0.10004,
+        -0.220088,
+        0.104748,
+        0.276582,
+        0.151826,
+        0.236566,
+        0.029424,
+        -0.285997,
+        -0.274228,
+        0.241273,
+        0.290705,
+        0.158887,
+        -0.107102,
+        -0.06944,
+        -0.071794,
+        -0.062378,
+        0.14241,
+        -0.196549,
+        -0.095332,
+        0.11181,
+        -0.097686,
+        -0.210673,
+        0.198903,
+        0.020008,
+        0.151826,
+        0.229504,
+        0.290705,
+        -0.177718,
+        -0.036485,
+        -0.121225,
+        -0.198903
+      ]
+    },
+    {
       "path": "tools/project006/installed_runtime_attestation.py",
       "role": "python_module",
       "binary": false,
@@ -105954,6 +106154,53 @@
         0.272036,
         0.161784,
         0.063515
+      ]
+    },
+    {
+      "path": "tools/project006/o22_reference/proof_o22.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2327,
+      "lines": 37,
+      "tokens_est": 582,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a257f12cee280e15",
+      "vector": [
+        -0.105155,
+        0.041809,
+        0.320534,
+        -0.20651,
+        0.224247,
+        -0.01647,
+        0.019004,
+        -0.082351,
+        -0.057012,
+        0.130494,
+        0.026606,
+        -0.178637,
+        0.247052,
+        0.229315,
+        -0.279992,
+        0.28506,
+        0.006335,
+        -0.100088,
+        0.168502,
+        0.074749,
+        -0.320534,
+        0.031673,
+        -0.079817,
+        -0.059546,
+        0.191307,
+        0.115291,
+        -0.168502,
+        0.249586,
+        -0.155833,
+        -0.262255,
+        -0.186239,
+        0.178637
       ]
     },
     {
@@ -107612,7 +107859,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788790677,
+  "generated_at_unix": 1788791195,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107793,6 +108040,7 @@
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
       ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
       ".github/workflows/project006-o21-byte-verified-update-proof.yml",
+      ".github/workflows/project006-o22-deployment-capsule-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -107897,6 +108145,7 @@
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
       "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
       "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
+      "artifacts/arena/project006_o22_deployment_capsule/PROOF_RECEIPT_O22.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -109253,6 +109502,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_atomic_runtime_update_o21.py",
+      "tests/test_project006_deployment_capsule_o22.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -109277,8 +109527,10 @@
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/atomic_runtime_update.py",
       "tools/project006/aura_interaction_contract.py",
+      "tools/project006/deployment_capsule_admission.py",
       "tools/project006/installed_runtime_attestation.py",
       "tools/project006/o21_reference/proof_o21.py",
+      "tools/project006/o22_reference/proof_o22.py",
       "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/proof_aura_interaction_o18.py",
@@ -267530,6 +267782,226 @@
         "file_digest8": "d3e76bbf00394be8"
       },
       {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#class:T:f2ca6f9db5e6f259",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 12,
+        "end_line": 45,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#function:claims:956c34f7ecc9aed8",
+        "name": "claims",
+        "kind": "function",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "de2c2bb667339f83",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#function:ev:a625276f9bca46fa",
+        "name": "ev",
+        "kind": "function",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "4c52097f88a44b2f",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_bad_mac_holds:7480e127c4fae81b",
+        "name": "T.test_bad_mac_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "c14f0d91d69cbce4",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_base_moves:3df6f0a2e5a19d1c",
+        "name": "T.test_base_moves",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "e759131406aca5ac",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_canonical_pair_order_required:40b2b089e32a7a0d",
+        "name": "T.test_canonical_pair_order_required",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "54485a52e210715c",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_component_set_moves:1874a38bd800fd6e",
+        "name": "T.test_component_set_moves",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "ec87ef5892248fb8",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_component_values_move:d6295bc9a47b1fe4",
+        "name": "T.test_component_values_move",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "bddc5d15b40e8470",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_deep_immutability_rejects_dict:6779a92e8e5d0452",
+        "name": "T.test_deep_immutability_rejects_dict",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "975e9aae4f228f29",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_extra_proof_holds:79d46e1b01d944c0",
+        "name": "T.test_extra_proof_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "102c2b3d02246ff1",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_failed_proof_holds:860bc7797e5458f4",
+        "name": "T.test_failed_proof_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "a1e00d2906a47e7d",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_host_incarnation_moves:49889d967cb41a54",
+        "name": "T.test_host_incarnation_moves",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "95257daa2023bd5d",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_k27_not_in_identity:87a619711c5df4d6",
+        "name": "T.test_k27_not_in_identity",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 44,
+        "end_line": 44,
+        "signature_hash": "8cbd0efd1b567e0a",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_missing_proof_holds:f8e20c817d9dd003",
+        "name": "T.test_missing_proof_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "5ccd793744e65814",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_no_host_is_observation_required:c428ef65093a6cf2",
+        "name": "T.test_no_host_is_observation_required",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "c517ef7c6c472257",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_operator_plan_has_accept_or_rollback:529ba300c823461c",
+        "name": "T.test_operator_plan_has_accept_or_rollback",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 45,
+        "end_line": 45,
+        "signature_hash": "0730f5ee257392fe",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_prepare_root_exists:79d06a9a649bd088",
+        "name": "T.test_prepare_root_exists",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "369bf85b2a011e67",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_ready_exact:ec457e1ac1d60cda",
+        "name": "T.test_ready_exact",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "5dd5f68657f3fff8",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_skipped_required_holds:fbfed6faedd164a2",
+        "name": "T.test_skipped_required_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "847327b06f122971",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_stale_host_holds:444cd5eb7c9f91af",
+        "name": "T.test_stale_host_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 37,
+        "end_line": 37,
+        "signature_hash": "9edd86b145d79f9e",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_wrong_head_holds:85680114badf184f",
+        "name": "T.test_wrong_head_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "9de20a029026ee5d",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_zero_executed_holds:f3fba73f4aabda31",
+        "name": "T.test_zero_executed_holds",
+        "kind": "method",
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "a35cee37db339c01",
+        "file_digest8": "98269244b7588ab2"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -270210,6 +270682,216 @@
         "file_digest8": "b96f35abe6e655e3"
       },
       {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:AdmissionEvidence:2d28086b69fe0acf",
+        "name": "AdmissionEvidence",
+        "kind": "class",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 90,
+        "end_line": 106,
+        "signature_hash": "aede5da25aa4873a",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:CapsuleError:932e554457826b40",
+        "name": "CapsuleError",
+        "kind": "class",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "c2175a4e190372bb",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:DeploymentCapsule:f4bd0fa051167954",
+        "name": "DeploymentCapsule",
+        "kind": "class",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 52,
+        "end_line": 70,
+        "signature_hash": "6f815430a1677ede",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:Disposition:f2e6bef9c8a01f83",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 9,
+        "end_line": 21,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:ObservedHostBasis:e4d37962541b8c38",
+        "name": "ObservedHostBasis",
+        "kind": "class",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 73,
+        "end_line": 87,
+        "signature_hash": "e423149dc356ad35",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:ProofClaim:f87b5f5345a85b64",
+        "name": "ProofClaim",
+        "kind": "class",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 33,
+        "end_line": 49,
+        "signature_hash": "32bcb568d7c04d63",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_hex64:d0d114e0fb0a31ba",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "19dd1ea1e95374fb",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_pairs:77122015a2a1775f",
+        "name": "_pairs",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "97a931ec1f65a2ca",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_root:0e27a48a7494b5a1",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "34df9904ddea3a4f",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_verify_evidence:bd139cdd3f62edeb",
+        "name": "_verify_evidence",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 114,
+        "end_line": 115,
+        "signature_hash": "a2bf96d225cf5ad7",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:admit_capsule:65341845e21e0490",
+        "name": "admit_capsule",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 117,
+        "end_line": 146,
+        "signature_hash": "34491195b91ec0f1",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:operator_plan:d9db647d0d033ddd",
+        "name": "operator_plan",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 148,
+        "end_line": 150,
+        "signature_hash": "6e9b18c79316dd74",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:sign_evidence:7d5124f511c612d1",
+        "name": "sign_evidence",
+        "kind": "function",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 108,
+        "end_line": 112,
+        "signature_hash": "9bca3c17daa443ab",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:AdmissionEvidence.unsigned_payload:51528ade6f80040e",
+        "name": "AdmissionEvidence.unsigned_payload",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 105,
+        "end_line": 106,
+        "signature_hash": "8c5079af15197710",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:AdmissionEvidence.validate:8321ba3da8c055cc",
+        "name": "AdmissionEvidence.validate",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 99,
+        "end_line": 104,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:DeploymentCapsule.capsule_root:b6a79ee4ce8ecb86",
+        "name": "DeploymentCapsule.capsule_root",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "b95ddf7bdb177061",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:DeploymentCapsule.validate:bc4c3096c968fdc9",
+        "name": "DeploymentCapsule.validate",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 63,
+        "end_line": 68,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ObservedHostBasis.basis_root:a970e9bb1ebd7512",
+        "name": "ObservedHostBasis.basis_root",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 87,
+        "end_line": 87,
+        "signature_hash": "81a14f55058cee2e",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ObservedHostBasis.validate:0cc23bac2caa8697",
+        "name": "ObservedHostBasis.validate",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 81,
+        "end_line": 85,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ProofClaim.root:a858394877cca186",
+        "name": "ProofClaim.root",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 49,
+        "end_line": 49,
+        "signature_hash": "e3e717e8a95babdc",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ProofClaim.validate:e188192cd92bcf1c",
+        "name": "ProofClaim.validate",
+        "kind": "method",
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "line": 42,
+        "end_line": 47,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e76ea58d45d0424a"
+      },
+      {
         "semantic_id": "tools/project006/installed_runtime_attestation.py#class:AttestationError:841e06b352f301b1",
         "name": "AttestationError",
         "kind": "class",
@@ -270408,6 +271090,56 @@
         "end_line": 9,
         "signature_hash": "779fe12d7757e6f1",
         "file_digest8": "46127e4ad673197f"
+      },
+      {
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:campaign:2c30a304fe396d8d",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "line": 16,
+        "end_line": 20,
+        "signature_hash": "5d0d5d85b7f484a4",
+        "file_digest8": "a257f12cee280e15"
+      },
+      {
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:d13:ed92e3bb228990fc",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "line": 9,
+        "end_line": 15,
+        "signature_hash": "6b299e931f9d9f0d",
+        "file_digest8": "a257f12cee280e15"
+      },
+      {
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:hs:1c59cdfb609cdc7a",
+        "name": "hs",
+        "kind": "function",
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "line": 21,
+        "end_line": 35,
+        "signature_hash": "b3e37fefbbbd45d5",
+        "file_digest8": "a257f12cee280e15"
+      },
+      {
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:keeper:bfcd235c839f4511",
+        "name": "keeper",
+        "kind": "function",
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "line": 3,
+        "end_line": 3,
+        "signature_hash": "25d67670486c403b",
+        "file_digest8": "a257f12cee280e15"
+      },
+      {
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:omega8:f496858184ceadbe",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "line": 4,
+        "end_line": 8,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "a257f12cee280e15"
       },
       {
         "semantic_id": "tools/project006/physical_wake_acceptance.py#class:AcceptanceContract:deb1d34604357297",
@@ -273160,8 +273892,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e2eb25c7053c218910dd3c9238a29f36",
-    "payload_hash": "397f8fa7ae7a585c629af1bfc3043e5e"
+    "record_fingerprint": "6aa3abe2a936b2b5ff1ad90052e4bedf",
+    "payload_hash": "4f839997fc5c583132afd9ddef4a9613"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273174,16 +273906,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1691,
-      "bytes": 26655858,
-      "tokens_est": 6654322,
+      "files": 1696,
+      "bytes": 26678224,
+      "tokens_est": 6659915,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1029,
-        "schema_or_lexicon": 284,
+        "python_module": 1032,
+        "schema_or_lexicon": 286,
         "support_file": 53
       }
     },
@@ -273870,16 +274602,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1691,
-    "total_bytes": 26655858,
-    "text_tokens_est": 6654322,
+    "file_count": 1696,
+    "total_bytes": 26678224,
+    "text_tokens_est": 6659915,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1029,
-      "schema_or_lexicon": 284,
+      "python_module": 1032,
+      "schema_or_lexicon": 286,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -275175,6 +275907,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 21,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:Disposition:f2e6bef9c8a01f83",
         "signature_hash": "9386d60514f2578d"
       }
     ],
@@ -339684,6 +340424,14 @@
         "signature_hash": "19dd1ea1e95374fb"
       },
       {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_hex64:d0d114e0fb0a31ba",
+        "signature_hash": "19dd1ea1e95374fb"
+      },
+      {
         "file": "tools/project006/installed_runtime_attestation.py",
         "kind": "function",
         "line": 8,
@@ -360702,6 +361450,14 @@
         "end_line": 98,
         "semantic_id": "aura_substrate_contracts.py#function:_pairs:fb7fd318a67bd49b",
         "signature_hash": "8396e802e0b4f5bd"
+      },
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_pairs:77122015a2a1775f",
+        "signature_hash": "97a931ec1f65a2ca"
       }
     ],
     "SubstrateFileRecord": [
@@ -371046,6 +371802,14 @@
         "end_line": 66,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_root:c64c620aa1bf60b8",
         "signature_hash": "2e65e72bab661379"
+      },
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_root:0e27a48a7494b5a1",
+        "signature_hash": "34df9904ddea3a4f"
       },
       {
         "file": "tools/project006/installed_runtime_attestation.py",
@@ -428856,6 +429620,14 @@
         "signature_hash": "1a51332cd1dc4f10"
       },
       {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 45,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#class:T:f2ca6f9db5e6f259",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
         "kind": "class",
         "line": 20,
@@ -429756,6 +430528,224 @@
         "end_line": 53,
         "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_published_release_not_accepted_without_host_witnesses:5e7a15bceda7e52d",
         "signature_hash": "e68f785339536487"
+      }
+    ],
+    "claims": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#function:claims:956c34f7ecc9aed8",
+        "signature_hash": "de2c2bb667339f83"
+      }
+    ],
+    "ev": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#function:ev:a625276f9bca46fa",
+        "signature_hash": "4c52097f88a44b2f"
+      },
+      {
+        "file": "tools/project006/test_physical_wake_acceptance.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tools/project006/test_physical_wake_acceptance.py#function:ev:58a4d3188a292ab8",
+        "signature_hash": "48a4f286356dd43c"
+      }
+    ],
+    "T.test_no_host_is_observation_required": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_no_host_is_observation_required:c428ef65093a6cf2",
+        "signature_hash": "c517ef7c6c472257"
+      }
+    ],
+    "T.test_ready_exact": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_ready_exact:ec457e1ac1d60cda",
+        "signature_hash": "5dd5f68657f3fff8"
+      }
+    ],
+    "T.test_bad_mac_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_bad_mac_holds:7480e127c4fae81b",
+        "signature_hash": "c14f0d91d69cbce4"
+      }
+    ],
+    "T.test_host_incarnation_moves": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_host_incarnation_moves:49889d967cb41a54",
+        "signature_hash": "95257daa2023bd5d"
+      }
+    ],
+    "T.test_base_moves": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_base_moves:3df6f0a2e5a19d1c",
+        "signature_hash": "e759131406aca5ac"
+      }
+    ],
+    "T.test_component_set_moves": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_component_set_moves:1874a38bd800fd6e",
+        "signature_hash": "ec87ef5892248fb8"
+      }
+    ],
+    "T.test_component_values_move": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_component_values_move:d6295bc9a47b1fe4",
+        "signature_hash": "bddc5d15b40e8470"
+      }
+    ],
+    "T.test_missing_proof_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_missing_proof_holds:f8e20c817d9dd003",
+        "signature_hash": "5ccd793744e65814"
+      }
+    ],
+    "T.test_extra_proof_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_extra_proof_holds:79d46e1b01d944c0",
+        "signature_hash": "102c2b3d02246ff1"
+      }
+    ],
+    "T.test_skipped_required_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_skipped_required_holds:fbfed6faedd164a2",
+        "signature_hash": "847327b06f122971"
+      }
+    ],
+    "T.test_zero_executed_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_zero_executed_holds:f3fba73f4aabda31",
+        "signature_hash": "a35cee37db339c01"
+      }
+    ],
+    "T.test_wrong_head_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_wrong_head_holds:85680114badf184f",
+        "signature_hash": "9de20a029026ee5d"
+      }
+    ],
+    "T.test_failed_proof_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_failed_proof_holds:860bc7797e5458f4",
+        "signature_hash": "a1e00d2906a47e7d"
+      }
+    ],
+    "T.test_stale_host_holds": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 37,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_stale_host_holds:444cd5eb7c9f91af",
+        "signature_hash": "9edd86b145d79f9e"
+      }
+    ],
+    "T.test_deep_immutability_rejects_dict": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_deep_immutability_rejects_dict:6779a92e8e5d0452",
+        "signature_hash": "975e9aae4f228f29"
+      }
+    ],
+    "T.test_canonical_pair_order_required": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_canonical_pair_order_required:40b2b089e32a7a0d",
+        "signature_hash": "54485a52e210715c"
+      }
+    ],
+    "T.test_prepare_root_exists": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_prepare_root_exists:79d06a9a649bd088",
+        "signature_hash": "369bf85b2a011e67"
+      }
+    ],
+    "T.test_k27_not_in_identity": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 44,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_k27_not_in_identity:87a619711c5df4d6",
+        "signature_hash": "8cbd0efd1b567e0a"
+      }
+    ],
+    "T.test_operator_plan_has_accept_or_rollback": [
+      {
+        "file": "tests/test_project006_deployment_capsule_o22.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 45,
+        "semantic_id": "tests/test_project006_deployment_capsule_o22.py#method:T.test_operator_plan_has_accept_or_rollback:529ba300c823461c",
+        "signature_hash": "0730f5ee257392fe"
       }
     ],
     "test_default_dockerfile_launches_unified_showcase": [
@@ -432262,6 +433252,176 @@
         "signature_hash": "f2d4aa4b8b258f8c"
       }
     ],
+    "CapsuleError": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:CapsuleError:932e554457826b40",
+        "signature_hash": "c2175a4e190372bb"
+      }
+    ],
+    "ProofClaim": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 49,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:ProofClaim:f87b5f5345a85b64",
+        "signature_hash": "32bcb568d7c04d63"
+      }
+    ],
+    "ProofClaim.validate": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 47,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ProofClaim.validate:e188192cd92bcf1c",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ProofClaim.root": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 49,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ProofClaim.root:a858394877cca186",
+        "signature_hash": "e3e717e8a95babdc"
+      }
+    ],
+    "DeploymentCapsule": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 70,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:DeploymentCapsule:f4bd0fa051167954",
+        "signature_hash": "6f815430a1677ede"
+      }
+    ],
+    "DeploymentCapsule.validate": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:DeploymentCapsule.validate:bc4c3096c968fdc9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "DeploymentCapsule.capsule_root": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:DeploymentCapsule.capsule_root:b6a79ee4ce8ecb86",
+        "signature_hash": "b95ddf7bdb177061"
+      }
+    ],
+    "ObservedHostBasis": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 87,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:ObservedHostBasis:e4d37962541b8c38",
+        "signature_hash": "e423149dc356ad35"
+      }
+    ],
+    "ObservedHostBasis.validate": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 85,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ObservedHostBasis.validate:0cc23bac2caa8697",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ObservedHostBasis.basis_root": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 87,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:ObservedHostBasis.basis_root:a970e9bb1ebd7512",
+        "signature_hash": "81a14f55058cee2e"
+      }
+    ],
+    "AdmissionEvidence": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "class",
+        "line": 90,
+        "end_line": 106,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#class:AdmissionEvidence:2d28086b69fe0acf",
+        "signature_hash": "aede5da25aa4873a"
+      }
+    ],
+    "AdmissionEvidence.validate": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 104,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:AdmissionEvidence.validate:8321ba3da8c055cc",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AdmissionEvidence.unsigned_payload": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 106,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#method:AdmissionEvidence.unsigned_payload:51528ade6f80040e",
+        "signature_hash": "8c5079af15197710"
+      }
+    ],
+    "sign_evidence": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 112,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:sign_evidence:7d5124f511c612d1",
+        "signature_hash": "9bca3c17daa443ab"
+      }
+    ],
+    "_verify_evidence": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 115,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:_verify_evidence:bd139cdd3f62edeb",
+        "signature_hash": "a2bf96d225cf5ad7"
+      }
+    ],
+    "admit_capsule": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 146,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:admit_capsule:65341845e21e0490",
+        "signature_hash": "34491195b91ec0f1"
+      }
+    ],
+    "operator_plan": [
+      {
+        "file": "tools/project006/deployment_capsule_admission.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 150,
+        "semantic_id": "tools/project006/deployment_capsule_admission.py#function:operator_plan:d9db647d0d033ddd",
+        "signature_hash": "6e9b18c79316dd74"
+      }
+    ],
     "AttestationError": [
       {
         "file": "tools/project006/installed_runtime_attestation.py",
@@ -432402,6 +433562,14 @@
         "signature_hash": "25d67670486c403b"
       },
       {
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "kind": "function",
+        "line": 3,
+        "end_line": 3,
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:keeper:bfcd235c839f4511",
+        "signature_hash": "25d67670486c403b"
+      },
+      {
         "file": "tools/project006/proof_o20.py",
         "kind": "function",
         "line": 4,
@@ -432417,6 +433585,14 @@
         "line": 5,
         "end_line": 9,
         "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:omega8:02b66c79706d970d",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 8,
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:omega8:f496858184ceadbe",
         "signature_hash": "779fe12d7757e6f1"
       },
       {
@@ -432462,6 +433638,14 @@
         "signature_hash": "6b299e931f9d9f0d"
       },
       {
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 15,
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:d13:ed92e3bb228990fc",
+        "signature_hash": "6b299e931f9d9f0d"
+      },
+      {
         "file": "tools/project006/proof_o20.py",
         "kind": "function",
         "line": 10,
@@ -432488,6 +433672,14 @@
         "signature_hash": "5d0d5d85b7f484a4"
       },
       {
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 20,
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:campaign:2c30a304fe396d8d",
+        "signature_hash": "5d0d5d85b7f484a4"
+      },
+      {
         "file": "tools/project006/proof_o20.py",
         "kind": "function",
         "line": 17,
@@ -432503,6 +433695,14 @@
         "line": 22,
         "end_line": 35,
         "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:hs:4cbd618ff16c37b6",
+        "signature_hash": "b3e37fefbbbd45d5"
+      },
+      {
+        "file": "tools/project006/o22_reference/proof_o22.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 35,
+        "semantic_id": "tools/project006/o22_reference/proof_o22.py#function:hs:1c59cdfb609cdc7a",
         "signature_hash": "b3e37fefbbbd45d5"
       },
       {
@@ -433226,16 +434426,6 @@
         "end_line": 40,
         "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_release_root_excludes_host_volatility:975f47c6f2d6deb8",
         "signature_hash": "b0251ef12de61f5d"
-      }
-    ],
-    "ev": [
-      {
-        "file": "tools/project006/test_physical_wake_acceptance.py",
-        "kind": "function",
-        "line": 6,
-        "end_line": 6,
-        "semantic_id": "tools/project006/test_physical_wake_acceptance.py#function:ev:58a4d3188a292ab8",
-        "signature_hash": "48a4f286356dd43c"
       }
     ],
     "Tests.fresh": [
