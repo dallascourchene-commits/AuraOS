@@ -1,0 +1,32 @@
+{
+  "objective":"O22_PROOF_CARRYING_DEPLOYMENT_CAPSULE_ADMISSION",
+  "date":"2026-09-07",
+  "state":"PUBLISHED_EXACT_HEAD_PENDING_D0_NONPROMOTING",
+  "gate10":false,
+  "foreign_parents":[
+    {"drive_id":"1rCv8qesHFMqdVySjX7IuVmVfvVKDw5zoTwarLUajQ1M","title":"J235 O3 AWJ032 Training Root Repair","consequence":"manifest keys do not prove observed values; shape does not prove authenticated success; frozen dataclass is not deep immutability; skipped suite is not passing proof"},
+    {"drive_id":"1KnoHJkypGdfmUmOx50NcHX_79PDlQTYsepvk5LgvY9E","title":"J235 O4 Proof-Carrying Repair Adoption Transaction","consequence":"ParallelProposal != CanonicalCommit != HostedExactProof != Publication != InstalledRuntimeCurrentness"}
+  ],
+  "keepers":[
+    "ManifestComponentRoot != ObservedComponentValueRoot",
+    "ProofShape != AuthenticatedNonVacuousProof",
+    "FrozenDataclass != DeepImmutability",
+    "SkippedRequiredProof != PassingProof",
+    "RepositoryPublished != InstalledRuntimeCurrent",
+    "DeploymentCapsuleReady => FreshAuthenticatedHostBasis + ExactObservedValues + CompleteNonVacuousExactHeadProofSet",
+    "O22Ready != O21CommitAuthority",
+    "K27Coordinate != CapsuleIdentity != HostCurrentness != DeploymentAuthority"
+  ],
+  "local_proof":{"source_sha256":"617680484e794cd4b8b1e0e70dd3366c1b065a6c803328aff170d359b121b137","test_sha256":"563c46fe61b0a58dc88643f4a15e71f26b810f56d4e5d7bff4560bf31a9d9f5f","proof_program_sha256":"c8d4d730d9f215cef02d9fc0a15b17d8847c53c53fa0e44b9dd92da91423a9a0","deterministic_output_sha256":"ccf41076b46eeb734a8caa5aa4576a6b6a40f9723172b1d1c6d730e803c85b9b","fresh_envs":3,"tests_per_env":19,"focused_test_executions":57,"campaign_cases_total":90000,"oracle_mismatches":0,"unsafe_ready":0,"omega8_states":6561,"omega8_keepers":1,"factored13d_states":1594323,"hard_invalid_contextual_repairs":0,"hs1000_candidates":1000,"hs1000_consequence_families":5,"claimed_breakthroughs":0},
+  "hs1000":{"freeze_root":"3c9bbb2e106dd6088e633e4d8fd556d2834d15b203574b26b0d051ed35daaf9a","quotient_root":"962b1d2ea6b0624d6974a0633842b34da5879d4f9b9fe89862d3b892debafb94"},
+  "external_coordinates":[
+    {"coord":[7,17,11],"url":"https://arxiv.org/abs/2602.11887","role":"source-to-artifact verifiable provenance"},
+    {"coord":[13,22,20],"url":"https://arxiv.org/abs/2603.28988","role":"attestation-aware promotion gate"},
+    {"coord":[21,10,15],"url":"https://arxiv.org/abs/2603.02451","role":"composable incremental attestation"},
+    {"coord":[11,22,11],"url":"https://arxiv.org/abs/2605.04249","role":"zero-trust lifecycle evidence mapping"},
+    {"coord":[15,23,19],"url":"https://www.reddit.com/r/devops/comments/1uaafd5/reddit_taught_me_why_my_ci_pipeline_was_wrong/","role":"practitioner pressure to test the same artifact that is deployed"}
+  ],
+  "scholar":"GOOGLE_SCHOLAR_DIRECT_GAP",
+  "current_host_disposition":"HOST_OBSERVATION_REQUIRED_REMOTE_CONNECTOR_OFFLINE",
+  "authority_ceiling":"D0 admission/reference only; no laptop mutation, no O21 commit authority, no provider/service/network effect, no merge/deploy, no canonical promotion, no private/native Transformer KV, no Gate10"
+}
