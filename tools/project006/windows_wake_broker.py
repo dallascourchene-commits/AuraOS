@@ -15,11 +15,20 @@ class WakeStore:
         finally:c.close()
     def capture(self,event_id:str)->bool:
         if not event_id or len(event_id)>2048: raise ValueError("BAD_EVENT_ID")
-        with sqlite3.connect(self.path) as c:
-            try:c.execute("INSERT INTO wake(event_id,observed_at,state) VALUES(?,?,?)",(event_id,time.time(),"CAPTURED")); return True
-            except sqlite3.IntegrityError:return False
+        c=sqlite3.connect(self.path)
+        try:
+            try:
+                c.execute("INSERT INTO wake(event_id,observed_at,state) VALUES(?,?,?)",(event_id,time.time(),"CAPTURED")); c.commit(); return True
+            except sqlite3.IntegrityError:
+                c.rollback(); return False
+        finally:
+            c.close()
     def finish(self,event_id:str,code:int,detail:str=""):
-        with sqlite3.connect(self.path) as c:c.execute("UPDATE wake SET state=?,exit_code=?,detail=? WHERE event_id=?",("DONE" if code==0 else "FAILED",code,detail[:2048],event_id))
+        c=sqlite3.connect(self.path)
+        try:
+            c.execute("UPDATE wake SET state=?,exit_code=?,detail=? WHERE event_id=?",("DONE" if code==0 else "FAILED",code,detail[:2048],event_id)); c.commit()
+        finally:
+            c.close()
 
 def event_identity(message:dict[str,Any])->str:
     for path in (("message","messageId"),("messageId",),("id",)):
