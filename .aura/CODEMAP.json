@@ -362,6 +362,7 @@
     "python -m venv": [
       ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      ".github/workflows/o19-authenticated-attenuated-delegation-proof.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
       ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       "README.md"
@@ -1064,7 +1065,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1705,
+    "repo_file_count": 1710,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1216,6 +1217,7 @@
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      ".github/workflows/o19-authenticated-attenuated-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -1342,6 +1344,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
+      "artifacts/arena/o19_authenticated_attenuated_delegation/PROOF_RECEIPT_O19.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -2706,6 +2709,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_o19_authenticated_attenuated_delegation.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
@@ -2725,6 +2729,8 @@
       "tools/arena/o18_hs1000.py",
       "tools/arena/o18_lattice8.py",
       "tools/arena/o18_sweep13d.py",
+      "tools/arena/o19_authenticated_attenuated_delegation.py",
+      "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -10428,6 +10434,59 @@
       ]
     },
     {
+      "path": ".github/workflows/o19-authenticated-attenuated-delegation-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3001,
+      "lines": 56,
+      "tokens_est": 751,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          36
+        ]
+      },
+      "topology": {},
+      "digest8": "27745e70734ccd28",
+      "vector": [
+        0.241477,
+        0.236943,
+        0.207466,
+        0.18706,
+        0.221071,
+        0.193862,
+        -0.010203,
+        0.044214,
+        0.094097,
+        -0.193862,
+        -0.12584,
+        0.268686,
+        0.060086,
+        -0.212001,
+        -0.236943,
+        0.080492,
+        0.227873,
+        -0.250547,
+        0.193862,
+        0.209734,
+        -0.202932,
+        -0.085027,
+        -0.078225,
+        -0.08276,
+        -0.119038,
+        0.227873,
+        0.24828,
+        0.196129,
+        0.105434,
+        0.096364,
+        -0.168921,
+        0.023808
+      ]
+    },
+    {
       "path": ".github/workflows/o5-consequence-admission-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17938,6 +17997,53 @@
         -0.228725,
         0.198594,
         -0.089025
+      ]
+    },
+    {
+      "path": "artifacts/arena/o19_authenticated_attenuated_delegation/PROOF_RECEIPT_O19.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3948,
+      "lines": 100,
+      "tokens_est": 987,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "77a1a47b049d390d",
+      "vector": [
+        -0.302805,
+        -0.171375,
+        -0.158489,
+        0.117256,
+        -0.328576,
+        0.106948,
+        -0.217762,
+        0.168798,
+        -0.243532,
+        0.176529,
+        0.307959,
+        -0.212608,
+        -0.233224,
+        -0.032213,
+        -0.003866,
+        -0.070869,
+        0.112102,
+        0.042522,
+        -0.243532,
+        -0.050253,
+        -0.202299,
+        0.112102,
+        -0.006443,
+        -0.181683,
+        0.173952,
+        -0.037367,
+        -0.148181,
+        0.212608,
+        -0.03479,
+        0.282188,
+        -0.094063,
+        -0.050253
       ]
     },
     {
@@ -104883,6 +104989,53 @@
       ]
     },
     {
+      "path": "tests/test_o19_authenticated_attenuated_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5004,
+      "lines": 63,
+      "tokens_est": 1251,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5635eb14e9975476",
+      "vector": [
+        -0.061052,
+        0.202437,
+        0.142455,
+        -0.159593,
+        -0.223859,
+        0.020351,
+        -0.21529,
+        -0.018209,
+        0.270987,
+        -0.007498,
+        -0.170304,
+        -0.17673,
+        0.110323,
+        0.069621,
+        0.26456,
+        -0.255991,
+        -0.125318,
+        -0.230285,
+        -0.065337,
+        0.09747,
+        -0.232427,
+        -0.211005,
+        -0.142455,
+        -0.21529,
+        -0.174588,
+        0.133887,
+        0.217432,
+        0.125318,
+        -0.255991,
+        0.185299,
+        -0.185299,
+        0.181015
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -105773,6 +105926,100 @@
         0.152471,
         -0.068178,
         0.189659
+      ]
+    },
+    {
+      "path": "tools/arena/o19_authenticated_attenuated_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11507,
+      "lines": 243,
+      "tokens_est": 2877,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7955538b9d5c76ff",
+      "vector": [
+        -0.040544,
+        -0.266606,
+        -0.084773,
+        -0.047915,
+        0.033172,
+        0.055287,
+        0.259235,
+        0.197805,
+        -0.018429,
+        -0.202719,
+        -0.242034,
+        0.234663,
+        0.227291,
+        -0.200262,
+        0.045458,
+        0.07003,
+        0.13146,
+        0.07003,
+        0.286264,
+        -0.187976,
+        -0.094602,
+        -0.040544,
+        -0.288721,
+        0.109346,
+        0.0086,
+        0.310836,
+        0.082316,
+        0.25432,
+        -0.099517,
+        -0.303465,
+        -0.156032,
+        0.116717
+      ]
+    },
+    {
+      "path": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7779,
+      "lines": 119,
+      "tokens_est": 1945,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a1a59651a5ca735c",
+      "vector": [
+        -0.204591,
+        -0.22085,
+        -0.22356,
+        0.275047,
+        0.090779,
+        0.117877,
+        0.212721,
+        0.193752,
+        0.277756,
+        0.22627,
+        0.07452,
+        -0.055551,
+        0.115167,
+        -0.07994,
+        0.196462,
+        0.272337,
+        0.058261,
+        -0.22356,
+        0.101618,
+        -0.006775,
+        0.234399,
+        -0.180203,
+        -0.193752,
+        -0.090779,
+        0.258788,
+        0.245239,
+        -0.169364,
+        -0.023033,
+        -0.060971,
+        -0.153105,
+        -0.093489,
+        -0.142265
       ]
     },
     {
@@ -108277,7 +108524,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788788263,
+  "generated_at_unix": 1788790350,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108431,6 +108678,7 @@
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      ".github/workflows/o19-authenticated-attenuated-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -108557,6 +108805,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
+      "artifacts/arena/o19_authenticated_attenuated_delegation/PROOF_RECEIPT_O19.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -109921,6 +110170,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_o19_authenticated_attenuated_delegation.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
@@ -109940,6 +110190,8 @@
       "tools/arena/o18_hs1000.py",
       "tools/arena/o18_lattice8.py",
       "tools/arena/o18_sweep13d.py",
+      "tools/arena/o19_authenticated_attenuated_delegation.py",
+      "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -267939,6 +268191,256 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#class:O19Tests:86875a048a4dc4f3",
+        "name": "O19Tests",
+        "kind": "class",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 7,
+        "end_line": 60,
+        "signature_hash": "519dfa5a0dbb03fb",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests._holds:f6d62aa07b3261bd",
+        "name": "O19Tests._holds",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "1c621823a13eda99",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_admission_auth:9f0f145e7d0f3b0b",
+        "name": "O19Tests.test_admission_auth",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "7bb0e5a84f7da932",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_attempt_auth:98f1297ec88286ac",
+        "name": "O19Tests.test_attempt_auth",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "86332ed4498fc99a",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_attenuation:316f22d87f45dea9",
+        "name": "O19Tests.test_attenuation",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "52802f5e11198907",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_authority_ceiling:7ef3618e207d548f",
+        "name": "O19Tests.test_authority_ceiling",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "1714946bf0778d30",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_candidate_independent_oracle_each_invalid:4631489a6b0e4205",
+        "name": "O19Tests.test_candidate_independent_oracle_each_invalid",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "4cb824153dac8378",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_candidate_independent_oracle_valid:8d1b6e84b064fe23",
+        "name": "O19Tests.test_candidate_independent_oracle_valid",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 57,
+        "end_line": 57,
+        "signature_hash": "ee5dc1817298b322",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_currentness_cardinality:862f9055353dc6ca",
+        "name": "O19Tests.test_currentness_cardinality",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "0881090b322b81de",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_exact_parent_forgery_is_real:0f65788bd39c83ab",
+        "name": "O19Tests.test_exact_parent_forgery_is_real",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "fdec4ab7f5aa3ca5",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_generation_not_monotone:f2a8a5502261eeca",
+        "name": "O19Tests.test_generation_not_monotone",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "e24fcb79a0ee4461",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_grant_auth:432809618a8e4f84",
+        "name": "O19Tests.test_grant_auth",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "34ef7d0951062ca2",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_grant_currentness:d30e50a2bf037c56",
+        "name": "O19Tests.test_grant_currentness",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "78f650fda2c15d22",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_no_chain:c02873c020636b18",
+        "name": "O19Tests.test_no_chain",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "b354b60a6f5f14cc",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_owner_verifier_same_rejected:4d23aab6dfc6010b",
+        "name": "O19Tests.test_owner_verifier_same_rejected",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 41,
+        "end_line": 45,
+        "signature_hash": "6d7ca5b1631e5e23",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_parent_link:67e578fccdac85a8",
+        "name": "O19Tests.test_parent_link",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "adc2cc103b7f8b08",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_parent_shape_false_admits_forged:53101ebc632e27d8",
+        "name": "O19Tests.test_parent_shape_false_admits_forged",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 56,
+        "end_line": 56,
+        "signature_hash": "b4a23c1137a6fb98",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_request_budget_exceeds:a60dc2d9ddba2d4d",
+        "name": "O19Tests.test_request_budget_exceeds",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 50,
+        "end_line": 53,
+        "signature_hash": "d1e1e3c11363a8d8",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_request_scope_exceeds:a6f44942ef644046",
+        "name": "O19Tests.test_request_scope_exceeds",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 46,
+        "end_line": 49,
+        "signature_hash": "03656afc552f6089",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_result_has_no_authority:8fee53ae13a60038",
+        "name": "O19Tests.test_result_has_no_authority",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "f86e15f92522699b",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_root_parent_forbidden:fdc47fc423356ffd",
+        "name": "O19Tests.test_root_parent_forbidden",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "99ae33bc661d6f2e",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_self_observer_rejected:9d8fc3fd0f7cc3b6",
+        "name": "O19Tests.test_self_observer_rejected",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "c9b0954fa0c9a0e3",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_source_binding:b168bb8bc0c00767",
+        "name": "O19Tests.test_source_binding",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "fb126c4a571bf0d4",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_valid:fcb5dee23ee6dfdb",
+        "name": "O19Tests.test_valid",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "5ed9c72955b811a9",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_wrong_child_issuer:63f0c8486ceeb310",
+        "name": "O19Tests.test_wrong_child_issuer",
+        "kind": "method",
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "80ddf2a3309ac682",
+        "file_digest8": "5635eb14e9975476"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -270687,6 +271189,396 @@
         "end_line": 12,
         "signature_hash": "26799ab4ad82cbfb",
         "file_digest8": "afd8c6a03b4abe18"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:AttemptUseReceipt:9f36946473600c5c",
+        "name": "AttemptUseReceipt",
+        "kind": "class",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 86,
+        "end_line": 103,
+        "signature_hash": "74cadfd8eafb5a69",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:AuthenticatedDelegationDecision:eb2ba69adc44f5d5",
+        "name": "AuthenticatedDelegationDecision",
+        "kind": "class",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 106,
+        "end_line": 126,
+        "signature_hash": "3aaf68ee6a7c7e98",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:AuthenticationError:86ac7306b4aa25a9",
+        "name": "AuthenticationError",
+        "kind": "class",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 128,
+        "end_line": 128,
+        "signature_hash": "9561a26551d5ebe1",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:DelegationGrant:b50a29d7aa51c020",
+        "name": "DelegationGrant",
+        "kind": "class",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 28,
+        "end_line": 44,
+        "signature_hash": "fafc7b4527e98da1",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:GrantCurrentnessReceipt:97c927acd6d95578",
+        "name": "GrantCurrentnessReceipt",
+        "kind": "class",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 47,
+        "end_line": 61,
+        "signature_hash": "9b61513b3b0460f9",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:OwnerAdmissionReceipt:5a1e347cf74c22f7",
+        "name": "OwnerAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 64,
+        "end_line": 83,
+        "signature_hash": "210b4d3d27c5d11b",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_canon:09c9de73021c946c",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 15,
+        "end_line": 20,
+        "signature_hash": "670c69469c93ee5a",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_check_time:bf0313af716e1cff",
+        "name": "_check_time",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 131,
+        "end_line": 133,
+        "signature_hash": "60dd0f650cc61f1a",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_key:6f2d340a62c1cc82",
+        "name": "_key",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 135,
+        "end_line": 139,
+        "signature_hash": "9d29bc26c6985b1f",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_ok_mac:26f45ad3defe880c",
+        "name": "_ok_mac",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "eb7d37900f2b59cc",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:authenticate_and_decide:1ee103da7604d3ca",
+        "name": "authenticate_and_decide",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 142,
+        "end_line": 232,
+        "signature_hash": "f69fa750f189f3f0",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:mac:603b986816d1a102",
+        "name": "mac",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "d88d2eb7c369820c",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:root:70940f1b5d393fad",
+        "name": "root",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 22,
+        "end_line": 22,
+        "signature_hash": "347125fa41d4265b",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_admission:e702ad2e8877575d",
+        "name": "sign_admission",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 239,
+        "end_line": 240,
+        "signature_hash": "6ee483e84328d243",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_attempt_use:74607c86cf0b7402",
+        "name": "sign_attempt_use",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 241,
+        "end_line": 242,
+        "signature_hash": "1c1f726cd5789244",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_currentness:53610812f96ed989",
+        "name": "sign_currentness",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 237,
+        "end_line": 238,
+        "signature_hash": "8dfa6d92af8d83dc",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_grant:09bb2345844a8b58",
+        "name": "sign_grant",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 235,
+        "end_line": 236,
+        "signature_hash": "a77c8a3f38fc2a36",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:AttemptUseReceipt.receipt_root:51f0d52b70b51294",
+        "name": "AttemptUseReceipt.receipt_root",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 103,
+        "end_line": 103,
+        "signature_hash": "8b41c9839e1ab268",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:AttemptUseReceipt.unsigned:ae5cf411336ea71e",
+        "name": "AttemptUseReceipt.unsigned",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:AuthenticatedDelegationDecision.result_root:4b0d1a34cd574699",
+        "name": "AuthenticatedDelegationDecision.result_root",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 119,
+        "end_line": 126,
+        "signature_hash": "cdf444ee996432ff",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:DelegationGrant.grant_root:dce89c810f00b212",
+        "name": "DelegationGrant.grant_root",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 44,
+        "end_line": 44,
+        "signature_hash": "79a2827cedcbe217",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:DelegationGrant.unsigned:ff718fe85b2868dc",
+        "name": "DelegationGrant.unsigned",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:GrantCurrentnessReceipt.receipt_root:01edb7dbbc73ac18",
+        "name": "GrantCurrentnessReceipt.receipt_root",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 61,
+        "end_line": 61,
+        "signature_hash": "8b41c9839e1ab268",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:GrantCurrentnessReceipt.unsigned:9fe69a11232ebe4b",
+        "name": "GrantCurrentnessReceipt.unsigned",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:OwnerAdmissionReceipt.receipt_root:fc600a10dca09338",
+        "name": "OwnerAdmissionReceipt.receipt_root",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 83,
+        "end_line": 83,
+        "signature_hash": "8b41c9839e1ab268",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:OwnerAdmissionReceipt.unsigned:694113aa364e9b96",
+        "name": "OwnerAdmissionReceipt.unsigned",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 80,
+        "end_line": 81,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:_canon.default:922072c058e15af5",
+        "name": "_canon.default",
+        "kind": "method",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "80e0ec2ef24d6397",
+        "file_digest8": "7955538b9d5c76ff"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:altered:2f1f383e5e0ee1c4",
+        "name": "altered",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 34,
+        "end_line": 52,
+        "signature_hash": "cb7b2c2a90b958b1",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:campaign:ebddba3f017bbcf6",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 79,
+        "end_line": 88,
+        "signature_hash": "2cf52e167dd0df9a",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:candidate:30d99498e8e4c798",
+        "name": "candidate",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 56,
+        "end_line": 63,
+        "signature_hash": "a7d5c97fb8e1b64d",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:d13:87c36a12d0c594fb",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 97,
+        "end_line": 98,
+        "signature_hash": "6b299e931f9d9f0d",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:emit:fbbb50806c45cead",
+        "name": "emit",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 114,
+        "end_line": 115,
+        "signature_hash": "38f055e0c9b7f603",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:fixture:0cc67c59a59c1526",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 16,
+        "end_line": 29,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:forged_parent_attack:15c8753bbe4a34d8",
+        "name": "forged_parent_attack",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "e3b926b6633557e6",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:hs1000:5e55da0327205512",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 100,
+        "end_line": 105,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:omega8:f3121eb5770327b0",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 90,
+        "end_line": 95,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:oracle:3cfdbb951a2d6d61",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "af505a57eaae990e",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:parent_shape_baseline:56871da2ae7f9fee",
+        "name": "parent_shape_baseline",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 69,
+        "end_line": 77,
+        "signature_hash": "82e8cac1ffd5cee4",
+        "file_digest8": "a1a59651a5ca735c"
+      },
+      {
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:run:385ccd362d3deaa3",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "2872c96b5dbb37d8",
+        "file_digest8": "a1a59651a5ca735c"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
@@ -274889,8 +275781,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "cdf00b0cd6861fd3fcb59e212e8dc69b",
-    "payload_hash": "457881d63c976e0d95f8e9139a0bbd41"
+    "record_fingerprint": "5f06852ffc80609481ef30546c81920b",
+    "payload_hash": "7435d5c1e1cb14f666ab94e9ea88a878"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274903,16 +275795,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1705,
-      "bytes": 26744562,
-      "tokens_est": 6676506,
+      "files": 1710,
+      "bytes": 26775801,
+      "tokens_est": 6684317,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1039,
-        "schema_or_lexicon": 288,
+        "python_module": 1042,
+        "schema_or_lexicon": 290,
         "support_file": 53
       }
     },
@@ -275599,16 +276491,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1705,
-    "total_bytes": 26744562,
-    "text_tokens_est": 6676506,
+    "file_count": 1710,
+    "total_bytes": 26775801,
+    "text_tokens_est": 6684317,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1039,
-      "schema_or_lexicon": 288,
+      "python_module": 1042,
+      "schema_or_lexicon": 290,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -276877,6 +277769,14 @@
         "end_line": 12,
         "semantic_id": "tools/arena/o18_sweep13d.py#function:run:135491358f4211ad",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:run:385ccd362d3deaa3",
+        "signature_hash": "2872c96b5dbb37d8"
       },
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
@@ -348289,6 +349189,14 @@
         "end_line": 30,
         "semantic_id": "aura_refactor_state_identity.py#function:_key:a20071f3b969acc4",
         "signature_hash": "bf3a233f00be2a47"
+      },
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 139,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_key:6f2d340a62c1cc82",
+        "signature_hash": "9d29bc26c6985b1f"
       }
     ],
     "normalize": [
@@ -386825,6 +387733,14 @@
         "end_line": 18,
         "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:fixture:e11220ceea6bac0d",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 29,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:fixture:0cc67c59a59c1526",
+        "signature_hash": "c73d3075455b50af"
       }
     ],
     "session": [
@@ -387297,6 +388213,14 @@
         "end_line": 73,
         "semantic_id": "tests/test_aura_shadow_model_router.py#function:candidate:2c8026203668f9f4",
         "signature_hash": "342d68b930ea7206"
+      },
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 63,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:candidate:30d99498e8e4c798",
+        "signature_hash": "a7d5c97fb8e1b64d"
       }
     ],
     "routing": [
@@ -431435,6 +432359,256 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "O19Tests": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 60,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#class:O19Tests:86875a048a4dc4f3",
+        "signature_hash": "519dfa5a0dbb03fb"
+      }
+    ],
+    "O19Tests.test_valid": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_valid:fcb5dee23ee6dfdb",
+        "signature_hash": "5ed9c72955b811a9"
+      }
+    ],
+    "O19Tests.test_exact_parent_forgery_is_real": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_exact_parent_forgery_is_real:0f65788bd39c83ab",
+        "signature_hash": "fdec4ab7f5aa3ca5"
+      }
+    ],
+    "O19Tests.test_grant_auth": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_grant_auth:432809618a8e4f84",
+        "signature_hash": "34ef7d0951062ca2"
+      }
+    ],
+    "O19Tests.test_parent_link": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_parent_link:67e578fccdac85a8",
+        "signature_hash": "adc2cc103b7f8b08"
+      }
+    ],
+    "O19Tests.test_attenuation": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_attenuation:316f22d87f45dea9",
+        "signature_hash": "52802f5e11198907"
+      }
+    ],
+    "O19Tests.test_grant_currentness": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_grant_currentness:d30e50a2bf037c56",
+        "signature_hash": "78f650fda2c15d22"
+      }
+    ],
+    "O19Tests.test_admission_auth": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_admission_auth:9f0f145e7d0f3b0b",
+        "signature_hash": "7bb0e5a84f7da932"
+      }
+    ],
+    "O19Tests.test_attempt_auth": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_attempt_auth:98f1297ec88286ac",
+        "signature_hash": "86332ed4498fc99a"
+      }
+    ],
+    "O19Tests.test_source_binding": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_source_binding:b168bb8bc0c00767",
+        "signature_hash": "fb126c4a571bf0d4"
+      }
+    ],
+    "O19Tests.test_authority_ceiling": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_authority_ceiling:7ef3618e207d548f",
+        "signature_hash": "1714946bf0778d30"
+      }
+    ],
+    "O19Tests._holds": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests._holds:f6d62aa07b3261bd",
+        "signature_hash": "1c621823a13eda99"
+      }
+    ],
+    "O19Tests.test_no_chain": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_no_chain:c02873c020636b18",
+        "signature_hash": "b354b60a6f5f14cc"
+      }
+    ],
+    "O19Tests.test_currentness_cardinality": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_currentness_cardinality:862f9055353dc6ca",
+        "signature_hash": "0881090b322b81de"
+      }
+    ],
+    "O19Tests.test_root_parent_forbidden": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_root_parent_forbidden:fdc47fc423356ffd",
+        "signature_hash": "99ae33bc661d6f2e"
+      }
+    ],
+    "O19Tests.test_wrong_child_issuer": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_wrong_child_issuer:63f0c8486ceeb310",
+        "signature_hash": "80ddf2a3309ac682"
+      }
+    ],
+    "O19Tests.test_generation_not_monotone": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_generation_not_monotone:f2a8a5502261eeca",
+        "signature_hash": "e24fcb79a0ee4461"
+      }
+    ],
+    "O19Tests.test_self_observer_rejected": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_self_observer_rejected:9d8fc3fd0f7cc3b6",
+        "signature_hash": "c9b0954fa0c9a0e3"
+      }
+    ],
+    "O19Tests.test_owner_verifier_same_rejected": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 45,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_owner_verifier_same_rejected:4d23aab6dfc6010b",
+        "signature_hash": "6d7ca5b1631e5e23"
+      }
+    ],
+    "O19Tests.test_request_scope_exceeds": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 49,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_request_scope_exceeds:a6f44942ef644046",
+        "signature_hash": "03656afc552f6089"
+      }
+    ],
+    "O19Tests.test_request_budget_exceeds": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 53,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_request_budget_exceeds:a60dc2d9ddba2d4d",
+        "signature_hash": "d1e1e3c11363a8d8"
+      }
+    ],
+    "O19Tests.test_result_has_no_authority": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_result_has_no_authority:8fee53ae13a60038",
+        "signature_hash": "f86e15f92522699b"
+      }
+    ],
+    "O19Tests.test_parent_shape_false_admits_forged": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 56,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_parent_shape_false_admits_forged:53101ebc632e27d8",
+        "signature_hash": "b4a23c1137a6fb98"
+      }
+    ],
+    "O19Tests.test_candidate_independent_oracle_valid": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 57,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_candidate_independent_oracle_valid:8d1b6e84b064fe23",
+        "signature_hash": "ee5dc1817298b322"
+      }
+    ],
+    "O19Tests.test_candidate_independent_oracle_each_invalid": [
+      {
+        "file": "tests/test_o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tests/test_o19_authenticated_attenuated_delegation.py#method:O19Tests.test_candidate_independent_oracle_each_invalid:4631489a6b0e4205",
+        "signature_hash": "4cb824153dac8378"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -431663,6 +432837,14 @@
         "end_line": 25,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:root:4e00ae0b7a5032f8",
         "signature_hash": "8b9f1879e1b67fb7"
+      },
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 22,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:root:70940f1b5d393fad",
+        "signature_hash": "347125fa41d4265b"
       }
     ],
     "currentness": [
@@ -434019,7 +435201,275 @@
         "signature_hash": "b307e9c3443f5155"
       }
     ],
+    "_canon": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 20,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_canon:09c9de73021c946c",
+        "signature_hash": "670c69469c93ee5a"
+      }
+    ],
+    "_canon.default": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:_canon.default:922072c058e15af5",
+        "signature_hash": "80e0ec2ef24d6397"
+      }
+    ],
+    "mac": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:mac:603b986816d1a102",
+        "signature_hash": "d88d2eb7c369820c"
+      }
+    ],
+    "_ok_mac": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_ok_mac:26f45ad3defe880c",
+        "signature_hash": "eb7d37900f2b59cc"
+      }
+    ],
+    "DelegationGrant": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 44,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:DelegationGrant:b50a29d7aa51c020",
+        "signature_hash": "fafc7b4527e98da1"
+      }
+    ],
+    "DelegationGrant.unsigned": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:DelegationGrant.unsigned:ff718fe85b2868dc",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "DelegationGrant.grant_root": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 44,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:DelegationGrant.grant_root:dce89c810f00b212",
+        "signature_hash": "79a2827cedcbe217"
+      }
+    ],
+    "GrantCurrentnessReceipt": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 61,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:GrantCurrentnessReceipt:97c927acd6d95578",
+        "signature_hash": "9b61513b3b0460f9"
+      }
+    ],
+    "GrantCurrentnessReceipt.unsigned": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:GrantCurrentnessReceipt.unsigned:9fe69a11232ebe4b",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "GrantCurrentnessReceipt.receipt_root": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 61,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:GrantCurrentnessReceipt.receipt_root:01edb7dbbc73ac18",
+        "signature_hash": "8b41c9839e1ab268"
+      }
+    ],
+    "OwnerAdmissionReceipt": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 83,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:OwnerAdmissionReceipt:5a1e347cf74c22f7",
+        "signature_hash": "210b4d3d27c5d11b"
+      }
+    ],
+    "OwnerAdmissionReceipt.unsigned": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 81,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:OwnerAdmissionReceipt.unsigned:694113aa364e9b96",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "OwnerAdmissionReceipt.receipt_root": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 83,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:OwnerAdmissionReceipt.receipt_root:fc600a10dca09338",
+        "signature_hash": "8b41c9839e1ab268"
+      }
+    ],
+    "AttemptUseReceipt": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 103,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:AttemptUseReceipt:9f36946473600c5c",
+        "signature_hash": "74cadfd8eafb5a69"
+      }
+    ],
+    "AttemptUseReceipt.unsigned": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:AttemptUseReceipt.unsigned:ae5cf411336ea71e",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "AttemptUseReceipt.receipt_root": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 103,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:AttemptUseReceipt.receipt_root:51f0d52b70b51294",
+        "signature_hash": "8b41c9839e1ab268"
+      }
+    ],
+    "AuthenticatedDelegationDecision": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 126,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:AuthenticatedDelegationDecision:eb2ba69adc44f5d5",
+        "signature_hash": "3aaf68ee6a7c7e98"
+      }
+    ],
+    "AuthenticatedDelegationDecision.result_root": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 126,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#method:AuthenticatedDelegationDecision.result_root:4b0d1a34cd574699",
+        "signature_hash": "cdf444ee996432ff"
+      }
+    ],
+    "AuthenticationError": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "class",
+        "line": 128,
+        "end_line": 128,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#class:AuthenticationError:86ac7306b4aa25a9",
+        "signature_hash": "9561a26551d5ebe1"
+      }
+    ],
+    "_check_time": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 133,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:_check_time:bf0313af716e1cff",
+        "signature_hash": "60dd0f650cc61f1a"
+      }
+    ],
+    "authenticate_and_decide": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 142,
+        "end_line": 232,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:authenticate_and_decide:1ee103da7604d3ca",
+        "signature_hash": "f69fa750f189f3f0"
+      }
+    ],
+    "sign_grant": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 236,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_grant:09bb2345844a8b58",
+        "signature_hash": "a77c8a3f38fc2a36"
+      }
+    ],
+    "sign_currentness": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 238,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_currentness:53610812f96ed989",
+        "signature_hash": "8dfa6d92af8d83dc"
+      }
+    ],
+    "sign_admission": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 239,
+        "end_line": 240,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_admission:e702ad2e8877575d",
+        "signature_hash": "6ee483e84328d243"
+      }
+    ],
+    "sign_attempt_use": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation.py",
+        "kind": "function",
+        "line": 241,
+        "end_line": 242,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation.py#function:sign_attempt_use:74607c86cf0b7402",
+        "signature_hash": "1c1f726cd5789244"
+      }
+    ],
+    "altered": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 52,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:altered:2f1f383e5e0ee1c4",
+        "signature_hash": "cb7b2c2a90b958b1"
+      }
+    ],
     "oracle": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:oracle:3cfdbb951a2d6d61",
+        "signature_hash": "af505a57eaae990e"
+      },
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
@@ -434035,6 +435485,76 @@
         "end_line": 49,
         "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:oracle:26868b50c367f71e",
         "signature_hash": "4df0604ad91753f1"
+      }
+    ],
+    "parent_shape_baseline": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:parent_shape_baseline:56871da2ae7f9fee",
+        "signature_hash": "82e8cac1ffd5cee4"
+      }
+    ],
+    "campaign": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 88,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:campaign:ebddba3f017bbcf6",
+        "signature_hash": "2cf52e167dd0df9a"
+      }
+    ],
+    "omega8": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 95,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:omega8:f3121eb5770327b0",
+        "signature_hash": "779fe12d7757e6f1"
+      }
+    ],
+    "d13": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 98,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:d13:87c36a12d0c594fb",
+        "signature_hash": "6b299e931f9d9f0d"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 105,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:hs1000:5e55da0327205512",
+        "signature_hash": "cb33d0ed1005d09a"
+      }
+    ],
+    "forged_parent_attack": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:forged_parent_attack:15c8753bbe4a34d8",
+        "signature_hash": "e3b926b6633557e6"
+      }
+    ],
+    "emit": [
+      {
+        "file": "tools/arena/o19_authenticated_attenuated_delegation_proof.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 115,
+        "semantic_id": "tools/arena/o19_authenticated_attenuated_delegation_proof.py#function:emit:fbbb50806c45cead",
+        "signature_hash": "38f055e0c9b7f603"
       }
     ],
     "ProbeStep": [

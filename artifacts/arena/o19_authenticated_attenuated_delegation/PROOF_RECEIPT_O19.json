@@ -1,0 +1,99 @@
+{
+  "authority_ceiling": "D0_NONPROMOTING",
+  "base_head": "dea84982d7ecc07310dbbc254ce1a5acee8553f1",
+  "base_pr": 918,
+  "failed_first_zero_credit": [
+    "Exact PR918 shape-only forged chain admitted with fully caller-constructible current/proof_bound fields.",
+    "Initial combined three-venv shell timed out after partial environments; only complete unchanged-frozen-byte outputs are credited."
+  ],
+  "focused_tests_per_env": 23,
+  "focused_total": 69,
+  "foreign_parents": [
+    {
+      "law": "StableOperationIdentity != DelegatedExecutionAuthority; every child scope/budget attenuates.",
+      "pr": 918
+    },
+    {
+      "law": "EnvelopeShape != AdmissionAuthority; caller booleans/SHA-shaped fields do not establish owner admission.",
+      "pr": 915
+    }
+  ],
+  "gate10": false,
+  "keepers": [
+    "DelegationHopShape != DelegationAuthority",
+    "CallerCurrentBoolean != AuthenticatedAtUseDelegationCurrentness",
+    "proof_bound=True != OwnerAdmissionProof",
+    "ChildGrant => AuthenticatedImmediateParentGrant + ScopeSubset + BudgetNonincrease",
+    "FinalHopNarrow != ValidDelegationChain",
+    "AttemptCandidate => AuthenticatedGrantChain + AuthenticatedOwnerAdmission + AuthenticatedAttemptUse",
+    "AuthenticatedDelegation != EffectAuthority",
+    "K27Coordinate != DelegationIdentity != Currentness != Authority"
+  ],
+  "objective": "Authenticate every attenuation grant edge, currentness receipt, owner admission, and attempt-use receipt before projecting current/proof-bound state into PR918.",
+  "parent_kernel_sha256": "c67876cee060ff381d4943508926e60f213b6297ec5a1b52420034707b73eb07",
+  "proof_output_sha256": "348be80fb40599f5231fd2a7bc2e6468a220c9dd8f3a726c35ab62ed57ebd17d",
+  "proof_sha256": "3d4748d41bab399a539a57e29f59f8eed34748e516b3be088586004c0d1d6ec9",
+  "receipt_root": "9b8180e3c7c430dc465c8cf33a54db1da4c077f32a04f34931217244fea0e3fa",
+  "result": {
+    "campaign": {
+      "authority_minted": 0,
+      "cases": 30000,
+      "false_admit": 0,
+      "false_hold": 0,
+      "gate10": false,
+      "oracle_mismatches": 0,
+      "outcomes": {
+        "ADMIT": 113,
+        "HOLD": 29887
+      },
+      "parent_shape_false_admits": 7413,
+      "root": "c4300991eb1ceccd3730a39184bfe7a5e40fdeaf89a3a0792977e67ee9ec9373"
+    },
+    "d13": {
+      "hard_invalid_context_repairs": 0,
+      "lawful_contexts": 243,
+      "nuisance_axes": [
+        "k27",
+        "hydration",
+        "ui",
+        "cache",
+        "agent_alias"
+      ],
+      "root": "e7371721ad5bca2df9eff3b91af6cd48d75802a73f61752ff52401826c4435f3",
+      "states": 1594323
+    },
+    "forged_parent_attack": "ADMIT_DELEGATED_ATTEMPT_D0",
+    "hs1000": {
+      "claimed_breakthroughs": 0,
+      "consequence_groups": 10,
+      "freeze_root": "0aac423419ec3d8bc38c45ec818d707b1b5bdb7f8a552237015f594c14b9db27",
+      "groups": {
+        "admission_auth": 100,
+        "attempt_auth": 100,
+        "attenuation": 100,
+        "authority_ceiling": 100,
+        "grant_auth": 100,
+        "grant_currentness": 100,
+        "intermediate_broadening_hidden_by_final_narrow": 100,
+        "parent_link": 100,
+        "source_binding": 100,
+        "valid": 100
+      },
+      "raw_cells": 1000,
+      "root": "4c1105ab77d249abd77e29337d488d4bde0734307ba067b82fa78298e80d3d2b"
+    },
+    "omega8": {
+      "invalid_promotions": 0,
+      "keepers": 1,
+      "root": "1c831372c97e1f0b1d48d7be3704b6d1e9654eb53f28ebba43897f6225b044c7",
+      "states": 6561
+    },
+    "result_root": "1c235ef131354e7dcd0f97911f41bc1de83e08aea8662ac209ad487f445ec20c",
+    "schema": "AURA-O19-AUTHENTICATED-ATTENUATED-DELEGATION-v1"
+  },
+  "schema": "AURA-O19-AUTHENTICATED-ATTENUATED-DELEGATION-PROOF-RECEIPT-v1",
+  "semantic_parent_head": "5c0cb77461809bb37cb8876d08ad7b3dbbc78e3e",
+  "source_sha256": "e27392fdc3538de133851aaae4d016f8040867dc5f6416a5d9aee8a91d65a800",
+  "test_sha256": "8c1bda5280180b66d1809f21d37dba46d279c1c0e42f9340424ad0bcb9b37436",
+  "venvs": 3
+}
