@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1684
-- **total_bytes**: 26700746
-- **text_tokens_est**: 6665536
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1024, 'schema_or_lexicon': 280, 'support_file': 53}
+- **file_count**: 1699
+- **total_bytes**: 26719207
+- **text_tokens_est**: 6670153
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 250, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1024, 'schema_or_lexicon': 286, 'support_file': 54}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1684,
+  "repo_file_count": 1699,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -199,6 +199,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
     ".github/workflows/project006-o11r2-stable-operation-proof.yml",
     ".github/workflows/project006-o14-execution-basis-seal-proof.yml",
+    ".github/workflows/project006-o15-workcell-effect-fault-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -300,10 +301,24 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/ARENA-CONTRIBUTION__PROJECT006-O11R2__STABLE-PROVIDER-OPERATION-CROSSBIND__20260907.md",
     "artifacts/ARENA-CONTRIBUTION__PROJECT006-O14__AUTHENTICATED-EXECUTION-BASIS-SEAL__20260907.md",
+    "artifacts/ARENA-CONTRIBUTION__PROJECT006-O15__WORKCELL-EFFECT-FAULT-INJECTION-BRIDGE__20260907.md",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "artifacts/project006_o11r2_stable_operation_proof.json",
     "artifacts/project006_o14_execution_basis_seal_proof.json",
+    "artifacts/project006_o15_claim_ceiling.md",
+    "artifacts/project006_o15_external_pressure.md",
+    "artifacts/project006_o15_external_urls.txt",
+    "artifacts/project006_o15_fixed_point_policy.md",
+    "artifacts/project006_o15_hyperdrive_projection.md",
+    "artifacts/project006_o15_hyperscale_projection.json",
+    "artifacts/project006_o15_k27_coordinates.json",
+    "artifacts/project006_o15_next_objective_gate.md",
+    "artifacts/project006_o15_no_blind_replay_law.md",
+    "artifacts/project006_o15_publication_manifest.json",
+    "artifacts/project006_o15_rebase_parents.json",
+    "artifacts/project006_o15_state_machine.md",
+    "artifacts/project006_o15_workcell_effect_fault_proof.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1824,17 +1839,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1684,
-  "bytes": 26700746,
-  "tokens_est": 6665536,
+  "files": 1699,
+  "bytes": 26719207,
+  "tokens_est": 6670153,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 242,
+    "knowledge_artifact": 250,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1024,
-    "schema_or_lexicon": 280,
-    "support_file": 53
+    "schema_or_lexicon": 286,
+    "support_file": 54
   }
 }
 ```
@@ -1965,6 +1980,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "VSA_TEST_PLAN.md",
     "artifacts/ARENA-CONTRIBUTION__PROJECT006-O11R2__STABLE-PROVIDER-OPERATION-CROSSBIND__20260907.md",
     "artifacts/ARENA-CONTRIBUTION__PROJECT006-O14__AUTHENTICATED-EXECUTION-BASIS-SEAL__20260907.md",
+    "artifacts/ARENA-CONTRIBUTION__PROJECT006-O15__WORKCELL-EFFECT-FAULT-INJECTION-BRIDGE__20260907.md",
+    "artifacts/project006_o15_claim_ceiling.md",
+    "artifacts/project006_o15_external_pressure.md",
+    "artifacts/project006_o15_fixed_point_policy.md",
+    "artifacts/project006_o15_hyperdrive_projection.md",
+    "artifacts/project006_o15_next_objective_gate.md",
+    "artifacts/project006_o15_no_blind_replay_law.md",
+    "artifacts/project006_o15_state_machine.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -2110,15 +2133,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_ST3GG_CANONICAL_CONTRACTS.md",
     "docs/AURA_ST3GG_COMPATIBILITY_P5_3.md",
     "docs/AURA_SUBSTRATE_INTEGRATION_P9.md",
-    "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md",
-    "docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md",
-    "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md",
-    "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
-    "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
-    "docs/AURA_TOKEN_ECONOMY_STACK.md",
-    "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
-    "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
+    "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md"
   ]
 }
 ```
