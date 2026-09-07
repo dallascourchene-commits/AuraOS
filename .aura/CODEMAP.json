@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1679,
+    "repo_file_count": 1684,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2697,6 +2697,7 @@
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_incremental_evidence.py",
       "tests/test_k27_memory_navigator_route_admission.py",
+      "tests/test_k27_memory_navigator_route_evidence_transaction.py",
       "tests/test_k27_memory_navigator_runtime_bridge.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -2725,10 +2726,14 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+      "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
       "tools/arena/k27_memory_navigator/minimal_evidence.py",
+      "tools/arena/k27_memory_navigator/reflexive_topology.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
       "tools/arena/k27_memory_navigator/route_delta_planner.py",
+      "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
       "tools/arena/k27_memory_navigator/runtime_bridge.py",
+      "tools/arena/k27_memory_navigator/temporal_zone.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -104420,6 +104425,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6926,
+      "lines": 147,
+      "tokens_est": 1732,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cca3fdf2e0426f07",
+      "vector": [
+        0.074462,
+        0.27539,
+        0.230476,
+        -0.119375,
+        0.265934,
+        -0.081553,
+        -0.114647,
+        0.048459,
+        0.008274,
+        0.23284,
+        -0.083917,
+        0.031912,
+        -0.081553,
+        -0.072098,
+        0.173744,
+        0.282481,
+        0.178472,
+        -0.187927,
+        0.166652,
+        -0.022457,
+        0.17138,
+        0.083917,
+        -0.289573,
+        -0.14065,
+        0.284845,
+        0.03664,
+        -0.268298,
+        0.057915,
+        0.299028,
+        -0.069734,
+        -0.213929,
+        -0.20211
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_navigator_runtime_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -105645,47 +105697,47 @@
       "path": "tools/arena/k27_memory_navigator/__init__.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 1255,
-      "lines": 30,
-      "tokens_est": 314,
+      "bytes": 1908,
+      "lines": 43,
+      "tokens_est": 477,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e704914194739b6b",
+      "digest8": "78b58ab7409673ef",
       "vector": [
-        -0.065477,
-        0.173456,
-        0.184943,
-        0.040205,
-        -0.065477,
-        -0.210214,
-        0.065477,
-        0.040205,
-        -0.251568,
-        -0.102235,
-        0.203322,
-        0.292922,
-        0.090748,
-        -0.11602,
-        0.281434,
-        -0.127507,
-        0.095343,
-        0.269947,
-        -0.212512,
-        -0.180348,
-        -0.198727,
-        0.265353,
-        0.217107,
-        -0.056287,
-        0.081559,
-        -0.060882,
-        -0.088451,
-        -0.228594,
-        0.0448,
-        -0.242378,
-        0.265353,
-        -0.189538
+        0.078669,
+        -0.214453,
+        0.085134,
+        -0.261869,
+        0.151949,
+        0.05065,
+        -0.272646,
+        0.01832,
+        -0.128241,
+        0.244627,
+        -0.063581,
+        -0.214453,
+        0.190744,
+        -0.115309,
+        -0.19721,
+        -0.093756,
+        -0.037718,
+        -0.261869,
+        -0.167036,
+        0.261869,
+        0.182123,
+        -0.177812,
+        0.214453,
+        -0.065737,
+        -0.164881,
+        0.27049,
+        -0.156259,
+        -0.151949,
+        0.151949,
+        0.248937,
+        -0.179968,
+        -0.033407
       ]
     },
     {
@@ -105736,6 +105788,53 @@
       ]
     },
     {
+      "path": "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2722,
+      "lines": 69,
+      "tokens_est": 681,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d9b700355231be4f",
+      "vector": [
+        0.143143,
+        0.188853,
+        -0.051724,
+        0.176824,
+        -0.15036,
+        -0.006014,
+        0.090216,
+        0.056535,
+        0.2923,
+        -0.082999,
+        -0.049318,
+        -0.268243,
+        0.049318,
+        -0.184041,
+        0.15036,
+        -0.2923,
+        -0.095028,
+        -0.159983,
+        0.222533,
+        -0.176824,
+        -0.085405,
+        -0.104651,
+        -0.287489,
+        -0.167201,
+        0.109462,
+        -0.128708,
+        -0.282677,
+        0.00842,
+        0.306735,
+        -0.270649,
+        0.138332,
+        0.159983
+      ]
+    },
+    {
       "path": "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "role": "python_module",
       "binary": false,
@@ -105780,6 +105879,53 @@
         0.252734,
         -0.097724,
         0.149394
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3468,
+      "lines": 118,
+      "tokens_est": 867,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e11a6e8feaeee690",
+      "vector": [
+        0.259303,
+        0.129013,
+        -0.307843,
+        -0.044707,
+        -0.047262,
+        -0.129013,
+        0.001277,
+        -0.210764,
+        -0.136677,
+        0.213319,
+        0.083028,
+        -0.205654,
+        -0.113685,
+        0.266968,
+        0.001277,
+        -0.116239,
+        -0.226092,
+        -0.118794,
+        0.279741,
+        -0.292515,
+        -0.310398,
+        -0.116239,
+        -0.003832,
+        -0.021715,
+        0.021715,
+        0.075364,
+        -0.236311,
+        0.075364,
+        -0.233756,
+        -0.129013,
+        0.223537,
+        -0.129013
       ]
     },
     {
@@ -105877,6 +106023,53 @@
       ]
     },
     {
+      "path": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1351,
+      "lines": 37,
+      "tokens_est": 338,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "189e8f641005b283",
+      "vector": [
+        -0.146697,
+        -0.158624,
+        -0.032202,
+        0.032202,
+        0.09422,
+        -0.168165,
+        -0.072752,
+        0.24211,
+        -0.230184,
+        0.180092,
+        -0.156239,
+        -0.265964,
+        -0.022661,
+        0.013119,
+        -0.206331,
+        -0.187248,
+        0.001193,
+        -0.27789,
+        0.299358,
+        0.134771,
+        -0.275505,
+        0.265964,
+        0.24211,
+        -0.120459,
+        0.046514,
+        -0.218257,
+        0.046514,
+        0.046514,
+        0.246881,
+        0.161009,
+        -0.177707,
+        0.118074
+      ]
+    },
+    {
       "path": "tools/arena/k27_memory_navigator/runtime_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -105921,6 +106114,53 @@
         0.251342,
         -0.184483,
         -0.011143
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/temporal_zone.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2266,
+      "lines": 67,
+      "tokens_est": 567,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d385760fff181366",
+      "vector": [
+        0.294323,
+        0.088429,
+        -0.296963,
+        -0.270566,
+        0.16234,
+        0.035636,
+        -0.164979,
+        0.133303,
+        -0.188736,
+        0.040915,
+        0.085789,
+        -0.056753,
+        -0.135943,
+        0.336558,
+        -0.281125,
+        -0.167619,
+        -0.08315,
+        0.180817,
+        0.223052,
+        0.23889,
+        0.117465,
+        -0.027717,
+        -0.170259,
+        -0.006599,
+        -0.146502,
+        -0.048834,
+        0.267927,
+        -0.15706,
+        -0.135943,
+        0.08315,
+        0.106907,
+        -0.194016
       ]
     },
     {
@@ -107015,7 +107255,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788740931,
+  "generated_at_unix": 1788741413,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108650,6 +108890,7 @@
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_incremental_evidence.py",
       "tests/test_k27_memory_navigator_route_admission.py",
+      "tests/test_k27_memory_navigator_route_evidence_transaction.py",
       "tests/test_k27_memory_navigator_runtime_bridge.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -108678,10 +108919,14 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+      "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
       "tools/arena/k27_memory_navigator/minimal_evidence.py",
+      "tools/arena/k27_memory_navigator/reflexive_topology.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
       "tools/arena/k27_memory_navigator/route_delta_planner.py",
+      "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
       "tools/arena/k27_memory_navigator/runtime_bridge.py",
+      "tools/arena/k27_memory_navigator/temporal_zone.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -267331,6 +267576,136 @@
         "file_digest8": "9284b0ef0e4884d7"
       },
       {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#class:RouteEvidenceTransactionTests:cf272a7e9d62c288",
+        "name": "RouteEvidenceTransactionTests",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 15,
+        "end_line": 142,
+        "signature_hash": "cb52ef4d5fbf61b9",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_consistent_relational_zone:181efc8e09017ca4",
+        "name": "RouteEvidenceTransactionTests.test_consistent_relational_zone",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 42,
+        "end_line": 48,
+        "signature_hash": "b2fd1bb95be1345b",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_consume_observed_edge:184c3840b121200d",
+        "name": "RouteEvidenceTransactionTests.test_consume_observed_edge",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "d97f0c66ae4a8199",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_nonempty_marginals_can_be_jointly_inconsistent:d8901e1d2e21b532",
+        "name": "RouteEvidenceTransactionTests.test_nonempty_marginals_can_be_jointly_inconsistent",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 50,
+        "end_line": 57,
+        "signature_hash": "0ed15eef9c062a8b",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_probe_can_merge_pre_components:ff5067f0e9e98efd",
+        "name": "RouteEvidenceTransactionTests.test_probe_can_merge_pre_components",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 16,
+        "end_line": 23,
+        "signature_hash": "dd0995f43f570a02",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_probe_can_split_component:d2c5863da4b014a3",
+        "name": "RouteEvidenceTransactionTests.test_probe_can_split_component",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "a9b33068b44d6446",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_program_root_stable:91db9b90a43a5618",
+        "name": "RouteEvidenceTransactionTests.test_program_root_stable",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "36cec46b08560723",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_random_topology_matches_independent_bfs:f60c38fd47063eef",
+        "name": "RouteEvidenceTransactionTests.test_random_topology_matches_independent_bfs",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 81,
+        "end_line": 120,
+        "signature_hash": "6816651de3f8284a",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_random_zone_matches_bellman_ford:3f08dca9cceca4e4",
+        "name": "RouteEvidenceTransactionTests.test_random_zone_matches_bellman_ford",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 122,
+        "end_line": 142,
+        "signature_hash": "9874b569a2038bdd",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_topology_certificate_is_nonauthorizing:28da81755cf24f8d",
+        "name": "RouteEvidenceTransactionTests.test_topology_certificate_is_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "0f6674bc8c54ab7a",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_transaction_holds_inconsistent_zone:8d131389a4e6b37d",
+        "name": "RouteEvidenceTransactionTests.test_transaction_holds_inconsistent_zone",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "7e536fc445db1514",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_transaction_ready:5343485c0369843d",
+        "name": "RouteEvidenceTransactionTests.test_transaction_ready",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "47d94fb486019f08",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_unknown_added_node_rejected:41f3ff0ee827519d",
+        "name": "RouteEvidenceTransactionTests.test_unknown_added_node_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "e226cf061ef7efdf",
+        "file_digest8": "cca3fdf2e0426f07"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Binding:cc5aaae510c0fae7",
         "name": "Binding",
         "kind": "class",
@@ -270581,6 +270956,16 @@
         "file_digest8": "591fa867cee1dda4"
       },
       {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py#function:run:6dadf18f05df8c7b",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
+        "line": 12,
+        "end_line": 64,
+        "signature_hash": "38bae176c178b221",
+        "file_digest8": "d9b700355231be4f"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:DecisionNode:b778615b6dfc8f77",
         "name": "DecisionNode",
         "kind": "class",
@@ -270659,6 +271044,96 @@
         "end_line": 101,
         "signature_hash": "9e147595101506ca",
         "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#class:ProbeStep:870178ef4bc01d37",
+        "name": "ProbeStep",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 63,
+        "end_line": 67,
+        "signature_hash": "f1a9e846b25a4497",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#class:TopologyCertificate:d751b5357f163d2c",
+        "name": "TopologyCertificate",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 71,
+        "end_line": 80,
+        "signature_hash": "6025a1c42751b79e",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#class:TopologyDisposition:93b4c046a1f4621d",
+        "name": "TopologyDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 9,
+        "end_line": 11,
+        "signature_hash": "ad1322c0a70731d1",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:components:00c523c1224afb4c",
+        "name": "components",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 36,
+        "end_line": 59,
+        "signature_hash": "8e2e2b575d7662b7",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:edge_set:68f4fd7fc64b6427",
+        "name": "edge_set",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "1ea64334a3f8a8b7",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:execute_probe_program:8a65f15abbe757ab",
+        "name": "execute_probe_program",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 95,
+        "end_line": 117,
+        "signature_hash": "02ed18d40985e0f8",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:graph_root:f692e75a5666c231",
+        "name": "graph_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 28,
+        "end_line": 33,
+        "signature_hash": "22251890922e1ebf",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:norm_edge:6519019c1044d19e",
+        "name": "norm_edge",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "d4cdbb3bd7fb12ba",
+        "file_digest8": "e11a6e8feaeee690"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:program_root:f11729dcda19cfb2",
+        "name": "program_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "line": 83,
+        "end_line": 92,
+        "signature_hash": "b8b879e41ec8a234",
+        "file_digest8": "e11a6e8feaeee690"
       },
       {
         "semantic_id": "tools/arena/k27_memory_navigator/route_card_admission.py#class:Admission:e2a494c21f39c3f6",
@@ -270971,6 +271446,36 @@
         "file_digest8": "af185b1a97f7e6d4"
       },
       {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_evidence_transaction.py#class:RouteEvidenceTransaction:cb8722c4da477d73",
+        "name": "RouteEvidenceTransaction",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+        "line": 17,
+        "end_line": 23,
+        "signature_hash": "11986ef08c77b1da",
+        "file_digest8": "189e8f641005b283"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_evidence_transaction.py#class:TransactionDisposition:9e6a98d2680f9221",
+        "name": "TransactionDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+        "line": 10,
+        "end_line": 13,
+        "signature_hash": "205137ff68deee92",
+        "file_digest8": "189e8f641005b283"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_evidence_transaction.py#function:certify:00f39b62eac01c18",
+        "name": "certify",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+        "line": 26,
+        "end_line": 36,
+        "signature_hash": "f11d3db86ac05592",
+        "file_digest8": "189e8f641005b283"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#class:RuntimeBridgeError:476e3b31905e1ed9",
         "name": "RuntimeBridgeError",
         "kind": "class",
@@ -271009,6 +271514,56 @@
         "end_line": 81,
         "signature_hash": "2b5ecf571daa1216",
         "file_digest8": "a347ca15eb36dee6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#class:DifferenceConstraint:9f9f430bc4a566f7",
+        "name": "DifferenceConstraint",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "line": 15,
+        "end_line": 24,
+        "signature_hash": "7067ad2055a00ccc",
+        "file_digest8": "d385760fff181366"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#class:ZoneCertificate:02e66f04ef4997d0",
+        "name": "ZoneCertificate",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "line": 28,
+        "end_line": 35,
+        "signature_hash": "9bbabe559d6e117b",
+        "file_digest8": "d385760fff181366"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#class:ZoneDisposition:2dbee4f65b9be398",
+        "name": "ZoneDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "line": 9,
+        "end_line": 11,
+        "signature_hash": "e26ea9c48b1250b3",
+        "file_digest8": "d385760fff181366"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#function:compile_zone:c125b67d85c19450",
+        "name": "compile_zone",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "line": 38,
+        "end_line": 66,
+        "signature_hash": "05cad9fa685f239d",
+        "file_digest8": "d385760fff181366"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#method:DifferenceConstraint.__post_init__:10d53d0548cede1f",
+        "name": "DifferenceConstraint.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "d385760fff181366"
       },
       {
         "semantic_id": "tools/arena/k27_memory_runtime.py#class:K27MemoryRuntime:606b57434b2b86ed",
@@ -272561,8 +273116,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "bc6506cbb260f7a9afa8ec57fbf78fef",
-    "payload_hash": "efcdc71b6726442d46fb4393780a71b4"
+    "record_fingerprint": "bedeefcedbab160b80c42e177176c2f1",
+    "payload_hash": "e7dfc49d17185a89ebd1f380ee53c69f"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272575,15 +273130,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1679,
-      "bytes": 26661198,
-      "tokens_est": 6655653,
+      "files": 1684,
+      "bytes": 26678584,
+      "tokens_est": 6660001,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1029,
+        "python_module": 1034,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -273271,15 +273826,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1679,
-    "total_bytes": 26661198,
-    "text_tokens_est": 6655653,
+    "file_count": 1684,
+    "total_bytes": 26678584,
+    "text_tokens_est": 6660001,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1029,
+      "python_module": 1034,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -274517,6 +275072,14 @@
         "end_line": 111,
         "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:run:caf3f4a959e32957",
         "signature_hash": "a4178f4df0896922"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 64,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py#function:run:6dadf18f05df8c7b",
+        "signature_hash": "38bae176c178b221"
       }
     ],
     "run.record": [
@@ -429529,6 +430092,136 @@
         "signature_hash": "4ebc5d6eccc642ef"
       }
     ],
+    "RouteEvidenceTransactionTests": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 142,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#class:RouteEvidenceTransactionTests:cf272a7e9d62c288",
+        "signature_hash": "cb52ef4d5fbf61b9"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_probe_can_merge_pre_components": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_probe_can_merge_pre_components:ff5067f0e9e98efd",
+        "signature_hash": "dd0995f43f570a02"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_probe_can_split_component": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_probe_can_split_component:d2c5863da4b014a3",
+        "signature_hash": "a9b33068b44d6446"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_consume_observed_edge": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_consume_observed_edge:184c3840b121200d",
+        "signature_hash": "d97f0c66ae4a8199"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_topology_certificate_is_nonauthorizing": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_topology_certificate_is_nonauthorizing:28da81755cf24f8d",
+        "signature_hash": "0f6674bc8c54ab7a"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_consistent_relational_zone": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 48,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_consistent_relational_zone:181efc8e09017ca4",
+        "signature_hash": "b2fd1bb95be1345b"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_nonempty_marginals_can_be_jointly_inconsistent": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 57,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_nonempty_marginals_can_be_jointly_inconsistent:d8901e1d2e21b532",
+        "signature_hash": "0ed15eef9c062a8b"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_transaction_holds_inconsistent_zone": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_transaction_holds_inconsistent_zone:8d131389a4e6b37d",
+        "signature_hash": "7e536fc445db1514"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_transaction_ready": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_transaction_ready:5343485c0369843d",
+        "signature_hash": "47d94fb486019f08"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_unknown_added_node_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_unknown_added_node_rejected:41f3ff0ee827519d",
+        "signature_hash": "e226cf061ef7efdf"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_program_root_stable": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_program_root_stable:91db9b90a43a5618",
+        "signature_hash": "36cec46b08560723"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_random_topology_matches_independent_bfs": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 120,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_random_topology_matches_independent_bfs:f60c38fd47063eef",
+        "signature_hash": "6816651de3f8284a"
+      }
+    ],
+    "RouteEvidenceTransactionTests.test_random_zone_matches_bellman_ford": [
+      {
+        "file": "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 142,
+        "semantic_id": "tests/test_k27_memory_navigator_route_evidence_transaction.py#method:RouteEvidenceTransactionTests.test_random_zone_matches_bellman_ford:3f08dca9cceca4e4",
+        "signature_hash": "9874b569a2038bdd"
+      }
+    ],
     "Seal": [
       {
         "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
@@ -432639,6 +433332,96 @@
         "signature_hash": "9e147595101506ca"
       }
     ],
+    "TopologyDisposition": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 11,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#class:TopologyDisposition:93b4c046a1f4621d",
+        "signature_hash": "ad1322c0a70731d1"
+      }
+    ],
+    "norm_edge": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:norm_edge:6519019c1044d19e",
+        "signature_hash": "d4cdbb3bd7fb12ba"
+      }
+    ],
+    "edge_set": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:edge_set:68f4fd7fc64b6427",
+        "signature_hash": "1ea64334a3f8a8b7"
+      }
+    ],
+    "graph_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 33,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:graph_root:f692e75a5666c231",
+        "signature_hash": "22251890922e1ebf"
+      }
+    ],
+    "components": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 59,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:components:00c523c1224afb4c",
+        "signature_hash": "8e2e2b575d7662b7"
+      }
+    ],
+    "ProbeStep": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 67,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#class:ProbeStep:870178ef4bc01d37",
+        "signature_hash": "f1a9e846b25a4497"
+      }
+    ],
+    "TopologyCertificate": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 80,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#class:TopologyCertificate:d751b5357f163d2c",
+        "signature_hash": "6025a1c42751b79e"
+      }
+    ],
+    "program_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 92,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:program_root:f11729dcda19cfb2",
+        "signature_hash": "b8b879e41ec8a234"
+      }
+    ],
+    "execute_probe_program": [
+      {
+        "file": "tools/arena/k27_memory_navigator/reflexive_topology.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 117,
+        "semantic_id": "tools/arena/k27_memory_navigator/reflexive_topology.py#function:execute_probe_program:8a65f15abbe757ab",
+        "signature_hash": "02ed18d40985e0f8"
+      }
+    ],
     "Polarity": [
       {
         "file": "tools/arena/k27_memory_navigator/route_card_admission.py",
@@ -432919,6 +433702,36 @@
         "signature_hash": "6f808008abdc1d4f"
       }
     ],
+    "TransactionDisposition": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 13,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_evidence_transaction.py#class:TransactionDisposition:9e6a98d2680f9221",
+        "signature_hash": "205137ff68deee92"
+      }
+    ],
+    "RouteEvidenceTransaction": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 23,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_evidence_transaction.py#class:RouteEvidenceTransaction:cb8722c4da477d73",
+        "signature_hash": "11986ef08c77b1da"
+      }
+    ],
+    "certify": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 36,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_evidence_transaction.py#function:certify:00f39b62eac01c18",
+        "signature_hash": "f11d3db86ac05592"
+      }
+    ],
     "RuntimeBridgeError": [
       {
         "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
@@ -432947,6 +433760,56 @@
         "end_line": 81,
         "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#function:route_identity_from_runtime:2d1edb18b9ffaa24",
         "signature_hash": "2b5ecf571daa1216"
+      }
+    ],
+    "ZoneDisposition": [
+      {
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 11,
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#class:ZoneDisposition:2dbee4f65b9be398",
+        "signature_hash": "e26ea9c48b1250b3"
+      }
+    ],
+    "DifferenceConstraint": [
+      {
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 24,
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#class:DifferenceConstraint:9f9f430bc4a566f7",
+        "signature_hash": "7067ad2055a00ccc"
+      }
+    ],
+    "DifferenceConstraint.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#method:DifferenceConstraint.__post_init__:10d53d0548cede1f",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ZoneCertificate": [
+      {
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 35,
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#class:ZoneCertificate:02e66f04ef4997d0",
+        "signature_hash": "9bbabe559d6e117b"
+      }
+    ],
+    "compile_zone": [
+      {
+        "file": "tools/arena/k27_memory_navigator/temporal_zone.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 66,
+        "semantic_id": "tools/arena/k27_memory_navigator/temporal_zone.py#function:compile_zone:c125b67d85c19450",
+        "signature_hash": "05cad9fa685f239d"
       }
     ],
     "RuntimeBindingError": [
