@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1704
-- **total_bytes**: 26663609
-- **text_tokens_est**: 6656307
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1030, 'schema_or_lexicon': 288, 'support_file': 49}
+- **file_count**: 1711
+- **total_bytes**: 26708368
+- **text_tokens_est**: 6667499
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 253, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1033, 'schema_or_lexicon': 291, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1704,
+  "repo_file_count": 1711,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -168,6 +168,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
     ".github/workflows/awj032-core-source-topology-binding-proof.yml",
     ".github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml",
+    ".github/workflows/awj032-o5-speculative-realization-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -317,6 +318,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+    "artifacts/arena/awj032_speculative_realization_reconciliation/FRONTDOOR_RUNTIME_BINDING_LOCAL.json",
+    "artifacts/arena/awj032_speculative_realization_reconciliation/README.md",
+    "artifacts/arena/awj032_speculative_realization_reconciliation/REBASE_MANIFEST.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1696,6 +1700,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_runtime_hard_false.py",
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/airllm_tiny_fixture_probe.py",
+    "tools/awj032/speculative_realization_reconciliation_reference/prove_speculative_realization_reconciliation.py",
+    "tools/awj032/speculative_realization_reconciliation_reference/speculative_realization_reconciliation.py",
+    "tools/awj032/speculative_realization_reconciliation_reference/test_speculative_realization_reconciliation.py",
     "tools/awj032/test_airllm_binding_mutation_soundness.py",
     "tools/awj032/test_airllm_hard_false_inspected_tree.py",
     "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1844,16 +1851,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1704,
-  "bytes": 26663609,
-  "tokens_est": 6656307,
+  "files": 1711,
+  "bytes": 26708368,
+  "tokens_est": 6667499,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 252,
+    "knowledge_artifact": 253,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1030,
-    "schema_or_lexicon": 288,
+    "python_module": 1033,
+    "schema_or_lexicon": 291,
     "support_file": 49
   }
 }
@@ -1990,6 +1997,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_o2/README.md",
     "artifacts/arena/awj032_airllm_training_o3/README.md",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
+    "artifacts/arena/awj032_speculative_realization_reconciliation/README.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -2137,8 +2145,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_SUBSTRATE_INTEGRATION_P9.md",
     "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md",
     "docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md",
-    "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md",
-    "docs/AURA_SWARM_AND_MCP_COCKPIT.md"
+    "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md"
   ]
 }
 ```
