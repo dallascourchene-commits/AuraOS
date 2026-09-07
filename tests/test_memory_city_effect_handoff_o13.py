@@ -141,6 +141,7 @@ class EffectHandoffO13Tests(unittest.TestCase):
         cert, kwargs = fixtures()
         kwargs["mutation"] = replace(kwargs["mutation"], expires_at=1000)
         decision = compile_effect_handoff(cert, **kwargs)
+        self.assertIs(decision.disposition, HandoffDisposition.REBIND_REQUIRED)
         self.assertEqual(decision.reason, "LEASE_IDENTITY_MOVED")
 
     def test_unknown_or_extended_admission_is_not_owner_output(self):
@@ -193,13 +194,21 @@ class EffectHandoffO13Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             HandoffDecision(HandoffDisposition.HOLD, "x", authority="OTHER")
 
-    def test_campaign_direct_script_entrypoint_runs(self):
+    def test_campaign_direct_script_entrypoint_runs_with_exact_oracle(self):
         script = ROOT / "tools" / "arena" / "campaign_memory_city_effect_handoff_o13.py"
         completed = subprocess.run([sys.executable, str(script)], cwd=ROOT, capture_output=True, text=True, check=True)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["false_tecc_route"], 0)
         self.assertEqual(payload["false_hold"], 0)
+        self.assertEqual(payload["disposition_mismatches"], 0)
+        self.assertEqual(payload["reason_mismatches"], 0)
+        self.assertEqual(payload["oracle_mismatches"], 0)
+        self.assertTrue(payload["oracle_self_test_pass"])
         self.assertEqual(payload["effect_ready"], 0)
+        self.assertEqual(payload["by_mode"]["3"]["rebind"], 3000)
+        self.assertEqual(payload["by_mode"]["3"]["hold"], 0)
+        self.assertEqual(payload["by_mode"]["4"]["rebind"], 3000)
+        self.assertEqual(payload["by_mode"]["4"]["hold"], 0)
 
 
 if __name__ == "__main__":
