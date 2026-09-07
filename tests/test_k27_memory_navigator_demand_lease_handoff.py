@@ -60,6 +60,13 @@ class DemandLeaseHandoffTests(unittest.TestCase):
         stale = DemandCellState("cell-7", 4, root("cfg-b"), 11, 22, 22)
         self.assertIsNot(compile_write(self.lease(), stale, 50).disposition, LeaseDisposition.READY_D0)
 
+    def test_direct_state_with_uninstalled_current_fence_cannot_write(self):
+        state = DemandCellState("cell-7", 4, root("cfg-a"), 10, 22, 21)
+        lease = DemandCellLease("cell-7", 4, root("cfg-a"), 10, 22, "worker-b", 100)
+        decision = compile_write(lease, state, 50)
+        self.assertIs(decision.disposition, LeaseDisposition.HOLD)
+        self.assertEqual(decision.reason, "FENCE_NOT_INSTALLED_CURRENT")
+
     def test_configuration_transition_requires_authentication(self):
         decision, same = apply_configuration_transition(self.cell(), self.transition(authenticated=False))
         self.assertIs(decision.disposition, LeaseDisposition.HOLD)
