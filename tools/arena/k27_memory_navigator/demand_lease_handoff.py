@@ -336,20 +336,30 @@ def dependency_closed_invalidation(
     changed_cells: FrozenSet[str],
     dependency_edges: Mapping[str, FrozenSet[str]],
 ) -> FrozenSet[str]:
-    """Return the smallest forward dependency-closed invalidation cone."""
+    """Return the smallest consumer-closed invalidation cone.
+
+    Repository convention is dependent -> dependencies. Starting at a changed
+    source, invalidate each dependent whose dependency set contains an already
+    invalid node, then continue to that dependent's consumers.
+    """
     if not isinstance(changed_cells, frozenset) or any(not isinstance(x, str) or not x for x in changed_cells):
         raise ValueError("changed_cells must be a frozenset of non-empty ids")
+    normalized: dict[str, FrozenSet[str]] = {}
+    for dependent, dependencies in dependency_edges.items():
+        if not isinstance(dependent, str) or not dependent:
+            raise ValueError("dependency edge keys must be non-empty dependent ids")
+        if not isinstance(dependencies, frozenset) or any(not isinstance(x, str) or not x for x in dependencies):
+            raise ValueError("dependency edges must map dependents to frozensets of dependency ids")
+        normalized[dependent] = dependencies
+
     seen = set(changed_cells)
-    stack = list(changed_cells)
-    while stack:
-        current = stack.pop()
-        children = dependency_edges.get(current, frozenset())
-        if not isinstance(children, frozenset) or any(not isinstance(x, str) or not x for x in children):
-            raise ValueError("dependency edges must map to frozensets of non-empty ids")
-        for child in children:
-            if child not in seen:
-                seen.add(child)
-                stack.append(child)
+    frontier = list(changed_cells)
+    while frontier:
+        changed = frontier.pop()
+        for dependent, dependencies in normalized.items():
+            if dependent not in seen and changed in dependencies:
+                seen.add(dependent)
+                frontier.append(dependent)
     return frozenset(seen)
 
 
