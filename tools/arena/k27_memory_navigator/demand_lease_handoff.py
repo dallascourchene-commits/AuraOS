@@ -136,8 +136,10 @@ def compile_write(lease: DemandCellLease, cell: DemandCellState, now: int) -> Le
         return LeaseDecision(LeaseDisposition.REBIND_REQUIRED, "CONFIGURATION_MOVED")
     if lease.support_epoch != cell.support_epoch:
         return LeaseDecision(LeaseDisposition.REBIND_REQUIRED, "SUPPORT_EPOCH_MOVED")
-    if lease.fence_generation < cell.highest_accepted_fence:
-        return LeaseDecision(LeaseDisposition.HOLD, "STALE_FENCE")
+    # highest_accepted_fence is the protected resource's installation witness.
+    # An issued/current generation that has not reached that boundary is not READY.
+    if lease.fence_generation != cell.highest_accepted_fence:
+        return LeaseDecision(LeaseDisposition.HOLD, "FENCE_NOT_INSTALLED_CURRENT")
     if lease.fence_generation != cell.fence_generation:
         return LeaseDecision(LeaseDisposition.REBIND_REQUIRED, "FENCE_GENERATION_MOVED")
     if now >= lease.expires_at:
