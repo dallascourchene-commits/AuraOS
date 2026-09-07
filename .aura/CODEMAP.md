@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1699
-- **total_bytes**: 26637084
-- **text_tokens_est**: 6649673
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 286, 'support_file': 49}
+- **file_count**: 1700
+- **total_bytes**: 26641495
+- **text_tokens_est**: 6650777
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 287, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1699,
+  "repo_file_count": 1700,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,6 +166,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-airllm-exact-head-verify.yml",
     ".github/workflows/awj032-airllm-g1-source-contract.yml",
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
+    ".github/workflows/awj032-core-source-topology-binding-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1839,16 +1840,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1699,
-  "bytes": 26637084,
-  "tokens_est": 6649673,
+  "files": 1700,
+  "bytes": 26641495,
+  "tokens_est": 6650777,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1027,
-    "schema_or_lexicon": 286,
+    "schema_or_lexicon": 287,
     "support_file": 49
   }
 }

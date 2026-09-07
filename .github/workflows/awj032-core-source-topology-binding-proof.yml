@@ -1,0 +1,55 @@
+name: AWJ032 Core Source Topology Binding Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/training_o2_transition_reference/transition_envelope.py'
+      - 'tools/awj032/training_o2_transition_reference/test_transition_envelope.py'
+      - '.github/workflows/awj032-core-source-topology-binding-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify exact pull request head
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          sha256sum tools/awj032/training_o2_transition_reference/transition_envelope.py
+          sha256sum tools/awj032/training_o2_transition_reference/test_transition_envelope.py
+      - name: Recreate three proof environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            python -m venv ".venv-${i}"
+            ".venv-${i}/bin/python" -m unittest tools.awj032.training_o2_transition_reference.test_transition_envelope
+            ".venv-${i}/bin/python" - <<'PY' > "/tmp/core-binding-${i}.json"
+          import json
+          from dataclasses import replace
+          from tools.awj032.training_o2_transition_reference.test_transition_envelope import TransitionTest, R
+          t=TransitionTest(); t.setUp()
+          out={
+            'valid': t.verify(),
+            'detached_source': t.verify_rebound_core(replace(t.core,source_root=R('detached-source'))),
+            'detached_topology': t.verify_rebound_core(replace(t.core,target_topology_root=R('detached-topology'))),
+          }
+          print(json.dumps(out,sort_keys=True,separators=(',',':')))
+          PY
+          done
+          cmp /tmp/core-binding-1.json /tmp/core-binding-2.json
+          cmp /tmp/core-binding-1.json /tmp/core-binding-3.json
+          grep -F '"detached_source":"HOLD_SOURCE_BINDING"' /tmp/core-binding-1.json
+          grep -F '"detached_topology":"HOLD_TARGET_TOPOLOGY_BINDING"' /tmp/core-binding-1.json
+          grep -F '"valid":"ADMIT_D0_PROOF_CARRYING_TRANSITION"' /tmp/core-binding-1.json
+          sha256sum /tmp/core-binding-1.json
+          echo AWJ032_CORE_SOURCE_TOPOLOGY_BINDING_EXACT_HEAD=PASS
