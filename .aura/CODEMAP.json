@@ -407,6 +407,7 @@
     ],
     "python -m venv": [
       ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
+      ".github/workflows/project006-o18-aura-interaction-proof.yml",
       "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
@@ -1061,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1677,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1236,6 +1237,7 @@
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-host-repair-r2.yml",
       ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
+      ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1336,6 +1338,7 @@
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
       "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
+      "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2713,9 +2716,13 @@
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/aura_interaction_contract.py",
+      "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
+      "tools/project006/proof_aura_interaction_o18.py",
       "tools/project006/proof_windows_liveness_fallback_o17.py",
       "tools/project006/terminal_outbox.py",
+      "tools/project006/test_aura_interaction_contract.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_liveness_fallback.py",
       "tools/project006/test_windows_wake_broker.py",
@@ -11848,6 +11855,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o18-aura-interaction-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1980,
+      "lines": 50,
+      "tokens_est": 495,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          32
+        ]
+      },
+      "topology": {},
+      "digest8": "acbded7b2359dc8c",
+      "vector": [
+        0.030652,
+        -0.135098,
+        -0.039735,
+        -0.225919,
+        0.194132,
+        -0.171426,
+        0.194132,
+        -0.039735,
+        0.135098,
+        -0.26906,
+        -0.216837,
+        0.051087,
+        -0.026111,
+        -0.003406,
+        -0.248625,
+        0.023841,
+        0.273601,
+        0.071522,
+        0.241813,
+        0.087416,
+        -0.212296,
+        -0.073793,
+        -0.203214,
+        -0.216837,
+        -0.205484,
+        -0.130556,
+        -0.237272,
+        -0.114663,
+        -0.116933,
+        -0.257707,
+        -0.246354,
+        0.253166
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17742,6 +17802,53 @@
         -0.091393,
         -0.133235,
         -0.258763
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3543,
+      "lines": 70,
+      "tokens_est": 886,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9bdb39983e661402",
+      "vector": [
+        -0.235673,
+        0.1331,
+        0.123332,
+        0.106236,
+        -0.137985,
+        -0.289402,
+        -0.008548,
+        -0.103794,
+        -0.19904,
+        -0.057392,
+        0.223462,
+        0.162407,
+        -0.123332,
+        0.184387,
+        0.277191,
+        -0.286959,
+        0.008548,
+        0.15508,
+        -0.052507,
+        0.211251,
+        -0.17706,
+        0.106236,
+        -0.308939,
+        -0.130658,
+        -0.15508,
+        0.101352,
+        0.233231,
+        -0.11112,
+        -0.084256,
+        -0.311382,
+        -0.164849,
+        -0.006106
       ]
     },
     {
@@ -105298,6 +105405,100 @@
       ]
     },
     {
+      "path": "tools/project006/aura_interaction_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6319,
+      "lines": 135,
+      "tokens_est": 1580,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b96f35abe6e655e3",
+      "vector": [
+        -0.023189,
+        -0.215329,
+        0.274958,
+        -0.195452,
+        -0.129197,
+        0.118155,
+        0.208703,
+        0.244039,
+        0.274958,
+        -0.107112,
+        -0.252873,
+        0.120363,
+        -0.089444,
+        -0.138031,
+        -0.153491,
+        0.071776,
+        0.179993,
+        -0.191035,
+        0.186618,
+        0.279375,
+        -0.250665,
+        0.241831,
+        -0.038649,
+        -0.191035,
+        -0.023189,
+        -0.005521,
+        0.191035,
+        0.18441,
+        0.065151,
+        -0.153491,
+        0.206495,
+        -0.040857
+      ]
+    },
+    {
+      "path": "tools/project006/physical_wake_acceptance.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5211,
+      "lines": 87,
+      "tokens_est": 1303,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dfdfdb997a97780a",
+      "vector": [
+        -0.093584,
+        0.072788,
+        -0.222984,
+        0.211431,
+        -0.222984,
+        -0.028884,
+        0.278442,
+        -0.264577,
+        0.14442,
+        -0.098206,
+        -0.160595,
+        -0.17677,
+        -0.292306,
+        0.186013,
+        0.010398,
+        0.045059,
+        -0.04737,
+        -0.186013,
+        0.128245,
+        0.165216,
+        -0.001155,
+        0.204499,
+        0.292306,
+        -0.128245,
+        0.051991,
+        0.259956,
+        0.190634,
+        -0.204499,
+        -0.151352,
+        -0.061234,
+        -0.114381,
+        0.266888
+      ]
+    },
+    {
       "path": "tools/project006/project006_consumer_outbox_wrapper.py",
       "role": "python_module",
       "binary": false,
@@ -105342,6 +105543,53 @@
         0.284245,
         0.070138,
         -0.05045
+      ]
+    },
+    {
+      "path": "tools/project006/proof_aura_interaction_o18.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2533,
+      "lines": 38,
+      "tokens_est": 634,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8d982bfbd2822cff",
+      "vector": [
+        -0.197014,
+        -0.243763,
+        -0.210371,
+        0.152491,
+        0.139134,
+        0.027827,
+        -0.190336,
+        0.076802,
+        0.021148,
+        -0.219276,
+        -0.263799,
+        -0.243763,
+        -0.038958,
+        -0.001113,
+        0.283834,
+        -0.1703,
+        0.001113,
+        -0.283834,
+        0.225954,
+        -0.023375,
+        -0.243763,
+        -0.005565,
+        0.023375,
+        0.165848,
+        -0.234859,
+        0.165848,
+        0.121325,
+        0.232633,
+        0.041184,
+        0.283834,
+        0.041184,
+        -0.168074
       ]
     },
     {
@@ -105436,6 +105684,53 @@
         -0.266856,
         0.183395,
         -0.229518
+      ]
+    },
+    {
+      "path": "tools/project006/test_aura_interaction_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3924,
+      "lines": 50,
+      "tokens_est": 981,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "874f13ef334c45c9",
+      "vector": [
+        -0.193146,
+        0.083112,
+        -0.052676,
+        -0.001171,
+        0.270405,
+        0.08077,
+        0.050335,
+        -0.277429,
+        -0.242311,
+        -0.043312,
+        0.066723,
+        -0.244652,
+        -0.291476,
+        0.113547,
+        -0.286793,
+        0.232946,
+        0.127594,
+        -0.08077,
+        -0.155688,
+        0.031606,
+        -0.0995,
+        -0.296158,
+        -0.284452,
+        -0.0597,
+        0.092476,
+        -0.12057,
+        -0.033947,
+        -0.136958,
+        -0.23997,
+        0.251676,
+        -0.064382,
+        -0.190805
       ]
     },
     {
@@ -106624,7 +106919,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788786807,
+  "generated_at_unix": 1788787551,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106801,6 +107096,7 @@
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-host-repair-r2.yml",
       ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
+      ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -106901,6 +107197,7 @@
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
       "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
+      "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108278,9 +108575,13 @@
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/aura_interaction_contract.py",
+      "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
+      "tools/project006/proof_aura_interaction_o18.py",
       "tools/project006/proof_windows_liveness_fallback_o17.py",
       "tools/project006/terminal_outbox.py",
+      "tools/project006/test_aura_interaction_contract.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_liveness_fallback.py",
       "tools/project006/test_windows_wake_broker.py",
@@ -268642,6 +268943,306 @@
         "file_digest8": "2630ed89a1cd55dd"
       },
       {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:AgentCommandDraft:29526934d1064675",
+        "name": "AgentCommandDraft",
+        "kind": "class",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 49,
+        "end_line": 54,
+        "signature_hash": "203c8f1d06014a55",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:AgentIntent:9b34ad175c194edd",
+        "name": "AgentIntent",
+        "kind": "class",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 37,
+        "end_line": 46,
+        "signature_hash": "97b5aafd47a1aebf",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:InteractionError:2ad0260b3b16082b",
+        "name": "InteractionError",
+        "kind": "class",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "c5ee665472ee9a84",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:LiveCurrentness:248864ba8ba95268",
+        "name": "LiveCurrentness",
+        "kind": "class",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 29,
+        "end_line": 34,
+        "signature_hash": "b3ce2cccdf9a590e",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:OwnerAdmissionBinding:6bf60f414f974907",
+        "name": "OwnerAdmissionBinding",
+        "kind": "class",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 57,
+        "end_line": 75,
+        "signature_hash": "8f886223bf40b536",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:SourceIdentity:66913a3506d9f64c",
+        "name": "SourceIdentity",
+        "kind": "class",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 19,
+        "end_line": 26,
+        "signature_hash": "b80336a88e960394",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:_canon:7e172033e77343b4",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "2ed191ce27080ff0",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:_find_forbidden_keys:b999fb3ec1554bfd",
+        "name": "_find_forbidden_keys",
+        "kind": "function",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 120,
+        "end_line": 131,
+        "signature_hash": "e7ffe36129b936c6",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:_sha:0cb7c024b5e1d7b8",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "b7035a2fd0c7c92f",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:compile_authorized_envelope:8abe7d96090dea40",
+        "name": "compile_authorized_envelope",
+        "kind": "function",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 85,
+        "end_line": 117,
+        "signature_hash": "4ded695386e3c9be",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:draft_agent_command:6324300024684490",
+        "name": "draft_agent_command",
+        "kind": "function",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 78,
+        "end_line": 82,
+        "signature_hash": "8c1d275762d47477",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:envelope_root:e607a6c503522a33",
+        "name": "envelope_root",
+        "kind": "function",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 134,
+        "end_line": 134,
+        "signature_hash": "f2d4aa4b8b258f8c",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:AgentIntent.validate:f5b53731afe2e6bd",
+        "name": "AgentIntent.validate",
+        "kind": "method",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:LiveCurrentness.validate:721a4036831c9d0c",
+        "name": "LiveCurrentness.validate",
+        "kind": "method",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:OwnerAdmissionBinding.validate_shape:482d18279824a5e3",
+        "name": "OwnerAdmissionBinding.validate_shape",
+        "kind": "method",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 67,
+        "end_line": 75,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:SourceIdentity.validate:eef0adc3aca5aec9",
+        "name": "SourceIdentity.validate",
+        "kind": "method",
+        "file": "tools/project006/aura_interaction_contract.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b96f35abe6e655e3"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:AcceptanceContract:deb1d34604357297",
+        "name": "AcceptanceContract",
+        "kind": "class",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 26,
+        "end_line": 37,
+        "signature_hash": "2c3024029b2df726",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:EventKind:5c1e79a4a2338a92",
+        "name": "EventKind",
+        "kind": "class",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 9,
+        "end_line": 17,
+        "signature_hash": "691797c91e56eba9",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:WakeAcceptanceLedger:b2b82379f1d58872",
+        "name": "WakeAcceptanceLedger",
+        "kind": "class",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 49,
+        "end_line": 86,
+        "signature_hash": "4243517c31074ac0",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:WakeEvent:2128754fa6a04cba",
+        "name": "WakeEvent",
+        "kind": "class",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "eb8cdf199715bd74",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:WitnessError:5682f7dedaae140c",
+        "name": "WitnessError",
+        "kind": "class",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "fbc15aa3f37197d6",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#function:_hex64:e431de9f9cd84eae",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "19dd1ea1e95374fb",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#function:_root:43ca8d348bd79bc3",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "769522c3b4bdf5c3",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:AcceptanceContract.validate:024c1d86a9b30e6b",
+        "name": "AcceptanceContract.validate",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 33,
+        "end_line": 37,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.__init__:6c7da9b70b440f6d",
+        "name": "WakeAcceptanceLedger.__init__",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 50,
+        "end_line": 57,
+        "signature_hash": "c1fe456fd070f68a",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.append:ff7753037d9849cf",
+        "name": "WakeAcceptanceLedger.append",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "e7f7066f9cdab4da",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.evaluate:6c131c809652ddbe",
+        "name": "WakeAcceptanceLedger.evaluate",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 73,
+        "end_line": 86,
+        "signature_hash": "39f406a2c05a5ab0",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.projection:27d4a838bcf71489",
+        "name": "WakeAcceptanceLedger.projection",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 67,
+        "end_line": 72,
+        "signature_hash": "21ea11b06b21f022",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeEvent.event_root:bf40a0f7e255adcc",
+        "name": "WakeEvent.event_root",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 47,
+        "end_line": 47,
+        "signature_hash": "f99b72ee906e3e00",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeEvent.validate:26cdc15fc2f5439e",
+        "name": "WakeEvent.validate",
+        "kind": "method",
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "line": 42,
+        "end_line": 45,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "dfdfdb997a97780a"
+      },
+      {
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:_changed:fb5eb9317f79eb5e",
         "name": "_changed",
         "kind": "function",
@@ -268760,6 +269361,56 @@
         "end_line": 206,
         "signature_hash": "a462d97dadc1d858",
         "file_digest8": "1251958ac0239c0e"
+      },
+      {
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:decision:29dcf00de55f5980",
+        "name": "decision",
+        "kind": "function",
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "493c3741ecc7660a",
+        "file_digest8": "8d982bfbd2822cff"
+      },
+      {
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:factored13d:1cd012384b37647b",
+        "name": "factored13d",
+        "kind": "function",
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "line": 17,
+        "end_line": 23,
+        "signature_hash": "465a1a1f10add68b",
+        "file_digest8": "8d982bfbd2822cff"
+      },
+      {
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:hs1000:8405f5b6f2b68b0f",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "line": 25,
+        "end_line": 34,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "8d982bfbd2822cff"
+      },
+      {
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:main:fb86b4d96d6fcf6d",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "8d982bfbd2822cff"
+      },
+      {
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:omega8:4762b29dbf9ff32c",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "line": 11,
+        "end_line": 15,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "8d982bfbd2822cff"
       },
       {
         "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:factored13d:0b1e0878fa4606bd",
@@ -268960,6 +269611,126 @@
         "end_line": 79,
         "signature_hash": "78cc05eff2137397",
         "file_digest8": "8403c8ccdc3570ef"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#class:InteractionTests:b2581101306f3582",
+        "name": "InteractionTests",
+        "kind": "class",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 14,
+        "end_line": 47,
+        "signature_hash": "6231608225e1b805",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#function:admission:9eadbd80cf3ac7a9",
+        "name": "admission",
+        "kind": "function",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 10,
+        "end_line": 12,
+        "signature_hash": "b23c056d9208e84b",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_authenticated_owner_binding_compiles:b45e5c2e06ad9a19",
+        "name": "InteractionTests.test_authenticated_owner_binding_compiles",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 16,
+        "end_line": 20,
+        "signature_hash": "783a7b097043f1df",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_currentness_move_requires_reproof:830be41358d0dc8a",
+        "name": "InteractionTests.test_currentness_move_requires_reproof",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "f74af0b766403756",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_draft_is_inert:901af63862e3d6c9",
+        "name": "InteractionTests.test_draft_is_inert",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "3b57dc487003d9d8",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_fuzz_hard_axes:dea1bab5a030f5f9",
+        "name": "InteractionTests.test_fuzz_hard_axes",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 38,
+        "end_line": 47,
+        "signature_hash": "e56e7f159a867437",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_non_d0_draft_rejected:72a4b1e931b8b474",
+        "name": "InteractionTests.test_non_d0_draft_rejected",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "b1b85de318a020d8",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_provider_policy_is_not_agent_selected:1e0ce170afafe593",
+        "name": "InteractionTests.test_provider_policy_is_not_agent_selected",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "ba10cada0ae7c69a",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_same_digest_different_file_fails:d03c7f4d4df3cbb6",
+        "name": "InteractionTests.test_same_digest_different_file_fails",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "d94da12cde48f208",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_same_file_digest_different_revision_fails:f4435eed229b1a20",
+        "name": "InteractionTests.test_same_file_digest_different_revision_fails",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "ad674922ea8d3af9",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_shape_without_authentication_fails:186285ccb5058725",
+        "name": "InteractionTests.test_shape_without_authentication_fails",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "3a24b0c1dfa8dff9",
+        "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_target_bounds:9c34d2012acf43e1",
+        "name": "InteractionTests.test_target_bounds",
+        "kind": "method",
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "line": 35,
+        "end_line": 37,
+        "signature_hash": "9cda8e15238167c3",
+        "file_digest8": "874f13ef334c45c9"
       },
       {
         "semantic_id": "tools/project006/test_terminal_outbox.py#class:TerminalOutboxTests:e377b74436c00b0f",
@@ -270652,8 +271423,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "78b4375de0ecd2fef22618186e544eaf",
-    "payload_hash": "2fb681d9204ae76ed3bbadd510de4e67"
+    "record_fingerprint": "b3cf786df2fdf66b1d602771c49630ba",
+    "payload_hash": "f88defc72c53d2c167137e1d3a6100ab"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270666,16 +271437,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26579759,
-      "tokens_est": 6635290,
+      "files": 1677,
+      "bytes": 26603269,
+      "tokens_est": 6641169,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1017,
-        "schema_or_lexicon": 276,
+        "python_module": 1021,
+        "schema_or_lexicon": 278,
         "support_file": 53
       }
     },
@@ -271362,16 +272133,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26579759,
-    "text_tokens_est": 6635290,
+    "file_count": 1677,
+    "total_bytes": 26603269,
+    "text_tokens_est": 6641169,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1017,
-      "schema_or_lexicon": 276,
+      "python_module": 1021,
+      "schema_or_lexicon": 278,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -272405,6 +273176,14 @@
         "line": 209,
         "end_line": 224,
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:main:b68f51e32021f711",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:main:fb86b4d96d6fcf6d",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -277062,6 +277841,14 @@
         "end_line": 83,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_sha:80a275fda771d2f3",
         "signature_hash": "5f445bd7f74a6239"
+      },
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:_sha:0cb7c024b5e1d7b8",
+        "signature_hash": "b7035a2fd0c7c92f"
       }
     ],
     "_repo": [
@@ -337150,6 +337937,14 @@
         "end_line": 229,
         "semantic_id": "aura_pascal_spatial_presentation_part1.py#function:_hex64:aebaedfeb4247965",
         "signature_hash": "3956785c98c04eb6"
+      },
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#function:_hex64:e431de9f9cd84eae",
+        "signature_hash": "19dd1ea1e95374fb"
       }
     ],
     "_utc_timestamp": [
@@ -368498,6 +369293,14 @@
         "end_line": 66,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_root:c64c620aa1bf60b8",
         "signature_hash": "2e65e72bab661379"
+      },
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#function:_root:43ca8d348bd79bc3",
+        "signature_hash": "769522c3b4bdf5c3"
       }
     ],
     "_iter_nul_records": [
@@ -429136,6 +429939,276 @@
         "signature_hash": "a18bebaafdbf6310"
       }
     ],
+    "InteractionError": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:InteractionError:2ad0260b3b16082b",
+        "signature_hash": "c5ee665472ee9a84"
+      }
+    ],
+    "_canon": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:_canon:7e172033e77343b4",
+        "signature_hash": "2ed191ce27080ff0"
+      }
+    ],
+    "SourceIdentity": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 26,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:SourceIdentity:66913a3506d9f64c",
+        "signature_hash": "b80336a88e960394"
+      }
+    ],
+    "SourceIdentity.validate": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:SourceIdentity.validate:eef0adc3aca5aec9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "LiveCurrentness": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 34,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:LiveCurrentness:248864ba8ba95268",
+        "signature_hash": "b3ce2cccdf9a590e"
+      }
+    ],
+    "LiveCurrentness.validate": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:LiveCurrentness.validate:721a4036831c9d0c",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AgentIntent": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 46,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:AgentIntent:9b34ad175c194edd",
+        "signature_hash": "97b5aafd47a1aebf"
+      }
+    ],
+    "AgentIntent.validate": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:AgentIntent.validate:f5b53731afe2e6bd",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AgentCommandDraft": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 54,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:AgentCommandDraft:29526934d1064675",
+        "signature_hash": "203c8f1d06014a55"
+      }
+    ],
+    "OwnerAdmissionBinding": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 75,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#class:OwnerAdmissionBinding:6bf60f414f974907",
+        "signature_hash": "8f886223bf40b536"
+      }
+    ],
+    "OwnerAdmissionBinding.validate_shape": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 75,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#method:OwnerAdmissionBinding.validate_shape:482d18279824a5e3",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "draft_agent_command": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 82,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:draft_agent_command:6324300024684490",
+        "signature_hash": "8c1d275762d47477"
+      }
+    ],
+    "compile_authorized_envelope": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 117,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:compile_authorized_envelope:8abe7d96090dea40",
+        "signature_hash": "4ded695386e3c9be"
+      }
+    ],
+    "_find_forbidden_keys": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 131,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:_find_forbidden_keys:b999fb3ec1554bfd",
+        "signature_hash": "e7ffe36129b936c6"
+      }
+    ],
+    "envelope_root": [
+      {
+        "file": "tools/project006/aura_interaction_contract.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 134,
+        "semantic_id": "tools/project006/aura_interaction_contract.py#function:envelope_root:e607a6c503522a33",
+        "signature_hash": "f2d4aa4b8b258f8c"
+      }
+    ],
+    "WitnessError": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:WitnessError:5682f7dedaae140c",
+        "signature_hash": "fbc15aa3f37197d6"
+      }
+    ],
+    "EventKind": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 17,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:EventKind:5c1e79a4a2338a92",
+        "signature_hash": "691797c91e56eba9"
+      }
+    ],
+    "AcceptanceContract": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 37,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:AcceptanceContract:deb1d34604357297",
+        "signature_hash": "2c3024029b2df726"
+      }
+    ],
+    "AcceptanceContract.validate": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 37,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:AcceptanceContract.validate:024c1d86a9b30e6b",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "WakeEvent": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:WakeEvent:2128754fa6a04cba",
+        "signature_hash": "eb8cdf199715bd74"
+      }
+    ],
+    "WakeEvent.validate": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeEvent.validate:26cdc15fc2f5439e",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "WakeEvent.event_root": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 47,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeEvent.event_root:bf40a0f7e255adcc",
+        "signature_hash": "f99b72ee906e3e00"
+      }
+    ],
+    "WakeAcceptanceLedger": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 86,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#class:WakeAcceptanceLedger:b2b82379f1d58872",
+        "signature_hash": "4243517c31074ac0"
+      }
+    ],
+    "WakeAcceptanceLedger.__init__": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 57,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.__init__:6c7da9b70b440f6d",
+        "signature_hash": "c1fe456fd070f68a"
+      }
+    ],
+    "WakeAcceptanceLedger.append": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.append:ff7753037d9849cf",
+        "signature_hash": "e7f7066f9cdab4da"
+      }
+    ],
+    "WakeAcceptanceLedger.projection": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 72,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.projection:27d4a838bcf71489",
+        "signature_hash": "21ea11b06b21f022"
+      }
+    ],
+    "WakeAcceptanceLedger.evaluate": [
+      {
+        "file": "tools/project006/physical_wake_acceptance.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 86,
+        "semantic_id": "tools/project006/physical_wake_acceptance.py#method:WakeAcceptanceLedger.evaluate:6c131c809652ddbe",
+        "signature_hash": "39f406a2c05a5ab0"
+      }
+    ],
     "_first_text": [
       {
         "file": "tools/project006/project006_consumer_outbox_wrapper.py",
@@ -429226,7 +430299,25 @@
         "signature_hash": "a462d97dadc1d858"
       }
     ],
+    "decision": [
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:decision:29dcf00de55f5980",
+        "signature_hash": "493c3741ecc7660a"
+      }
+    ],
     "omega8": [
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 15,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:omega8:4762b29dbf9ff32c",
+        "signature_hash": "779fe12d7757e6f1"
+      },
       {
         "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
         "kind": "function",
@@ -429238,6 +430329,14 @@
     ],
     "factored13d": [
       {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 23,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:factored13d:1cd012384b37647b",
+        "signature_hash": "465a1a1f10add68b"
+      },
+      {
         "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
         "kind": "function",
         "line": 22,
@@ -429247,6 +430346,14 @@
       }
     ],
     "hs1000": [
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 34,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:hs1000:8405f5b6f2b68b0f",
+        "signature_hash": "cb33d0ed1005d09a"
+      },
       {
         "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
         "kind": "function",
@@ -429414,6 +430521,126 @@
         "end_line": 214,
         "semantic_id": "tools/project006/terminal_outbox.py#method:AuraDriveBusWriterV1.__call__:cc9b0e7fc72c6963",
         "signature_hash": "9cb33e97f0708e31"
+      }
+    ],
+    "admission": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 12,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#function:admission:9eadbd80cf3ac7a9",
+        "signature_hash": "b23c056d9208e84b"
+      }
+    ],
+    "InteractionTests": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 47,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#class:InteractionTests:b2581101306f3582",
+        "signature_hash": "6231608225e1b805"
+      }
+    ],
+    "InteractionTests.test_draft_is_inert": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_draft_is_inert:901af63862e3d6c9",
+        "signature_hash": "3b57dc487003d9d8"
+      }
+    ],
+    "InteractionTests.test_authenticated_owner_binding_compiles": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 20,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_authenticated_owner_binding_compiles:b45e5c2e06ad9a19",
+        "signature_hash": "783a7b097043f1df"
+      }
+    ],
+    "InteractionTests.test_shape_without_authentication_fails": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_shape_without_authentication_fails:186285ccb5058725",
+        "signature_hash": "3a24b0c1dfa8dff9"
+      }
+    ],
+    "InteractionTests.test_same_digest_different_file_fails": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_same_digest_different_file_fails:d03c7f4d4df3cbb6",
+        "signature_hash": "d94da12cde48f208"
+      }
+    ],
+    "InteractionTests.test_same_file_digest_different_revision_fails": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_same_file_digest_different_revision_fails:f4435eed229b1a20",
+        "signature_hash": "ad674922ea8d3af9"
+      }
+    ],
+    "InteractionTests.test_currentness_move_requires_reproof": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_currentness_move_requires_reproof:830be41358d0dc8a",
+        "signature_hash": "f74af0b766403756"
+      }
+    ],
+    "InteractionTests.test_provider_policy_is_not_agent_selected": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_provider_policy_is_not_agent_selected:1e0ce170afafe593",
+        "signature_hash": "ba10cada0ae7c69a"
+      }
+    ],
+    "InteractionTests.test_non_d0_draft_rejected": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_non_d0_draft_rejected:72a4b1e931b8b474",
+        "signature_hash": "b1b85de318a020d8"
+      }
+    ],
+    "InteractionTests.test_target_bounds": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_target_bounds:9c34d2012acf43e1",
+        "signature_hash": "9cda8e15238167c3"
+      }
+    ],
+    "InteractionTests.test_fuzz_hard_axes": [
+      {
+        "file": "tools/project006/test_aura_interaction_contract.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 47,
+        "semantic_id": "tools/project006/test_aura_interaction_contract.py#method:InteractionTests.test_fuzz_hard_axes:dea1bab5a030f5f9",
+        "signature_hash": "e56e7f159a867437"
       }
     ],
     "TerminalOutboxTests": [
