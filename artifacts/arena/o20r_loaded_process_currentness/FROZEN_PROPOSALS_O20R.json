@@ -1,0 +1,26 @@
+{
+  "schema": "AURA-O20R-FROZEN-PROPOSALS-v1",
+  "objective": "Effect-Time Loaded Process Currentness",
+  "frozen_before_implementation": true,
+  "parents": [
+    {
+      "artifact": "RESULT__O21-IRTC__INSTALLED-RUNTIME-TRANSACTION-CAPSULE__GPT56SOL",
+      "drive_id": "1Fe-9W5Czp3jIlHIqgQUTfW8CZILr5qI7",
+      "result_root": "f61ca6ecfd6c455bcdbddb12bf3742b5b9d9ec05459963e2e0c9d26a05cdc3c8",
+      "consequence": "RecoverableTransactionState != ExactInstalledRuntimeExecutionEligibility"
+    },
+    {
+      "artifact": "P0-WP01-NONEXCLUSIVE-LOADED-ARTIFACT-BINDING-V1",
+      "drive_id": "1VdBcvCgjgShFivWUF3AHrxsF9utsqtf__Uo1rXTnvqg",
+      "consequence": "CURRENT DISK != CURRENT IN-MEMORY CODE; LOADED AT T0 != EXECUTED AT T1 without sufficient immutability/currentness relation"
+    }
+  ],
+  "alternatives": [
+    {"id": "A", "design": "Trust installed-runtime attestation as process execution identity", "disposition": "REJECT", "why": "cannot detect already-running stale processes, monkeypatch/reload/JIT/plugin/dispatch movement"},
+    {"id": "B", "design": "Trust one load-time witness for process lifetime", "disposition": "REJECT", "why": "load-time witness goes stale under mutable runtime behavior and process ABA"},
+    {"id": "C", "design": "Hash every disk file again immediately before effect", "disposition": "REJECT", "why": "disk identity still does not establish mapped/in-memory callable identity"},
+    {"id": "D", "design": "Effect-time process-incarnation witness with mutation-model-specific revalidation", "disposition": "SELECT", "why": "bind installed attestation to process start/load generation, loaded answer-bearing roots, dispatch generation, serving worker/population, unresolved units, and at-use observation"}
+  ],
+  "new_discriminator": "InstalledRuntimeCurrent != LoadedProcessCurrent != EffectTimeExecutableIdentity",
+  "authority_ceiling": "D0_NONPROMOTING"
+}
