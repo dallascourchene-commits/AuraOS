@@ -1070,7 +1070,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1717,
+    "repo_file_count": 1722,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1349,6 +1349,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
+      "artifacts/arena/memory_city_ecf_effect_refinement/PROOF_RECEIPT_O10R1.json",
       "artifacts/arena/memory_city_o14_effect_refinement/PROOF_RECEIPT_O14.json",
       "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
       "arxiv_forager.py",
@@ -2715,6 +2716,7 @@
       "tests/test_memory_city_anchor_locator.py",
       "tests/test_memory_city_component_correct_read_consequence.py",
       "tests/test_memory_city_contingent_hydration.py",
+      "tests/test_memory_city_ecf_effect_refinement.py",
       "tests/test_memory_city_effect_handoff_o13.py",
       "tests/test_memory_city_effect_refinement_handoff_o14.py",
       "tests/test_memory_city_hydration_plan.py",
@@ -2732,6 +2734,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_memory_city_ecf_effect_refinement.py",
       "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
       "tools/arena/campaign_memory_city_quotient_controllability.py",
@@ -2761,6 +2764,7 @@
       "tools/arena/memory_city_contingent_hydration_hs1000.py",
       "tools/arena/memory_city_coverage_membrane.py",
       "tools/arena/memory_city_ecf_adapter.py",
+      "tools/arena/memory_city_ecf_effect_refinement.py",
       "tools/arena/memory_city_effect_handoff_o13.py",
       "tools/arena/memory_city_effect_refinement_handoff_o14.py",
       "tools/arena/memory_city_hydration_plan.py",
@@ -2769,6 +2773,7 @@
       "tools/arena/memory_city_read_consequence.py",
       "tools/arena/memory_city_support_hydration.py",
       "tools/arena/memory_city_typed_closure.py",
+      "tools/arena/o10r1_ecf_refinement_hyperscale.py",
       "tools/arena/o13_effect_handoff_hs1000.py",
       "tools/arena/o13_effect_handoff_lattice.py",
       "tools/arena/o14_effect_refinement_13d.py",
@@ -18011,6 +18016,53 @@
         -0.033541,
         0.267246,
         -0.124426
+      ]
+    },
+    {
+      "path": "artifacts/arena/memory_city_ecf_effect_refinement/PROOF_RECEIPT_O10R1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4197,
+      "lines": 104,
+      "tokens_est": 1050,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "02aee4992a7b393d",
+      "vector": [
+        -0.23292,
+        0.151344,
+        -0.12129,
+        -0.273707,
+        -0.11485,
+        -0.129877,
+        0.138464,
+        -0.084796,
+        0.12773,
+        -0.185692,
+        0.185692,
+        0.205012,
+        0.041861,
+        0.168518,
+        0.230773,
+        -0.200719,
+        -0.26512,
+        0.13417,
+        0.256533,
+        0.063328,
+        0.074062,
+        0.12129,
+        -0.091236,
+        0.271561,
+        -0.228626,
+        0.149197,
+        0.10841,
+        0.031127,
+        0.25224,
+        0.243653,
+        0.222186,
+        -0.076209
       ]
     },
     {
@@ -105050,6 +105102,53 @@
       ]
     },
     {
+      "path": "tests/test_memory_city_ecf_effect_refinement.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10952,
+      "lines": 290,
+      "tokens_est": 2738,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "941145bc86e84f2b",
+      "vector": [
+        -0.207098,
+        -0.118143,
+        0.045867,
+        -0.120923,
+        -0.243236,
+        0.17652,
+        0.129262,
+        0.198758,
+        -0.104244,
+        -0.104244,
+        -0.093125,
+        -0.137602,
+        -0.145941,
+        0.037528,
+        -0.351649,
+        -0.093125,
+        0.112583,
+        -0.145941,
+        0.009729,
+        0.134822,
+        -0.17374,
+        0.120923,
+        0.112583,
+        -0.126483,
+        -0.056987,
+        -0.312732,
+        0.251575,
+        -0.215437,
+        0.17652,
+        -0.321071,
+        -0.207098,
+        0.248795
+      ]
+    },
+    {
       "path": "tests/test_memory_city_effect_handoff_o13.py",
       "role": "python_module",
       "binary": false,
@@ -105846,6 +105945,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/arena/campaign_memory_city_ecf_effect_refinement.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4630,
+      "lines": 131,
+      "tokens_est": 1158,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "aa0698f00c601a0a",
+      "vector": [
+        0.182445,
+        0.261679,
+        0.17619,
+        -0.134488,
+        -0.18036,
+        -0.149084,
+        0.161594,
+        -0.182445,
+        0.069851,
+        -0.130318,
+        -0.124063,
+        0.197041,
+        0.086531,
+        0.242913,
+        0.084446,
+        -0.240828,
+        0.186616,
+        -0.211637,
+        -0.140744,
+        0.126148,
+        -0.251253,
+        0.199126,
+        0.257509,
+        0.211637,
+        -0.146999,
+        -0.044829,
+        0.06151,
+        -0.265849,
+        0.090701,
+        0.209552,
+        -0.099042,
+        -0.194956
       ]
     },
     {
@@ -107212,6 +107358,53 @@
       ]
     },
     {
+      "path": "tools/arena/memory_city_ecf_effect_refinement.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7139,
+      "lines": 192,
+      "tokens_est": 1785,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f1c7a743c564878",
+      "vector": [
+        0.077148,
+        -0.102396,
+        0.259498,
+        0.172531,
+        0.281941,
+        -0.211806,
+        -0.060316,
+        -0.346465,
+        0.105202,
+        0.004208,
+        0.116423,
+        0.265109,
+        0.065926,
+        -0.262303,
+        -0.301579,
+        -0.091175,
+        -0.0519,
+        -0.035067,
+        -0.228639,
+        -0.304384,
+        -0.091175,
+        0.144477,
+        0.231444,
+        -0.054705,
+        0.096786,
+        -0.046289,
+        0.077148,
+        0.223028,
+        -0.043483,
+        -0.074343,
+        0.23986,
+        0.065926
+      ]
+    },
+    {
       "path": "tools/arena/memory_city_effect_handoff_o13.py",
       "role": "python_module",
       "binary": false,
@@ -107585,6 +107778,53 @@
         -0.130123,
         -0.088896,
         -0.289877
+      ]
+    },
+    {
+      "path": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4367,
+      "lines": 113,
+      "tokens_est": 1092,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c16fe82972a72f38",
+      "vector": [
+        -0.227645,
+        0.149913,
+        0.276506,
+        -0.269843,
+        -0.147692,
+        -0.016657,
+        0.254296,
+        -0.280947,
+        0.025541,
+        0.216541,
+        -0.132145,
+        0.018878,
+        -0.045529,
+        -0.181006,
+        0.136587,
+        0.276506,
+        0.283168,
+        -0.145471,
+        0.125482,
+        0.245413,
+        -0.256517,
+        0.247634,
+        -0.034424,
+        -0.052192,
+        0.136587,
+        0.109936,
+        0.103273,
+        0.154355,
+        0.067738,
+        0.018878,
+        -0.125482,
+        -0.145471
       ]
     },
     {
@@ -108867,7 +109107,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788775353,
+  "generated_at_unix": 1788776598,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -109148,6 +109388,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
+      "artifacts/arena/memory_city_ecf_effect_refinement/PROOF_RECEIPT_O10R1.json",
       "artifacts/arena/memory_city_o14_effect_refinement/PROOF_RECEIPT_O14.json",
       "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
       "arxiv_forager.py",
@@ -110514,6 +110755,7 @@
       "tests/test_memory_city_anchor_locator.py",
       "tests/test_memory_city_component_correct_read_consequence.py",
       "tests/test_memory_city_contingent_hydration.py",
+      "tests/test_memory_city_ecf_effect_refinement.py",
       "tests/test_memory_city_effect_handoff_o13.py",
       "tests/test_memory_city_effect_refinement_handoff_o14.py",
       "tests/test_memory_city_hydration_plan.py",
@@ -110531,6 +110773,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_memory_city_ecf_effect_refinement.py",
       "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
       "tools/arena/campaign_memory_city_quotient_controllability.py",
@@ -110560,6 +110803,7 @@
       "tools/arena/memory_city_contingent_hydration_hs1000.py",
       "tools/arena/memory_city_coverage_membrane.py",
       "tools/arena/memory_city_ecf_adapter.py",
+      "tools/arena/memory_city_ecf_effect_refinement.py",
       "tools/arena/memory_city_effect_handoff_o13.py",
       "tools/arena/memory_city_effect_refinement_handoff_o14.py",
       "tools/arena/memory_city_hydration_plan.py",
@@ -110568,6 +110812,7 @@
       "tools/arena/memory_city_read_consequence.py",
       "tools/arena/memory_city_support_hydration.py",
       "tools/arena/memory_city_typed_closure.py",
+      "tools/arena/o10r1_ecf_refinement_hyperscale.py",
       "tools/arena/o13_effect_handoff_hs1000.py",
       "tools/arena/o13_effect_handoff_lattice.py",
       "tools/arena/o14_effect_refinement_13d.py",
@@ -269611,6 +269856,206 @@
         "file_digest8": "d54d51e768946b0f"
       },
       {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#class:Cert:a4aff95bb42e795e",
+        "name": "Cert",
+        "kind": "class",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 34,
+        "end_line": 45,
+        "signature_hash": "06aca489b5d0d605",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#class:ECFEffectRefinementTests:ad288b49b36855b9",
+        "name": "ECFEffectRefinementTests",
+        "kind": "class",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 167,
+        "end_line": 285,
+        "signature_hash": "b4daebe5461c0fee",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#function:fixture:5c71bbc460325eed",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 48,
+        "end_line": 106,
+        "signature_hash": "a6842359afbb366c",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#function:hx:acad3084e1fb8186",
+        "name": "hx",
+        "kind": "function",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "61010034d3768ca9",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#function:multi_fixture:fb6412f970ed4d15",
+        "name": "multi_fixture",
+        "kind": "function",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 109,
+        "end_line": 164,
+        "signature_hash": "f45eaf3fab3aeb1c",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_binding_envelope_mismatch_holds:5f861eef6752db46",
+        "name": "ECFEffectRefinementTests.test_binding_envelope_mismatch_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 251,
+        "end_line": 255,
+        "signature_hash": "0e922e4e4b47a58b",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_coherent_cut_move_holds:56e0677c8bbb3f99",
+        "name": "ECFEffectRefinementTests.test_coherent_cut_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 237,
+        "end_line": 240,
+        "signature_hash": "e03b6df76738b3d8",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_ecf_cut_is_bound_into_refinement_receipt:d9f446f7380863f7",
+        "name": "ECFEffectRefinementTests.test_ecf_cut_is_bound_into_refinement_receipt",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 257,
+        "end_line": 262,
+        "signature_hash": "26d4b3de27cdf3f3",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_fabricated_upstream_admission_set_is_explicit_out_of_scope_canary:30ba1341a21190e0",
+        "name": "ECFEffectRefinementTests.test_fabricated_upstream_admission_set_is_explicit_out_of_scope_canary",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 271,
+        "end_line": 285,
+        "signature_hash": "57df35e5e5f6def5",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_intent_substitution_invalidates_admitted_witness:00d5b79cde925267",
+        "name": "ECFEffectRefinementTests.test_intent_substitution_invalidates_admitted_witness",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 205,
+        "end_line": 209,
+        "signature_hash": "0508a968f83ecf9c",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_jurisdiction_generation_move_holds:43d56aeed11e2b93",
+        "name": "ECFEffectRefinementTests.test_jurisdiction_generation_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 217,
+        "end_line": 220,
+        "signature_hash": "1df3da881a6887d5",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_multibinding_observation_order_is_not_identity:96e4b7eae553fbf0",
+        "name": "ECFEffectRefinementTests.test_multibinding_observation_order_is_not_identity",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 264,
+        "end_line": 269,
+        "signature_hash": "20b3345fc90ef24d",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_nuisance_change_does_not_split_plan:6962ceb09d114c6a",
+        "name": "ECFEffectRefinementTests.test_nuisance_change_does_not_split_plan",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 242,
+        "end_line": 249,
+        "signature_hash": "3d1e54e83b566542",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_obligation_substitution_invalidates_admitted_witness:98b018b7369d5570",
+        "name": "ECFEffectRefinementTests.test_obligation_substitution_invalidates_admitted_witness",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 198,
+        "end_line": 203,
+        "signature_hash": "2e467656927dfd35",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_producer_incarnation_move_holds:42d6d9130f6d1c1f",
+        "name": "ECFEffectRefinementTests.test_producer_incarnation_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 227,
+        "end_line": 230,
+        "signature_hash": "4196515b0989d2de",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_registry_move_holds:179d82853a4c89eb",
+        "name": "ECFEffectRefinementTests.test_registry_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 222,
+        "end_line": 225,
+        "signature_hash": "6a14ea2fa16fae81",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_scope_move_holds:923dd385230bd1a7",
+        "name": "ECFEffectRefinementTests.test_scope_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 232,
+        "end_line": 235,
+        "signature_hash": "0709d772ed256fd9",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_self_attested_old_o8_baseline_would_ready_but_seal_holds:0462d674fd2862a3",
+        "name": "ECFEffectRefinementTests.test_self_attested_old_o8_baseline_would_ready_but_seal_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 177,
+        "end_line": 196,
+        "signature_hash": "68c44cb74c3eb9ea",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_source_observation_substitution_invalidates_witness:58d26153f0a78b55",
+        "name": "ECFEffectRefinementTests.test_source_observation_substitution_invalidates_witness",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 211,
+        "end_line": 215,
+        "signature_hash": "865ec0ec59f3ad19",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_valid_ecf_admission_is_only_ready_path:95c76d426a88fe55",
+        "name": "ECFEffectRefinementTests.test_valid_ecf_admission_is_only_ready_path",
+        "kind": "method",
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "line": 168,
+        "end_line": 175,
+        "signature_hash": "592817e9c6ef5a33",
+        "file_digest8": "941145bc86e84f2b"
+      },
+      {
         "semantic_id": "tests/test_memory_city_effect_handoff_o13.py#class:EffectHandoffO13Tests:c046aa98a7287df8",
         "name": "EffectHandoffO13Tests",
         "kind": "class",
@@ -271599,6 +272044,16 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_ecf_effect_refinement.py#function:run:37575481083aa325",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_ecf_effect_refinement.py",
+        "line": 23,
+        "end_line": 126,
+        "signature_hash": "1d6d416ee481c0e2",
+        "file_digest8": "aa0698f00c601a0a"
       },
       {
         "semantic_id": "tools/arena/campaign_memory_city_effect_handoff_o13.py#function:fixtures:d86ee6df99570e23",
@@ -275791,6 +276246,86 @@
         "file_digest8": "5befe7481a36ef81"
       },
       {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#class:ECFEffectRefinement:67239fe878e74dd1",
+        "name": "ECFEffectRefinement",
+        "kind": "class",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 88,
+        "end_line": 112,
+        "signature_hash": "6c405187e49b41ea",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#class:EffectObligationObservation:9d5a3498d3584831",
+        "name": "EffectObligationObservation",
+        "kind": "class",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 58,
+        "end_line": 84,
+        "signature_hash": "154910b4d21080e3",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#function:_root:36c4aae50d85b4ea",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 46,
+        "end_line": 54,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#function:compile_ecf_effect_refinement:3d875488751b6565",
+        "name": "compile_ecf_effect_refinement",
+        "kind": "function",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 115,
+        "end_line": 191,
+        "signature_hash": "34dcca779c3988da",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#function:digest:c6619119a9e8da24",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 34,
+        "end_line": 43,
+        "signature_hash": "ca4017d839035e05",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#method:ECFEffectRefinement.__post_init__:b02f6fdd857dfde9",
+        "name": "ECFEffectRefinement.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 100,
+        "end_line": 112,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#method:EffectObligationObservation.__post_init__:dacebdc2529a935d",
+        "name": "EffectObligationObservation.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 64,
+        "end_line": 71,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#method:EffectObligationObservation.evidence_digest:d94714dad6fdb2be",
+        "name": "EffectObligationObservation.evidence_digest",
+        "kind": "method",
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "line": 73,
+        "end_line": 84,
+        "signature_hash": "eae17f23642a1381",
+        "file_digest8": "1f1c7a743c564878"
+      },
+      {
         "semantic_id": "tools/arena/memory_city_effect_handoff_o13.py#class:EffectHandoffEvidence:2c8dc06d804f4b81",
         "name": "EffectHandoffEvidence",
         "kind": "class",
@@ -276839,6 +277374,36 @@
         "end_line": 41,
         "signature_hash": "3021224a06bc5830",
         "file_digest8": "d6597c67f1fefb34"
+      },
+      {
+        "semantic_id": "tools/arena/o10r1_ecf_refinement_hyperscale.py#function:_hash:3e110b1d4d5dc140",
+        "name": "_hash",
+        "kind": "function",
+        "file": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "c89b502ec4c15cc6",
+        "file_digest8": "c16fe82972a72f38"
+      },
+      {
+        "semantic_id": "tools/arena/o10r1_ecf_refinement_hyperscale.py#function:apply_hard:edcd0eb50caff5b3",
+        "name": "apply_hard",
+        "kind": "function",
+        "file": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+        "line": 25,
+        "end_line": 49,
+        "signature_hash": "9d1c7caed408ac53",
+        "file_digest8": "c16fe82972a72f38"
+      },
+      {
+        "semantic_id": "tools/arena/o10r1_ecf_refinement_hyperscale.py#function:run:d72bc22635c05698",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+        "line": 52,
+        "end_line": 108,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "c16fe82972a72f38"
       },
       {
         "semantic_id": "tools/arena/o13_effect_handoff_hs1000.py#function:frozen_cells:171730abba4b2612",
@@ -278191,8 +278756,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ee0dae34e331974d873ce37d5e54febf",
-    "payload_hash": "ce6c9d6f502cbcb128928a54130e6431"
+    "record_fingerprint": "0d804c8157387f6fb9486fa52430f811",
+    "payload_hash": "68618437b48e0f48697f104a556b7e8f"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -278205,16 +278770,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1717,
-      "bytes": 26905522,
-      "tokens_est": 6716746,
+      "files": 1722,
+      "bytes": 26936807,
+      "tokens_est": 6724569,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1060,
-        "schema_or_lexicon": 282,
+        "python_module": 1064,
+        "schema_or_lexicon": 283,
         "support_file": 49
       }
     },
@@ -278901,16 +279466,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1717,
-    "total_bytes": 26905522,
-    "text_tokens_est": 6716746,
+    "file_count": 1722,
+    "total_bytes": 26936807,
+    "text_tokens_est": 6724569,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1060,
-      "schema_or_lexicon": 282,
+      "python_module": 1064,
+      "schema_or_lexicon": 283,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -280141,6 +280706,14 @@
         "signature_hash": "d981aa5a48724e5c"
       },
       {
+        "file": "tools/arena/campaign_memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 126,
+        "semantic_id": "tools/arena/campaign_memory_city_ecf_effect_refinement.py#function:run:37575481083aa325",
+        "signature_hash": "1d6d416ee481c0e2"
+      },
+      {
         "file": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
         "kind": "function",
         "line": 110,
@@ -280171,6 +280744,14 @@
         "end_line": 78,
         "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:run:4f65f9b8b62a1a9c",
         "signature_hash": "fbfdf6eacf736b3d"
+      },
+      {
+        "file": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 108,
+        "semantic_id": "tools/arena/o10r1_ecf_refinement_hyperscale.py#function:run:d72bc22635c05698",
+        "signature_hash": "26799ab4ad82cbfb"
       },
       {
         "file": "tools/arena/o13_effect_handoff_hs1000.py",
@@ -292389,6 +292970,14 @@
         "end_line": 162,
         "semantic_id": "aura_arena_state_packet.py#function:_hash:a45b3759164d8cd0",
         "signature_hash": "96a25c63c8c0337f"
+      },
+      {
+        "file": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/arena/o10r1_ecf_refinement_hyperscale.py#function:_hash:3e110b1d4d5dc140",
+        "signature_hash": "c89b502ec4c15cc6"
       }
     ],
     "ArenaExperienceLedger": [
@@ -296769,6 +297358,14 @@
         "end_line": 11,
         "semantic_id": "tools/arena/memory_city_coverage_membrane.py#function:digest:cdca3520ae6f5e38",
         "signature_hash": "3f5db76ec614c8b9"
+      },
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 43,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#function:digest:c6619119a9e8da24",
+        "signature_hash": "ca4017d839035e05"
       },
       {
         "file": "tools/arena/memory_city_effect_handoff_o13.py",
@@ -376247,6 +376844,14 @@
         "signature_hash": "c42b6aaf0ebf0bc1"
       },
       {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 54,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#function:_root:36c4aae50d85b4ea",
+        "signature_hash": "9af4f640541857b1"
+      },
+      {
         "file": "tools/arena/memory_city_effect_handoff_o13.py",
         "kind": "function",
         "line": 35,
@@ -390151,6 +390756,14 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 106,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#function:fixture:5c71bbc460325eed",
+        "signature_hash": "a6842359afbb366c"
       },
       {
         "file": "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
@@ -435495,6 +436108,14 @@
         "signature_hash": "9597dfd9c862d918"
       },
       {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#function:hx:acad3084e1fb8186",
+        "signature_hash": "61010034d3768ca9"
+      },
+      {
         "file": "tests/test_memory_city_effect_handoff_o13.py",
         "kind": "function",
         "line": 35,
@@ -435833,6 +436454,186 @@
         "end_line": 61,
         "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_duplicate_support_edge_fails_closed:924c3010c7ad332e",
         "signature_hash": "50a96cec8a7e3006"
+      }
+    ],
+    "Cert": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 45,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#class:Cert:a4aff95bb42e795e",
+        "signature_hash": "06aca489b5d0d605"
+      }
+    ],
+    "multi_fixture": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 164,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#function:multi_fixture:fb6412f970ed4d15",
+        "signature_hash": "f45eaf3fab3aeb1c"
+      }
+    ],
+    "ECFEffectRefinementTests": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "class",
+        "line": 167,
+        "end_line": 285,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#class:ECFEffectRefinementTests:ad288b49b36855b9",
+        "signature_hash": "b4daebe5461c0fee"
+      }
+    ],
+    "ECFEffectRefinementTests.test_valid_ecf_admission_is_only_ready_path": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 175,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_valid_ecf_admission_is_only_ready_path:95c76d426a88fe55",
+        "signature_hash": "592817e9c6ef5a33"
+      }
+    ],
+    "ECFEffectRefinementTests.test_self_attested_old_o8_baseline_would_ready_but_seal_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 196,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_self_attested_old_o8_baseline_would_ready_but_seal_holds:0462d674fd2862a3",
+        "signature_hash": "68c44cb74c3eb9ea"
+      }
+    ],
+    "ECFEffectRefinementTests.test_obligation_substitution_invalidates_admitted_witness": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 203,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_obligation_substitution_invalidates_admitted_witness:98b018b7369d5570",
+        "signature_hash": "2e467656927dfd35"
+      }
+    ],
+    "ECFEffectRefinementTests.test_intent_substitution_invalidates_admitted_witness": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 209,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_intent_substitution_invalidates_admitted_witness:00d5b79cde925267",
+        "signature_hash": "0508a968f83ecf9c"
+      }
+    ],
+    "ECFEffectRefinementTests.test_source_observation_substitution_invalidates_witness": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 215,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_source_observation_substitution_invalidates_witness:58d26153f0a78b55",
+        "signature_hash": "865ec0ec59f3ad19"
+      }
+    ],
+    "ECFEffectRefinementTests.test_jurisdiction_generation_move_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 217,
+        "end_line": 220,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_jurisdiction_generation_move_holds:43d56aeed11e2b93",
+        "signature_hash": "1df3da881a6887d5"
+      }
+    ],
+    "ECFEffectRefinementTests.test_registry_move_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 225,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_registry_move_holds:179d82853a4c89eb",
+        "signature_hash": "6a14ea2fa16fae81"
+      }
+    ],
+    "ECFEffectRefinementTests.test_producer_incarnation_move_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 227,
+        "end_line": 230,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_producer_incarnation_move_holds:42d6d9130f6d1c1f",
+        "signature_hash": "4196515b0989d2de"
+      }
+    ],
+    "ECFEffectRefinementTests.test_scope_move_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 235,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_scope_move_holds:923dd385230bd1a7",
+        "signature_hash": "0709d772ed256fd9"
+      }
+    ],
+    "ECFEffectRefinementTests.test_coherent_cut_move_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 237,
+        "end_line": 240,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_coherent_cut_move_holds:56e0677c8bbb3f99",
+        "signature_hash": "e03b6df76738b3d8"
+      }
+    ],
+    "ECFEffectRefinementTests.test_nuisance_change_does_not_split_plan": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 249,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_nuisance_change_does_not_split_plan:6962ceb09d114c6a",
+        "signature_hash": "3d1e54e83b566542"
+      }
+    ],
+    "ECFEffectRefinementTests.test_binding_envelope_mismatch_holds": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 255,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_binding_envelope_mismatch_holds:5f861eef6752db46",
+        "signature_hash": "0e922e4e4b47a58b"
+      }
+    ],
+    "ECFEffectRefinementTests.test_ecf_cut_is_bound_into_refinement_receipt": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 257,
+        "end_line": 262,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_ecf_cut_is_bound_into_refinement_receipt:d9f446f7380863f7",
+        "signature_hash": "26d4b3de27cdf3f3"
+      }
+    ],
+    "ECFEffectRefinementTests.test_multibinding_observation_order_is_not_identity": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 264,
+        "end_line": 269,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_multibinding_observation_order_is_not_identity:96e4b7eae553fbf0",
+        "signature_hash": "20b3345fc90ef24d"
+      }
+    ],
+    "ECFEffectRefinementTests.test_fabricated_upstream_admission_set_is_explicit_out_of_scope_canary": [
+      {
+        "file": "tests/test_memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 285,
+        "semantic_id": "tests/test_memory_city_ecf_effect_refinement.py#method:ECFEffectRefinementTests.test_fabricated_upstream_admission_set_is_explicit_out_of_scope_canary:30ba1341a21190e0",
+        "signature_hash": "57df35e5e5f6def5"
       }
     ],
     "EffectHandoffO13Tests": [
@@ -441607,6 +442408,66 @@
         "signature_hash": "28d57d3325cf7ab6"
       }
     ],
+    "EffectObligationObservation": [
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 84,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#class:EffectObligationObservation:9d5a3498d3584831",
+        "signature_hash": "154910b4d21080e3"
+      }
+    ],
+    "EffectObligationObservation.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 71,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#method:EffectObligationObservation.__post_init__:dacebdc2529a935d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectObligationObservation.evidence_digest": [
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 84,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#method:EffectObligationObservation.evidence_digest:d94714dad6fdb2be",
+        "signature_hash": "eae17f23642a1381"
+      }
+    ],
+    "ECFEffectRefinement": [
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 112,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#class:ECFEffectRefinement:67239fe878e74dd1",
+        "signature_hash": "6c405187e49b41ea"
+      }
+    ],
+    "ECFEffectRefinement.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 112,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#method:ECFEffectRefinement.__post_init__:b02f6fdd857dfde9",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "compile_ecf_effect_refinement": [
+      {
+        "file": "tools/arena/memory_city_ecf_effect_refinement.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 191,
+        "semantic_id": "tools/arena/memory_city_ecf_effect_refinement.py#function:compile_ecf_effect_refinement:3d875488751b6565",
+        "signature_hash": "34dcca779c3988da"
+      }
+    ],
     "canonical_read_consequence_root": [
       {
         "file": "tools/arena/memory_city_effect_handoff_o13.py",
@@ -442485,6 +443346,16 @@
         "end_line": 165,
         "semantic_id": "tools/arena/memory_city_typed_closure.py#function:symmetrized_union_closure:f6b835cd8a7488e4",
         "signature_hash": "452eb8102b33af97"
+      }
+    ],
+    "apply_hard": [
+      {
+        "file": "tools/arena/o10r1_ecf_refinement_hyperscale.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 49,
+        "semantic_id": "tools/arena/o10r1_ecf_refinement_hyperscale.py#function:apply_hard:edcd0eb50caff5b3",
+        "signature_hash": "9d1c7caed408ac53"
       }
     ],
     "frozen_cells": [
