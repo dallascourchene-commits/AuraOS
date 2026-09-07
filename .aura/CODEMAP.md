@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1686
-- **total_bytes**: 26633439
-- **text_tokens_est**: 6648714
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 282, 'support_file': 53}
+- **file_count**: 1691
+- **total_bytes**: 26655579
+- **text_tokens_est**: 6654252
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1029, 'schema_or_lexicon': 284, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1686,
+  "repo_file_count": 1691,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -201,6 +201,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/project006-o18-aura-interaction-proof.yml",
     ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
     ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
+    ".github/workflows/project006-o21-byte-verified-update-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -304,6 +305,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
     "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
     "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
+    "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1659,6 +1661,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
+    "tests/test_project006_atomic_runtime_update_o21.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
@@ -1681,8 +1684,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/project006/atomic_runtime_update.py",
     "tools/project006/aura_interaction_contract.py",
     "tools/project006/installed_runtime_attestation.py",
+    "tools/project006/o21_reference/proof_o21.py",
     "tools/project006/physical_wake_acceptance.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
     "tools/project006/proof_aura_interaction_o18.py",
@@ -1826,16 +1831,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1686,
-  "bytes": 26633439,
-  "tokens_est": 6648714,
+  "files": 1691,
+  "bytes": 26655579,
+  "tokens_est": 6654252,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1026,
-    "schema_or_lexicon": 282,
+    "python_module": 1029,
+    "schema_or_lexicon": 284,
     "support_file": 53
   }
 }
