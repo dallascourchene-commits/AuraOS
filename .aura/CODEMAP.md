@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1660
-- **total_bytes**: 26523587
-- **text_tokens_est**: 6621238
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 276, 'support_file': 49}
+- **file_count**: 1664
+- **total_bytes**: 26535524
+- **text_tokens_est**: 6624223
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 277, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1660,
+  "repo_file_count": 1664,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -295,6 +295,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/astra_effect_realisability_r1/CLOCK_UNCERTAINTY_GEOMETRY_PROOF_RECEIPT.json",
     "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
     "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
     "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
@@ -1358,6 +1359,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_astra_clock_uncertainty_geometry_r1.py",
     "tests/test_astra_effect_realisability_r1.py",
     "tests/test_astra_temporal_repair_budget_r1.py",
     "tests/test_aura_adaptive_execution.py",
@@ -1666,6 +1668,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_hs1000_r1.py",
     "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
     "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
     "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
@@ -1749,6 +1753,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_astra_clock_uncertainty_geometry_r1.py",
     "tests/test_astra_effect_realisability_r1.py",
     "tests/test_astra_temporal_repair_budget_r1.py",
     "tests/test_aura_adaptive_execution.py",
@@ -1785,8 +1790,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_gate_dialogue.py",
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py"
+    "tests/test_aura_bilateral_planning_enforcement.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1800,16 +1804,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1660,
-  "bytes": 26523587,
-  "tokens_est": 6621238,
+  "files": 1664,
+  "bytes": 26535524,
+  "tokens_est": 6624223,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1010,
-    "schema_or_lexicon": 276,
+    "python_module": 1013,
+    "schema_or_lexicon": 277,
     "support_file": 49
   }
 }

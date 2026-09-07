@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1660,
+    "repo_file_count": 1664,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1332,6 +1332,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/astra_effect_realisability_r1/CLOCK_UNCERTAINTY_GEOMETRY_PROOF_RECEIPT.json",
       "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
       "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
       "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
@@ -2395,6 +2396,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_astra_clock_uncertainty_geometry_r1.py",
       "tests/test_astra_effect_realisability_r1.py",
       "tests/test_astra_temporal_repair_budget_r1.py",
       "tests/test_aura_adaptive_execution.py",
@@ -2703,6 +2705,8 @@
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+      "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_hs1000_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
       "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
@@ -2786,6 +2790,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_astra_clock_uncertainty_geometry_r1.py",
       "tests/test_astra_effect_realisability_r1.py",
       "tests/test_astra_temporal_repair_budget_r1.py",
       "tests/test_aura_adaptive_execution.py",
@@ -2822,8 +2827,7 @@
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-      "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py"
+      "tests/test_aura_bilateral_planning_enforcement.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -17583,6 +17587,53 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/astra_effect_realisability_r1/CLOCK_UNCERTAINTY_GEOMETRY_PROOF_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2783,
+      "lines": 17,
+      "tokens_est": 696,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5a60210a6d63d4be",
+      "vector": [
+        -0.030323,
+        0.2535,
+        0.141912,
+        0.161318,
+        0.255926,
+        0.103098,
+        -0.044878,
+        0.175874,
+        0.285036,
+        0.16617,
+        0.22439,
+        -0.069136,
+        0.071562,
+        -0.124931,
+        -0.061859,
+        -0.246223,
+        -0.238945,
+        -0.263204,
+        -0.221964,
+        -0.076414,
+        -0.105524,
+        0.243797,
+        -0.132208,
+        -0.158893,
+        0.229242,
+        -0.231668,
+        0.018194,
+        0.066711,
+        -0.192854,
+        -0.289888,
+        0.054581,
+        0.02062
       ]
     },
     {
@@ -90381,6 +90432,53 @@
       ]
     },
     {
+      "path": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3412,
+      "lines": 44,
+      "tokens_est": 853,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a557de3fc8bb55a8",
+      "vector": [
+        -0.105103,
+        0.182419,
+        -0.155842,
+        0.05678,
+        0.298394,
+        -0.216245,
+        -0.182419,
+        0.295978,
+        0.047115,
+        0.218662,
+        -0.064028,
+        -0.134096,
+        0.230742,
+        0.141345,
+        0.233158,
+        0.122016,
+        0.06886,
+        0.276649,
+        -0.172755,
+        0.129264,
+        0.204165,
+        0.228326,
+        0.170339,
+        0.126848,
+        -0.126848,
+        0.250072,
+        0.02537,
+        -0.112351,
+        0.148593,
+        0.003624,
+        0.078525,
+        0.264568
+      ]
+    },
+    {
       "path": "tests/test_astra_effect_realisability_r1.py",
       "role": "python_module",
       "binary": false,
@@ -104857,6 +104955,100 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4278,
+      "lines": 54,
+      "tokens_est": 1070,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3509ed38e96304a4",
+      "vector": [
+        -0.011583,
+        -0.207447,
+        -0.177962,
+        -0.247462,
+        -0.003159,
+        0.268523,
+        -0.175856,
+        0.02422,
+        0.003159,
+        -0.260099,
+        0.177962,
+        -0.251674,
+        0.137947,
+        -0.070553,
+        0.205341,
+        -0.070553,
+        0.24325,
+        -0.201129,
+        0.180068,
+        -0.23272,
+        -0.228508,
+        -0.251674,
+        0.083189,
+        0.236932,
+        -0.072659,
+        -0.146371,
+        0.239038,
+        -0.074765,
+        0.154796,
+        -0.18428,
+        -0.076871,
+        0.091614
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_hs1000_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1464,
+      "lines": 14,
+      "tokens_est": 366,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cc17031aba126cea",
+      "vector": [
+        0.278873,
+        -0.25855,
+        0.233711,
+        0.231453,
+        -0.150162,
+        -0.025968,
+        0.035,
+        0.102743,
+        -0.235969,
+        -0.260808,
+        0.177259,
+        0.02371,
+        -0.195324,
+        0.12984,
+        -0.044033,
+        0.190808,
+        -0.274357,
+        0.050807,
+        0.010161,
+        -0.159195,
+        -0.15242,
+        0.181775,
+        -0.226937,
+        -0.179517,
+        0.25855,
+        0.18855,
+        0.156936,
+        -0.048549,
+        -0.260808,
+        0.010161,
+        -0.021452,
+        -0.147904
+      ]
+    },
+    {
       "path": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
       "role": "python_module",
       "binary": false,
@@ -106089,7 +106281,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788740831,
+  "generated_at_unix": 1788741031,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106363,6 +106555,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/astra_effect_realisability_r1/CLOCK_UNCERTAINTY_GEOMETRY_PROOF_RECEIPT.json",
       "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
       "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
       "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
@@ -107426,6 +107619,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_astra_clock_uncertainty_geometry_r1.py",
       "tests/test_astra_effect_realisability_r1.py",
       "tests/test_astra_temporal_repair_budget_r1.py",
       "tests/test_aura_adaptive_execution.py",
@@ -107734,6 +107928,8 @@
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+      "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_hs1000_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
       "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
@@ -219726,6 +219922,136 @@
         "file_digest8": "6688cbcc0e635cdf"
       },
       {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#class:ClockGeometryTests:e3e23b9687b74c5f",
+        "name": "ClockGeometryTests",
+        "kind": "class",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 4,
+        "end_line": 41,
+        "signature_hash": "7603078e56251ca8",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.rel:fdae4deb6c1318dc",
+        "name": "ClockGeometryTests.rel",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 5,
+        "end_line": 6,
+        "signature_hash": "7a83522401c41c87",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_ambiguous_route_rejected:4b066f74e2eba6b7",
+        "name": "ClockGeometryTests.test_ambiguous_route_rejected",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "e1cf0329d45dd335",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_audio_like_clock_relation_requires_uncertainty:a7a218d75b60c120",
+        "name": "ClockGeometryTests.test_audio_like_clock_relation_requires_uncertainty",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "ed033fb681f94ff9",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_brute_oracle_matches:b3244a59e83231de",
+        "name": "ClockGeometryTests.test_brute_oracle_matches",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "63674f6dccd1984d",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_declaration_permutation_invariant:4e32351fdf16be47",
+        "name": "ClockGeometryTests.test_declaration_permutation_invariant",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "bf6046f20f3237ba",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_definite_miss:2ae55a2e73c574f3",
+        "name": "ClockGeometryTests.test_definite_miss",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 15,
+        "end_line": 17,
+        "signature_hash": "1dd03bcdbd8cf6e7",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_exact_relation_ready:af7c52ce9300c79a",
+        "name": "ClockGeometryTests.test_exact_relation_ready",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 7,
+        "end_line": 9,
+        "signature_hash": "3151736b3fca3473",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_k27_cannot_authorize:d73b72d0aaba22b6",
+        "name": "ClockGeometryTests.test_k27_cannot_authorize",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "3d0446c6aa833d8c",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_stale_relation_holds:12ae00ee8f899876",
+        "name": "ClockGeometryTests.test_stale_relation_holds",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "9211398027eb0264",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_uncertainty_straddles_deadline:ddae8ba4f8f44642",
+        "name": "ClockGeometryTests.test_uncertainty_straddles_deadline",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 10,
+        "end_line": 14,
+        "signature_hash": "00d9440abe8607a5",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_unused_relation_rejected:861803aac9eca87f",
+        "name": "ClockGeometryTests.test_unused_relation_rejected",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "254d64f88c407518",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_window_uncertainty:5e83a63ec8cfd3dc",
+        "name": "ClockGeometryTests.test_window_uncertainty",
+        "kind": "method",
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "line": 18,
+        "end_line": 20,
+        "signature_hash": "654917039926c05b",
+        "file_digest8": "a557de3fc8bb55a8"
+      },
+      {
         "semantic_id": "tests/test_astra_effect_realisability_r1.py#class:TestAstraRealisabilityR1:ca4e596c826bc8cb",
         "name": "TestAstraRealisabilityR1",
         "kind": "class",
@@ -267406,6 +267732,46 @@
         "file_digest8": "f4057ceb6b272ce8"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:make_route:e8db4c81e1b71980",
+        "name": "make_route",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "line": 13,
+        "end_line": 16,
+        "signature_hash": "c1cc66a8ebd43197",
+        "file_digest8": "3509ed38e96304a4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:oracle_status:2070c50a81b255d8",
+        "name": "oracle_status",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "line": 18,
+        "end_line": 21,
+        "signature_hash": "f08330d72c799823",
+        "file_digest8": "3509ed38e96304a4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:relation:12125a3dda81f115",
+        "name": "relation",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "line": 9,
+        "end_line": 11,
+        "signature_hash": "e0534110e0b16b6d",
+        "file_digest8": "3509ed38e96304a4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:run:77ba434a5d3a1a1e",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "line": 23,
+        "end_line": 51,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "3509ed38e96304a4"
+      },
+      {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py#class:Capability:22804cdd93347d39",
         "name": "Capability",
         "kind": "class",
@@ -269126,8 +269492,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "190bbec72ed458563ebd56b6750fb3bf",
-    "payload_hash": "af28330e464a2069e6e5a00f134aa8bb"
+    "record_fingerprint": "7b8c1e47302818482762ba8c670ff317",
+    "payload_hash": "1d810f701fcc5a2d27734146a5e04863"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -269140,16 +269506,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1660,
-      "bytes": 26523587,
-      "tokens_est": 6621238,
+      "files": 1664,
+      "bytes": 26535524,
+      "tokens_est": 6624223,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1010,
-        "schema_or_lexicon": 276,
+        "python_module": 1013,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -269836,16 +270202,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1660,
-    "total_bytes": 26523587,
-    "text_tokens_est": 6621238,
+    "file_count": 1664,
+    "total_bytes": 26535524,
+    "text_tokens_est": 6624223,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1010,
-      "schema_or_lexicon": 276,
+      "python_module": 1013,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -271066,6 +271432,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 51,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:run:77ba434a5d3a1a1e",
+        "signature_hash": "26799ab4ad82cbfb"
       },
       {
         "file": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
@@ -380840,6 +381214,136 @@
         "signature_hash": "901e6f55c33cb73f"
       }
     ],
+    "ClockGeometryTests": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "class",
+        "line": 4,
+        "end_line": 41,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#class:ClockGeometryTests:e3e23b9687b74c5f",
+        "signature_hash": "7603078e56251ca8"
+      }
+    ],
+    "ClockGeometryTests.rel": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 5,
+        "end_line": 6,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.rel:fdae4deb6c1318dc",
+        "signature_hash": "7a83522401c41c87"
+      }
+    ],
+    "ClockGeometryTests.test_exact_relation_ready": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 9,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_exact_relation_ready:af7c52ce9300c79a",
+        "signature_hash": "3151736b3fca3473"
+      }
+    ],
+    "ClockGeometryTests.test_uncertainty_straddles_deadline": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 14,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_uncertainty_straddles_deadline:ddae8ba4f8f44642",
+        "signature_hash": "00d9440abe8607a5"
+      }
+    ],
+    "ClockGeometryTests.test_definite_miss": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_definite_miss:2ae55a2e73c574f3",
+        "signature_hash": "1dd03bcdbd8cf6e7"
+      }
+    ],
+    "ClockGeometryTests.test_window_uncertainty": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 20,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_window_uncertainty:5e83a63ec8cfd3dc",
+        "signature_hash": "654917039926c05b"
+      }
+    ],
+    "ClockGeometryTests.test_stale_relation_holds": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_stale_relation_holds:12ae00ee8f899876",
+        "signature_hash": "9211398027eb0264"
+      }
+    ],
+    "ClockGeometryTests.test_k27_cannot_authorize": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_k27_cannot_authorize:d73b72d0aaba22b6",
+        "signature_hash": "3d0446c6aa833d8c"
+      }
+    ],
+    "ClockGeometryTests.test_brute_oracle_matches": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_brute_oracle_matches:b3244a59e83231de",
+        "signature_hash": "63674f6dccd1984d"
+      }
+    ],
+    "ClockGeometryTests.test_declaration_permutation_invariant": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_declaration_permutation_invariant:4e32351fdf16be47",
+        "signature_hash": "bf6046f20f3237ba"
+      }
+    ],
+    "ClockGeometryTests.test_ambiguous_route_rejected": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_ambiguous_route_rejected:4b066f74e2eba6b7",
+        "signature_hash": "e1cf0329d45dd335"
+      }
+    ],
+    "ClockGeometryTests.test_unused_relation_rejected": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_unused_relation_rejected:861803aac9eca87f",
+        "signature_hash": "254d64f88c407518"
+      }
+    ],
+    "ClockGeometryTests.test_audio_like_clock_relation_requires_uncertainty": [
+      {
+        "file": "tests/test_astra_clock_uncertainty_geometry_r1.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tests/test_astra_clock_uncertainty_geometry_r1.py#method:ClockGeometryTests.test_audio_like_clock_relation_requires_uncertainty:a7a218d75b60c120",
+        "signature_hash": "ed033fb681f94ff9"
+      }
+    ],
     "p": [
       {
         "file": "tests/test_astra_effect_realisability_r1.py",
@@ -426956,6 +427460,36 @@
         "end_line": 134,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1.py#function:permutation_roots:cabef244844cb641",
         "signature_hash": "645d71091186a1f4"
+      }
+    ],
+    "relation": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 11,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:relation:12125a3dda81f115",
+        "signature_hash": "e0534110e0b16b6d"
+      }
+    ],
+    "make_route": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 16,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:make_route:e8db4c81e1b71980",
+        "signature_hash": "c1cc66a8ebd43197"
+      }
+    ],
+    "oracle_status": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 21,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py#function:oracle_status:2070c50a81b255d8",
+        "signature_hash": "f08330d72c799823"
       }
     ],
     "Effect": [
