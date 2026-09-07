@@ -1,0 +1,57 @@
+{
+  "objective": "O21_BYTE_VERIFIED_LAPTOP_UPDATE_TRANSACTION",
+  "date": "2026-09-07",
+  "state": "ACHIEVED_LOCAL_D0_NONPROMOTING",
+  "gate10": false,
+  "foreign_parents": [
+    {
+      "title": "O17_RECOVERABLE_TRAINING_STEP_TRANSACTION_HOSTED_EXACT_HEAD",
+      "drive_id": "1LdPL6iOB3yp0mbqVyMe3LUdRUwmX5rjg8R0eyBFlMtI",
+      "consequence": "TransportSuccess != ByteIdentity; ArtifactPublished != ArtifactReconstructedAndVerified; MutationAdmission != Commit != Publication"
+    },
+    {
+      "title": "O19_CANONICAL_PARALLEL_PATCH_COMMIT_TRANSACTION",
+      "drive_id": "1DF07okUmhW2r51gbsybsB93Y3LkIcr2D2ae_UxHjnpQ",
+      "consequence": "ParallelProposal != CanonicalCommit != CommitPublication; committed mutation is never reapplied after crash; ReferenceImplementationPass != HostDeployment"
+    }
+  ],
+  "keepers": [
+    "PublishedArtifact != VerifiedStagedBytes",
+    "BackupRequested != BackupDurable",
+    "Staged != CanonicalInstallCommit",
+    "CanonicalInstallCommit != PostInstallAcceptance",
+    "CommitReceipt => NeverReapplyInstall",
+    "PostInstallAcceptance => O20CurrentExact AND O19PhysicalWakeAccepted",
+    "Rollback => ExactDurablePreUpdateRoot",
+    "K27Coordinate != ReleaseIdentity != InstalledCurrentness != DeploymentAuthority"
+  ],
+  "proof": {
+    "source_sha256": "433cfe221a7f5be136c8f526c8bcf57f64550c648b4f5d44ac0731461386d2f4",
+    "test_sha256": "be52314b5c85ab50da562bcd750c2827e74c615b6cbbf8595776d140b38c6baf",
+    "proof_program_sha256": "e703d2fc8b3ef78a1f044645f650966bfab835f2afcea89b25aed839a7ab94b9",
+    "focused_tests_per_env": 15,
+    "fresh_envs": 3,
+    "focused_test_executions": 45,
+    "campaign_cases_per_env": 30000,
+    "campaign_cases_total": 90000,
+    "oracle_mismatches": 0,
+    "unsafe_accepts": 0,
+    "omega8_states": 6561,
+    "omega8_keepers": 1,
+    "factored13d_states": 1594323,
+    "hard_invalid_contextual_repairs": 0,
+    "hs1000_frozen_candidates": 1000,
+    "hs1000_consequence_families": 5,
+    "claimed_breakthroughs": 0,
+    "deterministic_output_sha256": "1cbe3fb6d8be7d2c5b88c657eb848fdfae3597b79f0ca47ebc95550fc883ab34"
+  },
+  "external_coordinates": [
+    {"coord":[9,8,11],"url":"https://arxiv.org/abs/2609.00406","role":"audit-first rollback / live-state coherence pressure"},
+    {"coord":[23,7,9],"url":"https://arxiv.org/abs/2607.13716","role":"canonical runtime action identity / attestation pressure"},
+    {"coord":[17,5,17],"url":"https://arxiv.org/abs/2607.05397","role":"runtime proof-of-execution / causal history pressure"},
+    {"coord":[13,22,20],"url":"https://arxiv.org/abs/2603.28988","role":"artifact-release attestation pressure"},
+    {"coord":[2,13,8],"url":"https://www.reddit.com/r/bashonubuntuonwindows/comments/1u6b15r/wsl2_failing_on_multiple_windows_servers_since/","role":"WSL version/runtime regression practitioner pressure"}
+  ],
+  "scholar": "GOOGLE_SCHOLAR_DIRECT_GAP",
+  "authority_ceiling": "D0/nonpromoting reference transaction only; no actual laptop deployment, no provider call, no service mutation, no canonical promotion, no native/private Transformer KV, no Gate10"
+}
