@@ -1,0 +1,52 @@
+name: O19R Transactional Shared Truth Proof
+
+on:
+  push:
+    branches:
+      - arena/o19r-transactional-shared-truth-commit
+  workflow_dispatch:
+
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Exact-head three-venv proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .o19r_proof && mkdir .o19r_proof
+          for e in 1 2 3; do
+            python -m venv ".o19r_proof/venv${e}"
+            py=".o19r_proof/venv${e}/bin/python"
+            "$py" -m unittest tests.test_transactional_shared_truth_commit_hosted -v > ".o19r_proof/test${e}.out" 2>&1
+            "$py" -m tools.arena.o19r_campaign > ".o19r_proof/campaign${e}.json"
+            "$py" -m tools.arena.o19r_lattice8 > ".o19r_proof/omega${e}.json"
+            "$py" -m tools.arena.o19r_sweep13d > ".o19r_proof/sweep${e}.json"
+            "$py" -m tools.arena.o19r_hs1000 > ".o19r_proof/hs${e}.json"
+          done
+          for stem in campaign omega sweep hs; do
+            cmp ".o19r_proof/${stem}1.json" ".o19r_proof/${stem}2.json"
+            cmp ".o19r_proof/${stem}1.json" ".o19r_proof/${stem}3.json"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('.o19r_proof')
+          c=json.loads((r/'campaign1.json').read_text())
+          o=json.loads((r/'omega1.json').read_text())
+          s=json.loads((r/'sweep1.json').read_text())
+          h=json.loads((r/'hs1.json').read_text())
+          assert c['cases']==24000 and c['false_commit']==0 and c['false_hold']==0 and c['authority_promotions']==0
+          assert c['naive_admission_means_commit_unsafe']==14000
+          assert c['naive_last_write_wins_unsafe']==16000
+          assert o['states']==6561 and o['bind']==1 and o['invalid_bind']==0
+          assert s['cartesian_states']==1594323 and s['lawful_contextual_bind']==243 and s['hard_invalid_context_repair']==0
+          assert h['raw']==1000 and h['quotients']==100 and h['top27_count']==27
+          print('O19R_EXACT_HEAD_PROOF=PASS')
+          PY
