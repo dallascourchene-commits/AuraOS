@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1686
-- **total_bytes**: 26558471
-- **text_tokens_est**: 6630019
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 249, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1687
+- **total_bytes**: 26569922
+- **text_tokens_est**: 6632882
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 249, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 282, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1686,
+  "repo_file_count": 1687,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1686,6 +1686,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_runtime_hard_false.py",
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/airllm_tiny_fixture_probe.py",
+    "tools/awj032/o17_runtime_delegated_training_reference.py",
     "tools/awj032/test_airllm_binding_mutation_soundness.py",
     "tools/awj032/test_airllm_hard_false_inspected_tree.py",
     "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1826,15 +1827,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1686,
-  "bytes": 26558471,
-  "tokens_est": 6630019,
+  "files": 1687,
+  "bytes": 26569922,
+  "tokens_est": 6632882,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 249,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1021,
+    "python_module": 1022,
     "schema_or_lexicon": 282,
     "support_file": 49
   }
