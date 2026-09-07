@@ -1,0 +1,42 @@
+name: Project006 O20 installed runtime currentness proof
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/installed_runtime_attestation.py'
+      - 'tools/project006/test_installed_runtime_attestation.py'
+      - 'tools/project006/proof_o20.py'
+      - 'artifacts/arena/project006_o20_installed_runtime_attestation/**'
+      - '.github/workflows/project006-o20-installed-runtime-currentness-proof.yml'
+  workflow_dispatch:
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Three fresh venvs
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$PWD/tools/project006:$PWD"
+          for n in 1 2 3; do
+            python -m venv ".o20-venv-$n"
+            ".o20-venv-$n/bin/python" -m unittest -v tools.project006.test_installed_runtime_attestation
+            ".o20-venv-$n/bin/python" tools/project006/proof_o20.py > ".o20-proof-$n.json"
+          done
+          cmp .o20-proof-1.json .o20-proof-2.json
+          cmp .o20-proof-1.json .o20-proof-3.json
+          python - <<'PY'
+          import hashlib,json
+          p=open('.o20-proof-1.json','rb').read(); x=json.loads(p)
+          assert hashlib.sha256(p).hexdigest()=='cb3fd779b88b704000a7a5bc93ffd67d0df304014b3a93b94b2a0799bee5581f'
+          assert x['campaign']['oracle_mismatches']==0 and x['campaign']['unsafe_current_accepts']==0
+          assert x['omega8']['states']==6561 and x['omega8']['keepers']==1 and x['omega8']['invalid_accepts']==0
+          assert x['factored13d']['states']==1594323 and x['factored13d']['hard_invalid_contextual_repairs']==0
+          assert x['hs1000']['frozen_candidates']==1000 and x['hs1000']['claimed_breakthroughs']==0
+          print('O20_EXACT_HEAD_PROOF=PASS')
+          PY
