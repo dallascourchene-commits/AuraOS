@@ -75,6 +75,8 @@ class RouteIdentity:
     owner_incarnation: str
     currentness_generation: int
     k27: tuple[int, ...]
+    runtime_state_root: str | None = None
+    revision_id: str | None = None
 
     def __post_init__(self) -> None:
         _hex64(self.objective_root, "objective_root")
@@ -91,12 +93,18 @@ class RouteIdentity:
             raise ValueError("k27 must be a tuple with depth <= 13")
         if any(type(x) is not int or x not in (0, 1, 2) for x in self.k27):
             raise ValueError("k27 digits must be exact ints in {0,1,2}")
+        if (self.runtime_state_root is None) != (self.revision_id is None):
+            raise ValueError("runtime_state_root and revision_id must be bound together")
+        if self.runtime_state_root is not None:
+            _hex64(self.runtime_state_root, "runtime_state_root")
+            _id(self.revision_id, "revision_id")
 
     def hard_roots(self) -> tuple[object, ...]:
         return (
             self.objective_root, self.target_id, self.source_root,
             self.dependency_root, self.map_generation,
             self.lifecycle_epoch, self.owner_incarnation,
+            self.runtime_state_root, self.revision_id,
         )
 
 
@@ -118,6 +126,8 @@ class TemporalRequirement:
                 raise ValueError(f"{field} must be exact int or None")
         if self.phase_tolerance is not None and self.phase_tolerance < 0:
             raise ValueError("phase_tolerance must be >= 0")
+        if type(self.lawfield_transition) is not bool or type(self.irreversible_or_external) is not bool:
+            raise ValueError("temporal flags must be exact bools")
 
     @property
     def mode(self) -> TimingMode:
@@ -149,6 +159,19 @@ class ProofReceipt:
     gate10: bool = False
 
     def __post_init__(self) -> None:
+        if not isinstance(self.polarity, Polarity):
+            raise ValueError("polarity must be an exact Polarity enum")
+        if not isinstance(self.route_identity, RouteIdentity):
+            raise ValueError("route_identity must be RouteIdentity")
+        if not isinstance(self.certified_envelope, CapacityEnvelope):
+            raise ValueError("certified_envelope must be CapacityEnvelope")
+        if not isinstance(self.temporal_mode, TimingMode):
+            raise ValueError("temporal_mode must be an exact TimingMode enum")
+        if type(self.event_time) is not int:
+            raise ValueError("event_time must be exact int")
+        for name in ("state_independent_negative", "authority_minted", "effect_authority", "gate10"):
+            if type(getattr(self, name)) is not bool:
+                raise ValueError(f"{name} must be exact bool")
         if self.polarity is Polarity.POSITIVE and self.state_independent_negative:
             raise ValueError("positive receipt cannot be state-independent negative")
         if self.authority_minted or self.effect_authority or self.gate10:
@@ -187,8 +210,8 @@ def admit(receipt: ProofReceipt, use: UseContext) -> Admission:
     Positive readiness requires exact at-use identity, timing, envelope and
     capability/knowledge discharge. A state-independent negative impossibility
     may survive a pure currentness/event-time rebind and any envelope shrink,
-    but never a hard-root move or envelope widening. K27 is intentionally absent
-    from authority decisions.
+    but never a hard-root move or envelope widening. Runtime state/revision are
+    hard identity when present. K27 is intentionally absent from authority decisions.
     """
     mode = use.temporal.mode
 
@@ -254,6 +277,8 @@ def canonical_receipt_root(receipt: ProofReceipt) -> str:
             "owner_incarnation": receipt.route_identity.owner_incarnation,
             "currentness_generation": receipt.route_identity.currentness_generation,
             "k27": list(receipt.route_identity.k27),
+            "runtime_state_root": receipt.route_identity.runtime_state_root,
+            "revision_id": receipt.route_identity.revision_id,
         },
         "envelope": receipt.certified_envelope.__dict__,
         "temporal_mode": receipt.temporal_mode.value,
