@@ -18,13 +18,14 @@ freeze_root = hashlib.sha256(
     json.dumps(cells, sort_keys=True, separators=(",", ":")).encode()
 ).hexdigest()
 classes = (
-    "ACK_REQUIRED",
+    "ACK_RECONCILIATION",
+    "CURRENTNESS_OWNER_BIND",
     "ATTEMPT_REQUIRED",
     "IDEMPOTENT_RETRY",
     "QUERY_RECONCILE",
     "NONRETRYABLE_HOLD",
     "RETURN_ONLY",
-    "IDENTITY_REBIND",
+    "OPERATION_LINEAGE",
     "TERMINAL_CLASS_SPLIT",
 )
 groups = {}
@@ -35,7 +36,7 @@ quotient_root = hashlib.sha256(
     json.dumps(groups, sort_keys=True, separators=(",", ":")).encode()
 ).hexdigest()
 print(json.dumps({
-    "schema": "AURA-PROJECT006-O11-HS1000-v1",
+    "schema": "AURA-PROJECT006-O11R-HS1000-v2",
     "raw_cells": len(cells),
     "freeze_root": freeze_root,
     "consequence_groups": len(groups),
