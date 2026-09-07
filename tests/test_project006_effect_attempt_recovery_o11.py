@@ -1,5 +1,6 @@
 import json
 import os
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
@@ -62,6 +63,13 @@ class EffectAttemptRecoveryO11Tests(unittest.TestCase):
         journal.bind_admitted(ident, intent, contract)
         context = RecoveryContext(intent.identity_root, contract.contract_root, contract.capability_receipt_root,
                                   "K", root("c"))
+        return ident, intent, contract, journal, outbox, context
+
+    def terminal_fixture(self):
+        ident, intent, contract, journal, outbox, context = self.fixture()
+        journal.publish_ack(ident, intent, contract, lambda _: "ACK")
+        journal.decide_and_persist(ident, intent, contract, context)
+        journal.record_result("C", root("f"))
         return ident, intent, contract, journal, outbox, context
 
     def test_binding_rejects_wrong_source(self):
@@ -136,6 +144,14 @@ class EffectAttemptRecoveryO11Tests(unittest.TestCase):
         self.assertEqual(row["effect_attempt_root"], permit.effect_attempt_root)
         self.assertEqual(row["provider_action_currentness_root"], permit.provider_action_currentness_root)
 
+    def test_ack_substituted_lineage_rejected_before_writer(self):
+        ident, intent, contract, journal, _, _ = self.fixture()
+        bad_intent = EffectIntent("C", "K", root("a"), root("b"), root("e"), "MAIL")
+        calls = []
+        with self.assertRaisesRegex(ValueError, "EFFECT_LINEAGE_EQUIVOCATION"):
+            journal.publish_ack(ident, bad_intent, contract, lambda _: calls.append(1) or "ACK")
+        self.assertEqual(calls, [])
+
     def test_nonretryable_crash_holds_and_can_publish_ambiguous_terminal(self):
         ident, intent, contract, journal, outbox, context = self.fixture()
         journal.publish_ack(ident, intent, contract, lambda _: "ACK")
@@ -191,11 +207,39 @@ class EffectAttemptRecoveryO11Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "PROVIDER_OPERATION_ROOT_CONFLICT"):
             journal.record_result("C", root("f"), root("7"))
 
+    def test_post_result_currentness_drift_does_not_erase_owed_return(self):
+        ident, intent, contract, journal, _, context = self.terminal_fixture()
+        journal.currentness_resolver = lambda _i, _c: None
+        self.assertEqual(journal.decide_and_persist(ident, intent, contract, context).action,
+                         Action.RETRY_RETURN_WRITER_ONLY)
+
+    def test_final_return_rejects_moved_source_file(self):
+        ident, intent, contract, journal, outbox, context = self.terminal_fixture()
+        bad = CommandIdentity("C", "K", "OTHER_FILE", "REV", root("a"))
+        with self.assertRaisesRegex(ValueError, "FULL_SOURCE_IDENTITY_DIVERGED"):
+            journal.stage_final_terminal(outbox, bad)
+
+    def test_final_return_rejects_moved_source_revision(self):
+        ident, intent, contract, journal, outbox, context = self.terminal_fixture()
+        bad = CommandIdentity("C", "K", "FILE", "OTHER_REV", root("a"))
+        with self.assertRaisesRegex(ValueError, "FULL_SOURCE_IDENTITY_DIVERGED"):
+            journal.stage_final_terminal(outbox, bad)
+
+    def test_caller_outbound_ref_cannot_self_close_effect_journal(self):
+        ident, intent, contract, journal, outbox, context = self.terminal_fixture()
+        with self.assertRaisesRegex(ValueError, "COMMAND_NOT_INGESTED"):
+            journal.mark_return_written(outbox, ident)
+        self.assertEqual(journal.status("C")["phase"], Phase.RESULT_OBSERVED.value)
+
+    def test_pending_outbox_does_not_prove_return_written(self):
+        ident, intent, contract, journal, outbox, context = self.terminal_fixture()
+        journal.stage_final_terminal(outbox, ident)
+        with self.assertRaisesRegex(ValueError, "OUTBOX_RETURN_NOT_WRITTEN"):
+            journal.mark_return_written(outbox, ident)
+        self.assertEqual(journal.status("C")["phase"], Phase.RESULT_OBSERVED.value)
+
     def test_result_final_return_writer_retry_only(self):
-        ident, intent, contract, journal, outbox, context = self.fixture()
-        journal.publish_ack(ident, intent, contract, lambda _: "ACK")
-        journal.decide_and_persist(ident, intent, contract, context)
-        journal.record_result("C", root("f"))
+        ident, intent, contract, journal, outbox, context = self.terminal_fixture()
         journal.stage_final_terminal(outbox, ident)
         calls = [0]
         def writer(_):
@@ -207,9 +251,34 @@ class EffectAttemptRecoveryO11Tests(unittest.TestCase):
             outbox.publish_pending("C", writer)
         self.assertEqual(journal.decide_and_persist(ident, intent, contract, context).action,
                          Action.RETRY_RETURN_WRITER_ONLY)
-        ref = outbox.publish_pending("C", writer)
-        journal.mark_return_written("C", ref)
+        outbox.publish_pending("C", writer)
+        receipt = journal.mark_return_written(outbox, ident)
+        self.assertEqual(len(receipt), 64)
         self.assertEqual(calls[0], 2)
+        self.assertEqual(journal.status("C")["phase"], Phase.RETURN_WRITTEN.value)
+
+    def test_legacy_effect_row_without_full_source_identity_requires_rebind(self):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        path = os.path.join(td.name, "legacy.db")
+        con = sqlite3.connect(path)
+        con.execute("""CREATE TABLE effect_tx(
+            command_id TEXT PRIMARY KEY,idempotency_key TEXT NOT NULL,source_digest TEXT NOT NULL,
+            intent_root TEXT NOT NULL,contract_root TEXT NOT NULL,effect_payload_root TEXT NOT NULL,
+            phase TEXT NOT NULL,provider_request_count INTEGER NOT NULL DEFAULT 0,
+            ack_receipt_root TEXT,effect_attempt_root TEXT,provider_operation_root TEXT,result_root TEXT,
+            terminal_class TEXT,return_receipt_root TEXT)""")
+        con.execute("""INSERT INTO effect_tx(command_id,idempotency_key,source_digest,intent_root,contract_root,
+                    effect_payload_root,phase) VALUES(?,?,?,?,?,?,?)""",
+                    ("C", "K", root("a"), root("1"), root("2"), root("c"), Phase.DECIDED_ADMITTED.value))
+        con.commit()
+        con.close()
+        journal = EffectAttemptJournal(path)
+        ident = CommandIdentity("C", "K", "FILE", "REV", root("a"))
+        intent = EffectIntent("C", "K", root("a"), root("b"), root("c"), "MAIL")
+        contract = EffectContract(RecoveryMode.NON_RETRYABLE, root("d"), "MAIL")
+        with self.assertRaisesRegex(ValueError, "LEGACY_SOURCE_IDENTITY_REBIND_REQUIRED"):
+            journal.bind_admitted(ident, intent, contract)
 
     def test_pre_effect_rejection_still_forbids_provider_count(self):
         ident, _, _, _, _, _ = self.fixture()
