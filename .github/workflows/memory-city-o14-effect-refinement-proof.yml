@@ -1,0 +1,70 @@
+name: Memory City O14 effect-refinement proof
+on:
+  pull_request:
+    paths:
+      - 'tools/arena/memory_city_effect_refinement_handoff_o14.py'
+      - 'tools/arena/memory_city_consequence_refinement.py'
+      - 'tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py'
+      - 'tools/arena/o14_effect_refinement_lattice.py'
+      - 'tools/arena/o14_effect_refinement_13d.py'
+      - 'tools/arena/o14_effect_refinement_hs1000.py'
+      - 'tests/test_memory_city_effect_refinement_handoff_o14.py'
+      - '.github/workflows/memory-city-o14-effect-refinement-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    env:
+      EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: exact head checkout identity
+        run: |
+          test "$(git rev-parse HEAD)" = "${EXPECTED_SHA}"
+      - name: three fresh stdlib venvs
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            rm -rf ".venv-o14-$i"
+            python3 -m venv ".venv-o14-$i"
+            PYTHONPATH=tools/arena ".venv-o14-$i/bin/python" -m unittest discover -s tests -p 'test_memory_city_effect_handoff_o13.py'
+            PYTHONPATH=tools/arena ".venv-o14-$i/bin/python" -m unittest discover -s tests -p 'test_memory_city_effect_refinement_handoff_o14.py'
+            PYTHONPATH=tools/arena ".venv-o14-$i/bin/python" tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py > "o14-campaign-$i.json"
+            PYTHONPATH=tools/arena ".venv-o14-$i/bin/python" tools/arena/o14_effect_refinement_lattice.py > "o14-lattice-$i.json"
+            PYTHONPATH=tools/arena ".venv-o14-$i/bin/python" tools/arena/o14_effect_refinement_13d.py > "o14-13d-$i.json"
+            PYTHONPATH=tools/arena ".venv-o14-$i/bin/python" tools/arena/o14_effect_refinement_hs1000.py > "o14-hs1000-$i.json"
+          done
+          cmp o14-campaign-1.json o14-campaign-2.json && cmp o14-campaign-1.json o14-campaign-3.json
+          cmp o14-lattice-1.json o14-lattice-2.json && cmp o14-lattice-1.json o14-lattice-3.json
+          cmp o14-13d-1.json o14-13d-2.json && cmp o14-13d-1.json o14-13d-3.json
+          cmp o14-hs1000-1.json o14-hs1000-2.json && cmp o14-hs1000-1.json o14-hs1000-3.json
+          python3 - <<'PY'
+          import json
+          for f in ('o14-campaign-1.json','o14-lattice-1.json','o14-13d-1.json','o14-hs1000-1.json'):
+              p=json.load(open(f)); print(f,p)
+          campaign=json.load(open('o14-campaign-1.json'))
+          lattice=json.load(open('o14-lattice-1.json'))
+          sweep=json.load(open('o14-13d-1.json'))
+          hs=json.load(open('o14-hs1000-1.json'))
+          assert campaign['counts']['false_tecc']==0
+          assert campaign['counts']['false_hold']==0
+          assert campaign['counts']['refined_collision_pairs']==0
+          assert campaign['counts']['nuisance_false_splits']==0
+          assert lattice['counts']['false_tecc']==0
+          assert lattice['counts']['false_hold']==0
+          assert lattice['counts']['effect_ready']==0
+          assert sweep['hard_invalid_repairs']==0
+          assert sweep['effect_ready']==0
+          assert hs['cells']==1000
+          assert hs['groups']==9
+          PY
+      - name: source syntax and clean tracked checkout
+        run: |
+          python3 -m py_compile tools/arena/memory_city_consequence_refinement.py tools/arena/memory_city_effect_refinement_handoff_o14.py tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py tools/arena/o14_effect_refinement_lattice.py tools/arena/o14_effect_refinement_13d.py tools/arena/o14_effect_refinement_hs1000.py tests/test_memory_city_effect_refinement_handoff_o14.py
+          git diff --exit-code

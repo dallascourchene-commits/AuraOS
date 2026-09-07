@@ -1,0 +1,121 @@
+{
+  "authority": {
+    "deploy": false,
+    "effect": false,
+    "gate10": false,
+    "merge": false,
+    "mutation": false
+  },
+  "campaign": {
+    "base_collision_pairs": 4000,
+    "candidate_tecc": 2000,
+    "cases": 16000,
+    "effect_ready": 0,
+    "false_hold": 0,
+    "false_tecc": 0,
+    "nuisance_false_splits": 0,
+    "oracle_tecc": 2000,
+    "refined_collision_pairs": 0,
+    "root": "6152807f9aeb735ce4e534d3f886e0cdb5123a85d139ce786e8f674dc59477b8",
+    "schema": "AURA-O14-CAMPAIGN-v2-INTEGRATED"
+  },
+  "carrier_observation": {
+    "carrier_head_is_not_semantic_reproof": true,
+    "pre_repair_head": "06801c20c6175cc7e7c96733e2d40fd40b1a5c5e",
+    "semantic_credit_bound_to": "0955c546de9b7f343bd2714ab93e0946bdd73d2f",
+    "workflow_pin_commit": "d0961af7f1b0b626bfe83c1aa7d4152df3bb8601"
+  },
+  "factored_13d": {
+    "context_execution_routes": 243,
+    "context_states": 243,
+    "effect_ready": 0,
+    "hard_invalid_repairs": 0,
+    "hard_keepers": 1,
+    "hard_states": 6561,
+    "nonroutes": 1594080,
+    "omega8_root": "67cfaa7634544916c74cdf72beddd982c975c9b0222cd68cf199e6e470a64392",
+    "root": "af20eebbf06aaa2ec4778472a0ed90e2c31cc6d47a029eee1898be7b071fbdb0",
+    "schema": "AURA-O14-13D-FACTORED-v2-INTEGRATED",
+    "tecc_root_variants_across_context": 1,
+    "total_states": 1594323,
+    "valid_contextual_tecc_routes": 243
+  },
+  "hosted_integration": {
+    "checkout_action_resolved_sha": "11d5960a326750d5838078e36cf38b85af677262",
+    "clean_tracked_checkout_pass": true,
+    "credit": 1,
+    "deterministic_outputs_across_venvs": true,
+    "exact_checkout_head": "0955c546de9b7f343bd2714ab93e0946bdd73d2f",
+    "exact_checkout_identity_pass": true,
+    "fresh_venvs": 3,
+    "job_id": 101695800930,
+    "o13_tests_per_venv": 16,
+    "o14_tests_per_venv": 12,
+    "run_id": 34107505924,
+    "source_syntax_pass": true,
+    "status": "SUCCESS",
+    "workflow_dependency_now_pinned": true,
+    "workflow_pin_commit": "d0961af7f1b0b626bfe83c1aa7d4152df3bb8601"
+  },
+  "hs1000": {
+    "cells": 1000,
+    "claim_breakthroughs": 0,
+    "freeze_root": "7ee515bf774fd43cefcbe2dcf8b34c1f6fb64c329b553d1970c5b8ce17635609",
+    "groups": 9,
+    "quotient_root": "343baebac64efc66470e9db406a7c581a03e2333c2553a788a272325334ccf41",
+    "schema": "AURA-O14-HS1000-v2"
+  },
+  "keeper_laws": [
+    "CertifiedReadConsequence != EffectObligationSubclass != MutationAuthority",
+    "O13CurrentCrossBinding + ModeSeal != ExactTECCInputWithoutEffectRefinementIdentity",
+    "EffectEscalationRoot + O13TECCInput != EffectAuthority",
+    "ValidO14 => HOLD_TECC_REQUIRED_D0",
+    "HostedExecutionSuccess != IntendedPropertyProven",
+    "CoarselySafe != CorrectRecoveryClassification",
+    "ProofProducerContractMove => DependencyClosedProofConsumerRevalidation",
+    "SemanticHead != CarrierHead",
+    "K27Coordinate != Identity != Truth != Currentness != Authority"
+  ],
+  "omega8": {
+    "candidate_tecc": 1,
+    "effect_ready": 0,
+    "false_hold": 0,
+    "false_tecc": 0,
+    "oracle_tecc": 1,
+    "root": "67cfaa7634544916c74cdf72beddd982c975c9b0222cd68cf199e6e470a64392",
+    "schema": "AURA-O14-OMEGA8-v2-INTEGRATED",
+    "states": 6561
+  },
+  "proof_parent": {
+    "head": "2dfb01aea97201394e8df642dc1de56503d1a2cd",
+    "pr": 892,
+    "role": "O13R_CLASSIFICATION_EXACT_PROOF_CONE"
+  },
+  "receipt_root": "6ca1cbaede1219997c19a7825c175ad2a88add6e296982f4783c54d870ea3603",
+  "refinement_parent": {
+    "git_blob": "7a212c6dbf51207cff1f553076b14896bc7d7972",
+    "head": "b233d87bf32c0ae9b056c9c441558af8908f9392",
+    "pr": 887,
+    "role": "O8_EFFECT_OBLIGATION_REFINEMENT_OWNER"
+  },
+  "reopen_conditions": [
+    "O14 semantic source bytes change",
+    "O13/O13R inherited runtime or proof contract changes",
+    "O8 refinement-owner bytes change",
+    "workflow dependency pin changes",
+    "independent falsifier finds a classification, collision, or authority boundary defect",
+    "TECC owner contract becomes concrete and requires a new handoff adapter"
+  ],
+  "runtime_parent": {
+    "head": "51e4c8eeb327a5d5c8fe3f30e17907819cc86577",
+    "pr": 889,
+    "role": "O13_CURRENT_READ_ADMISSION_LEASE_FENCE_OWNER"
+  },
+  "schema": "AURA-MEMORY-CITY-O14-EFFECT-REFINEMENT-PROOF-v2-HOSTED-EXACT",
+  "semantic_head": {
+    "hosted_exact_head_proven": true,
+    "meaning": "two-parent O13R-absorbed O14 semantic rebase head",
+    "sha": "0955c546de9b7f343bd2714ab93e0946bdd73d2f"
+  },
+  "status": "D0_NONPROMOTING_HOSTED_SEMANTIC_HEAD_PROVEN"
+}

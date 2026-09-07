@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1708
-- **total_bytes**: 26857212
-- **text_tokens_est**: 6704666
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1053, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1717
+- **total_bytes**: 26905522
+- **text_tokens_est**: 6716746
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1060, 'schema_or_lexicon': 282, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1708,
+  "repo_file_count": 1717,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -171,6 +171,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/human-agent-emergent-research.yml",
     ".github/workflows/memory-city-m3-proof.yml",
     ".github/workflows/memory-city-o13-effect-handoff-proof.yml",
+    ".github/workflows/memory-city-o14-effect-refinement-proof.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -301,6 +302,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
+    "artifacts/arena/memory_city_o14_effect_refinement/PROOF_RECEIPT_O14.json",
     "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
     "arxiv_forager.py",
     "async_palace.py",
@@ -1667,6 +1669,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_component_correct_read_consequence.py",
     "tests/test_memory_city_contingent_hydration.py",
     "tests/test_memory_city_effect_handoff_o13.py",
+    "tests/test_memory_city_effect_refinement_handoff_o14.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_mode_sealed_admission.py",
     "tests/test_memory_city_navigator.py",
@@ -1683,6 +1686,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
     "tools/arena/campaign_memory_city_effect_handoff_o13.py",
+    "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
     "tools/arena/campaign_memory_city_quotient_controllability.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
@@ -1704,12 +1708,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_reflexive_telemetry.py",
     "tools/arena/memory_city_adaptive_hydration.py",
     "tools/arena/memory_city_anchor_locator.py",
+    "tools/arena/memory_city_consequence_refinement.py",
     "tools/arena/memory_city_contingent_hydration.py",
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_coverage_membrane.py",
     "tools/arena/memory_city_ecf_adapter.py",
     "tools/arena/memory_city_effect_handoff_o13.py",
+    "tools/arena/memory_city_effect_refinement_handoff_o14.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
     "tools/arena/memory_city_quotient_controllability.py",
@@ -1718,6 +1724,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_typed_closure.py",
     "tools/arena/o13_effect_handoff_hs1000.py",
     "tools/arena/o13_effect_handoff_lattice.py",
+    "tools/arena/o14_effect_refinement_13d.py",
+    "tools/arena/o14_effect_refinement_hs1000.py",
+    "tools/arena/o14_effect_refinement_lattice.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1848,16 +1857,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1708,
-  "bytes": 26857212,
-  "tokens_est": 6704666,
+  "files": 1717,
+  "bytes": 26905522,
+  "tokens_est": 6716746,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1053,
-    "schema_or_lexicon": 280,
+    "python_module": 1060,
+    "schema_or_lexicon": 282,
     "support_file": 49
   }
 }
