@@ -1,0 +1,30 @@
+{
+  "schema": "AURA_PROJECT006_O19_PHYSICAL_WAKE_ACCEPTANCE_PROOF_V1",
+  "state": "ACHIEVED_D0_NONPROMOTING_LOCAL_EXACT_BYTES",
+  "objective": "Require complete, causal, command-bound physical evidence for Windows guardian -> stopped WSL -> restarted WSL -> Aura consumption -> outbound return -> replay without duplicate effect.",
+  "foreign_parents": [
+    {"kind":"github_pr","pr":853,"law":"OrderedTypedLedger != CompleteReplay"},
+    {"kind":"github_pr","pr":909,"law":"ProviderAccepted != ResultObserved != ReturnWritten"}
+  ],
+  "source_sha256": "ab6998bbd98780c052d2d927fb0a3f42edf9adc9300ec6e8929d4e740b3a8212",
+  "tests_sha256": "512de404840146b486531abec518e608880c9efe111a80365b904fcf691c35a8",
+  "proof_program_sha256": "02662e5dde8649796c658f898ead96923385628f0a2c89619dc15422b357edbf",
+  "proof_output_sha256": "5bb7169f47a6d8f5b3faf4c1750948fd5d1b7fb5f118b22fea35bd3eaf326dc9",
+  "fresh_venvs": 3,
+  "focused_tests_per_env": 12,
+  "focused_test_executions": 36,
+  "omega8": {"states":6561,"keepers":1,"invalid_accepts":0,"root":"7147510d6cb4ae33fcdb45d856ff4d1d049af8dc6f4c2601bc70953b74749620"},
+  "factored13d": {"states":1594323,"keeper_contexts":243,"hard_invalid_contextual_repairs":0,"root":"a384b0b1fad266b405fbd0177db7abf86f3dd43307dfba488a12959036015691"},
+  "hs1000": {"frozen_candidates":1000,"consequence_group_count":4,"claimed_breakthroughs":0,"freeze_root":"cd93392c073e177152a3ffcdff2bf3c8db32b52e25fe76036fc5a7b2bc6a9f24","quotient_root":"0c12f81c93ea37b0347723883ed71e963a2ecc181306527c6013bac6d1fd6edf"},
+  "required_event_kinds": ["WINDOWS_GUARDIAN_ALIVE","WSL_STOP_OBSERVED","WSL_RESTART_OBSERVED","COMMAND_INGESTED","COMMAND_CONSUMED","OUTBOUND_RETURN_WRITTEN","REPLAY_ATTEMPTED","REPLAY_NO_DUPLICATE_EFFECT"],
+  "keeper_laws": [
+    "OrderedTypedLedger != CompleteReplay",
+    "SequenceIdentity != SequenceCompleteness",
+    "WindowsGuardianAlive != WSLWakeSucceeded",
+    "WSLRestartObserved != CommandConsumed",
+    "CommandConsumed != OutboundReturnWritten",
+    "OutboundReturnWritten != ReplayNoDuplicateEffect",
+    "PhysicalWakeAccepted => ExactCoverage AND CausalOrder AND CurrentnessExact AND AuthorityExact AND ProviderCountExact"
+  ],
+  "authority_ceiling": "D0_NONPROMOTING_NO_HOST_DEPLOY_NO_PROVIDER_CALL_NO_GATE10"
+}
