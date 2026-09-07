@@ -11,27 +11,21 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 SCHEMA = "AuraTerminalBusResponseV1"
-VERSION = "PROJECT006_TERMINAL_OUTBOX_V2"
+VERSION = "PROJECT006_TERMINAL_OUTBOX_V3"
 TERMINAL_KINDS = frozenset({
     "ACK_ACCEPTED_PRE_EFFECT", "SCHEMA_REJECTED", "AUTHORITY_REJECTED",
     "IDEMPOTENCY_REJECTED", "IDEMPOTENT_REPLAY", "CURRENTNESS_REJECTED",
     "STALE_REOPEN", "CAPABILITY_REJECTED", "ADMISSION_BLOCKED", "COMMAND_BLOCKED",
     "EXECUTOR_ERROR", "COMPLETION_AMBIGUOUS", "RESULT",
 })
-# These classes are known to occur before a provider attempt and therefore must
-# never claim a provider request.  COMPLETION_AMBIGUOUS and EXECUTOR_ERROR are
-# deliberately excluded: they may be post-effect outcomes.
 PRE_EFFECT_ZERO_PROVIDER_KINDS = frozenset({
     "ACK_ACCEPTED_PRE_EFFECT", "SCHEMA_REJECTED", "AUTHORITY_REJECTED",
     "IDEMPOTENCY_REJECTED", "CURRENTNESS_REJECTED", "STALE_REOPEN",
     "CAPABILITY_REJECTED", "ADMISSION_BLOCKED", "COMMAND_BLOCKED",
 })
-# ACK is a lifecycle transition, not the final command return.  It uses the
-# bounded bus writer directly and is journalled by the effect-attempt owner.
 FINAL_TERMINAL_KINDS = TERMINAL_KINDS - {"ACK_ACCEPTED_PRE_EFFECT"}
-# Compatibility name retained for callers/tests that enumerate pre-effect
-# negative outcomes.  IDEMPOTENT_REPLAY is not assumed to be pre-effect.
 NEGATIVE_KINDS = PRE_EFFECT_ZERO_PROVIDER_KINDS - {"ACK_ACCEPTED_PRE_EFFECT"}
+
 
 class TxState(str, Enum):
     INGESTED = "INGESTED"
@@ -43,6 +37,14 @@ class TxState(str, Enum):
     ERROR_TERMINAL = "ERROR_TERMINAL"
     COMPLETION_AMBIGUOUS = "COMPLETION_AMBIGUOUS"
     RETURN_WRITTEN = "RETURN_WRITTEN"
+
+
+class AckState(str, Enum):
+    STAGED = "STAGED"
+    WRITE_INFLIGHT = "WRITE_INFLIGHT"
+    WRITE_AMBIGUOUS = "WRITE_AMBIGUOUS"
+    WRITTEN = "WRITTEN"
+
 
 @dataclass(frozen=True)
 class CommandIdentity:
@@ -56,6 +58,7 @@ class CommandIdentity:
         for name, value in asdict(self).items():
             if not isinstance(value, str) or not value or len(value) > 2048:
                 raise ValueError(f"INVALID_{name.upper()}")
+
 
 @dataclass(frozen=True)
 class TerminalResponse:
@@ -72,8 +75,6 @@ class TerminalResponse:
         if type(self.provider_request_count) is not int or self.provider_request_count < 0:
             raise ValueError("INVALID_PROVIDER_REQUEST_COUNT")
         if self.kind in PRE_EFFECT_ZERO_PROVIDER_KINDS and self.provider_request_count != 0:
-            # Preserve the existing failure token for compatibility while
-            # tightening the semantic set that it applies to.
             raise ValueError("NEGATIVE_RESPONSE_HAS_PROVIDER_EFFECT")
         if self.kind == "COMPLETION_AMBIGUOUS" and self.provider_request_count < 1:
             raise ValueError("AMBIGUOUS_COMPLETION_REQUIRES_EFFECT_ATTEMPT")
@@ -95,14 +96,15 @@ class TerminalResponse:
         body = json.dumps(self.canonical(), sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
         return hashlib.sha256(body.encode()).hexdigest()
 
-class OutboxJournal:
-    """Durable journal for final command returns only.
 
-    Provider effects are never invoked by this class.  ACK_ACCEPTED_PRE_EFFECT
-    is not a final return and cannot be staged here; the effect-attempt journal
-    owns that lifecycle transition.  Retries here retry only the bounded Drive
-    writer for an already-decided final response.
+class OutboxJournal:
+    """Durable final-return journal plus a distinct ACK publication table.
+
+    ACK remains nonterminal. The ACK table exists only to migrate legacy receipt
+    publication safely: it commits WRITE_INFLIGHT before calling the external
+    writer, so a crash cannot turn unknown ACK delivery into blind resend.
     """
+
     def __init__(self, path: str | Path):
         self.path = str(path)
         con = sqlite3.connect(self.path)
@@ -119,15 +121,27 @@ class OutboxJournal:
               outbound_ref TEXT,
               writer_attempts INTEGER NOT NULL DEFAULT 0
             )""")
+            con.execute("""CREATE TABLE IF NOT EXISTS ack_tx(
+              command_id TEXT PRIMARY KEY,
+              idempotency_key TEXT NOT NULL,
+              source_digest TEXT NOT NULL,
+              state TEXT NOT NULL,
+              response_digest TEXT NOT NULL,
+              response_json TEXT NOT NULL,
+              outbound_ref TEXT,
+              writer_attempts INTEGER NOT NULL DEFAULT 0
+            )""")
             con.commit()
         finally:
             con.close()
 
     @contextmanager
-    def _con(self):
+    def _con(self, *, immediate: bool = False):
         con = sqlite3.connect(self.path)
         con.row_factory = sqlite3.Row
         try:
+            if immediate:
+                con.execute("BEGIN IMMEDIATE")
             yield con
             con.commit()
         except Exception:
@@ -151,20 +165,20 @@ class OutboxJournal:
         if response.kind not in FINAL_TERMINAL_KINDS:
             raise ValueError("ACK_IS_NOT_TERMINAL_RETURN")
         canonical = response.canonical()
-        digest = response.digest()
+        response_digest = response.digest()
         encoded = json.dumps(canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
         self.ingest(response.identity)
         with self._con() as con:
             row = con.execute("SELECT * FROM tx WHERE command_id=?", (response.identity.command_id,)).fetchone()
             if row["state"] == TxState.RETURN_WRITTEN.value:
-                if row["response_digest"] != digest:
+                if row["response_digest"] != response_digest:
                     raise ValueError("TERMINAL_EQUIVOCATION")
-                return digest
-            if row["response_digest"] and row["response_digest"] != digest:
+                return response_digest
+            if row["response_digest"] and row["response_digest"] != response_digest:
                 raise ValueError("TERMINAL_EQUIVOCATION")
             con.execute("UPDATE tx SET state=?,response_digest=?,response_json=? WHERE command_id=?",
-                        (TxState.RETURN_PENDING.value, digest, encoded, response.identity.command_id))
-        return digest
+                        (TxState.RETURN_PENDING.value, response_digest, encoded, response.identity.command_id))
+        return response_digest
 
     def publish_pending(self, command_id: str, writer: Callable[[Mapping[str, Any]], str]) -> str:
         with self._con() as con:
@@ -188,6 +202,79 @@ class OutboxJournal:
                         (TxState.RETURN_WRITTEN.value, ref, command_id))
         return ref
 
+    def stage_ack(self, response: TerminalResponse) -> str:
+        if response.kind != "ACK_ACCEPTED_PRE_EFFECT":
+            raise ValueError("NOT_ACK_RESPONSE")
+        canonical = response.canonical()
+        response_digest = response.digest()
+        encoded = json.dumps(canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        with self._con(immediate=True) as con:
+            row = con.execute("SELECT * FROM ack_tx WHERE command_id=?", (response.identity.command_id,)).fetchone()
+            if row is None:
+                con.execute("""INSERT INTO ack_tx(command_id,idempotency_key,source_digest,state,response_digest,response_json)
+                               VALUES(?,?,?,?,?,?)""",
+                            (response.identity.command_id, response.identity.idempotency_key, response.identity.source_digest,
+                             AckState.STAGED.value, response_digest, encoded))
+                return response_digest
+            if row["idempotency_key"] != response.identity.idempotency_key or row["source_digest"] != response.identity.source_digest:
+                raise ValueError("ACK_IDENTITY_CONFLICT")
+            if row["response_digest"] != response_digest:
+                raise ValueError("ACK_EQUIVOCATION")
+            return response_digest
+
+    def publish_ack_pending(self, command_id: str, writer: Callable[[Mapping[str, Any]], str]) -> str:
+        with self._con(immediate=True) as con:
+            row = con.execute("SELECT * FROM ack_tx WHERE command_id=?", (command_id,)).fetchone()
+            if row is None:
+                raise ValueError("ACK_NOT_STAGED")
+            state = AckState(row["state"])
+            if state is AckState.WRITTEN:
+                return str(row["outbound_ref"])
+            if state in (AckState.WRITE_INFLIGHT, AckState.WRITE_AMBIGUOUS):
+                raise ValueError("ACK_RECONCILIATION_REQUIRED")
+            con.execute("UPDATE ack_tx SET state=?,writer_attempts=writer_attempts+1 WHERE command_id=?",
+                        (AckState.WRITE_INFLIGHT.value, command_id))
+            payload = json.loads(row["response_json"])
+        try:
+            ref = writer(payload)
+        except Exception:
+            with self._con(immediate=True) as con:
+                row2 = con.execute("SELECT * FROM ack_tx WHERE command_id=?", (command_id,)).fetchone()
+                if row2 is not None and row2["state"] == AckState.WRITE_INFLIGHT.value:
+                    con.execute("UPDATE ack_tx SET state=? WHERE command_id=?",
+                                (AckState.WRITE_AMBIGUOUS.value, command_id))
+            raise
+        if not isinstance(ref, str) or not ref:
+            with self._con(immediate=True) as con:
+                con.execute("UPDATE ack_tx SET state=? WHERE command_id=?",
+                            (AckState.WRITE_AMBIGUOUS.value, command_id))
+            raise ValueError("ACK_WRITER_DID_NOT_RETURN_REF")
+        with self._con(immediate=True) as con:
+            row3 = con.execute("SELECT * FROM ack_tx WHERE command_id=?", (command_id,)).fetchone()
+            if row3 is None or row3["state"] != AckState.WRITE_INFLIGHT.value:
+                raise ValueError("ACK_CONFIRMATION_STATE_MOVED")
+            con.execute("UPDATE ack_tx SET state=?,outbound_ref=? WHERE command_id=?",
+                        (AckState.WRITTEN.value, ref, command_id))
+        return ref
+
+    def resolve_ack_written(self, command_id: str, outbound_ref: str) -> str:
+        if not isinstance(outbound_ref, str) or not outbound_ref:
+            raise ValueError("ACK_OUTBOUND_REF_REQUIRED")
+        with self._con(immediate=True) as con:
+            row = con.execute("SELECT * FROM ack_tx WHERE command_id=?", (command_id,)).fetchone()
+            if row is None or row["state"] not in (AckState.WRITE_INFLIGHT.value, AckState.WRITE_AMBIGUOUS.value):
+                raise ValueError("ACK_RECONCILIATION_STATE_INVALID")
+            con.execute("UPDATE ack_tx SET state=?,outbound_ref=? WHERE command_id=?",
+                        (AckState.WRITTEN.value, outbound_ref, command_id))
+        return outbound_ref
+
+    def ack_status(self, command_id: str) -> dict[str, Any]:
+        with self._con() as con:
+            row = con.execute("SELECT * FROM ack_tx WHERE command_id=?", (command_id,)).fetchone()
+            if row is None:
+                raise ValueError("ACK_NOT_STAGED")
+            return dict(row)
+
     def status(self, command_id: str) -> dict[str, Any]:
         with self._con() as con:
             row = con.execute("SELECT * FROM tx WHERE command_id=?", (command_id,)).fetchone()
@@ -195,14 +282,9 @@ class OutboxJournal:
                 raise ValueError("COMMAND_NOT_INGESTED")
             return dict(row)
 
-class AuraDriveBusWriterV1:
-    """Exact adapter for installed ``aura_drive_bus_writer_v1.py`` line protocol.
 
-    Source-grounded invocation:
-      [python, script, --channel, aura_to_swarm, --kind, <kind>, --objective, <command_id>]
-    with canonical JSON on stdin. The installed writer owns OAuth refresh, Drive-root guard,
-    filename construction, and bounded upload.
-    """
+class AuraDriveBusWriterV1:
+    """Exact adapter for installed ``aura_drive_bus_writer_v1.py`` line protocol."""
     def __init__(self, python: str, script: str, *, timeout_s: int = 60):
         if not python or not script:
             raise ValueError("INVALID_WRITER_BINDING")
