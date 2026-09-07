@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1694
-- **total_bytes**: 26723474
-- **text_tokens_est**: 6671229
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1033, 'schema_or_lexicon': 283, 'support_file': 53}
+- **file_count**: 1696
+- **total_bytes**: 26727237
+- **text_tokens_est**: 6672171
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1033, 'schema_or_lexicon': 285, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1694,
+  "repo_file_count": 1696,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -305,6 +305,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/project006_mc_o14_tecc_admission/RESULT_MC_O14R.json",
     "artifacts/arena/project006_o17_transport_source_identity/FROZEN_PROPOSALS_O17.json",
     "artifacts/arena/project006_o17_transport_source_identity/PHYSICAL_R3_SOURCE_PREIMAGE_EVIDENCE.json",
+    "artifacts/arena/project006_o17_transport_source_identity/PROOF_RECEIPT_O17.json",
+    "artifacts/arena/project006_o17_transport_source_identity/RESULT_O17.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1834,16 +1836,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1694,
-  "bytes": 26723474,
-  "tokens_est": 6671229,
+  "files": 1696,
+  "bytes": 26727237,
+  "tokens_est": 6672171,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1033,
-    "schema_or_lexicon": 283,
+    "schema_or_lexicon": 285,
     "support_file": 53
   }
 }
