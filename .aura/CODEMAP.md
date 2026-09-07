@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1698
-- **total_bytes**: 26634702
-- **text_tokens_est**: 6649077
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 285, 'support_file': 49}
+- **file_count**: 1699
+- **total_bytes**: 26637084
+- **text_tokens_est**: 6649673
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 286, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1698,
+  "repo_file_count": 1699,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -314,6 +314,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_o3/README.md",
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
+    "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1838,16 +1839,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1698,
-  "bytes": 26634702,
-  "tokens_est": 6649077,
+  "files": 1699,
+  "bytes": 26637084,
+  "tokens_est": 6649673,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1027,
-    "schema_or_lexicon": 285,
+    "schema_or_lexicon": 286,
     "support_file": 49
   }
 }
