@@ -121,7 +121,7 @@ def decide(installed: InstalledRuntimeAttestation, process: LoadedProcessWitness
         return hold("SERVING_WORKER_SELECTION_MOVED")
     if (at_use.process_id != process.process_id or at_use.process_start_nonce != process.process_start_nonce or
         at_use.process_generation != process.process_generation):
-        return hold("PROCESS_INCARCATION_MOVED")
+        return hold("PROCESS_INCARNATION_MOVED")
     if at_use.load_generation != process.load_generation: return hold("LOAD_GENERATION_MOVED")
     if at_use.loaded_units_root != process.loaded_units_root(): return hold("LOADED_ANSWER_BEARING_UNITS_MOVED")
     if at_use.dispatch_root != process.dispatch_root: return hold("DISPATCH_IDENTITY_MOVED")
