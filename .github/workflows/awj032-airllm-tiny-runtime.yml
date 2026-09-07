@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: awj032-airllm-tiny-runtime-${{ github.event.pull_request.number || github.ref }}
+  group: awj032-airllm-tiny-runtime-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
@@ -45,6 +45,45 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Materialize pinned training source and prove O1-O2-O3-R1 lifecycle suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --no-tags https://github.com/lyogavin/airllm.git .awj032_airllm_upstream_fixture
+          git -C .awj032_airllm_upstream_fixture checkout --detach 55e435087d951da8c25ab3672e969025241a398e
+          test "$(git -C .awj032_airllm_upstream_fixture rev-parse HEAD)" = "55e435087d951da8c25ab3672e969025241a398e"
+          python - <<'PY'
+          import json
+          import unittest
+          from pathlib import Path
+          from tools.awj032.training_o1_reference import test_training_admission as o1
+          from tools.awj032.training_o2_transition_reference import test_transition_envelope as o2
+          from tools.awj032.training_o3_delegated_bridge_reference import test_delegated_training_bridge as o3
+          from tools.awj032.training_r1_resolver_reference import test_resolver as r1
+
+          loader = unittest.defaultTestLoader
+          suite = unittest.TestSuite(loader.loadTestsFromModule(m) for m in (o1, o2, o3, r1))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          assert result.wasSuccessful(), result
+          assert result.testsRun == 45, result.testsRun
+          assert not result.skipped, result.skipped
+          receipt = {
+              'schema': 'AWJ032_O1_O2_O3_R1_EXACT_HEAD_SUITE_V1',
+              'airllm_commit': '55e435087d951da8c25ab3672e969025241a398e',
+              'modules': ['O1', 'O2', 'O3', 'R1'],
+              'tests_run': result.testsRun,
+              'skipped': len(result.skipped),
+              'failures': len(result.failures),
+              'errors': len(result.errors),
+              'status': 'PASS',
+              'claim_ceiling': 'PINNED_TRAINING_SOURCE_AND_D0_LIFECYCLE_CONTRACT_TEST_ONLY_NOT_RUNTIME_TRAINING_PROOF',
+          }
+          Path('.awj032/o1_o2_o3_r1_exact_head_suite.json').write_text(
+              json.dumps(receipt, sort_keys=True, indent=2), encoding='utf-8'
+          )
+          print('O1_O2_O3_R1_EXACT_HEAD_SUITE_PASS', receipt)
+          PY
 
       - name: Materialize pinned stock AirLLM v3.3.0
         shell: bash
@@ -114,6 +153,8 @@ jobs:
           allowed = {
               ('NESTED_PIP_MUTATION', 'air_llm/setup.py', 29, 'pip install'),
               ('NESTED_PIP_MUTATION', 'air_llm/airllm/airllm_base.py', 124, 'pip install'),
+              ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/airllm_base.py', 298,
+               'from_config receives opaque **kwargs without explicit trust_remote_code=False'),
               ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/auto_model.py', 60,
                'get_module_class receives opaque **kwargs without explicit trust_remote_code=False'),
           }
@@ -122,6 +163,14 @@ jobs:
           assert not unexpected, {'unexpected_findings': sorted(unexpected), 'all_findings': findings}
           assert observed <= allowed, findings
 
+          # Midway Customs oracle self-falsification: preserve coarse finding class but move
+          # the exact identity by one line. The exact-fixture oracle must reject it.
+          known_wrong = {
+              ('REMOTE_CODE_OPAQUE_LOADER_KWARGS', 'air_llm/airllm/airllm_base.py', 299,
+               'from_config receives opaque **kwargs without explicit trust_remote_code=False'),
+          }
+          assert known_wrong - allowed, 'fixture residual oracle accepted known-wrong identity'
+
           adjudication = {
               'schema': 'AWJ032_FIXTURE_SOURCE_ADJUDICATION_V1',
               'base_source_gate_status': r['status'],
@@ -129,10 +178,13 @@ jobs:
               'known_scanner_residuals': findings,
               'unexpected_findings': [],
               'fixture_path_admitted': True,
+              'oracle_self_falsification': 'PASS_EXACT_IDENTITY_REJECTS_LINE_DRIFT',
               'reason': (
                   'two NESTED_PIP matches are non-executing text in the exact pinned source; '
-                  'get_module_class is an internal AirLLM routing method, while actual Transformers '
-                  'loader boundaries are independently enforced by RuntimeHardFalseGuard'
+                  'the airllm_base.py from_config finding expands a remediated local kwargs mapping '
+                  'whose trust_remote_code value is forced to literal False, while get_module_class '
+                  'is an internal AirLLM routing method; actual Transformers loader boundaries are '
+                  'independently enforced by RuntimeHardFalseGuard'
               ),
               'claim_ceiling': 'PINNED_TINY_FIXTURE_PATH_ONLY_NOT_GENERAL_SOURCE_GATE_PASS',
           }
