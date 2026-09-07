@@ -1,0 +1,16 @@
+{
+  "objective": "Unify GLM-5.3 cost-aware transfer planning with semantic-delta selective reproof so source/topology/calibration/cost changes reopen only affected obligations and stale economic estimates never become transfer plans.",
+  "exact_two_foreign_parents": [
+    {"artifact": "PR722 AWJ032 GLM53 G2 cost-aware prefetch transfer admission", "head": "670733b5e2dd273297c975541b9d22b60b723c53"},
+    {"artifact": "PR803 AWJ032 selective AirLLM semantic-delta reproof", "head": "fa3f75a0e8391d7ae3606d7321985a8001436762"}
+  ],
+  "keepers": [
+    "SemanticSourceDelta != ReproveAllEvidence",
+    "StaleTransferEstimate != CurrentTransferPlan",
+    "ExpectedLatencyValue = P_hit * MissStallSeconds",
+    "PositiveLatencyMarginCannotPayEnergyDebt",
+    "PhysicalIO remains UNKNOWN without attestation",
+    "Selective reproof is dependency-derived, not heuristic"
+  ],
+  "claim_ceiling": "D0/nonpromoting planning/reproof reference only; no physical expert transfer, model execution, physical I/O measurement, merge/deploy/spend or Gate10"
+}
