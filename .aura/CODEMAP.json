@@ -1062,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1680,
+    "repo_file_count": 1681,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2694,6 +2694,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
+      "tests/test_project006_o4_effect_attempt_journal.py",
       "tests/test_project006_o4_owner_row_convergence.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -11814,53 +11815,53 @@
       "path": ".github/workflows/project006-o4-owner-row-convergence-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2385,
-      "lines": 59,
-      "tokens_est": 597,
+      "bytes": 2578,
+      "lines": 63,
+      "tokens_est": 645,
       "symbol_count": 0,
       "commands": [
         "python -m venv"
       ],
       "command_lines": {
         "python -m venv": [
-          36
+          38
         ]
       },
       "topology": {},
-      "digest8": "88601d676ef29065",
+      "digest8": "43c67112b53950d5",
       "vector": [
-        0.008125,
-        -0.249548,
-        -0.001161,
-        -0.105623,
-        -0.284369,
-        0.270441,
-        0.179907,
-        -0.145086,
-        0.265798,
-        -0.035981,
-        -0.010446,
-        -0.237941,
-        0.21937,
-        -0.263477,
-        0.096337,
-        0.082409,
-        0.133479,
-        -0.01741,
-        -0.1683,
-        0.133479,
-        0.295976,
-        0.23562,
-        -0.087052,
-        0.087052,
-        0.119551,
-        0.003482,
-        -0.254191,
-        -0.23562,
-        0.25187,
-        -0.010446,
-        -0.189192,
-        -0.022053
+        -0.245288,
+        0.275477,
+        -0.049058,
+        -0.149688,
+        0.124531,
+        0.031447,
+        -0.275477,
+        -0.124531,
+        -0.056605,
+        -0.086794,
+        -0.008805,
+        -0.260383,
+        0.084278,
+        -0.308182,
+        0.17233,
+        -0.031447,
+        -0.262898,
+        -0.003774,
+        0.096857,
+        -0.013837,
+        -0.164783,
+        -0.031447,
+        -0.200004,
+        -0.318245,
+        -0.227677,
+        0.046542,
+        -0.275477,
+        0.247804,
+        0.006289,
+        0.247804,
+        -0.114468,
+        0.076731
       ]
     },
     {
@@ -104374,6 +104375,53 @@
       ]
     },
     {
+      "path": "tests/test_project006_o4_effect_attempt_journal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6277,
+      "lines": 112,
+      "tokens_est": 1570,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1a210893ed75f07b",
+      "vector": [
+        -0.121831,
+        -0.163672,
+        -0.281811,
+        0.146443,
+        0.173517,
+        -0.102141,
+        0.222742,
+        0.062761,
+        -0.109525,
+        0.225203,
+        -0.028304,
+        -0.222742,
+        -0.301501,
+        -0.015998,
+        -0.126754,
+        0.062761,
+        -0.07999,
+        -0.168594,
+        -0.212897,
+        -0.25966,
+        0.023382,
+        -0.303962,
+        0.023382,
+        0.102141,
+        -0.043072,
+        -0.055378,
+        -0.011076,
+        0.124292,
+        0.188284,
+        0.274428,
+        0.267044,
+        -0.291656
+      ]
+    },
+    {
       "path": "tests/test_project006_o4_owner_row_convergence.py",
       "role": "python_module",
       "binary": false,
@@ -107063,7 +107111,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788786816,
+  "generated_at_unix": 1788786919,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108697,6 +108745,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
+      "tests/test_project006_o4_effect_attempt_journal.py",
       "tests/test_project006_o4_owner_row_convergence.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -267210,6 +267259,156 @@
         "file_digest8": "95627abbf6d8f256"
       },
       {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#class:O4ActualJournalPathTests:7f3e965ce6d85a41",
+        "name": "O4ActualJournalPathTests",
+        "kind": "class",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 35,
+        "end_line": 108,
+        "signature_hash": "80b04bc43a2abe3a",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:currentness:db64da679255f722",
+        "name": "currentness",
+        "kind": "function",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "c4b8bba1b4bac02e",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:proof:691765e34bade838",
+        "name": "proof",
+        "kind": "function",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 26,
+        "end_line": 32,
+        "signature_hash": "a92b25bbe97939ca",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:root:324a72dad81f21fd",
+        "name": "root",
+        "kind": "function",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "867e86c2e64b6d67",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.fixture:1c555527226a8c7e",
+        "name": "O4ActualJournalPathTests.fixture",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 36,
+        "end_line": 47,
+        "signature_hash": "9af8e68102876a30",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving:df80d62bcf86267b",
+        "name": "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "7887fd79d44a125a",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt:00c2786eb2a3ea75",
+        "name": "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 83,
+        "end_line": 96,
+        "signature_hash": "d9b9c0f19a859c9e",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired:827f3a2ab1640138",
+        "name": "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 77,
+        "end_line": 77,
+        "signature_hash": "339892a90820e4b0",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider:62ecf9799ef6d377",
+        "name": "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 76,
+        "end_line": 81,
+        "signature_hash": "8898eb57122d9492",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound:775366c96c100879",
+        "name": "O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 49,
+        "end_line": 60,
+        "signature_hash": "5d1dd8fae0aec997",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider:8b6df36f0e7d95da",
+        "name": "O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "0f06f58970ee5d2e",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad:42cd1d6705b16306",
+        "name": "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "e445e4d5a9ee5e11",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider:a541fd176d9aa279",
+        "name": "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 69,
+        "end_line": 74,
+        "signature_hash": "4e77814bbbd5073d",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving:83c8240c5d69806b",
+        "name": "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "7887fd79d44a125a",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure:844feb7ee51b5a80",
+        "name": "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 98,
+        "end_line": 108,
+        "signature_hash": "059251dece4fc6e0",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
         "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#class:O4OwnerRowConvergenceTests:d6ad4f7d894e1aef",
         "name": "O4OwnerRowConvergenceTests",
         "kind": "class",
@@ -272400,8 +272599,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1ab66aadf02d2cb33da3084369932c1e",
-    "payload_hash": "e72261ba5ec0bcfd9c5f9924a910dfd6"
+    "record_fingerprint": "c627b1f759b0575f7141f7aea53129f5",
+    "payload_hash": "e5b4af8c8cf5c3daa2d0fa192d96057b"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272414,15 +272613,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1680,
-      "bytes": 26675580,
-      "tokens_est": 6659249,
+      "files": 1681,
+      "bytes": 26682050,
+      "tokens_est": 6660867,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1025,
+        "python_module": 1026,
         "schema_or_lexicon": 277,
         "support_file": 53
       }
@@ -273110,15 +273309,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1680,
-    "total_bytes": 26675580,
-    "text_tokens_est": 6659249,
+    "file_count": 1681,
+    "total_bytes": 26682050,
+    "text_tokens_est": 6660867,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1025,
+      "python_module": 1026,
       "schema_or_lexicon": 277,
       "support_file": 53
     },
@@ -428818,6 +429017,14 @@
         "end_line": 25,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:root:4e00ae0b7a5032f8",
         "signature_hash": "8b9f1879e1b67fb7"
+      },
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:root:324a72dad81f21fd",
+        "signature_hash": "867e86c2e64b6d67"
       }
     ],
     "currentness": [
@@ -428828,6 +429035,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:currentness:4b54015bf7993fb5",
         "signature_hash": "97b254244bfe1746"
+      },
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:currentness:db64da679255f722",
+        "signature_hash": "c4b8bba1b4bac02e"
       },
       {
         "file": "tools/project006/campaign_effect_attempt_recovery_o11.py",
@@ -429236,6 +429451,136 @@
         "end_line": 352,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_completion_ambiguous_zero_attempt_rejected_by_outbox:051850d58d59e20d",
         "signature_hash": "04a85b892fa86a4b"
+      }
+    ],
+    "proof": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 32,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:proof:691765e34bade838",
+        "signature_hash": "a92b25bbe97939ca"
+      }
+    ],
+    "O4ActualJournalPathTests": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 108,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#class:O4ActualJournalPathTests:7f3e965ce6d85a41",
+        "signature_hash": "80b04bc43a2abe3a"
+      }
+    ],
+    "O4ActualJournalPathTests.fixture": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 47,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.fixture:1c555527226a8c7e",
+        "signature_hash": "9af8e68102876a30"
+      }
+    ],
+    "O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 60,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound:775366c96c100879",
+        "signature_hash": "5d1dd8fae0aec997"
+      }
+    ],
+    "O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider:8b6df36f0e7d95da",
+        "signature_hash": "0f06f58970ee5d2e"
+      }
+    ],
+    "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 74,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider:a541fd176d9aa279",
+        "signature_hash": "4e77814bbbd5073d"
+      }
+    ],
+    "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad:42cd1d6705b16306",
+        "signature_hash": "e445e4d5a9ee5e11"
+      }
+    ],
+    "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 81,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider:62ecf9799ef6d377",
+        "signature_hash": "8898eb57122d9492"
+      }
+    ],
+    "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 77,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired:827f3a2ab1640138",
+        "signature_hash": "339892a90820e4b0"
+      }
+    ],
+    "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 96,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt:00c2786eb2a3ea75",
+        "signature_hash": "d9b9c0f19a859c9e"
+      }
+    ],
+    "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving:df80d62bcf86267b",
+        "signature_hash": "7887fd79d44a125a"
+      }
+    ],
+    "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 108,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure:844feb7ee51b5a80",
+        "signature_hash": "059251dece4fc6e0"
+      }
+    ],
+    "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving:83c8240c5d69806b",
+        "signature_hash": "7887fd79d44a125a"
       }
     ],
     "r": [
