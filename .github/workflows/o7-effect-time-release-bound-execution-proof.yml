@@ -1,0 +1,47 @@
+name: O7 effect-time release-bound execution proof
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Verify exact checkout
+        if: github.event_name == 'pull_request'
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Measure published proof subjects
+        run: |
+          sha256sum tools/arena/installed_runtime_bound_delegation.py
+          sha256sum tools/arena/effect_time_loaded_process_currentness.py
+          sha256sum tools/arena/effect_time_release_bound_execution.py
+          sha256sum tests/test_effect_time_release_bound_execution.py
+          sha256sum tools/arena/proof_o7_effect_time_release_bound_execution.py
+      - name: Three fresh virtual environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            rm -rf ".venv_o7_${i}"
+            python -m venv ".venv_o7_${i}"
+            source ".venv_o7_${i}/bin/activate"
+            python -m unittest discover -s tests -p 'test_effect_time_release_bound_execution.py'
+            python -m tools.arena.proof_o7_effect_time_release_bound_execution > "/tmp/o7_${i}.json"
+            deactivate
+          done
+          cmp /tmp/o7_1.json /tmp/o7_2.json
+          cmp /tmp/o7_1.json /tmp/o7_3.json
+          sha256sum /tmp/o7_1.json
+          cat /tmp/o7_1.json
+          echo O7_EXACT_HEAD_PROOF=PASS
