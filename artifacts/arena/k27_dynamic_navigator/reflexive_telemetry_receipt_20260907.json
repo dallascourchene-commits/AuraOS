@@ -1,0 +1,51 @@
+{
+  "schema": "aura.k27.reflexive_telemetry.receipt.v1",
+  "objective": "REFLEXIVE_SAFE_TELEMETRY_AND_COUNTEREXAMPLE_GROUNDED_NOVELTY",
+  "foreign_parents": [
+    {
+      "artifact_id": "1K6M0vDyTRrbCl7fZZpAALCK4IGv5gyr77uA-O4AKZcs",
+      "name": "Counterexample-Grounded Novelty Admission",
+      "campaign_root": "51e1c96461089d167147277c104f61d21129eb66f3ceab919a27b01da9034ebd"
+    },
+    {
+      "artifact_id": "1DgohBE-zfmgesClePbxC1TtIup_Exl4x1amXXKa7Qmo",
+      "name": "Reflexive Evidence-Effect Compiler",
+      "result_root": "0947aa4e01a1dda861a6b0012ce5488dad552ea28bb85f35f9089d1ddf469d46"
+    }
+  ],
+  "fresh_venvs": 3,
+  "tests_per_venv": 12,
+  "focused_tests_total": 36,
+  "randomized_cases_per_venv": 10000,
+  "randomized_cases_total": 30000,
+  "campaign_root": "859823c983914d85c802bc5e4c946a6f66efebc845f9fdd8a8a11317c4301fa7",
+  "per_venv": {
+    "ADMISSION_READY": 2783,
+    "HOLD_CONSUMED_ONCE": 256,
+    "HOLD_NEEDS_COUNTEREXAMPLE": 602,
+    "HOLD_UNDECLARED_PROBE_EFFECT": 1101,
+    "REJECT": 1223,
+    "SUPPORT_NOT_DISCOVERY": 4035,
+    "oracle_mismatches": 0,
+    "false_novelty": 0,
+    "13d_states": 1594323,
+    "13d_mismatches": 0
+  },
+  "8_crystalline_lenses": [
+    "identity", "currentness", "evidence-polarity", "lawful-ancestry",
+    "collision", "reflexive-effect", "reentry", "authority"
+  ],
+  "keeper_laws": [
+    "PassiveObservation + StateChange => HOLD_UNDECLARED_PROBE_EFFECT",
+    "SupportArtifact != Discovery",
+    "RepeatedConsequence != NewAdvancement",
+    "NoveltyAdmissionRequiresCounterexample",
+    "ConsumedOnceProbe != ReplayableTelemetry",
+    "ProbePreStateMustEqualPriorPostState",
+    "Hard13DAxisCannotBeCompensated",
+    "TelemetryAdmission != Authority"
+  ],
+  "authority_minted": false,
+  "effect_authority": false,
+  "gate10": false
+}
