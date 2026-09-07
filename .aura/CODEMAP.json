@@ -1062,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1681,
+    "repo_file_count": 1682,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2728,6 +2728,7 @@
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
+      "tools/project006/tecc_effect_admission_bridge.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_wake_broker.py",
@@ -105973,6 +105974,53 @@
       ]
     },
     {
+      "path": "tools/project006/tecc_effect_admission_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 26670,
+      "lines": 566,
+      "tokens_est": 6668,
+      "symbol_count": 42,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ebd1dac566732de4",
+      "vector": [
+        0.107,
+        -0.284184,
+        -0.288786,
+        -0.219753,
+        -0.028764,
+        -0.079387,
+        -0.242764,
+        0.249668,
+        0.16913,
+        0.079387,
+        0.113904,
+        -0.281883,
+        -0.003452,
+        -0.171431,
+        -0.047172,
+        0.109301,
+        0.008054,
+        0.219753,
+        0.104699,
+        0.263474,
+        0.005753,
+        -0.086291,
+        0.104699,
+        0.277281,
+        -0.247366,
+        -0.072484,
+        0.226657,
+        -0.182936,
+        0.178334,
+        -0.116205,
+        0.219753,
+        -0.088592
+      ]
+    },
+    {
       "path": "tools/project006/terminal_outbox.py",
       "role": "python_module",
       "binary": false,
@@ -107111,7 +107159,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788783515,
+  "generated_at_unix": 1788783678,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108779,6 +108827,7 @@
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
+      "tools/project006/tecc_effect_admission_bridge.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_wake_broker.py",
@@ -270399,6 +270448,426 @@
         "file_digest8": "a5e4f82906c8f232"
       },
       {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:AdmissionAtUseContext:a9fca842f89e27df",
+        "name": "AdmissionAtUseContext",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 215,
+        "end_line": 238,
+        "signature_hash": "dab3134845bea171",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:AdmissionDecision:59cff8e831c83ef1",
+        "name": "AdmissionDecision",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 249,
+        "end_line": 262,
+        "signature_hash": "d79fb999c2fd0118",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:AdmissionDisposition:6542081acffdca25",
+        "name": "AdmissionDisposition",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 241,
+        "end_line": 245,
+        "signature_hash": "3386456a49862bbd",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ConsumerAdmissionEvidence:3a8965b38905eb84",
+        "name": "ConsumerAdmissionEvidence",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 115,
+        "end_line": 153,
+        "signature_hash": "859beb4fd3c07850",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ProducerTeccEvidence:4a619523e1d5295d",
+        "name": "ProducerTeccEvidence",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 66,
+        "end_line": 111,
+        "signature_hash": "529db9ede632f0bb",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ProofBoundEffectAttemptJournal:77ca1504316b3c6d",
+        "name": "ProofBoundEffectAttemptJournal",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 402,
+        "end_line": 565,
+        "signature_hash": "ce01a4f468981b1d",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ProofBoundProviderActionPermit:628c52d82e2d12e2",
+        "name": "ProofBoundProviderActionPermit",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 373,
+        "end_line": 387,
+        "signature_hash": "ddaeb75717b2c476",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:TeccAuthorizationReceipt:e643aa8e4ec103e6",
+        "name": "TeccAuthorizationReceipt",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 157,
+        "end_line": 200,
+        "signature_hash": "babafdbb90aa0849",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:TeccVerifierRegistry:02b4a3e8bfa0688a",
+        "name": "TeccVerifierRegistry",
+        "kind": "class",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 204,
+        "end_line": 211,
+        "signature_hash": "9ba2568a6c812415",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_explicit_false:ab9a23b9b129dac6",
+        "name": "_explicit_false",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "cef229427e6d986e",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_id:7d7af6a606b0f9f1",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "2d513146cbdc39e3",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_journal_schema:4fe7d3e98a489a23",
+        "name": "_journal_schema",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 390,
+        "end_line": 399,
+        "signature_hash": "162d16a322e70d5b",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_nn:9d0ff8bc85a58054",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "a5d2c762d1f9222f",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_root:852574b4b062362d",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "eee57e80860c0825",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:canon:6d48e304e5f09f81",
+        "name": "canon",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "012e45cec7f5be52",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:digest:3527e7ff872ba5d6",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "cf8a82ff0ebb16a7",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:issue_authorization_receipt:e7c19ff96b8ffb7b",
+        "name": "issue_authorization_receipt",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 269,
+        "end_line": 289,
+        "signature_hash": "cd2b45e6fc3c8ff5",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:operation_identity_root:1f95913cc5fa722e",
+        "name": "operation_identity_root",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 50,
+        "end_line": 62,
+        "signature_hash": "81b8b51784ad3a9f",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:sign_authorization:fa21046b0daf2835",
+        "name": "sign_authorization",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 265,
+        "end_line": 266,
+        "signature_hash": "107a13bb347de3cb",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:validate_effect_admission:69f921b2b6296ea7",
+        "name": "validate_effect_admission",
+        "kind": "function",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 292,
+        "end_line": 369,
+        "signature_hash": "d72cbab08565b3a0",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:AdmissionAtUseContext.__post_init__:d211f95a1da78411",
+        "name": "AdmissionAtUseContext.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 232,
+        "end_line": 238,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:AdmissionDecision.__post_init__:94f75021ec855ebe",
+        "name": "AdmissionDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 258,
+        "end_line": 262,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ConsumerAdmissionEvidence.__post_init__:a70920f66211a709",
+        "name": "ConsumerAdmissionEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 130,
+        "end_line": 137,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ConsumerAdmissionEvidence.payload:95fb519ad56377c2",
+        "name": "ConsumerAdmissionEvidence.payload",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 139,
+        "end_line": 153,
+        "signature_hash": "46f4116b00af9128",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProducerTeccEvidence.__post_init__:039127d7fe0ef553",
+        "name": "ProducerTeccEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 85,
+        "end_line": 91,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProducerTeccEvidence.payload:d1a8d6a0b1329868",
+        "name": "ProducerTeccEvidence.payload",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 93,
+        "end_line": 111,
+        "signature_hash": "46f4116b00af9128",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.__init__:73ea3e634683d36f",
+        "name": "ProofBoundEffectAttemptJournal.__init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 411,
+        "end_line": 430,
+        "signature_hash": "efbc5e93ad790aa4",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal._parent_row_exact:ed8b5929a49fc248",
+        "name": "ProofBoundEffectAttemptJournal._parent_row_exact",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 441,
+        "end_line": 460,
+        "signature_hash": "9fd208b7de9f37e6",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal._require_sidecar_current:ea90ecc463e08c74",
+        "name": "ProofBoundEffectAttemptJournal._require_sidecar_current",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 504,
+        "end_line": 532,
+        "signature_hash": "22e8d72745504080",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal._sidecar:4f10321156301b63",
+        "name": "ProofBoundEffectAttemptJournal._sidecar",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 432,
+        "end_line": 439,
+        "signature_hash": "ae09a5db5e0a2fa9",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.bind_verified:2ce979f40007c53d",
+        "name": "ProofBoundEffectAttemptJournal.bind_verified",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 462,
+        "end_line": 502,
+        "signature_hash": "30e4ae5f2a67e0a7",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.decide_and_persist:59440535e76ef5b6",
+        "name": "ProofBoundEffectAttemptJournal.decide_and_persist",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 543,
+        "end_line": 553,
+        "signature_hash": "3ea48198e10ca907",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.mark_return_written:b68e9721e4e16b8e",
+        "name": "ProofBoundEffectAttemptJournal.mark_return_written",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 564,
+        "end_line": 565,
+        "signature_hash": "f97570aeb837792a",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.prepare_ack:70c7a6697133eb19",
+        "name": "ProofBoundEffectAttemptJournal.prepare_ack",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 534,
+        "end_line": 541,
+        "signature_hash": "8504c78419743053",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.record_ambiguous:f0c3838eb2af535c",
+        "name": "ProofBoundEffectAttemptJournal.record_ambiguous",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 558,
+        "end_line": 559,
+        "signature_hash": "36bd1370a310f40f",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.record_result:586e77a278105bf3",
+        "name": "ProofBoundEffectAttemptJournal.record_result",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 555,
+        "end_line": 556,
+        "signature_hash": "f28b1217a4ee3690",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.stage_final_terminal:7bca50787a900af6",
+        "name": "ProofBoundEffectAttemptJournal.stage_final_terminal",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 561,
+        "end_line": 562,
+        "signature_hash": "44a75f3d46abfef2",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundProviderActionPermit.__post_init__:0c7b78db6eeaf71e",
+        "name": "ProofBoundProviderActionPermit.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 383,
+        "end_line": 387,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccAuthorizationReceipt.__post_init__:c2cb518ffa12062a",
+        "name": "TeccAuthorizationReceipt.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 172,
+        "end_line": 180,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccAuthorizationReceipt.payload:cd01f95ff430c067",
+        "name": "TeccAuthorizationReceipt.payload",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 182,
+        "end_line": 196,
+        "signature_hash": "46f4116b00af9128",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccAuthorizationReceipt.receipt_root:77686eff1190efbd",
+        "name": "TeccAuthorizationReceipt.receipt_root",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 199,
+        "end_line": 200,
+        "signature_hash": "8b41c9839e1ab268",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccVerifierRegistry.__post_init__:a9db6c823d6b0c3b",
+        "name": "TeccVerifierRegistry.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "line": 208,
+        "end_line": 211,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ebd1dac566732de4"
+      },
+      {
         "semantic_id": "tools/project006/terminal_outbox.py#class:AckState:8d0a002d56be0a9f",
         "name": "AckState",
         "kind": "class",
@@ -272149,8 +272618,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "250761a0c0abf1c5488314371024b435",
-    "payload_hash": "8c30df68a08dfd58fea6b4bbbb888701"
+    "record_fingerprint": "1617292899986dd0c20a0a9b29d87ceb",
+    "payload_hash": "b3475bf144db446126733fb19794c14f"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272163,15 +272632,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1681,
-      "bytes": 26658329,
-      "tokens_est": 6654936,
+      "files": 1682,
+      "bytes": 26684999,
+      "tokens_est": 6661604,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1025,
+        "python_module": 1026,
         "schema_or_lexicon": 278,
         "support_file": 53
       }
@@ -272859,15 +273328,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1681,
-    "total_bytes": 26658329,
-    "text_tokens_est": 6654936,
+    "file_count": 1682,
+    "total_bytes": 26684999,
+    "text_tokens_est": 6661604,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1025,
+      "python_module": 1026,
       "schema_or_lexicon": 278,
       "support_file": 53
     },
@@ -290687,6 +291156,14 @@
         "end_line": 38,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:digest:661e24830d40d6b6",
         "signature_hash": "1191bf18035c2e8c"
+      },
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:digest:3527e7ff872ba5d6",
+        "signature_hash": "cf8a82ff0ebb16a7"
       }
     ],
     "_runtime_binding_digest": [
@@ -305051,6 +305528,14 @@
         "end_line": 50,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_id:d195d919364ce2d8",
         "signature_hash": "d64cfb03b3a12a79"
+      },
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_id:7d7af6a606b0f9f1",
+        "signature_hash": "2d513146cbdc39e3"
       }
     ],
     "_privacy": [
@@ -370067,6 +370552,14 @@
         "end_line": 44,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_root:13df56a88fac23ff",
         "signature_hash": "9af4f640541857b1"
+      },
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_root:852574b4b062362d",
+        "signature_hash": "eee57e80860c0825"
       }
     ],
     "_iter_nul_records": [
@@ -372367,6 +372860,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_security_accuracy_harness.py#function:canon:11bd004c7cfedf61",
         "signature_hash": "013604bc627266a0"
+      },
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:canon:6d48e304e5f09f81",
+        "signature_hash": "012e45cec7f5be52"
       }
     ],
     "load_fixture": [
@@ -429325,6 +429826,14 @@
         "end_line": 130,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
         "signature_hash": "0c3f98b7c2640bed"
+      },
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_nn:9d0ff8bc85a58054",
+        "signature_hash": "a5d2c762d1f9222f"
       }
     ],
     "RecoveryMode": [
@@ -431829,6 +432338,376 @@
         "end_line": 199,
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:run_once:0510385a247114ab",
         "signature_hash": "a462d97dadc1d858"
+      }
+    ],
+    "_explicit_false": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_explicit_false:ab9a23b9b129dac6",
+        "signature_hash": "cef229427e6d986e"
+      }
+    ],
+    "operation_identity_root": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 62,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:operation_identity_root:1f95913cc5fa722e",
+        "signature_hash": "81b8b51784ad3a9f"
+      }
+    ],
+    "ProducerTeccEvidence": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 111,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ProducerTeccEvidence:4a619523e1d5295d",
+        "signature_hash": "529db9ede632f0bb"
+      }
+    ],
+    "ProducerTeccEvidence.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 91,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProducerTeccEvidence.__post_init__:039127d7fe0ef553",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ProducerTeccEvidence.payload": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 111,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProducerTeccEvidence.payload:d1a8d6a0b1329868",
+        "signature_hash": "46f4116b00af9128"
+      }
+    ],
+    "ConsumerAdmissionEvidence": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 115,
+        "end_line": 153,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ConsumerAdmissionEvidence:3a8965b38905eb84",
+        "signature_hash": "859beb4fd3c07850"
+      }
+    ],
+    "ConsumerAdmissionEvidence.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 137,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ConsumerAdmissionEvidence.__post_init__:a70920f66211a709",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ConsumerAdmissionEvidence.payload": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 153,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ConsumerAdmissionEvidence.payload:95fb519ad56377c2",
+        "signature_hash": "46f4116b00af9128"
+      }
+    ],
+    "TeccAuthorizationReceipt": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 157,
+        "end_line": 200,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:TeccAuthorizationReceipt:e643aa8e4ec103e6",
+        "signature_hash": "babafdbb90aa0849"
+      }
+    ],
+    "TeccAuthorizationReceipt.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 180,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccAuthorizationReceipt.__post_init__:c2cb518ffa12062a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TeccAuthorizationReceipt.payload": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 196,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccAuthorizationReceipt.payload:cd01f95ff430c067",
+        "signature_hash": "46f4116b00af9128"
+      }
+    ],
+    "TeccAuthorizationReceipt.receipt_root": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 200,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccAuthorizationReceipt.receipt_root:77686eff1190efbd",
+        "signature_hash": "8b41c9839e1ab268"
+      }
+    ],
+    "TeccVerifierRegistry": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 204,
+        "end_line": 211,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:TeccVerifierRegistry:02b4a3e8bfa0688a",
+        "signature_hash": "9ba2568a6c812415"
+      }
+    ],
+    "TeccVerifierRegistry.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 211,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:TeccVerifierRegistry.__post_init__:a9db6c823d6b0c3b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AdmissionAtUseContext": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 215,
+        "end_line": 238,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:AdmissionAtUseContext:a9fca842f89e27df",
+        "signature_hash": "dab3134845bea171"
+      }
+    ],
+    "AdmissionAtUseContext.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 238,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:AdmissionAtUseContext.__post_init__:d211f95a1da78411",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AdmissionDisposition": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 241,
+        "end_line": 245,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:AdmissionDisposition:6542081acffdca25",
+        "signature_hash": "3386456a49862bbd"
+      }
+    ],
+    "AdmissionDecision": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 249,
+        "end_line": 262,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:AdmissionDecision:59cff8e831c83ef1",
+        "signature_hash": "d79fb999c2fd0118"
+      }
+    ],
+    "AdmissionDecision.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 262,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:AdmissionDecision.__post_init__:94f75021ec855ebe",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "sign_authorization": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 265,
+        "end_line": 266,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:sign_authorization:fa21046b0daf2835",
+        "signature_hash": "107a13bb347de3cb"
+      }
+    ],
+    "issue_authorization_receipt": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 269,
+        "end_line": 289,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:issue_authorization_receipt:e7c19ff96b8ffb7b",
+        "signature_hash": "cd2b45e6fc3c8ff5"
+      }
+    ],
+    "validate_effect_admission": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 292,
+        "end_line": 369,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:validate_effect_admission:69f921b2b6296ea7",
+        "signature_hash": "d72cbab08565b3a0"
+      }
+    ],
+    "ProofBoundProviderActionPermit": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 373,
+        "end_line": 387,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ProofBoundProviderActionPermit:628c52d82e2d12e2",
+        "signature_hash": "ddaeb75717b2c476"
+      }
+    ],
+    "ProofBoundProviderActionPermit.__post_init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 383,
+        "end_line": 387,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundProviderActionPermit.__post_init__:0c7b78db6eeaf71e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_journal_schema": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 390,
+        "end_line": 399,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#function:_journal_schema:4fe7d3e98a489a23",
+        "signature_hash": "162d16a322e70d5b"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 402,
+        "end_line": 565,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#class:ProofBoundEffectAttemptJournal:77ca1504316b3c6d",
+        "signature_hash": "ce01a4f468981b1d"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.__init__": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 411,
+        "end_line": 430,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.__init__:73ea3e634683d36f",
+        "signature_hash": "efbc5e93ad790aa4"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal._sidecar": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 432,
+        "end_line": 439,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal._sidecar:4f10321156301b63",
+        "signature_hash": "ae09a5db5e0a2fa9"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal._parent_row_exact": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 441,
+        "end_line": 460,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal._parent_row_exact:ed8b5929a49fc248",
+        "signature_hash": "9fd208b7de9f37e6"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.bind_verified": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 462,
+        "end_line": 502,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.bind_verified:2ce979f40007c53d",
+        "signature_hash": "30e4ae5f2a67e0a7"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal._require_sidecar_current": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 504,
+        "end_line": 532,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal._require_sidecar_current:ea90ecc463e08c74",
+        "signature_hash": "22e8d72745504080"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.prepare_ack": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 534,
+        "end_line": 541,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.prepare_ack:70c7a6697133eb19",
+        "signature_hash": "8504c78419743053"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.decide_and_persist": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 543,
+        "end_line": 553,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.decide_and_persist:59440535e76ef5b6",
+        "signature_hash": "3ea48198e10ca907"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.record_result": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 555,
+        "end_line": 556,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.record_result:586e77a278105bf3",
+        "signature_hash": "f28b1217a4ee3690"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.record_ambiguous": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 558,
+        "end_line": 559,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.record_ambiguous:f0c3838eb2af535c",
+        "signature_hash": "36bd1370a310f40f"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.stage_final_terminal": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 561,
+        "end_line": 562,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.stage_final_terminal:7bca50787a900af6",
+        "signature_hash": "44a75f3d46abfef2"
+      }
+    ],
+    "ProofBoundEffectAttemptJournal.mark_return_written": [
+      {
+        "file": "tools/project006/tecc_effect_admission_bridge.py",
+        "kind": "method",
+        "line": 564,
+        "end_line": 565,
+        "semantic_id": "tools/project006/tecc_effect_admission_bridge.py#method:ProofBoundEffectAttemptJournal.mark_return_written:b68e9721e4e16b8e",
+        "signature_hash": "f97570aeb837792a"
       }
     ],
     "TxState": [

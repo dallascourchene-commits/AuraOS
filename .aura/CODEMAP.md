@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1681
-- **total_bytes**: 26658329
-- **text_tokens_est**: 6654936
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1025, 'schema_or_lexicon': 278, 'support_file': 53}
+- **file_count**: 1682
+- **total_bytes**: 26684999
+- **text_tokens_est**: 6661604
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 278, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1681,
+  "repo_file_count": 1682,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1689,6 +1689,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/o11_effect_attempt_hs1000.py",
     "tools/project006/o11_effect_attempt_lattice8.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
+    "tools/project006/tecc_effect_admission_bridge.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
     "tools/project006/test_windows_wake_broker.py",
@@ -1821,15 +1822,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1681,
-  "bytes": 26658329,
-  "tokens_est": 6654936,
+  "files": 1682,
+  "bytes": 26684999,
+  "tokens_est": 6661604,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1025,
+    "python_module": 1026,
     "schema_or_lexicon": 278,
     "support_file": 53
   }
