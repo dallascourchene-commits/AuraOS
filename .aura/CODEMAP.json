@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1676,
+    "repo_file_count": 1677,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2725,6 +2725,7 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/arena/memory_city_anchor_locator.py",
+      "tools/arena/memory_city_contingent_hydration.py",
       "tools/arena/memory_city_hydration_plan.py",
       "tools/arena/memory_city_navigator.py",
       "tools/construction_demo_assets/README.md",
@@ -105733,6 +105734,53 @@
       ]
     },
     {
+      "path": "tools/arena/memory_city_contingent_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14602,
+      "lines": 384,
+      "tokens_est": 3651,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dff2e83770011c41",
+      "vector": [
+        0.225503,
+        -0.123128,
+        -0.056722,
+        0.236571,
+        0.142496,
+        -0.001383,
+        -0.065022,
+        -0.206135,
+        -0.139729,
+        -0.134195,
+        -0.231037,
+        0.327879,
+        -0.327879,
+        -0.139729,
+        -0.200601,
+        -0.026286,
+        0.131428,
+        -0.175699,
+        0.302977,
+        0.100992,
+        -0.164631,
+        -0.095458,
+        0.275308,
+        -0.001383,
+        0.037353,
+        0.178466,
+        0.015218,
+        -0.142496,
+        0.189533,
+        0.283608,
+        -0.095458,
+        0.001383
+      ]
+    },
+    {
       "path": "tools/arena/memory_city_hydration_plan.py",
       "role": "python_module",
       "binary": false,
@@ -106871,7 +106919,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788741942,
+  "generated_at_unix": 1788742675,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108534,6 +108582,7 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/arena/memory_city_anchor_locator.py",
+      "tools/arena/memory_city_contingent_hydration.py",
       "tools/arena/memory_city_hydration_plan.py",
       "tools/arena/memory_city_navigator.py",
       "tools/construction_demo_assets/README.md",
@@ -270534,6 +270583,206 @@
         "file_digest8": "2b3d094b89a580fb"
       },
       {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:BranchPlan:a345760b11438893",
+        "name": "BranchPlan",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 75,
+        "end_line": 82,
+        "signature_hash": "c6315f917d56afa0",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:ContingentHydrationStrategy:3e3fbccb7c1a1635",
+        "name": "ContingentHydrationStrategy",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 86,
+        "end_line": 102,
+        "signature_hash": "5c5e832a5e5c08f7",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:DemandBranch:46b261410a76798c",
+        "name": "DemandBranch",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 48,
+        "end_line": 58,
+        "signature_hash": "93fe3fe67167c73a",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:HydrationItem:55bfb8c85f6bdf6a",
+        "name": "HydrationItem",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 35,
+        "end_line": 44,
+        "signature_hash": "99d664060346fd1a",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:InvariantSupport:141e620ed3543abf",
+        "name": "InvariantSupport",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 62,
+        "end_line": 71,
+        "signature_hash": "dc0225e2dfa94b33",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:StrategyDisposition:1a415a6208ca29aa",
+        "name": "StrategyDisposition",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "75e360e59b403941",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:StrategyUseDecision:ac68b3fae5ec002e",
+        "name": "StrategyUseDecision",
+        "kind": "class",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 106,
+        "end_line": 114,
+        "signature_hash": "6f36ee31175ea5cc",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:_canonical_items:561644e16200f04f",
+        "name": "_canonical_items",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 117,
+        "end_line": 125,
+        "signature_hash": "1a824ab129ee8f62",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:_component_maps:5164e0c6902e3a16",
+        "name": "_component_maps",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 162,
+        "end_line": 171,
+        "signature_hash": "7a1998296ef01066",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:_powerset:7d7c1a02cfc7dd8a",
+        "name": "_powerset",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 174,
+        "end_line": 177,
+        "signature_hash": "0e30322adb75cc3c",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:clairvoyant_branch_feasible:0836a4fbcead42a0",
+        "name": "clairvoyant_branch_feasible",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 339,
+        "end_line": 364,
+        "signature_hash": "22b7bd110c136a77",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:compile_contingent_hydration:05121fb17b8f4015",
+        "name": "compile_contingent_hydration",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 180,
+        "end_line": 309,
+        "signature_hash": "a35d78b285fae16c",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:fixed_union_feasible:8748728d8ea896fd",
+        "name": "fixed_union_feasible",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 367,
+        "end_line": 383,
+        "signature_hash": "9b9fc58f0d6bb043",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:invariant_components:28446760d6325f8c",
+        "name": "invariant_components",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 128,
+        "end_line": 159,
+        "signature_hash": "6f7a24835817a3e5",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:validate_strategy_at_use:02786a8df06c5e34",
+        "name": "validate_strategy_at_use",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 312,
+        "end_line": 336,
+        "signature_hash": "252771c60dd61498",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:DemandBranch.__post_init__:8efc6169a0e895c8",
+        "name": "DemandBranch.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 52,
+        "end_line": 58,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:HydrationItem.__post_init__:1d824722cc22e265",
+        "name": "HydrationItem.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 40,
+        "end_line": 44,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:InvariantSupport.__post_init__:24580072d137b211",
+        "name": "InvariantSupport.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 66,
+        "end_line": 71,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:invariant_components.find:b4029d52c72852a4",
+        "name": "invariant_components.find",
+        "kind": "method",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 135,
+        "end_line": 139,
+        "signature_hash": "4fd129890f997915",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:invariant_components.union:25cc79f706fbe699",
+        "name": "invariant_components.union",
+        "kind": "method",
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "line": 141,
+        "end_line": 146,
+        "signature_hash": "58cb91e55826085a",
+        "file_digest8": "dff2e83770011c41"
+      },
+      {
         "semantic_id": "tools/arena/memory_city_hydration_plan.py#class:HydrationPlan:c5821d10150a55d7",
         "name": "HydrationPlan",
         "kind": "class",
@@ -272024,8 +272273,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "be2abef3754b4ddfc01b02b332ca7239",
-    "payload_hash": "989a235ff6d7a94ca345a6376416ad40"
+    "record_fingerprint": "9da75367fc3edf23473473c16d46d059",
+    "payload_hash": "1c42ff8e9bcc7bb67c2f25339bd16f2e"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272038,15 +272287,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1676,
-      "bytes": 26640390,
-      "tokens_est": 6650450,
+      "files": 1677,
+      "bytes": 26654992,
+      "tokens_est": 6654101,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1026,
+        "python_module": 1027,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -272734,15 +272983,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1676,
-    "total_bytes": 26640390,
-    "text_tokens_est": 6650450,
+    "file_count": 1677,
+    "total_bytes": 26654992,
+    "text_tokens_est": 6654101,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1026,
+      "python_module": 1027,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -432128,6 +432377,206 @@
         "end_line": 101,
         "semantic_id": "tools/arena/memory_city_anchor_locator.py#function:evaluate_anchored_span_at_use:6728778d18de28ea",
         "signature_hash": "0e09941d2e5bc02d"
+      }
+    ],
+    "StrategyDisposition": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:StrategyDisposition:1a415a6208ca29aa",
+        "signature_hash": "75e360e59b403941"
+      }
+    ],
+    "HydrationItem": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 44,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:HydrationItem:55bfb8c85f6bdf6a",
+        "signature_hash": "99d664060346fd1a"
+      }
+    ],
+    "HydrationItem.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 44,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:HydrationItem.__post_init__:1d824722cc22e265",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "DemandBranch": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 58,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:DemandBranch:46b261410a76798c",
+        "signature_hash": "93fe3fe67167c73a"
+      }
+    ],
+    "DemandBranch.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 58,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:DemandBranch.__post_init__:8efc6169a0e895c8",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "InvariantSupport": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 71,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:InvariantSupport:141e620ed3543abf",
+        "signature_hash": "dc0225e2dfa94b33"
+      }
+    ],
+    "InvariantSupport.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 71,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:InvariantSupport.__post_init__:24580072d137b211",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BranchPlan": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 82,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:BranchPlan:a345760b11438893",
+        "signature_hash": "c6315f917d56afa0"
+      }
+    ],
+    "ContingentHydrationStrategy": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 102,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:ContingentHydrationStrategy:3e3fbccb7c1a1635",
+        "signature_hash": "5c5e832a5e5c08f7"
+      }
+    ],
+    "StrategyUseDecision": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 114,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#class:StrategyUseDecision:ac68b3fae5ec002e",
+        "signature_hash": "6f36ee31175ea5cc"
+      }
+    ],
+    "_canonical_items": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 125,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:_canonical_items:561644e16200f04f",
+        "signature_hash": "1a824ab129ee8f62"
+      }
+    ],
+    "invariant_components": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 159,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:invariant_components:28446760d6325f8c",
+        "signature_hash": "6f7a24835817a3e5"
+      }
+    ],
+    "invariant_components.find": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 139,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:invariant_components.find:b4029d52c72852a4",
+        "signature_hash": "4fd129890f997915"
+      }
+    ],
+    "invariant_components.union": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 146,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#method:invariant_components.union:25cc79f706fbe699",
+        "signature_hash": "58cb91e55826085a"
+      }
+    ],
+    "_component_maps": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 162,
+        "end_line": 171,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:_component_maps:5164e0c6902e3a16",
+        "signature_hash": "7a1998296ef01066"
+      }
+    ],
+    "_powerset": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 174,
+        "end_line": 177,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:_powerset:7d7c1a02cfc7dd8a",
+        "signature_hash": "0e30322adb75cc3c"
+      }
+    ],
+    "compile_contingent_hydration": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 180,
+        "end_line": 309,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:compile_contingent_hydration:05121fb17b8f4015",
+        "signature_hash": "a35d78b285fae16c"
+      }
+    ],
+    "validate_strategy_at_use": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 336,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:validate_strategy_at_use:02786a8df06c5e34",
+        "signature_hash": "252771c60dd61498"
+      }
+    ],
+    "clairvoyant_branch_feasible": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 339,
+        "end_line": 364,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:clairvoyant_branch_feasible:0836a4fbcead42a0",
+        "signature_hash": "22b7bd110c136a77"
+      }
+    ],
+    "fixed_union_feasible": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 367,
+        "end_line": 383,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration.py#function:fixed_union_feasible:8748728d8ea896fd",
+        "signature_hash": "9b9fc58f0d6bb043"
       }
     ],
     "HydrationPlanDisposition": [
