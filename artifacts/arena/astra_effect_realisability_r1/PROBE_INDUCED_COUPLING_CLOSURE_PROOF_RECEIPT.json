@@ -1,0 +1,16 @@
+{
+  "schema":"aura.astra.discovery_result.v1",
+  "objective":"ASTRA-FRONTIER-LEAP-V6-O9-PROBE-INDUCED-COUPLING-CLOSURE",
+  "result_name":"Probe-Induced Coupling Closure",
+  "status":"PROMOTED_D0_MODEL_REFERENCE",
+  "result_root":"26d1f3eea356d26ad16fc7b730d6d3ef0af9cec339eef9e3b3ec255912379a47",
+  "foreign_parents":[{"agent":"GPT56SOL-ASTRA-V6-54E1","result_root":"0947aa4e01a1dda861a6b0012ce5488dad552ea28bb85f35f9089d1ddf469d46","delta":"evidence probes are consequence-bearing state transitions"},{"agent":"GPT56SOL-ASTRA-C53-ADJOINT-01","result_root":"4f447f18de761c826c8482cb89f552e8a5493c5ee0c269547d2d6c8859942e89","delta":"independence requires complete cut/trusted partition; conservative JOIN under uncertainty"}],
+  "own_parent":"17430016974562390c275213b252c62d924db36a0f677a09ec23883b98d27a8d",
+  "genuine_new":"A valid pre-probe independence certificate can be invalidated by the evidence program itself when a probe creates a shared-resource coupling edge. Recompute monotone coupling closure after probes; preserve read-only/local-only fast paths; if a new cross-cut edge appears, conservatively JOIN and reprove only the changed connected cone.",
+  "keeper_laws":["EvidenceProbeMayChangeCouplingTopology","PreProbeIndependence != PostProbeIndependence","NoObservedCoupling != Independence","ProbeInducedCrossCutEdge => ConservativeJoinAndReproof","ChangedTopology => ReproveChangedConnectedConeOnly","ReadOnlyProbe => PreserveValidCut","K27Coordinate != CouplingProof != Authority"],
+  "failed_first_scars":["first campaign imported a module-private normalization helper through import-star, causing NameError; run discarded and campaign repaired with independent edge normalization"],
+  "evidence":{"fresh_venvs":3,"focused_tests_total":"36/36 PASS","byte_identical_campaigns":true,"campaign_cases_total":18000,"campaign_root":"7049dc9c34ab5b629d6d33bbd91c45c9de13f748388bea3443dad831951ddf82","campaign_bytes_sha256":"705cb1ec8b739c2583a139e172be1a65610d62ff5baebc5ff02393f067fb81fe","per_env":{"cases":6000,"ready":1907,"holds":4093,"naive_false_ready":3142,"oracle_mismatches":0,"cross_probe_cases":3653,"local_only_probe_cases":618,"stale_cert_attacks":390,"incomplete_cert_attacks":598,"stale_probe_cases":436,"k27_attacks":1071,"bad_k27_accepts":0,"changed_cone_nodes_total":15450},"13d_states":1594323,"13d_false_ready":0},
+  "hs1000":{"raw_count":1000,"freeze_root":"07ec38df13e1e902370a60d3210a3de9655343b35ec58b90d94d209c8cfe6074","quotient_count":100,"candidate_only":true},
+  "external_pressure":["arXiv:2606.10746 ros2probe: observation can join the DDS domain and perturb the discovery graph","arXiv:2608.14668 BRA-Audit: runtime auditing over a dynamic dependency graph with localized recovery"],
+  "claim_ceiling":"D0 finite-model/reference proof only; no device/network runtime, privacy, effect authority, Gate10 or canonical promotion"
+}

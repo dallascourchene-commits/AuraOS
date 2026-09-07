@@ -1,0 +1,53 @@
+{
+  "schema": "aura.astra.temporal_repair_budget.proof_receipt.v1",
+  "authority": "D0_NONPROMOTING",
+  "gate10": false,
+  "effect_authority": false,
+  "objective": "O3_CONSEQUENCE_BUDGETED_TYPED_TEMPORAL_REPAIR",
+  "rebase_parents": [
+    {
+      "agent_id": "GPT56SOL-ASTRA-C53-TIME-01",
+      "claim_root": "31284dacfbc3d13ec6b645fc2c25f59efee8aaf7f171f4edc30b3b1dc5d3f249",
+      "role": "typed multi-time coordinate algebra"
+    },
+    {
+      "agent_id": "GPT56SOL-ASTRA-C53-ADJOINT-01",
+      "claim_root": "308772573b11707c78ff24fd2d6be061013b6e84531adafc00c2e8f9fad36ce5",
+      "role": "backward consequence-budget compilation"
+    }
+  ],
+  "keeper": "ConsequenceBudget may coarsen soft temporal domains but must never compensate causal/currentness/commitment/externalization failure.",
+  "domains": ["causal", "validity", "media", "simulation", "commitment", "externalization"],
+  "default_hard_domains": ["causal", "validity", "commitment", "externalization"],
+  "fresh_venvs": 3,
+  "tests_per_venv": 11,
+  "total_tests": 33,
+  "campaign_cases_per_venv": 1000,
+  "oracle_mismatches": 0,
+  "hard_domain_losses": 0,
+  "authority_promotions": 0,
+  "scalar_alias_family_cases": 100,
+  "scalar_alias_failures": 0,
+  "campaign_root": "81171382429ccdb60cf813a5692d5261487e1da1741ae018caab8f87941e6735",
+  "worker_sha256": "6d2cde7d8de07527657a375ff4eea00fd6f3e2883643f1c0b2e33303f452f15c",
+  "test_sha256": "95310a926404fa3d191d9ff453b2f89ac31129697185d1920eb80108a2f7d385",
+  "campaign_sha256": "f8a88707cfffa43842bdef4761478f35b61d38c8a84cea6e141555fc88c3f762",
+  "campaign_output_sha256": "b804149d8d9e762ffc65cfa785e09b4844d706b6c9afcf721502f70c8900b87f",
+  "status_counts": {
+    "HOLD_COST": 239,
+    "HOLD_NO_FEASIBLE_PLAN": 384,
+    "READY_D0": 377
+  },
+  "failed_first_scar": {
+    "observed": "First three-venv campaign was semantically passing but produced different evidence roots.",
+    "cause": "Random branching iterated unordered frozenset HARD, making draw order depend on Python hash randomization.",
+    "repair": "Iterate sorted(HARD) before random decisions.",
+    "post_repair": "Three campaign files are byte-identical."
+  },
+  "external_pressure": [
+    "BaseAudioContext.currentTime is a separate audio timeline from the system clock and advances by render quanta.",
+    "Distributed consistency models can keep clock/time constraints optional and orthogonal to causality/visibility axioms.",
+    "Recent browser practitioner evidence favors worker/audio scheduling separation from UI-thread clocks."
+  ],
+  "claim_ceiling": "D0 synthetic/reference only; no device/browser/network/audio/XR timing or production claim"
+}

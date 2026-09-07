@@ -1,0 +1,16 @@
+{
+  "schema":"aura.astra.discovery_result.v1",
+  "objective":"ASTRA-FRONTIER-LEAP-V6-O7-CROSS-CLOCK-UNCERTAINTY-GEOMETRY",
+  "result_name":"Interval-Valued Cross-Clock Route Geometry",
+  "status":"PROMOTED_D0_MODEL_REFERENCE",
+  "result_root":"dc8c3ef5cb4f88455c3e0321e9396131693d3439f348434ca0253ea491369ed6",
+  "direct_falsifier_of":"O6 strongest falsifier: dynamic uncertainty requires coordination not represented by compiled temporal route cards",
+  "genuine_new":"Represent each cross-domain clock conversion as a conservative interval of admissible target-clock moments. READY requires every admissible realization to satisfy the deadline/window; boundary-straddling becomes HOLD_TEMPORAL_UNCERTAINTY. Calibration currentness remains distinct from event time and K27 coordinates remain nonauthoritative.",
+  "keeper_laws":["CrossClockPointEstimate != ConservativeTemporalWitness","AdmissibleTimeSetStraddlesBoundary => HOLD_TEMPORAL_UNCERTAINTY","AllAdmissibleTimesMeetBoundary => READY_D0","CalibrationCurrentness != EventTime","K27Coordinate != ClockEvidence != Authority","Hard13DAxisCannotBeCompensatedByTimingOrCoordinate"],
+  "browser_failed_first_scar":"Managed Chromium URLBlocklist=[*] caused ERR_BLOCKED_BY_ADMINISTRATOR for localhost/file/https navigation. Policy was not bypassed; no browser/audio empirical claim.",
+  "evidence":{"fresh_venvs":3,"focused_tests_total":"33/33 PASS","byte_identical_replays":true,"campaign_cases_total":36000,"campaign_root":"8ff24b5a518e65f230b4ae8f4f7d4edb755d57ecd68dcc3df87479943ffd06ec","per_env":{"cases":12000,"oracle_mismatches":0,"naive_midpoint_false_accepts":1841,"currentness_holds":1856,"k27_attacks":1795,"bad_k27_accepts":0,"ready":4672,"uncertain":3647,"miss":1825},"13d_states":1594323,"13d_false_ready":0},
+  "hs1000":{"raw_count":1000,"freeze_root":"109a4ded4051e69b00f2426dc0e047e480f1471b7d39ad9442bf7e5ac940ca12","quotient_count":100,"candidate_only":true},
+  "omega8":{"W0":"USED_BASELINE","W1":"NOT_EARNED","W2":"EARNED_BOUNDED_PERMUTATION_AUDIT","W3":"EARNED_BOUNDED_FAILED_FIRST_RETEST","W4":"EARNED_CAMPAIGN_REDUCTION","W5":"EARNED_NEXT_BLOCKED_IDENTITY_DISTINCT","W6":"NOT_EARNED","W7":"EARNED_BOUNDED_SHARED_SCALAR_CLOCK_CHALLENGE","W8":"NOT_EARNED"},
+  "external_pressure":["Web Audio currentTime is an audio timeline separate from system clock and may be unsynchronized","arXiv:2608.13486 models distributed monitoring without a global clock as sets of possible global moments","arXiv:2402.11666 reasons about components operating on multiple clocks","2026 r/webaudio practitioner reports distinguish worker/audio scheduling from UI-thread timers"],
+  "claim_ceiling":"D0 model/reference only; no browser/audio/network/device wall-clock performance, Gate10, effect authority or canonical promotion"
+}

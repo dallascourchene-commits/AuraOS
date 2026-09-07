@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26483250
-- **text_tokens_est**: 6611153
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1679
+- **total_bytes**: 26588278
+- **text_tokens_est**: 6637415
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1025, 'schema_or_lexicon': 280, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1679,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -295,6 +295,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/astra_effect_realisability_r1/CLOCK_UNCERTAINTY_GEOMETRY_PROOF_RECEIPT.json",
+    "artifacts/arena/astra_effect_realisability_r1/CONTINGENT_INVARIANT_SUPPORT_STRATEGY_PROOF_RECEIPT.json",
+    "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
+    "artifacts/arena/astra_effect_realisability_r1/PROBE_INDUCED_COUPLING_CLOSURE_PROOF_RECEIPT.json",
+    "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
+    "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
+    "artifacts/arena/astra_effect_realisability_r1/UNCERTAINTY_BOUNDED_EVIDENCE_CHOREOGRAPHY_PROOF_RECEIPT.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1120,6 +1127,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
     "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+    "docs/arena/ASTRA_EFFECT_REALISABILITY_R1.md",
     "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
@@ -1354,6 +1362,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_astra_clock_uncertainty_geometry_r1.py",
+    "tests/test_astra_contingent_invariant_support_strategy_r1.py",
+    "tests/test_astra_effect_realisability_r1.py",
+    "tests/test_astra_probe_induced_coupling_closure_r1.py",
+    "tests/test_astra_temporal_repair_budget_r1.py",
+    "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
     "tests/test_aura_adaptive_execution.py",
     "tests/test_aura_adaptive_fusion_schema.py",
     "tests/test_aura_adaptive_planner.py",
@@ -1659,6 +1673,22 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_geometry_r1_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_astra_clock_uncertainty_hs1000_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_contingent_invariant_support_strategy_hs1000_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_contingent_invariant_support_strategy_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_contingent_invariant_support_strategy_r1_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_astra_probe_induced_coupling_closure_hs1000_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_probe_induced_coupling_closure_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_probe_induced_coupling_closure_r1_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+    "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_hs1000_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1.py",
+    "tools/arena/worker_cells/gpt56sol_astra_uncertainty_bounded_evidence_choreography_r1_campaign.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1738,6 +1768,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_astra_clock_uncertainty_geometry_r1.py",
+    "tests/test_astra_contingent_invariant_support_strategy_r1.py",
+    "tests/test_astra_effect_realisability_r1.py",
+    "tests/test_astra_probe_induced_coupling_closure_r1.py",
+    "tests/test_astra_temporal_repair_budget_r1.py",
+    "tests/test_astra_uncertainty_bounded_evidence_choreography_r1.py",
     "tests/test_aura_adaptive_execution.py",
     "tests/test_aura_adaptive_fusion_schema.py",
     "tests/test_aura_adaptive_planner.py",
@@ -1769,13 +1805,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_bilateral_gate_dialogue.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1789,16 +1819,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26483250,
-  "tokens_est": 6611153,
+  "files": 1679,
+  "bytes": 26588278,
+  "tokens_est": 6637415,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 273,
+    "python_module": 1025,
+    "schema_or_lexicon": 280,
     "support_file": 49
   }
 }
