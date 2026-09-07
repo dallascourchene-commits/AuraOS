@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1695
-- **total_bytes**: 26769330
-- **text_tokens_est**: 6682690
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1042, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1701
+- **total_bytes**: 26806187
+- **text_tokens_est**: 6691908
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1047, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1695,
+  "repo_file_count": 1701,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -299,6 +299,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
+    "artifacts/arena/memory_city_horizon_fenced_handoff/PROOF_RECEIPT_R2.json",
     "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
     "arxiv_forager.py",
     "async_palace.py",
@@ -1663,10 +1664,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_adaptive_hydration.py",
     "tests/test_memory_city_anchor_locator.py",
     "tests/test_memory_city_contingent_hydration.py",
+    "tests/test_memory_city_horizon_fenced_handoff.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_navigator.py",
     "tests/test_memory_city_navigator_convergence.py",
     "tests/test_memory_city_quotient_controllability.py",
+    "tests/test_memory_city_read_consequence.py",
     "tests/test_memory_city_reflexive_telemetry_provenance.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1676,6 +1679,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
     "tools/arena/campaign_memory_city_quotient_controllability.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
@@ -1701,9 +1705,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_ecf_adapter.py",
+    "tools/arena/memory_city_horizon_fenced_handoff.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
     "tools/arena/memory_city_quotient_controllability.py",
+    "tools/arena/memory_city_read_consequence.py",
     "tools/arena/memory_city_support_hydration.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
@@ -1835,16 +1841,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1695,
-  "bytes": 26769330,
-  "tokens_est": 6682690,
+  "files": 1701,
+  "bytes": 26806187,
+  "tokens_est": 6691908,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1042,
-    "schema_or_lexicon": 278,
+    "python_module": 1047,
+    "schema_or_lexicon": 279,
     "support_file": 49
   }
 }
