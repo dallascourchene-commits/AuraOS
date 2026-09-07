@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1700
-- **total_bytes**: 26804937
-- **text_tokens_est**: 6691596
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1047, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1702
+- **total_bytes**: 26811784
+- **text_tokens_est**: 6693308
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1700,
+  "repo_file_count": 1702,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -169,6 +169,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/frontier27-proof.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/memory-city-m3-proof.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -1665,6 +1666,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_component_correct_read_consequence.py",
     "tests/test_memory_city_contingent_hydration.py",
     "tests/test_memory_city_hydration_plan.py",
+    "tests/test_memory_city_mode_sealed_admission.py",
     "tests/test_memory_city_navigator.py",
     "tests/test_memory_city_navigator_convergence.py",
     "tests/test_memory_city_quotient_controllability.py",
@@ -1840,16 +1842,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1700,
-  "bytes": 26804937,
-  "tokens_est": 6691596,
+  "files": 1702,
+  "bytes": 26811784,
+  "tokens_est": 6693308,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1047,
-    "schema_or_lexicon": 278,
+    "python_module": 1048,
+    "schema_or_lexicon": 279,
     "support_file": 49
   }
 }
