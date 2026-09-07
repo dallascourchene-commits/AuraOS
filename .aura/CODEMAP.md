@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1694
-- **total_bytes**: 26673369
-- **text_tokens_est**: 6658701
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1032, 'schema_or_lexicon': 284, 'support_file': 53}
+- **file_count**: 1696
+- **total_bytes**: 26678224
+- **text_tokens_est**: 6659915
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1032, 'schema_or_lexicon': 286, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1694,
+  "repo_file_count": 1696,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -202,6 +202,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
     ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
     ".github/workflows/project006-o21-byte-verified-update-proof.yml",
+    ".github/workflows/project006-o22-deployment-capsule-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -306,6 +307,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
     "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
     "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
+    "artifacts/arena/project006_o22_deployment_capsule/PROOF_RECEIPT_O22.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1834,16 +1836,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1694,
-  "bytes": 26673369,
-  "tokens_est": 6658701,
+  "files": 1696,
+  "bytes": 26678224,
+  "tokens_est": 6659915,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1032,
-    "schema_or_lexicon": 284,
+    "schema_or_lexicon": 286,
     "support_file": 53
   }
 }
