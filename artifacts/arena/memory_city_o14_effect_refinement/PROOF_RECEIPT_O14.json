@@ -1,0 +1,80 @@
+{
+  "authority": {
+    "deploy": false,
+    "effect": false,
+    "gate10": false,
+    "merge": false,
+    "mutation": false
+  },
+  "base_head": "51e4c8eeb327a5d5c8fe3f30e17907819cc86577",
+  "base_pr": 889,
+  "factored_13d": {
+    "context_states": 243,
+    "effect_ready": 0,
+    "hard_invalid_repairs": 0,
+    "hard_states": 6561,
+    "nonroutes": 1594080,
+    "output_sha256": "a91c1f302d660d367984fabcc0aee5f31c136db6980eb31cb5e515c2de88bec6",
+    "root": "b18799e63aeec1c149e2353b75c7e91f7f286540378c3a0864215d567ed4abe3",
+    "states": 1594323,
+    "valid_contextual_tecc": 243
+  },
+  "hosted_integration": {
+    "credit": 0,
+    "status": "PENDING"
+  },
+  "hs1000": {
+    "cells": 1000,
+    "consequence_groups": 9,
+    "freeze_root": "7ee515bf774fd43cefcbe2dcf8b34c1f6fb64c329b553d1970c5b8ce17635609",
+    "output_sha256": "d5c227ce379895691d78dde4f852566a628007a24f5951b4020ac1caf0bff0ee",
+    "quotient_root": "343baebac64efc66470e9db406a7c581a03e2333c2553a788a272325334ccf41"
+  },
+  "keeper_laws": [
+    "CertifiedReadConsequence != EffectObligationSubclass != MutationAuthority",
+    "O13CurrentCrossBinding + ModeSeal != ExactTECCInputWithoutEffectRefinementIdentity",
+    "EffectEscalationRoot + O13TECCInput != EffectAuthority",
+    "ValidO14 => HOLD_TECC_REQUIRED_D0",
+    "K27Coordinate != Identity != Truth != Currentness != Authority"
+  ],
+  "local_isolation": {
+    "campaign_cases_per_env": 16000,
+    "campaign_output_sha256": "0acedd325c6da252d060623f4b1cac6dea175238ff9e6005cd1b5239728214cc",
+    "campaign_root": "685bde8930ceec03961fedf31cf38efbb5b68134fc6a4844e7d3c9b3c5c77aae",
+    "false_hold_per_env": 0,
+    "false_tecc_per_env": 0,
+    "focused_tests_passed": 33,
+    "focused_tests_total": 33,
+    "fresh_venvs": 3,
+    "nuisance_false_splits": 0,
+    "o13_collision_pairs": 4000,
+    "o14_collision_pairs": 0,
+    "pair_discriminator": 4000,
+    "valid_tecc_per_env": 2000
+  },
+  "omega8": {
+    "effect_ready": 0,
+    "false_hold": 0,
+    "false_tecc": 0,
+    "keepers": 1,
+    "output_sha256": "9ccb445373fe47a32fa7f7674a2793cb8bc802b74de8fbadfb88c3745c3dd49b",
+    "root": "2ca233f589d9261d15ac8e04f804218fd93bacc0b771b7004f59f6c00218b083",
+    "states": 6561
+  },
+  "publish_source_sha256": {
+    ".github/workflows/memory-city-o14-effect-refinement-proof.yml": "3230f56f48afa0982bcb79f02a75d25c8edd9b7b91099f1048741c000a03be71",
+    "tests/test_memory_city_effect_refinement_handoff_o14.py": "8be70bc08c51b03065e98531c248e749ebc2721245c6157c8ab183d2419a1ce3",
+    "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py": "9009967064fd4cc92d20f3c84b77ac2dd03c51e5f2b63cbd6a7ed491cb0ccf09",
+    "tools/arena/memory_city_consequence_refinement.py": "aa0ab27b57c746f3f597226dc2f4999e06a53e2abb6bdd1fadd4c9ae508dbd68",
+    "tools/arena/memory_city_effect_refinement_handoff_o14.py": "0a71df6c86d89b217aac7c6afd1052f5394858790db15489f8f2c63997c6a8bc",
+    "tools/arena/o14_effect_refinement_13d.py": "cc5537ee975204805d7cce33552483c32a99ee6db2579982f10c84288a5437fa",
+    "tools/arena/o14_effect_refinement_hs1000.py": "36da613b0a10d0ba21e169a21ff21b7fe162e368c9ce0cd2b60ac90bea47ebff",
+    "tools/arena/o14_effect_refinement_lattice.py": "69d8734d8476a1c032d21501690f68080f079d1170065e82f077cf79c592fd49"
+  },
+  "receipt_root": "b0321423fcef9cf87278827d953d8208414bcff34c0d68cfa6828a85785cddc2",
+  "refinement_owner_git_blob": "7a212c6dbf51207cff1f553076b14896bc7d7972",
+  "refinement_parent_head": "b233d87bf32c0ae9b056c9c441558af8908f9392",
+  "refinement_parent_pr": 887,
+  "schema": "AURA-MEMORY-CITY-O14-EFFECT-REFINEMENT-PROOF-v1",
+  "status": "D0_NONPROMOTING_PREPUBLICATION_HOSTED_PENDING"
+}
