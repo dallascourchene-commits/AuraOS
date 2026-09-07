@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1675
-- **total_bytes**: 26645127
-- **text_tokens_est**: 6651633
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 276, 'support_file': 53}
+- **file_count**: 1681
+- **total_bytes**: 26658329
+- **text_tokens_est**: 6654936
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1025, 'schema_or_lexicon': 278, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1675,
+  "repo_file_count": 1681,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -168,6 +168,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/frontier27-proof.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -298,6 +299,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+    "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1678,7 +1680,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/campaign_effect_attempt_recovery_o11.py",
+    "tools/project006/campaign_tecc_effect_admission_bridge.py",
     "tools/project006/effect_attempt_recovery.py",
+    "tools/project006/mc_o14_hs1000.py",
+    "tools/project006/mc_o14_lattice8.py",
+    "tools/project006/mc_o14_sweep13d.py",
     "tools/project006/o11_effect_attempt_factored13d.py",
     "tools/project006/o11_effect_attempt_hs1000.py",
     "tools/project006/o11_effect_attempt_lattice8.py",
@@ -1815,16 +1821,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1675,
-  "bytes": 26645127,
-  "tokens_est": 6651633,
+  "files": 1681,
+  "bytes": 26658329,
+  "tokens_est": 6654936,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1021,
-    "schema_or_lexicon": 276,
+    "python_module": 1025,
+    "schema_or_lexicon": 278,
     "support_file": 53
   }
 }
