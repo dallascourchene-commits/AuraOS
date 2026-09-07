@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1705
-- **total_bytes**: 26809688
-- **text_tokens_est**: 6692784
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1710
+- **total_bytes**: 26823810
+- **text_tokens_est**: 6696316
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1052, 'schema_or_lexicon': 283, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1705,
+  "repo_file_count": 1710,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -302,6 +302,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
     "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O11_MODE_SEAL.json",
     "artifacts/arena/memory_city_current_read_effect_handoff/PROOF_RECEIPT_O12C.json",
+    "artifacts/arena/memory_city_current_read_effect_handoff/PROOF_RECEIPT_O12C_R2.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9_REPROOF_REPAIR.json",
     "arxiv_forager.py",
@@ -1714,6 +1715,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_typed_closure_hs1000.py",
     "tools/arena/o12c_hs1000.py",
     "tools/arena/o12c_lattice8.py",
+    "tools/arena/o12c_r2_factored13d.py",
+    "tools/arena/o12c_r2_hs1000.py",
+    "tools/arena/o12c_r2_lattice8.py",
+    "tools/arena/o12c_r2_lattice_state.py",
     "tools/arena/o12c_sweep13d.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
@@ -1845,16 +1850,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1705,
-  "bytes": 26809688,
-  "tokens_est": 6692784,
+  "files": 1710,
+  "bytes": 26823810,
+  "tokens_est": 6696316,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1048,
-    "schema_or_lexicon": 282,
+    "python_module": 1052,
+    "schema_or_lexicon": 283,
     "support_file": 49
   }
 }
