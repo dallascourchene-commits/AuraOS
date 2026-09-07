@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788786027,
+  "generated_at_unix": 1788787008,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1690,
+    "repo_file_count": 1693,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -292,6 +293,7 @@
       "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
       "artifacts/arena/awj032_airllm_training_o2/PROOF_RECEIPT_O2.json",
       "artifacts/arena/awj032_airllm_training_o2/README.md",
+      "artifacts/arena/awj032_o17_runtime_delegated_training/PROOF_RECEIPT_O17.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -1670,6 +1672,7 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/o17_runtime_delegated_training_reference.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1806,16 +1809,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1690,
-      "bytes": 26573839,
-      "tokens_est": 6633861,
+      "files": 1693,
+      "bytes": 26589648,
+      "tokens_est": 6637815,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 250,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1023,
-        "schema_or_lexicon": 283,
+        "python_module": 1024,
+        "schema_or_lexicon": 285,
         "support_file": 49
       }
     },
@@ -3536,6 +3539,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:main:2009ec2177b00536",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3744,6 +3755,14 @@
         "end_line": 218,
         "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:run:039d5dc30f81c899",
         "signature_hash": "3b05aa323d68dd37"
+      },
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:run:413a5e523a05ec97",
+        "signature_hash": "045a40d7e55c5877"
       }
     ],
     "run.record": [
@@ -158666,6 +158685,650 @@
         "signature_hash": "8da6b94eb23fc2af"
       }
     ],
+    "H": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:H:98bd2c1e0ee8acfb",
+        "signature_hash": "93783e12685eb5a1"
+      }
+    ],
+    "M": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:M:eaa423ecc809fd3e",
+        "signature_hash": "5a473255bd0db29a"
+      }
+    ],
+    "R": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:R:035b8eb9365de504",
+        "signature_hash": "3e6f53fe793c454e"
+      }
+    ],
+    "W": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:W:152abb04c12a9080",
+        "signature_hash": "15c74b99ae9908ec"
+      }
+    ],
+    "C": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:C:c5d8549c789f3040",
+        "signature_hash": "1f0d9c2fbb103336"
+      }
+    ],
+    "C.u": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:C.u:8f7d6bc3ba22d4ac",
+        "signature_hash": "f9483fa79ac69c4d"
+      }
+    ],
+    "C.root": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:C.root:264ba8f6dad29988",
+        "signature_hash": "3d3022af382c5b18"
+      }
+    ],
+    "C0": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:C0:42b9d617d8379046",
+        "signature_hash": "65c48e7cd5a016c5"
+      }
+    ],
+    "vc": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:vc:613cbd63d768a3e3",
+        "signature_hash": "f61839a1dd5b4368"
+      }
+    ],
+    "A": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:A:f9d62e783c11f827",
+        "signature_hash": "c3d5a7a406cac1b4"
+      }
+    ],
+    "A.u": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:A.u:d809c7f515b30f5f",
+        "signature_hash": "f9483fa79ac69c4d"
+      }
+    ],
+    "A.root": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:A.root:0f69788601650661",
+        "signature_hash": "3d3022af382c5b18"
+      }
+    ],
+    "A0": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:A0:4caf36bbcb11d3f3",
+        "signature_hash": "8c0cce5dfc55101a"
+      }
+    ],
+    "va": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:va:1c0997e5866adbf2",
+        "signature_hash": "f166e5aec816a04f"
+      }
+    ],
+    "L": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:L:24ebb8f0f93b3c89",
+        "signature_hash": "a78566689df99333"
+      }
+    ],
+    "L.u": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:L.u:53edff38077960ba",
+        "signature_hash": "f9483fa79ac69c4d"
+      }
+    ],
+    "L.root": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:L.root:311fdd09056add04",
+        "signature_hash": "3d3022af382c5b18"
+      }
+    ],
+    "L0": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:L0:afb0af3ad60178ce",
+        "signature_hash": "62d2c9e3112620ab"
+      }
+    ],
+    "vl": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:vl:942acaff2d98e167",
+        "signature_hash": "07cfc89828aac804"
+      }
+    ],
+    "op": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:op:f91fed8982eb9fa7",
+        "signature_hash": "45ce6e45b28f3403"
+      }
+    ],
+    "at": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:at:778e82cb94f579f8",
+        "signature_hash": "ec8e4397be6bcedc"
+      }
+    ],
+    "rec": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:rec:a88bbb3888a146b5",
+        "signature_hash": "abe31dd0138e302d"
+      }
+    ],
+    "P": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:P:6bfa43c7fae626a3",
+        "signature_hash": "212c48ca4ebf640e"
+      }
+    ],
+    "P.root": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:P.root:56395a53dcdca1f2",
+        "signature_hash": "3d3022af382c5b18"
+      }
+    ],
+    "P.public": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:P.public:90624c40aed6e0e8",
+        "signature_hash": "4a29c3d7c0021926"
+      }
+    ],
+    "compile": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:compile:54cb9039406012b4",
+        "signature_hash": "fff62cb200dcad1d"
+      }
+    ],
+    "accept": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:accept:3aec8c7abe603754",
+        "signature_hash": "7352309e73a87cf1"
+      }
+    ],
+    "J": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:J:9dc5ae667af2f634",
+        "signature_hash": "6707004b7a5a8495"
+      }
+    ],
+    "J.__init__": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.__init__:ea67a572deea70a2",
+        "signature_hash": "211802df05e272a4"
+      }
+    ],
+    "J.dispatch": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.dispatch:cf6bafaffd1cf76c",
+        "signature_hash": "17550c5256f3e11e"
+      }
+    ],
+    "J.observe": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.observe:8341d637a5ee6fec",
+        "signature_hash": "e30ba9b11feab815"
+      }
+    ],
+    "J.ret": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.ret:5731005a97de6bff",
+        "signature_hash": "f85ae3a5f0449b65"
+      }
+    ],
+    "J.get": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.get:c660ce75699b1a67",
+        "signature_hash": "7846f4fa6d1a7ccd"
+      }
+    ],
+    "T": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:T:6425ca10641b1d9d",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:T:c29fab64d0b15a6f",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.f": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.f:ecfd4a1e10112d5a",
+        "signature_hash": "c47e44f4a1943636"
+      }
+    ],
+    "T.test01": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test01:d6caf69e8582d6b2",
+        "signature_hash": "a0b96df0cf6b7c3e"
+      }
+    ],
+    "T.test02": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test02:a4d4afc05d91e396",
+        "signature_hash": "b0046f9730d2c895"
+      }
+    ],
+    "T.test03": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test03:6e5587646a712974",
+        "signature_hash": "329782864c3b49e8"
+      }
+    ],
+    "T.test04": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 96,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test04:3b1a37e10d3fd45b",
+        "signature_hash": "184fe911a6a4b945"
+      }
+    ],
+    "T.test05": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 99,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test05:14be5e48c00fccf4",
+        "signature_hash": "43964d8fdfe17dc5"
+      }
+    ],
+    "T.test06": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test06:dd4364f5be53de2a",
+        "signature_hash": "e445699e91e6a737"
+      }
+    ],
+    "T.test07": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test07:5522daa22013684c",
+        "signature_hash": "100aa396e3b627ce"
+      }
+    ],
+    "T.test08": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 108,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test08:a4385cdc11fe9861",
+        "signature_hash": "da400475b760e1b6"
+      }
+    ],
+    "T.test09": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test09:16ef5462987e1b5d",
+        "signature_hash": "4ce784e2c93afc98"
+      }
+    ],
+    "T.test10": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test10:474168e98384d9c6",
+        "signature_hash": "e2c23976ba3c5b49"
+      }
+    ],
+    "T.test11": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test11:1b4c14611aa1bc6e",
+        "signature_hash": "8810e94bfba6d3f5"
+      }
+    ],
+    "T.test12": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 118,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test12:76f6bc2c93981b08",
+        "signature_hash": "a158026146d3a209"
+      }
+    ],
+    "T.test13": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test13:c0c63d9452294444",
+        "signature_hash": "e6e518b9796cc7a7"
+      }
+    ],
+    "T.test14": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 120,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test14:6a962fe82dbe6ff8",
+        "signature_hash": "b931b2b94f758372"
+      }
+    ],
+    "T.test15": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 121,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test15:b29dc1254ab0ffa5",
+        "signature_hash": "9d026124fdb17a5d"
+      }
+    ],
+    "T.test16": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test16:7afc9397bc8e1f1a",
+        "signature_hash": "6adf44679726a1a7"
+      }
+    ],
+    "T.test17": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 123,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test17:a9aaa5107c340d2f",
+        "signature_hash": "65f0b846a15c6c6f"
+      }
+    ],
+    "T.test18": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 126,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test18:fe22ad364e1a7418",
+        "signature_hash": "a7cb89a79b50c10f"
+      }
+    ],
+    "T.test19": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test19:fd6e243501e1795d",
+        "signature_hash": "4d74f39096ab7fec"
+      }
+    ],
+    "T.test20": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test20:dd45b2021861ff17",
+        "signature_hash": "ec9f87951c494594"
+      }
+    ],
+    "T.test21": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test21:a57aa09610c74c58",
+        "signature_hash": "81f1b8132c72aa9c"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 145,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:decide:ead6af4ecaa24070",
+        "signature_hash": "78f662ec29be60a2"
+      }
+    ],
+    "campaign": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 150,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:campaign:e8486c0b88065420",
+        "signature_hash": "101bde732963efb2"
+      }
+    ],
+    "mutations": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 152,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:mutations:923e5dc6e16ebdb8",
+        "signature_hash": "f817a7a5ff70c65d"
+      }
+    ],
+    "omega8": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 154,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:omega8:2bc269c4cd3cf74d",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/awj032/training_o1_reference/training_admission.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 237,
+        "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:omega8:54d9d183eebcbc30",
+        "signature_hash": "7684a9102d4271dc"
+      },
+      {
+        "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/transition_envelope.py#function:omega8:8e6e1e8abf0fb933",
+        "signature_hash": "d1b51a3f92a8a2b1"
+      }
+    ],
+    "d13": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:d13:87949f4cb67d3c94",
+        "signature_hash": "6b299e931f9d9f0d"
+      }
+    ],
+    "hs": [
+      {
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 157,
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:hs:4937be02bf20ade9",
+        "signature_hash": "b3e37fefbbbd45d5"
+      }
+    ],
     "BindingMutationSoundnessTests": [
       {
         "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
@@ -160064,24 +160727,6 @@
         "signature_hash": "55a793a813efb7a9"
       }
     ],
-    "omega8": [
-      {
-        "file": "tools/awj032/training_o1_reference/training_admission.py",
-        "kind": "function",
-        "line": 235,
-        "end_line": 237,
-        "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:omega8:54d9d183eebcbc30",
-        "signature_hash": "7684a9102d4271dc"
-      },
-      {
-        "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
-        "kind": "function",
-        "line": 85,
-        "end_line": 87,
-        "semantic_id": "tools/awj032/training_o2_transition_reference/transition_envelope.py#function:omega8:8e6e1e8abf0fb933",
-        "signature_hash": "d1b51a3f92a8a2b1"
-      }
-    ],
     "core": [
       {
         "file": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
@@ -160110,16 +160755,6 @@
         "end_line": 12,
         "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#function:trace:425fd8511e65ec25",
         "signature_hash": "01d69b4470516c74"
-      }
-    ],
-    "T": [
-      {
-        "file": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
-        "kind": "class",
-        "line": 13,
-        "end_line": 60,
-        "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:T:c29fab64d0b15a6f",
-        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_exact_admit": [
@@ -161911,6 +162546,12 @@
     "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
+    "python -m venv": [
+      ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml",
+      "README.md",
+      "examples/arena_navigation_domain_lens/README.md",
+      "examples/mini_aura_reference_arena/README.md"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -162244,11 +162885,6 @@
     ],
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
-    ],
-    "python -m venv": [
-      "README.md",
-      "examples/arena_navigation_domain_lens/README.md",
-      "examples/mini_aura_reference_arena/README.md"
     ],
     "python mini_aura_reference.py --out results_local.json": [
       "README.md",
@@ -171780,6 +172416,59 @@
       ]
     },
     {
+      "path": ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2873,
+      "lines": 61,
+      "tokens_est": 719,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          36
+        ]
+      },
+      "topology": {},
+      "digest8": "1661692b05776291",
+      "vector": [
+        0.290747,
+        0.011041,
+        -0.069926,
+        -0.111637,
+        0.256397,
+        -0.263758,
+        -0.10673,
+        0.092009,
+        -0.011041,
+        0.114091,
+        -0.288293,
+        -0.089555,
+        -0.293201,
+        -0.170522,
+        -0.033123,
+        0.099369,
+        0.062566,
+        -0.214687,
+        0.165615,
+        0.145987,
+        0.222047,
+        -0.172976,
+        0.128812,
+        -0.177883,
+        -0.096916,
+        0.087101,
+        0.268665,
+        0.101823,
+        0.276026,
+        -0.023309,
+        0.273572,
+        0.187697
+      ]
+    },
+    {
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -180236,6 +180925,53 @@
         -0.207799,
         -0.04109,
         0.083354
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_o17_runtime_delegated_training/PROOF_RECEIPT_O17.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1485,
+      "lines": 37,
+      "tokens_est": 372,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e75ee254309d6bbe",
+      "vector": [
+        -0.245518,
+        0.290157,
+        -0.156239,
+        -0.06226,
+        -0.146841,
+        -0.170335,
+        0.217324,
+        -0.092803,
+        0.137443,
+        0.034067,
+        0.264313,
+        -0.135093,
+        0.052863,
+        0.294856,
+        -0.017621,
+        -0.273711,
+        -0.172685,
+        -0.203228,
+        0.224373,
+        -0.057562,
+        -0.186781,
+        0.059911,
+        0.104551,
+        -0.163287,
+        0.23612,
+        0.078707,
+        -0.189131,
+        0.287808,
+        0.222023,
+        -0.069309,
+        0.059911,
+        0.092803
       ]
     },
     {
@@ -267879,6 +268615,53 @@
       ]
     },
     {
+      "path": "tools/awj032/o17_runtime_delegated_training_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11451,
+      "lines": 163,
+      "tokens_est": 2863,
+      "symbol_count": 64,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9aefa58b907da7e1",
+      "vector": [
+        0.083073,
+        -0.219632,
+        0.085349,
+        -0.233287,
+        -0.073969,
+        -0.276531,
+        -0.096729,
+        0.103557,
+        0.242391,
+        0.178664,
+        -0.167284,
+        -0.02845,
+        0.246943,
+        0.108109,
+        0.03983,
+        -0.160456,
+        0.110385,
+        -0.228735,
+        -0.251495,
+        -0.083073,
+        -0.142248,
+        0.274255,
+        0.060313,
+        0.030726,
+        0.285635,
+        0.187768,
+        0.119489,
+        0.278807,
+        -0.265151,
+        -0.208252,
+        -0.060313,
+        0.02845
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "role": "python_module",
       "binary": false,
@@ -292453,16 +293236,16 @@
     }
   },
   "summary": {
-    "file_count": 1690,
-    "total_bytes": 26573839,
-    "text_tokens_est": 6633861,
+    "file_count": 1693,
+    "total_bytes": 26589648,
+    "text_tokens_est": 6637815,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 250,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1023,
-      "schema_or_lexicon": 283,
+      "python_module": 1024,
+      "schema_or_lexicon": 285,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -292620,6 +293403,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -292764,6 +293548,7 @@
       "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
       "artifacts/arena/awj032_airllm_training_o2/PROOF_RECEIPT_O2.json",
       "artifacts/arena/awj032_airllm_training_o2/README.md",
+      "artifacts/arena/awj032_o17_runtime_delegated_training/PROOF_RECEIPT_O17.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -294142,6 +294927,7 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/o17_runtime_delegated_training_reference.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -452932,6 +453718,646 @@
         "file_digest8": "ea7fae03964050af"
       },
       {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:A:f9d62e783c11f827",
+        "name": "A",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 23,
+        "end_line": 28,
+        "signature_hash": "c3d5a7a406cac1b4",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:C:c5d8549c789f3040",
+        "name": "C",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 12,
+        "end_line": 17,
+        "signature_hash": "1f0d9c2fbb103336",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:J:9dc5ae667af2f634",
+        "name": "J",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 71,
+        "end_line": 90,
+        "signature_hash": "6707004b7a5a8495",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:L:24ebb8f0f93b3c89",
+        "name": "L",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 36,
+        "end_line": 41,
+        "signature_hash": "a78566689df99333",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:P:6bfa43c7fae626a3",
+        "name": "P",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 52,
+        "end_line": 56,
+        "signature_hash": "212c48ca4ebf640e",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:T:6425ca10641b1d9d",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 91,
+        "end_line": 132,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#class:W:152abb04c12a9080",
+        "name": "W",
+        "kind": "class",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "15c74b99ae9908ec",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:A0:4caf36bbcb11d3f3",
+        "name": "A0",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "8c0cce5dfc55101a",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:C0:42b9d617d8379046",
+        "name": "C0",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "65c48e7cd5a016c5",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:H:98bd2c1e0ee8acfb",
+        "name": "H",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "93783e12685eb5a1",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:L0:afb0af3ad60178ce",
+        "name": "L0",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "62d2c9e3112620ab",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:M:eaa423ecc809fd3e",
+        "name": "M",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "5a473255bd0db29a",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:R:035b8eb9365de504",
+        "name": "R",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "3e6f53fe793c454e",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:accept:3aec8c7abe603754",
+        "name": "accept",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 68,
+        "end_line": 70,
+        "signature_hash": "7352309e73a87cf1",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:at:778e82cb94f579f8",
+        "name": "at",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "ec8e4397be6bcedc",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:campaign:e8486c0b88065420",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 146,
+        "end_line": 150,
+        "signature_hash": "101bde732963efb2",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:compile:54cb9039406012b4",
+        "name": "compile",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "fff62cb200dcad1d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:d13:87949f4cb67d3c94",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 155,
+        "end_line": 155,
+        "signature_hash": "6b299e931f9d9f0d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:decide:ead6af4ecaa24070",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 133,
+        "end_line": 145,
+        "signature_hash": "78f662ec29be60a2",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:hs:4937be02bf20ade9",
+        "name": "hs",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 156,
+        "end_line": 157,
+        "signature_hash": "b3e37fefbbbd45d5",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:main:2009ec2177b00536",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 158,
+        "end_line": 161,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:mutations:923e5dc6e16ebdb8",
+        "name": "mutations",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 151,
+        "end_line": 152,
+        "signature_hash": "f817a7a5ff70c65d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:omega8:2bc269c4cd3cf74d",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 153,
+        "end_line": 154,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:op:f91fed8982eb9fa7",
+        "name": "op",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "45ce6e45b28f3403",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:rec:a88bbb3888a146b5",
+        "name": "rec",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 50,
+        "end_line": 50,
+        "signature_hash": "abe31dd0138e302d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:run:413a5e523a05ec97",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "045a40d7e55c5877",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:va:1c0997e5866adbf2",
+        "name": "va",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "f166e5aec816a04f",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:vc:613cbd63d768a3e3",
+        "name": "vc",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "f61839a1dd5b4368",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#function:vl:942acaff2d98e167",
+        "name": "vl",
+        "kind": "function",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "07cfc89828aac804",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:A.root:0f69788601650661",
+        "name": "A.root",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "3d3022af382c5b18",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:A.u:d809c7f515b30f5f",
+        "name": "A.u",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "f9483fa79ac69c4d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:C.root:264ba8f6dad29988",
+        "name": "C.root",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "3d3022af382c5b18",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:C.u:8f7d6bc3ba22d4ac",
+        "name": "C.u",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "f9483fa79ac69c4d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.__init__:ea67a572deea70a2",
+        "name": "J.__init__",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 72,
+        "end_line": 73,
+        "signature_hash": "211802df05e272a4",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.dispatch:cf6bafaffd1cf76c",
+        "name": "J.dispatch",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 74,
+        "end_line": 80,
+        "signature_hash": "17550c5256f3e11e",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.get:c660ce75699b1a67",
+        "name": "J.get",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 89,
+        "end_line": 90,
+        "signature_hash": "7846f4fa6d1a7ccd",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.observe:8341d637a5ee6fec",
+        "name": "J.observe",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "e30ba9b11feab815",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:J.ret:5731005a97de6bff",
+        "name": "J.ret",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 85,
+        "end_line": 88,
+        "signature_hash": "f85ae3a5f0449b65",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:L.root:311fdd09056add04",
+        "name": "L.root",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 41,
+        "end_line": 41,
+        "signature_hash": "3d3022af382c5b18",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:L.u:53edff38077960ba",
+        "name": "L.u",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 39,
+        "end_line": 39,
+        "signature_hash": "f9483fa79ac69c4d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:P.public:90624c40aed6e0e8",
+        "name": "P.public",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 56,
+        "end_line": 56,
+        "signature_hash": "4a29c3d7c0021926",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:P.root:56395a53dcdca1f2",
+        "name": "P.root",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 55,
+        "end_line": 55,
+        "signature_hash": "3d3022af382c5b18",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.f:ecfd4a1e10112d5a",
+        "name": "T.f",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 92,
+        "end_line": 92,
+        "signature_hash": "c47e44f4a1943636",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test01:d6caf69e8582d6b2",
+        "name": "T.test01",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 93,
+        "end_line": 93,
+        "signature_hash": "a0b96df0cf6b7c3e",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test02:a4d4afc05d91e396",
+        "name": "T.test02",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 94,
+        "end_line": 94,
+        "signature_hash": "b0046f9730d2c895",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test03:6e5587646a712974",
+        "name": "T.test03",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 95,
+        "end_line": 95,
+        "signature_hash": "329782864c3b49e8",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test04:3b1a37e10d3fd45b",
+        "name": "T.test04",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 96,
+        "end_line": 96,
+        "signature_hash": "184fe911a6a4b945",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test05:14be5e48c00fccf4",
+        "name": "T.test05",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 97,
+        "end_line": 99,
+        "signature_hash": "43964d8fdfe17dc5",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test06:dd4364f5be53de2a",
+        "name": "T.test06",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 100,
+        "end_line": 102,
+        "signature_hash": "e445699e91e6a737",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test07:5522daa22013684c",
+        "name": "T.test07",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 103,
+        "end_line": 105,
+        "signature_hash": "100aa396e3b627ce",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test08:a4385cdc11fe9861",
+        "name": "T.test08",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 106,
+        "end_line": 108,
+        "signature_hash": "da400475b760e1b6",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test09:16ef5462987e1b5d",
+        "name": "T.test09",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 109,
+        "end_line": 111,
+        "signature_hash": "4ce784e2c93afc98",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test10:474168e98384d9c6",
+        "name": "T.test10",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 112,
+        "end_line": 114,
+        "signature_hash": "e2c23976ba3c5b49",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test11:1b4c14611aa1bc6e",
+        "name": "T.test11",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 115,
+        "end_line": 117,
+        "signature_hash": "8810e94bfba6d3f5",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test12:76f6bc2c93981b08",
+        "name": "T.test12",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 118,
+        "end_line": 118,
+        "signature_hash": "a158026146d3a209",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test13:c0c63d9452294444",
+        "name": "T.test13",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 119,
+        "end_line": 119,
+        "signature_hash": "e6e518b9796cc7a7",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test14:6a962fe82dbe6ff8",
+        "name": "T.test14",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 120,
+        "end_line": 120,
+        "signature_hash": "b931b2b94f758372",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test15:b29dc1254ab0ffa5",
+        "name": "T.test15",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 121,
+        "end_line": 121,
+        "signature_hash": "9d026124fdb17a5d",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test16:7afc9397bc8e1f1a",
+        "name": "T.test16",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 122,
+        "end_line": 122,
+        "signature_hash": "6adf44679726a1a7",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test17:a9aaa5107c340d2f",
+        "name": "T.test17",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 123,
+        "end_line": 123,
+        "signature_hash": "65f0b846a15c6c6f",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test18:fe22ad364e1a7418",
+        "name": "T.test18",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 124,
+        "end_line": 126,
+        "signature_hash": "a7cb89a79b50c10f",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test19:fd6e243501e1795d",
+        "name": "T.test19",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 127,
+        "end_line": 129,
+        "signature_hash": "4d74f39096ab7fec",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test20:dd45b2021861ff17",
+        "name": "T.test20",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 130,
+        "end_line": 131,
+        "signature_hash": "ec9f87951c494594",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
+        "semantic_id": "tools/awj032/o17_runtime_delegated_training_reference.py#method:T.test21:a57aa09610c74c58",
+        "name": "T.test21",
+        "kind": "method",
+        "file": "tools/awj032/o17_runtime_delegated_training_reference.py",
+        "line": 132,
+        "end_line": 132,
+        "signature_hash": "81f1b8132c72aa9c",
+        "file_digest8": "9aefa58b907da7e1"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#class:BindingMutationSoundnessTests:7ab077d5ce2a6ac6",
         "name": "BindingMutationSoundnessTests",
         "kind": "class",
@@ -456032,7 +457458,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "711be64b233255adc58a7981f16f1274",
-    "payload_hash": "b05f7ce59a54041228b6a29013fc7087"
+    "record_fingerprint": "b0de2fa1a4f5c883772d88136228cfaa",
+    "payload_hash": "ed61fb4b75b1a9b9c438e9d050f54e89"
   }
 }
