@@ -6,15 +6,32 @@ from hashlib import sha256
 import json
 import random
 
-from .demand_lease_handoff import (
-    ConfigurationTransition,
-    DemandCellLease,
-    DemandCellState,
-    LeaseDisposition,
-    apply_configuration_transition,
-    compile_write,
-    dependency_closed_invalidation,
-)
+try:
+    from .demand_lease_handoff import (
+        ConfigurationTransition,
+        DemandCellLease,
+        DemandCellState,
+        LeaseDisposition,
+        ResourceFenceReceipt,
+        TransitionAuthorityEvidence,
+        TransitionVerificationContext,
+        apply_configuration_transition,
+        compile_write,
+        dependency_closed_invalidation,
+    )
+except ImportError:  # direct-script execution from this directory
+    from demand_lease_handoff import (
+        ConfigurationTransition,
+        DemandCellLease,
+        DemandCellState,
+        LeaseDisposition,
+        ResourceFenceReceipt,
+        TransitionAuthorityEvidence,
+        TransitionVerificationContext,
+        apply_configuration_transition,
+        compile_write,
+        dependency_closed_invalidation,
+    )
 
 
 def _root(label: str) -> str:
@@ -37,6 +54,40 @@ def _naive_expiry_only(lease: DemandCellLease, cell: DemandCellState, now: int) 
     return lease.cell_id == cell.cell_id and now < lease.expires_at
 
 
+def _transition_receipts(transition: ConfigurationTransition, valid: bool):
+    authority_source = _root("authority-source")
+    verifier = _root("verifier")
+    observer = _root("resource-observer")
+    good_resource = ResourceFenceReceipt(
+        transition.cell_id,
+        transition.new_configuration_root,
+        transition.new_support_epoch,
+        transition.new_fence_generation,
+        "0" * 64,
+        observer,
+    )
+    resource = ResourceFenceReceipt(
+        good_resource.cell_id,
+        good_resource.configuration_root,
+        good_resource.support_epoch,
+        good_resource.installed_fence_generation,
+        good_resource.canonical_state_root(),
+        observer,
+    )
+    evidence = TransitionAuthorityEvidence(
+        transition.canonical_claim_root() if valid else _root("wrong-claim"),
+        authority_source,
+        verifier,
+    )
+    verification = TransitionVerificationContext(
+        authority_source,
+        verifier,
+        resource.resource_state_root,
+        observer,
+    )
+    return evidence, resource, verification
+
+
 def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
     rng = random.Random(seed)
     counters = {
@@ -48,6 +99,7 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         "compiler_false_hold": 0,
         "transition_ready": 0,
         "transition_hold": 0,
+        "unsupported_transition_false_ready": 0,
         "selective_invalidation_units": 0,
         "global_invalidation_units": 0,
     }
@@ -75,8 +127,6 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         elif mode == 7:
             current, now = base, 99
         else:
-            # Current/issued fence has advanced but the protected resource has
-            # not installed it yet. This is the Greptile P1 regression case.
             current = DemandCellState("cell", 4, cfg_a, 10, 22, 21)
             lease = DemandCellLease("cell", 4, cfg_a, 10, 22, "new", 100)
             now = 50
@@ -89,18 +139,13 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         counters["compiler_false_ready"] += int(actual and not expected)
         counters["compiler_false_hold"] += int(expected and not actual)
 
-        transition = ConfigurationTransition(
-            cell_id="cell",
-            old_configuration_root=cfg_a,
-            new_configuration_root=cfg_b,
-            old_support_epoch=10,
-            new_support_epoch=11,
-            new_fence_generation=22,
-            authenticated=(i % 5 != 0),
-            installed_at_resource=(i % 7 != 0),
-        )
-        decision, _ = apply_configuration_transition(base, transition)
-        counters["transition_ready" if decision.disposition is LeaseDisposition.READY_D0 else "transition_hold"] += 1
+        transition = ConfigurationTransition("cell", cfg_a, cfg_b, 10, 11, 22)
+        valid = i % 5 != 0
+        evidence, resource, verification = _transition_receipts(transition, valid)
+        decision, _ = apply_configuration_transition(base, transition, evidence, resource, verification)
+        transition_ready = decision.disposition is LeaseDisposition.READY_D0
+        counters["transition_ready" if transition_ready else "transition_hold"] += 1
+        counters["unsupported_transition_false_ready"] += int((not valid) and transition_ready)
 
         width = 128
         source = f"c-{rng.randrange(width)}"
@@ -119,13 +164,16 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         counters["global_invalidation_units"] += width
 
     encoded = json.dumps(counters, sort_keys=True, separators=(",", ":")).encode()
-    return {
-        "schema": "aura.astra.o10r.demand_lease_handoff.campaign.v1",
+    result = {
+        "schema": "aura.astra.o10.demand_lease_handoff.campaign.v2",
         "seed": seed,
         **counters,
         "campaign_root": sha256(encoded).hexdigest(),
         "authority": "D0_NONPROMOTING_GATE10_FALSE",
     }
+    if counters["compiler_false_ready"] or counters["compiler_false_hold"] or counters["unsupported_transition_false_ready"]:
+        raise AssertionError(result)
+    return result
 
 
 if __name__ == "__main__":
