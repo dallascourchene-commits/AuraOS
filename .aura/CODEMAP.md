@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1706
-- **total_bytes**: 26844262
-- **text_tokens_est**: 6701429
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1052, 'schema_or_lexicon': 279, 'support_file': 49}
+- **file_count**: 1707
+- **total_bytes**: 26851160
+- **text_tokens_est**: 6703154
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1053, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1706,
+  "repo_file_count": 1707,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1665,6 +1665,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_anchor_locator.py",
     "tests/test_memory_city_component_correct_read_consequence.py",
     "tests/test_memory_city_contingent_hydration.py",
+    "tests/test_memory_city_current_effect_handoff.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_mode_sealed_admission.py",
     "tests/test_memory_city_navigator.py",
@@ -1846,15 +1847,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1706,
-  "bytes": 26844262,
-  "tokens_est": 6701429,
+  "files": 1707,
+  "bytes": 26851160,
+  "tokens_est": 6703154,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1052,
+    "python_module": 1053,
     "schema_or_lexicon": 279,
     "support_file": 49
   }
