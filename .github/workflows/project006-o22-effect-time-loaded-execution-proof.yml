@@ -17,20 +17,18 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Verify exact head
+      - name: Verify exact head and executable Git blobs
         shell: bash
         run: |
+          set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git hash-object tools/project006/effect_time_loaded_execution.py)" = 'b572eb692de3a7081fc0c4adbd86e91db77a0033'
+          test "$(git hash-object tests/test_project006_effect_time_loaded_execution_o22.py)" = '98c65eb111ebb3e3c4cd7a10b902f22fb6c30755'
+          test "$(git hash-object tools/project006/o22_reference/proof_o22.py)" = 'd0af0ec9db79491b508bed8a00c137eb183cc33d'
       - name: Setup Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.13'
-      - name: Verify frozen publication identity
-        shell: bash
-        run: |
-          echo '02be832cb3941ef7ded274a461d2e2e0fc76a74e87909c85b362555e1d499541  tools/project006/effect_time_loaded_execution.py' | sha256sum -c -
-          test "$(git hash-object tests/test_project006_effect_time_loaded_execution_o22.py)" = '98c65eb111ebb3e3c4cd7a10b902f22fb6c30755'
-          echo 'da3f7bf1a9111bb5658958c142b0a6f6f4ab3172c9f024ab87458f473b086d77  tools/project006/o22_reference/proof_o22.py' | sha256sum -c -
       - name: Three fresh venvs and deterministic proof
         shell: bash
         run: |
