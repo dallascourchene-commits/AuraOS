@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788797781,
+  "generated_at_unix": 1788797949,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1820,8 +1820,8 @@
     {
       "ring": "repo",
       "files": 1703,
-      "bytes": 26662024,
-      "tokens_est": 6655906,
+      "bytes": 26662672,
+      "tokens_est": 6656068,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
@@ -163336,9 +163336,6 @@
     "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
-    "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
-      ".github/workflows/awj032-airllm-tiny-runtime.yml"
-    ],
     "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
@@ -173147,13 +173144,12 @@
       "path": ".github/workflows/awj032-airllm-tiny-runtime.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 11150,
-      "lines": 255,
-      "tokens_est": 2788,
+      "bytes": 11798,
+      "lines": 264,
+      "tokens_est": 2950,
       "symbol_count": 0,
       "commands": [
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json",
-        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json",
         "python -m pip",
         "python tools/awj032/airllm_tiny_fixture_probe.py \\"
       ],
@@ -173161,54 +173157,51 @@
         "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json": [
           102
         ],
-        "python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json": [
-          143
-        ],
         "python -m pip": [
-          201,
-          202,
+          210,
           211,
-          212
+          220,
+          221
         ],
         "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
-          218
+          227
         ]
       },
       "topology": {},
-      "digest8": "d57d22c661e4843e",
+      "digest8": "5ada33a058653266",
       "vector": [
-        -0.086488,
-        -0.061777,
-        0.017847,
-        0.157874,
-        0.270445,
-        0.232006,
-        -0.308884,
-        -0.094724,
-        -0.108453,
-        -0.113944,
-        0.171602,
-        -0.245735,
-        0.015101,
-        -0.105707,
-        -0.080996,
-        -0.325358,
-        0.102961,
-        -0.196313,
-        -0.262208,
-        0.289665,
-        -0.100216,
-        -0.130418,
-        0.218278,
-        -0.026084,
-        -0.059031,
-        0.127672,
-        -0.256717,
-        -0.264954,
-        -0.048049,
-        -0.064522,
-        0.226515,
-        -0.05354
+        0.160043,
+        0.169389,
+        0.258172,
+        0.146025,
+        -0.101633,
+        0.239481,
+        0.239481,
+        0.185744,
+        0.234808,
+        0.066587,
+        0.153034,
+        -0.160043,
+        -0.223126,
+        -0.274527,
+        0.047896,
+        0.022196,
+        0.015187,
+        -0.160043,
+        0.178734,
+        0.136679,
+        -0.136679,
+        0.101633,
+        -0.288545,
+        -0.211444,
+        -0.064251,
+        -0.27219,
+        0.099297,
+        -0.054905,
+        -0.176398,
+        0.267518,
+        -0.174062,
+        0.064251
       ]
     },
     {
@@ -294503,8 +294496,8 @@
   },
   "summary": {
     "file_count": 1703,
-    "total_bytes": 26662024,
-    "text_tokens_est": 6655906,
+    "total_bytes": 26662672,
+    "text_tokens_est": 6656068,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
@@ -459585,6 +459578,6 @@
       }
     ],
     "record_fingerprint": "e0e13594adf2372eda545da67497ad3a",
-    "payload_hash": "a85de1549b2ec264f47199a8c80a3eb0"
+    "payload_hash": "3890dac818bc486a30e672af285728af"
   }
 }
