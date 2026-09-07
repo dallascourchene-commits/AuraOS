@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1703
-- **total_bytes**: 26794295
-- **text_tokens_est**: 6688935
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1046, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1705
+- **total_bytes**: 26796546
+- **text_tokens_est**: 6689499
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 282, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1703,
+  "repo_file_count": 1705,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1713,6 +1713,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/o12c_hs1000.py",
     "tools/arena/o12c_lattice8.py",
     "tools/arena/o12c_sweep13d.py",
+    "tools/arena/o13_hs1000.py",
+    "tools/arena/o13_lattice8.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1843,15 +1845,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1703,
-  "bytes": 26794295,
-  "tokens_est": 6688935,
+  "files": 1705,
+  "bytes": 26796546,
+  "tokens_est": 6689499,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1046,
+    "python_module": 1048,
     "schema_or_lexicon": 282,
     "support_file": 49
   }
