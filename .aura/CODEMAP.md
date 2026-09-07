@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1692
-- **total_bytes**: 26725682
-- **text_tokens_est**: 6671777
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1038, 'schema_or_lexicon': 279, 'support_file': 49}
+- **file_count**: 1696
+- **total_bytes**: 26746784
+- **text_tokens_est**: 6677054
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1042, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1692,
+  "repo_file_count": 1696,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1666,6 +1666,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_coverage_membrane.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_navigator.py",
+    "tests/test_memory_city_read_consequence.py",
     "tests/test_memory_city_typed_closure.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1699,6 +1700,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_coverage_membrane_hs1000.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
+    "tools/arena/memory_city_read_consequence.py",
+    "tools/arena/memory_city_read_consequence_campaign.py",
+    "tools/arena/memory_city_read_consequence_hs1000.py",
     "tools/arena/memory_city_typed_closure.py",
     "tools/arena/memory_city_typed_closure_campaign.py",
     "tools/arena/memory_city_typed_closure_hs1000.py",
@@ -1832,15 +1836,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1692,
-  "bytes": 26725682,
-  "tokens_est": 6671777,
+  "files": 1696,
+  "bytes": 26746784,
+  "tokens_est": 6677054,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1038,
+    "python_module": 1042,
     "schema_or_lexicon": 279,
     "support_file": 49
   }
