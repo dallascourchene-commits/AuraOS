@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1702
-- **total_bytes**: 26811784
-- **text_tokens_est**: 6693308
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 279, 'support_file': 49}
+- **file_count**: 1706
+- **total_bytes**: 26842723
+- **text_tokens_est**: 6701044
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1052, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1702,
+  "repo_file_count": 1706,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1701,11 +1701,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_reflexive_telemetry.py",
     "tools/arena/memory_city_adaptive_hydration.py",
     "tools/arena/memory_city_anchor_locator.py",
+    "tools/arena/memory_city_consequence_refinement.py",
     "tools/arena/memory_city_contingent_hydration.py",
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_coverage_membrane.py",
+    "tools/arena/memory_city_current_effect_handoff.py",
     "tools/arena/memory_city_ecf_adapter.py",
+    "tools/arena/memory_city_handoff_current_read_seal.py",
+    "tools/arena/memory_city_horizon_fenced_handoff.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
     "tools/arena/memory_city_quotient_controllability.py",
@@ -1842,15 +1846,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1702,
-  "bytes": 26811784,
-  "tokens_est": 6693308,
+  "files": 1706,
+  "bytes": 26842723,
+  "tokens_est": 6701044,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1048,
+    "python_module": 1052,
     "schema_or_lexicon": 279,
     "support_file": 49
   }
