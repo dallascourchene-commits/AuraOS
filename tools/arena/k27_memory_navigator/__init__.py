@@ -17,6 +17,16 @@ from .minimal_evidence import (
     DecisionNode, EvidenceMode, EvidencePlan, EvidenceWorld,
     compile_minimal_evidence, evaluate,
 )
+from .temporal_zone import (
+    DifferenceConstraint, ZoneCertificate, ZoneDisposition, compile_zone,
+)
+from .reflexive_topology import (
+    ProbeStep, TopologyCertificate, TopologyDisposition, components,
+    execute_probe_program, graph_root, program_root,
+)
+from .route_evidence_transaction import (
+    RouteEvidenceTransaction, TransactionDisposition, certify,
+)
 
 __all__ = [
     "Admission", "CapacityEnvelope", "Disposition", "Polarity", "ProofReceipt",
@@ -25,5 +35,8 @@ __all__ = [
     "route_identity_from_runtime", "DeltaPlan", "DeltaStrategy", "RouteChange",
     "RouteSegment", "SegmentDecision", "plan_route_delta", "DecisionNode",
     "EvidenceMode", "EvidencePlan", "EvidenceWorld", "compile_minimal_evidence",
-    "evaluate",
+    "evaluate", "DifferenceConstraint", "ZoneCertificate", "ZoneDisposition",
+    "compile_zone", "ProbeStep", "TopologyCertificate", "TopologyDisposition",
+    "components", "execute_probe_program", "graph_root", "program_root",
+    "RouteEvidenceTransaction", "TransactionDisposition", "certify",
 ]
