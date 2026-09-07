@@ -1,0 +1,139 @@
+{
+  "authority": {
+    "authority_minted": false,
+    "deploy_authority": false,
+    "effect_authority": false,
+    "gate10": false,
+    "merge_authority": false,
+    "mutation_authority": false
+  },
+  "base_head": "7446bec5437f5207a68204c52124dcc08ef87a05",
+  "base_pr": 888,
+  "campaign": {
+    "campaign_root": "adf7699290012e13ce37077dba78d2d4a87210cd41e1ecb9ab98e73ffb62b63f",
+    "metrics": {
+      "admission_missing_authority": 2000,
+      "admission_schema": 2000,
+      "cases": 20000,
+      "consequence_substitution": 2000,
+      "detached_binding": 0,
+      "effect_escalation_move": 2000,
+      "expired": 2000,
+      "holder_move": 2000,
+      "oracle_tecc": 2000,
+      "read_authority": 2000,
+      "read_owner_move": 2000,
+      "refinement_owner_move": 2000,
+      "strict_false_hold": 0,
+      "strict_false_tecc": 0,
+      "strict_tecc": 2000,
+      "unsafe_false_tecc": 16000,
+      "valid": 2000
+    },
+    "reasons": {
+      "ADMISSION_AUTHORITY_FIELDS_MISSING_OR_ESCALATED": 2000,
+      "ADMISSION_SCHEMA_NOT_CANONICAL": 2000,
+      "EFFECT_ESCALATION_MOVED": 2000,
+      "EFFECT_REFINEMENT_OWNER_RECEIPT_STALE": 2000,
+      "LEASE_EXPIRED": 2000,
+      "LEASE_HOLDER_MOVED": 2000,
+      "OWNER_BOUND_EFFECT_REFINEMENT_REQUIRES_INDEPENDENT_TECC": 2000,
+      "READ_CERTIFICATE_AUTHORITY_ESCALATION": 2000,
+      "READ_CONSEQUENCE_ROOT_SUBSTITUTED": 2000,
+      "READ_OWNER_RECEIPT_STALE": 2000
+    },
+    "schema": "AURA-MEMORY-CITY-O12C-R2-CAMPAIGN-v1"
+  },
+  "factored13d": {
+    "hard_execution": {
+      "candidate_tecc": 1,
+      "effect_ready": 0,
+      "false_hold": 0,
+      "false_tecc": 0,
+      "oracle_tecc": 1,
+      "states": 6561
+    },
+    "metrics": {
+      "context_states_executed_on_keeper": 243,
+      "decision_context_accesses": 0,
+      "effect_ready": 0,
+      "factored_states": 1594323,
+      "full_13d_non_tecc_states": 1594080,
+      "full_13d_tecc_states": 243,
+      "hard_false_hold": 0,
+      "hard_false_tecc": 0,
+      "hard_invalid_repaired_by_context": 0,
+      "hard_states_executed": 6561,
+      "hard_valid_states": 1,
+      "tecc_root_variants_across_context": 1,
+      "valid_context_variants": 243
+    },
+    "root": "fd25255b61724699c4c24e650fbfbc3bf07932f0808ec440ccae9048ba8192e9",
+    "schema": "AURA-MEMORY-CITY-O12C-R2-FACTORED-13D-v1"
+  },
+  "failed_first_scars": [
+    "Initial test/campaign import-star could not access underscore-private consequence helper; zero credit; all three venvs deleted and recreated.",
+    "Naive full 1,594,323-call 13D runner exceeded container call window; zero 13D credit; replaced by actual 6,561 hard-state execution plus actual 243 typed-context execution and structural factor check."
+  ],
+  "focused_tests": {
+    "fresh_venvs": 3,
+    "passed": 48,
+    "tests_per_env": 16,
+    "total": 48
+  },
+  "foreign_parents": [
+    {
+      "kind": "independent_review",
+      "name": "Greptile PR888 exact-source review",
+      "source_head": "dbe1e09fd3dbf6b2707f5ce2e04186c6d53cfddd"
+    },
+    {
+      "drive_id": "1aRRBzvzqUe3eEvGg20VeUYzV97wpvazbWxJ3BnC8Fa8",
+      "kind": "drive_contract",
+      "name": "PCTC V0.4 certified read -> effect-obligation refinement -> mutation seam"
+    }
+  ],
+  "hs1000": {
+    "cells": 1000,
+    "consequence_groups": 10,
+    "freeze_root": "4fbc0a3a7c1453850f8ad7a5a56d72550a678bff2b84e609736806049ce9b7d1",
+    "quotient_root": "2431314af67366012e472decb0b76a6fcef010df044a688eaa5654e25f28a93f",
+    "top27_root": "2431314af67366012e472decb0b76a6fcef010df044a688eaa5654e25f28a93f"
+  },
+  "inherited_results": {
+    "o1_tecc_effect_refinement_collision_campaign_root": "d02d2ce2e3e3038ce2e7084cf7a158b9c3a6479c385054e709305003c117495d",
+    "o2_owner_binding_migration_campaign_root": "2aeaee04bb6b6a978d8a239f5402363f7450aeeae9a6f8fc108461cb052caaf7"
+  },
+  "keeper_laws": [
+    "OwnerProducedBindingRoot != SchemaShapedRecomputation",
+    "ExactCurrentCrossBinding + ModeSeal != ExactTECCInputWithoutEffectRefinementIdentity",
+    "CertifiedReadConsequence != EffectObligationSubclass != MutationAuthority",
+    "EffectEscalationRoot + CurrentSemanticHandoff + ExactMutationFenceStillDoesNotMintEffectAuthority",
+    "ValidEffectHandoff => HOLD_TECC_REQUIRED_D0"
+  ],
+  "lattice8": {
+    "metrics": {
+      "candidate_tecc": 1,
+      "effect_ready": 0,
+      "false_hold": 0,
+      "false_tecc": 0,
+      "oracle_tecc": 1,
+      "states": 6561
+    },
+    "root": "42d0700acc9d5d2e2c0252fbc1f9c961f4257d285f7c859b3b526c26504d2d29",
+    "schema": "AURA-MEMORY-CITY-O12C-R2-LATTICE8-v1"
+  },
+  "objective": "Owner-bound read + effect-refinement + mutation evidence to TECC-only handoff",
+  "receipt_root": "732d87b91faf1ce56ab28708f91c22222bdc1fc2342b0af8508bba8b1a3f4e19",
+  "schema": "AURA-MEMORY-CITY-O12C-R2-PROOF-RECEIPT-v1",
+  "source_hashes": {
+    "campaign": "fcaade264472aba6e700ac9088b1f2e70307b7cb7375b8157f11cbe875e85074",
+    "factored13d": "cc076a72e0899d5b2d23ba8121172cf119a7ed1e86c9c39167716843da639d58",
+    "hs1000": "622a3cb0d2d397cdcfc22837b8e0fbab83f08d1a5d2dbef46b82aa5682f1e7ee",
+    "implementation": "f2ca0b80dd3a2f6598fb8f23f9ee482cfdc7e2d34a1865d25c2dd762e86c1abb",
+    "lattice8": "c00744a02cee35ed19859de5584394ec26d747543140f388ea05f426c8061a04",
+    "lattice_state": "bdc4555378d85a44a7fd630cdb55f6b4c2499846ad83ee6bc684770e154c71de",
+    "tests": "8ed94e9d76d86dc56caa723ac2871b84a30e517d75dc0ee4a1d5c547e4cc7913"
+  },
+  "status": "D0_NONPROMOTING"
+}
