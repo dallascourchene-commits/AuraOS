@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1675,
+    "repo_file_count": 1679,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2695,6 +2695,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_memory_navigator_incremental_evidence.py",
       "tests/test_k27_memory_navigator_route_admission.py",
       "tests/test_k27_memory_navigator_runtime_bridge.py",
       "tests/test_k27_memory_runtime.py",
@@ -2723,7 +2724,10 @@
       "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
+      "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+      "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
+      "tools/arena/k27_memory_navigator/route_delta_planner.py",
       "tools/arena/k27_memory_navigator/runtime_bridge.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/construction_demo_assets/README.md",
@@ -104322,6 +104326,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_memory_navigator_incremental_evidence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8997,
+      "lines": 195,
+      "tokens_est": 2250,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8e79954923428961",
+      "vector": [
+        -0.134126,
+        -0.006387,
+        -0.310406,
+        -0.169893,
+        0.297632,
+        0.037044,
+        0.098359,
+        0.057483,
+        -0.157119,
+        -0.164783,
+        0.192886,
+        0.003832,
+        0.039599,
+        -0.057483,
+        -0.098359,
+        -0.277194,
+        -0.20055,
+        -0.085585,
+        0.220989,
+        0.14179,
+        -0.08303,
+        -0.292522,
+        -0.177557,
+        -0.241427,
+        0.218434,
+        0.103469,
+        0.272084,
+        -0.25931,
+        0.203105,
+        0.006387,
+        -0.164783,
+        -0.080476
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_navigator_route_admission.py",
       "role": "python_module",
       "binary": false,
@@ -105594,47 +105645,141 @@
       "path": "tools/arena/k27_memory_navigator/__init__.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 623,
-      "lines": 25,
-      "tokens_est": 156,
+      "bytes": 1255,
+      "lines": 30,
+      "tokens_est": 314,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b1517c955da13f8f",
+      "digest8": "e704914194739b6b",
       "vector": [
-        -0.134754,
-        0.080308,
-        0.279036,
-        0.159255,
-        0.183755,
-        -0.017695,
-        -0.249091,
-        0.29537,
-        0.088475,
-        -0.210978,
-        -0.306259,
-        -0.216423,
-        0.093919,
-        -0.112975,
-        0.221868,
-        -0.235479,
-        0.066696,
-        0.129309,
-        -0.183755,
-        -0.093919,
-        -0.216423,
-        -0.102086,
-        0.020417,
-        -0.044918,
-        0.311703,
-        0.31987,
-        0.053085,
-        -0.034029,
-        -0.04764,
-        0.014973,
-        0.134754,
-        0.148365
+        -0.065477,
+        0.173456,
+        0.184943,
+        0.040205,
+        -0.065477,
+        -0.210214,
+        0.065477,
+        0.040205,
+        -0.251568,
+        -0.102235,
+        0.203322,
+        0.292922,
+        0.090748,
+        -0.11602,
+        0.281434,
+        -0.127507,
+        0.095343,
+        0.269947,
+        -0.212512,
+        -0.180348,
+        -0.198727,
+        0.265353,
+        0.217107,
+        -0.056287,
+        0.081559,
+        -0.060882,
+        -0.088451,
+        -0.228594,
+        0.0448,
+        -0.242378,
+        0.265353,
+        -0.189538
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3962,
+      "lines": 116,
+      "tokens_est": 991,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "591fa867cee1dda4",
+      "vector": [
+        0.259476,
+        -0.079383,
+        -0.041469,
+        -0.29739,
+        -0.23341,
+        -0.065165,
+        0.072274,
+        0.209713,
+        0.077013,
+        0.10071,
+        -0.114928,
+        0.221561,
+        -0.159951,
+        0.292651,
+        -0.254736,
+        0.271324,
+        -0.069904,
+        -0.069904,
+        -0.020142,
+        0.16706,
+        -0.235779,
+        -0.067535,
+        -0.292651,
+        0.292651,
+        0.219192,
+        0.024881,
+        -0.112558,
+        -0.112558,
+        -0.114928,
+        0.150472,
+        0.143363,
+        0.015403
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4454,
+      "lines": 122,
+      "tokens_est": 1114,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "51fdb2fed96d9998",
+      "vector": [
+        0.189832,
+        -0.230269,
+        0.281939,
+        -0.183092,
+        -0.147148,
+        0.012356,
+        0.097724,
+        0.198818,
+        -0.084245,
+        -0.16512,
+        0.250488,
+        -0.088738,
+        0.108957,
+        0.167366,
+        -0.228023,
+        0.052793,
+        0.279693,
+        -0.077505,
+        0.041561,
+        -0.266214,
+        0.239255,
+        -0.266214,
+        -0.239255,
+        -0.151641,
+        0.196571,
+        -0.034821,
+        0.052793,
+        0.115696,
+        -0.102217,
+        0.252734,
+        -0.097724,
+        0.149394
       ]
     },
     {
@@ -105682,6 +105827,53 @@
         0.060855,
         0.132888,
         -0.271986
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4184,
+      "lines": 121,
+      "tokens_est": 1046,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "af185b1a97f7e6d4",
+      "vector": [
+        0.212845,
+        0.215098,
+        0.167799,
+        -0.228612,
+        0.147528,
+        -0.095724,
+        -0.138518,
+        -0.068696,
+        -0.262397,
+        -0.025902,
+        -0.28492,
+        -0.147528,
+        0.282668,
+        -0.097976,
+        0.282668,
+        -0.012388,
+        0.061939,
+        0.070948,
+        -0.237621,
+        0.24663,
+        0.152032,
+        -0.016892,
+        -0.010135,
+        0.034911,
+        0.041668,
+        0.253387,
+        -0.174556,
+        -0.059687,
+        0.28492,
+        -0.194827,
+        -0.219602,
+        -0.113743
       ]
     },
     {
@@ -106823,7 +107015,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788740557,
+  "generated_at_unix": 1788740931,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108456,6 +108648,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_memory_navigator_incremental_evidence.py",
       "tests/test_k27_memory_navigator_route_admission.py",
       "tests/test_k27_memory_navigator_runtime_bridge.py",
       "tests/test_k27_memory_runtime.py",
@@ -108484,7 +108677,10 @@
       "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
+      "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+      "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
+      "tools/arena/k27_memory_navigator/route_delta_planner.py",
       "tools/arena/k27_memory_navigator/runtime_bridge.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/construction_demo_assets/README.md",
@@ -266575,6 +266771,246 @@
         "file_digest8": "94c9ed628d66a22d"
       },
       {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#class:IncrementalEvidenceTests:ef09db121971f8f3",
+        "name": "IncrementalEvidenceTests",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 54,
+        "end_line": 190,
+        "signature_hash": "2a8f22c1ba005063",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:envelope:aac0d1669c5864b5",
+        "name": "envelope",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "33d51f95070644d8",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:identity:42ea47162ba84247",
+        "name": "identity",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 21,
+        "end_line": 26,
+        "signature_hash": "c7271559ba999e12",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:receipt:b2fb53a87a9e0be6",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 43,
+        "end_line": 46,
+        "signature_hash": "caec069b1be324a8",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:temporal:108ac15f55999fc4",
+        "name": "temporal",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 35,
+        "end_line": 40,
+        "signature_hash": "e3f504f160098675",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:use:56a4b975ac1765bb",
+        "name": "use",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "edf491dbdf06fdb9",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.contexts:dff7471d29b815b4",
+        "name": "IncrementalEvidenceTests.contexts",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "81d5407f7b78d2c1",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.segments:0917440c2d39c5ee",
+        "name": "IncrementalEvidenceTests.segments",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 55,
+        "end_line": 60,
+        "signature_hash": "18537a60c8b936c8",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_currentness_rebind_does_not_rebuild_geometry:ca05a52b756953aa",
+        "name": "IncrementalEvidenceTests.test_currentness_rebind_does_not_rebuild_geometry",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 79,
+        "end_line": 86,
+        "signature_hash": "98816c0760c7dbd4",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_dense_switches_eager:4c8d8abfe4d136c2",
+        "name": "IncrementalEvidenceTests.test_dense_switches_eager",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 72,
+        "end_line": 77,
+        "signature_hash": "3fdc062134c58087",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_duplicate_segments_rejected:d04fa801445e1106",
+        "name": "IncrementalEvidenceTests.test_duplicate_segments_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 95,
+        "end_line": 98,
+        "signature_hash": "278786fa8766367a",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_hard_premise_holds_before_query:f300f7548c7dea0d",
+        "name": "IncrementalEvidenceTests.test_hard_premise_holds_before_query",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 106,
+        "end_line": 109,
+        "signature_hash": "70a54d14e1e0bfc8",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_lifecycle_move_reproof_without_geometry_rebuild:2744af81f43e324c",
+        "name": "IncrementalEvidenceTests.test_lifecycle_move_reproof_without_geometry_rebuild",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 88,
+        "end_line": 93,
+        "signature_hash": "3fb6a3df4aa6e61a",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_parity_requires_all_weighted_bits:f3c1993a7427eafa",
+        "name": "IncrementalEvidenceTests.test_parity_requires_all_weighted_bits",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 135,
+        "end_line": 138,
+        "signature_hash": "b79fd2d68ab8b434",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_plans_never_mint_authority:384d16799c3d1009",
+        "name": "IncrementalEvidenceTests.test_plans_never_mint_authority",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 140,
+        "end_line": 145,
+        "signature_hash": "3e3c86cfcf2a9219",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal.brute:aef4338f4bea6d50",
+        "name": "IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal.brute",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 149,
+        "end_line": 162,
+        "signature_hash": "79a11c83b2c4f57a",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal:c6f4f37d347d3e82",
+        "name": "IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 147,
+        "end_line": 176,
+        "signature_hash": "c6f03cedcaef8f99",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_random_tree_classification:394971f492d82cfc",
+        "name": "IncrementalEvidenceTests.test_random_tree_classification",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 178,
+        "end_line": 190,
+        "signature_hash": "33fe587a9774159a",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_sparse_corridor:cc2b0a9e6dcfcee8",
+        "name": "IncrementalEvidenceTests.test_sparse_corridor",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "8d08e3d297dae223",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_tree_classifies_every_world:243975ecae160857",
+        "name": "IncrementalEvidenceTests.test_tree_classifies_every_world",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 117,
+        "end_line": 122,
+        "signature_hash": "57ed0feeea6440d1",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_uniform_outcome_is_zero_disclosure:bd6d07ff07ec9947",
+        "name": "IncrementalEvidenceTests.test_uniform_outcome_is_zero_disclosure",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 100,
+        "end_line": 104,
+        "signature_hash": "7c51f2c9d34829af",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_unsplittable_family_falls_back:670f49dcfd78eb2c",
+        "name": "IncrementalEvidenceTests.test_unsplittable_family_falls_back",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 130,
+        "end_line": 133,
+        "signature_hash": "01efd108737e26ea",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_unsupported_family_falls_back:3c9b48a29a3b20eb",
+        "name": "IncrementalEvidenceTests.test_unsupported_family_falls_back",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 124,
+        "end_line": 128,
+        "signature_hash": "d7c81869f4ba744f",
+        "file_digest8": "8e79954923428961"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_weighted_tree_prefers_cheaper_equivalent_predicate:267746cd51b356cd",
+        "name": "IncrementalEvidenceTests.test_weighted_tree_prefers_cheaper_equivalent_predicate",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "line": 111,
+        "end_line": 115,
+        "signature_hash": "c1fd67be30304720",
+        "file_digest8": "8e79954923428961"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#class:NavigatorRouteAdmissionTests:aabbd9ec667747b1",
         "name": "NavigatorRouteAdmissionTests",
         "kind": "class",
@@ -270095,6 +270531,136 @@
         "file_digest8": "4c8836c0d0d22734"
       },
       {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:envelope:1380f8a29d1065ff",
+        "name": "envelope",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "f9d55436b9064ce6",
+        "file_digest8": "591fa867cee1dda4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:identity:2775fa9c68573b2b",
+        "name": "identity",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "52e464d7198c533e",
+        "file_digest8": "591fa867cee1dda4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:receipt:fcf0acb6b42f61df",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "line": 31,
+        "end_line": 37,
+        "signature_hash": "2c199bf345a7dffa",
+        "file_digest8": "591fa867cee1dda4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:run:caf3f4a959e32957",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "line": 40,
+        "end_line": 111,
+        "signature_hash": "a4178f4df0896922",
+        "file_digest8": "591fa867cee1dda4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:temporal:34dba8c7b483ab2e",
+        "name": "temporal",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "87dc9e55c34f528f",
+        "file_digest8": "591fa867cee1dda4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:DecisionNode:b778615b6dfc8f77",
+        "name": "DecisionNode",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "6e3b66e75c95fcad",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:EvidenceMode:1aa68c4dd010cb61",
+        "name": "EvidenceMode",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 10,
+        "end_line": 14,
+        "signature_hash": "027435ba7f51b3ca",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:EvidencePlan:71e2f697a1b3d2d2",
+        "name": "EvidencePlan",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 39,
+        "end_line": 46,
+        "signature_hash": "5d9c5f4fbfb83772",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:EvidenceWorld:911f5634acdec5ff",
+        "name": "EvidenceWorld",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 18,
+        "end_line": 27,
+        "signature_hash": "79d350c2da30908c",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#function:compile_minimal_evidence:536d550c83528b6e",
+        "name": "compile_minimal_evidence",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 49,
+        "end_line": 107,
+        "signature_hash": "ebe27e12d885dd6d",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#function:evaluate:e8e200206ed5778f",
+        "name": "evaluate",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 110,
+        "end_line": 121,
+        "signature_hash": "6dec05670c922d20",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#method:EvidenceWorld.__post_init__:02047368c241e4a1",
+        "name": "EvidenceWorld.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 23,
+        "end_line": 27,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#method:compile_minimal_evidence.solve:14bd41a46dcd561a",
+        "name": "compile_minimal_evidence.solve",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "line": 82,
+        "end_line": 101,
+        "signature_hash": "9e147595101506ca",
+        "file_digest8": "51fdb2fed96d9998"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory_navigator/route_card_admission.py#class:Admission:e2a494c21f39c3f6",
         "name": "Admission",
         "kind": "class",
@@ -270313,6 +270879,96 @@
         "end_line": 128,
         "signature_hash": "00baf84268a619dd",
         "file_digest8": "de55e41e3d2d95d5"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:DeltaPlan:3a9acabdd7d6192d",
+        "name": "DeltaPlan",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 54,
+        "end_line": 61,
+        "signature_hash": "8e7a3b782323eb59",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:DeltaStrategy:79c727efedd585c3",
+        "name": "DeltaStrategy",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 10,
+        "end_line": 13,
+        "signature_hash": "b0694cdf71e5e788",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:RouteChange:2f410105829dad66",
+        "name": "RouteChange",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 32,
+        "end_line": 42,
+        "signature_hash": "79a0ab77c3198715",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:RouteSegment:afa96193825b415a",
+        "name": "RouteSegment",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 17,
+        "end_line": 28,
+        "signature_hash": "b923a10e41517658",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:SegmentDecision:c1e45ecd5d4d11fb",
+        "name": "SegmentDecision",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 46,
+        "end_line": 50,
+        "signature_hash": "c77335568c7c6de2",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#function:_coverage:839831a7b53d26d1",
+        "name": "_coverage",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "3b8b252cc0673697",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#function:plan_route_delta:71af7cd66d9cb6ce",
+        "name": "plan_route_delta",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 68,
+        "end_line": 120,
+        "signature_hash": "6f808008abdc1d4f",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#method:RouteChange.__post_init__:ca581450cc79d8ae",
+        "name": "RouteChange.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "af185b1a97f7e6d4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#method:RouteSegment.__post_init__:27ea5a0e9ff1640d",
+        "name": "RouteSegment.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "line": 22,
+        "end_line": 28,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "af185b1a97f7e6d4"
       },
       {
         "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#class:RuntimeBridgeError:476e3b31905e1ed9",
@@ -271905,8 +272561,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "492df4ebf7faba145a171c42d48e31e3",
-    "payload_hash": "283fb4b4cc7aa222ae184f063c7bee0c"
+    "record_fingerprint": "bc6506cbb260f7a9afa8ec57fbf78fef",
+    "payload_hash": "efcdc71b6726442d46fb4393780a71b4"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271919,15 +272575,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1675,
-      "bytes": 26638969,
-      "tokens_est": 6650094,
+      "files": 1679,
+      "bytes": 26661198,
+      "tokens_est": 6655653,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1025,
+        "python_module": 1029,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -272615,15 +273271,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1675,
-    "total_bytes": 26638969,
-    "text_tokens_est": 6650094,
+    "file_count": 1679,
+    "total_bytes": 26661198,
+    "text_tokens_est": 6655653,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1025,
+      "python_module": 1029,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -273853,6 +274509,14 @@
         "end_line": 182,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:run:145d96f58ea52f8e",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 111,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:run:caf3f4a959e32957",
+        "signature_hash": "a4178f4df0896922"
       }
     ],
     "run.record": [
@@ -344637,6 +345301,14 @@
         "end_line": 38,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:evaluate:c198dc8d00caa7cb",
         "signature_hash": "cfdf5c5266cbe18b"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 121,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#function:evaluate:e8e200206ed5778f",
+        "signature_hash": "6dec05670c922d20"
       }
     ],
     "_tuple_paths": [
@@ -388743,12 +389415,28 @@
         "signature_hash": "7cfd625189ef942a"
       },
       {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 26,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:identity:42ea47162ba84247",
+        "signature_hash": "c7271559ba999e12"
+      },
+      {
         "file": "tests/test_k27_memory_navigator_route_admission.py",
         "kind": "function",
         "line": 14,
         "end_line": 19,
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#function:identity:040890251309d739",
         "signature_hash": "c7271559ba999e12"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:identity:2775fa9c68573b2b",
+        "signature_hash": "52e464d7198c533e"
       }
     ],
     "runtime_proof": [
@@ -428287,15 +428975,39 @@
     ],
     "envelope": [
       {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:envelope:aac0d1669c5864b5",
+        "signature_hash": "33d51f95070644d8"
+      },
+      {
         "file": "tests/test_k27_memory_navigator_route_admission.py",
         "kind": "function",
         "line": 22,
         "end_line": 25,
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#function:envelope:64b3b3f38a33e56c",
         "signature_hash": "33d51f95070644d8"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:envelope:1380f8a29d1065ff",
+        "signature_hash": "f9d55436b9064ce6"
       }
     ],
     "temporal": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 40,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:temporal:108ac15f55999fc4",
+        "signature_hash": "e3f504f160098675"
+      },
       {
         "file": "tests/test_k27_memory_navigator_route_admission.py",
         "kind": "function",
@@ -428303,9 +429015,25 @@
         "end_line": 32,
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#function:temporal:149922d36ab107d2",
         "signature_hash": "e3f504f160098675"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:temporal:34dba8c7b483ab2e",
+        "signature_hash": "87dc9e55c34f528f"
       }
     ],
     "receipt": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 46,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:receipt:b2fb53a87a9e0be6",
+        "signature_hash": "caec069b1be324a8"
+      },
       {
         "file": "tests/test_k27_memory_navigator_route_admission.py",
         "kind": "function",
@@ -428313,9 +429041,25 @@
         "end_line": 40,
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#function:receipt:f606236a6e334f24",
         "signature_hash": "caec069b1be324a8"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 37,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:receipt:fcf0acb6b42f61df",
+        "signature_hash": "2c199bf345a7dffa"
       }
     ],
     "use": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#function:use:56a4b975ac1765bb",
+        "signature_hash": "edf491dbdf06fdb9"
+      },
       {
         "file": "tests/test_k27_memory_navigator_route_admission.py",
         "kind": "function",
@@ -428323,6 +429067,196 @@
         "end_line": 46,
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#function:use:fdfc5142181546a5",
         "signature_hash": "f7d053af17b17f40"
+      }
+    ],
+    "IncrementalEvidenceTests": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 190,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#class:IncrementalEvidenceTests:ef09db121971f8f3",
+        "signature_hash": "2a8f22c1ba005063"
+      }
+    ],
+    "IncrementalEvidenceTests.segments": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.segments:0917440c2d39c5ee",
+        "signature_hash": "18537a60c8b936c8"
+      }
+    ],
+    "IncrementalEvidenceTests.contexts": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.contexts:dff7471d29b815b4",
+        "signature_hash": "81d5407f7b78d2c1"
+      }
+    ],
+    "IncrementalEvidenceTests.test_sparse_corridor": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_sparse_corridor:cc2b0a9e6dcfcee8",
+        "signature_hash": "8d08e3d297dae223"
+      }
+    ],
+    "IncrementalEvidenceTests.test_dense_switches_eager": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 77,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_dense_switches_eager:4c8d8abfe4d136c2",
+        "signature_hash": "3fdc062134c58087"
+      }
+    ],
+    "IncrementalEvidenceTests.test_currentness_rebind_does_not_rebuild_geometry": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 86,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_currentness_rebind_does_not_rebuild_geometry:ca05a52b756953aa",
+        "signature_hash": "98816c0760c7dbd4"
+      }
+    ],
+    "IncrementalEvidenceTests.test_lifecycle_move_reproof_without_geometry_rebuild": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 93,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_lifecycle_move_reproof_without_geometry_rebuild:2744af81f43e324c",
+        "signature_hash": "3fb6a3df4aa6e61a"
+      }
+    ],
+    "IncrementalEvidenceTests.test_duplicate_segments_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 98,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_duplicate_segments_rejected:d04fa801445e1106",
+        "signature_hash": "278786fa8766367a"
+      }
+    ],
+    "IncrementalEvidenceTests.test_uniform_outcome_is_zero_disclosure": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 104,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_uniform_outcome_is_zero_disclosure:bd6d07ff07ec9947",
+        "signature_hash": "7c51f2c9d34829af"
+      }
+    ],
+    "IncrementalEvidenceTests.test_hard_premise_holds_before_query": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 109,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_hard_premise_holds_before_query:f300f7548c7dea0d",
+        "signature_hash": "70a54d14e1e0bfc8"
+      }
+    ],
+    "IncrementalEvidenceTests.test_weighted_tree_prefers_cheaper_equivalent_predicate": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 115,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_weighted_tree_prefers_cheaper_equivalent_predicate:267746cd51b356cd",
+        "signature_hash": "c1fd67be30304720"
+      }
+    ],
+    "IncrementalEvidenceTests.test_tree_classifies_every_world": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 122,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_tree_classifies_every_world:243975ecae160857",
+        "signature_hash": "57ed0feeea6440d1"
+      }
+    ],
+    "IncrementalEvidenceTests.test_unsupported_family_falls_back": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 128,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_unsupported_family_falls_back:3c9b48a29a3b20eb",
+        "signature_hash": "d7c81869f4ba744f"
+      }
+    ],
+    "IncrementalEvidenceTests.test_unsplittable_family_falls_back": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 133,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_unsplittable_family_falls_back:670f49dcfd78eb2c",
+        "signature_hash": "01efd108737e26ea"
+      }
+    ],
+    "IncrementalEvidenceTests.test_parity_requires_all_weighted_bits": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 138,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_parity_requires_all_weighted_bits:f3c1993a7427eafa",
+        "signature_hash": "b79fd2d68ab8b434"
+      }
+    ],
+    "IncrementalEvidenceTests.test_plans_never_mint_authority": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 145,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_plans_never_mint_authority:384d16799c3d1009",
+        "signature_hash": "3e3c86cfcf2a9219"
+      }
+    ],
+    "IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 176,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal:c6f4f37d347d3e82",
+        "signature_hash": "c6f03cedcaef8f99"
+      }
+    ],
+    "IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal.brute": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 162,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_random_small_cost_is_bruteforce_optimal.brute:aef4338f4bea6d50",
+        "signature_hash": "79a11c83b2c4f57a"
+      }
+    ],
+    "IncrementalEvidenceTests.test_random_tree_classification": [
+      {
+        "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 190,
+        "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#method:IncrementalEvidenceTests.test_random_tree_classification:394971f492d82cfc",
+        "signature_hash": "33fe587a9774159a"
       }
     ],
     "reference": [
@@ -431635,6 +432569,76 @@
         "signature_hash": "c1cbb7a146fe1ebb"
       }
     ],
+    "EvidenceMode": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 14,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:EvidenceMode:1aa68c4dd010cb61",
+        "signature_hash": "027435ba7f51b3ca"
+      }
+    ],
+    "EvidenceWorld": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 27,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:EvidenceWorld:911f5634acdec5ff",
+        "signature_hash": "79d350c2da30908c"
+      }
+    ],
+    "EvidenceWorld.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 27,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#method:EvidenceWorld.__post_init__:02047368c241e4a1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "DecisionNode": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:DecisionNode:b778615b6dfc8f77",
+        "signature_hash": "6e3b66e75c95fcad"
+      }
+    ],
+    "EvidencePlan": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 46,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:EvidencePlan:71e2f697a1b3d2d2",
+        "signature_hash": "5d9c5f4fbfb83772"
+      }
+    ],
+    "compile_minimal_evidence": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 107,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#function:compile_minimal_evidence:536d550c83528b6e",
+        "signature_hash": "ebe27e12d885dd6d"
+      }
+    ],
+    "compile_minimal_evidence.solve": [
+      {
+        "file": "tools/arena/k27_memory_navigator/minimal_evidence.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 101,
+        "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#method:compile_minimal_evidence.solve:14bd41a46dcd561a",
+        "signature_hash": "9e147595101506ca"
+      }
+    ],
     "Polarity": [
       {
         "file": "tools/arena/k27_memory_navigator/route_card_admission.py",
@@ -431823,6 +432827,96 @@
         "end_line": 267,
         "semantic_id": "tools/arena/k27_memory_navigator/route_card_admission.py#function:canonical_receipt_root:d673b48f7661295a",
         "signature_hash": "f4a1bcbee796d564"
+      }
+    ],
+    "DeltaStrategy": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 13,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:DeltaStrategy:79c727efedd585c3",
+        "signature_hash": "b0694cdf71e5e788"
+      }
+    ],
+    "RouteSegment": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 28,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:RouteSegment:afa96193825b415a",
+        "signature_hash": "b923a10e41517658"
+      }
+    ],
+    "RouteSegment.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#method:RouteSegment.__post_init__:27ea5a0e9ff1640d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RouteChange": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 42,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:RouteChange:2f410105829dad66",
+        "signature_hash": "79a0ab77c3198715"
+      }
+    ],
+    "RouteChange.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#method:RouteChange.__post_init__:ca581450cc79d8ae",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SegmentDecision": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 50,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:SegmentDecision:c1e45ecd5d4d11fb",
+        "signature_hash": "c77335568c7c6de2"
+      }
+    ],
+    "DeltaPlan": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 61,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#class:DeltaPlan:3a9acabdd7d6192d",
+        "signature_hash": "8e7a3b782323eb59"
+      }
+    ],
+    "_coverage": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#function:_coverage:839831a7b53d26d1",
+        "signature_hash": "3b8b252cc0673697"
+      }
+    ],
+    "plan_route_delta": [
+      {
+        "file": "tools/arena/k27_memory_navigator/route_delta_planner.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 120,
+        "semantic_id": "tools/arena/k27_memory_navigator/route_delta_planner.py#function:plan_route_delta:71af7cd66d9cb6ce",
+        "signature_hash": "6f808008abdc1d4f"
       }
     ],
     "RuntimeBridgeError": [
