@@ -179,6 +179,8 @@ def verify_transition(*, core:AdapterCore, env:TransitionEnvelope, permit:Transi
                       observed_target_topology_root:str):
     if core.identity_root != env.intent.to_adapter_root: return 'HOLD_ADAPTER_CORE_MISMATCH'
     if core.o1_adapter_root != env.intent.o1_adapter_root: return 'HOLD_O1_ADAPTER_BINDING'
+    if core.source_root != observed_source_root: return 'HOLD_SOURCE_BINDING'
+    if core.target_topology_root != observed_target_topology_root: return 'HOLD_TARGET_TOPOLOGY_BINDING'
     if permit.permit_root != env.admission_permit_root: return 'HOLD_ADMISSION_PERMIT_ROOT'
     if permit.adapter_root != core.o1_adapter_root: return 'HOLD_ADMISSION_ADAPTER_BINDING'
     if permit.transition_subject_root != core.identity_root: return 'HOLD_TRANSITION_SUBJECT_BINDING'
