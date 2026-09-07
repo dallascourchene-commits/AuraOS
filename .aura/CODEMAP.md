@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1676
-- **total_bytes**: 26640390
-- **text_tokens_est**: 6650450
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1681
+- **total_bytes**: 26661836
+- **text_tokens_est**: 6655814
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1031, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1676,
+  "repo_file_count": 1681,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1660,6 +1660,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_anchor_locator.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_navigator.py",
+    "tests/test_memory_city_navigator_convergence.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1670,6 +1671,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/k27_dynamic_navigator.py",
+    "tools/arena/k27_invariant_route_cut.py",
     "tools/arena/k27_memory/README.md",
     "tools/arena/k27_memory/__init__.py",
     "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -1683,9 +1686,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_runtime.py",
+    "tools/arena/k27_reflexive_telemetry.py",
     "tools/arena/memory_city_anchor_locator.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
+    "tools/arena/memory_city_support_hydration.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1816,15 +1821,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1676,
-  "bytes": 26640390,
-  "tokens_est": 6650450,
+  "files": 1681,
+  "bytes": 26661836,
+  "tokens_est": 6655814,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1026,
+    "python_module": 1031,
     "schema_or_lexicon": 275,
     "support_file": 49
   }
