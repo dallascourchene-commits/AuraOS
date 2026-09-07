@@ -4,7 +4,7 @@ from collections import defaultdict, deque
 from itertools import product
 from memory_city_navigator import SourceSpanLocator
 from memory_city_contingent_hydration import HydrationItem, DemandBranch, InvariantSupport, StrategyDisposition
-from memory_city_typed_closure import InfluenceGraph, TypedClosureDisposition, compile_typed_closure, validate_typed_closure_at_use, symmetrized_union_closure
+from memory_city_typed_closure import InfluenceGraph, TypedClosureDisposition, compile_typed_closure, validate_typed_closure_at_use, symmetrized_union_closure, directed_descendants
 SEED=8740901
 
 def H(x): return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":")).encode()).hexdigest()
@@ -35,6 +35,19 @@ def dfs_desc(starts,edges,ids):
   for y in sorted(adj[x]):
    if y not in seen:seen.add(y);stack.append(y)
  return tuple(sorted(seen))
+def typed_reproof_oracle(starts,support_edges,influence_edges,ids):
+ """Independent semantics: alternate hard-support expansion and directed influence to fixed point."""
+ universe=set(ids); seen=set(starts)
+ changed=True
+ while changed:
+  before=set(seen)
+  for edge in support_edges:
+   if seen.intersection(edge): seen.update(edge)
+  for a,b in influence_edges:
+   if a in seen: seen.add(b)
+  changed=seen!=before
+ if not seen.issubset(universe): raise ValueError('oracle escaped universe')
+ return tuple(sorted(seen))
 def make_case(rng,idx):
  n=rng.randint(5,9);ids=[f"c{idx}_{j}" for j in range(n)]
  items=tuple(HydrationItem(x,locator(x,rng.randint(2,12),(rng.randrange(27),rng.randrange(27))),rng.randint(1,4)) for x in ids)
@@ -56,10 +69,12 @@ def run(cases=5000):
   items,branches,support,influence,changed,max_bytes,reveal,deadline,horizon,transition,future=make_case(rng,i)
   cert=compile_typed_closure(items,branches,support,influence,changed_evidence_item_ids=changed,max_resident_bytes=max_bytes,reveal_tick=reveal,deadline_tick=deadline,transition_model_root=transition,horizon=horizon,future_congruence_root=future)
   ids=tuple(x.item_id for x in items);comps=bfs_components(ids,support.hyperedges);i2c={x:c for c in comps for x in c};first=branches[0]
-  expected_hyd=tuple(sorted({x for d in first.demand_item_ids for x in i2c[d]}));expected_rep=dfs_desc(changed,influence.edges,ids)
+  expected_hyd=tuple(sorted({x for d in first.demand_item_ids for x in i2c[d]}));expected_rep=typed_reproof_oracle(changed,support.hyperedges,influence.edges,ids);legacy_rep=dfs_desc(changed,influence.edges,ids)
   if cert.hydration.disposition is StrategyDisposition.READY:
    got=next(p.required_item_ids for p in cert.hydration.branch_plans if p.branch_id==first.branch_id);stats['hydration_oracle_mismatch']+=int(got!=expected_hyd)
   stats['reproof_oracle_mismatch']+=int(cert.reproof_item_ids!=expected_rep)
+  stats['legacy_item_only_underreproof']+=int(bool(set(expected_rep)-set(legacy_rep)))
+  stats['repair_smaller_than_legacy']+=int(bool(set(legacy_rep)-set(cert.reproof_item_ids)))
   if cert.disposition is TypedClosureDisposition.READY and set(expected_rep)-set(expected_hyd):stats['support_only_false_ready']+=1
   if cert.disposition is TypedClosureDisposition.READY:
    mega=symmetrized_union_closure(tuple(first.demand_item_ids)+changed,support,influence,ids);im={x.item_id:x for x in items};mega_bytes=sum(im[x].locator.span_bytes for x in mega);hyd_bytes=sum(im[x].locator.span_bytes for x in expected_hyd)
@@ -76,9 +91,9 @@ def run(cases=5000):
   inc=compile_typed_closure(items,branches,support,InfluenceGraph(influence.generation,influence.edges,False),changed_evidence_item_ids=changed,max_resident_bytes=max_bytes,reveal_tick=reveal,deadline_tick=deadline,transition_model_root=transition,horizon=0);stats['incomplete_relation_false_ready']+=int(inc.disposition is TypedClosureDisposition.READY)
   mutated=tuple(HydrationItem(x.item_id,SourceSpanLocator(x.locator.source_id,x.locator.parent_export_sha256,x.locator.start_line,x.locator.end_line,x.locator.span_sha256,x.locator.span_bytes,tuple((v+7)%27 for v in x.locator.k27_hint)),x.duration_ticks) for x in items)
   cert2=compile_typed_closure(mutated,branches,support,influence,changed_evidence_item_ids=changed,max_resident_bytes=max_bytes,reveal_tick=reveal,deadline_tick=deadline,transition_model_root=transition,horizon=horizon,future_congruence_root=future);stats['k27_disposition_mismatch']+=int(cert2.disposition!=cert.disposition);stats['k27_reproof_mismatch']+=int(cert2.reproof_item_ids!=cert.reproof_item_ids);stats['ready']+=int(cert.disposition is TypedClosureDisposition.READY);stats['hold']+=int(cert.disposition is not TypedClosureDisposition.READY)
-  if i<20:sample.append({'i':i,'disp':cert.disposition.value,'hyd':list(expected_hyd),'reproof':list(expected_rep),'horizon':horizon,'root':cert.receipt_root})
+  if i<20:sample.append({'i':i,'disp':cert.disposition.value,'hyd':list(expected_hyd),'reproof':list(expected_rep),'legacy_reproof':list(legacy_rep),'horizon':horizon,'root':cert.receipt_root})
  d13=false_ready=mutant_false_ready=0
  for s in product(range(3),repeat=13):
   d13+=1;hard=all(x==2 for x in s[:8]);mutant=sum(s)>=22;false_ready+=0;mutant_false_ready+=int(mutant and not hard)
- out={'schema':'AURA-MEMORY-CITY-TYPED-CLOSURE-CAMPAIGN-v1','seed':SEED,'cases':cases,'stats':dict(sorted(stats.items())),'d13':{'states':d13,'false_ready':false_ready,'mutant_false_ready':mutant_false_ready},'sample':sample};out['campaign_root']=H(out);return out
+ out={'schema':'AURA-MEMORY-CITY-TYPED-CLOSURE-CAMPAIGN-v2','seed':SEED,'cases':cases,'stats':dict(sorted(stats.items())),'d13':{'states':d13,'false_ready':false_ready,'mutant_false_ready':mutant_false_ready},'sample':sample};out['campaign_root']=H(out);return out
 if __name__=='__main__':print(json.dumps(run(),sort_keys=True,separators=(",",":")))

@@ -1,0 +1,56 @@
+{
+  "schema": "AURA-MEMORY-CITY-TYPED-REPROOF-REPAIR-PROOF-v1",
+  "objective": "MC-O9R-HARD-COMPONENT-SEEDED-DIRECTED-REPROOF",
+  "status": "D0_FALSIFIER_REPAIR_CANDIDATE",
+  "parent_pr": 874,
+  "parent_cut": "5fb1eca51b3f4306d2be189d58980590613ae91a",
+  "branch": "arena/memory-city-typed-reproof-falsifier-gpt56sol-20260906",
+  "foreign_parents": [
+    {
+      "result": "Hard-Support Quotient Dependency DAG",
+      "root": "86f0323f0a89a74b8de45bc8527b633d481384b19a61f175dbfa8aac894603a3"
+    },
+    {
+      "result": "Bi-Closure Epistemic Quotient",
+      "root": "54c65db64e81a3867783896c1b6cf422e19a61a68fe75a76bc38e7ffffe0ecad"
+    }
+  ],
+  "defect": "The existing MC-O9 compiler seeded reproof from changed item ids and followed raw directed influence only. Hard-support peers of a changed item, and hard-support peers reached at an influence destination, could therefore be omitted from reproof even though the foreign HSQD result defines hard-support components as indivisible reproof units before directed quotient propagation.",
+  "repair": "Compute exact hard-support components, seed reproof with the components containing changed evidence, lift directed influence edges between components, then return all items in the reachable component set. Directed cycles remain directed reproof SCCs and do not rewrite hydration/support identity.",
+  "failed_proof_disposition": "The predecessor O9 campaign's reproof_oracle_mismatch=0 is not retained as independent proof because its oracle used the same item-only directed-descendant semantics as the implementation.",
+  "independent_local_falsification": {
+    "fresh_venvs": 3,
+    "focused_tests_total": "18/18 PASS",
+    "randomized_cases_total": 30000,
+    "cases_per_env": 10000,
+    "per_env": {
+      "legacy_item_only_underreproof": 5840,
+      "legacy_equal": 4160,
+      "repair_oracle_mismatch": 0,
+      "repair_smaller_than_legacy": 0,
+      "support_cases": 8190,
+      "cycle_cases": 2458
+    },
+    "campaign_root": "d21aa4492a9d2127db6f11d89086f47d15f121c37ea8d60c0e7465a53a2a64f9",
+    "campaign_output_sha256": "5684f2a542e94c037c27203943bcaabd9e55fa8c7f0d1e301ec255d8b716aa21",
+    "model_sha256": "19908dc180a0ab9416452086e2a8b018625c728ce55a66dcaeeee5104d404755",
+    "tests_sha256": "10c9a674c5ebbaab938c0c4169e766527966c3763d5b4f6937ac65d55e2a6c12",
+    "campaign_sha256": "e365f87a3678ecb8a5ca78b9a6486110209edb92fb130bb6369da1f25bd748f4",
+    "evidence_class": "independent semantic falsifier model; hosted integration CI and owner review remain separate evidence"
+  },
+  "provider_blobs": {
+    "typed_closure": "3138e58152cb4b65b73ad270822eb7b91294ce99",
+    "tests": "266a2bcb2208b4cb3f57f3ab9b9ef43a5a802b9e",
+    "campaign": "4e8e34c616483b0339117150a4586e8bc80d7810"
+  },
+  "keeper_laws": [
+    "ChangedItem => ChangedHardComponentForReproof",
+    "InfluenceDestination => DestinationHardComponentForReproof",
+    "HardComponentQuotientThenDirectedReachability => ReproofClosure",
+    "DirectedCycle => ReproofSCC NOT SupportIdentityRewrite",
+    "HydrationSupportClosure != ReproofClosure",
+    "SelfConfirmingOracle != IndependentProof",
+    "K27Coordinate != RelationTruth != Currentness != Authority"
+  ],
+  "claim_ceiling": "D0 read-only finite graph/hypergraph repair only; no production dependency-completeness proof, mutation/effect authority, merge/deploy authority, canonical promotion, Gate10, native/private Transformer KV, runtime-latency or bandwidth claim."
+}
