@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1682
-- **total_bytes**: 26684999
-- **text_tokens_est**: 6661604
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 278, 'support_file': 53}
+- **file_count**: 1683
+- **total_bytes**: 26693864
+- **text_tokens_est**: 6663821
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 278, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1682,
+  "repo_file_count": 1683,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1657,6 +1657,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_project006_effect_attempt_recovery_o11.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_tecc_effect_admission_bridge.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1822,15 +1823,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1682,
-  "bytes": 26684999,
-  "tokens_est": 6661604,
+  "files": 1683,
+  "bytes": 26693864,
+  "tokens_est": 6663821,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1026,
+    "python_module": 1027,
     "schema_or_lexicon": 278,
     "support_file": 53
   }
