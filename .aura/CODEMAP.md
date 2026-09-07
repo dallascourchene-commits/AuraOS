@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1705
-- **total_bytes**: 26744562
-- **text_tokens_est**: 6676506
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1039, 'schema_or_lexicon': 288, 'support_file': 53}
+- **file_count**: 1713
+- **total_bytes**: 26769326
+- **text_tokens_est**: 6682700
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1045, 'schema_or_lexicon': 290, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1705,
+  "repo_file_count": 1713,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -175,6 +175,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
     ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+    ".github/workflows/o19r-transactional-shared-truth-proof.yml",
     ".github/workflows/o5-consequence-admission-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -301,6 +302,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
     "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
+    "artifacts/arena/o19r_transactional_shared_truth/FROZEN_PROPOSALS_O19R.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -1669,6 +1671,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_project006_effect_attempt_recovery_o11.py",
     "tests/test_render_four_tab_deployment.py",
     "tests/test_tecc_effect_admission_bridge.py",
+    "tests/test_transactional_shared_truth_commit_hosted.py",
     "tests/test_transport_source_identity_bridge_hosted.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
@@ -1684,6 +1687,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/o18_hs1000.py",
     "tools/arena/o18_lattice8.py",
     "tools/arena/o18_sweep13d.py",
+    "tools/arena/o19r_campaign.py",
+    "tools/arena/o19r_hs1000.py",
+    "tools/arena/o19r_lattice8.py",
+    "tools/arena/o19r_sweep13d.py",
+    "tools/arena/transactional_shared_truth_commit.py",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -1845,16 +1853,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1705,
-  "bytes": 26744562,
-  "tokens_est": 6676506,
+  "files": 1713,
+  "bytes": 26769326,
+  "tokens_est": 6682700,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1039,
-    "schema_or_lexicon": 288,
+    "python_module": 1045,
+    "schema_or_lexicon": 290,
     "support_file": 53
   }
 }
