@@ -1,0 +1,20 @@
+{
+  "adversarial_parent": {"drive_id":"1HAGVl4XwMLKV2ICJgUlWRMRpFIDhmLuBHtZfdOePpC4","name":"ERAC-SERF-R1 Sink-Evidence Reconciliation Fence","result_root":"91ce34c95a325d42c737d9c1f49e3ae408470c98ba660af7d24ba3e2f61f0faf"},
+  "authority":"D0_NONPROMOTING_GATE10_FALSE",
+  "base_project006_pr":896,
+  "campaign_output_sha256":"daa49a4e58f48cf4e3af3115a045a1b6f2be37bc05e07f790fe2d204748e4d0e",
+  "campaign_root":"d0023456ccd7c0525c1b77f424cbcb146c39310a630ddca3c49befa65a2173c5",
+  "claim_ceiling":"Finite local HMAC/reference model only; no production signature/key management, sink-fence implementation, provider exactly-once guarantee, host/provider execution, TECC verification, effect authority, merge/deploy authority, canonical promotion, native/private Transformer KV, or Gate10.",
+  "failed_first_scars":[{"cause":"typed SinkEvidence constructor rehydrated serialized disposition string instead of preserving enum; verification failed before semantics","credit":0,"repair":"preserve enum in typed constructor; delete/recreate all proof venvs"}],
+  "hs1000":{"cells":1000,"cells_root":"63d15c709b1e2f9119aafc4d47f91d3d5060911b4b626f66650dd6609b088faa","freeze_root":"e0fc3fc28fc78d2dbfcc0cc26fb5ecefde85d7af4d94176ecc85cabbc33b732a","groups":11,"quotient_root":"fee9e7df2007a203f15ed7e9caf7266579196ce4dfdf8822dd5226a8c3cc80c6"},
+  "keepers":["AcceptedWithoutRecoverableResult=>HOLD_NO_REPLAY","NotAcceptedWithoutNewInstalledSinkFence=>HOLD_NO_REPLAY","VerifiedUnknown=>HOLD","NewInstalledSinkFenceExcludesPreCrashAttemptBeforeRetry","SinkEvidenceCanResolveOutcome!=SinkEvidenceCanAuthorizeAction","TerminalOutcomeObserved=>RetryReturnWriterOnly","K27Coordinate!=SinkReceipt!=ReplayAuthority"],
+  "mutation":{"details":{"accepted_without_result_replay":true,"equal_fence_replay":true,"forged_accepted":true,"notaccepted_without_fence_replay":true,"uninstalled_fence_replay":true,"unknown_requery_loop":true},"killed":6,"mutants":6,"output_sha256":"790d65b7827ede2c4177637e8804863328e2273582f7d38c5832e65a33cfb458"},
+  "objective":"O11R1_PROJECT006_NATIVE_SINK_EVIDENCE_RECONCILIATION_FENCE",
+  "omega8":{"invalid_routes":0,"keepers":1,"root":"71870679cb835bd4ad955d6408347d281df00d4c60d9aa56dff7dd21950646e3","states":6561},
+  "pr":897,
+  "proof_receipt_root":"d692f30aab1e6fb6c7a13a16d174941b22bb7c12ce7d6cba5918844e2030f9cf",
+  "recursion13d":{"cartesian_states":1594323,"context_counts":{"RETRY_PROVIDER_SAME_OPERATION_ID":243},"context_states_on_keeper":243,"hard_invalid_context_repair":0,"hard_keepers":1,"hard_states":6561,"root":"f70ed849933a40ba1cfdc148ccc7b48a3f3812019910f98827f13a93a6d3bec7"},
+  "schema":"AURA-PROJECT006-SINK-EVIDENCE-RECOVERY-PROOF-v2-SERF-R1",
+  "source_sha256":{"campaign.py":"4400ceb0bdcfa0655d824b418cb15d6e4e0587db7abae127d787aef3603b4ad6","hyperscale.py":"97154ffb6213615dcb4f4cfdafb97cdda751e98d79d2ce9b15efbf89eaccd4ae","mutation.py":"07130292c131040e4f238187fd73a85fe80ebd841a5af102406b8f79efe2a3ed","project006_sink_evidence_recovery.py":"798c256201e47717bdb64def9dd896a0171da97d048890340d3fa442ecc0373d","tests/test_sink_recovery.py":"0c28790c1e26da32fe7f5e6f384fc1d4a26dbb6eb2b8f77534318bef3a1bb5a3"},
+  "three_fresh_venvs":{"accepted_without_result_replays":0,"authority_minted":0,"campaign_cases_total":72000,"notaccepted_without_new_fence_replays":0,"oracle_mismatches":0,"tests_total":"63/63 PASS","unsafe_naive_replays_per_env":3532}
+}
