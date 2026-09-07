@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1708
-- **total_bytes**: 26852674
-- **text_tokens_est**: 6703532
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1053, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1709
+- **total_bytes**: 26858833
+- **text_tokens_est**: 6705072
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1054, 'schema_or_lexicon': 280, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1708,
+  "repo_file_count": 1709,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1708,6 +1708,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_coverage_membrane.py",
+    "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
     "tools/arena/memory_city_ecf_adapter.py",
     "tools/arena/memory_city_effect_handoff_o13.py",
     "tools/arena/memory_city_hydration_plan.py",
@@ -1848,15 +1849,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1708,
-  "bytes": 26852674,
-  "tokens_est": 6703532,
+  "files": 1709,
+  "bytes": 26858833,
+  "tokens_est": 6705072,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1053,
+    "python_module": 1054,
     "schema_or_lexicon": 280,
     "support_file": 49
   }
