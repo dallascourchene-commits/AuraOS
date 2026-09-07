@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1695,
+    "repo_file_count": 1702,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1342,6 +1342,7 @@
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
       "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
       "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O11_MODE_SEAL.json",
+      "artifacts/arena/memory_city_current_read_effect_handoff/PROOF_RECEIPT_O12C.json",
       "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
       "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9_REPROOF_REPAIR.json",
       "arxiv_forager.py",
@@ -2707,6 +2708,7 @@
       "tests/test_memory_city_anchor_locator.py",
       "tests/test_memory_city_contingent_hydration.py",
       "tests/test_memory_city_coverage_membrane.py",
+      "tests/test_memory_city_horizon_fenced_handoff.py",
       "tests/test_memory_city_hydration_plan.py",
       "tests/test_memory_city_navigator.py",
       "tests/test_memory_city_typed_closure.py",
@@ -2718,6 +2720,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_memory/README.md",
@@ -2740,12 +2743,16 @@
       "tools/arena/memory_city_coverage_membrane.py",
       "tools/arena/memory_city_coverage_membrane_campaign.py",
       "tools/arena/memory_city_coverage_membrane_hs1000.py",
+      "tools/arena/memory_city_horizon_fenced_handoff.py",
       "tools/arena/memory_city_hydration_plan.py",
       "tools/arena/memory_city_mode_sealed_admission_campaign.py",
       "tools/arena/memory_city_navigator.py",
       "tools/arena/memory_city_typed_closure.py",
       "tools/arena/memory_city_typed_closure_campaign.py",
       "tools/arena/memory_city_typed_closure_hs1000.py",
+      "tools/arena/o12c_hs1000.py",
+      "tools/arena/o12c_lattice8.py",
+      "tools/arena/o12c_sweep13d.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -17914,6 +17921,53 @@
         -0.203174,
         -0.154963,
         0.044767
+      ]
+    },
+    {
+      "path": "artifacts/arena/memory_city_current_read_effect_handoff/PROOF_RECEIPT_O12C.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2357,
+      "lines": 40,
+      "tokens_est": 590,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "877ce1c05639cef9",
+      "vector": [
+        -0.238963,
+        -0.111068,
+        0.245695,
+        -0.04151,
+        -0.164918,
+        0.028047,
+        -0.095361,
+        0.117799,
+        0.259158,
+        0.167162,
+        -0.187356,
+        0.173894,
+        0.218769,
+        -0.079654,
+        0.093117,
+        -0.019072,
+        -0.243451,
+        -0.135749,
+        -0.25467,
+        0.05946,
+        0.014585,
+        -0.227745,
+        -0.198575,
+        0.081898,
+        -0.04151,
+        0.212038,
+        -0.187356,
+        -0.283839,
+        -0.095361,
+        -0.160431,
+        0.274864,
+        -0.277108
       ]
     },
     {
@@ -104906,6 +104960,53 @@
       ]
     },
     {
+      "path": "tests/test_memory_city_horizon_fenced_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6657,
+      "lines": 59,
+      "tokens_est": 1665,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b8a1d7f8aaa78be8",
+      "vector": [
+        0.07279,
+        0.191227,
+        0.16902,
+        0.218369,
+        -0.035778,
+        -0.023441,
+        0.164085,
+        0.132008,
+        0.198629,
+        0.094997,
+        -0.161618,
+        0.144345,
+        0.085127,
+        0.129541,
+        0.102399,
+        0.235641,
+        0.186292,
+        -0.220836,
+        0.208499,
+        0.27512,
+        0.240576,
+        0.25538,
+        -0.307197,
+        -0.238108,
+        -0.267718,
+        -0.144345,
+        0.048115,
+        -0.245511,
+        0.099931,
+        0.077724,
+        -0.04318,
+        0.020973
+      ]
+    },
+    {
       "path": "tests/test_memory_city_hydration_plan.py",
       "role": "python_module",
       "binary": false,
@@ -105420,6 +105521,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5421,
+      "lines": 57,
+      "tokens_est": 1356,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1d1fb19dcf5f431a",
+      "vector": [
+        -0.143811,
+        -0.239686,
+        -0.181715,
+        0.003344,
+        -0.128204,
+        0.045707,
+        0.237456,
+        -0.2709,
+        -0.166108,
+        -0.114826,
+        0.09253,
+        -0.264212,
+        -0.246375,
+        -0.074693,
+        -0.230767,
+        -0.257523,
+        0.050167,
+        0.056856,
+        0.21516,
+        0.114826,
+        -0.0903,
+        -0.041248,
+        0.259752,
+        -0.148271,
+        0.239686,
+        0.253063,
+        -0.076922,
+        0.168337,
+        -0.068004,
+        -0.264212,
+        0.197323,
+        0.043478
       ]
     },
     {
@@ -106457,6 +106605,53 @@
       ]
     },
     {
+      "path": "tools/arena/memory_city_horizon_fenced_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14265,
+      "lines": 276,
+      "tokens_est": 3567,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "32958550693ed0c4",
+      "vector": [
+        0.23349,
+        0.231486,
+        -0.147309,
+        0.067141,
+        0.21946,
+        0.189397,
+        0.239503,
+        0.249524,
+        0.141296,
+        0.193406,
+        -0.143301,
+        -0.183385,
+        -0.155326,
+        -0.183385,
+        0.145305,
+        -0.065137,
+        -0.229481,
+        -0.083175,
+        -0.007015,
+        0.205431,
+        -0.175368,
+        -0.155326,
+        0.243511,
+        0.107225,
+        0.217456,
+        -0.159334,
+        0.017036,
+        0.111233,
+        -0.23349,
+        0.139292,
+        -0.149313,
+        -0.241507
+      ]
+    },
+    {
       "path": "tools/arena/memory_city_hydration_plan.py",
       "role": "python_module",
       "binary": false,
@@ -106736,6 +106931,147 @@
         0.156869,
         -0.149217,
         -0.047188
+      ]
+    },
+    {
+      "path": "tools/arena/o12c_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1463,
+      "lines": 13,
+      "tokens_est": 366,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b419f2fba29c5881",
+      "vector": [
+        0.009759,
+        -0.271863,
+        -0.271863,
+        0.174271,
+        -0.076679,
+        -0.023701,
+        0.093409,
+        -0.112928,
+        -0.149176,
+        0.135234,
+        0.012548,
+        -0.285805,
+        -0.012548,
+        -0.16033,
+        -0.015336,
+        -0.026489,
+        0.263498,
+        0.165906,
+        0.204943,
+        -0.118504,
+        0.032066,
+        -0.057161,
+        0.101774,
+        0.26071,
+        0.034854,
+        0.252345,
+        0.285805,
+        0.27744,
+        -0.1436,
+        0.218885,
+        -0.224461,
+        -0.257921
+      ]
+    },
+    {
+      "path": "tools/arena/o12c_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1320,
+      "lines": 16,
+      "tokens_est": 330,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "237501e11468c848",
+      "vector": [
+        -0.250114,
+        -0.122149,
+        -0.126802,
+        0.25244,
+        -0.24546,
+        -0.25244,
+        -0.184968,
+        0.173335,
+        0.161701,
+        0.154721,
+        -0.164028,
+        0.066309,
+        0.182641,
+        0.126802,
+        0.03141,
+        0.198928,
+        -0.152395,
+        -0.173335,
+        0.250114,
+        0.231501,
+        0.184968,
+        0.112842,
+        -0.189621,
+        0.296646,
+        -0.001163,
+        0.091902,
+        0.054676,
+        -0.03141,
+        0.210561,
+        0.243134,
+        -0.001163,
+        0.164028
+      ]
+    },
+    {
+      "path": "tools/arena/o12c_sweep13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1287,
+      "lines": 12,
+      "tokens_est": 322,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cd1aff2c5d81d48c",
+      "vector": [
+        0.012331,
+        0.252218,
+        -0.207379,
+        -0.227557,
+        0.238766,
+        -0.063895,
+        0.135637,
+        -0.059411,
+        0.158057,
+        0.090799,
+        0.079589,
+        -0.153573,
+        -0.238766,
+        -0.012331,
+        -0.153573,
+        0.048202,
+        -0.205137,
+        0.26567,
+        0.187202,
+        -0.144605,
+        0.04596,
+        0.263428,
+        0.220831,
+        -0.099766,
+        0.142363,
+        -0.162541,
+        -0.279121,
+        0.25446,
+        -0.052686,
+        0.223073,
+        0.261186,
+        -0.057169
       ]
     },
     {
@@ -107783,7 +108119,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788745536,
+  "generated_at_unix": 1788747309,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108063,6 +108399,7 @@
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
       "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
       "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O11_MODE_SEAL.json",
+      "artifacts/arena/memory_city_current_read_effect_handoff/PROOF_RECEIPT_O12C.json",
       "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
       "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9_REPROOF_REPAIR.json",
       "arxiv_forager.py",
@@ -109428,6 +109765,7 @@
       "tests/test_memory_city_anchor_locator.py",
       "tests/test_memory_city_contingent_hydration.py",
       "tests/test_memory_city_coverage_membrane.py",
+      "tests/test_memory_city_horizon_fenced_handoff.py",
       "tests/test_memory_city_hydration_plan.py",
       "tests/test_memory_city_navigator.py",
       "tests/test_memory_city_typed_closure.py",
@@ -109439,6 +109777,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_memory/README.md",
@@ -109461,12 +109800,16 @@
       "tools/arena/memory_city_coverage_membrane.py",
       "tools/arena/memory_city_coverage_membrane_campaign.py",
       "tools/arena/memory_city_coverage_membrane_hs1000.py",
+      "tools/arena/memory_city_horizon_fenced_handoff.py",
       "tools/arena/memory_city_hydration_plan.py",
       "tools/arena/memory_city_mode_sealed_admission_campaign.py",
       "tools/arena/memory_city_navigator.py",
       "tools/arena/memory_city_typed_closure.py",
       "tools/arena/memory_city_typed_closure_campaign.py",
       "tools/arena/memory_city_typed_closure_hs1000.py",
+      "tools/arena/o12c_hs1000.py",
+      "tools/arena/o12c_lattice8.py",
+      "tools/arena/o12c_sweep13d.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -268545,6 +268888,226 @@
         "file_digest8": "de04ecb5f2bdf43d"
       },
       {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:Closure:d0b3005aad55b4d1",
+        "name": "Closure",
+        "kind": "class",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "7055f295ed315abd",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:Hydration:62cb2620edee5a53",
+        "name": "Hydration",
+        "kind": "class",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "1068e06ec66ad291",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:ReadCert:4dd0467772467cfa",
+        "name": "ReadCert",
+        "kind": "class",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "1f966d6e686c9628",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:ReadUse:324d9e1740e5ed3a",
+        "name": "ReadUse",
+        "kind": "class",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 22,
+        "end_line": 22,
+        "signature_hash": "7677f24d5dfc4e84",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:T:919ae1bb29890656",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 29,
+        "end_line": 57,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#function:admission:c8f72f4a49ee870e",
+        "name": "admission",
+        "kind": "function",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "48e1a705a9119b0c",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#function:fixtures:aca961a414b96bde",
+        "name": "fixtures",
+        "kind": "function",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "4f80933332795bf9",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#function:r:60c9046d0d29f1f0",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_authority_escalation_holds:c6892094281fe18b",
+        "name": "T.test_authority_escalation_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "2b5426df3cdb0011",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_campaign_direct_script_entrypoint_runs:c738560752117bf1",
+        "name": "T.test_campaign_direct_script_entrypoint_runs",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "eb2673ad48021c7e",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_decision_never_mints_authority:8bf1f7aecd071c24",
+        "name": "T.test_decision_never_mints_authority",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "db07105a7f858d49",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_expired_lease_holds:582dce63326765ab",
+        "name": "T.test_expired_lease_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "df03df5a2e106d0e",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_forged_admission_receipt_holds:12f10dd76fc92bc8",
+        "name": "T.test_forged_admission_receipt_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "25fa4b75689d9935",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_owner_evidence_stale_holds:6772ace06bb581ae",
+        "name": "T.test_owner_evidence_stale_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "215bbcd4588ca0bc",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_read_only_cannot_enter_effect_handoff:d907af72def025b8",
+        "name": "T.test_read_only_cannot_enter_effect_handoff",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "39654eb68ea7ee5b",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_read_use_certificate_move_holds:54f28ba801b4f818",
+        "name": "T.test_read_use_certificate_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "19bb7627c21ad94b",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_revision_move_rebinds:83aad3479b6f24a2",
+        "name": "T.test_revision_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "7c6f9453c1e02415",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_same_receipt_semantic_swap_holds:24b7dca34220dd4e",
+        "name": "T.test_same_receipt_semantic_swap_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "f77f1f11793f7524",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_stale_component_reproof_holds:0133326f9c0e210f",
+        "name": "T.test_stale_component_reproof_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "efcae1daa512615a",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_transition_move_holds:ea616038a6007f04",
+        "name": "T.test_transition_move_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "64e9e27a08604717",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_uninstalled_fence_holds:56204b95c68c0a89",
+        "name": "T.test_uninstalled_fence_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "9e5afb74e3da1cf1",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_valid_cross_binding_routes_to_tecc_not_ready:476776c5b377cd08",
+        "name": "T.test_valid_cross_binding_routes_to_tecc_not_ready",
+        "kind": "method",
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "3faf49dcd8e54036",
+        "file_digest8": "b8a1d7f8aaa78be8"
+      },
+      {
         "semantic_id": "tests/test_memory_city_hydration_plan.py#class:HydrationPlanTests:e65e6ec45f409b69",
         "name": "HydrationPlanTests",
         "kind": "class",
@@ -269413,6 +269976,96 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:C:9546ecfb88c788fb",
+        "name": "C",
+        "kind": "class",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "1f0d9c2fbb103336",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:H:76369d176e3fbfcc",
+        "name": "H",
+        "kind": "class",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "a67b938b8248628c",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:RC:759abcd97d1c329a",
+        "name": "RC",
+        "kind": "class",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "f76d3e5424df7cb1",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:RU:0500da19001778d2",
+        "name": "RU",
+        "kind": "class",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "3a4159c47d08e1ef",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:admission:cc442b8ea773e351",
+        "name": "admission",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "529f1c133e341a7e",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:base:84936fa52b46fd4d",
+        "name": "base",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "fc255db21ad827bd",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:legacy_ready:b8e992df5f31021f",
+        "name": "legacy_ready",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "ba2c50275dc52300",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:r:a659187e4bf540f7",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "1d1fb19dcf5f431a"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:run:e3fe223b21a276da",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "line": 26,
+        "end_line": 55,
+        "signature_hash": "51ee1e0781780976",
+        "file_digest8": "1d1fb19dcf5f431a"
       },
       {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
@@ -272635,6 +273288,196 @@
         "file_digest8": "a4831e0386a83d2f"
       },
       {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:EffectHandoffEvidence:8849944a4a2846f9",
+        "name": "EffectHandoffEvidence",
+        "kind": "class",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 118,
+        "end_line": 124,
+        "signature_hash": "623b34481e1fdfaf",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:HandoffDecision:a43da8b50491e0f9",
+        "name": "HandoffDecision",
+        "kind": "class",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 128,
+        "end_line": 144,
+        "signature_hash": "2fc19af5812f9546",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:HandoffDisposition:dc5870009ddea1af",
+        "name": "HandoffDisposition",
+        "kind": "class",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 52,
+        "end_line": 55,
+        "signature_hash": "ca56e1f2f22b1440",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:HandoffVerificationContext:4e31894c282695d4",
+        "name": "HandoffVerificationContext",
+        "kind": "class",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 95,
+        "end_line": 114,
+        "signature_hash": "145ba15666a3dcf3",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:MutationBoundaryProjection:bb7019eafc58a320",
+        "name": "MutationBoundaryProjection",
+        "kind": "class",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 59,
+        "end_line": 91,
+        "signature_hash": "2fe6adbba86112d3",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_admission_receipt_current:733abb20856106fe",
+        "name": "_admission_receipt_current",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 157,
+        "end_line": 184,
+        "signature_hash": "67a6877d1cc546bf",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_id:6acae0351a0a09af",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_nn:5799ca4a8c7d21bb",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "111700e86562b752",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_read_consequence_current:f69d674529a9a3a5",
+        "name": "_read_consequence_current",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 187,
+        "end_line": 221,
+        "signature_hash": "5e8b0ee69a42c191",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_root:b4eb23ebe5d27239",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_status:0c53dc3877c37c34",
+        "name": "_status",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 45,
+        "end_line": 49,
+        "signature_hash": "61650c5dda426cbf",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:canonical_read_binding_root:833aeabdb14b80b2",
+        "name": "canonical_read_binding_root",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 147,
+        "end_line": 154,
+        "signature_hash": "e50012272d736f3c",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:compile_effect_handoff:3e891a4fd0614275",
+        "name": "compile_effect_handoff",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 224,
+        "end_line": 275,
+        "signature_hash": "3078b7db873f0fbb",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:digest:cc246c1d2a945a30",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "ca4017d839035e05",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:EffectHandoffEvidence.__post_init__:0a01cf84e78084e1",
+        "name": "EffectHandoffEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 122,
+        "end_line": 124,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:HandoffDecision.__post_init__:e1b88af08575b152",
+        "name": "HandoffDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 140,
+        "end_line": 144,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:HandoffVerificationContext.__post_init__:909adcf05bc6556c",
+        "name": "HandoffVerificationContext.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:MutationBoundaryProjection.__post_init__:4d59e4d9aafb6472",
+        "name": "MutationBoundaryProjection.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 71,
+        "end_line": 77,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:MutationBoundaryProjection.boundary_root:f7ff280f8f1e3e60",
+        "name": "MutationBoundaryProjection.boundary_root",
+        "kind": "method",
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "line": 80,
+        "end_line": 91,
+        "signature_hash": "ed63c64ce0bd39ef",
+        "file_digest8": "32958550693ed0c4"
+      },
+      {
         "semantic_id": "tools/arena/memory_city_hydration_plan.py#class:HydrationPlan:c5821d10150a55d7",
         "name": "HydrationPlan",
         "kind": "class",
@@ -273103,6 +273946,56 @@
         "end_line": 31,
         "signature_hash": "cb856b2c443c13ca",
         "file_digest8": "75f92c8db735d5c3"
+      },
+      {
+        "semantic_id": "tools/arena/o12c_hs1000.py#function:run:2fcd88ea05a96d15",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o12c_hs1000.py",
+        "line": 4,
+        "end_line": 11,
+        "signature_hash": "b49da1c079e41f88",
+        "file_digest8": "b419f2fba29c5881"
+      },
+      {
+        "semantic_id": "tools/arena/o12c_lattice8.py#function:candidate:af8cfb73d8ba2611",
+        "name": "candidate",
+        "kind": "function",
+        "file": "tools/arena/o12c_lattice8.py",
+        "line": 5,
+        "end_line": 8,
+        "signature_hash": "f8d1cd4cf8f577d2",
+        "file_digest8": "237501e11468c848"
+      },
+      {
+        "semantic_id": "tools/arena/o12c_lattice8.py#function:generic_effect_baseline:deb987ef3677c47b",
+        "name": "generic_effect_baseline",
+        "kind": "function",
+        "file": "tools/arena/o12c_lattice8.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "3e888e91dab88b59",
+        "file_digest8": "237501e11468c848"
+      },
+      {
+        "semantic_id": "tools/arena/o12c_lattice8.py#function:run:73b25b6175ef041b",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o12c_lattice8.py",
+        "line": 10,
+        "end_line": 14,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "237501e11468c848"
+      },
+      {
+        "semantic_id": "tools/arena/o12c_sweep13d.py#function:run:98068c1cd57a4555",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o12c_sweep13d.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "cd1aff2c5d81d48c"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -274355,8 +275248,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f8fcc97ad3df3cb72e9b1204f2d1d862",
-    "payload_hash": "84037603172dbc5d9c81f2a4423df458"
+    "record_fingerprint": "d45428d65ceb4093e353600f75ff993d",
+    "payload_hash": "58fc2ecee4dda73f39771f70d4b8562d"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274369,16 +275262,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1695,
-      "bytes": 26742476,
-      "tokens_est": 6675977,
+      "files": 1702,
+      "bytes": 26775246,
+      "tokens_est": 6684173,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1039,
-        "schema_or_lexicon": 281,
+        "python_module": 1045,
+        "schema_or_lexicon": 282,
         "support_file": 49
       }
     },
@@ -275065,16 +275958,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1695,
-    "total_bytes": 26742476,
-    "text_tokens_est": 6675977,
+    "file_count": 1702,
+    "total_bytes": 26775246,
+    "text_tokens_est": 6684173,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1039,
-      "schema_or_lexicon": 281,
+      "python_module": 1045,
+      "schema_or_lexicon": 282,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -276297,6 +277190,14 @@
         "signature_hash": "d981aa5a48724e5c"
       },
       {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 55,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:run:e3fe223b21a276da",
+        "signature_hash": "51ee1e0781780976"
+      },
+      {
         "file": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
         "kind": "function",
         "line": 43,
@@ -276335,6 +277236,30 @@
         "end_line": 98,
         "semantic_id": "tools/arena/memory_city_typed_closure_campaign.py#function:run:2e346c79fc6219d3",
         "signature_hash": "fbfdf6eacf736b3d"
+      },
+      {
+        "file": "tools/arena/o12c_hs1000.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 11,
+        "semantic_id": "tools/arena/o12c_hs1000.py#function:run:2fcd88ea05a96d15",
+        "signature_hash": "b49da1c079e41f88"
+      },
+      {
+        "file": "tools/arena/o12c_lattice8.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 14,
+        "semantic_id": "tools/arena/o12c_lattice8.py#function:run:73b25b6175ef041b",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o12c_sweep13d.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "tools/arena/o12c_sweep13d.py#function:run:98068c1cd57a4555",
+        "signature_hash": "26799ab4ad82cbfb"
       }
     ],
     "run.record": [
@@ -282251,6 +283176,14 @@
         "end_line": 59,
         "semantic_id": "scripts/aura_exact_head_transport.py#function:_status:f24b23de6a77a57f",
         "signature_hash": "e2cfa8ce61522dc9"
+      },
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 49,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_status:0c53dc3877c37c34",
+        "signature_hash": "61650c5dda426cbf"
       }
     ],
     "_export": [
@@ -292853,6 +293786,14 @@
         "end_line": 11,
         "semantic_id": "tools/arena/memory_city_coverage_membrane.py#function:digest:cdca3520ae6f5e38",
         "signature_hash": "3f5db76ec614c8b9"
+      },
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:digest:cc246c1d2a945a30",
+        "signature_hash": "ca4017d839035e05"
       },
       {
         "file": "tools/arena/memory_city_navigator.py",
@@ -307201,6 +308142,14 @@
         "end_line": 126,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_id:0f03725d6ec856da",
         "signature_hash": "2cc123d979c37fb2"
+      },
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_id:6acae0351a0a09af",
+        "signature_hash": "d64cfb03b3a12a79"
       }
     ],
     "_privacy": [
@@ -372225,6 +373174,14 @@
         "end_line": 618,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_root:953ced6073ce4465",
         "signature_hash": "359c484fcebcc325"
+      },
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_root:b4eb23ebe5d27239",
+        "signature_hash": "9af4f640541857b1"
       }
     ],
     "_iter_nul_records": [
@@ -386357,6 +387314,14 @@
         "end_line": 73,
         "semantic_id": "tests/test_aura_shadow_model_router.py#function:candidate:2c8026203668f9f4",
         "signature_hash": "342d68b930ea7206"
+      },
+      {
+        "file": "tools/arena/o12c_lattice8.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 8,
+        "semantic_id": "tools/arena/o12c_lattice8.py#function:candidate:af8cfb73d8ba2611",
+        "signature_hash": "f8d1cd4cf8f577d2"
       }
     ],
     "routing": [
@@ -397766,6 +398731,14 @@
         "line": 39,
         "end_line": 100,
         "semantic_id": "tests/test_aura_construction_authority.py#function:fixtures:95f1aabb7f436249",
+        "signature_hash": "4f80933332795bf9"
+      },
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#function:fixtures:aca961a414b96bde",
         "signature_hash": "4f80933332795bf9"
       }
     ],
@@ -430127,6 +431100,14 @@
         "end_line": 115,
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 57,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:T:919ae1bb29890656",
+        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -431435,6 +432416,22 @@
         "signature_hash": "0a38978db5ecc8b8"
       },
       {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#function:r:60c9046d0d29f1f0",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:r:a659187e4bf540f7",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
         "file": "tools/arena/memory_city_coverage_membrane_campaign.py",
         "kind": "function",
         "line": 8,
@@ -431721,6 +432718,204 @@
         "end_line": 64,
         "semantic_id": "tests/test_memory_city_coverage_membrane.py#method:CoverageMembraneTests.test_no_authority:7c09c4c5a0505501",
         "signature_hash": "0ac2432ef5f76bbe"
+      }
+    ],
+    "Hydration": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:Hydration:62cb2620edee5a53",
+        "signature_hash": "1068e06ec66ad291"
+      }
+    ],
+    "Closure": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:Closure:d0b3005aad55b4d1",
+        "signature_hash": "7055f295ed315abd"
+      }
+    ],
+    "ReadCert": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:ReadCert:4dd0467772467cfa",
+        "signature_hash": "1f966d6e686c9628"
+      }
+    ],
+    "ReadUse": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 22,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#class:ReadUse:324d9e1740e5ed3a",
+        "signature_hash": "7677f24d5dfc4e84"
+      }
+    ],
+    "admission": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#function:admission:c8f72f4a49ee870e",
+        "signature_hash": "48e1a705a9119b0c"
+      },
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:admission:cc442b8ea773e351",
+        "signature_hash": "529f1c133e341a7e"
+      }
+    ],
+    "T.test_valid_cross_binding_routes_to_tecc_not_ready": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_valid_cross_binding_routes_to_tecc_not_ready:476776c5b377cd08",
+        "signature_hash": "3faf49dcd8e54036"
+      }
+    ],
+    "T.test_read_only_cannot_enter_effect_handoff": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_read_only_cannot_enter_effect_handoff:d907af72def025b8",
+        "signature_hash": "39654eb68ea7ee5b"
+      }
+    ],
+    "T.test_stale_component_reproof_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_stale_component_reproof_holds:0133326f9c0e210f",
+        "signature_hash": "efcae1daa512615a"
+      }
+    ],
+    "T.test_same_receipt_semantic_swap_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_same_receipt_semantic_swap_holds:24b7dca34220dd4e",
+        "signature_hash": "f77f1f11793f7524"
+      }
+    ],
+    "T.test_transition_move_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_transition_move_holds:ea616038a6007f04",
+        "signature_hash": "64e9e27a08604717"
+      }
+    ],
+    "T.test_read_use_certificate_move_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_read_use_certificate_move_holds:54f28ba801b4f818",
+        "signature_hash": "19bb7627c21ad94b"
+      }
+    ],
+    "T.test_forged_admission_receipt_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_forged_admission_receipt_holds:12f10dd76fc92bc8",
+        "signature_hash": "25fa4b75689d9935"
+      }
+    ],
+    "T.test_authority_escalation_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_authority_escalation_holds:c6892094281fe18b",
+        "signature_hash": "2b5426df3cdb0011"
+      }
+    ],
+    "T.test_expired_lease_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_expired_lease_holds:582dce63326765ab",
+        "signature_hash": "df03df5a2e106d0e"
+      }
+    ],
+    "T.test_uninstalled_fence_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_uninstalled_fence_holds:56204b95c68c0a89",
+        "signature_hash": "9e5afb74e3da1cf1"
+      }
+    ],
+    "T.test_revision_move_rebinds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_revision_move_rebinds:83aad3479b6f24a2",
+        "signature_hash": "7c6f9453c1e02415"
+      }
+    ],
+    "T.test_owner_evidence_stale_holds": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_owner_evidence_stale_holds:6772ace06bb581ae",
+        "signature_hash": "215bbcd4588ca0bc"
+      }
+    ],
+    "T.test_decision_never_mints_authority": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_decision_never_mints_authority:8bf1f7aecd071c24",
+        "signature_hash": "db07105a7f858d49"
+      }
+    ],
+    "T.test_campaign_direct_script_entrypoint_runs": [
+      {
+        "file": "tests/test_memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tests/test_memory_city_horizon_fenced_handoff.py#method:T.test_campaign_direct_script_entrypoint_runs:c738560752117bf1",
+        "signature_hash": "eb2673ad48021c7e"
       }
     ],
     "HydrationPlanTests": [
@@ -432561,6 +433756,74 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "H": [
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:H:76369d176e3fbfcc",
+        "signature_hash": "a67b938b8248628c"
+      },
+      {
+        "file": "tools/arena/memory_city_typed_closure_campaign.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/memory_city_typed_closure_campaign.py#function:H:ff8c2796b7150298",
+        "signature_hash": "93783e12685eb5a1"
+      }
+    ],
+    "C": [
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:C:9546ecfb88c788fb",
+        "signature_hash": "1f0d9c2fbb103336"
+      }
+    ],
+    "RC": [
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:RC:759abcd97d1c329a",
+        "signature_hash": "f76d3e5424df7cb1"
+      }
+    ],
+    "RU": [
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#class:RU:0500da19001778d2",
+        "signature_hash": "3a4159c47d08e1ef"
+      }
+    ],
+    "base": [
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:base:84936fa52b46fd4d",
+        "signature_hash": "fc255db21ad827bd"
+      }
+    ],
+    "legacy_ready": [
+      {
+        "file": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/arena/campaign_memory_city_horizon_fenced_handoff.py#function:legacy_ready:b8e992df5f31021f",
+        "signature_hash": "ba2c50275dc52300"
       }
     ],
     "AdmissionError": [
@@ -435671,6 +436934,156 @@
         "signature_hash": "15e439a6c9e8da54"
       }
     ],
+    "_nn": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_nn:5799ca4a8c7d21bb",
+        "signature_hash": "111700e86562b752"
+      }
+    ],
+    "HandoffDisposition": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:HandoffDisposition:dc5870009ddea1af",
+        "signature_hash": "ca56e1f2f22b1440"
+      }
+    ],
+    "MutationBoundaryProjection": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 91,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:MutationBoundaryProjection:bb7019eafc58a320",
+        "signature_hash": "2fe6adbba86112d3"
+      }
+    ],
+    "MutationBoundaryProjection.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 77,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:MutationBoundaryProjection.__post_init__:4d59e4d9aafb6472",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MutationBoundaryProjection.boundary_root": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 91,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:MutationBoundaryProjection.boundary_root:f7ff280f8f1e3e60",
+        "signature_hash": "ed63c64ce0bd39ef"
+      }
+    ],
+    "HandoffVerificationContext": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 114,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:HandoffVerificationContext:4e31894c282695d4",
+        "signature_hash": "145ba15666a3dcf3"
+      }
+    ],
+    "HandoffVerificationContext.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:HandoffVerificationContext.__post_init__:909adcf05bc6556c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectHandoffEvidence": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 118,
+        "end_line": 124,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:EffectHandoffEvidence:8849944a4a2846f9",
+        "signature_hash": "623b34481e1fdfaf"
+      }
+    ],
+    "EffectHandoffEvidence.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 124,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:EffectHandoffEvidence.__post_init__:0a01cf84e78084e1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HandoffDecision": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "class",
+        "line": 128,
+        "end_line": 144,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#class:HandoffDecision:a43da8b50491e0f9",
+        "signature_hash": "2fc19af5812f9546"
+      }
+    ],
+    "HandoffDecision.__post_init__": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 144,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#method:HandoffDecision.__post_init__:e1b88af08575b152",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "canonical_read_binding_root": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 154,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:canonical_read_binding_root:833aeabdb14b80b2",
+        "signature_hash": "e50012272d736f3c"
+      }
+    ],
+    "_admission_receipt_current": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 184,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_admission_receipt_current:733abb20856106fe",
+        "signature_hash": "67a6877d1cc546bf"
+      }
+    ],
+    "_read_consequence_current": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 221,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:_read_consequence_current:f69d674529a9a3a5",
+        "signature_hash": "5e8b0ee69a42c191"
+      }
+    ],
+    "compile_effect_handoff": [
+      {
+        "file": "tools/arena/memory_city_horizon_fenced_handoff.py",
+        "kind": "function",
+        "line": 224,
+        "end_line": 275,
+        "semantic_id": "tools/arena/memory_city_horizon_fenced_handoff.py#function:compile_effect_handoff:3e891a4fd0614275",
+        "signature_hash": "3078b7db873f0fbb"
+      }
+    ],
     "HydrationPlanDisposition": [
       {
         "file": "tools/arena/memory_city_hydration_plan.py",
@@ -436011,16 +437424,6 @@
         "signature_hash": "452eb8102b33af97"
       }
     ],
-    "H": [
-      {
-        "file": "tools/arena/memory_city_typed_closure_campaign.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 10,
-        "semantic_id": "tools/arena/memory_city_typed_closure_campaign.py#function:H:ff8c2796b7150298",
-        "signature_hash": "93783e12685eb5a1"
-      }
-    ],
     "bfs_components": [
       {
         "file": "tools/arena/memory_city_typed_closure_campaign.py",
@@ -436049,6 +437452,16 @@
         "end_line": 50,
         "semantic_id": "tools/arena/memory_city_typed_closure_campaign.py#function:typed_reproof_oracle:b0955d8a9b595679",
         "signature_hash": "6e5f097327d7d20f"
+      }
+    ],
+    "generic_effect_baseline": [
+      {
+        "file": "tools/arena/o12c_lattice8.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/o12c_lattice8.py#function:generic_effect_baseline:deb987ef3677c47b",
+        "signature_hash": "3e888e91dab88b59"
       }
     ],
     "_coordinates": [
