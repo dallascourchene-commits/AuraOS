@@ -1,0 +1,49 @@
+name: AWJ032 O4 Effect-Time Adapter Realization Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/training_o2_transition_reference/transition_envelope.py'
+      - 'tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py'
+      - 'tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py'
+      - 'tests/test_awj032_effect_time_adapter_realization.py'
+      - '.github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify exact pull request head and source bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          sha256sum tools/awj032/training_o2_transition_reference/transition_envelope.py
+          sha256sum tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py
+          sha256sum tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py
+          sha256sum tests/test_awj032_effect_time_adapter_realization.py
+      - name: Recreate three proof environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            rm -rf ".venv-${i}"
+            python -m venv ".venv-${i}"
+            ".venv-${i}/bin/python" -m unittest tests.test_awj032_effect_time_adapter_realization
+            ".venv-${i}/bin/python" -m tools.awj032.training_o2_transition_reference.effect_time_adapter_realization_proof > "/tmp/awj032-o4-${i}.txt"
+            grep -F 'AWJ032_O4_PROOF=PASS' "/tmp/awj032-o4-${i}.txt"
+          done
+          cmp /tmp/awj032-o4-1.txt /tmp/awj032-o4-2.txt
+          cmp /tmp/awj032-o4-1.txt /tmp/awj032-o4-3.txt
+          cat /tmp/awj032-o4-1.txt
+          sha256sum /tmp/awj032-o4-1.txt
+          echo AWJ032_O4_EXACT_HEAD_PROOF=PASS
