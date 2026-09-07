@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: awj032-airllm-tiny-runtime-${{ github.event.pull_request.number || github.ref }}
+  group: awj032-airllm-tiny-runtime-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
