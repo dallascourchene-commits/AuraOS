@@ -1,0 +1,123 @@
+{
+  "campaign": {
+    "accepted_provider_replays": 0,
+    "actions": {
+      "CONSUME_SINK_RESULT_NO_PROVIDER_REPLAY": 325,
+      "DONE": 5961,
+      "HOLD_AMBIGUOUS": 1354,
+      "HOLD_INVALID_EVIDENCE": 1930,
+      "HOLD_REBIND_REQUIRED": 2010,
+      "HOLD_UNSUPPORTED": 5905,
+      "QUERY_PROVIDER_STATUS": 123,
+      "RETRY_EXACT_SAME_EFFECT": 302,
+      "RETRY_RETURN_WRITER_ONLY": 12090
+    },
+    "authority_minted": 0,
+    "campaign_root": "5f2dc63e082534334b7891a6469c68eadbe74327fe0947592c78f01578e32a15",
+    "cases": 30000,
+    "finalization_bypasses": 0,
+    "forged_current_owner_replays": 0,
+    "forged_fence_replays": 0,
+    "naive_ambiguous_replays": 5742,
+    "oracle_mismatches": 0
+  },
+  "campaign_cases_total": 90000,
+  "claim_ceiling": "D0 local/reference only; HMAC secrets are test trust roots, not production key management; no production sink-fence owner authentication, provider exactly-once, effect authority, merge/deploy, canonical promotion, native/private Transformer KV, or Gate10.",
+  "cross_checks": [
+    "PR899 Greptile currentness/finalization review",
+    "Memory City TECC consumer admission two-stage authentication membrane",
+    "arXiv:2608.00501",
+    "arXiv:2609.03340"
+  ],
+  "determinism": {
+    "campaign_sha256_all": [
+      "e9fd6de65abebae08e0f731b00f9a0334e390fa34cb21b987c9e07aac61d76c3",
+      "e9fd6de65abebae08e0f731b00f9a0334e390fa34cb21b987c9e07aac61d76c3",
+      "e9fd6de65abebae08e0f731b00f9a0334e390fa34cb21b987c9e07aac61d76c3"
+    ],
+    "hyperscale_sha256_all": [
+      "8d4312f4380b616513776e2dfe5a5817ec481145ac721237fbf229c8f09eb971",
+      "8d4312f4380b616513776e2dfe5a5817ec481145ac721237fbf229c8f09eb971",
+      "8d4312f4380b616513776e2dfe5a5817ec481145ac721237fbf229c8f09eb971"
+    ],
+    "mutation_sha256_all": [
+      "4a6e030039de1977b2fdffafb6e0b64ac68f26671ef647aa1395ebd80a0dbe42",
+      "4a6e030039de1977b2fdffafb6e0b64ac68f26671ef647aa1395ebd80a0dbe42",
+      "4a6e030039de1977b2fdffafb6e0b64ac68f26671ef647aa1395ebd80a0dbe42"
+    ]
+  },
+  "focused_tests_total": "93/93 PASS",
+  "hyperscale": {
+    "hs1000": {
+      "cells": 1000,
+      "cells_root": "5588b1e627935318ce687fcd9f70e5b674c4d51988007f4a57eeaebc0e9a0975",
+      "consequence_groups": 13,
+      "freeze_root": "e0fc3fc28fc78d2dbfcc0cc26fb5ecefde85d7af4d94176ecc85cabbc33b732a",
+      "quotient_root": "ef7255e2713dbd08a4b8b461deee6eddcb65ae64b05e8b9728df829346d56916"
+    },
+    "omega8": {
+      "invalid_routes": 0,
+      "keepers": 1,
+      "root": "ba2c7e121e0c6b95f78309deb3606d46e43f134e6448a7b74d412c75f1ef9fff",
+      "states": 6561
+    },
+    "recursion13d": {
+      "context_states_on_keeper": 243,
+      "hard_invalid_context_repair": 0,
+      "hard_keepers": 1,
+      "hard_states": 6561,
+      "lawful_contextual_routes": 243,
+      "root": "6d150f94cbebae804763a5a2b856053ed996d8519f420ed4c021c35ee8fe30aa",
+      "states": 1594323
+    }
+  },
+  "keeper_laws": [
+    "LocalHigherFence != RightfulInstalledFence",
+    "CallerBoolean != AuthenticatedAtUseOwnerReceipt",
+    "DurableAttemptJournalRead != CallerConstructedAttemptSnapshot",
+    "VerifiedSinkStatus != ReplayAuthorization",
+    "RetryableOrQueryableAmbiguity != FinalReturn",
+    "K27Coordinate != Identity != Currentness != ReplayAuthority != EffectAuthority"
+  ],
+  "mutation": {
+    "details": {
+      "accepted_no_result": true,
+      "caller_boolean_currentness": true,
+      "forged_current_mac": true,
+      "forged_current_owner": true,
+      "forged_fence_mac": true,
+      "forged_fence_owner": true,
+      "retryable_ambiguity_not_final": true,
+      "terminal_no_reexec": true,
+      "unknown_no_retry": true,
+      "wrong_attempt": true
+    },
+    "killed": 10,
+    "mutants": 10
+  },
+  "objective": "O12R1-OWNER-AUTHENTICATED-EFFECT-ATTEMPT-SINK-FENCE-RECOVERY",
+  "parents": [
+    {
+      "head": "d2be5615d2a5584b1c11485a71505ca74eebf80c",
+      "pr": 899,
+      "role": "durable effect-attempt journal and ACK/final-return separation",
+      "type": "github_pr"
+    },
+    {
+      "id": "1WdFKfRbvJl6qHkmQwh7r2JnsU_2JvaBhA77b3s2b5eo",
+      "receipt_root": "3361d7c1928036684655e5e686bd399395478917c33b610bc54c9439e47f1614",
+      "role": "unauthenticated caller-constructible sink-fence falsifier",
+      "type": "drive_adversarial_receipt"
+    }
+  ],
+  "receipt_root": "89cc9d29f439b6bb992266ebedd737439553b18a6888059e0dca842f78d31c90",
+  "schema": "AURA-PROJECT006-O12R1-PROOF-RECEIPT-v1",
+  "source_sha256": {
+    "campaign_o12r1.py": "55d1dc73f911d8952f896400f77312a61768a45793b9f10ac50d081e44fe867b",
+    "hyperscale_o12r1.py": "018b5277c0564c28f123e497c055c2448b8193b3ae1c1fffa08c6cdcdfd5a1dd",
+    "mutation_o12r1.py": "242705401a1561b956447d295f6b400eb049c0b952b793762268f103ade9a9b9",
+    "o12r1_recovery.py": "210e2cde72ee142a1fd67e40108bb718e15c455429520414100ccef88ef25b8d",
+    "test_o12r1.py": "d29c0062bc1e9f65cc025643d2d4d3dfca92321f474d41e5b5dc081f3ef3a03c"
+  },
+  "venvs": 3
+}
