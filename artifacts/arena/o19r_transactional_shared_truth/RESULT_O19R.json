@@ -1,0 +1,48 @@
+{
+  "result_root": "6b72b3e52d983a9b677f47303a9fe9e778715ef42f6a936d0f610004246b7703",
+  "root_definition": "sha256(canonical_json(body))",
+  "body": {
+    "schema": "aura.arena.result.v1",
+    "objective": "O19R-TRANSACTIONAL-SHARED-TRUTH-COMMIT",
+    "status": "ACHIEVED_D0_NONPROMOTING",
+    "parent_head": "dea84982d7ecc07310dbbc254ce1a5acee8553f1",
+    "semantic_head": "b07efba3922be8a59f642bebd195b16582577393",
+    "foreign_parents": [
+      {"name": "PR914 recoverable training-step transaction", "keeper": "TrainingExecutionAdmitted != TrainingStepCommitted != CheckpointPublished"},
+      {"name": "O-AVX12 parallel-view collaborative creative lens", "keeper": "ParallelView != ParallelTruth; identical patches dedupe, disjoint compose, conflicts HOLD"}
+    ],
+    "keeper_laws": [
+      "DelegatedAttemptAdmitted != SharedTruthCommitted != Published",
+      "ExactPrestateMode => FullStateExact + ExactResumeRoot",
+      "KeyPreconditionMode => TouchedKeysExact; DisjointPatchesMayCompose",
+      "SameOperationAndExactPatch => DedupCommitted",
+      "SameTargetDifferentPatch => HOLD_CONFLICT",
+      "CanonicalCommitReceipt => NeverReapplyPatch",
+      "PublicationRequiresDurableCommitReceipt",
+      "K27Coordinate != CommitTruth != Authority"
+    ],
+    "proof": {
+      "fresh_venvs": 3,
+      "python": "3.13.15",
+      "focused_tests_total": 75,
+      "campaign_cases_total": 72000,
+      "false_commit": 0,
+      "false_hold": 0,
+      "authority_promotions": 0,
+      "naive_admission_means_commit_unsafe_per_env": 14000,
+      "naive_last_write_wins_unsafe_per_env": 16000,
+      "campaign_root": "b92afa940b50302d30cc8d30e57419ca5ea4b513e3d6ce86ca1b11748f57b58d",
+      "omega8_root": "2a280476fae7b310997a22acca0d06fdb935b30d08bade72e2498c18f7ac4aee",
+      "omega8_states": 6561,
+      "omega8_keepers": 1,
+      "d13_root": "6802e6afd1fbda3c67d8f498cc0e7b4fd6c1a4fc0e73d59a65f928bc1b7fa6a0",
+      "d13_states": 1594323,
+      "d13_lawful_contexts": 243,
+      "d13_hard_invalid_context_repair": 0,
+      "hs1000_freeze_root": "6b56cbe6d18473e67668f1bd0d4936554734e43abbbeae8f9f747efc4720ed7b",
+      "hs1000_quotient_root": "f7b9ebe5391e79dcde0f8d793d9391a9f1085022479368ce07770e157c288d55",
+      "hs1000_top27_root": "0526cef897893cde9ffb93acf3556f51d4fb3c44b0c1cce749dad8b50cfba393"
+    },
+    "claim_ceiling": "D0 reference/falsifier only; no effect/project/checkpoint authority, merge/deploy, canonical promotion, Gate10, or native/private Transformer KV claim."
+  }
+}
