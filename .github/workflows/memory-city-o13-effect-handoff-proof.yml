@@ -88,5 +88,7 @@ jobs:
           assert lattice['sweep13d_contextual_decision_variations']==0
           assert hs['raw_challenge_cells']==1000
           assert hs['claim_breakthroughs']==0
+          assert hs['oracle_mismatches']==0
+          assert sum(row['cells'] for row in hs['by_mode'].values())==1000
           PY
           git diff --exit-code
