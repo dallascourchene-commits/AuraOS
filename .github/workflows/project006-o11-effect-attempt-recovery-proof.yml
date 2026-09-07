@@ -1,0 +1,78 @@
+name: Project006 O11 Effect Attempt Recovery Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/project006/terminal_outbox.py"
+      - "tools/project006/effect_attempt_recovery.py"
+      - "tools/project006/campaign_effect_attempt_recovery_o11.py"
+      - "tools/project006/o11_effect_attempt_lattice8.py"
+      - "tools/project006/o11_effect_attempt_factored13d.py"
+      - "tools/project006/o11_effect_attempt_hs1000.py"
+      - "tools/arena/effect_return_atomicity.py"
+      - "tests/test_project006_effect_attempt_recovery_o11.py"
+      - ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout identity
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_HEAD"
+          printf 'exact_checkout_head=%s\n' "$actual"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.13"
+      - name: Run exact source in three fresh virtual environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            rm -rf ".venv-o11-$i"
+            python -m venv ".venv-o11-$i"
+            PY=".venv-o11-$i/bin/python"
+            "$PY" -m unittest tools/project006/test_terminal_outbox.py tests/test_project006_effect_attempt_recovery_o11.py -v
+            "$PY" tools/project006/campaign_effect_attempt_recovery_o11.py > "o11-campaign-$i.json"
+            "$PY" tools/project006/o11_effect_attempt_lattice8.py > "o11-lattice-$i.json"
+            "$PY" tools/project006/o11_effect_attempt_factored13d.py > "o11-13d-$i.json"
+            "$PY" tools/project006/o11_effect_attempt_hs1000.py > "o11-hs1000-$i.json"
+          done
+          for stem in campaign lattice 13d hs1000; do
+            cmp "o11-$stem-1.json" "o11-$stem-2.json"
+            cmp "o11-$stem-1.json" "o11-$stem-3.json"
+          done
+          python - <<'PY'
+          import json
+          campaign=json.load(open('o11-campaign-1.json'))
+          lattice=json.load(open('o11-lattice-1.json'))
+          d13=json.load(open('o11-13d-1.json'))
+          hs=json.load(open('o11-hs1000-1.json'))
+          assert campaign['cases']==6000
+          assert campaign['oracle_mismatches']==0
+          assert campaign['false_provider_actions']==0
+          assert campaign['false_hold']==0
+          assert campaign['legacy_posteffect_ambiguity_rejected']==1000
+          assert campaign['legacy_ack_then_result_equivocation']==1000
+          assert lattice['states']==6561
+          assert lattice['keeper']==1
+          assert d13['states']==1594323
+          assert d13['lawful_contexts']==243
+          assert d13['hard_invalid_context_repairs']==0
+          assert hs['raw_cells']==1000
+          assert hs['claimed_breakthroughs']==0
+          PY
+          git diff --exit-code
