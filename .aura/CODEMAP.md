@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1736
-- **total_bytes**: 26826847
-- **text_tokens_est**: 6697090
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1057, 'schema_or_lexicon': 300, 'support_file': 53}
+- **file_count**: 1738
+- **total_bytes**: 26831027
+- **text_tokens_est**: 6698136
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1057, 'schema_or_lexicon': 302, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1736,
+  "repo_file_count": 1738,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -313,6 +313,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/o20r_effect_time_loaded_process_currentness/RESULT.json",
     "artifacts/arena/o20r_loaded_process_currentness/FROZEN_PROPOSALS_O20R.json",
     "artifacts/arena/o21r_proof_carrying_cache/FROZEN_ALTERNATIVES.json",
+    "artifacts/arena/o21r_proof_carrying_cache/PROOF_RECEIPT.json",
+    "artifacts/arena/o21r_proof_carrying_cache/RESULT.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -1876,16 +1878,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1736,
-  "bytes": 26826847,
-  "tokens_est": 6697090,
+  "files": 1738,
+  "bytes": 26831027,
+  "tokens_est": 6698136,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1057,
-    "schema_or_lexicon": 300,
+    "schema_or_lexicon": 302,
     "support_file": 53
   }
 }
