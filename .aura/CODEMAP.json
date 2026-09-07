@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1693,
+    "repo_file_count": 1694,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2740,6 +2740,7 @@
       "tools/arena/memory_city_coverage_membrane_campaign.py",
       "tools/arena/memory_city_coverage_membrane_hs1000.py",
       "tools/arena/memory_city_hydration_plan.py",
+      "tools/arena/memory_city_mode_sealed_admission_campaign.py",
       "tools/arena/memory_city_navigator.py",
       "tools/arena/memory_city_typed_closure.py",
       "tools/arena/memory_city_typed_closure_campaign.py",
@@ -106455,6 +106456,53 @@
       ]
     },
     {
+      "path": "tools/arena/memory_city_mode_sealed_admission_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3154,
+      "lines": 67,
+      "tokens_est": 789,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c043f8f5fc3bf726",
+      "vector": [
+        -0.276112,
+        0.229115,
+        -0.149218,
+        0.193866,
+        0.156268,
+        -0.158618,
+        -0.186816,
+        -0.001175,
+        -0.292562,
+        -0.243214,
+        -0.10692,
+        0.130419,
+        0.132769,
+        -0.158618,
+        0.247914,
+        -0.005875,
+        -0.149218,
+        0.092821,
+        0.095171,
+        0.012924,
+        -0.273762,
+        -0.292562,
+        -0.264363,
+        0.034073,
+        -0.165667,
+        -0.022324,
+        0.022324,
+        0.200916,
+        -0.095171,
+        0.226765,
+        0.198566,
+        -0.095171
+      ]
+    },
+    {
       "path": "tools/arena/memory_city_navigator.py",
       "role": "python_module",
       "binary": false,
@@ -107687,7 +107735,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788745356,
+  "generated_at_unix": 1788745453,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -109365,6 +109413,7 @@
       "tools/arena/memory_city_coverage_membrane_campaign.py",
       "tools/arena/memory_city_coverage_membrane_hs1000.py",
       "tools/arena/memory_city_hydration_plan.py",
+      "tools/arena/memory_city_mode_sealed_admission_campaign.py",
       "tools/arena/memory_city_navigator.py",
       "tools/arena/memory_city_typed_closure.py",
       "tools/arena/memory_city_typed_closure_campaign.py",
@@ -272567,6 +272616,26 @@
         "file_digest8": "fe93eec3af389f89"
       },
       {
+        "semantic_id": "tools/arena/memory_city_mode_sealed_admission_campaign.py#function:h:4cc455095a87f685",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/memory_city_mode_sealed_admission_campaign.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "ad123cb640a00f07",
+        "file_digest8": "c043f8f5fc3bf726"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_mode_sealed_admission_campaign.py#function:run:47bea82b4bea05a7",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/memory_city_mode_sealed_admission_campaign.py",
+        "line": 13,
+        "end_line": 63,
+        "signature_hash": "2bb4b8966f768c55",
+        "file_digest8": "c043f8f5fc3bf726"
+      },
+      {
         "semantic_id": "tools/arena/memory_city_navigator.py#class:NavigatorError:506863ad9937e320",
         "name": "NavigatorError",
         "kind": "class",
@@ -274237,8 +274306,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "66aa04f6a943797fadc39cb6811c616d",
-    "payload_hash": "8c17eba5630046f77b7a5ab633c6c8bd"
+    "record_fingerprint": "f8fcc97ad3df3cb72e9b1204f2d1d862",
+    "payload_hash": "baa217bdf1b3c6b402899d96ca82b346"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274251,15 +274320,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1693,
-      "bytes": 26735361,
-      "tokens_est": 6674197,
+      "files": 1694,
+      "bytes": 26738515,
+      "tokens_est": 6674986,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1038,
+        "python_module": 1039,
         "schema_or_lexicon": 280,
         "support_file": 49
       }
@@ -274947,15 +275016,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1693,
-    "total_bytes": 26735361,
-    "text_tokens_est": 6674197,
+    "file_count": 1694,
+    "total_bytes": 26738515,
+    "text_tokens_est": 6674986,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1038,
+      "python_module": 1039,
       "schema_or_lexicon": 280,
       "support_file": 49
     },
@@ -276201,6 +276270,14 @@
         "end_line": 42,
         "semantic_id": "tools/arena/memory_city_coverage_membrane_campaign.py#function:run:a764f59e30829a7d",
         "signature_hash": "fbfdf6eacf736b3d"
+      },
+      {
+        "file": "tools/arena/memory_city_mode_sealed_admission_campaign.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 63,
+        "semantic_id": "tools/arena/memory_city_mode_sealed_admission_campaign.py#function:run:47bea82b4bea05a7",
+        "signature_hash": "2bb4b8966f768c55"
       },
       {
         "file": "tools/arena/memory_city_typed_closure_campaign.py",
@@ -435343,6 +435420,14 @@
         "end_line": 5,
         "semantic_id": "tools/arena/memory_city_coverage_membrane_hs1000.py#function:h:0e0940ebe6f23249",
         "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/arena/memory_city_mode_sealed_admission_campaign.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tools/arena/memory_city_mode_sealed_admission_campaign.py#function:h:4cc455095a87f685",
+        "signature_hash": "ad123cb640a00f07"
       },
       {
         "file": "tools/arena/memory_city_typed_closure_hs1000.py",
