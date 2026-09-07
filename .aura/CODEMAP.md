@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1709
-- **total_bytes**: 26858833
-- **text_tokens_est**: 6705072
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1054, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1716
+- **total_bytes**: 26870584
+- **text_tokens_est**: 6708012
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1059, 'schema_or_lexicon': 282, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1709,
+  "repo_file_count": 1716,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -299,6 +299,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/current_owner_effect_refinement_o14/FROZEN_PROPOSALS.json",
+    "artifacts/arena/current_owner_effect_refinement_o14/PROOF_RECEIPT_O14.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
     "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
@@ -1654,6 +1656,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_consequence_admission_kernel.py",
+    "tests/test_effect_refinement_seal_o14.py",
     "tests/test_frame_address_immutability.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
@@ -1682,9 +1685,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_effect_refinement_seal_o14.py",
     "tools/arena/campaign_memory_city_effect_handoff_o13.py",
     "tools/arena/campaign_memory_city_quotient_controllability.py",
     "tools/arena/consequence_admission_kernel.py",
+    "tools/arena/effect_refinement_seal.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/k27_dynamic_navigator.py",
     "tools/arena/k27_invariant_route_cut.py",
@@ -1708,7 +1713,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_coverage_membrane.py",
-    "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
     "tools/arena/memory_city_ecf_adapter.py",
     "tools/arena/memory_city_effect_handoff_o13.py",
     "tools/arena/memory_city_hydration_plan.py",
@@ -1719,6 +1723,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_typed_closure.py",
     "tools/arena/o13_effect_handoff_hs1000.py",
     "tools/arena/o13_effect_handoff_lattice.py",
+    "tools/arena/o14_effect_refinement_factored13d.py",
+    "tools/arena/o14_effect_refinement_hs1000.py",
+    "tools/arena/o14_effect_refinement_lattice8.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1849,16 +1856,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1709,
-  "bytes": 26858833,
-  "tokens_est": 6705072,
+  "files": 1716,
+  "bytes": 26870584,
+  "tokens_est": 6708012,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1054,
-    "schema_or_lexicon": 280,
+    "python_module": 1059,
+    "schema_or_lexicon": 282,
     "support_file": 49
   }
 }

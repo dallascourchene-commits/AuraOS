@@ -1068,7 +1068,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1709,
+    "repo_file_count": 1716,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1344,6 +1344,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/current_owner_effect_refinement_o14/FROZEN_PROPOSALS.json",
+      "artifacts/arena/current_owner_effect_refinement_o14/PROOF_RECEIPT_O14.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
       "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
@@ -2699,6 +2701,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_refinement_seal_o14.py",
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
@@ -2727,9 +2730,11 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_effect_refinement_seal_o14.py",
       "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "tools/arena/campaign_memory_city_quotient_controllability.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_refinement_seal.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_dynamic_navigator.py",
       "tools/arena/k27_invariant_route_cut.py",
@@ -2753,7 +2758,6 @@
       "tools/arena/memory_city_contingent_hydration_campaign.py",
       "tools/arena/memory_city_contingent_hydration_hs1000.py",
       "tools/arena/memory_city_coverage_membrane.py",
-      "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
       "tools/arena/memory_city_ecf_adapter.py",
       "tools/arena/memory_city_effect_handoff_o13.py",
       "tools/arena/memory_city_hydration_plan.py",
@@ -2764,6 +2768,9 @@
       "tools/arena/memory_city_typed_closure.py",
       "tools/arena/o13_effect_handoff_hs1000.py",
       "tools/arena/o13_effect_handoff_lattice.py",
+      "tools/arena/o14_effect_refinement_factored13d.py",
+      "tools/arena/o14_effect_refinement_hs1000.py",
+      "tools/arena/o14_effect_refinement_lattice8.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -17850,6 +17857,100 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/current_owner_effect_refinement_o14/FROZEN_PROPOSALS.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 930,
+      "lines": 14,
+      "tokens_est": 233,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dc47a1a454151698",
+      "vector": [
+        -0.109109,
+        -0.039064,
+        -0.109109,
+        0.300385,
+        0.241116,
+        -0.114497,
+        0.119885,
+        -0.039064,
+        0.130661,
+        0.286915,
+        -0.014817,
+        -0.187236,
+        0.04984,
+        -0.200706,
+        -0.281527,
+        0.259975,
+        -0.127967,
+        0.268057,
+        -0.130661,
+        0.071392,
+        0.289609,
+        -0.187236,
+        0.138743,
+        -0.071392,
+        0.041758,
+        -0.092944,
+        0.146825,
+        -0.133355,
+        -0.265363,
+        0.004041,
+        -0.292303,
+        0.117191
+      ]
+    },
+    {
+      "path": "artifacts/arena/current_owner_effect_refinement_o14/PROOF_RECEIPT_O14.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3677,
+      "lines": 55,
+      "tokens_est": 920,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "03d221d81c84c3d7",
+      "vector": [
+        0.010585,
+        0.271672,
+        0.219925,
+        0.107022,
+        -0.043515,
+        0.231686,
+        0.078797,
+        0.194052,
+        0.10467,
+        -0.10467,
+        -0.12584,
+        -0.229334,
+        0.257559,
+        0.234038,
+        -0.099966,
+        -0.194052,
+        -0.022345,
+        -0.243447,
+        0.139952,
+        -0.017641,
+        -0.257559,
+        -0.052923,
+        0.097614,
+        0.097614,
+        0.144657,
+        0.241094,
+        0.285785,
+        -0.074092,
+        -0.184643,
+        -0.217573,
+        -0.168178,
+        -0.252855
       ]
     },
     {
@@ -104372,6 +104473,53 @@
       ]
     },
     {
+      "path": "tests/test_effect_refinement_seal_o14.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3088,
+      "lines": 31,
+      "tokens_est": 772,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "42ae2eb9c0ae3e4b",
+      "vector": [
+        0.169704,
+        -0.09975,
+        -0.066068,
+        0.234476,
+        -0.156749,
+        -0.143795,
+        -0.011659,
+        -0.09975,
+        0.213749,
+        -0.029795,
+        0.104931,
+        -0.231886,
+        -0.086795,
+        0.024614,
+        0.242249,
+        -0.073841,
+        0.224113,
+        -0.112704,
+        -0.110113,
+        0.115295,
+        -0.291476,
+        0.110113,
+        0.169704,
+        -0.011659,
+        -0.12825,
+        0.24484,
+        -0.325158,
+        0.262976,
+        0.164522,
+        0.226704,
+        -0.319976,
+        -0.12825
+      ]
+    },
+    {
       "path": "tests/test_frame_address_immutability.py",
       "role": "python_module",
       "binary": false,
@@ -105688,6 +105836,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_effect_refinement_seal_o14.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1368,
+      "lines": 22,
+      "tokens_est": 342,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e8ff96ff3f329648",
+      "vector": [
+        -0.124889,
+        -0.096343,
+        0.274756,
+        0.205769,
+        -0.289029,
+        0.001189,
+        0.067797,
+        -0.198633,
+        0.291407,
+        0.089206,
+        -0.26524,
+        0.070176,
+        -0.205769,
+        0.024978,
+        -0.027357,
+        -0.160571,
+        -0.174844,
+        0.26524,
+        0.048766,
+        -0.269998,
+        -0.091585,
+        -0.272377,
+        0.010705,
+        -0.139162,
+        -0.269998,
+        0.16295,
+        -0.112995,
+        -0.120131,
+        -0.010705,
+        0.148677,
+        0.115374,
+        0.227179
+      ]
+    },
+    {
       "path": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "role": "python_module",
       "binary": false,
@@ -105826,6 +106021,53 @@
         0.17504,
         0.005646,
         -0.077921
+      ]
+    },
+    {
+      "path": "tools/arena/effect_refinement_seal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6159,
+      "lines": 132,
+      "tokens_est": 1540,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f0bed4e0b1bcbd72",
+      "vector": [
+        0.24724,
+        -0.193846,
+        0.177595,
+        0.207775,
+        0.286706,
+        0.270455,
+        0.24724,
+        0.052234,
+        0.012768,
+        0.096342,
+        -0.042948,
+        0.073127,
+        0.01509,
+        -0.131165,
+        -0.228668,
+        0.100985,
+        0.219382,
+        0.029019,
+        -0.23099,
+        0.258848,
+        -0.024376,
+        -0.210096,
+        0.261169,
+        0.228668,
+        0.121879,
+        -0.012768,
+        0.286706,
+        0.008125,
+        0.142773,
+        -0.091699,
+        -0.133487,
+        -0.179917
       ]
     },
     {
@@ -106910,53 +107152,6 @@
       ]
     },
     {
-      "path": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-      "role": "python_module",
-      "binary": false,
-      "bytes": 6159,
-      "lines": 132,
-      "tokens_est": 1540,
-      "symbol_count": 15,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "f0bed4e0b1bcbd72",
-      "vector": [
-        0.02038,
-        0.118685,
-        0.18582,
-        -0.161843,
-        0.276931,
-        0.164241,
-        0.284124,
-        0.104299,
-        0.212194,
-        0.032369,
-        -0.01079,
-        -0.276931,
-        0.125878,
-        0.11389,
-        0.08272,
-        -0.25775,
-        -0.15465,
-        -0.068334,
-        -0.262545,
-        -0.003597,
-        0.164241,
-        0.044357,
-        0.061141,
-        -0.207399,
-        0.111492,
-        0.28892,
-        -0.044357,
-        0.029971,
-        0.255352,
-        -0.130673,
-        0.293715,
-        0.252955
-      ]
-    },
-    {
       "path": "tools/arena/memory_city_ecf_adapter.py",
       "role": "python_module",
       "binary": false,
@@ -107424,6 +107619,147 @@
         -0.106267,
         0.197993,
         0.175621
+      ]
+    },
+    {
+      "path": "tools/arena/o14_effect_refinement_factored13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 725,
+      "lines": 8,
+      "tokens_est": 182,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "60c5fa1567a83cef",
+      "vector": [
+        0.050553,
+        0.025893,
+        0.210843,
+        -0.070281,
+        0.225639,
+        -0.242901,
+        -0.112203,
+        -0.252765,
+        -0.208377,
+        -0.213309,
+        0.279891,
+        0.215775,
+        0.233037,
+        0.181251,
+        0.228105,
+        0.289755,
+        0.255231,
+        -0.186183,
+        -0.200979,
+        0.050553,
+        0.196047,
+        0.082611,
+        -0.040689,
+        -0.023427,
+        0.020961,
+        -0.191115,
+        0.159057,
+        -0.156591,
+        -0.087543,
+        -0.038223,
+        -0.173853,
+        -0.087543
+      ]
+    },
+    {
+      "path": "tools/arena/o14_effect_refinement_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 623,
+      "lines": 13,
+      "tokens_est": 156,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a550bfd5e9e62360",
+      "vector": [
+        0.209519,
+        -0.130175,
+        0.214478,
+        -0.261589,
+        -0.073146,
+        -0.269028,
+        0.100421,
+        -0.127695,
+        0.063228,
+        -0.013637,
+        -0.298782,
+        0.194642,
+        -0.021076,
+        -0.008678,
+        0.20456,
+        0.219438,
+        -0.068187,
+        -0.043392,
+        0.122736,
+        0.226876,
+        0.107859,
+        0.085543,
+        -0.142572,
+        0.298782,
+        0.172327,
+        -0.298782,
+        -0.276466,
+        0.095462,
+        0.234315,
+        0.021076,
+        0.142572,
+        -0.130175
+      ]
+    },
+    {
+      "path": "tools/arena/o14_effect_refinement_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1340,
+      "lines": 20,
+      "tokens_est": 335,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ef509e6667227041",
+      "vector": [
+        0.262659,
+        -0.147521,
+        0.089952,
+        0.161913,
+        0.281848,
+        -0.212286,
+        0.05637,
+        -0.286646,
+        0.296241,
+        0.152318,
+        -0.202691,
+        0.303437,
+        0.09235,
+        -0.16671,
+        -0.195495,
+        0.104344,
+        0.193096,
+        -0.068363,
+        0.080357,
+        0.044376,
+        -0.082755,
+        -0.003598,
+        0.262659,
+        0.121135,
+        -0.046775,
+        -0.05637,
+        0.229077,
+        0.152318,
+        0.133128,
+        -0.303437,
+        -0.049174,
+        0.03718
       ]
     },
     {
@@ -108471,7 +108807,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788773628,
+  "generated_at_unix": 1788773979,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108749,6 +109085,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/current_owner_effect_refinement_o14/FROZEN_PROPOSALS.json",
+      "artifacts/arena/current_owner_effect_refinement_o14/PROOF_RECEIPT_O14.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
       "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
@@ -110104,6 +110442,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_refinement_seal_o14.py",
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
@@ -110132,9 +110471,11 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_effect_refinement_seal_o14.py",
       "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "tools/arena/campaign_memory_city_quotient_controllability.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_refinement_seal.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_dynamic_navigator.py",
       "tools/arena/k27_invariant_route_cut.py",
@@ -110169,6 +110510,9 @@
       "tools/arena/memory_city_typed_closure.py",
       "tools/arena/o13_effect_handoff_hs1000.py",
       "tools/arena/o13_effect_handoff_lattice.py",
+      "tools/arena/o14_effect_refinement_factored13d.py",
+      "tools/arena/o14_effect_refinement_hs1000.py",
+      "tools/arena/o14_effect_refinement_lattice8.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -267507,6 +267851,146 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#class:T:b504b2df0c2c9b79",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 9,
+        "end_line": 29,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.setUp:a132e12cbffdfa44",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_authority_taint_holds:f15033d23c2b6b96",
+        "name": "T.test_authority_taint_holds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "3d3b361d47b991c7",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_binding_move_rebinds:46a5376d330b6380",
+        "name": "T.test_binding_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "48de18c9d1e2cc23",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_escalation_move_rebinds:7a2cbaf10b81f069",
+        "name": "T.test_escalation_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "64e0cfeac6308736",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_intent_move_rebinds:fdd2c2d6558907e7",
+        "name": "T.test_intent_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "6b028f5bcbaea136",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_invalid_root_fails_construction:7537e08d0da2e978",
+        "name": "T.test_invalid_root_fails_construction",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "0cfe8a81f585ae25",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_obligation_move_rebinds:3cd6a9f8ace5df6c",
+        "name": "T.test_obligation_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "8024cdb85310875b",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_owner_receipt_move_rebinds:c491873eaaaafdc5",
+        "name": "T.test_owner_receipt_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "b0d26b093d814efd",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_partial_plan_holds:e5761a1301c4e870",
+        "name": "T.test_partial_plan_holds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "0d622e1dc09398cb",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_plan_move_rebinds:296368daa077efc7",
+        "name": "T.test_plan_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "b862eadbca9116f7",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_read_only_or_hold_base_cannot_route:01f2765000bb6986",
+        "name": "T.test_read_only_or_hold_base_cannot_route",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "1c7cdcdae98ee94d",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_refinement_changes_tecc_identity:09fbc4ff37d189b8",
+        "name": "T.test_refinement_changes_tecc_identity",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 22,
+        "end_line": 27,
+        "signature_hash": "99cf20c32141adb5",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_valid_routes_to_tecc_not_effect_ready:17d9d220733c4196",
+        "name": "T.test_valid_routes_to_tecc_not_effect_ready",
+        "kind": "method",
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "e042c364dca25cb6",
+        "file_digest8": "42ae2eb9c0ae3e4b"
+      },
+      {
         "semantic_id": "tests/test_frame_address_immutability.py#class:FrameAddressImmutabilityTests:29b7f1bfec59b129",
         "name": "FrameAddressImmutabilityTests",
         "kind": "class",
@@ -271427,6 +271911,156 @@
         "file_digest8": "1397bda28a709ec7"
       },
       {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:CurrentOwnerHandoff:ccf425ce2a36cae5",
+        "name": "CurrentOwnerHandoff",
+        "kind": "class",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 27,
+        "end_line": 38,
+        "signature_hash": "fd3f9048b7932fa3",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:Decision:1077c9e7e0902c7e",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 71,
+        "end_line": 84,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:Disp:85b6ee071db6f5db",
+        "name": "Disp",
+        "kind": "class",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "ab6990944b56390f",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:EffectRefinementSeal:75ab353b50f241b5",
+        "name": "EffectRefinementSeal",
+        "kind": "class",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 41,
+        "end_line": 57,
+        "signature_hash": "af5cad03033810cf",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:RefinementVerification:6f49029d42e91869",
+        "name": "RefinementVerification",
+        "kind": "class",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 60,
+        "end_line": 68,
+        "signature_hash": "67bdd57767e93fa6",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:_authority_clean:bf93aaff218470ce",
+        "name": "_authority_clean",
+        "kind": "function",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 86,
+        "end_line": 87,
+        "signature_hash": "bce062c52392d136",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:_root:3d7fed8177c1617e",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "c42b6aaf0ebf0bc1",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:compile_refined_tecc_seal:c0774504889b4bcd",
+        "name": "compile_refined_tecc_seal",
+        "kind": "function",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 89,
+        "end_line": 125,
+        "signature_hash": "a2269b347ddaa993",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:digest:113af5307a16910a",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "3f5db76ec614c8b9",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:fixture:940310561d161052",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:root:c734ffb0f1301cf1",
+        "name": "root",
+        "kind": "function",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "02e0a41ac003db76",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:CurrentOwnerHandoff.__post_init__:df20015bd47185dd",
+        "name": "CurrentOwnerHandoff.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:Decision.__post_init__:a4807a700f49d2ff",
+        "name": "Decision.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:EffectRefinementSeal.__post_init__:5cf8b981f86e7ae7",
+        "name": "EffectRefinementSeal.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:RefinementVerification.__post_init__:4aa11234bc6c6271",
+        "name": "RefinementVerification.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_refinement_seal.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f0bed4e0b1bcbd72"
+      },
+      {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
         "name": "CapabilityManifest",
         "kind": "class",
@@ -274857,156 +275491,6 @@
         "file_digest8": "c161a099857772c1"
       },
       {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:CurrentOwnerHandoff:361073d93fa097f9",
-        "name": "CurrentOwnerHandoff",
-        "kind": "class",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 27,
-        "end_line": 38,
-        "signature_hash": "fd3f9048b7932fa3",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:Decision:8c6e1fd8c7b5ec4f",
-        "name": "Decision",
-        "kind": "class",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 71,
-        "end_line": 84,
-        "signature_hash": "fc4b98c490ac6e3c",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:Disp:94e6bbed251a0d42",
-        "name": "Disp",
-        "kind": "class",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 21,
-        "end_line": 24,
-        "signature_hash": "ab6990944b56390f",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:EffectRefinementSeal:e440d2a645e1894d",
-        "name": "EffectRefinementSeal",
-        "kind": "class",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 41,
-        "end_line": 57,
-        "signature_hash": "af5cad03033810cf",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:RefinementVerification:d25fdcb0e4d93b46",
-        "name": "RefinementVerification",
-        "kind": "class",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 60,
-        "end_line": 68,
-        "signature_hash": "67bdd57767e93fa6",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:_authority_clean:478ae87d2bb24599",
-        "name": "_authority_clean",
-        "kind": "function",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 86,
-        "end_line": 87,
-        "signature_hash": "bce062c52392d136",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:_root:5c55f37f7a9679f8",
-        "name": "_root",
-        "kind": "function",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 16,
-        "end_line": 19,
-        "signature_hash": "c42b6aaf0ebf0bc1",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:compile_refined_tecc_seal:bad8bc5c832d6277",
-        "name": "compile_refined_tecc_seal",
-        "kind": "function",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 89,
-        "end_line": 125,
-        "signature_hash": "a2269b347ddaa993",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:digest:71063d05ea25ccff",
-        "name": "digest",
-        "kind": "function",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 11,
-        "end_line": 12,
-        "signature_hash": "3f5db76ec614c8b9",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:fixture:117042845674f858",
-        "name": "fixture",
-        "kind": "function",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 127,
-        "end_line": 131,
-        "signature_hash": "c73d3075455b50af",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:root:03eb4268b0c290a9",
-        "name": "root",
-        "kind": "function",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 14,
-        "end_line": 14,
-        "signature_hash": "02e0a41ac003db76",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:CurrentOwnerHandoff.__post_init__:394fdc9753aa32a7",
-        "name": "CurrentOwnerHandoff.__post_init__",
-        "kind": "method",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 37,
-        "end_line": 38,
-        "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:Decision.__post_init__:aaffaec4b6580646",
-        "name": "Decision.__post_init__",
-        "kind": "method",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 81,
-        "end_line": 84,
-        "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:EffectRefinementSeal.__post_init__:2044f5e9e07868ac",
-        "name": "EffectRefinementSeal.__post_init__",
-        "kind": "method",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 55,
-        "end_line": 57,
-        "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:RefinementVerification.__post_init__:05e13777ba8b35d7",
-        "name": "RefinementVerification.__post_init__",
-        "kind": "method",
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "line": 67,
-        "end_line": 68,
-        "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "f0bed4e0b1bcbd72"
-      },
-      {
         "semantic_id": "tools/arena/memory_city_ecf_adapter.py#class:ECFAdmission:665ed8d924c43678",
         "name": "ECFAdmission",
         "kind": "class",
@@ -277417,8 +277901,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "43fa2e750630ce6b1fecd580a6c6483c",
-    "payload_hash": "1b14ef26c72e1d924d15be7c63c5cb4e"
+    "record_fingerprint": "9df4c15db4dd14ae4c78e7791c6deb8c",
+    "payload_hash": "658ed47105b855562e8f72fcc432d48a"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -277431,16 +277915,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1709,
-      "bytes": 26858833,
-      "tokens_est": 6705072,
+      "files": 1716,
+      "bytes": 26870584,
+      "tokens_est": 6708012,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1054,
-        "schema_or_lexicon": 280,
+        "python_module": 1059,
+        "schema_or_lexicon": 282,
         "support_file": 49
       }
     },
@@ -278127,16 +278611,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1709,
-    "total_bytes": 26858833,
-    "text_tokens_est": 6705072,
+    "file_count": 1716,
+    "total_bytes": 26870584,
+    "text_tokens_est": 6708012,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1054,
-      "schema_or_lexicon": 280,
+      "python_module": 1059,
+      "schema_or_lexicon": 282,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -295933,6 +296417,14 @@
         "signature_hash": "3c60ab9e6d97eef8"
       },
       {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:digest:113af5307a16910a",
+        "signature_hash": "3f5db76ec614c8b9"
+      },
+      {
         "file": "tools/arena/frontier27_runtime.py",
         "kind": "function",
         "line": 21,
@@ -295954,14 +296446,6 @@
         "line": 10,
         "end_line": 11,
         "semantic_id": "tools/arena/memory_city_coverage_membrane.py#function:digest:cdca3520ae6f5e38",
-        "signature_hash": "3f5db76ec614c8b9"
-      },
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "function",
-        "line": 11,
-        "end_line": 12,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:digest:71063d05ea25ccff",
         "signature_hash": "3f5db76ec614c8b9"
       },
       {
@@ -375425,11 +375909,11 @@
         "signature_hash": "359c484fcebcc325"
       },
       {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
+        "file": "tools/arena/effect_refinement_seal.py",
         "kind": "function",
         "line": 16,
         "end_line": 19,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:_root:5c55f37f7a9679f8",
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:_root:3d7fed8177c1617e",
         "signature_hash": "c42b6aaf0ebf0bc1"
       },
       {
@@ -389331,11 +389815,11 @@
         "signature_hash": "c73d3075455b50af"
       },
       {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
+        "file": "tools/arena/effect_refinement_seal.py",
         "kind": "function",
         "line": 127,
         "end_line": 131,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:fixture:117042845674f858",
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:fixture:940310561d161052",
         "signature_hash": "c73d3075455b50af"
       }
     ],
@@ -433263,6 +433747,154 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "T": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 29,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#class:T:b504b2df0c2c9b79",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 115,
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.setUp": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.setUp:a132e12cbffdfa44",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.test_valid_routes_to_tecc_not_effect_ready": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_valid_routes_to_tecc_not_effect_ready:17d9d220733c4196",
+        "signature_hash": "e042c364dca25cb6"
+      }
+    ],
+    "T.test_intent_move_rebinds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_intent_move_rebinds:fdd2c2d6558907e7",
+        "signature_hash": "6b028f5bcbaea136"
+      }
+    ],
+    "T.test_escalation_move_rebinds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_escalation_move_rebinds:7a2cbaf10b81f069",
+        "signature_hash": "64e0cfeac6308736"
+      }
+    ],
+    "T.test_plan_move_rebinds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_plan_move_rebinds:296368daa077efc7",
+        "signature_hash": "b862eadbca9116f7"
+      }
+    ],
+    "T.test_obligation_move_rebinds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_obligation_move_rebinds:3cd6a9f8ace5df6c",
+        "signature_hash": "8024cdb85310875b"
+      }
+    ],
+    "T.test_owner_receipt_move_rebinds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_owner_receipt_move_rebinds:c491873eaaaafdc5",
+        "signature_hash": "b0d26b093d814efd"
+      }
+    ],
+    "T.test_binding_move_rebinds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_binding_move_rebinds:46a5376d330b6380",
+        "signature_hash": "48de18c9d1e2cc23"
+      }
+    ],
+    "T.test_partial_plan_holds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_partial_plan_holds:e5761a1301c4e870",
+        "signature_hash": "0d622e1dc09398cb"
+      }
+    ],
+    "T.test_read_only_or_hold_base_cannot_route": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_read_only_or_hold_base_cannot_route:01f2765000bb6986",
+        "signature_hash": "1c7cdcdae98ee94d"
+      }
+    ],
+    "T.test_authority_taint_holds": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_authority_taint_holds:f15033d23c2b6b96",
+        "signature_hash": "3d3b361d47b991c7"
+      }
+    ],
+    "T.test_refinement_changes_tecc_identity": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 27,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_refinement_changes_tecc_identity:09fbc4ff37d189b8",
+        "signature_hash": "99cf20c32141adb5"
+      }
+    ],
+    "T.test_invalid_root_fails_construction": [
+      {
+        "file": "tests/test_effect_refinement_seal_o14.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_effect_refinement_seal_o14.py#method:T.test_invalid_root_fails_construction:7537e08d0da2e978",
+        "signature_hash": "0cfe8a81f585ae25"
+      }
+    ],
     "FrameAddressImmutabilityTests": [
       {
         "file": "tests/test_frame_address_immutability.py",
@@ -433371,16 +434003,6 @@
         "end_line": 80,
         "semantic_id": "tests/test_frame_address_immutability.py#method:FrameAddressImmutabilityTests.test_tuple_input_preserves_value_semantics:aa6df716e445bff6",
         "signature_hash": "916e57cb7c4f653a"
-      }
-    ],
-    "T": [
-      {
-        "file": "tests/test_frontier27_runtime.py",
-        "kind": "class",
-        "line": 12,
-        "end_line": 115,
-        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
-        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -436777,11 +437399,11 @@
         "signature_hash": "d6a166dc8cfde9f6"
       },
       {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
+        "file": "tools/arena/effect_refinement_seal.py",
         "kind": "class",
         "line": 71,
         "end_line": 84,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:Decision:8c6e1fd8c7b5ec4f",
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:Decision:1077c9e7e0902c7e",
         "signature_hash": "fc4b98c490ac6e3c"
       }
     ],
@@ -437043,6 +437665,124 @@
         "end_line": 268,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
         "signature_hash": "033c7cd0343e1003"
+      }
+    ],
+    "root": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:root:c734ffb0f1301cf1",
+        "signature_hash": "02e0a41ac003db76"
+      },
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:root:82733b686a2a7f01",
+        "signature_hash": "347125fa41d4265b"
+      }
+    ],
+    "Disp": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:Disp:85b6ee071db6f5db",
+        "signature_hash": "ab6990944b56390f"
+      }
+    ],
+    "CurrentOwnerHandoff": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 38,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:CurrentOwnerHandoff:ccf425ce2a36cae5",
+        "signature_hash": "fd3f9048b7932fa3"
+      }
+    ],
+    "CurrentOwnerHandoff.__post_init__": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:CurrentOwnerHandoff.__post_init__:df20015bd47185dd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectRefinementSeal": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 57,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:EffectRefinementSeal:75ab353b50f241b5",
+        "signature_hash": "af5cad03033810cf"
+      }
+    ],
+    "EffectRefinementSeal.__post_init__": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:EffectRefinementSeal.__post_init__:5cf8b981f86e7ae7",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RefinementVerification": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 68,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#class:RefinementVerification:6f49029d42e91869",
+        "signature_hash": "67bdd57767e93fa6"
+      }
+    ],
+    "RefinementVerification.__post_init__": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:RefinementVerification.__post_init__:4aa11234bc6c6271",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "Decision.__post_init__": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#method:Decision.__post_init__:a4807a700f49d2ff",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_authority_clean": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 87,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:_authority_clean:bf93aaff218470ce",
+        "signature_hash": "bce062c52392d136"
+      }
+    ],
+    "compile_refined_tecc_seal": [
+      {
+        "file": "tools/arena/effect_refinement_seal.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 125,
+        "semantic_id": "tools/arena/effect_refinement_seal.py#function:compile_refined_tecc_seal:c0774504889b4bcd",
+        "signature_hash": "a2269b347ddaa993"
       }
     ],
     "stable": [
@@ -440237,24 +440977,6 @@
         "signature_hash": "6fe522742be8458f"
       }
     ],
-    "root": [
-      {
-        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
-        "kind": "function",
-        "line": 9,
-        "end_line": 9,
-        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:root:82733b686a2a7f01",
-        "signature_hash": "347125fa41d4265b"
-      },
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "function",
-        "line": 14,
-        "end_line": 14,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:root:03eb4268b0c290a9",
-        "signature_hash": "02e0a41ac003db76"
-      }
-    ],
     "CoverageDisposition": [
       {
         "file": "tools/arena/memory_city_coverage_membrane.py",
@@ -440353,106 +441075,6 @@
         "end_line": 182,
         "semantic_id": "tools/arena/memory_city_coverage_membrane.py#function:compile_proof_carrying_typed_admission:8971714bd49d5c17",
         "signature_hash": "cb920310795463de"
-      }
-    ],
-    "Disp": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "class",
-        "line": 21,
-        "end_line": 24,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:Disp:94e6bbed251a0d42",
-        "signature_hash": "ab6990944b56390f"
-      }
-    ],
-    "CurrentOwnerHandoff": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "class",
-        "line": 27,
-        "end_line": 38,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:CurrentOwnerHandoff:361073d93fa097f9",
-        "signature_hash": "fd3f9048b7932fa3"
-      }
-    ],
-    "CurrentOwnerHandoff.__post_init__": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "method",
-        "line": 37,
-        "end_line": 38,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:CurrentOwnerHandoff.__post_init__:394fdc9753aa32a7",
-        "signature_hash": "175e4972e4d2d582"
-      }
-    ],
-    "EffectRefinementSeal": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "class",
-        "line": 41,
-        "end_line": 57,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:EffectRefinementSeal:e440d2a645e1894d",
-        "signature_hash": "af5cad03033810cf"
-      }
-    ],
-    "EffectRefinementSeal.__post_init__": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "method",
-        "line": 55,
-        "end_line": 57,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:EffectRefinementSeal.__post_init__:2044f5e9e07868ac",
-        "signature_hash": "175e4972e4d2d582"
-      }
-    ],
-    "RefinementVerification": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "class",
-        "line": 60,
-        "end_line": 68,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#class:RefinementVerification:d25fdcb0e4d93b46",
-        "signature_hash": "67bdd57767e93fa6"
-      }
-    ],
-    "RefinementVerification.__post_init__": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "method",
-        "line": 67,
-        "end_line": 68,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:RefinementVerification.__post_init__:05e13777ba8b35d7",
-        "signature_hash": "175e4972e4d2d582"
-      }
-    ],
-    "Decision.__post_init__": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "method",
-        "line": 81,
-        "end_line": 84,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#method:Decision.__post_init__:aaffaec4b6580646",
-        "signature_hash": "175e4972e4d2d582"
-      }
-    ],
-    "_authority_clean": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "function",
-        "line": 86,
-        "end_line": 87,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:_authority_clean:478ae87d2bb24599",
-        "signature_hash": "bce062c52392d136"
-      }
-    ],
-    "compile_refined_tecc_seal": [
-      {
-        "file": "tools/arena/memory_city_current_owner_effect_refinement_seal.py",
-        "kind": "function",
-        "line": 89,
-        "end_line": 125,
-        "semantic_id": "tools/arena/memory_city_current_owner_effect_refinement_seal.py#function:compile_refined_tecc_seal:bad8bc5c832d6277",
-        "signature_hash": "a2269b347ddaa993"
       }
     ],
     "ECFCurrentCut": [
