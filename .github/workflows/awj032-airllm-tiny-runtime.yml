@@ -46,7 +46,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Materialize pinned streamed-training source and prove O1 exact-source suite
+      - name: Materialize pinned training source and prove O1-O2-O3-R1 lifecycle suite
         shell: bash
         run: |
           set -euo pipefail
@@ -57,27 +57,32 @@ jobs:
           import json
           import unittest
           from pathlib import Path
-          from tools.awj032.training_o1_reference import test_training_admission as mod
+          from tools.awj032.training_o1_reference import test_training_admission as o1
+          from tools.awj032.training_o2_transition_reference import test_transition_envelope as o2
+          from tools.awj032.training_o3_delegated_bridge_reference import test_delegated_training_bridge as o3
+          from tools.awj032.training_r1_resolver_reference import test_resolver as r1
 
-          suite = unittest.defaultTestLoader.loadTestsFromModule(mod)
+          loader = unittest.defaultTestLoader
+          suite = unittest.TestSuite(loader.loadTestsFromModule(m) for m in (o1, o2, o3, r1))
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           assert result.wasSuccessful(), result
-          assert result.testsRun == 16, result.testsRun
+          assert result.testsRun == 45, result.testsRun
           assert not result.skipped, result.skipped
           receipt = {
-              'schema': 'AWJ032_O1_EXACT_SOURCE_SUITE_V1',
+              'schema': 'AWJ032_O1_O2_O3_R1_EXACT_HEAD_SUITE_V1',
               'airllm_commit': '55e435087d951da8c25ab3672e969025241a398e',
+              'modules': ['O1', 'O2', 'O3', 'R1'],
               'tests_run': result.testsRun,
               'skipped': len(result.skipped),
               'failures': len(result.failures),
               'errors': len(result.errors),
               'status': 'PASS',
-              'claim_ceiling': 'PINNED_TRAINING_SOURCE_AND_D0_CONTRACT_TEST_ONLY_NOT_RUNTIME_TRAINING_PROOF',
+              'claim_ceiling': 'PINNED_TRAINING_SOURCE_AND_D0_LIFECYCLE_CONTRACT_TEST_ONLY_NOT_RUNTIME_TRAINING_PROOF',
           }
-          Path('.awj032/o1_exact_source_suite.json').write_text(
+          Path('.awj032/o1_o2_o3_r1_exact_head_suite.json').write_text(
               json.dumps(receipt, sort_keys=True, indent=2), encoding='utf-8'
           )
-          print('O1_EXACT_SOURCE_SUITE_PASS', receipt)
+          print('O1_O2_O3_R1_EXACT_HEAD_SUITE_PASS', receipt)
           PY
 
       - name: Materialize pinned stock AirLLM v3.3.0
