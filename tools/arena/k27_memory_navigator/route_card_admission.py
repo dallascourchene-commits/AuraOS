@@ -91,8 +91,8 @@ class RouteIdentity:
             raise ValueError("currentness_generation must be non-negative exact int")
         if not isinstance(self.k27, tuple) or len(self.k27) > 13:
             raise ValueError("k27 must be a tuple with depth <= 13")
-        if any(type(x) is not int or x not in (0, 1, 2) for x in self.k27):
-            raise ValueError("k27 digits must be exact ints in {0,1,2}")
+        if any(type(x) is not int or not 0 <= x < 27 for x in self.k27):
+            raise ValueError("k27 digits must be exact base-27 ints in 0..26")
         if (self.runtime_state_root is None) != (self.revision_id is None):
             raise ValueError("runtime_state_root and revision_id must be bound together")
         if self.runtime_state_root is not None:
@@ -143,7 +143,28 @@ class TemporalRequirement:
             return True
         if self.worst_case_finish is None:
             return False
-        return self.worst_case_finish <= self.deadline
+        return self.event_time <= self.worst_case_finish <= self.deadline
+
+
+def temporal_contract_root(requirement: TemporalRequirement) -> str:
+    """Hash the complete temporal contract except event_time, which is bound separately.
+
+    Keeping event time separate preserves the polarity law: positive evidence is
+    exact-at-use, while a state-independent negative certificate may rebind to a
+    new event time only when every other temporal constraint is unchanged.
+    """
+    if not isinstance(requirement, TemporalRequirement):
+        raise ValueError("temporal requirement required")
+    payload = {
+        "deadline": requirement.deadline,
+        "worst_case_finish": requirement.worst_case_finish,
+        "phase_tolerance": requirement.phase_tolerance,
+        "lawfield_transition": requirement.lawfield_transition,
+        "irreversible_or_external": requirement.irreversible_or_external,
+        "mode": requirement.mode.value,
+    }
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return sha256(raw).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -153,6 +174,7 @@ class ProofReceipt:
     certified_envelope: CapacityEnvelope
     temporal_mode: TimingMode
     event_time: int
+    temporal_contract_root: str | None = None
     state_independent_negative: bool = False
     authority_minted: bool = False
     effect_authority: bool = False
@@ -169,6 +191,8 @@ class ProofReceipt:
             raise ValueError("temporal_mode must be an exact TimingMode enum")
         if type(self.event_time) is not int:
             raise ValueError("event_time must be exact int")
+        if self.temporal_contract_root is not None:
+            _hex64(self.temporal_contract_root, "temporal_contract_root")
         for name in ("state_independent_negative", "authority_minted", "effect_authority", "gate10"):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"{name} must be exact bool")
@@ -189,6 +213,20 @@ class UseContext:
     disclosure_budget_ok: bool = True
     irreversible_effect_already_committed: bool = False
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.identity, RouteIdentity):
+            raise ValueError("identity must be RouteIdentity")
+        if not isinstance(self.envelope, CapacityEnvelope):
+            raise ValueError("envelope must be CapacityEnvelope")
+        if not isinstance(self.temporal, TemporalRequirement):
+            raise ValueError("temporal must be TemporalRequirement")
+        for name in (
+            "current_source", "capability_current", "local_knowledge_sufficient",
+            "disclosure_budget_ok", "irreversible_effect_already_committed",
+        ):
+            if type(getattr(self, name)) is not bool:
+                raise ValueError(f"{name} must be exact bool")
+
 
 @dataclass(frozen=True)
 class Admission:
@@ -204,14 +242,24 @@ def _hard_root_movement(old: RouteIdentity, new: RouteIdentity) -> bool:
     return old.hard_roots() != new.hard_roots()
 
 
+def _requires_explicit_temporal_contract(requirement: TemporalRequirement) -> bool:
+    return any((
+        requirement.deadline is not None,
+        requirement.worst_case_finish is not None,
+        requirement.phase_tolerance is not None,
+        requirement.lawfield_transition,
+        requirement.irreversible_or_external,
+    ))
+
+
 def admit(receipt: ProofReceipt, use: UseContext) -> Admission:
     """Classify one current route-use request.
 
-    Positive readiness requires exact at-use identity, timing, envelope and
-    capability/knowledge discharge. A state-independent negative impossibility
-    may survive a pure currentness/event-time rebind and any envelope shrink,
-    but never a hard-root move or envelope widening. Runtime state/revision are
-    hard identity when present. K27 is intentionally absent from authority decisions.
+    Positive readiness requires exact at-use identity, temporal contract and
+    envelope discharge. A state-independent negative impossibility may survive a
+    pure currentness/event-time rebind and any envelope shrink, but never a hard
+    root, temporal-contract or envelope widening. Runtime state/revision are hard
+    identity when present. K27 remains locality metadata, never authority.
     """
     mode = use.temporal.mode
 
@@ -227,6 +275,13 @@ def admit(receipt: ProofReceipt, use: UseContext) -> Admission:
         return Admission(Disposition.HOLD, mode, ("capability_attestation_disclosure_budget_exceeded",))
     if not use.temporal.deadline_safe:
         return Admission(Disposition.HOLD, mode, ("worst_case_deadline_miss_or_unknown",))
+
+    current_temporal_root = temporal_contract_root(use.temporal)
+    if receipt.temporal_contract_root is None:
+        if _requires_explicit_temporal_contract(use.temporal):
+            return Admission(Disposition.REPROVE, mode, ("temporal_contract_unbound",))
+    elif receipt.temporal_contract_root != current_temporal_root:
+        return Admission(Disposition.REPROVE, mode, ("temporal_contract_changed",))
 
     hard_move = _hard_root_movement(receipt.route_identity, use.identity)
 
@@ -283,6 +338,7 @@ def canonical_receipt_root(receipt: ProofReceipt) -> str:
         "envelope": receipt.certified_envelope.__dict__,
         "temporal_mode": receipt.temporal_mode.value,
         "event_time": receipt.event_time,
+        "temporal_contract_root": receipt.temporal_contract_root,
         "state_independent_negative": receipt.state_independent_negative,
         "authority_minted": False,
         "effect_authority": False,
