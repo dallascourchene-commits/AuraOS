@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1688,
+    "repo_file_count": 1691,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2696,6 +2696,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_demand_lease_handoff.py",
+      "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
       "tests/test_k27_memory_navigator_incremental_evidence.py",
       "tests/test_k27_memory_navigator_review_regressions.py",
       "tests/test_k27_memory_navigator_route_admission.py",
@@ -2728,9 +2729,11 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/campaign_demand_lease_handoff.py",
+      "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
       "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
       "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
       "tools/arena/k27_memory_navigator/demand_lease_handoff.py",
+      "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
       "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "tools/arena/k27_memory_navigator/reflexive_topology.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
@@ -104382,6 +104385,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4610,
+      "lines": 33,
+      "tokens_est": 1153,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4f8b4cff9678a61d",
+      "vector": [
+        -0.072602,
+        -0.23855,
+        0.288927,
+        -0.125943,
+        -0.102236,
+        0.333378,
+        0.099272,
+        -0.048895,
+        0.208917,
+        -0.111126,
+        0.108163,
+        -0.048895,
+        0.137796,
+        -0.010372,
+        0.173356,
+        -0.007408,
+        0.087419,
+        -0.128906,
+        -0.063712,
+        0.23855,
+        -0.318561,
+        -0.179283,
+        0.137796,
+        -0.084456,
+        0.26522,
+        0.128906,
+        0.122979,
+        0.128906,
+        0.1941,
+        0.318561,
+        -0.155576,
+        0.241514
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_navigator_incremental_evidence.py",
       "role": "python_module",
       "binary": false,
@@ -105886,6 +105936,53 @@
       ]
     },
     {
+      "path": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5082,
+      "lines": 43,
+      "tokens_est": 1271,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9fd18c25709e92d0",
+      "vector": [
+        0.151789,
+        -0.237757,
+        0.030895,
+        0.079252,
+        0.030895,
+        -0.337159,
+        -0.194773,
+        -0.264622,
+        -0.038955,
+        -0.12761,
+        -0.1894,
+        -0.087312,
+        -0.028208,
+        -0.047014,
+        -0.18134,
+        0.089999,
+        -0.165221,
+        0.087312,
+        0.192086,
+        -0.114177,
+        -0.227011,
+        -0.221638,
+        0.235071,
+        -0.342532,
+        0.232384,
+        -0.073879,
+        -0.012089,
+        0.020149,
+        0.275369,
+        -0.033582,
+        -0.259249,
+        0.151789
+      ]
+    },
+    {
       "path": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
       "role": "python_module",
       "binary": false,
@@ -106024,6 +106121,53 @@
         -0.161907,
         0.052185,
         0.148526
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11579,
+      "lines": 258,
+      "tokens_est": 2895,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3e79aa1be1432f3d",
+      "vector": [
+        -0.175436,
+        -0.05932,
+        -0.109805,
+        0.266309,
+        0.289027,
+        0.225921,
+        -0.321842,
+        -0.218348,
+        0.283979,
+        -0.208251,
+        0.04165,
+        -0.079514,
+        0.208251,
+        -0.145145,
+        -0.117378,
+        0.225921,
+        -0.127475,
+        0.102232,
+        0.152717,
+        -0.253688,
+        0.321842,
+        0.05932,
+        0.026505,
+        0.044174,
+        0.051747,
+        -0.19563,
+        -0.162814,
+        -0.031553,
+        -0.061844,
+        -0.04165,
+        0.124951,
+        -0.147669
       ]
     },
     {
@@ -107447,7 +107591,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788743942,
+  "generated_at_unix": 1788745164,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -109081,6 +109225,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_demand_lease_handoff.py",
+      "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
       "tests/test_k27_memory_navigator_incremental_evidence.py",
       "tests/test_k27_memory_navigator_review_regressions.py",
       "tests/test_k27_memory_navigator_route_admission.py",
@@ -109113,9 +109258,11 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/campaign_demand_lease_handoff.py",
+      "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
       "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
       "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
       "tools/arena/k27_memory_navigator/demand_lease_handoff.py",
+      "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
       "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "tools/arena/k27_memory_navigator/reflexive_topology.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
@@ -267452,6 +267599,236 @@
         "file_digest8": "a17d77e30e9a793c"
       },
       {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#class:T:bc7c60a511fe74d5",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 13,
+        "end_line": 31,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:env:833975476ba4835d",
+        "name": "env",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "3cb57ada5cfc0d03",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:ev:b7705600fadd91ef",
+        "name": "ev",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "8561db7205df1b1e",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:lease:2abb741abec8bc3a",
+        "name": "lease",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "535ffe75d785eecc",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:r:e59e1d895c409cd4",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:w:5346489645baee99",
+        "name": "w",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "03dbddbeebc1a0d4",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.admit:b4b30bf418f404f8",
+        "name": "T.admit",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "82f8f91049483a1d",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.setUp:ed33657662153f69",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_authority_ceiling_stays_false:485a7b1e30363ad0",
+        "name": "T.test_authority_ceiling_stays_false",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 31,
+        "end_line": 31,
+        "signature_hash": "2c14f70a436e114a",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_authority_divergence_rebinds:33e192815d6803dd",
+        "name": "T.test_authority_divergence_rebinds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "4697529ea0e3cd9c",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_completeness_generation_move_rebinds:0786b67e0b05758d",
+        "name": "T.test_completeness_generation_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 22,
+        "end_line": 22,
+        "signature_hash": "23fb4b0e4d2ef101",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_exact_reuse_ready:1a5591bae2411148",
+        "name": "T.test_exact_reuse_ready",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "a4592e2bebfae44b",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_extra_equivalent_world_does_not_force_full_reconstruction:60df3f8673a2f798",
+        "name": "T.test_extra_equivalent_world_does_not_force_full_reconstruction",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "4ead93f7c8725095",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_forged_completeness_receipt_holds:14e362429077efce",
+        "name": "T.test_forged_completeness_receipt_holds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 23,
+        "end_line": 23,
+        "signature_hash": "82a02c3b3ff6c26d",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_irrelevant_hidden_config_is_quotiented:30280c54960ea2a4",
+        "name": "T.test_irrelevant_hidden_config_is_quotiented",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "3c3053620bcb164b",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_issue_divergent_envelope_holds:755faedd31adfac5",
+        "name": "T.test_issue_divergent_envelope_holds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 29,
+        "end_line": 29,
+        "signature_hash": "2b2c04b691e09b28",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_issue_requires_completeness_evidence:e4ab9dd53fa0d73f",
+        "name": "T.test_issue_requires_completeness_evidence",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 30,
+        "end_line": 30,
+        "signature_hash": "9bb4adf1424f0ff4",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_lease_move_rebinds:1dce1faa515867cb",
+        "name": "T.test_lease_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "3bc2508accf04ceb",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_observation_move_rebinds:bfe4bf75d8250102",
+        "name": "T.test_observation_move_rebinds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 25,
+        "end_line": 25,
+        "signature_hash": "af14214466febc07",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_same_epoch_support_but_new_possible_consequence_rebinds:8b19a539d972059c",
+        "name": "T.test_same_epoch_support_but_new_possible_consequence_rebinds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "3f2580b2d3dd8126",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_same_generation_support_identity_swap_cannot_reuse:59d2aabe4e678b30",
+        "name": "T.test_same_generation_support_identity_swap_cannot_reuse",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "8aa22142e780e83c",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_stale_completeness_verifier_holds:fd9296ab027a6575",
+        "name": "T.test_stale_completeness_verifier_holds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 24,
+        "end_line": 24,
+        "signature_hash": "db2728b7d3e05bd4",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_transition_divergence_rebinds:40271f488fe86804",
+        "name": "T.test_transition_divergence_rebinds",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "db52d480996a8cad",
+        "file_digest8": "4f8b4cff9678a61d"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_navigator_incremental_evidence.py#class:IncrementalEvidenceTests:ef09db121971f8f3",
         "name": "IncrementalEvidenceTests",
         "kind": "class",
@@ -271632,6 +272009,86 @@
         "file_digest8": "780c31f193aaf72d"
       },
       {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:envelope:062539c47a962525",
+        "name": "envelope",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "a5e2b663a828ffb6",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:evidence:2f5db5f570c7ef16",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "41ab7deef7b39912",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:lease:73464ded8c6fe0e4",
+        "name": "lease",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "535ffe75d785eecc",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:legacy_ready:2660b0ef2bfacdb0",
+        "name": "legacy_ready",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "e82a60e4da532aff",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:oracle:f62c77ed6d63dd54",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 14,
+        "end_line": 19,
+        "signature_hash": "dcdc767a7fc92fc7",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:r:e3580c2f80cc6c2a",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:run:8946a4e405ba44af",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 21,
+        "end_line": 41,
+        "signature_hash": "b1c11d1ae43cc77c",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:world:d498f32fee64e478",
+        "name": "world",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "6e72e3ca3252c731",
+        "file_digest8": "9fd18c25709e92d0"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory_navigator/campaign_incremental_route.py#function:envelope:1380f8a29d1065ff",
         "name": "envelope",
         "kind": "function",
@@ -271960,6 +272417,246 @@
         "end_line": 185,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "a935e6b8339ffa77"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:ConsequenceWorld:be131ec63ed10cab",
+        "name": "ConsequenceWorld",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 45,
+        "end_line": 64,
+        "signature_hash": "b0f6e2cde15f731d",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:EnvelopeCompletenessReceipt:e2818cf9fe44ca0e",
+        "name": "EnvelopeCompletenessReceipt",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 99,
+        "end_line": 118,
+        "signature_hash": "cf58f85c42901a3e",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:EnvelopeVerificationContext:a6c892a38f218278",
+        "name": "EnvelopeVerificationContext",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 122,
+        "end_line": 128,
+        "signature_hash": "a78b4b453a2cf02a",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:HorizonCertificate:79cadb58f94423ed",
+        "name": "HorizonCertificate",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 143,
+        "end_line": 163,
+        "signature_hash": "7a01a15a7750fb5a",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:HorizonDecision:d4bde22a69b9f03c",
+        "name": "HorizonDecision",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 167,
+        "end_line": 180,
+        "signature_hash": "5b314c2b19fd3378",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:HorizonDisposition:22728383929d9c30",
+        "name": "HorizonDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 38,
+        "end_line": 41,
+        "signature_hash": "b3356486920ce9b5",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:PossibilityEnvelope:fee8f5c63e07040a",
+        "name": "PossibilityEnvelope",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 68,
+        "end_line": 95,
+        "signature_hash": "2c2c7383d4479c28",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_completeness_current:6395f41660b49010",
+        "name": "_completeness_current",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 131,
+        "end_line": 139,
+        "signature_hash": "eb550ed7857f59be",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_hash:92431f45447acad6",
+        "name": "_hash",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "8bac4ad6ab14c1a3",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_nni:5abdd392a51b1afb",
+        "name": "_nni",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "2917fe897212c644",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_root:06f17163fb23902d",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:admit_horizon_certificate:f983fcf74b5d593a",
+        "name": "admit_horizon_certificate",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 218,
+        "end_line": 257,
+        "signature_hash": "d8dd58a3954bbcae",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:issue_horizon_certificate:c91cb082c015ac67",
+        "name": "issue_horizon_certificate",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 183,
+        "end_line": 215,
+        "signature_hash": "deefa174637baeb1",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:ConsequenceWorld.__post_init__:442c226fbc15ced6",
+        "name": "ConsequenceWorld.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 53,
+        "end_line": 55,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:ConsequenceWorld.relevant_projection:7a6702e0c93ac08a",
+        "name": "ConsequenceWorld.relevant_projection",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 57,
+        "end_line": 64,
+        "signature_hash": "f0ec004c0d8498e3",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:EnvelopeCompletenessReceipt.__post_init__:e71c7d1671513518",
+        "name": "EnvelopeCompletenessReceipt.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 105,
+        "end_line": 109,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:EnvelopeCompletenessReceipt.canonical_receipt_root:3a94213b27bbb9c4",
+        "name": "EnvelopeCompletenessReceipt.canonical_receipt_root",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 111,
+        "end_line": 118,
+        "signature_hash": "35091d8175f27dea",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:EnvelopeVerificationContext.__post_init__:c00e6ac00f9f9905",
+        "name": "EnvelopeVerificationContext.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 126,
+        "end_line": 128,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:HorizonCertificate.__post_init__:cf4133679dc02fc1",
+        "name": "HorizonCertificate.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 156,
+        "end_line": 163,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:HorizonDecision.__post_init__:792e1dbec8e4263e",
+        "name": "HorizonDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 174,
+        "end_line": 180,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.__post_init__:1dffdb3d71acdaaa",
+        "name": "PossibilityEnvelope.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.consequence_envelope_root:3e7687f548eb3f3b",
+        "name": "PossibilityEnvelope.consequence_envelope_root",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "26be5954e4352622",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.full_hidden_root:f21d86809af7762a",
+        "name": "PossibilityEnvelope.full_hidden_root",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 93,
+        "end_line": 95,
+        "signature_hash": "31c0f17012e1cea6",
+        "file_digest8": "3e79aa1be1432f3d"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.uniform_consequence_root:3caa6febf03c7ae4",
+        "name": "PossibilityEnvelope.uniform_consequence_root",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "line": 83,
+        "end_line": 91,
+        "signature_hash": "0d8de780bbc488e6",
+        "file_digest8": "3e79aa1be1432f3d"
       },
       {
         "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:DecisionNode:b778615b6dfc8f77",
@@ -274142,8 +274839,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "20a805fb6d023263642f076a4fe9fce5",
-    "payload_hash": "21f351c8589869e3bf1ae47d5778faf3"
+    "record_fingerprint": "09bdd5def71aafd259d348dde3065fa7",
+    "payload_hash": "a0b4f8b40afef6fa51d3cb7252ae4d6c"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274156,15 +274853,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1688,
-      "bytes": 26721302,
-      "tokens_est": 6670682,
+      "files": 1691,
+      "bytes": 26742573,
+      "tokens_est": 6676001,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1038,
+        "python_module": 1041,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -274852,15 +275549,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1688,
-    "total_bytes": 26721302,
-    "text_tokens_est": 6670682,
+    "file_count": 1691,
+    "total_bytes": 26742573,
+    "text_tokens_est": 6676001,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1038,
+      "python_module": 1041,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -276098,6 +276795,14 @@
         "end_line": 187,
         "semantic_id": "tools/arena/k27_memory_navigator/campaign_demand_lease_handoff.py#function:run:05c291a472927b28",
         "signature_hash": "9e3fe6cc6a44704d"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 41,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:run:8946a4e405ba44af",
+        "signature_hash": "b1c11d1ae43cc77c"
       },
       {
         "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
@@ -288276,6 +288981,14 @@
         "end_line": 162,
         "semantic_id": "aura_arena_state_packet.py#function:_hash:a45b3759164d8cd0",
         "signature_hash": "96a25c63c8c0337f"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_hash:92431f45447acad6",
+        "signature_hash": "8bac4ad6ab14c1a3"
       }
     ],
     "ArenaExperienceLedger": [
@@ -372052,6 +372765,14 @@
         "end_line": 37,
         "semantic_id": "tools/arena/k27_memory_navigator/demand_lease_handoff.py#function:_root:0468400e7f24192c",
         "signature_hash": "9af4f640541857b1"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_root:06f17163fb23902d",
+        "signature_hash": "9af4f640541857b1"
       }
     ],
     "_iter_nul_records": [
@@ -398448,6 +399169,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:evidence:2f5db5f570c7ef16",
+        "signature_hash": "41ab7deef7b39912"
       }
     ],
     "claim": [
@@ -429978,6 +430707,14 @@
         "end_line": 115,
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#class:T:bc7c60a511fe74d5",
+        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -430858,6 +431595,242 @@
         "signature_hash": "eb2673ad48021c7e"
       }
     ],
+    "r": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:r:e59e1d895c409cd4",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:r:e3580c2f80cc6c2a",
+        "signature_hash": "e5a2d5a687fa3045"
+      }
+    ],
+    "lease": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:lease:2abb741abec8bc3a",
+        "signature_hash": "535ffe75d785eecc"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:lease:73464ded8c6fe0e4",
+        "signature_hash": "535ffe75d785eecc"
+      }
+    ],
+    "w": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:w:5346489645baee99",
+        "signature_hash": "03dbddbeebc1a0d4"
+      }
+    ],
+    "env": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:env:833975476ba4835d",
+        "signature_hash": "3cb57ada5cfc0d03"
+      }
+    ],
+    "ev": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#function:ev:b7705600fadd91ef",
+        "signature_hash": "8561db7205df1b1e"
+      }
+    ],
+    "T.setUp": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.setUp:ed33657662153f69",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.admit": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.admit:b4b30bf418f404f8",
+        "signature_hash": "82f8f91049483a1d"
+      }
+    ],
+    "T.test_exact_reuse_ready": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_exact_reuse_ready:1a5591bae2411148",
+        "signature_hash": "a4592e2bebfae44b"
+      }
+    ],
+    "T.test_same_epoch_support_but_new_possible_consequence_rebinds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_same_epoch_support_but_new_possible_consequence_rebinds:8b19a539d972059c",
+        "signature_hash": "3f2580b2d3dd8126"
+      }
+    ],
+    "T.test_transition_divergence_rebinds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_transition_divergence_rebinds:40271f488fe86804",
+        "signature_hash": "db52d480996a8cad"
+      }
+    ],
+    "T.test_authority_divergence_rebinds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_authority_divergence_rebinds:33e192815d6803dd",
+        "signature_hash": "4697529ea0e3cd9c"
+      }
+    ],
+    "T.test_same_generation_support_identity_swap_cannot_reuse": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_same_generation_support_identity_swap_cannot_reuse:59d2aabe4e678b30",
+        "signature_hash": "8aa22142e780e83c"
+      }
+    ],
+    "T.test_completeness_generation_move_rebinds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 22,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_completeness_generation_move_rebinds:0786b67e0b05758d",
+        "signature_hash": "23fb4b0e4d2ef101"
+      }
+    ],
+    "T.test_forged_completeness_receipt_holds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_forged_completeness_receipt_holds:14e362429077efce",
+        "signature_hash": "82a02c3b3ff6c26d"
+      }
+    ],
+    "T.test_stale_completeness_verifier_holds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 24,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_stale_completeness_verifier_holds:fd9296ab027a6575",
+        "signature_hash": "db2728b7d3e05bd4"
+      }
+    ],
+    "T.test_observation_move_rebinds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_observation_move_rebinds:bfe4bf75d8250102",
+        "signature_hash": "af14214466febc07"
+      }
+    ],
+    "T.test_lease_move_rebinds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_lease_move_rebinds:1dce1faa515867cb",
+        "signature_hash": "3bc2508accf04ceb"
+      }
+    ],
+    "T.test_irrelevant_hidden_config_is_quotiented": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_irrelevant_hidden_config_is_quotiented:30280c54960ea2a4",
+        "signature_hash": "3c3053620bcb164b"
+      }
+    ],
+    "T.test_extra_equivalent_world_does_not_force_full_reconstruction": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_extra_equivalent_world_does_not_force_full_reconstruction:60df3f8673a2f798",
+        "signature_hash": "4ead93f7c8725095"
+      }
+    ],
+    "T.test_issue_divergent_envelope_holds": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 29,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_issue_divergent_envelope_holds:755faedd31adfac5",
+        "signature_hash": "2b2c04b691e09b28"
+      }
+    ],
+    "T.test_issue_requires_completeness_evidence": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 30,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_issue_requires_completeness_evidence:e4ab9dd53fa0d73f",
+        "signature_hash": "9bb4adf1424f0ff4"
+      }
+    ],
+    "T.test_authority_ceiling_stays_false": [
+      {
+        "file": "tests/test_k27_memory_navigator_envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_memory_navigator_envelope_bound_horizon.py#method:T.test_authority_ceiling_stays_false:485a7b1e30363ad0",
+        "signature_hash": "2c14f70a436e114a"
+      }
+    ],
     "envelope": [
       {
         "file": "tests/test_k27_memory_navigator_incremental_evidence.py",
@@ -430882,6 +431855,14 @@
         "end_line": 26,
         "semantic_id": "tests/test_k27_memory_navigator_route_admission.py#function:envelope:64b3b3f38a33e56c",
         "signature_hash": "33d51f95070644d8"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:envelope:062539c47a962525",
+        "signature_hash": "a5e2b663a828ffb6"
       },
       {
         "file": "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
@@ -434828,6 +435809,36 @@
         "signature_hash": "b8767953ce3becd9"
       }
     ],
+    "world": [
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:world:d498f32fee64e478",
+        "signature_hash": "6e72e3ca3252c731"
+      }
+    ],
+    "legacy_ready": [
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:legacy_ready:2660b0ef2bfacdb0",
+        "signature_hash": "e82a60e4da532aff"
+      }
+    ],
+    "oracle": [
+      {
+        "file": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 19,
+        "semantic_id": "tools/arena/k27_memory_navigator/campaign_envelope_bound_horizon.py#function:oracle:f62c77ed6d63dd54",
+        "signature_hash": "dcdc767a7fc92fc7"
+      }
+    ],
     "LeaseDisposition": [
       {
         "file": "tools/arena/k27_memory_navigator/demand_lease_handoff.py",
@@ -435056,6 +436067,226 @@
         "end_line": 380,
         "semantic_id": "tools/arena/k27_memory_navigator/demand_lease_handoff.py#function:canonical_lease_root:72c5a8c5df026cd5",
         "signature_hash": "2eeea2b7bbc64bb6"
+      }
+    ],
+    "_nni": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_nni:5abdd392a51b1afb",
+        "signature_hash": "2917fe897212c644"
+      }
+    ],
+    "HorizonDisposition": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 41,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:HorizonDisposition:22728383929d9c30",
+        "signature_hash": "b3356486920ce9b5"
+      }
+    ],
+    "ConsequenceWorld": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 64,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:ConsequenceWorld:be131ec63ed10cab",
+        "signature_hash": "b0f6e2cde15f731d"
+      }
+    ],
+    "ConsequenceWorld.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 55,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:ConsequenceWorld.__post_init__:442c226fbc15ced6",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ConsequenceWorld.relevant_projection": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 64,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:ConsequenceWorld.relevant_projection:7a6702e0c93ac08a",
+        "signature_hash": "f0ec004c0d8498e3"
+      }
+    ],
+    "PossibilityEnvelope": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 95,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:PossibilityEnvelope:fee8f5c63e07040a",
+        "signature_hash": "2c2c7383d4479c28"
+      }
+    ],
+    "PossibilityEnvelope.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.__post_init__:1dffdb3d71acdaaa",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "PossibilityEnvelope.consequence_envelope_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.consequence_envelope_root:3e7687f548eb3f3b",
+        "signature_hash": "26be5954e4352622"
+      }
+    ],
+    "PossibilityEnvelope.uniform_consequence_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 91,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.uniform_consequence_root:3caa6febf03c7ae4",
+        "signature_hash": "0d8de780bbc488e6"
+      }
+    ],
+    "PossibilityEnvelope.full_hidden_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 95,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:PossibilityEnvelope.full_hidden_root:f21d86809af7762a",
+        "signature_hash": "31c0f17012e1cea6"
+      }
+    ],
+    "EnvelopeCompletenessReceipt": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 99,
+        "end_line": 118,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:EnvelopeCompletenessReceipt:e2818cf9fe44ca0e",
+        "signature_hash": "cf58f85c42901a3e"
+      }
+    ],
+    "EnvelopeCompletenessReceipt.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 109,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:EnvelopeCompletenessReceipt.__post_init__:e71c7d1671513518",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EnvelopeCompletenessReceipt.canonical_receipt_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 118,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:EnvelopeCompletenessReceipt.canonical_receipt_root:3a94213b27bbb9c4",
+        "signature_hash": "35091d8175f27dea"
+      }
+    ],
+    "EnvelopeVerificationContext": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 128,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:EnvelopeVerificationContext:a6c892a38f218278",
+        "signature_hash": "a78b4b453a2cf02a"
+      }
+    ],
+    "EnvelopeVerificationContext.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 128,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:EnvelopeVerificationContext.__post_init__:c00e6ac00f9f9905",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_completeness_current": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 139,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:_completeness_current:6395f41660b49010",
+        "signature_hash": "eb550ed7857f59be"
+      }
+    ],
+    "HorizonCertificate": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 143,
+        "end_line": 163,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:HorizonCertificate:79cadb58f94423ed",
+        "signature_hash": "7a01a15a7750fb5a"
+      }
+    ],
+    "HorizonCertificate.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 163,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:HorizonCertificate.__post_init__:cf4133679dc02fc1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HorizonDecision": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "class",
+        "line": 167,
+        "end_line": 180,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#class:HorizonDecision:d4bde22a69b9f03c",
+        "signature_hash": "5b314c2b19fd3378"
+      }
+    ],
+    "HorizonDecision.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 180,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#method:HorizonDecision.__post_init__:792e1dbec8e4263e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "issue_horizon_certificate": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 215,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:issue_horizon_certificate:c91cb082c015ac67",
+        "signature_hash": "deefa174637baeb1"
+      }
+    ],
+    "admit_horizon_certificate": [
+      {
+        "file": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 257,
+        "semantic_id": "tools/arena/k27_memory_navigator/envelope_bound_horizon.py#function:admit_horizon_certificate:f983fcf74b5d593a",
+        "signature_hash": "d8dd58a3954bbcae"
       }
     ],
     "EvidenceMode": [
