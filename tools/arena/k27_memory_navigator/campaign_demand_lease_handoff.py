@@ -100,6 +100,7 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         "transition_ready": 0,
         "transition_hold": 0,
         "unsupported_transition_false_ready": 0,
+        "invalidation_oracle_mismatches": 0,
         "selective_invalidation_units": 0,
         "global_invalidation_units": 0,
     }
@@ -149,18 +150,27 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
 
         width = 128
         source = f"c-{rng.randrange(width)}"
-        edges: dict[str, frozenset[str]] = {}
+        mutable_edges: dict[str, set[str]] = {}
         for n in range(width):
-            children = set()
+            dependency = f"c-{n}"
             if n + 1 < width and rng.random() < 0.12:
-                children.add(f"c-{n + 1}")
+                mutable_edges.setdefault(f"c-{n + 1}", set()).add(dependency)
             if n + 7 < width and rng.random() < 0.025:
-                children.add(f"c-{n + 7}")
-            if children:
-                edges[f"c-{n}"] = frozenset(children)
-        counters["selective_invalidation_units"] += len(
-            dependency_closed_invalidation(frozenset({source}), edges)
-        )
+                mutable_edges.setdefault(f"c-{n + 7}", set()).add(dependency)
+        edges = {dependent: frozenset(dependencies) for dependent, dependencies in mutable_edges.items()}
+        actual_cone = dependency_closed_invalidation(frozenset({source}), edges)
+
+        # Independent fixed-point oracle over dependent -> dependencies.
+        expected_cone = {source}
+        changed = True
+        while changed:
+            changed = False
+            for dependent, dependencies in edges.items():
+                if dependent not in expected_cone and dependencies & expected_cone:
+                    expected_cone.add(dependent)
+                    changed = True
+        counters["invalidation_oracle_mismatches"] += int(actual_cone != frozenset(expected_cone))
+        counters["selective_invalidation_units"] += len(actual_cone)
         counters["global_invalidation_units"] += width
 
     encoded = json.dumps(counters, sort_keys=True, separators=(",", ":")).encode()
@@ -171,7 +181,8 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         "campaign_root": sha256(encoded).hexdigest(),
         "authority": "D0_NONPROMOTING_GATE10_FALSE",
     }
-    if counters["compiler_false_ready"] or counters["compiler_false_hold"] or counters["unsupported_transition_false_ready"]:
+    if (counters["compiler_false_ready"] or counters["compiler_false_hold"]
+            or counters["unsupported_transition_false_ready"] or counters["invalidation_oracle_mismatches"]):
         raise AssertionError(result)
     return result
 
