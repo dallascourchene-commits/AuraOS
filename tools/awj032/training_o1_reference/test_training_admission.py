@@ -7,7 +7,7 @@ from pathlib import Path
 from training_admission import *
 
 R = lambda s: sha256(s.encode()).hexdigest()
-REPO = Path(__file__).resolve().parents[4] / ".awj032_airllm_upstream_fixture"
+REPO = Path(__file__).resolve().parents[3] / ".awj032_airllm_upstream_fixture"
 
 
 def man(
