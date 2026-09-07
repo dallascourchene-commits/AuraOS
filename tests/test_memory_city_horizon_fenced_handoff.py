@@ -147,7 +147,7 @@ class T(unittest.TestCase):
         h, c, cert, use, a, ev, m, v = fixtures()
         c2 = replace(c, reproof_item_ids=('a', 'c'))
         d = compile_effect_handoff(cert, use, h, c2, admission(h, c2), ev, m, v)
-        self.assertEqual(d.reason, 'ACTIVE_READ_WORLD_NOT_CERTIFIED')
+        self.assertEqual(d.reason, 'ACTIVE_COMPONENT_REPROOF_MOVED')
 
     def test_same_receipt_semantic_swap_holds(self):
         h, c, cert, use, a, ev, m, v = fixtures()
