@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1665,
+    "repo_file_count": 1666,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2710,6 +2710,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/project006_consumer_outbox_wrapper.py",
+      "tools/project006/project006_sink_evidence_recovery.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_wake_broker.py",
@@ -105191,6 +105192,53 @@
       ]
     },
     {
+      "path": "tools/project006/project006_sink_evidence_recovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11837,
+      "lines": 267,
+      "tokens_est": 2960,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0c99f9635ed4de3f",
+      "vector": [
+        0.202669,
+        0.257846,
+        -0.219647,
+        -0.049871,
+        0.221769,
+        -0.204791,
+        0.249357,
+        0.221769,
+        -0.134759,
+        -0.264213,
+        -0.051994,
+        -0.262091,
+        -0.083827,
+        -0.071093,
+        0.011672,
+        0.07746,
+        -0.247235,
+        -0.166592,
+        -0.25148,
+        0.206914,
+        -0.200547,
+        -0.198425,
+        0.107171,
+        -0.111415,
+        -0.035016,
+        0.172959,
+        0.094437,
+        -0.257846,
+        -0.170836,
+        0.14537,
+        0.005305,
+        -0.079582
+      ]
+    },
+    {
       "path": "tools/project006/terminal_outbox.py",
       "role": "python_module",
       "binary": false,
@@ -106329,7 +106377,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788775036,
+  "generated_at_unix": 1788775261,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107981,6 +108029,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/project006_consumer_outbox_wrapper.py",
+      "tools/project006/project006_sink_evidence_recovery.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_wake_broker.py",
@@ -268461,6 +268510,226 @@
         "file_digest8": "1251958ac0239c0e"
       },
       {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:CurrentOwnerContext:d4de3033cb72a9b5",
+        "name": "CurrentOwnerContext",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 95,
+        "end_line": 103,
+        "signature_hash": "82a803b430d23e5f",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:NativeState:9174ad395005f26d",
+        "name": "NativeState",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 35,
+        "end_line": 41,
+        "signature_hash": "56040f2d3e978be5",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:OperationIdentity:11597ab53fa23c9a",
+        "name": "OperationIdentity",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 71,
+        "end_line": 91,
+        "signature_hash": "528de1bf75c10778",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:RecoveryAction:2e785bae4209c9bf",
+        "name": "RecoveryAction",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 56,
+        "end_line": 67,
+        "signature_hash": "6ad5c80128a307d6",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:RecoveryCapability:edc6232a7664535a",
+        "name": "RecoveryCapability",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 44,
+        "end_line": 47,
+        "signature_hash": "3a41a33b70433183",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:RecoveryDecision:d13794d9b9ace6d3",
+        "name": "RecoveryDecision",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 162,
+        "end_line": 177,
+        "signature_hash": "7e6bde07fc4dcbb3",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:SinkDisposition:31b737e5f2d62c02",
+        "name": "SinkDisposition",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 50,
+        "end_line": 53,
+        "signature_hash": "2d64594abdcb95fd",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:SinkEvidence:fd2ab5558337bc80",
+        "name": "SinkEvidence",
+        "kind": "class",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 107,
+        "end_line": 138,
+        "signature_hash": "78842b9a937abbe7",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_id:2adfd8709c6f7da4",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_nn:6d771a14c4d3d3f5",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "111700e86562b752",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_owner_current:0cdd1ec598fccaf1",
+        "name": "_owner_current",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 180,
+        "end_line": 193,
+        "signature_hash": "e9aa95c2d4341931",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_root:db736d72519d3589",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 17,
+        "end_line": 20,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_verify_sink:4ba15ebb2ff6538a",
+        "name": "_verify_sink",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 196,
+        "end_line": 209,
+        "signature_hash": "90b37ff82a8eec90",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:decide_recovery:da98009a9acb48d9",
+        "name": "decide_recovery",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 212,
+        "end_line": 266,
+        "signature_hash": "bbf274b47c2489af",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:digest:8412651ec5709a12",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "ca4017d839035e05",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:sign_sink_evidence:cf0781010052f162",
+        "name": "sign_sink_evidence",
+        "kind": "function",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 141,
+        "end_line": 158,
+        "signature_hash": "4d9ed13808eaee17",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:CurrentOwnerContext.__post_init__:b03885c970fd934b",
+        "name": "CurrentOwnerContext.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 101,
+        "end_line": 103,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:OperationIdentity.__post_init__:427f0ec1a7723de5",
+        "name": "OperationIdentity.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:OperationIdentity.root:bd32a3730fddb809",
+        "name": "OperationIdentity.root",
+        "kind": "method",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 90,
+        "end_line": 91,
+        "signature_hash": "e3e717e8a95babdc",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:RecoveryDecision.__post_init__:5b2151d7ff629c9d",
+        "name": "RecoveryDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 172,
+        "end_line": 177,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:SinkEvidence.__post_init__:fc2422aeada58256",
+        "name": "SinkEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 117,
+        "end_line": 125,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:SinkEvidence.unsigned_payload:404100db689db3dc",
+        "name": "SinkEvidence.unsigned_payload",
+        "kind": "method",
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "line": 127,
+        "end_line": 138,
+        "signature_hash": "8c5079af15197710",
+        "file_digest8": "0c99f9635ed4de3f"
+      },
+      {
         "semantic_id": "tools/project006/terminal_outbox.py#class:AuraDriveBusWriterV1:8c7e36404a2cad95",
         "name": "AuraDriveBusWriterV1",
         "kind": "class",
@@ -270161,8 +270430,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "909ab06e64c02b4cdd5dc14ebf53c4ff",
-    "payload_hash": "313eb8d23c574018ac329d419fef5fcc"
+    "record_fingerprint": "3d01c7a7e9ea33203050faca67dc914f",
+    "payload_hash": "23ce1db12562626d3dae7f8556c08714"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270175,15 +270444,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1665,
-      "bytes": 26560137,
-      "tokens_est": 6630382,
+      "files": 1666,
+      "bytes": 26571974,
+      "tokens_est": 6633342,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1014,
+        "python_module": 1015,
         "schema_or_lexicon": 273,
         "support_file": 53
       }
@@ -270871,15 +271140,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1665,
-    "total_bytes": 26560137,
-    "text_tokens_est": 6630382,
+    "file_count": 1666,
+    "total_bytes": 26571974,
+    "text_tokens_est": 6633342,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1014,
+      "python_module": 1015,
       "schema_or_lexicon": 273,
       "support_file": 53
     },
@@ -288651,6 +288920,14 @@
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
         "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:digest:8412651ec5709a12",
+        "signature_hash": "ca4017d839035e05"
       }
     ],
     "_runtime_binding_digest": [
@@ -302999,6 +303276,14 @@
         "end_line": 126,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_id:0f03725d6ec856da",
         "signature_hash": "2cc123d979c37fb2"
+      },
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_id:2adfd8709c6f7da4",
+        "signature_hash": "d64cfb03b3a12a79"
       }
     ],
     "_privacy": [
@@ -367999,6 +368284,14 @@
         "end_line": 66,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_root:c64c620aa1bf60b8",
         "signature_hash": "2e65e72bab661379"
+      },
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 20,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_root:db736d72519d3589",
+        "signature_hash": "9af4f640541857b1"
       }
     ],
     "_iter_nul_records": [
@@ -427915,6 +428208,14 @@
         "end_line": 130,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
         "signature_hash": "0c3f98b7c2640bed"
+      },
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_nn:6d771a14c4d3d3f5",
+        "signature_hash": "111700e86562b752"
       }
     ],
     "_queue_class": [
@@ -428725,6 +429026,186 @@
         "end_line": 206,
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:run_once:0510385a247114ab",
         "signature_hash": "a462d97dadc1d858"
+      }
+    ],
+    "NativeState": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 41,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:NativeState:9174ad395005f26d",
+        "signature_hash": "56040f2d3e978be5"
+      }
+    ],
+    "RecoveryCapability": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 47,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:RecoveryCapability:edc6232a7664535a",
+        "signature_hash": "3a41a33b70433183"
+      }
+    ],
+    "SinkDisposition": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 53,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:SinkDisposition:31b737e5f2d62c02",
+        "signature_hash": "2d64594abdcb95fd"
+      }
+    ],
+    "RecoveryAction": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 67,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:RecoveryAction:2e785bae4209c9bf",
+        "signature_hash": "6ad5c80128a307d6"
+      }
+    ],
+    "OperationIdentity": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 91,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:OperationIdentity:11597ab53fa23c9a",
+        "signature_hash": "528de1bf75c10778"
+      }
+    ],
+    "OperationIdentity.__post_init__": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:OperationIdentity.__post_init__:427f0ec1a7723de5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "OperationIdentity.root": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 91,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:OperationIdentity.root:bd32a3730fddb809",
+        "signature_hash": "e3e717e8a95babdc"
+      }
+    ],
+    "CurrentOwnerContext": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 103,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:CurrentOwnerContext:d4de3033cb72a9b5",
+        "signature_hash": "82a803b430d23e5f"
+      }
+    ],
+    "CurrentOwnerContext.__post_init__": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 103,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:CurrentOwnerContext.__post_init__:b03885c970fd934b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SinkEvidence": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 138,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:SinkEvidence:fd2ab5558337bc80",
+        "signature_hash": "78842b9a937abbe7"
+      }
+    ],
+    "SinkEvidence.__post_init__": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 125,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:SinkEvidence.__post_init__:fc2422aeada58256",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SinkEvidence.unsigned_payload": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 138,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:SinkEvidence.unsigned_payload:404100db689db3dc",
+        "signature_hash": "8c5079af15197710"
+      }
+    ],
+    "sign_sink_evidence": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 158,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:sign_sink_evidence:cf0781010052f162",
+        "signature_hash": "4d9ed13808eaee17"
+      }
+    ],
+    "RecoveryDecision": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "class",
+        "line": 162,
+        "end_line": 177,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#class:RecoveryDecision:d13794d9b9ace6d3",
+        "signature_hash": "7e6bde07fc4dcbb3"
+      }
+    ],
+    "RecoveryDecision.__post_init__": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 177,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#method:RecoveryDecision.__post_init__:5b2151d7ff629c9d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_owner_current": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 180,
+        "end_line": 193,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_owner_current:0cdd1ec598fccaf1",
+        "signature_hash": "e9aa95c2d4341931"
+      }
+    ],
+    "_verify_sink": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 209,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:_verify_sink:4ba15ebb2ff6538a",
+        "signature_hash": "90b37ff82a8eec90"
+      }
+    ],
+    "decide_recovery": [
+      {
+        "file": "tools/project006/project006_sink_evidence_recovery.py",
+        "kind": "function",
+        "line": 212,
+        "end_line": 266,
+        "semantic_id": "tools/project006/project006_sink_evidence_recovery.py#function:decide_recovery:da98009a9acb48d9",
+        "signature_hash": "bbf274b47c2489af"
       }
     ],
     "TxState": [
