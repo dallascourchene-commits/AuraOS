@@ -1,0 +1,16 @@
+{
+  "objective":"O21R-PROOF-CARRYING-IMMUTABLE-CACHE-CONSUMPTION",
+  "freeze_before_proof":true,
+  "foreign_parents":[
+    {"name":"O-AVX13 Parallel K27 View / Shared Immutable Creative Cache","drive_id":"1bwqlnFAYcDb6bk_2OyXX49dHddySsHijaEBJgzwlszI","keeper":"ParallelView != ParallelCacheTruth; K27View != CacheIdentity"},
+    {"name":"O21 Installed-Runtime-Bound Delegated Execution Permit","drive_id":"1Ur_cVEBXuCOJDXUVjgvENxUOjnRVJ86QoDbP7ZnLSuQ","keeper":"ValidAttenuatedDelegation != CurrentInstalledRuntime != RuntimeBoundExecutionPermit"}
+  ],
+  "situated_parent":"O20R effect-time loaded process currentness / PR927",
+  "alternatives":[
+    {"id":"A1","proposal":"A content-addressed cache hit is sufficient for reuse","disposition":"REJECTED","reason":"artifact identity does not establish producer provenance or present-tense consumer eligibility"},
+    {"id":"A2","proposal":"A current delegated permit plus cache hit is sufficient","disposition":"REJECTED","reason":"the actual loaded process may be stale or different at use"},
+    {"id":"A3","proposal":"Include K27/view/actor/currentness in cache identity","disposition":"REJECTED","reason":"destroys safe dedupe and confuses volatile navigation with immutable artifact identity"},
+    {"id":"A4","proposal":"Stable immutable cache object + separate proof-carrying at-use consumption receipt","disposition":"SELECTED"}
+  ],
+  "selected_law":"ImmutableCacheHit != CurrentConsumerEligibility"
+}
