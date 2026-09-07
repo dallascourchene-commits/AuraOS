@@ -11,14 +11,27 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 SCHEMA = "AuraTerminalBusResponseV1"
-VERSION = "PROJECT006_TERMINAL_OUTBOX_V1"
+VERSION = "PROJECT006_TERMINAL_OUTBOX_V2"
 TERMINAL_KINDS = frozenset({
     "ACK_ACCEPTED_PRE_EFFECT", "SCHEMA_REJECTED", "AUTHORITY_REJECTED",
     "IDEMPOTENCY_REJECTED", "IDEMPOTENT_REPLAY", "CURRENTNESS_REJECTED",
     "STALE_REOPEN", "CAPABILITY_REJECTED", "ADMISSION_BLOCKED", "COMMAND_BLOCKED",
     "EXECUTOR_ERROR", "COMPLETION_AMBIGUOUS", "RESULT",
 })
-NEGATIVE_KINDS = TERMINAL_KINDS - {"ACK_ACCEPTED_PRE_EFFECT", "RESULT"}
+# These classes are known to occur before a provider attempt and therefore must
+# never claim a provider request.  COMPLETION_AMBIGUOUS and EXECUTOR_ERROR are
+# deliberately excluded: they may be post-effect outcomes.
+PRE_EFFECT_ZERO_PROVIDER_KINDS = frozenset({
+    "ACK_ACCEPTED_PRE_EFFECT", "SCHEMA_REJECTED", "AUTHORITY_REJECTED",
+    "IDEMPOTENCY_REJECTED", "CURRENTNESS_REJECTED", "STALE_REOPEN",
+    "CAPABILITY_REJECTED", "ADMISSION_BLOCKED", "COMMAND_BLOCKED",
+})
+# ACK is a lifecycle transition, not the final command return.  It uses the
+# bounded bus writer directly and is journalled by the effect-attempt owner.
+FINAL_TERMINAL_KINDS = TERMINAL_KINDS - {"ACK_ACCEPTED_PRE_EFFECT"}
+# Compatibility name retained for callers/tests that enumerate pre-effect
+# negative outcomes.  IDEMPOTENT_REPLAY is not assumed to be pre-effect.
+NEGATIVE_KINDS = PRE_EFFECT_ZERO_PROVIDER_KINDS - {"ACK_ACCEPTED_PRE_EFFECT"}
 
 class TxState(str, Enum):
     INGESTED = "INGESTED"
@@ -58,8 +71,12 @@ class TerminalResponse:
             raise ValueError("UNSUPPORTED_TERMINAL_KIND")
         if type(self.provider_request_count) is not int or self.provider_request_count < 0:
             raise ValueError("INVALID_PROVIDER_REQUEST_COUNT")
-        if self.kind in NEGATIVE_KINDS and self.provider_request_count != 0:
+        if self.kind in PRE_EFFECT_ZERO_PROVIDER_KINDS and self.provider_request_count != 0:
+            # Preserve the existing failure token for compatibility while
+            # tightening the semantic set that it applies to.
             raise ValueError("NEGATIVE_RESPONSE_HAS_PROVIDER_EFFECT")
+        if self.kind == "COMPLETION_AMBIGUOUS" and self.provider_request_count < 1:
+            raise ValueError("AMBIGUOUS_COMPLETION_REQUIRES_EFFECT_ATTEMPT")
         return {
             "schema": SCHEMA,
             "version": VERSION,
@@ -79,10 +96,12 @@ class TerminalResponse:
         return hashlib.sha256(body.encode()).hexdigest()
 
 class OutboxJournal:
-    """Durable transaction journal separating provider terminality from Drive return.
+    """Durable journal for final command returns only.
 
-    The provider effect is never invoked by this class. Retries here retry only the
-    bounded Drive writer for an already-decided response.
+    Provider effects are never invoked by this class.  ACK_ACCEPTED_PRE_EFFECT
+    is not a final return and cannot be staged here; the effect-attempt journal
+    owns that lifecycle transition.  Retries here retry only the bounded Drive
+    writer for an already-decided final response.
     """
     def __init__(self, path: str | Path):
         self.path = str(path)
@@ -129,6 +148,8 @@ class OutboxJournal:
                 raise ValueError("IDEMPOTENCY_CONFLICT")
 
     def stage_terminal(self, response: TerminalResponse) -> str:
+        if response.kind not in FINAL_TERMINAL_KINDS:
+            raise ValueError("ACK_IS_NOT_TERMINAL_RETURN")
         canonical = response.canonical()
         digest = response.digest()
         encoded = json.dumps(canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
