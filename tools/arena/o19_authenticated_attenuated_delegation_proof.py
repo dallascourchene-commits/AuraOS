@@ -63,9 +63,12 @@ def candidate(bits):
     except AuthenticationError: return False
 
 def oracle(bits):
+    # Independent logical contract: every hard evidence axis must be valid.
     return all(bits)
 
 def parent_shape_baseline(bits):
+    # Exact PR918 public shape: if attenuation and source checks are true, caller-supplied
+    # current/proof_bound booleans can make all other auth failures invisible.
     op,_,_,_,_=fixture()
     attenuation=bits[2]; source=bits[6]
     hops=[DelegationHop('worker-a',frozenset({'read','edit'}),100,1,True),DelegationHop('worker-b',frozenset({'edit'}) if attenuation else frozenset({'admin','edit'}),40,2,True)]
