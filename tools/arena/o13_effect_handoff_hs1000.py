@@ -7,7 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "arena"))
 
-from campaign_memory_city_effect_handoff_o13 import scenario
+from campaign_memory_city_effect_handoff_o13 import oracle_matches, scenario
 from memory_city_effect_handoff_o13 import compile_effect_handoff, digest
 
 BOUNDARIES = (
@@ -43,22 +43,38 @@ def run():
     freeze_root = digest(cells)
     results = []
     groups = {}
+    oracle_mismatches = 0
+    by_mode = {str(i): {"cells": 0, "oracle_mismatches": 0} for i in range(8)}
     for index, cell in enumerate(cells):
         # Exercise the implementation-backed eight-scenario falsifier while the
         # 10x10x10 grid remains a search geometry, not a breakthrough count.
-        cert, kwargs, expected, mode = scenario(index)
+        cert, kwargs, expected_disposition, expected_reason, mode = scenario(index)
         decision = compile_effect_handoff(cert, **kwargs)
         consequence = (decision.disposition.value, decision.reason)
-        results.append({"cell": cell, "mode": mode, "consequence": consequence})
+        exact = oracle_matches(decision, expected_disposition, expected_reason)
+        if not exact:
+            oracle_mismatches += 1
+            by_mode[str(mode)]["oracle_mismatches"] += 1
+        by_mode[str(mode)]["cells"] += 1
+        results.append({
+            "cell": cell,
+            "mode": mode,
+            "expected_disposition": expected_disposition.value,
+            "expected_reason": expected_reason,
+            "consequence": consequence,
+            "oracle_match": exact,
+        })
         groups.setdefault(consequence, 0)
         groups[consequence] += 1
     quotient_rows = sorted((list(key), count) for key, count in groups.items())
     payload = {
-        "schema": "AURA-MEMORY-CITY-O13-HS1000-v1",
+        "schema": "AURA-MEMORY-CITY-O13-HS1000-v2-EXACT-ORACLE",
         "raw_challenge_cells": len(cells),
         "claim_breakthroughs": 0,
         "freeze_root": freeze_root,
         "observed_consequence_groups": len(groups),
+        "oracle_mismatches": oracle_mismatches,
+        "by_mode": by_mode,
         "quotient_rows": quotient_rows,
         "result_root": digest(results),
     }
