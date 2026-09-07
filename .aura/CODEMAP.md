@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1694
-- **total_bytes**: 26738515
-- **text_tokens_est**: 6674986
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1039, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1695
+- **total_bytes**: 26742476
+- **text_tokens_est**: 6675977
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1039, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1694,
+  "repo_file_count": 1695,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -300,6 +300,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
     "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
+    "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O11_MODE_SEAL.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9_REPROOF_REPAIR.json",
     "arxiv_forager.py",
@@ -1834,16 +1835,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1694,
-  "bytes": 26738515,
-  "tokens_est": 6674986,
+  "files": 1695,
+  "bytes": 26742476,
+  "tokens_est": 6675977,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1039,
-    "schema_or_lexicon": 280,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
