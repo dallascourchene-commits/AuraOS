@@ -1,23 +1,27 @@
 from __future__ import annotations
 from dataclasses import dataclass, asdict
 from hashlib import sha256
-import hmac, json
+import hmac
+import json
 
-SCHEMA='AURA-AWJ032-TRAINING-ADMISSION-RESOLVER-v1'
-AIRLLM_COMMIT='55e435087d951da8c25ab3672e969025241a398e'
+from tools.awj032.training_o1_reference.training_admission import (
+    Admission as O1Admission, SourceAuditVerifier, AIRLLM_COMMIT,
+)
+
+SCHEMA='AURA-AWJ032-TRAINING-ADMISSION-RESOLVER-v4'
 HEX=set('0123456789abcdef')
-SUPPORTED={('qwen3_5','AirLLMLoRA'),('qwen3_8','AirLLMLoRA'),('qwen4_exp','AirLLMLoRAQwen4Exp')}
+SUPPORTED={('qwen3_5','AirLLMLoRA'),('qwen3_8_dense','AirLLMLoRA'),('qwen4_exp','AirLLMLoRAQwen4Exp')}
 
 def canon(v): return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()
 def jhash(v): return sha256(canon(v)).hexdigest()
 def isroot(x): return isinstance(x,str) and len(x)==64 and set(x)<=HEX
-
-def needroot(x,name):
-    if not isroot(x): raise ValueError(f'{name}: sha256 required')
-    return x
+def needroot(x,n):
+    if not isroot(x): raise ValueError(f'{n}: sha256 required')
+def valid_int(x): return type(x) is int
 
 @dataclass(frozen=True)
 class AdmissionSemantic:
+    o1_admission_root:str
     source_root:str
     adapter_root:str
     runtime_root:str
@@ -29,12 +33,10 @@ class AdmissionSemantic:
     authority:str='D0_NONPROMOTING'
     gate10:bool=False
     def __post_init__(self):
-        for n in ('source_root','adapter_root','runtime_root','target_topology_root'):
-            needroot(getattr(self,n),n)
-        if self.airllm_commit != AIRLLM_COMMIT: raise ValueError('AirLLM generation drift')
+        for n in ('o1_admission_root','source_root','adapter_root','runtime_root','target_topology_root'): needroot(getattr(self,n),n)
+        if self.airllm_commit!=AIRLLM_COMMIT: raise ValueError('AirLLM generation drift')
         if (self.model_family,self.trainer_class) not in SUPPORTED: raise ValueError('unsupported family/trainer')
-        if self.action!='ADMIT_D0_ADAPTER_LOAD' or self.authority!='D0_NONPROMOTING' or self.gate10:
-            raise ValueError('authority widening forbidden')
+        if self.action!='ADMIT_D0_ADAPTER_LOAD' or self.authority!='D0_NONPROMOTING' or self.gate10: raise ValueError('authority widening forbidden')
     @property
     def semantic_root(self): return jhash({'schema':SCHEMA,'kind':'semantic',**asdict(self)})
 
@@ -47,79 +49,92 @@ class AdmissionReceipt:
     expires_at:int
     mac:str
     def __post_init__(self):
-        if not self.key_id: raise ValueError('key_id required')
-        if self.generation < 1: raise ValueError('generation must be positive')
-        if self.issued_at < 0 or self.expires_at <= self.issued_at: raise ValueError('bad validity interval')
-        if not isroot(self.mac): raise ValueError('mac must be sha256 hex')
+        if not self.key_id or not valid_int(self.generation) or self.generation<1: raise ValueError('receipt generation')
+        if not valid_int(self.issued_at) or not valid_int(self.expires_at) or self.issued_at<0 or self.expires_at<=self.issued_at: raise ValueError('receipt validity interval')
+        needroot(self.mac,'mac')
     @property
-    def signed_payload(self):
-        return {'schema':SCHEMA,'kind':'receipt','semantic_root':self.semantic.semantic_root,'key_id':self.key_id,
-                'generation':self.generation,'issued_at':self.issued_at,'expires_at':self.expires_at}
+    def signed_payload(self): return {'schema':SCHEMA,'kind':'admission_receipt','semantic_root':self.semantic.semantic_root,'key_id':self.key_id,'generation':self.generation,'issued_at':self.issued_at,'expires_at':self.expires_at}
     @property
     def receipt_root(self): return jhash({**self.signed_payload,'mac':self.mac})
 
-class OwnerResolver:
-    def __init__(self, keys:dict[str,bytes], active_key_id:str, active_generation:int):
-        if active_key_id not in keys: raise ValueError('active key missing')
-        if active_generation < 1: raise ValueError('active generation')
-        self._keys=dict(keys); self.active_key_id=active_key_id; self.active_generation=active_generation
-    @staticmethod
-    def _mac(key:bytes,payload:dict): return hmac.new(key,canon(payload),sha256).hexdigest()
-    def issue(self, semantic:AdmissionSemantic, *, now:int, ttl:int) -> AdmissionReceipt:
-        if ttl <= 0: raise ValueError('ttl must be positive')
-        payload={'schema':SCHEMA,'kind':'receipt','semantic_root':semantic.semantic_root,'key_id':self.active_key_id,
-                 'generation':self.active_generation,'issued_at':now,'expires_at':now+ttl}
-        mac=self._mac(self._keys[self.active_key_id],payload)
-        return AdmissionReceipt(semantic,self.active_key_id,self.active_generation,now,now+ttl,mac)
-    def verify(self, receipt:AdmissionReceipt, *, now:int, expected_source_root:str, expected_adapter_root:str,
-               expected_runtime_root:str, expected_target_topology_root:str) -> str:
-        if receipt.key_id != self.active_key_id or receipt.key_id not in self._keys: return 'HOLD_KEY_CURRENTNESS'
-        if receipt.generation != self.active_generation: return 'HOLD_GENERATION_CURRENTNESS'
-        if now < receipt.issued_at: return 'HOLD_NOT_YET_VALID'
-        if now >= receipt.expires_at: return 'HOLD_EXPIRED'
-        want=self._mac(self._keys[receipt.key_id],receipt.signed_payload)
-        if not hmac.compare_digest(want,receipt.mac): return 'HOLD_BAD_SIGNATURE'
-        s=receipt.semantic
-        if s.source_root != expected_source_root: return 'HOLD_SOURCE_MISMATCH'
-        if s.adapter_root != expected_adapter_root: return 'HOLD_ADAPTER_MISMATCH'
-        if s.runtime_root != expected_runtime_root: return 'HOLD_RUNTIME_MISMATCH'
-        if s.target_topology_root != expected_target_topology_root: return 'HOLD_TARGET_TOPOLOGY_MISMATCH'
-        if s.action!='ADMIT_D0_ADAPTER_LOAD' or s.authority!='D0_NONPROMOTING' or s.gate10:
-            return 'HOLD_AUTHORITY_WIDENING'
-        return 'VERIFIED_D0_ADMISSION'
-
 @dataclass(frozen=True)
-class TransitionAdmissionBinding:
+class TransitionPermit:
     transition_root:str
+    transition_subject_root:str
+    deployment_generation:str
     admission_semantic_root:str
     admission_receipt_root:str
+    o1_admission_root:str
+    source_root:str
     adapter_root:str
     runtime_root:str
-    deployment_generation:str
+    target_topology_root:str
+    key_id:str
+    generation:int
+    issued_at:int
+    expires_at:int
+    mac:str
     def __post_init__(self):
-        for n in ('transition_root','admission_semantic_root','admission_receipt_root','adapter_root','runtime_root'):
-            needroot(getattr(self,n),n)
-        if not self.deployment_generation: raise ValueError('deployment generation required')
+        for n in ('transition_root','transition_subject_root','admission_semantic_root','admission_receipt_root','o1_admission_root','source_root','adapter_root','runtime_root','target_topology_root','mac'): needroot(getattr(self,n),n)
+        if not self.deployment_generation or not self.key_id: raise ValueError('transition/deployment identity required')
+        if not valid_int(self.generation) or self.generation<1: raise ValueError('permit generation')
+        if not valid_int(self.issued_at) or not valid_int(self.expires_at) or self.issued_at<0 or self.expires_at<=self.issued_at: raise ValueError('permit validity interval')
     @property
-    def binding_root(self): return jhash({'schema':SCHEMA,'kind':'transition_binding',**asdict(self)})
+    def signed_payload(self): return {'schema':SCHEMA,'kind':'transition_permit','transition_root':self.transition_root,'transition_subject_root':self.transition_subject_root,'deployment_generation':self.deployment_generation,'admission_semantic_root':self.admission_semantic_root,'admission_receipt_root':self.admission_receipt_root,'o1_admission_root':self.o1_admission_root,'source_root':self.source_root,'adapter_root':self.adapter_root,'runtime_root':self.runtime_root,'target_topology_root':self.target_topology_root,'key_id':self.key_id,'generation':self.generation,'issued_at':self.issued_at,'expires_at':self.expires_at}
+    @property
+    def permit_root(self): return jhash({**self.signed_payload,'mac':self.mac})
 
-def verify_transition_admission(binding:TransitionAdmissionBinding, receipt:AdmissionReceipt, resolver:OwnerResolver, *, now:int) -> str:
-    if binding.admission_semantic_root != receipt.semantic.semantic_root: return 'HOLD_SEMANTIC_BINDING_MISMATCH'
-    if binding.admission_receipt_root != receipt.receipt_root: return 'HOLD_RECEIPT_BINDING_MISMATCH'
-    if binding.adapter_root != receipt.semantic.adapter_root: return 'HOLD_ADAPTER_BINDING_MISMATCH'
-    if binding.runtime_root != receipt.semantic.runtime_root: return 'HOLD_RUNTIME_BINDING_MISMATCH'
-    return resolver.verify(receipt, now=now, expected_source_root=receipt.semantic.source_root,
-        expected_adapter_root=binding.adapter_root, expected_runtime_root=binding.runtime_root,
-        expected_target_topology_root=receipt.semantic.target_topology_root)
+class OwnerResolver:
+    def __init__(self,keys:dict[str,bytes],active_key_id:str,active_generation:int):
+        if active_key_id not in keys or not valid_int(active_generation) or active_generation<1: raise ValueError('resolver config')
+        self._keys={k:bytes(v) for k,v in keys.items()}; self.active_key_id=active_key_id; self.active_generation=active_generation
+    @staticmethod
+    def _mac(key,payload): return hmac.new(key,canon(payload),sha256).hexdigest()
+    def issue(self,semantic:AdmissionSemantic,*,o1_admission:O1Admission,source_verifier:SourceAuditVerifier,now:int,ttl:int):
+        if not source_verifier.verify_admission(o1_admission): raise ValueError('O1 admission signature invalid')
+        if o1_admission.action!='ADMIT_D0_ADAPTER_LOAD': raise ValueError('O1 outcome is not admission')
+        if semantic.o1_admission_root!=o1_admission.admission_root: raise ValueError('O1 admission root mismatch')
+        if (semantic.source_root,semantic.adapter_root,semantic.runtime_root,semantic.target_topology_root)!=(o1_admission.source_root,o1_admission.adapter_root,o1_admission.runtime_root,o1_admission.target_topology_root): raise ValueError('O1 semantic mismatch')
+        if not valid_int(now) or not valid_int(ttl) or now<0 or ttl<=0: raise ValueError('finite integer time required')
+        p={'schema':SCHEMA,'kind':'admission_receipt','semantic_root':semantic.semantic_root,'key_id':self.active_key_id,'generation':self.active_generation,'issued_at':now,'expires_at':now+ttl}
+        return AdmissionReceipt(semantic,self.active_key_id,self.active_generation,now,now+ttl,self._mac(self._keys[self.active_key_id],p))
+    def verify(self,receipt:AdmissionReceipt,*,now:int,expected_source_root:str,expected_adapter_root:str,expected_runtime_root:str,expected_target_topology_root:str,expected_o1_admission_root:str|None=None):
+        if not valid_int(now) or now<0: return 'HOLD_INVALID_TIME'
+        if receipt.key_id!=self.active_key_id or receipt.key_id not in self._keys: return 'HOLD_KEY_CURRENTNESS'
+        if receipt.generation!=self.active_generation: return 'HOLD_GENERATION_CURRENTNESS'
+        if now<receipt.issued_at: return 'HOLD_NOT_YET_VALID'
+        if now>=receipt.expires_at: return 'HOLD_EXPIRED'
+        if not hmac.compare_digest(self._mac(self._keys[receipt.key_id],receipt.signed_payload),receipt.mac): return 'HOLD_BAD_SIGNATURE'
+        s=receipt.semantic
+        if expected_o1_admission_root is not None and s.o1_admission_root!=expected_o1_admission_root: return 'HOLD_O1_ADMISSION_MISMATCH'
+        if s.source_root!=expected_source_root: return 'HOLD_SOURCE_MISMATCH'
+        if s.adapter_root!=expected_adapter_root: return 'HOLD_ADAPTER_MISMATCH'
+        if s.runtime_root!=expected_runtime_root: return 'HOLD_RUNTIME_MISMATCH'
+        if s.target_topology_root!=expected_target_topology_root: return 'HOLD_TARGET_TOPOLOGY_MISMATCH'
+        return 'VERIFIED_D0_ADMISSION'
+    def issue_transition_permit(self,receipt:AdmissionReceipt,*,transition_root:str,transition_subject_root:str,deployment_generation:str,now:int,ttl:int,observed_source_root:str,observed_adapter_root:str,observed_runtime_root:str,observed_target_topology_root:str):
+        needroot(transition_root,'transition_root'); needroot(transition_subject_root,'transition_subject_root')
+        if not deployment_generation: raise ValueError('deployment generation required')
+        verdict=self.verify(receipt,now=now,expected_source_root=observed_source_root,expected_adapter_root=observed_adapter_root,expected_runtime_root=observed_runtime_root,expected_target_topology_root=observed_target_topology_root)
+        if verdict!='VERIFIED_D0_ADMISSION': raise ValueError('cannot issue transition permit: '+verdict)
+        if not valid_int(ttl) or ttl<=0: raise ValueError('ttl')
+        p={'schema':SCHEMA,'kind':'transition_permit','transition_root':transition_root,'transition_subject_root':transition_subject_root,'deployment_generation':deployment_generation,'admission_semantic_root':receipt.semantic.semantic_root,'admission_receipt_root':receipt.receipt_root,'o1_admission_root':receipt.semantic.o1_admission_root,'source_root':observed_source_root,'adapter_root':observed_adapter_root,'runtime_root':observed_runtime_root,'target_topology_root':observed_target_topology_root,'key_id':self.active_key_id,'generation':self.active_generation,'issued_at':now,'expires_at':now+ttl}
+        return TransitionPermit(transition_root,transition_subject_root,deployment_generation,receipt.semantic.semantic_root,receipt.receipt_root,receipt.semantic.o1_admission_root,observed_source_root,observed_adapter_root,observed_runtime_root,observed_target_topology_root,self.active_key_id,self.active_generation,now,now+ttl,self._mac(self._keys[self.active_key_id],p))
+    def verify_transition_permit(self,permit:TransitionPermit,*,now:int,expected_transition_root:str,expected_transition_subject_root:str,expected_deployment_generation:str,observed_source_root:str,observed_adapter_root:str,observed_runtime_root:str,observed_target_topology_root:str):
+        if not valid_int(now) or now<0: return 'HOLD_INVALID_TIME'
+        if permit.key_id!=self.active_key_id or permit.key_id not in self._keys: return 'HOLD_KEY_CURRENTNESS'
+        if permit.generation!=self.active_generation: return 'HOLD_GENERATION_CURRENTNESS'
+        if now<permit.issued_at: return 'HOLD_NOT_YET_VALID'
+        if now>=permit.expires_at: return 'HOLD_EXPIRED'
+        if not hmac.compare_digest(self._mac(self._keys[permit.key_id],permit.signed_payload),permit.mac): return 'HOLD_BAD_SIGNATURE'
+        if permit.transition_root!=expected_transition_root: return 'HOLD_TRANSITION_CONTEXT'
+        if permit.transition_subject_root!=expected_transition_subject_root: return 'HOLD_TRANSITION_SUBJECT'
+        if permit.deployment_generation!=expected_deployment_generation: return 'HOLD_DEPLOYMENT_CONTEXT'
+        if permit.source_root!=observed_source_root: return 'HOLD_SOURCE_MISMATCH'
+        if permit.adapter_root!=observed_adapter_root: return 'HOLD_ADAPTER_MISMATCH'
+        if permit.runtime_root!=observed_runtime_root: return 'HOLD_RUNTIME_MISMATCH'
+        if permit.target_topology_root!=observed_target_topology_root: return 'HOLD_TARGET_TOPOLOGY_MISMATCH'
+        return 'VERIFIED_D0_TRANSITION_PERMIT'
 
-def minimum_reopen_cone(changed_root:str, bindings:list[TransitionAdmissionBinding]):
-    return tuple(i for i,b in enumerate(bindings) if changed_root in {
-        b.transition_root,b.admission_semantic_root,b.admission_receipt_root,b.adapter_root,b.runtime_root})
-
-def omega8(state):
-    if len(state)!=8 or any(v not in (0,1,2) for v in state): raise ValueError
-    return 'KEEPER' if all(v==2 for v in state) else 'HOLD'
-
-def factored13d(state):
-    if len(state)!=13 or any(v not in (0,1,2) for v in state): raise ValueError
-    return 'KEEPER' if all(v==2 for v in state) else 'HOLD'
+def omega8(s): return 'KEEPER' if len(s)==8 and all(v==2 for v in s) else 'HOLD'
+def factored13d(s): return 'KEEPER' if len(s)==13 and all(v==2 for v in s) else 'HOLD'
