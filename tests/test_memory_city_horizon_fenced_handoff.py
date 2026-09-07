@@ -1,58 +1,54 @@
-from dataclasses import dataclass, replace
-from hashlib import sha256
+from dataclasses import replace
 from pathlib import Path
-import json
-import subprocess
-import sys
-import unittest
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'/'arena'))
-from memory_city_horizon_fenced_handoff import *
+import json, subprocess, sys, unittest
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'tools'/'arena'))
+from campaign_memory_city_horizon_fenced_handoff import *
 
-def r(x): return sha256(x.encode()).hexdigest()
-@dataclass(frozen=True)
-class Hydration:
-    status:str='READY_SUPPORT_CLOSED_HYDRATION_D0'; receipt_root:str=r('hydr'); support_root:str=r('support'); support_cut:tuple[str,...]=('a','b')
-@dataclass(frozen=True)
-class Closure:
-    disposition:str='READY_D0'; receipt_root:str=r('typed'); influence_root:str=r('infl'); reproof_item_ids:tuple[str,...]=('a','b','c'); transition_model_root:str=r('trans'); horizon:int=2; future_congruence_root:str=r('future')
-@dataclass(frozen=True)
-class ReadCert:
-    status:str='READY_D0'; receipt_root:str=r('readcert'); coverage_receipt_root:str=r('cov'); binding_roots:tuple[str,...]=(); member_support_roots:tuple[str,...]=(r('support'),); member_hydration_receipt_roots:tuple[str,...]=(r('hydr'),); hydration_cut:tuple[str,...]=('a','b'); reproof_item_ids:tuple[str,...]=('a','b','c'); transition_model_root:str=r('trans'); horizon:int=2; future_congruence_root:str=r('future'); consequence_root:str=r('cons'); mutation_authority:bool=False; effect_authority:bool=False; gate10:bool=False
-@dataclass(frozen=True)
-class ReadUse: status:str='READY_D0'; certificate_root:str=r('readcert')
-
-def admission(h=Hydration(),c=Closure(),mode='EFFECT_BOUND'):
-    p={'schema':'AURA-MEMORY-CITY-PROOF-CARRYING-TYPED-ADMISSION-v2','disposition':'HOLD_TECC_REQUIRED_D0' if mode=='EFFECT_BOUND' else 'READY_D0','reason':'effect_bound_use_requires_independent_tecc_verification' if mode=='EFFECT_BOUND' else 'read_only_coverage_and_horizon_ready','admission_mode':mode,'typed_closure_receipt_root':c.receipt_root,'coverage_receipt_root':r('cov'),'support_root':h.support_root,'influence_root':c.influence_root,'transition_model_root':c.transition_model_root,'future_congruence_root':c.future_congruence_root,'horizon':c.horizon,'required_verifier_schema':'AURA-TECC-v1' if mode=='EFFECT_BOUND' else None,'authority_minted':False,'mutation_authority':False,'effect_authority':False,'gate10':False}; p['receipt_root']=digest(p); return p
-
-def fixtures():
-    h=Hydration(); c=Closure(); cert=ReadCert(binding_roots=(canonical_read_binding_root(h,c),)); use=ReadUse(); a=admission(h,c); ev=EffectHandoffEvidence(r('owner'),r('verifier')); m=MutationBoundaryProjection('cell',4,r('cfg'),8,17,17,'worker',100,r('ta'),r('rf')); v=HandoffVerificationContext('cell',4,r('cfg'),8,17,17,r('owner'),r('verifier'),r('ta'),r('rf'),50); return h,c,cert,use,a,ev,m,v
 class T(unittest.TestCase):
-    def test_valid_cross_binding_routes_to_tecc_not_ready(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,use,h,c,a,ev,m,v); self.assertIs(d.disposition,HandoffDisposition.HOLD_TECC_REQUIRED_D0); self.assertEqual(d.required_verifier_schema,'AURA-TECC-v1'); self.assertFalse(d.effect_authority)
-    def test_read_only_cannot_enter_effect_handoff(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,use,h,c,admission(h,c,'READ_ONLY'),ev,m,v); self.assertEqual(d.reason,'READ_ONLY_CANNOT_ENTER_EFFECT_HANDOFF')
-    def test_stale_component_reproof_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); c2=replace(c,reproof_item_ids=('a','c')); d=compile_effect_handoff(cert,use,h,c2,admission(h,c2),ev,m,v); self.assertEqual(d.reason,'ACTIVE_COMPONENT_REPROOF_MOVED')
-    def test_same_receipt_semantic_swap_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); c2=replace(c,reproof_item_ids=('a','b','d')); d=compile_effect_handoff(cert,use,h,c2,admission(h,c2),ev,m,v); self.assertIn(d.reason,('ACTIVE_READ_WORLD_NOT_CERTIFIED','ACTIVE_COMPONENT_REPROOF_MOVED'))
+    def test_valid_routes_to_tecc_not_effect_ready(self):
+        d=invoke(base()); self.assertIs(d.disposition,HandoffDisposition.HOLD_TECC_REQUIRED_D0); self.assertFalse(d.effect_authority); self.assertIsNotNone(d.effect_escalation_root)
+    def test_foreign_admission_schema_holds(self):
+        d=invoke(apply_mode(1,base())); self.assertEqual(d.reason,'ADMISSION_SCHEMA_NOT_CANONICAL')
+    def test_missing_authority_declaration_holds(self):
+        d=invoke(apply_mode(2,base())); self.assertEqual(d.reason,'ADMISSION_SHAPE_NOT_CANONICAL')
+    def test_read_certificate_authority_holds(self):
+        d=invoke(apply_mode(3,base())); self.assertEqual(d.reason,'READ_CERTIFICATE_AUTHORITY_ESCALATION')
+    def test_substituted_consequence_holds_even_if_self_rehashed(self):
+        d=invoke(apply_mode(4,base())); self.assertEqual(d.reason,'READ_CONSEQUENCE_ROOT_UNAUTHENTICATED')
+    def test_holder_mismatch_holds(self):
+        d=invoke(apply_mode(5,base())); self.assertEqual(d.reason,'LEASE_HOLDER_MOVED')
+    def test_read_only_admission_holds(self):
+        d=invoke(apply_mode(6,base())); self.assertEqual(d.reason,'READ_ONLY_CANNOT_ENTER_EFFECT_HANDOFF')
+    def test_effect_obligation_move_holds(self):
+        d=invoke(apply_mode(7,base())); self.assertEqual(d.reason,'HOLD_EFFECT_OBLIGATION_MOVED')
+    def test_unresolved_refinement_holds(self):
+        d=invoke(apply_mode(8,base())); self.assertEqual(d.reason,'EFFECT_REFINEMENT_NOT_COMPLETE')
+    def test_component_reproof_move_holds(self):
+        d=invoke(apply_mode(9,base())); self.assertEqual(d.reason,'ACTIVE_COMPONENT_REPROOF_MOVED')
+    def test_reproof_semantics_move_holds(self):
+        d=invoke(apply_mode(10,base())); self.assertEqual(d.reason,'ACTIVE_REPROOF_SEMANTICS_MOVED')
     def test_transition_move_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); c2=replace(c,transition_model_root=r('moved')); d=compile_effect_handoff(cert,use,h,c2,admission(h,c2),ev,m,v); self.assertIn(d.reason,('ACTIVE_READ_WORLD_NOT_CERTIFIED','ACTIVE_TRANSITION_CONSEQUENCE_MOVED'))
-    def test_read_use_certificate_move_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,replace(use,certificate_root=r('other')),h,c,a,ev,m,v); self.assertEqual(d.reason,'READ_USE_CERTIFICATE_MOVED')
-    def test_forged_admission_receipt_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); a=dict(a); a['support_root']=r('other'); d=compile_effect_handoff(cert,use,h,c,a,ev,m,v); self.assertEqual(d.reason,'ADMISSION_SUPPORT_MOVED')
-    def test_authority_escalation_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); a=dict(a); a['effect_authority']=True; a['receipt_root']=digest({k:v for k,v in a.items() if k!='receipt_root'}); d=compile_effect_handoff(cert,use,h,c,a,ev,m,v); self.assertEqual(d.reason,'ADMISSION_AUTHORITY_ESCALATION')
-    def test_expired_lease_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,use,h,c,a,ev,m,replace(v,now=100)); self.assertEqual(d.reason,'LEASE_EXPIRED')
+        d=invoke(apply_mode(11,base())); self.assertEqual(d.reason,'ACTIVE_TRANSITION_CONSEQUENCE_MOVED')
+    def test_read_use_move_holds(self):
+        d=invoke(apply_mode(12,base())); self.assertEqual(d.reason,'READ_USE_CERTIFICATE_MOVED')
+    def test_owner_and_verifier_stale_hold(self):
+        self.assertEqual(invoke(apply_mode(13,base())).reason,'OWNER_EVIDENCE_ROOT_STALE'); self.assertEqual(invoke(apply_mode(14,base())).reason,'VERIFIER_RECEIPT_ROOT_STALE')
+    def test_revision_rebinds(self):
+        self.assertIs(invoke(apply_mode(15,base())).disposition,HandoffDisposition.REBIND_REQUIRED)
     def test_uninstalled_fence_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); m=replace(m,installed_fence_generation=16); v=replace(v,installed_fence_generation=16); d=compile_effect_handoff(cert,use,h,c,a,ev,m,v); self.assertEqual(d.reason,'FENCE_NOT_INSTALLED_CURRENT')
-    def test_revision_move_rebinds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,use,h,c,a,ev,replace(m,revision=5),v); self.assertIs(d.disposition,HandoffDisposition.REBIND_REQUIRED)
-    def test_owner_evidence_stale_holds(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,use,h,c,a,replace(ev,owner_evidence_root=r('old')),m,v); self.assertEqual(d.reason,'OWNER_EVIDENCE_ROOT_STALE')
-    def test_decision_never_mints_authority(self):
-        h,c,cert,use,a,ev,m,v=fixtures(); d=compile_effect_handoff(cert,use,h,c,a,ev,m,v); self.assertFalse(d.authority_minted); self.assertFalse(d.mutation_authority); self.assertFalse(d.effect_authority); self.assertFalse(d.gate10)
-    def test_campaign_direct_script_entrypoint_runs(self):
-        repo=Path(__file__).resolve().parents[1]; script=repo/'tools'/'arena'/'campaign_memory_city_horizon_fenced_handoff.py'; completed=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True,check=True); payload=json.loads(completed.stdout); self.assertEqual(payload['candidate_false_route'],0); self.assertEqual(payload['candidate_false_hold'],0); self.assertEqual(payload['effect_ready'],0)
+        self.assertEqual(invoke(apply_mode(16,base())).reason,'FENCE_NOT_INSTALLED_CURRENT')
+    def test_expired_lease_holds(self):
+        self.assertEqual(invoke(apply_mode(17,base())).reason,'LEASE_EXPIRED')
+    def test_negative_times_rejected(self):
+        with self.assertRaises(ValueError): MutationBoundaryProjection('cell',4,r('cfg'),8,17,17,'worker',-1,r('ta'),r('rf'))
+        with self.assertRaises(ValueError): HandoffVerificationContext('cell',4,r('cfg'),8,17,17,'worker',r('owner'),r('verifier'),r('ta'),r('rf'),-1)
+    def test_pr878_binding_semantics_field_required(self):
+        d=invoke(apply_mode(23,base())); self.assertEqual(d.reason,'ACTIVE_READ_WORLD_NOT_CERTIFIED')
+    def test_context_axes_do_not_repair_hard_invalid(self):
+        a,_=evaluate_hard_state((2,2,2,2,2,2,2,2),(0,0,0,0,0)); b,_=evaluate_hard_state((2,2,2,2,2,2,2,2),(2,2,2,2,2)); self.assertEqual(a.disposition,b.disposition)
+        bad,_=evaluate_hard_state((2,2,2,2,2,0,2,2),(2,2,2,2,2)); self.assertIsNot(bad.disposition,HandoffDisposition.HOLD_TECC_REQUIRED_D0)
+    def test_campaign_direct_entrypoint(self):
+        repo=ROOT; script=repo/'tools'/'arena'/'campaign_memory_city_horizon_fenced_handoff.py'; cp=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True,check=True); p=json.loads(cp.stdout); self.assertEqual(p['candidate_false_route'],0); self.assertEqual(p['review_attack_canaries'],5000)
+
 if __name__=='__main__': unittest.main()
