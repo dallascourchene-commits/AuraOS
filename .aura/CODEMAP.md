@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1674
-- **total_bytes**: 26611703
-- **text_tokens_est**: 6643277
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 275, 'support_file': 53}
+- **file_count**: 1675
+- **total_bytes**: 26613067
+- **text_tokens_est**: 6643618
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 276, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1674,
+  "repo_file_count": 1675,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -296,6 +296,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "arxiv_forager.py",
     "async_palace.py",
@@ -1814,16 +1815,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1674,
-  "bytes": 26611703,
-  "tokens_est": 6643277,
+  "files": 1675,
+  "bytes": 26613067,
+  "tokens_est": 6643618,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1021,
-    "schema_or_lexicon": 275,
+    "schema_or_lexicon": 276,
     "support_file": 53
   }
 }
