@@ -113,6 +113,7 @@ def apply_mode(mode:int, fx):
     elif mode==22:
         a=dict(a); a['effect_authority']=True; a['receipt_root']=digest({k:x for k,x in a.items() if k!='receipt_root'})
     elif mode==23:
+        # PR888 legacy binding omitted typed_reproof_semantics; prove it no longer joins the owner class.
         legacy=digest({'schema':READ_BINDING_SCHEMA,'hydration_receipt_root':h.receipt_root,'hydration_support_root':h.support_root,'typed_closure_receipt_root':c.receipt_root})
         cert=read_cert(h,c,binding_override=legacy); use=replace(use,certificate_root=cert.receipt_root); a=admission(h,c,cert); intent,obligation,plan=refinement(cert)
     return h,c,cert,use,a,intent,obligation,plan,ev,m,v
@@ -120,6 +121,7 @@ def apply_mode(mode:int, fx):
 def run(cases=24000):
     counts={'cases':cases,'oracle_tecc_route':0,'oracle_hold':0,'candidate_false_route':0,'candidate_false_hold':0,
             'effect_ready':0,'review_attack_canaries':0,'negative_time_constructor_rejects':0}
+    # Greptile issues 1-5 map to modes 1..5: each is accepted by the reviewed O12C shape or is not checked there.
     review_attack_modes={1,2,3,4,5}
     for i in range(cases):
         mode=i%24; expected=(mode==0); fx=apply_mode(mode,base()); d=invoke(fx)
