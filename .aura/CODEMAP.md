@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1694
-- **total_bytes**: 26667526
-- **text_tokens_est**: 6657234
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1030, 'schema_or_lexicon': 284, 'support_file': 53}
+- **file_count**: 1699
+- **total_bytes**: 26697607
+- **text_tokens_est**: 6664757
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1034, 'schema_or_lexicon': 285, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1694,
+  "repo_file_count": 1699,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -175,6 +175,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-connectome-bridge.yml",
     ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
     ".github/workflows/o5-consequence-admission-proof.yml",
+    ".github/workflows/o7-effect-time-release-bound-execution-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
     ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -1660,6 +1661,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_consequence_admission_kernel.py",
+    "tests/test_effect_time_release_bound_execution.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_installed_runtime_bound_delegation.py",
@@ -1673,9 +1675,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/attenuated_stable_operation_delegation.py",
     "tools/arena/consequence_admission_kernel.py",
+    "tools/arena/effect_time_loaded_process_currentness.py",
+    "tools/arena/effect_time_release_bound_execution.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/installed_runtime_bound_delegation.py",
     "tools/arena/proof_o21_runtime_bound_delegation.py",
+    "tools/arena/proof_o7_effect_time_release_bound_execution.py",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -1834,16 +1839,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1694,
-  "bytes": 26667526,
-  "tokens_est": 6657234,
+  "files": 1699,
+  "bytes": 26697607,
+  "tokens_est": 6664757,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1030,
-    "schema_or_lexicon": 284,
+    "python_module": 1034,
+    "schema_or_lexicon": 285,
     "support_file": 53
   }
 }
