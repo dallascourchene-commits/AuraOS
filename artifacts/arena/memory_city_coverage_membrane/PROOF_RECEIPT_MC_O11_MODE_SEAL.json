@@ -1,0 +1,77 @@
+{
+  "schema": "AURA-MEMORY-CITY-MODE-SEALED-ADMISSION-PROOF-v1",
+  "objective": "MC-O11-MODE-SEALED-PROOF-CARRYING-ADMISSION",
+  "status": "D0_INTEGRATION_CANDIDATE",
+  "parent_pr": 880,
+  "parent_cut": "0ee3533c9a06c8f1b7998dd220e14520511ccd5e",
+  "branch": "arena/memory-city-mode-sealed-admission-gpt56sol-20260906",
+  "foreign_parents": [
+    {
+      "result": "J233/O2 Adaptive Read Bi-Closure Consequence Identity",
+      "artifact_id": "1Ey4jWK-eaoNhvR--yYT3SRFRdcp6bFYvLkHoJkx0F10",
+      "campaign_root": "519886ef35f55d27935edaa6ff699ab530971b5130101753e4ea31f74d448184"
+    },
+    {
+      "result": "O7 Trust-Exact Consequence Capsule",
+      "artifact_id": "1_eunTHVYC1JOaB3ZvXjKWxTcv-hVIS4C",
+      "result_root": "b73ba8f36be6b96598f10bf2b58bda382f6e6d8058c2daa0269dad0712aa830f"
+    }
+  ],
+  "genuine_delta": "The Memory City proof-carrying typed-admission seam is explicitly mode sealed. READ_ONLY may return READY_D0 when its existing coverage/horizon conditions are met. EFFECT_BOUND can never return READY in this module and instead returns HOLD_TECC_REQUIRED_D0 with AURA-TECC-v1 as the required independent verifier. Read consequence compression therefore cannot be reinterpreted as effect-bound trust by a generic READY token.",
+  "provider_git_blobs": {
+    "coverage_membrane": "7dc845c4378e06781d5798f0f5d144953c02f538",
+    "tests": "964ab6f979b0694b5c074f28d7153754cb630fd1",
+    "campaign": "48a0cffda0c9edc854f63aa5a4f95be8aa73d708"
+  },
+  "local_semantic_replay": {
+    "fresh_venvs": 3,
+    "focused_tests_total": "36/36 PASS",
+    "randomized_cases_total": 30000,
+    "cases_per_env": 10000,
+    "per_env": {
+      "read_ready": 4568,
+      "read_hold": 5432,
+      "effect_requests": 10000,
+      "effect_ready": 0,
+      "effect_tecc_hold": 10000,
+      "legacy_generic_false_effect_ready_canary": 4568,
+      "authority_minted": 0,
+      "mode_receipt_collision": 0
+    },
+    "campaign_root": "baa8cbea8daa07a8ff4e9e188dbcd118f6408efbe18a8482030c1721e8738ec3",
+    "campaign_output_sha256": "b7fabe8f2becb654dfe27d71d14e37ae3fbff85d26ea1ed0643e519022dd04a4",
+    "note": "Fresh-venv evidence executed a frozen semantic mirror of the hosted function. Hosted branch test/campaign files are committed for owner/CI replay; no hosted execution claim is inferred from local mirror evidence."
+  },
+  "recursion13d": {
+    "states": 1594323,
+    "read_ready": 1,
+    "read_unresolved": 8191,
+    "read_invalid": 1586131,
+    "effect_ready": 0,
+    "legacy_effect_upgrade_canary": 243,
+    "root": "9b9589981ffc707eb5735703b57f2422564e9a24720b90fb994e6f66e10a449f",
+    "script_sha256": "09495ec28501f9a44cc99a4f8f24f88c070f420d79900e943d789623718a11af"
+  },
+  "crystalline8": [
+    "coverage_completeness",
+    "typed_closure_currentness",
+    "support_influence_identity",
+    "transition_consequence_currentness",
+    "read_vs_effect_mode",
+    "independent_tecc_boundary",
+    "authority_nonpromotion",
+    "k27_routing_nonauthority"
+  ],
+  "keeper_laws": [
+    "ReadConsequenceIdentity != EffectObligationEquivalence",
+    "READY_READ_D0 != EffectReady",
+    "EffectBoundRequestAtMemoryCityAdmission => HOLD_TECC_REQUIRED_D0",
+    "CoverageCompressionMayNotEraseUseTimeTrust",
+    "TECCVerification != MemoryCityCoverageVerification",
+    "AdmissionModeBindsReceiptIdentity",
+    "ReadAdmissionNeverMintsMutationOrEffectAuthority",
+    "K27Coordinate != CoverageProof != TrustReceipt != Authority"
+  ],
+  "hyperscale_accounting": "The 10,000-case randomized falsifier exceeds the 1,000-candidate search floor. Repeated cases are test geometry, not independent breakthroughs; no 1,000-breakthrough claim is made.",
+  "claim_ceiling": "D0 read/effect type-boundary reference only. HOLD_TECC_REQUIRED_D0 is a routing/denial result, not TECC verification, effect authority, mutation authority, canonical promotion, merge/deploy authority, Gate10, production attestation, native/private Transformer KV, latency or bandwidth proof."
+}
