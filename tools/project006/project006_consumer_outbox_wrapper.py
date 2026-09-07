@@ -3,14 +3,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from terminal_outbox import (  # noqa: E402
+from tools.project006.terminal_outbox import (
     AuraDriveBusWriterV1,
     CommandIdentity,
     NEGATIVE_KINDS,
@@ -19,7 +17,7 @@ from terminal_outbox import (  # noqa: E402
     TERMINAL_KINDS,
 )
 
-VERSION = "PROJECT006_CONSUMER_OUTBOX_WRAPPER_V1"
+VERSION = "PROJECT006_CONSUMER_OUTBOX_WRAPPER_V2"
 DEFAULT_CONSUMER = "/home/john_of_wick/.config/aura-drive/bin/aura_drive_swarm_consumer_v1.py"
 DEFAULT_RECEIPTS = "/home/john_of_wick/.config/aura-drive/state/swarm_consumer_v1/receipts"
 DEFAULT_CONFIG = "/home/john_of_wick/.config/aura-drive/callback-config-v2.json"
@@ -57,9 +55,8 @@ def _first_int(value: Any, keys: set[str]) -> int | None:
 def _infer_kind(value: Any) -> str | None:
     candidates: list[str] = []
     for key, child in _walk(value):
-        if key.casefold() in {"kind", "code", "state", "status", "disposition", "result"}:
-            if isinstance(child, str):
-                candidates.append(child.upper())
+        if key.casefold() in {"kind", "code", "state", "status", "disposition", "result"} and isinstance(child, str):
+            candidates.append(child.upper())
     joined = " | ".join(candidates)
     for hint in _TERMINAL_HINTS:
         if hint in joined:
@@ -115,16 +112,9 @@ def parse_terminal_receipt(path: Path, *, command_filter: str | None = None) -> 
     failing_gate = _first_text(raw, {"first_failing_gate", "firstfailinggate", "blocking_reason", "reason", "error_code"})
     identity = CommandIdentity(command_id, idem, source_file_id, source_revision, source_digest)
     return TerminalResponse(
-        identity=identity,
-        kind=kind,
-        first_failing_gate=failing_gate,
-        provider_request_count=provider_count,
-        payload={
-            "local_receipt_path": str(path),
-            "local_receipt_sha256": receipt_sha,
-            "source_binding_status": source_binding,
-            "local_receipt": raw,
-        },
+        identity=identity, kind=kind, first_failing_gate=failing_gate, provider_request_count=provider_count,
+        payload={"local_receipt_path": str(path), "local_receipt_sha256": receipt_sha,
+                 "source_binding_status": source_binding, "local_receipt": raw},
     )
 
 
@@ -165,7 +155,8 @@ def _writer_binding(config_path: str) -> tuple[str, str]:
     return python, writer
 
 
-def publish_receipts(paths: Iterable[Path], *, journal_path: str, config_path: str, command_filter: str | None = None) -> list[dict[str, str]]:
+def publish_receipts(paths: Iterable[Path], *, journal_path: str, config_path: str,
+                     command_filter: str | None = None) -> list[dict[str, str]]:
     journal = OutboxJournal(journal_path)
     python, writer_script = _writer_binding(config_path)
     writer = AuraDriveBusWriterV1(python, writer_script)
@@ -175,33 +166,35 @@ def publish_receipts(paths: Iterable[Path], *, journal_path: str, config_path: s
         if response is None:
             continue
         try:
-            journal.stage_terminal(response)
-            ref = journal.publish_pending(response.identity.command_id, writer)
+            if response.kind == "ACK_ACCEPTED_PRE_EFFECT":
+                journal.stage_ack(response)
+                ref = journal.publish_ack_pending(response.identity.command_id, writer)
+                status = "ACK_WRITTEN_PRE_EFFECT"
+            else:
+                journal.stage_terminal(response)
+                ref = journal.publish_pending(response.identity.command_id, writer)
+                status = "RETURN_WRITTEN"
         except ValueError as exc:
             results.append({"command_id": response.identity.command_id, "status": f"HOLD:{exc}"})
             continue
-        results.append({"command_id": response.identity.command_id, "status": "RETURN_WRITTEN", "outbound_file_id": ref})
+        results.append({"command_id": response.identity.command_id, "status": status, "outbound_file_id": ref})
     return results
 
 
-def run_once(*, consumer: str, receipts: str, journal: str, config: str, command_filter: str | None = None) -> dict[str, Any]:
+def run_once(*, consumer: str, receipts: str, journal: str, config: str,
+             command_filter: str | None = None) -> dict[str, Any]:
     receipt_dir = Path(receipts)
     before = _snapshot(receipt_dir)
     proc = subprocess.run([sys.executable, consumer, "once"], text=True, capture_output=True, check=False, timeout=240)
     after = _snapshot(receipt_dir)
     changed = _changed(before, after)
-    # For an explicit command filter, include historical local receipts too. This is how
-    # a previously-local-only AWJ033 terminal is repaired without rerunning any provider.
     if command_filter and receipt_dir.exists():
         changed.extend(receipt_dir.glob("*.json"))
     published = publish_receipts(changed, journal_path=journal, config_path=config, command_filter=command_filter)
     return {
-        "schema": "PROJECT006_CONSUMER_OUTBOX_RUN_V1",
-        "version": VERSION,
-        "consumer_exit_code": proc.returncode,
-        "consumer_stdout_tail": proc.stdout[-2000:],
-        "consumer_stderr_tail": proc.stderr[-2000:],
-        "changed_receipt_count": len(_changed(before, after)),
+        "schema": "PROJECT006_CONSUMER_OUTBOX_RUN_V2", "version": VERSION,
+        "consumer_exit_code": proc.returncode, "consumer_stdout_tail": proc.stdout[-2000:],
+        "consumer_stderr_tail": proc.stderr[-2000:], "changed_receipt_count": len(_changed(before, after)),
         "published": published,
     }
 
@@ -216,10 +209,13 @@ def main() -> int:
     ap.add_argument("--command-id")
     ns = ap.parse_args()
     if ns.command == "once":
-        result = run_once(consumer=ns.consumer, receipts=ns.receipts, journal=ns.journal, config=ns.config, command_filter=ns.command_id)
+        result = run_once(consumer=ns.consumer, receipts=ns.receipts, journal=ns.journal,
+                          config=ns.config, command_filter=ns.command_id)
     else:
         paths = list(Path(ns.receipts).glob("*.json")) if Path(ns.receipts).exists() else []
-        result = {"schema": "PROJECT006_CONSUMER_OUTBOX_FLUSH_V1", "published": publish_receipts(paths, journal_path=ns.journal, config_path=ns.config, command_filter=ns.command_id)}
+        result = {"schema": "PROJECT006_CONSUMER_OUTBOX_FLUSH_V2",
+                  "published": publish_receipts(paths, journal_path=ns.journal,
+                                                config_path=ns.config, command_filter=ns.command_id)}
     print(json.dumps(result, sort_keys=True))
     return 0
 
