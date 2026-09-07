@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1670
-- **total_bytes**: 26612685
-- **text_tokens_est**: 6643521
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1020, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1675
+- **total_bytes**: 26637129
+- **text_tokens_est**: 6649633
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1023, 'schema_or_lexicon': 277, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1670,
+  "repo_file_count": 1675,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -297,6 +297,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
+    "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1652,6 +1654,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frame_address_immutability.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_dynamic_navigator.py",
     "tests/test_k27_epoch_invalidation.py",
     "tests/test_k27_epoch_republish_invalidation.py",
     "tests/test_k27_memory_runtime.py",
@@ -1665,8 +1668,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/k27_dynamic_navigator.py",
     "tools/arena/k27_memory/README.md",
     "tools/arena/k27_memory/__init__.py",
     "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -1810,16 +1815,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1670,
-  "bytes": 26612685,
-  "tokens_est": 6643521,
+  "files": 1675,
+  "bytes": 26637129,
+  "tokens_est": 6649633,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1020,
-    "schema_or_lexicon": 275,
+    "python_module": 1023,
+    "schema_or_lexicon": 277,
     "support_file": 49
   }
 }

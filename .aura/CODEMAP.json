@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1670,
+    "repo_file_count": 1675,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1338,6 +1338,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
+      "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2693,6 +2695,7 @@
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_dynamic_navigator.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_runtime.py",
@@ -2706,8 +2709,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/k27_dynamic_navigator.py",
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -17701,6 +17706,100 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4851,
+      "lines": 24,
+      "tokens_est": 1213,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c526b756eb505c48",
+      "vector": [
+        0.168266,
+        -0.178866,
+        0.051672,
+        0.030473,
+        0.072871,
+        -0.149717,
+        0.080821,
+        -0.239813,
+        0.316659,
+        0.086121,
+        0.247762,
+        -0.078171,
+        -0.056972,
+        0.186815,
+        0.197415,
+        -0.202715,
+        -0.115269,
+        -0.261012,
+        0.027824,
+        -0.123219,
+        -0.226563,
+        -0.274261,
+        0.09142,
+        -0.276911,
+        -0.28751,
+        -0.162967,
+        -0.276911,
+        0.075521,
+        0.208014,
+        -0.059622,
+        0.056972,
+        0.017224
+      ]
+    },
+    {
+      "path": "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 990,
+      "lines": 27,
+      "tokens_est": 248,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b02b6ced00273ceb",
+      "vector": [
+        -0.224269,
+        0.180047,
+        -0.009476,
+        0.093709,
+        -0.022111,
+        0.25375,
+        0.081074,
+        -0.203211,
+        -0.22848,
+        -0.224269,
+        0.201105,
+        0.262173,
+        -0.205316,
+        -0.201105,
+        -0.171623,
+        -0.078968,
+        -0.268491,
+        -0.251644,
+        0.234798,
+        0.05791,
+        -0.249538,
+        -0.169518,
+        -0.087391,
+        -0.125296,
+        0.070545,
+        -0.047381,
+        -0.112661,
+        0.222163,
+        -0.180047,
+        0.201105,
+        -0.055804,
+        -0.110555
       ]
     },
     {
@@ -104223,6 +104322,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_dynamic_navigator.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6680,
+      "lines": 116,
+      "tokens_est": 1670,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b29fb3ca4c8e5ad2",
+      "vector": [
+        0.108424,
+        -0.232686,
+        0.242432,
+        0.193702,
+        0.07675,
+        -0.074313,
+        -0.057258,
+        0.259488,
+        -0.196139,
+        -0.015837,
+        -0.232686,
+        0.140099,
+        0.18152,
+        0.23025,
+        -0.079186,
+        0.208321,
+        0.291162,
+        -0.208321,
+        -0.220504,
+        0.02071,
+        -0.035329,
+        -0.054821,
+        -0.198575,
+        -0.218067,
+        0.237559,
+        0.12548,
+        -0.261924,
+        0.037766,
+        0.218067,
+        -0.142535,
+        -0.149845,
+        0.081623
+      ]
+    },
+    {
       "path": "tests/test_k27_epoch_invalidation.py",
       "role": "python_module",
       "binary": false,
@@ -104834,6 +104980,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1283,
+      "lines": 35,
+      "tokens_est": 321,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "573d7186837a402b",
+      "vector": [
+        0.196394,
+        0.141353,
+        0.193892,
+        0.088815,
+        -0.058793,
+        0.306474,
+        -0.213906,
+        -0.188888,
+        -0.131346,
+        0.296467,
+        -0.116335,
+        0.123841,
+        -0.028771,
+        -0.228917,
+        -0.031273,
+        -0.158866,
+        0.063797,
+        0.211405,
+        0.198895,
+        -0.253936,
+        0.226416,
+        -0.046284,
+        0.221412,
+        0.24643,
+        0.128844,
+        0.011258,
+        -0.061295,
+        -0.133848,
+        0.091317,
+        0.071302,
+        -0.228917,
+        -0.288961
+      ]
+    },
+    {
       "path": "tools/arena/consequence_admission_kernel.py",
       "role": "python_module",
       "binary": false,
@@ -104925,6 +105118,53 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/k27_dynamic_navigator.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10640,
+      "lines": 305,
+      "tokens_est": 2660,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d73358ebc5d92be4",
+      "vector": [
+        0.253783,
+        -0.012085,
+        0.075805,
+        0.11975,
+        -0.247191,
+        0.00769,
+        0.260375,
+        0.146118,
+        -0.258178,
+        -0.078003,
+        0.196654,
+        -0.236205,
+        -0.093383,
+        0.005493,
+        0.051636,
+        0.23181,
+        0.260375,
+        -0.034057,
+        0.205443,
+        0.049438,
+        0.121948,
+        0.229613,
+        0.247191,
+        0.045044,
+        -0.264769,
+        -0.212035,
+        0.11975,
+        -0.176879,
+        0.018677,
+        -0.078003,
+        0.253783,
+        0.238402
       ]
     },
     {
@@ -106583,7 +106823,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788730964,
+  "generated_at_unix": 1788741498,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106859,6 +107099,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
+      "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108214,6 +108456,7 @@
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_dynamic_navigator.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_runtime.py",
@@ -108227,8 +108470,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/k27_dynamic_navigator.py",
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -266170,6 +266415,196 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#class:Binding:287fba0dce049d73",
+        "name": "Binding",
+        "kind": "class",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 15,
+        "end_line": 19,
+        "signature_hash": "9212b43a4c8ff883",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#class:DynamicNavigatorTests:c099a30c1c656953",
+        "name": "DynamicNavigatorTests",
+        "kind": "class",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 47,
+        "end_line": 112,
+        "signature_hash": "aaaa6601c6aa5bc0",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#class:FakeRuntime:88569d560a5dd772",
+        "name": "FakeRuntime",
+        "kind": "class",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 22,
+        "end_line": 44,
+        "signature_hash": "35d504e22b7d7500",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_at_use_capsule_is_deep_copied_and_stable:97e009df084ba1d1",
+        "name": "DynamicNavigatorTests.test_at_use_capsule_is_deep_copied_and_stable",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "9ceb8922ee1c66b3",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_cone_descendants_also_invalidate_route:e8ea2858c75eacd9",
+        "name": "DynamicNavigatorTests.test_cone_descendants_also_invalidate_route",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "dca954330b4323c8",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_duplicate_telemetry_ids_fail_closed:74660ca53961975e",
+        "name": "DynamicNavigatorTests.test_duplicate_telemetry_ids_fail_closed",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 104,
+        "end_line": 106,
+        "signature_hash": "bef5fd80e2a2ba67",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_effect_compiler_holds_on_first_local_information_gap:138c978eac52f54c",
+        "name": "DynamicNavigatorTests.test_effect_compiler_holds_on_first_local_information_gap",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "828eee639bb283d1",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_effect_compiler_ready_still_nonauthorizing:51a08e0c2273525d",
+        "name": "DynamicNavigatorTests.test_effect_compiler_ready_still_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "6a8e0cba590dfb8a",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_invalid_hydration_level_fails_closed:5f28cd70c674430c",
+        "name": "DynamicNavigatorTests.test_invalid_hydration_level_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 108,
+        "end_line": 109,
+        "signature_hash": "d600efc5637c0034",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_negative_scar_currentness_rebind_is_not_exact_reuse:41e30be803c4bdbb",
+        "name": "DynamicNavigatorTests.test_negative_scar_currentness_rebind_is_not_exact_reuse",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 89,
+        "end_line": 92,
+        "signature_hash": "7d1a0d830a093c44",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_negative_scar_reuse_only_under_narrower_equal_envelope:0f494b5b229648c5",
+        "name": "DynamicNavigatorTests.test_negative_scar_reuse_only_under_narrower_equal_envelope",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "bbaa81607cf46be7",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_positive_scar_never_gets_negative_reuse_privilege:37c13b9bf0dd8f9e",
+        "name": "DynamicNavigatorTests.test_positive_scar_never_gets_negative_reuse_privilege",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 94,
+        "end_line": 96,
+        "signature_hash": "fec525950be56261",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_route_delta_consumes_owned_projection_and_cone:0f414728279db706",
+        "name": "DynamicNavigatorTests.test_route_delta_consumes_owned_projection_and_cone",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 48,
+        "end_line": 55,
+        "signature_hash": "a19b052ba7ab38a3",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_route_registration_projection_root_is_deterministic:44d45df47df7d92b",
+        "name": "DynamicNavigatorTests.test_route_registration_projection_root_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "200325391c436222",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_traffic_summary_measures_hydration_levels:c1c9687696ab5b51",
+        "name": "DynamicNavigatorTests.test_traffic_summary_measures_hydration_levels",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 98,
+        "end_line": 102,
+        "signature_hash": "e8fc26deeb0ca74c",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.__init__:1227132c394cc584",
+        "name": "FakeRuntime.__init__",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 23,
+        "end_line": 30,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.invalidation_cone:72e0e18d84caac0d",
+        "name": "FakeRuntime.invalidation_cone",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "328eeb9b7d98d9ee",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.read:00b7d93d5c3657ef",
+        "name": "FakeRuntime.read",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "fd5bc87a1f79811c",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.route_projection:a5f2ac6f614573fe",
+        "name": "FakeRuntime.route_projection",
+        "kind": "method",
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "line": 33,
+        "end_line": 40,
+        "signature_hash": "4d9258e94ba985d0",
+        "file_digest8": "b29fb3ca4c8e5ad2"
+      },
+      {
         "semantic_id": "tests/test_k27_epoch_invalidation.py#class:EpochInvalidationTests:c825ebad3cc97fb7",
         "name": "EpochInvalidationTests",
         "kind": "class",
@@ -267028,6 +267463,16 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_k27_dynamic_navigator_telemetry.py#function:main:38e487537b960fe1",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
+        "line": 13,
+        "end_line": 32,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "573d7186837a402b"
       },
       {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
@@ -268138,6 +268583,226 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:AtUseCapsule:b25ffd0d0b695720",
+        "name": "AtUseCapsule",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 107,
+        "end_line": 118,
+        "signature_hash": "5356b663222b1ec5",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectDisposition:99090139bd6d162e",
+        "name": "EffectDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 97,
+        "end_line": 103,
+        "signature_hash": "5f61ef6974d7b225",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectIntent:d9ab361e9e06de74",
+        "name": "EffectIntent",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 89,
+        "end_line": 93,
+        "signature_hash": "f0173f902a8a994e",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:InvalidationPlan:3a0008ce4a2f6b33",
+        "name": "InvalidationPlan",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 69,
+        "end_line": 76,
+        "signature_hash": "6b71ed67e04c3afa",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:K27DynamicNavigator:dcb3e9a6ce62ca3d",
+        "name": "K27DynamicNavigator",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 144,
+        "end_line": 270,
+        "signature_hash": "40bc97e0e06f534e",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:LawField:b14151d3d3f3d1d6",
+        "name": "LawField",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "5ad051463526d163",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:NegativeRouteScar:18fafc4b5f99df43",
+        "name": "NegativeRouteScar",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 122,
+        "end_line": 128,
+        "signature_hash": "e692488fff839243",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:RouteRegistration:0fba3fd76a3c35da",
+        "name": "RouteRegistration",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 57,
+        "end_line": 65,
+        "signature_hash": "4ce34f200ddf512e",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficEvent:8e1f148a1acb8fb1",
+        "name": "TrafficEvent",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 33,
+        "end_line": 53,
+        "signature_hash": "816b041e222d3924",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficSummary:5ee54e50268395fe",
+        "name": "TrafficSummary",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 132,
+        "end_line": 141,
+        "signature_hash": "b901a163f7a88999",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:canonical:929605e431d93a86",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "8405a7944186ce60",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:digest:4c83be23abb83c07",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "3c60ab9e6d97eef8",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:summarize_traffic:da4631dd79c66e73",
+        "name": "summarize_traffic",
+        "kind": "function",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 273,
+        "end_line": 304,
+        "signature_hash": "10df9b719f3315e2",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.__init__:38cc610fb90c72cd",
+        "name": "K27DynamicNavigator.__init__",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 147,
+        "end_line": 150,
+        "signature_hash": "eb0869bbca4a2264",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.capture_at_use:9da6baaaf6bc752e",
+        "name": "K27DynamicNavigator.capture_at_use",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 227,
+        "end_line": 248,
+        "signature_hash": "0f12cb82bfc7ace5",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.classify_negative_scar:b3bfd532db0c50b1",
+        "name": "K27DynamicNavigator.classify_negative_scar",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 251,
+        "end_line": 270,
+        "signature_hash": "1391480ce9935ae7",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.compile_effect:f66146f2c71b1a49",
+        "name": "K27DynamicNavigator.compile_effect",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 201,
+        "end_line": 225,
+        "signature_hash": "c6caf67ee1623717",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.plan_invalidation:ef22c419bf18d4e3",
+        "name": "K27DynamicNavigator.plan_invalidation",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 179,
+        "end_line": 198,
+        "signature_hash": "b4af862beca0272d",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.record:e87893b062c8bf07",
+        "name": "K27DynamicNavigator.record",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 156,
+        "end_line": 160,
+        "signature_hash": "a96d88c79c914ba6",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.register_route:ccb493315ad0c059",
+        "name": "K27DynamicNavigator.register_route",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 162,
+        "end_line": 177,
+        "signature_hash": "e4a180408945f5bd",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.traffic:9714802d49b7ec58",
+        "name": "K27DynamicNavigator.traffic",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 153,
+        "end_line": 154,
+        "signature_hash": "426471c9f068eb81",
+        "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:TrafficEvent.validate:3a31d8f3ebd146ea",
+        "name": "TrafficEvent.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 44,
+        "end_line": 53,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "d73358ebc5d92be4"
       },
       {
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:canon:37d3e0e603debb0a",
@@ -270960,8 +271625,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "59759493fb96e6b14c3a35e454cdaee4",
-    "payload_hash": "2744e0ca9cf9b730cfeb2ae28974c767"
+    "record_fingerprint": "556f797848b14b1e8687a5868e369910",
+    "payload_hash": "c457dc1e6b2373e5083bfb3540605703"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270974,16 +271639,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1670,
-      "bytes": 26612685,
-      "tokens_est": 6643521,
+      "files": 1675,
+      "bytes": 26637129,
+      "tokens_est": 6649633,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1020,
-        "schema_or_lexicon": 275,
+        "python_module": 1023,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -271670,16 +272335,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1670,
-    "total_bytes": 26612685,
-    "text_tokens_est": 6643521,
+    "file_count": 1675,
+    "total_bytes": 26637129,
+    "text_tokens_est": 6649633,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1020,
-      "schema_or_lexicon": 275,
+      "python_module": 1023,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -272705,6 +273370,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 32,
+        "semantic_id": "tools/arena/campaign_k27_dynamic_navigator_telemetry.py#function:main:38e487537b960fe1",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -289418,6 +290091,14 @@
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
         "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:digest:4c83be23abb83c07",
+        "signature_hash": "3c60ab9e6d97eef8"
       }
     ],
     "_runtime_binding_digest": [
@@ -344171,6 +344852,14 @@
         "line": 85,
         "end_line": 92,
         "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
+        "signature_hash": "8405a7944186ce60"
+      },
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:canonical:929605e431d93a86",
         "signature_hash": "8405a7944186ce60"
       },
       {
@@ -427132,6 +427821,196 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "Binding": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 19,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#class:Binding:287fba0dce049d73",
+        "signature_hash": "9212b43a4c8ff883"
+      }
+    ],
+    "FakeRuntime": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 44,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#class:FakeRuntime:88569d560a5dd772",
+        "signature_hash": "35d504e22b7d7500"
+      }
+    ],
+    "FakeRuntime.__init__": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.__init__:1227132c394cc584",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "FakeRuntime.read": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.read:00b7d93d5c3657ef",
+        "signature_hash": "fd5bc87a1f79811c"
+      }
+    ],
+    "FakeRuntime.route_projection": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 40,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.route_projection:a5f2ac6f614573fe",
+        "signature_hash": "4d9258e94ba985d0"
+      }
+    ],
+    "FakeRuntime.invalidation_cone": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:FakeRuntime.invalidation_cone:72e0e18d84caac0d",
+        "signature_hash": "328eeb9b7d98d9ee"
+      }
+    ],
+    "DynamicNavigatorTests": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 112,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#class:DynamicNavigatorTests:c099a30c1c656953",
+        "signature_hash": "aaaa6601c6aa5bc0"
+      }
+    ],
+    "DynamicNavigatorTests.test_route_delta_consumes_owned_projection_and_cone": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 55,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_route_delta_consumes_owned_projection_and_cone:0f414728279db706",
+        "signature_hash": "a19b052ba7ab38a3"
+      }
+    ],
+    "DynamicNavigatorTests.test_cone_descendants_also_invalidate_route": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_cone_descendants_also_invalidate_route:e8ea2858c75eacd9",
+        "signature_hash": "dca954330b4323c8"
+      }
+    ],
+    "DynamicNavigatorTests.test_effect_compiler_holds_on_first_local_information_gap": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_effect_compiler_holds_on_first_local_information_gap:138c978eac52f54c",
+        "signature_hash": "828eee639bb283d1"
+      }
+    ],
+    "DynamicNavigatorTests.test_effect_compiler_ready_still_nonauthorizing": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_effect_compiler_ready_still_nonauthorizing:51a08e0c2273525d",
+        "signature_hash": "6a8e0cba590dfb8a"
+      }
+    ],
+    "DynamicNavigatorTests.test_at_use_capsule_is_deep_copied_and_stable": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_at_use_capsule_is_deep_copied_and_stable:97e009df084ba1d1",
+        "signature_hash": "9ceb8922ee1c66b3"
+      }
+    ],
+    "DynamicNavigatorTests.test_negative_scar_reuse_only_under_narrower_equal_envelope": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_negative_scar_reuse_only_under_narrower_equal_envelope:0f494b5b229648c5",
+        "signature_hash": "bbaa81607cf46be7"
+      }
+    ],
+    "DynamicNavigatorTests.test_negative_scar_currentness_rebind_is_not_exact_reuse": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 92,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_negative_scar_currentness_rebind_is_not_exact_reuse:41e30be803c4bdbb",
+        "signature_hash": "7d1a0d830a093c44"
+      }
+    ],
+    "DynamicNavigatorTests.test_positive_scar_never_gets_negative_reuse_privilege": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 96,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_positive_scar_never_gets_negative_reuse_privilege:37c13b9bf0dd8f9e",
+        "signature_hash": "fec525950be56261"
+      }
+    ],
+    "DynamicNavigatorTests.test_traffic_summary_measures_hydration_levels": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 102,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_traffic_summary_measures_hydration_levels:c1c9687696ab5b51",
+        "signature_hash": "e8fc26deeb0ca74c"
+      }
+    ],
+    "DynamicNavigatorTests.test_duplicate_telemetry_ids_fail_closed": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 106,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_duplicate_telemetry_ids_fail_closed:74660ca53961975e",
+        "signature_hash": "bef5fd80e2a2ba67"
+      }
+    ],
+    "DynamicNavigatorTests.test_invalid_hydration_level_fails_closed": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 109,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_invalid_hydration_level_fails_closed:5f28cd70c674430c",
+        "signature_hash": "d600efc5637c0034"
+      }
+    ],
+    "DynamicNavigatorTests.test_route_registration_projection_root_is_deterministic": [
+      {
+        "file": "tests/test_k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tests/test_k27_dynamic_navigator.py#method:DynamicNavigatorTests.test_route_registration_projection_root_is_deterministic:44d45df47df7d92b",
+        "signature_hash": "200325391c436222"
+      }
+    ],
     "new_store": [
       {
         "file": "tests/test_k27_epoch_invalidation.py",
@@ -428998,6 +429877,206 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "TrafficEvent": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 53,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficEvent:8e1f148a1acb8fb1",
+        "signature_hash": "816b041e222d3924"
+      }
+    ],
+    "TrafficEvent.validate": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 53,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:TrafficEvent.validate:3a31d8f3ebd146ea",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "RouteRegistration": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 65,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:RouteRegistration:0fba3fd76a3c35da",
+        "signature_hash": "4ce34f200ddf512e"
+      }
+    ],
+    "InvalidationPlan": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 69,
+        "end_line": 76,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:InvalidationPlan:3a0008ce4a2f6b33",
+        "signature_hash": "6b71ed67e04c3afa"
+      }
+    ],
+    "LawField": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:LawField:b14151d3d3f3d1d6",
+        "signature_hash": "5ad051463526d163"
+      }
+    ],
+    "EffectIntent": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 93,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectIntent:d9ab361e9e06de74",
+        "signature_hash": "f0173f902a8a994e"
+      }
+    ],
+    "EffectDisposition": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 97,
+        "end_line": 103,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectDisposition:99090139bd6d162e",
+        "signature_hash": "5f61ef6974d7b225"
+      }
+    ],
+    "AtUseCapsule": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 118,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:AtUseCapsule:b25ffd0d0b695720",
+        "signature_hash": "5356b663222b1ec5"
+      }
+    ],
+    "NegativeRouteScar": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 128,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:NegativeRouteScar:18fafc4b5f99df43",
+        "signature_hash": "e692488fff839243"
+      }
+    ],
+    "TrafficSummary": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 132,
+        "end_line": 141,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficSummary:5ee54e50268395fe",
+        "signature_hash": "b901a163f7a88999"
+      }
+    ],
+    "K27DynamicNavigator": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 270,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:K27DynamicNavigator:dcb3e9a6ce62ca3d",
+        "signature_hash": "40bc97e0e06f534e"
+      }
+    ],
+    "K27DynamicNavigator.__init__": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 150,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.__init__:38cc610fb90c72cd",
+        "signature_hash": "eb0869bbca4a2264"
+      }
+    ],
+    "K27DynamicNavigator.traffic": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 154,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.traffic:9714802d49b7ec58",
+        "signature_hash": "426471c9f068eb81"
+      }
+    ],
+    "K27DynamicNavigator.record": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 160,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.record:e87893b062c8bf07",
+        "signature_hash": "a96d88c79c914ba6"
+      }
+    ],
+    "K27DynamicNavigator.register_route": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 177,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.register_route:ccb493315ad0c059",
+        "signature_hash": "e4a180408945f5bd"
+      }
+    ],
+    "K27DynamicNavigator.plan_invalidation": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 198,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.plan_invalidation:ef22c419bf18d4e3",
+        "signature_hash": "b4af862beca0272d"
+      }
+    ],
+    "K27DynamicNavigator.compile_effect": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 225,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.compile_effect:f66146f2c71b1a49",
+        "signature_hash": "c6caf67ee1623717"
+      }
+    ],
+    "K27DynamicNavigator.capture_at_use": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 227,
+        "end_line": 248,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.capture_at_use:9da6baaaf6bc752e",
+        "signature_hash": "0f12cb82bfc7ace5"
+      }
+    ],
+    "K27DynamicNavigator.classify_negative_scar": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 270,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.classify_negative_scar:b3bfd532db0c50b1",
+        "signature_hash": "1391480ce9935ae7"
+      }
+    ],
+    "summarize_traffic": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "function",
+        "line": 273,
+        "end_line": 304,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:summarize_traffic:da4631dd79c66e73",
+        "signature_hash": "10df9b719f3315e2"
       }
     ],
     "classify_hold": [
