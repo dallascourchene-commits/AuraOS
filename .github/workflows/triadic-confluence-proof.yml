@@ -1,0 +1,36 @@
+name: Triadic Confluence D0 Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena/triadic_confluence_runtime.py"
+      - "tests/test_triadic_confluence_runtime.py"
+      - "benchmarks/benchmark_triadic_confluence.py"
+      - "benchmarks/check_triadic_confluence_thresholds.py"
+      - "docs/TRIADIC_CONFLUENCE_IMPLEMENTATION.md"
+      - ".github/workflows/triadic-confluence-proof.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile D0 runtime
+        run: python -m py_compile tools/arena/triadic_confluence_runtime.py tests/test_triadic_confluence_runtime.py benchmarks/benchmark_triadic_confluence.py benchmarks/check_triadic_confluence_thresholds.py
+      - name: Unit tests
+        run: python -m unittest -v tests.test_triadic_confluence_runtime
+      - name: Structural refinement benchmark
+        run: python benchmarks/benchmark_triadic_confluence.py 10000 > triadic-confluence-benchmark.json
+      - name: Fail-closed structural thresholds
+        run: python benchmarks/check_triadic_confluence_thresholds.py triadic-confluence-benchmark.json
+      - name: Show receipt
+        run: cat triadic-confluence-benchmark.json
