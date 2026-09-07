@@ -1,0 +1,78 @@
+{
+  "schema_id": "AURA_PROJECT006_O17_NONADMIN_WINDOWS_LIVENESS_PROOF_V1",
+  "date": "2026-09-07",
+  "state": "ACHIEVED_REFERENCE_D0_NONPROMOTING",
+  "physical_acceptance": false,
+  "gate10": false,
+  "objective": "Repair the real owner-host Task Scheduler privilege mismatch without weakening Project006 admission, outbox, currentness, or provider authority; add a truthful non-admin Windows user-session fallback and make wake-from-stopped a separate empirical obligation.",
+  "foreign_parents": [
+    {
+      "kind": "CURRENT_WAKE_OUTBOX_OWNER",
+      "ref": "GitHub PR896",
+      "exact_head": "fb13d33f6cacef313493dc819a57d805bff002e4"
+    },
+    {
+      "kind": "PHYSICAL_TRANSPORT_DEPLOYMENT_GAP",
+      "ref": "Drive 18ZsY5e2KLzQLBr8ConI1qp7PxL-giOFRzashya6-nvM",
+      "receipt_root": "63bd689819fa73eac147bee629094c1dd0b1541f9d1113e66ccd942b42faee4a"
+    }
+  ],
+  "real_host_falsifier": {
+    "operation": "Register-ScheduledTask",
+    "observed_failure": "Access is denied",
+    "credit": "MATERIAL_INPUT_NOT_CLOSED_PHYSICAL_PROOF"
+  },
+  "keepers": [
+    "ScheduledTaskInstall != GuaranteedNonAdminInstall",
+    "UserSessionAutostart != BootLevelLiveness",
+    "WindowsProcessAlive != WSLWakeSucceeded",
+    "ImmediateCanaryReturn != WakeFromStoppedProof",
+    "WakeAttempt != CommandConsumed != OutboundReturn",
+    "PhysicalProviderSuccess != SeptemberProject006Deployment",
+    "ProviderRequestCountZero remains mandatory for the AWJ033 execution-false canary"
+  ],
+  "implementation": {
+    "semantic_branch_base": "fb13d33f6cacef313493dc819a57d805bff002e4",
+    "semantic_code_head_before_receipt": "2f41750facc794ed46e647261c5015d99fb99c97",
+    "files": {
+      "tools/project006/Install-AuraProject006Wake.ps1": "76b4674d293bb492f43cbadec07bc2036e45663ee1f45d7c67a4e846f96b8367",
+      "tools/project006/windows_reconcile_guardian.ps1": "6763135538ac910b56814a432630c58b502687f2cd3af36cc2a47d76b471e337",
+      "tools/project006/windows_liveness_contract.py": "529a17e16a3aa54bfd700da62eac2b1edd7727339ac9b10d6d2a4a1eb0ae306f",
+      "tools/project006/test_windows_liveness_fallback.py": "ea8627c3f777eb5ae797b2b4f0eaaaa8a550cd19cc077e1f6c72dda153371860",
+      "tools/project006/proof_windows_liveness_fallback_o17.py": "161b6ad41a5c575a1f17dbef7e89dd685a6e0b19277ef8591c0015106793c4e0"
+    }
+  },
+  "credited_local_proof": {
+    "fresh_venvs": 3,
+    "focused_tests_per_env": 8,
+    "focused_test_executions_total": 24,
+    "randomized_cases_per_env": 10000,
+    "randomized_cases_total": 30000,
+    "oracle_mismatches": 0,
+    "omega8_states": 6561,
+    "omega8_keepers": 2,
+    "omega8_invalid_accepts": 0,
+    "omega8_root": "4044fa5362b42181d3f203cc7ba6c010cdae16ccebad020f3558a0436caa1b4d",
+    "factored13d_states": 1594323,
+    "factored13d_keeper_contexts": 486,
+    "hard_invalid_contextual_repairs": 0,
+    "factored13d_root": "ece22e75e007b710da29f232aced37639075cfe58a8b34eff8c61623001aaf1d",
+    "hs1000_frozen_candidates": 1000,
+    "hs1000_consequence_groups": 6,
+    "hs1000_claimed_breakthroughs": 0,
+    "hs1000_freeze_root": "17315d5c0845df9438a981dc72229d2e5ce3b45dad63b3c6cc48a5e7f954ffe4",
+    "hs1000_quotient_root": "d9e123d157221cdcc07b982f05f8192119274ba8e7f25d933999123f698dac0a",
+    "proof_output_sha256_all_envs": "3562aa42dfac6861b5781af7e783789151614e778cb9bfdcdfb930f069844b54"
+  },
+  "hosted_exact_head_proof": "PENDING_CREDIT_ZERO_UNTIL_GREEN",
+  "physical_reopen": [
+    "Reconnect owner-host command relay or equivalent Windows control plane",
+    "Install exact semantic descendant of this branch without elevation",
+    "Observe Windows guardian heartbeat while WSL is running",
+    "Stop WSL",
+    "Require Windows guardian to restart WSL and consume the already-READY R4/AWJ033-equivalent command without a manual consumer invocation",
+    "Require a command-bound typed outbound Drive return and provider_request_count=0 for execution-false canary",
+    "Replay and prove no duplicate provider effect or terminal equivocation"
+  ],
+  "authority_ceiling": "D0 reference/installation design only; no host deployment in this objective, no provider call, no merge, no canonical promotion, no Gate10, no claim of boot/pre-login liveness."
+}
