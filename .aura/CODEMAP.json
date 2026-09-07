@@ -1070,7 +1070,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1717,
+    "repo_file_count": 1722,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1347,6 +1347,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/effect_return_atomicity/PROOF_RECEIPT_O10.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
       "artifacts/arena/memory_city_o14_effect_refinement/PROOF_RECEIPT_O14.json",
@@ -2703,6 +2704,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_return_atomicity.py",
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
@@ -2732,10 +2734,12 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_effect_return_atomicity.py",
       "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
       "tools/arena/campaign_memory_city_quotient_controllability.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_dynamic_navigator.py",
       "tools/arena/k27_invariant_route_cut.py",
@@ -2769,6 +2773,7 @@
       "tools/arena/memory_city_read_consequence.py",
       "tools/arena/memory_city_support_hydration.py",
       "tools/arena/memory_city_typed_closure.py",
+      "tools/arena/o10_erac_hyperscale.py",
       "tools/arena/o13_effect_handoff_hs1000.py",
       "tools/arena/o13_effect_handoff_lattice.py",
       "tools/arena/o14_effect_refinement_13d.py",
@@ -17917,6 +17922,53 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/effect_return_atomicity/PROOF_RECEIPT_O10.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4060,
+      "lines": 77,
+      "tokens_est": 1015,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "87299b93b72326fd",
+      "vector": [
+        -0.253273,
+        0.201383,
+        0.114899,
+        -0.011119,
+        0.043242,
+        0.184086,
+        0.018532,
+        0.238447,
+        0.06548,
+        -0.109957,
+        -0.080306,
+        -0.161847,
+        0.129725,
+        -0.231034,
+        0.253273,
+        0.223621,
+        -0.156905,
+        0.105015,
+        0.27304,
+        0.275511,
+        -0.216208,
+        -0.24586,
+        0.092661,
+        -0.154434,
+        0.233505,
+        -0.048184,
+        0.174202,
+        -0.0383,
+        0.263156,
+        -0.154434,
+        -0.19397,
+        -0.102544
       ]
     },
     {
@@ -104486,6 +104538,53 @@
       ]
     },
     {
+      "path": "tests/test_effect_return_atomicity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5221,
+      "lines": 62,
+      "tokens_est": 1306,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bbe61b42d6c688ff",
+      "vector": [
+        0.131815,
+        0.264737,
+        -0.138461,
+        -0.255876,
+        0.178338,
+        -0.231507,
+        -0.280245,
+        -0.027692,
+        0.187199,
+        -0.176122,
+        0.107446,
+        0.100799,
+        -0.19163,
+        0.271383,
+        -0.080861,
+        -0.10523,
+        -0.247014,
+        -0.24923,
+        -0.0432,
+        -0.231507,
+        0.074215,
+        -0.116307,
+        0.091938,
+        0.153968,
+        -0.169476,
+        0.171691,
+        -0.184984,
+        0.207137,
+        -0.222645,
+        -0.129599,
+        -0.054277,
+        -0.114092
+      ]
+    },
+    {
       "path": "tests/test_frame_address_immutability.py",
       "role": "python_module",
       "binary": false,
@@ -105849,6 +105948,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_effect_return_atomicity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4276,
+      "lines": 54,
+      "tokens_est": 1069,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6c3e1d0f7b88f8f8",
+      "vector": [
+        -0.087696,
+        0.046695,
+        -0.074029,
+        -0.035306,
+        0.087696,
+        0.160587,
+        0.226644,
+        0.190199,
+        0.233477,
+        0.085419,
+        -0.192476,
+        -0.185643,
+        0.222088,
+        0.190199,
+        -0.178809,
+        -0.28359,
+        0.2517,
+        0.119586,
+        -0.021639,
+        -0.165142,
+        -0.160587,
+        0.247144,
+        -0.069474,
+        0.105919,
+        -0.117308,
+        -0.240311,
+        -0.187921,
+        -0.210699,
+        -0.285867,
+        0.144642,
+        -0.212977,
+        -0.153753
+      ]
+    },
+    {
       "path": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "role": "python_module",
       "binary": false,
@@ -106034,6 +106180,53 @@
         0.17504,
         0.005646,
         -0.077921
+      ]
+    },
+    {
+      "path": "tools/arena/effect_return_atomicity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11011,
+      "lines": 239,
+      "tokens_est": 2753,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "18f56ff517030a56",
+      "vector": [
+        0.178467,
+        0.249411,
+        -0.12526,
+        -0.205071,
+        -0.094222,
+        0.072052,
+        0.047665,
+        0.276015,
+        0.060967,
+        -0.218373,
+        -0.278232,
+        0.193986,
+        0.216156,
+        -0.092005,
+        -0.087571,
+        0.129694,
+        0.049882,
+        -0.10309,
+        -0.244977,
+        -0.189552,
+        0.162948,
+        -0.041014,
+        -0.19842,
+        0.280449,
+        -0.171816,
+        -0.22059,
+        -0.182901,
+        0.171816,
+        0.034363,
+        0.233892,
+        0.205071,
+        -0.123043
       ]
     },
     {
@@ -107588,6 +107781,53 @@
       ]
     },
     {
+      "path": "tools/arena/o10_erac_hyperscale.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2010,
+      "lines": 40,
+      "tokens_est": 503,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2188e9bbab464532",
+      "vector": [
+        0.177971,
+        0.280948,
+        0.043653,
+        0.057085,
+        0.24513,
+        -0.238414,
+        0.283187,
+        0.088426,
+        -0.104096,
+        -0.251846,
+        -0.182449,
+        0.070517,
+        0.063801,
+        -0.267517,
+        -0.122005,
+        -0.202596,
+        -0.054847,
+        -0.097381,
+        -0.128721,
+        -0.079471,
+        0.189164,
+        -0.238414,
+        -0.012312,
+        -0.036937,
+        -0.173494,
+        -0.218267,
+        0.265278,
+        -0.077233,
+        -0.238414,
+        -0.22946,
+        0.012312,
+        -0.204835
+      ]
+    },
+    {
       "path": "tools/arena/o13_effect_handoff_hs1000.py",
       "role": "python_module",
       "binary": false,
@@ -108867,7 +109107,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788773193,
+  "generated_at_unix": 1788773746,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -109146,6 +109386,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/effect_return_atomicity/PROOF_RECEIPT_O10.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
       "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
       "artifacts/arena/memory_city_o14_effect_refinement/PROOF_RECEIPT_O14.json",
@@ -110502,6 +110743,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_return_atomicity.py",
       "tests/test_frame_address_immutability.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
@@ -110531,10 +110773,12 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_effect_return_atomicity.py",
       "tools/arena/campaign_memory_city_effect_handoff_o13.py",
       "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
       "tools/arena/campaign_memory_city_quotient_controllability.py",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_dynamic_navigator.py",
       "tools/arena/k27_invariant_route_cut.py",
@@ -110568,6 +110812,7 @@
       "tools/arena/memory_city_read_consequence.py",
       "tools/arena/memory_city_support_hydration.py",
       "tools/arena/memory_city_typed_closure.py",
+      "tools/arena/o10_erac_hyperscale.py",
       "tools/arena/o13_effect_handoff_hs1000.py",
       "tools/arena/o13_effect_handoff_lattice.py",
       "tools/arena/o14_effect_refinement_13d.py",
@@ -267911,6 +268156,186 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_effect_return_atomicity.py#class:ERACFocused:21c118a30a1f8c18",
+        "name": "ERACFocused",
+        "kind": "class",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 18,
+        "end_line": 59,
+        "signature_hash": "61eaf943ab4a7451",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#function:fixture:0046713bc1b6db22",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 11,
+        "end_line": 16,
+        "signature_hash": "208e967207c711b9",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#function:hx:f35e63665d519e9e",
+        "name": "hx",
+        "kind": "function",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "9597dfd9c862d918",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_ack_allows_first_call:f9cc6a630d7920e5",
+        "name": "ERACFocused.test_ack_allows_first_call",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "69a38894e6ef5d98",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_admitted_writes_ack_first:684c4310a013bd7f",
+        "name": "ERACFocused.test_admitted_writes_ack_first",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "f56809453c8d13f1",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_auth_movement_rebinds:e90c2e0914c018e8",
+        "name": "ERACFocused.test_auth_movement_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 47,
+        "end_line": 49,
+        "signature_hash": "6b879f37cbc96728",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_capability_movement_rebinds:54cf6e1d6b4bc1a4",
+        "name": "ERACFocused.test_capability_movement_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "df1f30b55895fe7a",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_context_axes_cannot_repair_hard_invalid:fd7f846a539fa2df",
+        "name": "ERACFocused.test_context_axes_cannot_repair_hard_invalid",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "f83bb830ad5803a2",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_d0_never_mints_authority:2ee1fd67b4aa69d5",
+        "name": "ERACFocused.test_d0_never_mints_authority",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "8fece713a7c70d71",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_effect_attempt_root_binds_payload_and_key:ef715c1b41192d08",
+        "name": "ERACFocused.test_effect_attempt_root_binds_payload_and_key",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "63b41300eb537c06",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_idempotent_ambiguous_retries_exact:47e12ae5f4330fe1",
+        "name": "ERACFocused.test_idempotent_ambiguous_retries_exact",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "04937f8de16d4b09",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_intent_movement_rebinds:8e441872b9aac6f3",
+        "name": "ERACFocused.test_intent_movement_rebinds",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "8245b837796cc001",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_negative_decision_returns:d881e4c5f274d993",
+        "name": "ERACFocused.test_negative_decision_returns",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "d1c9bad2805ca98e",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_nonretryable_ambiguous_holds:62cae8dfc980dcad",
+        "name": "ERACFocused.test_nonretryable_ambiguous_holds",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "b338a292103ffa30",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_queryable_ambiguous_queries:a0dbb32ae4d2bf82",
+        "name": "ERACFocused.test_queryable_ambiguous_queries",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 29,
+        "end_line": 31,
+        "signature_hash": "767d9cff4cf0b0b9",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_result_never_recalls_provider:d591d08af2509461",
+        "name": "ERACFocused.test_result_never_recalls_provider",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 35,
+        "end_line": 37,
+        "signature_hash": "480946736d5ea2e7",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_return_written_terminal:206ee26584b435f2",
+        "name": "ERACFocused.test_return_written_terminal",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "f7f43632777fef9d",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_same_key_different_payload_holds:baf1fee5c451321d",
+        "name": "ERACFocused.test_same_key_different_payload_holds",
+        "kind": "method",
+        "file": "tests/test_effect_return_atomicity.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "75e85efc3ba06674",
+        "file_digest8": "bbe61b42d6c688ff"
+      },
+      {
         "semantic_id": "tests/test_frame_address_immutability.py#class:FrameAddressImmutabilityTests:29b7f1bfec59b129",
         "name": "FrameAddressImmutabilityTests",
         "kind": "class",
@@ -271601,6 +272026,46 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:hx:3b952e103fe1774b",
+        "name": "hx",
+        "kind": "function",
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "9597dfd9c862d918",
+        "file_digest8": "6c3e1d0f7b88f8f8"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:make:b8460d3b5deaadef",
+        "name": "make",
+        "kind": "function",
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "line": 7,
+        "end_line": 12,
+        "signature_hash": "fa9e1cd69aec32e6",
+        "file_digest8": "6c3e1d0f7b88f8f8"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:run:e3b09928e1bded43",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "line": 34,
+        "end_line": 51,
+        "signature_hash": "7948fa120ff468b2",
+        "file_digest8": "6c3e1d0f7b88f8f8"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:scenario:c53c6134ff0ce45f",
+        "name": "scenario",
+        "kind": "function",
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "line": 14,
+        "end_line": 32,
+        "signature_hash": "b3d89b11416f3f19",
+        "file_digest8": "6c3e1d0f7b88f8f8"
+      },
+      {
         "semantic_id": "tools/arena/campaign_memory_city_effect_handoff_o13.py#function:fixtures:d86ee6df99570e23",
         "name": "fixtures",
         "kind": "function",
@@ -272009,6 +272474,236 @@
         "end_line": 74,
         "signature_hash": "6cca0427257ffe2f",
         "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Action:cb6184229e5a7a61",
+        "name": "Action",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 51,
+        "end_line": 61,
+        "signature_hash": "aeff42a0655b7485",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:DurableEffectState:85487b567299a543",
+        "name": "DurableEffectState",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 107,
+        "end_line": 135,
+        "signature_hash": "40d94524b4c88f72",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectContract:a4bb756b4fc9f393",
+        "name": "EffectContract",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 65,
+        "end_line": 79,
+        "signature_hash": "0be891ec1ae8127a",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectIntent:1d0ea9f10367995f",
+        "name": "EffectIntent",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 83,
+        "end_line": 103,
+        "signature_hash": "f0173f902a8a994e",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Phase:bda145b0cbfa4e33",
+        "name": "Phase",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 40,
+        "end_line": 48,
+        "signature_hash": "5ed0b551036abbaa",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryContext:bffb26539dc93d91",
+        "name": "RecoveryContext",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 139,
+        "end_line": 154,
+        "signature_hash": "63c1667687edfe0d",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryDecision:acd5c7a9f7034022",
+        "name": "RecoveryDecision",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 158,
+        "end_line": 172,
+        "signature_hash": "7e6bde07fc4dcbb3",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryMode:62b22c69a62d7d1a",
+        "name": "RecoveryMode",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "f4798767cbd25b4f",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_id:47c3fe8fd9dba651",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_nn:df3f2c7a48889097",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "111700e86562b752",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_root:26f14279e478dee3",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:compile_initial_state:cdfc1961f4f75b78",
+        "name": "compile_initial_state",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 175,
+        "end_line": 187,
+        "signature_hash": "0a12b50d975fe572",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:decide_recovery:8b51f52175f87b54",
+        "name": "decide_recovery",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 197,
+        "end_line": 229,
+        "signature_hash": "4b9c60f261f495ae",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:digest:3035af4e3c569183",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "ca4017d839035e05",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:effect_attempt_root:8f1c6a323baff38b",
+        "name": "effect_attempt_root",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 190,
+        "end_line": 194,
+        "signature_hash": "05e9c11b28b0e397",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:hard13d_erac:d71e32e2e189fe6d",
+        "name": "hard13d_erac",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 232,
+        "end_line": 238,
+        "signature_hash": "2685a603736596df",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:DurableEffectState.__post_init__:5f8e5cd470a91d8e",
+        "name": "DurableEffectState.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 124,
+        "end_line": 135,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.__post_init__:0619c8725bcb75d3",
+        "name": "EffectContract.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 70,
+        "end_line": 74,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.contract_root:9f8d7703533536a2",
+        "name": "EffectContract.contract_root",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "674ed695d58d29da",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.__post_init__:3937a277a1a8e8f9",
+        "name": "EffectIntent.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 91,
+        "end_line": 96,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.identity_root:ac108adf2414f4a2",
+        "name": "EffectIntent.identity_root",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 99,
+        "end_line": 103,
+        "signature_hash": "58a8d7e492dc7d88",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryContext.__post_init__:eb3e606c7c9e988b",
+        "name": "RecoveryContext.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 149,
+        "end_line": 154,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryDecision.__post_init__:13b1cd78a451f3d7",
+        "name": "RecoveryDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 167,
+        "end_line": 172,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
@@ -276821,6 +277516,16 @@
         "file_digest8": "d6597c67f1fefb34"
       },
       {
+        "semantic_id": "tools/arena/o10_erac_hyperscale.py#function:run:bf84caadcdb3c979",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o10_erac_hyperscale.py",
+        "line": 5,
+        "end_line": 37,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "2188e9bbab464532"
+      },
+      {
         "semantic_id": "tools/arena/o13_effect_handoff_hs1000.py#function:frozen_cells:171730abba4b2612",
         "name": "frozen_cells",
         "kind": "function",
@@ -278171,8 +278876,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "6213d253b4f96c8a2d1df200bd6938bf",
-    "payload_hash": "ca5c7a04aacb0c54389dc528f3998ae5"
+    "record_fingerprint": "4328a4c7f9036134c008c5faa674e082",
+    "payload_hash": "d0aae0e30ad80ee414de25cd7d9420b9"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -278185,16 +278890,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1717,
-      "bytes": 26899975,
-      "tokens_est": 6715359,
+      "files": 1722,
+      "bytes": 26926553,
+      "tokens_est": 6722005,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1060,
-        "schema_or_lexicon": 282,
+        "python_module": 1064,
+        "schema_or_lexicon": 283,
         "support_file": 49
       }
     },
@@ -278881,16 +279586,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1717,
-    "total_bytes": 26899975,
-    "text_tokens_est": 6715359,
+    "file_count": 1722,
+    "total_bytes": 26926553,
+    "text_tokens_est": 6722005,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1060,
-      "schema_or_lexicon": 282,
+      "python_module": 1064,
+      "schema_or_lexicon": 283,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -280121,6 +280826,14 @@
         "signature_hash": "d981aa5a48724e5c"
       },
       {
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 51,
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:run:e3b09928e1bded43",
+        "signature_hash": "7948fa120ff468b2"
+      },
+      {
         "file": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
         "kind": "function",
         "line": 91,
@@ -280151,6 +280864,14 @@
         "end_line": 78,
         "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:run:4f65f9b8b62a1a9c",
         "signature_hash": "fbfdf6eacf736b3d"
+      },
+      {
+        "file": "tools/arena/o10_erac_hyperscale.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 37,
+        "semantic_id": "tools/arena/o10_erac_hyperscale.py#function:run:bf84caadcdb3c979",
+        "signature_hash": "26799ab4ad82cbfb"
       },
       {
         "file": "tools/arena/o13_effect_handoff_hs1000.py",
@@ -296719,6 +297440,14 @@
         "signature_hash": "3c60ab9e6d97eef8"
       },
       {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:digest:3035af4e3c569183",
+        "signature_hash": "ca4017d839035e05"
+      },
+      {
         "file": "tools/arena/frontier27_runtime.py",
         "kind": "function",
         "line": 21,
@@ -311121,6 +311850,14 @@
         "end_line": 126,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_id:0f03725d6ec856da",
         "signature_hash": "2cc123d979c37fb2"
+      },
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_id:47c3fe8fd9dba651",
+        "signature_hash": "d64cfb03b3a12a79"
       },
       {
         "file": "tools/arena/memory_city_effect_handoff_o13.py",
@@ -376219,6 +376956,14 @@
         "signature_hash": "359c484fcebcc325"
       },
       {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_root:26f14279e478dee3",
+        "signature_hash": "9af4f640541857b1"
+      },
+      {
         "file": "tools/arena/memory_city_consequence_refinement.py",
         "kind": "function",
         "line": 10,
@@ -390131,6 +390876,14 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 16,
+        "semantic_id": "tests/test_effect_return_atomicity.py#function:fixture:0046713bc1b6db22",
+        "signature_hash": "208e967207c711b9"
       },
       {
         "file": "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
@@ -434081,6 +434834,248 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "hx": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tests/test_effect_return_atomicity.py#function:hx:f35e63665d519e9e",
+        "signature_hash": "9597dfd9c862d918"
+      },
+      {
+        "file": "tests/test_memory_city_component_correct_read_consequence.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_memory_city_component_correct_read_consequence.py#function:hx:3dd63a5d0ffbe6ab",
+        "signature_hash": "9597dfd9c862d918"
+      },
+      {
+        "file": "tests/test_memory_city_effect_handoff_o13.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tests/test_memory_city_effect_handoff_o13.py#function:hx:b24d082797d353e9",
+        "signature_hash": "61010034d3768ca9"
+      },
+      {
+        "file": "tests/test_memory_city_effect_refinement_handoff_o14.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tests/test_memory_city_effect_refinement_handoff_o14.py#function:hx:2c984dd78fc342cb",
+        "signature_hash": "61010034d3768ca9"
+      },
+      {
+        "file": "tests/test_memory_city_mode_sealed_admission.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tests/test_memory_city_mode_sealed_admission.py#function:hx:e7a5f151324ca94f",
+        "signature_hash": "9597dfd9c862d918"
+      },
+      {
+        "file": "tests/test_memory_city_read_consequence.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_memory_city_read_consequence.py#function:hx:91379711481bd87e",
+        "signature_hash": "9597dfd9c862d918"
+      },
+      {
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:hx:3b952e103fe1774b",
+        "signature_hash": "9597dfd9c862d918"
+      },
+      {
+        "file": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/campaign_memory_city_effect_handoff_o13.py#function:hx:659c0b04d089a6be",
+        "signature_hash": "61010034d3768ca9"
+      },
+      {
+        "file": "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py#function:hx:afe62eab047b446a",
+        "signature_hash": "61010034d3768ca9"
+      },
+      {
+        "file": "tools/arena/o13_effect_handoff_lattice.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/arena/o13_effect_handoff_lattice.py#function:hx:016378975db2eb37",
+        "signature_hash": "61010034d3768ca9"
+      }
+    ],
+    "ERACFocused": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 59,
+        "semantic_id": "tests/test_effect_return_atomicity.py#class:ERACFocused:21c118a30a1f8c18",
+        "signature_hash": "61eaf943ab4a7451"
+      }
+    ],
+    "ERACFocused.test_negative_decision_returns": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_negative_decision_returns:d881e4c5f274d993",
+        "signature_hash": "d1c9bad2805ca98e"
+      }
+    ],
+    "ERACFocused.test_admitted_writes_ack_first": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_admitted_writes_ack_first:684c4310a013bd7f",
+        "signature_hash": "f56809453c8d13f1"
+      }
+    ],
+    "ERACFocused.test_ack_allows_first_call": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_ack_allows_first_call:f9cc6a630d7920e5",
+        "signature_hash": "69a38894e6ef5d98"
+      }
+    ],
+    "ERACFocused.test_idempotent_ambiguous_retries_exact": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_idempotent_ambiguous_retries_exact:47e12ae5f4330fe1",
+        "signature_hash": "04937f8de16d4b09"
+      }
+    ],
+    "ERACFocused.test_queryable_ambiguous_queries": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_queryable_ambiguous_queries:a0dbb32ae4d2bf82",
+        "signature_hash": "767d9cff4cf0b0b9"
+      }
+    ],
+    "ERACFocused.test_nonretryable_ambiguous_holds": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_nonretryable_ambiguous_holds:62cae8dfc980dcad",
+        "signature_hash": "b338a292103ffa30"
+      }
+    ],
+    "ERACFocused.test_result_never_recalls_provider": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_result_never_recalls_provider:d591d08af2509461",
+        "signature_hash": "480946736d5ea2e7"
+      }
+    ],
+    "ERACFocused.test_return_written_terminal": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_return_written_terminal:206ee26584b435f2",
+        "signature_hash": "f7f43632777fef9d"
+      }
+    ],
+    "ERACFocused.test_same_key_different_payload_holds": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_same_key_different_payload_holds:baf1fee5c451321d",
+        "signature_hash": "75e85efc3ba06674"
+      }
+    ],
+    "ERACFocused.test_capability_movement_rebinds": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_capability_movement_rebinds:54cf6e1d6b4bc1a4",
+        "signature_hash": "df1f30b55895fe7a"
+      }
+    ],
+    "ERACFocused.test_auth_movement_rebinds": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 49,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_auth_movement_rebinds:e90c2e0914c018e8",
+        "signature_hash": "6b879f37cbc96728"
+      }
+    ],
+    "ERACFocused.test_intent_movement_rebinds": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_intent_movement_rebinds:8e441872b9aac6f3",
+        "signature_hash": "8245b837796cc001"
+      }
+    ],
+    "ERACFocused.test_d0_never_mints_authority": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_d0_never_mints_authority:2ee1fd67b4aa69d5",
+        "signature_hash": "8fece713a7c70d71"
+      }
+    ],
+    "ERACFocused.test_effect_attempt_root_binds_payload_and_key": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_effect_attempt_root_binds_payload_and_key:ef715c1b41192d08",
+        "signature_hash": "63b41300eb537c06"
+      }
+    ],
+    "ERACFocused.test_context_axes_cannot_repair_hard_invalid": [
+      {
+        "file": "tests/test_effect_return_atomicity.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tests/test_effect_return_atomicity.py#method:ERACFocused.test_context_axes_cannot_repair_hard_invalid:fd7f846a539fa2df",
+        "signature_hash": "f83bb830ad5803a2"
+      }
+    ],
     "FrameAddressImmutabilityTests": [
       {
         "file": "tests/test_frame_address_immutability.py",
@@ -435463,72 +436458,6 @@
         "end_line": 28,
         "semantic_id": "tests/test_memory_city_anchor_locator.py#method:AnchorTests.test_reordered_anchors_hold:59fc5b34ba84e75d",
         "signature_hash": "5be4f43a7a18592a"
-      }
-    ],
-    "hx": [
-      {
-        "file": "tests/test_memory_city_component_correct_read_consequence.py",
-        "kind": "function",
-        "line": 12,
-        "end_line": 12,
-        "semantic_id": "tests/test_memory_city_component_correct_read_consequence.py#function:hx:3dd63a5d0ffbe6ab",
-        "signature_hash": "9597dfd9c862d918"
-      },
-      {
-        "file": "tests/test_memory_city_effect_handoff_o13.py",
-        "kind": "function",
-        "line": 35,
-        "end_line": 36,
-        "semantic_id": "tests/test_memory_city_effect_handoff_o13.py#function:hx:b24d082797d353e9",
-        "signature_hash": "61010034d3768ca9"
-      },
-      {
-        "file": "tests/test_memory_city_effect_refinement_handoff_o14.py",
-        "kind": "function",
-        "line": 38,
-        "end_line": 39,
-        "semantic_id": "tests/test_memory_city_effect_refinement_handoff_o14.py#function:hx:2c984dd78fc342cb",
-        "signature_hash": "61010034d3768ca9"
-      },
-      {
-        "file": "tests/test_memory_city_mode_sealed_admission.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 10,
-        "semantic_id": "tests/test_memory_city_mode_sealed_admission.py#function:hx:e7a5f151324ca94f",
-        "signature_hash": "9597dfd9c862d918"
-      },
-      {
-        "file": "tests/test_memory_city_read_consequence.py",
-        "kind": "function",
-        "line": 11,
-        "end_line": 11,
-        "semantic_id": "tests/test_memory_city_read_consequence.py#function:hx:91379711481bd87e",
-        "signature_hash": "9597dfd9c862d918"
-      },
-      {
-        "file": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
-        "kind": "function",
-        "line": 19,
-        "end_line": 20,
-        "semantic_id": "tools/arena/campaign_memory_city_effect_handoff_o13.py#function:hx:659c0b04d089a6be",
-        "signature_hash": "61010034d3768ca9"
-      },
-      {
-        "file": "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 17,
-        "semantic_id": "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py#function:hx:afe62eab047b446a",
-        "signature_hash": "61010034d3768ca9"
-      },
-      {
-        "file": "tools/arena/o13_effect_handoff_lattice.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 18,
-        "semantic_id": "tools/arena/o13_effect_handoff_lattice.py#function:hx:016378975db2eb37",
-        "signature_hash": "61010034d3768ca9"
       }
     ],
     "loc": [
@@ -437673,7 +438602,25 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "make": [
+      {
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 12,
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:make:b8460d3b5deaadef",
+        "signature_hash": "fa9e1cd69aec32e6"
+      }
+    ],
     "scenario": [
+      {
+        "file": "tools/arena/campaign_effect_return_atomicity.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 32,
+        "semantic_id": "tools/arena/campaign_effect_return_atomicity.py#function:scenario:c53c6134ff0ce45f",
+        "signature_hash": "b3d89b11416f3f19"
+      },
       {
         "file": "tools/arena/campaign_memory_city_effect_handoff_o13.py",
         "kind": "function",
@@ -437999,6 +438946,246 @@
         "end_line": 268,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
         "signature_hash": "033c7cd0343e1003"
+      }
+    ],
+    "_nn": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_nn:df3f2c7a48889097",
+        "signature_hash": "111700e86562b752"
+      },
+      {
+        "file": "tools/arena/memory_city_consequence_refinement.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": "tools/arena/memory_city_consequence_refinement.py#function:_nn:9e229fb99e209db1",
+        "signature_hash": "45f8eb8a4604ea27"
+      },
+      {
+        "file": "tools/arena/memory_city_effect_handoff_o13.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 50,
+        "semantic_id": "tools/arena/memory_city_effect_handoff_o13.py#function:_nn:37a84234f9bd2d9c",
+        "signature_hash": "111700e86562b752"
+      }
+    ],
+    "RecoveryMode": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryMode:62b22c69a62d7d1a",
+        "signature_hash": "f4798767cbd25b4f"
+      }
+    ],
+    "Phase": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 48,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Phase:bda145b0cbfa4e33",
+        "signature_hash": "5ed0b551036abbaa"
+      }
+    ],
+    "Action": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 61,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Action:cb6184229e5a7a61",
+        "signature_hash": "aeff42a0655b7485"
+      }
+    ],
+    "EffectContract": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 79,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectContract:a4bb756b4fc9f393",
+        "signature_hash": "0be891ec1ae8127a"
+      }
+    ],
+    "EffectContract.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 74,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.__post_init__:0619c8725bcb75d3",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectContract.contract_root": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.contract_root:9f8d7703533536a2",
+        "signature_hash": "674ed695d58d29da"
+      }
+    ],
+    "EffectIntent": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 103,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectIntent:1d0ea9f10367995f",
+        "signature_hash": "f0173f902a8a994e"
+      },
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectIntent:d9ab361e9e06de74",
+        "signature_hash": "f0173f902a8a994e"
+      },
+      {
+        "file": "tools/arena/memory_city_consequence_refinement.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tools/arena/memory_city_consequence_refinement.py#class:EffectIntent:febef1f69c9a3b8a",
+        "signature_hash": "f0173f902a8a994e"
+      }
+    ],
+    "EffectIntent.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 96,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.__post_init__:3937a277a1a8e8f9",
+        "signature_hash": "175e4972e4d2d582"
+      },
+      {
+        "file": "tools/arena/memory_city_consequence_refinement.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/arena/memory_city_consequence_refinement.py#method:EffectIntent.__post_init__:5fe480655e3a7501",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectIntent.identity_root": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 103,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.identity_root:ac108adf2414f4a2",
+        "signature_hash": "58a8d7e492dc7d88"
+      }
+    ],
+    "DurableEffectState": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 135,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:DurableEffectState:85487b567299a543",
+        "signature_hash": "40d94524b4c88f72"
+      }
+    ],
+    "DurableEffectState.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 135,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:DurableEffectState.__post_init__:5f8e5cd470a91d8e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RecoveryContext": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 139,
+        "end_line": 154,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryContext:bffb26539dc93d91",
+        "signature_hash": "63c1667687edfe0d"
+      }
+    ],
+    "RecoveryContext.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 154,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryContext.__post_init__:eb3e606c7c9e988b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RecoveryDecision": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 158,
+        "end_line": 172,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryDecision:acd5c7a9f7034022",
+        "signature_hash": "7e6bde07fc4dcbb3"
+      }
+    ],
+    "RecoveryDecision.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 172,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryDecision.__post_init__:13b1cd78a451f3d7",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "compile_initial_state": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 187,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:compile_initial_state:cdfc1961f4f75b78",
+        "signature_hash": "0a12b50d975fe572"
+      }
+    ],
+    "effect_attempt_root": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 194,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:effect_attempt_root:8f1c6a323baff38b",
+        "signature_hash": "05e9c11b28b0e397"
+      }
+    ],
+    "decide_recovery": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 229,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:decide_recovery:8b51f52175f87b54",
+        "signature_hash": "4b9c60f261f495ae"
+      }
+    ],
+    "hard13d_erac": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 232,
+        "end_line": 238,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:hard13d_erac:d71e32e2e189fe6d",
+        "signature_hash": "2685a603736596df"
       }
     ],
     "stable": [
@@ -438829,24 +440016,6 @@
         "end_line": 26,
         "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:LawField:b14151d3d3f3d1d6",
         "signature_hash": "5ad051463526d163"
-      }
-    ],
-    "EffectIntent": [
-      {
-        "file": "tools/arena/k27_dynamic_navigator.py",
-        "kind": "class",
-        "line": 28,
-        "end_line": 29,
-        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectIntent:d9ab361e9e06de74",
-        "signature_hash": "f0173f902a8a994e"
-      },
-      {
-        "file": "tools/arena/memory_city_consequence_refinement.py",
-        "kind": "class",
-        "line": 37,
-        "end_line": 45,
-        "semantic_id": "tools/arena/memory_city_consequence_refinement.py#class:EffectIntent:febef1f69c9a3b8a",
-        "signature_hash": "f0173f902a8a994e"
       }
     ],
     "EffectDisposition": [
@@ -440959,24 +442128,6 @@
         "signature_hash": "0e09941d2e5bc02d"
       }
     ],
-    "_nn": [
-      {
-        "file": "tools/arena/memory_city_consequence_refinement.py",
-        "kind": "function",
-        "line": 13,
-        "end_line": 15,
-        "semantic_id": "tools/arena/memory_city_consequence_refinement.py#function:_nn:9e229fb99e209db1",
-        "signature_hash": "45f8eb8a4604ea27"
-      },
-      {
-        "file": "tools/arena/memory_city_effect_handoff_o13.py",
-        "kind": "function",
-        "line": 47,
-        "end_line": 50,
-        "semantic_id": "tools/arena/memory_city_effect_handoff_o13.py#function:_nn:37a84234f9bd2d9c",
-        "signature_hash": "111700e86562b752"
-      }
-    ],
     "EffectObligationProjection": [
       {
         "file": "tools/arena/memory_city_consequence_refinement.py",
@@ -440994,16 +442145,6 @@
         "line": 30,
         "end_line": 34,
         "semantic_id": "tools/arena/memory_city_consequence_refinement.py#method:EffectObligationProjection.__post_init__:2874787f0ca6c9d7",
-        "signature_hash": "175e4972e4d2d582"
-      }
-    ],
-    "EffectIntent.__post_init__": [
-      {
-        "file": "tools/arena/memory_city_consequence_refinement.py",
-        "kind": "method",
-        "line": 41,
-        "end_line": 42,
-        "semantic_id": "tools/arena/memory_city_consequence_refinement.py#method:EffectIntent.__post_init__:5fe480655e3a7501",
         "signature_hash": "175e4972e4d2d582"
       }
     ],

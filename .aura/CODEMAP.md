@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1717
-- **total_bytes**: 26899975
-- **text_tokens_est**: 6715359
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1060, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1722
+- **total_bytes**: 26926553
+- **text_tokens_est**: 6722005
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1064, 'schema_or_lexicon': 283, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1717,
+  "repo_file_count": 1722,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -300,6 +300,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/effect_return_atomicity/PROOF_RECEIPT_O10.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
     "artifacts/arena/memory_city_o14_effect_refinement/PROOF_RECEIPT_O14.json",
@@ -1656,6 +1657,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_consequence_admission_kernel.py",
+    "tests/test_effect_return_atomicity.py",
     "tests/test_frame_address_immutability.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
@@ -1685,10 +1687,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_effect_return_atomicity.py",
     "tools/arena/campaign_memory_city_effect_handoff_o13.py",
     "tools/arena/campaign_memory_city_effect_refinement_handoff_o14.py",
     "tools/arena/campaign_memory_city_quotient_controllability.py",
     "tools/arena/consequence_admission_kernel.py",
+    "tools/arena/effect_return_atomicity.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/k27_dynamic_navigator.py",
     "tools/arena/k27_invariant_route_cut.py",
@@ -1722,6 +1726,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_read_consequence.py",
     "tools/arena/memory_city_support_hydration.py",
     "tools/arena/memory_city_typed_closure.py",
+    "tools/arena/o10_erac_hyperscale.py",
     "tools/arena/o13_effect_handoff_hs1000.py",
     "tools/arena/o13_effect_handoff_lattice.py",
     "tools/arena/o14_effect_refinement_13d.py",
@@ -1857,16 +1862,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1717,
-  "bytes": 26899975,
-  "tokens_est": 6715359,
+  "files": 1722,
+  "bytes": 26926553,
+  "tokens_est": 6722005,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1060,
-    "schema_or_lexicon": 282,
+    "python_module": 1064,
+    "schema_or_lexicon": 283,
     "support_file": 49
   }
 }
