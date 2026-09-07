@@ -1062,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1679,
+    "repo_file_count": 1680,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2724,6 +2724,7 @@
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o4_effect_attempt_journal.py",
       "tools/project006/o4_owner_row_convergence.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
@@ -105783,6 +105784,53 @@
       ]
     },
     {
+      "path": "tools/project006/o4_effect_attempt_journal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6916,
+      "lines": 123,
+      "tokens_est": 1729,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "98149faaf4781977",
+      "vector": [
+        -0.255917,
+        -0.219812,
+        0.079642,
+        -0.058404,
+        -0.268659,
+        -0.122118,
+        0.200698,
+        0.064776,
+        -0.16247,
+        -0.141232,
+        0.270783,
+        0.130613,
+        0.0223,
+        -0.232555,
+        -0.156098,
+        0.113623,
+        -0.11787,
+        -0.092385,
+        -0.168841,
+        0.10088,
+        0.170965,
+        0.164594,
+        -0.262288,
+        0.255917,
+        -0.160346,
+        -0.253793,
+        -0.132737,
+        -0.149727,
+        -0.066899,
+        0.264412,
+        0.238926,
+        -0.054157
+      ]
+    },
+    {
       "path": "tools/project006/o4_owner_row_convergence.py",
       "role": "python_module",
       "binary": false,
@@ -107015,7 +107063,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788786732,
+  "generated_at_unix": 1788786816,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108679,6 +108727,7 @@
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o4_effect_attempt_journal.py",
       "tools/project006/o4_owner_row_convergence.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
@@ -270281,6 +270330,76 @@
         "file_digest8": "e076199c5c3983ac"
       },
       {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4EffectAttemptJournal:f8db5f2f9af0816c",
+        "name": "O4EffectAttemptJournal",
+        "kind": "class",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 34,
+        "end_line": 122,
+        "signature_hash": "754a0ccc9916c4e0",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4ProviderActionPermit:3ac7901116fb77e8",
+        "name": "O4ProviderActionPermit",
+        "kind": "class",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 22,
+        "end_line": 31,
+        "signature_hash": "49df931ccf210b30",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.__init__:b23e6a018609a69e",
+        "name": "O4EffectAttemptJournal.__init__",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "1f7191f1af3db8bb",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._permit:46c070c93bf1333e",
+        "name": "O4EffectAttemptJournal._permit",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 57,
+        "end_line": 64,
+        "signature_hash": "a70a973f8ef7cf9a",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._semantic:63b736f80f0bb6b8",
+        "name": "O4EffectAttemptJournal._semantic",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 49,
+        "end_line": 54,
+        "signature_hash": "5779cda475b2eff9",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.decide_and_persist:7318487e7db7f039",
+        "name": "O4EffectAttemptJournal.decide_and_persist",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 66,
+        "end_line": 122,
+        "signature_hash": "a7ef30185518849f",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4ProviderActionPermit.__post_init__:8623a92bb391a5d5",
+        "name": "O4ProviderActionPermit.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
         "semantic_id": "tools/project006/o4_owner_row_convergence.py#class:ProofAdmission:4e7477ce4a205734",
         "name": "ProofAdmission",
         "kind": "class",
@@ -272281,8 +272400,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "67d53f1eb909e120d1f1febd49c0958d",
-    "payload_hash": "59852a11c9eec762ad301810ea6a5f8a"
+    "record_fingerprint": "1ab66aadf02d2cb33da3084369932c1e",
+    "payload_hash": "e72261ba5ec0bcfd9c5f9924a910dfd6"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272295,15 +272414,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1679,
-      "bytes": 26668664,
-      "tokens_est": 6657520,
+      "files": 1680,
+      "bytes": 26675580,
+      "tokens_est": 6659249,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1024,
+        "python_module": 1025,
         "schema_or_lexicon": 277,
         "support_file": 53
       }
@@ -272991,15 +273110,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1679,
-    "total_bytes": 26668664,
-    "text_tokens_est": 6657520,
+    "file_count": 1680,
+    "total_bytes": 26675580,
+    "text_tokens_est": 6659249,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1024,
+      "python_module": 1025,
       "schema_or_lexicon": 277,
       "support_file": 53
     },
@@ -431989,6 +432108,76 @@
         "end_line": 522,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:hard_o11_state:dec2593e744d1640",
         "signature_hash": "ac106c0df04d850d"
+      }
+    ],
+    "O4ProviderActionPermit": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 31,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4ProviderActionPermit:3ac7901116fb77e8",
+        "signature_hash": "49df931ccf210b30"
+      }
+    ],
+    "O4ProviderActionPermit.__post_init__": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4ProviderActionPermit.__post_init__:8623a92bb391a5d5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "O4EffectAttemptJournal": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 122,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4EffectAttemptJournal:f8db5f2f9af0816c",
+        "signature_hash": "754a0ccc9916c4e0"
+      }
+    ],
+    "O4EffectAttemptJournal.__init__": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.__init__:b23e6a018609a69e",
+        "signature_hash": "1f7191f1af3db8bb"
+      }
+    ],
+    "O4EffectAttemptJournal._semantic": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 54,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._semantic:63b736f80f0bb6b8",
+        "signature_hash": "5779cda475b2eff9"
+      }
+    ],
+    "O4EffectAttemptJournal._permit": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 64,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._permit:46c070c93bf1333e",
+        "signature_hash": "a70a973f8ef7cf9a"
+      }
+    ],
+    "O4EffectAttemptJournal.decide_and_persist": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 122,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.decide_and_persist:7318487e7db7f039",
+        "signature_hash": "a7ef30185518849f"
       }
     ],
     "SemanticEffectIdentity": [
