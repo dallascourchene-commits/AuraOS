@@ -2,6 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable
 from k27_dynamic_navigator import digest
+from memory_city_ecf_adapter import ECFAdmissionIndex
 
 
 def _nonempty(value: str, field: str) -> str:
@@ -67,7 +68,7 @@ class VerifiedProbeEvidence:
     schema_root: str
     batch_root: str
 
-    def validate(self) -> None:
+    def validate(self):
         for field in (
             'evidence_id', 'probe_id', 'pre_state_root', 'post_state_root',
             'declared_effect', 'consequence_root', 'evidence_polarity',
@@ -82,12 +83,11 @@ class VerifiedProbeEvidence:
             'material_consequence', 'collision_checked', 'lawful_ancestry',
         )):
             raise ValueError('verified admission flags must be exact bool')
-        _hex64(self.observation_root, 'observation_root')
-        _hex64(self.schema_root, 'schema_root')
-        _hex64(self.batch_root, 'batch_root')
+        for field in ('observation_root', 'schema_root', 'batch_root'):
+            _hex64(getattr(self, field), field)
 
     @property
-    def evidence_root(self) -> str:
+    def evidence_root(self):
         self.validate()
         return digest({
             'schema': 'AURA-VERIFIED-PROBE-EVIDENCE-v1',
@@ -126,13 +126,12 @@ class ProbeAdmission:
 
 
 class ReflexiveTelemetryGate:
-    """D0 telemetry admission over evidence pre-verified by its rightful owner.
+    """D0 novelty admission over structural evidence plus current ECF ingress.
 
-    ProbeTransition fields are candidate assertions, never provenance. Novelty can
-    only be admitted when those assertions exactly cross-bind to a content-addressed
-    VerifiedProbeEvidence record whose batch root was independently admitted by the
-    upstream telemetry/evidence owner. This layer does not verify signatures, mint
-    authority, or infer truth from K27 locality.
+    Probe fields are candidate assertions, never provenance. The rightful ECF
+    owner must already have admitted an exact witness for the content-addressed
+    evidence root and current use cut. This gate does not authenticate signatures,
+    register producers, mint evidence/effect authority, or infer trust from K27.
     """
 
     def __init__(
@@ -140,27 +139,25 @@ class ReflexiveTelemetryGate:
         inherited_consequence_roots: Iterable[str] = (),
         *,
         evidence_records: Iterable[VerifiedProbeEvidence] = (),
-        verified_batch_roots: Iterable[str] = (),
+        ecf_index: ECFAdmissionIndex | None = None,
     ):
         self.inherited = set(inherited_consequence_roots)
         self.consumed_once = set()
         self.admitted = set()
+        self.ecf_index = ecf_index
         self._evidence = {}
         self._evidence_ids = set()
-        for record in evidence_records:
-            if not isinstance(record, VerifiedProbeEvidence):
+        for evidence in evidence_records:
+            if not isinstance(evidence, VerifiedProbeEvidence):
                 raise ValueError('evidence records must be VerifiedProbeEvidence')
-            root = record.evidence_root
-            if root in self._evidence or record.evidence_id in self._evidence_ids:
+            root = evidence.evidence_root
+            if root in self._evidence or evidence.evidence_id in self._evidence_ids:
                 raise ValueError('duplicate evidence identity')
-            self._evidence[root] = record
-            self._evidence_ids.add(record.evidence_id)
-        self._verified_batch_roots = set(verified_batch_roots)
-        for root in self._verified_batch_roots:
-            _hex64(root, 'verified_batch_root')
+            self._evidence[root] = evidence
+            self._evidence_ids.add(evidence.evidence_id)
 
     @staticmethod
-    def _transition_root(p: ProbeTransition) -> str:
+    def _transition_root(p):
         return digest({
             'probe_id': p.probe_id,
             'pre_state_root': p.pre_state_root,
@@ -173,7 +170,7 @@ class ReflexiveTelemetryGate:
         })
 
     @staticmethod
-    def _candidate_binding(p: ProbeTransition) -> tuple[object, ...]:
+    def _candidate_binding(p):
         return (
             p.probe_id, p.pre_state_root, p.post_state_root, p.declared_effect,
             p.consequence_root, p.material_consequence, p.collision_checked,
@@ -181,44 +178,49 @@ class ReflexiveTelemetryGate:
         )
 
     @staticmethod
-    def _evidence_binding(e: VerifiedProbeEvidence) -> tuple[object, ...]:
+    def _evidence_binding(e):
         return (
             e.probe_id, e.pre_state_root, e.post_state_root, e.declared_effect,
             e.consequence_root, e.material_consequence, e.collision_checked,
             e.lawful_ancestry, e.counterexample_root, e.evidence_polarity,
         )
 
-    def _hold(self, status: str, p: ProbeTransition, changed: bool, reason: str) -> ProbeAdmission:
+    def _hold(self, status, p, changed, reason):
         return ProbeAdmission(
             status, p.probe_id, changed, p.consequence_root,
             self._transition_root(p), False, False, reason, p.evidence_root,
         )
 
-    def _verified_evidence(self, p: ProbeTransition, changed: bool):
+    def _verified_evidence(self, p, changed):
         if not p.evidence_root:
             return None, self._hold(
                 'HOLD_NEEDS_VERIFIED_EVIDENCE', p, changed,
-                'novelty/support telemetry requires owner-verified evidence identity',
+                'novelty/support telemetry requires evidence identity',
             )
         evidence = self._evidence.get(p.evidence_root)
         if evidence is None:
             return None, self._hold(
                 'HOLD_EVIDENCE_NOT_FOUND', p, changed,
-                'evidence root is not present in the bound evidence index',
-            )
-        if evidence.batch_root not in self._verified_batch_roots:
-            return None, self._hold(
-                'HOLD_UNVERIFIED_EVIDENCE_BATCH', p, changed,
-                'evidence batch root has not been admitted by upstream owner',
+                'evidence root not present in structural evidence index',
             )
         if self._candidate_binding(p) != self._evidence_binding(evidence):
             return None, self._hold(
                 'HOLD_EVIDENCE_BINDING_MISMATCH', p, changed,
-                'caller assertions do not exactly match owner-verified evidence',
+                'caller assertions do not match structural evidence',
             )
+        if self.ecf_index is None:
+            return None, self._hold(
+                'HOLD_ECF_EVIDENCE_INGRESS_REQUIRED', p, changed,
+                'no current ECF evidence ingress bound',
+            )
+        admission = self.ecf_index.resolve(
+            p.evidence_root, scope='MEMORY_CITY_REFLEXIVE_TELEMETRY'
+        )
+        if admission.status != 'ADMITTED_EVIDENCE_D0':
+            return None, self._hold(admission.status, p, changed, admission.reason)
         return evidence, None
 
-    def admit(self, p: ProbeTransition) -> ProbeAdmission:
+    def admit(self, p):
         p.validate()
         changed = p.pre_state_root != p.post_state_root
         root = self._transition_root(p)
@@ -234,37 +236,37 @@ class ReflexiveTelemetryGate:
             return hold
         assert evidence is not None
 
-        # CONSUMED_ONCE local state is changed only after evidence has been verified,
-        # so an unverified caller cannot burn the one-use slot as a denial of service.
         if p.declared_effect == 'CONSUMED_ONCE' and p.probe_id in self.consumed_once:
             return ProbeAdmission(
-                'HOLD_CONSUMED_ONCE', p.probe_id, changed, evidence.consequence_root,
-                root, False, False, 'consumed-once probe reused', p.evidence_root,
+                'HOLD_CONSUMED_ONCE', p.probe_id, changed,
+                evidence.consequence_root, root, False, False,
+                'consumed-once probe reused', p.evidence_root,
             )
-
         if not evidence.lawful_ancestry or not evidence.collision_checked or not evidence.material_consequence:
             return ProbeAdmission(
                 'REJECT', p.probe_id, changed, evidence.consequence_root, root,
                 False, False, 'verified admission prerequisites failed', p.evidence_root,
             )
-
+        # Only owner-admitted evidence can consume a one-use slot.
         if p.declared_effect == 'CONSUMED_ONCE':
             self.consumed_once.add(p.probe_id)
-
         if evidence.consequence_root in self.inherited or evidence.consequence_root in self.admitted:
             return ProbeAdmission(
-                'SUPPORT_NOT_DISCOVERY', p.probe_id, changed, evidence.consequence_root,
-                root, not changed, False, 'consequence already represented', p.evidence_root,
+                'SUPPORT_NOT_DISCOVERY', p.probe_id, changed,
+                evidence.consequence_root, root, not changed, False,
+                'consequence already represented', p.evidence_root,
             )
         if not evidence.counterexample_root:
             return ProbeAdmission(
-                'HOLD_NEEDS_COUNTEREXAMPLE', p.probe_id, changed, evidence.consequence_root,
-                root, not changed, False, 'no verified discriminating counterexample', p.evidence_root,
+                'HOLD_NEEDS_COUNTEREXAMPLE', p.probe_id, changed,
+                evidence.consequence_root, root, not changed, False,
+                'no ECF-admitted discriminating counterexample', p.evidence_root,
             )
         self.admitted.add(evidence.consequence_root)
         return ProbeAdmission(
-            'ADMISSION_READY', p.probe_id, changed, evidence.consequence_root, root,
-            not changed, True, 'verified consequence-distinct counterexample survived D0 admission',
+            'ADMISSION_READY', p.probe_id, changed, evidence.consequence_root,
+            root, not changed, True,
+            'ECF-admitted consequence-distinct counterexample survived D0 admission',
             p.evidence_root,
         )
 
@@ -281,10 +283,10 @@ class ReflexiveTelemetryGate:
                     'probe pre-state does not equal prior post-state', p.evidence_root,
                 ))
                 break
-            a = self.admit(p)
-            out.append(a)
+            admission = self.admit(p)
+            out.append(admission)
             expected = p.post_state_root
-            if a.status.startswith('HOLD_') or a.status == 'REJECT':
+            if admission.status.startswith('HOLD_') or admission.status == 'REJECT':
                 break
         return tuple(out)
 
