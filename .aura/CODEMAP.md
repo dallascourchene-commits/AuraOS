@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1702
-- **total_bytes**: 26775246
-- **text_tokens_est**: 6684173
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1045, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1705
+- **total_bytes**: 26809688
+- **text_tokens_est**: 6692784
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 282, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1702,
+  "repo_file_count": 1705,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1667,6 +1667,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_anchor_locator.py",
     "tests/test_memory_city_contingent_hydration.py",
     "tests/test_memory_city_coverage_membrane.py",
+    "tests/test_memory_city_effect_handoff_o12c_r2.py",
     "tests/test_memory_city_horizon_fenced_handoff.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_navigator.py",
@@ -1679,6 +1680,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_memory_city_effect_handoff_o12c_r2.py",
     "tools/arena/campaign_memory_city_horizon_fenced_handoff.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
@@ -1702,6 +1704,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_coverage_membrane.py",
     "tools/arena/memory_city_coverage_membrane_campaign.py",
     "tools/arena/memory_city_coverage_membrane_hs1000.py",
+    "tools/arena/memory_city_effect_handoff_o12c_r2.py",
     "tools/arena/memory_city_horizon_fenced_handoff.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_mode_sealed_admission_campaign.py",
@@ -1842,15 +1845,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1702,
-  "bytes": 26775246,
-  "tokens_est": 6684173,
+  "files": 1705,
+  "bytes": 26809688,
+  "tokens_est": 6692784,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1045,
+    "python_module": 1048,
     "schema_or_lexicon": 282,
     "support_file": 49
   }
