@@ -13,7 +13,7 @@ from memory_city_coverage_membrane import AdmissionMode, PositiveTrace, compile_
 from memory_city_read_consequence import ReadWorldBinding, compile_read_consequence_certificate
 from memory_city_support_hydration import SupportClosedHydration
 from memory_city_typed_closure import REPROOF_SEMANTICS, TypedClosureCertificate, TypedClosureDisposition
-from memory_city_effect_handoff_o13 import EffectHandoffEvidence, HandoffDisposition, HandoffVerificationContext, MutationBoundaryProjection, compile_effect_handoff, digest
+from memory_city_effect_handoff_o13 import EffectHandoffEvidence, HandoffDecision, HandoffDisposition, HandoffVerificationContext, MutationBoundaryProjection, compile_effect_handoff, digest
 
 
 def hx(value: str) -> str:
@@ -61,42 +61,75 @@ def fixtures():
 def scenario(index: int):
     cert, kwargs = fixtures()
     mode = index % 8
-    expected = HandoffDisposition.HOLD_TECC_REQUIRED_D0 if mode == 0 else None
+    expected_disposition = HandoffDisposition.HOLD_TECC_REQUIRED_D0
+    expected_reason = "EXACT_CURRENT_OWNER_CROSS_BINDING_REQUIRES_INDEPENDENT_TECC"
     if mode == 1:
         kwargs["typed_closure"] = replace(kwargs["typed_closure"], reproof_semantics="")
-        expected = HandoffDisposition.HOLD
+        expected_disposition = HandoffDisposition.HOLD
+        expected_reason = "READ_OWNER_AT_T1_HOLD_REPROOF_SEMANTICS"
     elif mode == 2:
         kwargs["typed_closure"] = replace(kwargs["typed_closure"], receipt_root=hx(f"moved-{index}"))
-        expected = HandoffDisposition.HOLD
+        expected_disposition = HandoffDisposition.HOLD
+        expected_reason = "READ_OWNER_AT_T1_HOLD_ACTIVE_WORLD_MEMBERSHIP"
     elif mode == 3:
         kwargs["mutation"] = replace(kwargs["mutation"], holder=f"other-{index}")
-        expected = HandoffDisposition.REBIND_REQUIRED
+        expected_disposition = HandoffDisposition.REBIND_REQUIRED
+        expected_reason = "LEASE_IDENTITY_MOVED"
     elif mode == 4:
         kwargs["mutation"] = replace(kwargs["mutation"], expires_at=101 + (index % 17))
-        expected = HandoffDisposition.REBIND_REQUIRED
+        expected_disposition = HandoffDisposition.REBIND_REQUIRED
+        expected_reason = "LEASE_IDENTITY_MOVED"
     elif mode == 5:
         altered = dict(kwargs["admission"])
         altered["schema"] = "UNKNOWN-ADMISSION"
         kwargs["admission"] = altered
-        expected = HandoffDisposition.HOLD
+        expected_disposition = HandoffDisposition.HOLD
+        expected_reason = "ADMISSION_NOT_EXACT_CURRENT_OWNER_OUTPUT"
     elif mode == 6:
         cert = replace(cert, effect_authority=True)
-        expected = HandoffDisposition.HOLD
+        expected_disposition = HandoffDisposition.HOLD
+        expected_reason = "READ_CERTIFICATE_AUTHORITY_ESCALATION"
     elif mode == 7:
         cert = replace(cert, consequence_root=hx(f"forged-{index}"))
-        expected = HandoffDisposition.HOLD
-    return cert, kwargs, expected, mode
+        expected_disposition = HandoffDisposition.HOLD
+        expected_reason = "READ_CERTIFICATE_CONSEQUENCE_ROOT_FORGED"
+    return cert, kwargs, expected_disposition, expected_reason, mode
+
+
+def oracle_matches(decision, expected_disposition: HandoffDisposition, expected_reason: str) -> bool:
+    """Require the exact recovery/hold class and exact semantic reason, not merely non-effect."""
+    return decision.disposition is expected_disposition and decision.reason == expected_reason
+
+
+def oracle_self_test() -> bool:
+    """Prove the campaign oracle detects the historical blind spot: HOLD substituted for REBIND."""
+    wrong = HandoffDecision(HandoffDisposition.HOLD, "LEASE_IDENTITY_MOVED")
+    return not oracle_matches(wrong, HandoffDisposition.REBIND_REQUIRED, "LEASE_IDENTITY_MOVED")
 
 
 def run(cases: int = 24000) -> dict:
     false_tecc_route = 0
     false_hold = 0
+    disposition_mismatches = 0
+    reason_mismatches = 0
+    oracle_mismatches = 0
     tecc_routes = 0
     effect_ready = 0
-    by_mode = {str(i): {"cases": 0, "tecc": 0, "hold": 0, "rebind": 0} for i in range(8)}
+    by_mode = {
+        str(i): {
+            "cases": 0,
+            "tecc": 0,
+            "hold": 0,
+            "rebind": 0,
+            "disposition_mismatches": 0,
+            "reason_mismatches": 0,
+            "oracle_mismatches": 0,
+        }
+        for i in range(8)
+    }
     samples = []
     for index in range(cases):
-        cert, kwargs, expected, mode = scenario(index)
+        cert, kwargs, expected_disposition, expected_reason, mode = scenario(index)
         decision = compile_effect_handoff(cert, **kwargs)
         row = by_mode[str(mode)]
         row["cases"] += 1
@@ -107,20 +140,44 @@ def run(cases: int = 24000) -> dict:
             row["rebind"] += 1
         else:
             row["hold"] += 1
-        if decision.disposition is HandoffDisposition.HOLD_TECC_REQUIRED_D0 and expected is not HandoffDisposition.HOLD_TECC_REQUIRED_D0:
+
+        disposition_ok = decision.disposition is expected_disposition
+        reason_ok = decision.reason == expected_reason
+        if not disposition_ok:
+            disposition_mismatches += 1
+            row["disposition_mismatches"] += 1
+        if not reason_ok:
+            reason_mismatches += 1
+            row["reason_mismatches"] += 1
+        if not (disposition_ok and reason_ok):
+            oracle_mismatches += 1
+            row["oracle_mismatches"] += 1
+
+        # Preserve the original coarse safety counters for historical comparability.
+        if decision.disposition is HandoffDisposition.HOLD_TECC_REQUIRED_D0 and expected_disposition is not HandoffDisposition.HOLD_TECC_REQUIRED_D0:
             false_tecc_route += 1
-        if decision.disposition is not HandoffDisposition.HOLD_TECC_REQUIRED_D0 and expected is HandoffDisposition.HOLD_TECC_REQUIRED_D0:
+        if decision.disposition is not HandoffDisposition.HOLD_TECC_REQUIRED_D0 and expected_disposition is HandoffDisposition.HOLD_TECC_REQUIRED_D0:
             false_hold += 1
         if decision.effect_authority:
             effect_ready += 1
         if len(samples) < 16:
-            samples.append((mode, decision.disposition.value, decision.reason))
+            samples.append({
+                "mode": mode,
+                "expected_disposition": expected_disposition.value,
+                "expected_reason": expected_reason,
+                "observed_disposition": decision.disposition.value,
+                "observed_reason": decision.reason,
+            })
     payload = {
-        "schema": "AURA-MEMORY-CITY-O13-EFFECT-HANDOFF-CAMPAIGN-v1",
+        "schema": "AURA-MEMORY-CITY-O13-EFFECT-HANDOFF-CAMPAIGN-v2-EXACT-ORACLE",
         "cases": cases,
         "tecc_routes": tecc_routes,
         "false_tecc_route": false_tecc_route,
         "false_hold": false_hold,
+        "disposition_mismatches": disposition_mismatches,
+        "reason_mismatches": reason_mismatches,
+        "oracle_mismatches": oracle_mismatches,
+        "oracle_self_test_pass": oracle_self_test(),
         "effect_ready": effect_ready,
         "by_mode": by_mode,
         "samples": samples,

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - arena/current-read-effect-handoff-o13-gpt56sol
+      - arena/memcity-o13-oracle-integrity-r1-gpt56sol-20260907
     paths:
       - 'tools/arena/memory_city_effect_handoff_o13.py'
       - 'tools/arena/campaign_memory_city_effect_handoff_o13.py'
@@ -18,6 +19,7 @@ on:
       - 'tools/arena/o13_effect_handoff_lattice.py'
       - 'tools/arena/o13_effect_handoff_hs1000.py'
       - 'tests/test_memory_city_effect_handoff_o13.py'
+      - '.github/workflows/memory-city-o13-effect-handoff-proof.yml'
 
 permissions:
   contents: read
@@ -68,7 +70,15 @@ jobs:
           assert campaign['cases']==24000
           assert campaign['false_tecc_route']==0
           assert campaign['false_hold']==0
+          assert campaign['disposition_mismatches']==0
+          assert campaign['reason_mismatches']==0
+          assert campaign['oracle_mismatches']==0
+          assert campaign['oracle_self_test_pass'] is True
           assert campaign['effect_ready']==0
+          assert campaign['by_mode']['3']['rebind']==3000
+          assert campaign['by_mode']['3']['hold']==0
+          assert campaign['by_mode']['4']['rebind']==3000
+          assert campaign['by_mode']['4']['hold']==0
           assert lattice['lattice8_states']==6561
           assert lattice['lattice8_tecc_routes']==1
           assert lattice['lattice8_hard_invalid_routes']==0
@@ -78,5 +88,7 @@ jobs:
           assert lattice['sweep13d_contextual_decision_variations']==0
           assert hs['raw_challenge_cells']==1000
           assert hs['claim_breakthroughs']==0
+          assert hs['oracle_mismatches']==0
+          assert sum(row['cells'] for row in hs['by_mode'].values())==1000
           PY
           git diff --exit-code
