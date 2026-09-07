@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788795191,
+  "generated_at_unix": 1788797106,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1700,
+    "repo_file_count": 1710,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -298,6 +298,10 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
+      "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+      "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
+      "artifacts/arena/awj032_selective_transfer_revalidation/REBASE_MANIFEST.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -1676,6 +1680,12 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+      "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+      "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+      "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+      "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+      "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -1816,16 +1826,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1700,
-      "bytes": 26639312,
-      "tokens_est": 6650226,
+      "files": 1710,
+      "bytes": 26688089,
+      "tokens_est": 6662424,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 287,
+        "python_module": 1033,
+        "schema_or_lexicon": 291,
         "support_file": 49
       }
     },
@@ -15916,6 +15926,22 @@
         "end_line": 162,
         "semantic_id": "aura_arena_state_packet.py#function:_hash:a45b3759164d8cd0",
         "signature_hash": "96a25c63c8c0337f"
+      },
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_hash:5ae11a6dd08e03e3",
+        "signature_hash": "8bac4ad6ab14c1a3"
+      },
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_hash:db0f4d9715d37692",
+        "signature_hash": "8bac4ad6ab14c1a3"
       }
     ],
     "ArenaExperienceLedger": [
@@ -128508,6 +128534,14 @@
         "end_line": 43,
         "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_server.py#function:state:f36d665e567b7907",
         "signature_hash": "4f98deada91b795f"
+      },
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#function:state:1833b02ea249e15b",
+        "signature_hash": "a84b8f7bf3e87132"
       }
     ],
     "decoded": [
@@ -134402,6 +134436,14 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
         "signature_hash": "b6d2f925be861055"
+      },
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:observation:438ac84f31304b5d",
+        "signature_hash": "5ab20f066e769058"
       }
     ],
     "expected_project_refs": [
@@ -137844,6 +137886,14 @@
         "end_line": 182,
         "semantic_id": "tests/test_aura_gate_adapters.py#function:runtime:d91911e46a3286e0",
         "signature_hash": "e672a1fd71dad185"
+      },
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:runtime:61a795c8f8b6c254",
+        "signature_hash": "44929c6e64fccad5"
       }
     ],
     "adapter": [
@@ -158724,6 +158774,818 @@
         "signature_hash": "8da6b94eb23fc2af"
       }
     ],
+    "PortDecision": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
+        "signature_hash": "b355002f61262647"
+      }
+    ],
+    "StaticObservation": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:StaticObservation:36774d7655d36a13",
+        "signature_hash": "c10b985e06f4a4f4"
+      }
+    ],
+    "TrainingSkeleton": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:TrainingSkeleton:b6943438928f8352",
+        "signature_hash": "c0e1fdf246245b58"
+      }
+    ],
+    "PortReceipt": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortReceipt:55dab8a84c9ebe99",
+        "signature_hash": "e8bfa74defc8e48b"
+      }
+    ],
+    "selected_expert_slice_plan": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:selected_expert_slice_plan:80240f5365a356dc",
+        "signature_hash": "651741f651bf49fe"
+      }
+    ],
+    "_skeleton_ok": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_skeleton_ok:c5cd4f91265c4f20",
+        "signature_hash": "d9105cf42230de5f"
+      }
+    ],
+    "assess_port": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 189,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:assess_port:9bc4bebdbec49ace",
+        "signature_hash": "ff85ff1035995c67"
+      }
+    ],
+    "skeleton": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:skeleton:d656bcd8ff1aa4c5",
+        "signature_hash": "47a2313843e94941"
+      }
+    ],
+    "GLM53TrainingPortTests": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#class:GLM53TrainingPortTests:0b606b7889e7e9d3",
+        "signature_hash": "1f259e8045fee9f7"
+      }
+    ],
+    "GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit:0576419409f5ea49",
+        "signature_hash": "4882c219b533f57a"
+      }
+    ],
+    "GLM53TrainingPortTests.test_remote_code_fails_closed": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_remote_code_fails_closed:843c472c221b73d8",
+        "signature_hash": "7169d0feb3de70ca"
+      }
+    ],
+    "GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory:78e987d148d4f64e",
+        "signature_hash": "9dba398d960b1221"
+      }
+    ],
+    "GLM53TrainingPortTests.test_native_router_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_native_router_contract_is_mandatory:72f147d42596d190",
+        "signature_hash": "6a4804dd53f35693"
+      }
+    ],
+    "GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory:72367f076c564818",
+        "signature_hash": "3d3584a05304b438"
+      }
+    ],
+    "GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory:1efd65260f3d8e87",
+        "signature_hash": "eeef57f3177fe8a7"
+      }
+    ],
+    "GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only:474805e6ffe96232",
+        "signature_hash": "4624daf5c1ba163d"
+      }
+    ],
+    "GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts:26cc488f4b87f673",
+        "signature_hash": "77d503846f2924ac"
+      }
+    ],
+    "GLM53TrainingPortTests.test_eight_corner_crystalline_lattice": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_eight_corner_crystalline_lattice:bd7a78b8e843e82c",
+        "signature_hash": "a59b5b4a045b718b"
+      }
+    ],
+    "GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts:d0cdf5346aa04c6c",
+        "signature_hash": "9f0973d144d8f598"
+      }
+    ],
+    "GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived:9ba5a631689d2915",
+        "signature_hash": "d405def07ce15937"
+      }
+    ],
+    "ModelFamily": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ModelFamily:52f4c5a0f2a12adb",
+        "signature_hash": "97630aabe75031f7"
+      }
+    ],
+    "Operation": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Operation:28d0f4505c7ae057",
+        "signature_hash": "53e5aa0f0ec78f71"
+      }
+    ],
+    "Decision": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Decision:d2a9d7d52b7bc5a0",
+        "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:Decision:979f72e763a33e7c",
+        "signature_hash": "d6a166dc8cfde9f6"
+      }
+    ],
+    "SourceBinding": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:SourceBinding:dd246ce80b24419d",
+        "signature_hash": "6d1250ea5ac06cd3"
+      }
+    ],
+    "SourceBinding.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:SourceBinding.canonical:2c07112f15d94cdb",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "RuntimeProof": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:RuntimeProof:80ffbcf518183daf",
+        "signature_hash": "99c2b15cf8f08cc0"
+      }
+    ],
+    "RuntimeProof.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:RuntimeProof.canonical:77c704a2f2239a12",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "AdapterIdentity": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdapterIdentity:0ebd397490a13c9d",
+        "signature_hash": "aadd7f818b8ece00"
+      }
+    ],
+    "AdapterIdentity.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:AdapterIdentity.canonical:3e94f3eb61bb8365",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "PrefetchContract": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:PrefetchContract:26f74af7b9720691",
+        "signature_hash": "019748e77c467c38"
+      }
+    ],
+    "PrefetchContract.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:PrefetchContract.canonical:d4400e63d41a3e6b",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "ExternalEvidenceCard": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 101,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ExternalEvidenceCard:67f561ad5068e74c",
+        "signature_hash": "3236a49127fddccf"
+      }
+    ],
+    "ExternalEvidenceCard.canonical": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:ExternalEvidenceCard.canonical:37285fef830b863e",
+        "signature_hash": "8e8956e5bf6a3e84"
+      }
+    ],
+    "CapabilityRequest": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 119,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:CapabilityRequest:6027c546ce637ff8",
+        "signature_hash": "1160361a5cbe27da"
+      }
+    ],
+    "AdmissionReceipt": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 131,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdmissionReceipt:422517ec2ce376a3",
+        "signature_hash": "cdf4b6f2ba88559d"
+      },
+      {
+        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#class:AdmissionReceipt:bde8947bedc6abfb",
+        "signature_hash": "cdf4b6f2ba88559d"
+      }
+    ],
+    "_stable_hash": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 152,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_stable_hash:766ecee54857713f",
+        "signature_hash": "4c70f6bac2b29ae9"
+      }
+    ],
+    "_valid_nonempty": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_valid_nonempty:177ed8397e8e6e3c",
+        "signature_hash": "4b4f5fde86d6a598"
+      }
+    ],
+    "_external_digest": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 159,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_external_digest:32fd271cf7d9c6fc",
+        "signature_hash": "40933a182d47fc4c"
+      }
+    ],
+    "_diagnostic_k27": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 172,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_diagnostic_k27:2f4dcc0922cbf32c",
+        "signature_hash": "c9cd5c1228852979"
+      }
+    ],
+    "_build_y13": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 192,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_build_y13:d0a911ef80b9fb17",
+        "signature_hash": "5cdd2da5f2f76c3d"
+      }
+    ],
+    "admit": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 294,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:admit:9cd7ef77f2db2da6",
+        "signature_hash": "df08b11b09768619"
+      },
+      {
+        "file": "tools/awj032/training_o1_reference/training_admission.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 146,
+        "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:admit:3ce0a4835494bb01",
+        "signature_hash": "bb676c9171dd8b32"
+      }
+    ],
+    "source": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:source:a7f99045190d9a4b",
+        "signature_hash": "a1a8ec6d00f701b6"
+      },
+      {
+        "file": "tools/awj032/training_o1_reference/test_training_admission.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#function:source:d20b030a7d1d5d46",
+        "signature_hash": "4b1eb2b86e3ed8a1"
+      }
+    ],
+    "qwen_adapter": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:qwen_adapter:2dd0fe6bcab5b627",
+        "signature_hash": "7ab715906e0f2b77"
+      }
+    ],
+    "glm_prefetch": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:glm_prefetch:22ba8cbfcc2b2e77",
+        "signature_hash": "7e71af77cff19d5a"
+      }
+    ],
+    "CapabilityMembraneTests": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#class:CapabilityMembraneTests:bfca3dd096da902e",
+        "signature_hash": "9f1a1ea99c5af809"
+      }
+    ],
+    "CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter:7031ce3c48435be7",
+        "signature_hash": "adf182f01b3217a4"
+      }
+    ],
+    "CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter:8822f47e58236815",
+        "signature_hash": "2e847af37e5675ee"
+      }
+    ],
+    "CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract:4f5fde90bb5e7f0c",
+        "signature_hash": "e959d4f2af38087d"
+      }
+    ],
+    "CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission:167ed5385ff7cda4",
+        "signature_hash": "e14f2d7bae8f8ee6"
+      }
+    ],
+    "CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness:5d46e631df54d307",
+        "signature_hash": "0c78debc06725b21"
+      }
+    ],
+    "CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change:628998bc873ad029",
+        "signature_hash": "659644543c8a55c9"
+      }
+    ],
+    "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training:16fdcbe23bf525ac",
+        "signature_hash": "a08df9754f2e1279"
+      }
+    ],
+    "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 148,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch:f7a19e776040aee8",
+        "signature_hash": "f252910f619b8dfc"
+      }
+    ],
+    "CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 173,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission:04dc331161f3d9f1",
+        "signature_hash": "8150b93704c9021c"
+      }
+    ],
+    "CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest": [
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest:0fce6aaa64f14c97",
+        "signature_hash": "cfa541084510cdf0"
+      }
+    ],
+    "CurrentnessState": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:CurrentnessState:5f1e256bc4fec140",
+        "signature_hash": "0582e0bcecc6bc38"
+      }
+    ],
+    "CurrentnessState.x12": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#method:CurrentnessState.x12:dd45a7d3e44d9669",
+        "signature_hash": "60ca129ab8317639"
+      }
+    ],
+    "EvidenceLeaf": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:EvidenceLeaf:c789d1d3836f9857",
+        "signature_hash": "6c4b8b707153ede8"
+      }
+    ],
+    "TransferEstimate": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:TransferEstimate:34c003df98356956",
+        "signature_hash": "5a52d4238e3779e7"
+      }
+    ],
+    "RevalidationReceipt": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:RevalidationReceipt:cd01f680e0294e23",
+        "signature_hash": "2c29a63884c5b826"
+      }
+    ],
+    "changed_dimensions": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:changed_dimensions:0c799a9447093179",
+        "signature_hash": "8a87a3564367001e"
+      }
+    ],
+    "selective_reproof": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:selective_reproof:bb41364cb4e920a0",
+        "signature_hash": "613406ceaaef8e9b"
+      }
+    ],
+    "_estimate_matches_current": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 124,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_estimate_matches_current:c625efcd6184e36b",
+        "signature_hash": "860dd3d51e879f1c"
+      }
+    ],
+    "_costs": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 142,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_costs:0427d16b37c614d8",
+        "signature_hash": "2ce58bdac68a0c9a"
+      }
+    ],
+    "_k27": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_k27:ffcb3d43f99b21ec",
+        "signature_hash": "f337c1cd22d934ab"
+      }
+    ],
+    "revalidate": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 204,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:revalidate:e02715ba1b389240",
+        "signature_hash": "bb129500181b5ad0"
+      }
+    ],
+    "estimate": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#function:estimate:9475983ebe3a21de",
+        "signature_hash": "d574f79b42705c89"
+      }
+    ],
+    "SelectiveRevalidationTests": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 166,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#class:SelectiveRevalidationTests:a3a2bc0ef7cf5d9d",
+        "signature_hash": "33b6420a8df70c6f"
+      }
+    ],
+    "SelectiveRevalidationTests.test_no_delta_positive_margin_is_plan_eligible": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_no_delta_positive_margin_is_plan_eligible:5724a25b68481951",
+        "signature_hash": "7af2b955cf59f1ba"
+      }
+    ],
+    "SelectiveRevalidationTests.test_model_delta_reopens_only_declared_dependents": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_model_delta_reopens_only_declared_dependents:42b3db15b96edc22",
+        "signature_hash": "396c62879754e7bd"
+      }
+    ],
+    "SelectiveRevalidationTests.test_cost_model_delta_reopens_only_cost_leaf": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_cost_model_delta_reopens_only_cost_leaf:212ffee6db4c6b77",
+        "signature_hash": "674dcf60ea8f422c"
+      }
+    ],
+    "SelectiveRevalidationTests.test_stale_estimate_abstains_before_reuse": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_stale_estimate_abstains_before_reuse:fc6337636e574f4e",
+        "signature_hash": "ed235b0aae56864c"
+      }
+    ],
+    "SelectiveRevalidationTests.test_low_confidence_abstains": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_low_confidence_abstains:6d5e6813f630215f",
+        "signature_hash": "00a772498621119e"
+      }
+    ],
+    "SelectiveRevalidationTests.test_nonpositive_margin_abstains": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_nonpositive_margin_abstains:f44bea6848488d95",
+        "signature_hash": "008b07daa780b043"
+      }
+    ],
+    "SelectiveRevalidationTests.test_latency_value_cannot_pay_energy_debt": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 107,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_latency_value_cannot_pay_energy_debt:4dac48e62298622f",
+        "signature_hash": "d52655bd8abea093"
+      }
+    ],
+    "SelectiveRevalidationTests.test_authority_change_holds_even_if_economics_are_good": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 113,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_authority_change_holds_even_if_economics_are_good:b62b2f4a5e2cc00e",
+        "signature_hash": "2a5311d767b5b9f2"
+      }
+    ],
+    "SelectiveRevalidationTests.test_eight_corner_crystalline_lattice": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 130,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_eight_corner_crystalline_lattice:0f33e73395dbdabd",
+        "signature_hash": "a59b5b4a045b718b"
+      }
+    ],
+    "SelectiveRevalidationTests.test_hyperscale_1000_selective_reproof_and_no_stale_admission": [
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 166,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_hyperscale_1000_selective_reproof_and_no_stale_admission:77ca11b70844fc6b",
+        "signature_hash": "1cf2a4832cc6410e"
+      }
+    ],
     "BindingMutationSoundnessTests": [
       {
         "file": "tools/awj032/test_airllm_binding_mutation_soundness.py",
@@ -159724,16 +160586,6 @@
         "signature_hash": "c812ef0f49389e60"
       }
     ],
-    "source": [
-      {
-        "file": "tools/awj032/training_o1_reference/test_training_admission.py",
-        "kind": "function",
-        "line": 13,
-        "end_line": 13,
-        "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#function:source:d20b030a7d1d5d46",
-        "signature_hash": "4b1eb2b86e3ed8a1"
-      }
-    ],
     "man": [
       {
         "file": "tools/awj032/training_o1_reference/test_training_admission.py",
@@ -160394,16 +161246,6 @@
         "end_line": 127,
         "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:audit_source:4ef38074559b0bd9",
         "signature_hash": "c7b40fbb1465d640"
-      }
-    ],
-    "admit": [
-      {
-        "file": "tools/awj032/training_o1_reference/training_admission.py",
-        "kind": "function",
-        "line": 129,
-        "end_line": 146,
-        "semantic_id": "tools/awj032/training_o1_reference/training_admission.py#function:admit:3ce0a4835494bb01",
-        "signature_hash": "bb676c9171dd8b32"
       }
     ],
     "admit.out": [
@@ -161518,16 +162360,6 @@
         "end_line": 29,
         "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#method:AdmissionSemantic.semantic_root:484c15911828cb07",
         "signature_hash": "7de05f9ff73621d7"
-      }
-    ],
-    "AdmissionReceipt": [
-      {
-        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
-        "kind": "class",
-        "line": 32,
-        "end_line": 40,
-        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#class:AdmissionReceipt:bde8947bedc6abfb",
-        "signature_hash": "cdf4b6f2ba88559d"
       }
     ],
     "AdmissionReceipt.__post_init__": [
@@ -181716,6 +182548,194 @@
         0.059949,
         0.003827,
         -0.264032
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1843,
+      "lines": 32,
+      "tokens_est": 461,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "24f528ee985352c5",
+      "vector": [
+        0.218976,
+        0.103983,
+        0.04037,
+        0.184723,
+        -0.030583,
+        0.299716,
+        -0.248336,
+        -0.089303,
+        0.12845,
+        0.030583,
+        -0.030583,
+        -0.045263,
+        0.240996,
+        0.236103,
+        0.218976,
+        0.263016,
+        -0.23855,
+        0.292376,
+        -0.101537,
+        -0.277696,
+        0.258123,
+        -0.10643,
+        0.126003,
+        -0.06239,
+        -0.15781,
+        -0.23121,
+        0.015903,
+        0.028137,
+        0.04771,
+        -0.184723,
+        0.074623,
+        -0.211636
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1075,
+      "lines": 23,
+      "tokens_est": 269,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c0e1041ffc7800b3",
+      "vector": [
+        -0.270381,
+        -0.022433,
+        -0.253851,
+        -0.23496,
+        0.005904,
+        -0.036602,
+        -0.272743,
+        0.041325,
+        -0.152311,
+        0.272743,
+        0.064939,
+        -0.21843,
+        0.140504,
+        0.135781,
+        0.211346,
+        -0.03424,
+        0.293995,
+        0.074384,
+        0.282188,
+        -0.029518,
+        -0.005904,
+        0.090914,
+        -0.135781,
+        -0.022433,
+        -0.206623,
+        -0.060216,
+        -0.227876,
+        0.142865,
+        0.246767,
+        0.149949,
+        -0.057855,
+        0.30108
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1693,
+      "lines": 38,
+      "tokens_est": 424,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "df95eeb13345e6f6",
+      "vector": [
+        -0.12629,
+        -0.242522,
+        0.106173,
+        -0.255934,
+        0.112879,
+        0.246993,
+        -0.242522,
+        0.139702,
+        -0.26711,
+        0.217935,
+        0.217935,
+        -0.083821,
+        -0.162054,
+        0.077115,
+        0.204524,
+        -0.115114,
+        0.077115,
+        0.021235,
+        0.186642,
+        -0.276051,
+        0.063704,
+        0.175466,
+        0.083821,
+        0.068175,
+        -0.148643,
+        0.253699,
+        -0.2157,
+        -0.034646,
+        0.052528,
+        -0.246993,
+        0.27158,
+        0.007823
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_selective_transfer_revalidation/REBASE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1045,
+      "lines": 17,
+      "tokens_est": 262,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8a1597f1612c999d",
+      "vector": [
+        0.106542,
+        -0.19084,
+        -0.069077,
+        -0.186157,
+        0.24938,
+        0.275137,
+        0.113567,
+        -0.237672,
+        0.11825,
+        -0.209573,
+        -0.001171,
+        -0.101859,
+        0.242355,
+        -0.106542,
+        -0.07376,
+        -0.204889,
+        -0.270454,
+        -0.225964,
+        -0.29387,
+        0.120592,
+        0.197865,
+        0.296212,
+        -0.07376,
+        -0.106542,
+        0.012879,
+        0.108884,
+        -0.040978,
+        -0.270454,
+        -0.017562,
+        0.195523,
+        0.139325,
+        0.078443
       ]
     },
     {
@@ -269359,6 +270379,288 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6714,
+      "lines": 190,
+      "tokens_est": 1679,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8e57376da7e1446",
+      "vector": [
+        -0.027269,
+        0.24282,
+        -0.102582,
+        -0.071418,
+        -0.149328,
+        -0.29476,
+        0.31294,
+        0.00909,
+        0.149328,
+        -0.325925,
+        -0.00909,
+        0.105179,
+        -0.053239,
+        0.048045,
+        -0.016881,
+        0.31294,
+        0.032463,
+        -0.31294,
+        -0.014284,
+        0.133746,
+        -0.255805,
+        0.144134,
+        -0.011687,
+        0.084403,
+        0.087,
+        0.092194,
+        0.263596,
+        -0.068821,
+        -0.053239,
+        -0.289566,
+        -0.29476,
+        -0.006493
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5198,
+      "lines": 122,
+      "tokens_est": 1300,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cdef5d752d7c914a",
+      "vector": [
+        -0.207386,
+        -0.291299,
+        -0.11628,
+        0.281709,
+        0.032367,
+        0.243349,
+        0.255336,
+        0.226566,
+        0.291299,
+        0.041957,
+        -0.111485,
+        -0.147448,
+        -0.149845,
+        -0.080317,
+        -0.272119,
+        -0.089907,
+        0.027572,
+        0.149845,
+        -0.13546,
+        0.046752,
+        0.171423,
+        -0.245746,
+        0.123472,
+        -0.025174,
+        -0.046752,
+        0.039559,
+        -0.262529,
+        -0.264926,
+        0.020379,
+        -0.15464,
+        0.231361,
+        -0.022776
+      ]
+    },
+    {
+      "path": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10069,
+      "lines": 295,
+      "tokens_est": 2518,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f4550bdb0a52c39e",
+      "vector": [
+        0.261884,
+        0.123443,
+        0.23881,
+        0.222659,
+        -0.146517,
+        0.028842,
+        0.171897,
+        0.130365,
+        -0.188049,
+        0.294187,
+        0.167283,
+        -0.102677,
+        -0.153439,
+        -0.273421,
+        -0.086526,
+        0.040379,
+        0.065759,
+        0.111906,
+        0.10037,
+        0.215737,
+        -0.005768,
+        -0.2042,
+        -0.174205,
+        0.104984,
+        -0.155746,
+        0.185741,
+        0.224966,
+        0.164975,
+        0.178819,
+        0.264191,
+        -0.252654,
+        -0.118828
+      ]
+    },
+    {
+      "path": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7738,
+      "lines": 189,
+      "tokens_est": 1934,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f78aaacfcfbade3b",
+      "vector": [
+        -0.276772,
+        -0.191788,
+        0.109101,
+        0.090726,
+        0.279069,
+        0.242319,
+        -0.042492,
+        -0.292851,
+        0.076945,
+        -0.187195,
+        -0.070054,
+        -0.13896,
+        -0.081539,
+        -0.274476,
+        0.074648,
+        -0.242319,
+        -0.16882,
+        -0.210163,
+        0.233132,
+        0.251507,
+        -0.122882,
+        -0.083836,
+        0.044789,
+        -0.267585,
+        -0.081539,
+        -0.111398,
+        0.274476,
+        0.136664,
+        -0.120586,
+        0.005742,
+        0.104507,
+        -0.079242
+      ]
+    },
+    {
+      "path": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6655,
+      "lines": 205,
+      "tokens_est": 1664,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f36f7506835e4fe7",
+      "vector": [
+        0.079668,
+        -0.200955,
+        -0.227115,
+        -0.010702,
+        0.065399,
+        0.293703,
+        -0.112963,
+        0.296081,
+        0.027349,
+        -0.172417,
+        -0.250896,
+        -0.005945,
+        0.131988,
+        -0.162904,
+        -0.03924,
+        -0.032105,
+        0.227115,
+        -0.281812,
+        -0.015458,
+        -0.120097,
+        0.296081,
+        0.079668,
+        -0.229493,
+        0.048752,
+        0.262787,
+        -0.139123,
+        0.277056,
+        0.065399,
+        -0.172417,
+        -0.200955,
+        -0.048752,
+        0.184308
+      ]
+    },
+    {
+      "path": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6747,
+      "lines": 171,
+      "tokens_est": 1687,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "16dce958faadae34",
+      "vector": [
+        -0.141612,
+        0.281821,
+        -0.077115,
+        0.023836,
+        0.335101,
+        0.049073,
+        0.077115,
+        -0.158437,
+        0.063094,
+        0.121982,
+        -0.068703,
+        0.164045,
+        0.189283,
+        -0.099549,
+        0.046269,
+        -0.158437,
+        -0.043465,
+        -0.074311,
+        -0.225737,
+        -0.222933,
+        0.220129,
+        0.250975,
+        -0.250975,
+        0.023836,
+        -0.021031,
+        -0.304255,
+        -0.217325,
+        -0.343513,
+        -0.166849,
+        0.217325,
+        -0.009815,
+        -0.091136
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "role": "python_module",
       "binary": false,
@@ -294121,16 +295423,16 @@
     }
   },
   "summary": {
-    "file_count": 1700,
-    "total_bytes": 26639312,
-    "text_tokens_est": 6650226,
+    "file_count": 1710,
+    "total_bytes": 26688089,
+    "text_tokens_est": 6662424,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 287,
+      "python_module": 1033,
+      "schema_or_lexicon": 291,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294438,6 +295740,10 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
+      "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
+      "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
+      "artifacts/arena/awj032_selective_transfer_revalidation/REBASE_MANIFEST.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -295816,6 +297122,12 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+      "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+      "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+      "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+      "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+      "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
       "tools/awj032/test_airllm_binding_mutation_soundness.py",
       "tools/awj032/test_airllm_hard_false_inspected_tree.py",
       "tools/awj032/test_airllm_hard_false_remediation.py",
@@ -454610,6 +455922,846 @@
         "file_digest8": "ea7fae03964050af"
       },
       {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
+        "name": "PortDecision",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 10,
+        "end_line": 17,
+        "signature_hash": "b355002f61262647",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortReceipt:55dab8a84c9ebe99",
+        "name": "PortReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 52,
+        "end_line": 60,
+        "signature_hash": "e8bfa74defc8e48b",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:StaticObservation:36774d7655d36a13",
+        "name": "StaticObservation",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 21,
+        "end_line": 37,
+        "signature_hash": "c10b985e06f4a4f4",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:TrainingSkeleton:b6943438928f8352",
+        "name": "TrainingSkeleton",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 41,
+        "end_line": 48,
+        "signature_hash": "c0e1fdf246245b58",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_hash:5ae11a6dd08e03e3",
+        "name": "_hash",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "8bac4ad6ab14c1a3",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_skeleton_ok:c5cd4f91265c4f20",
+        "name": "_skeleton_ok",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 103,
+        "end_line": 112,
+        "signature_hash": "d9105cf42230de5f",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:assess_port:9bc4bebdbec49ace",
+        "name": "assess_port",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 115,
+        "end_line": 189,
+        "signature_hash": "ff85ff1035995c67",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:selected_expert_slice_plan:80240f5365a356dc",
+        "name": "selected_expert_slice_plan",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 85,
+        "end_line": 100,
+        "signature_hash": "651741f651bf49fe",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#class:GLM53TrainingPortTests:0b606b7889e7e9d3",
+        "name": "GLM53TrainingPortTests",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 46,
+        "end_line": 117,
+        "signature_hash": "1f259e8045fee9f7",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:observation:438ac84f31304b5d",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 19,
+        "end_line": 38,
+        "signature_hash": "5ab20f066e769058",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:skeleton:d656bcd8ff1aa4c5",
+        "name": "skeleton",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "47a2313843e94941",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory:1efd65260f3d8e87",
+        "name": "GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 67,
+        "end_line": 70,
+        "signature_hash": "eeef57f3177fe8a7",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_eight_corner_crystalline_lattice:bd7a78b8e843e82c",
+        "name": "GLM53TrainingPortTests.test_eight_corner_crystalline_lattice",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 84,
+        "end_line": 93,
+        "signature_hash": "a59b5b4a045b718b",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit:0576419409f5ea49",
+        "name": "GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 47,
+        "end_line": 51,
+        "signature_hash": "4882c219b533f57a",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory:72367f076c564818",
+        "name": "GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "3d3584a05304b438",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory:78e987d148d4f64e",
+        "name": "GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "9dba398d960b1221",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts:d0cdf5346aa04c6c",
+        "name": "GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 95,
+        "end_line": 110,
+        "signature_hash": "9f0973d144d8f598",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_native_router_contract_is_mandatory:72f147d42596d190",
+        "name": "GLM53TrainingPortTests.test_native_router_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "6a4804dd53f35693",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_remote_code_fails_closed:843c472c221b73d8",
+        "name": "GLM53TrainingPortTests.test_remote_code_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "7169d0feb3de70ca",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only:474805e6ffe96232",
+        "name": "GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 72,
+        "end_line": 78,
+        "signature_hash": "4624daf5c1ba163d",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts:26cc488f4b87f673",
+        "name": "GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "77d503846f2924ac",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived:9ba5a631689d2915",
+        "name": "GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 112,
+        "end_line": 117,
+        "signature_hash": "d405def07ce15937",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdapterIdentity:0ebd397490a13c9d",
+        "name": "AdapterIdentity",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 67,
+        "end_line": 79,
+        "signature_hash": "aadd7f818b8ece00",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdmissionReceipt:422517ec2ce376a3",
+        "name": "AdmissionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 131,
+        "end_line": 138,
+        "signature_hash": "cdf4b6f2ba88559d",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:CapabilityRequest:6027c546ce637ff8",
+        "name": "CapabilityRequest",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 119,
+        "end_line": 127,
+        "signature_hash": "1160361a5cbe27da",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Decision:d2a9d7d52b7bc5a0",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ExternalEvidenceCard:67f561ad5068e74c",
+        "name": "ExternalEvidenceCard",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 101,
+        "end_line": 115,
+        "signature_hash": "3236a49127fddccf",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:ModelFamily:52f4c5a0f2a12adb",
+        "name": "ModelFamily",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 10,
+        "end_line": 14,
+        "signature_hash": "97630aabe75031f7",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Operation:28d0f4505c7ae057",
+        "name": "Operation",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "53e5aa0f0ec78f71",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:PrefetchContract:26f74af7b9720691",
+        "name": "PrefetchContract",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 83,
+        "end_line": 97,
+        "signature_hash": "019748e77c467c38",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:RuntimeProof:80ffbcf518183daf",
+        "name": "RuntimeProof",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 51,
+        "end_line": 63,
+        "signature_hash": "99c2b15cf8f08cc0",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:SourceBinding:dd246ce80b24419d",
+        "name": "SourceBinding",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 33,
+        "end_line": 47,
+        "signature_hash": "6d1250ea5ac06cd3",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_build_y13:d0a911ef80b9fb17",
+        "name": "_build_y13",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 175,
+        "end_line": 192,
+        "signature_hash": "5cdd2da5f2f76c3d",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_diagnostic_k27:2f4dcc0922cbf32c",
+        "name": "_diagnostic_k27",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 166,
+        "end_line": 172,
+        "signature_hash": "c9cd5c1228852979",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_external_digest:32fd271cf7d9c6fc",
+        "name": "_external_digest",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 159,
+        "end_line": 163,
+        "signature_hash": "40933a182d47fc4c",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_stable_hash:766ecee54857713f",
+        "name": "_stable_hash",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 150,
+        "end_line": 152,
+        "signature_hash": "4c70f6bac2b29ae9",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:_valid_nonempty:177ed8397e8e6e3c",
+        "name": "_valid_nonempty",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 155,
+        "end_line": 156,
+        "signature_hash": "4b4f5fde86d6a598",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#function:admit:9cd7ef77f2db2da6",
+        "name": "admit",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 195,
+        "end_line": 294,
+        "signature_hash": "df08b11b09768619",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:AdapterIdentity.canonical:3e94f3eb61bb8365",
+        "name": "AdapterIdentity.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 73,
+        "end_line": 79,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:ExternalEvidenceCard.canonical:37285fef830b863e",
+        "name": "ExternalEvidenceCard.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 108,
+        "end_line": 115,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:PrefetchContract.canonical:d4400e63d41a3e6b",
+        "name": "PrefetchContract.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 90,
+        "end_line": 97,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:RuntimeProof.canonical:77c704a2f2239a12",
+        "name": "RuntimeProof.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#method:SourceBinding.canonical:2c07112f15d94cdb",
+        "name": "SourceBinding.canonical",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "8e8956e5bf6a3e84",
+        "file_digest8": "f4550bdb0a52c39e"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#class:CapabilityMembraneTests:bfca3dd096da902e",
+        "name": "CapabilityMembraneTests",
+        "kind": "class",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 55,
+        "end_line": 184,
+        "signature_hash": "9f1a1ea99c5af809",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:glm_prefetch:22ba8cbfcc2b2e77",
+        "name": "glm_prefetch",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 45,
+        "end_line": 52,
+        "signature_hash": "7e71af77cff19d5a",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:qwen_adapter:2dd0fe6bcab5b627",
+        "name": "qwen_adapter",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "7ab715906e0f2b77",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:runtime:61a795c8f8b6c254",
+        "name": "runtime",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "44929c6e64fccad5",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#function:source:a7f99045190d9a4b",
+        "name": "source",
+        "kind": "function",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "a1a8ec6d00f701b6",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch:f7a19e776040aee8",
+        "name": "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_glm_prefetch",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 134,
+        "end_line": 148,
+        "signature_hash": "f252910f619b8dfc",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training:16fdcbe23bf525ac",
+        "name": "CapabilityMembraneTests.test_eight_corner_crystalline_lattice_qwen_training",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 121,
+        "end_line": 132,
+        "signature_hash": "a08df9754f2e1279",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission:167ed5385ff7cda4",
+        "name": "CapabilityMembraneTests.test_external_evidence_never_mints_authority_or_admission",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 86,
+        "end_line": 102,
+        "signature_hash": "e14f2d7bae8f8ee6",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest:0fce6aaa64f14c97",
+        "name": "CapabilityMembraneTests.test_external_kv_order_does_not_change_admission_or_digest",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 175,
+        "end_line": 184,
+        "signature_hash": "cfa541084510cdf0",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract:4f5fde90bb5e7f0c",
+        "name": "CapabilityMembraneTests.test_glm_prefetch_admits_only_router_separated_contract",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 72,
+        "end_line": 84,
+        "signature_hash": "e959d4f2af38087d",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter:8822f47e58236815",
+        "name": "CapabilityMembraneTests.test_glm_training_stays_hold_even_with_qwen_runtime_and_adapter",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 64,
+        "end_line": 70,
+        "signature_hash": "2e847af37e5675ee",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission:04dc331161f3d9f1",
+        "name": "CapabilityMembraneTests.test_hyperscale_1000_frozen_cases_no_unsafe_glm_training_admission",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 150,
+        "end_line": 173,
+        "signature_hash": "8150b93704c9021c",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change:628998bc873ad029",
+        "name": "CapabilityMembraneTests.test_operation_root_changes_on_consequence_bearing_identity_change",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 116,
+        "end_line": 119,
+        "signature_hash": "659644543c8a55c9",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter:7031ce3c48435be7",
+        "name": "CapabilityMembraneTests.test_qwen_training_admits_only_exact_current_runtime_and_adapter",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 56,
+        "end_line": 62,
+        "signature_hash": "adf182f01b3217a4",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py#method:CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness:5d46e631df54d307",
+        "name": "CapabilityMembraneTests.test_y13_is_x12_plus_derived_witness",
+        "kind": "method",
+        "file": "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
+        "line": 104,
+        "end_line": 114,
+        "signature_hash": "0c78debc06725b21",
+        "file_digest8": "f78aaacfcfbade3b"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:CurrentnessState:5f1e256bc4fec140",
+        "name": "CurrentnessState",
+        "kind": "class",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 21,
+        "end_line": 49,
+        "signature_hash": "0582e0bcecc6bc38",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:Decision:979f72e763a33e7c",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 10,
+        "end_line": 17,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:EvidenceLeaf:c789d1d3836f9857",
+        "name": "EvidenceLeaf",
+        "kind": "class",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 53,
+        "end_line": 55,
+        "signature_hash": "6c4b8b707153ede8",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:RevalidationReceipt:cd01f680e0294e23",
+        "name": "RevalidationReceipt",
+        "kind": "class",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 74,
+        "end_line": 83,
+        "signature_hash": "2c29a63884c5b826",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:TransferEstimate:34c003df98356956",
+        "name": "TransferEstimate",
+        "kind": "class",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 59,
+        "end_line": 70,
+        "signature_hash": "5a52d4238e3779e7",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_costs:0427d16b37c614d8",
+        "name": "_costs",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 127,
+        "end_line": 142,
+        "signature_hash": "2ce58bdac68a0c9a",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_estimate_matches_current:c625efcd6184e36b",
+        "name": "_estimate_matches_current",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 123,
+        "end_line": 124,
+        "signature_hash": "860dd3d51e879f1c",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_hash:db0f4d9715d37692",
+        "name": "_hash",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 109,
+        "end_line": 111,
+        "signature_hash": "8bac4ad6ab14c1a3",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:_k27:ffcb3d43f99b21ec",
+        "name": "_k27",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 145,
+        "end_line": 147,
+        "signature_hash": "f337c1cd22d934ab",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:changed_dimensions:0c799a9447093179",
+        "name": "changed_dimensions",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 114,
+        "end_line": 115,
+        "signature_hash": "8a87a3564367001e",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:revalidate:e02715ba1b389240",
+        "name": "revalidate",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 150,
+        "end_line": 204,
+        "signature_hash": "bb129500181b5ad0",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#function:selective_reproof:bb41364cb4e920a0",
+        "name": "selective_reproof",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "613406ceaaef8e9b",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#method:CurrentnessState.x12:dd45a7d3e44d9669",
+        "name": "CurrentnessState.x12",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "line": 35,
+        "end_line": 49,
+        "signature_hash": "60ca129ab8317639",
+        "file_digest8": "f36f7506835e4fe7"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#class:SelectiveRevalidationTests:a3a2bc0ef7cf5d9d",
+        "name": "SelectiveRevalidationTests",
+        "kind": "class",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 64,
+        "end_line": 166,
+        "signature_hash": "33b6420a8df70c6f",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#function:estimate:9475983ebe3a21de",
+        "name": "estimate",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 36,
+        "end_line": 51,
+        "signature_hash": "d574f79b42705c89",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#function:state:1833b02ea249e15b",
+        "name": "state",
+        "kind": "function",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 18,
+        "end_line": 33,
+        "signature_hash": "a84b8f7bf3e87132",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_authority_change_holds_even_if_economics_are_good:b62b2f4a5e2cc00e",
+        "name": "SelectiveRevalidationTests.test_authority_change_holds_even_if_economics_are_good",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 109,
+        "end_line": 113,
+        "signature_hash": "2a5311d767b5b9f2",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_cost_model_delta_reopens_only_cost_leaf:212ffee6db4c6b77",
+        "name": "SelectiveRevalidationTests.test_cost_model_delta_reopens_only_cost_leaf",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 82,
+        "end_line": 86,
+        "signature_hash": "674dcf60ea8f422c",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_eight_corner_crystalline_lattice:0f33e73395dbdabd",
+        "name": "SelectiveRevalidationTests.test_eight_corner_crystalline_lattice",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 115,
+        "end_line": 130,
+        "signature_hash": "a59b5b4a045b718b",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_hyperscale_1000_selective_reproof_and_no_stale_admission:77ca11b70844fc6b",
+        "name": "SelectiveRevalidationTests.test_hyperscale_1000_selective_reproof_and_no_stale_admission",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 132,
+        "end_line": 166,
+        "signature_hash": "1cf2a4832cc6410e",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_latency_value_cannot_pay_energy_debt:4dac48e62298622f",
+        "name": "SelectiveRevalidationTests.test_latency_value_cannot_pay_energy_debt",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 104,
+        "end_line": 107,
+        "signature_hash": "d52655bd8abea093",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_low_confidence_abstains:6d5e6813f630215f",
+        "name": "SelectiveRevalidationTests.test_low_confidence_abstains",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 94,
+        "end_line": 97,
+        "signature_hash": "00a772498621119e",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_model_delta_reopens_only_declared_dependents:42b3db15b96edc22",
+        "name": "SelectiveRevalidationTests.test_model_delta_reopens_only_declared_dependents",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 72,
+        "end_line": 80,
+        "signature_hash": "396c62879754e7bd",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_no_delta_positive_margin_is_plan_eligible:5724a25b68481951",
+        "name": "SelectiveRevalidationTests.test_no_delta_positive_margin_is_plan_eligible",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "7af2b955cf59f1ba",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_nonpositive_margin_abstains:f44bea6848488d95",
+        "name": "SelectiveRevalidationTests.test_nonpositive_margin_abstains",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 99,
+        "end_line": 102,
+        "signature_hash": "008b07daa780b043",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py#method:SelectiveRevalidationTests.test_stale_estimate_abstains_before_reuse:fc6337636e574f4e",
+        "name": "SelectiveRevalidationTests.test_stale_estimate_abstains_before_reuse",
+        "kind": "method",
+        "file": "tools/awj032/selective_transfer_revalidation_reference/test_selective_revalidation.py",
+        "line": 88,
+        "end_line": 92,
+        "signature_hash": "ed235b0aae56864c",
+        "file_digest8": "16dce958faadae34"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_binding_mutation_soundness.py#class:BindingMutationSoundnessTests:7ab077d5ce2a6ac6",
         "name": "BindingMutationSoundnessTests",
         "kind": "class",
@@ -458960,7 +461112,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8f312181e9e11d770b13fc3057133852",
-    "payload_hash": "ef157376d4a7375bfcb78e818515338e"
+    "record_fingerprint": "081327d247cb0168aff54d37a189a9d8",
+    "payload_hash": "dab8e65086ed29b9e73e394236bc9fb1"
   }
 }

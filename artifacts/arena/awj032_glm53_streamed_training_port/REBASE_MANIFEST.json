@@ -1,0 +1,31 @@
+{
+  "objective": "Derive and prove a D0 GLM-5.3 streamed-training port ABI by unifying native grouped-expert/FP8 routing requirements with the pinned AirLLM/Qwen layer-streamed LoRA backward-recompute skeleton.",
+  "exact_two_foreign_parents": [
+    {"artifact": "PR333 AWJ032 GLM53 grouped-expert AirLLM adapter requirement", "head": "815ec64338114d8d3947af6c295b28f8f401287e"},
+    {"artifact": "PR908 AWJ032 AirLLM training exact Qwen adapter identity/current training admission", "head": "f4a4b561bd0473b83c02ff9ecb46fb94532a653c"}
+  ],
+  "external_source_bindings": {
+    "airllm_lora": "lyogavin/airllm@55e435087d951da8c25ab3672e969025241a398e:air_llm/airllm/airllm_lora.py",
+    "transformers_glm": "huggingface/transformers@6622f6f781c9c0b1f2f5541a257943bee95ad586:src/transformers/models/glm_moe_dsa/modeling_glm_moe_dsa.py",
+    "glm_model": "zai-org/GLM-5.3"
+  },
+  "local_proof": {
+    "fresh_venvs": 2,
+    "tests_per_venv": 11,
+    "total_pass": 22,
+    "hyperscale_routes": 1000,
+    "all_256_experts_addressed": true,
+    "first_failed_generation_credit": 0,
+    "module_sha256": "569402aa073a569c236091a889735b2023087430a0bf7d8624892500b5b4ddf5",
+    "tests_sha256": "92b1db4c0166fe73f5be1b82f3f54e2a9dff285d14a282febfa6050826da69a0"
+  },
+  "keepers": [
+    "Reuse AirLLM streamed autograd skeleton; do not reuse Qwen model-specific execution semantics",
+    "NativeGLMRouter owns top-k selection",
+    "Packed3DExpertBank => first-axis selected expert + FP8 scale slices",
+    "All256ExpertsAddressable; none pruned",
+    "AdapterOnlyGradients + FrozenBase + CPU hidden graph + backward recompute",
+    "StaticABIMatch != EmpiricalTrainingSupport"
+  ],
+  "claim_ceiling": "D0 static/synthetic port ABI only. GLM streamed training remains HOLD_EMPIRICAL_PORT_RUN until updated owner-host exact-source smoke receipts exist."
+}
