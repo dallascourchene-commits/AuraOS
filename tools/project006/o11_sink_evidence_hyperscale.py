@@ -12,6 +12,7 @@ def base():
 def signed(disp=SinkDisposition.NOT_ACCEPTED): return sign_sink_evidence(secret=SECRET,operation_id='op',disposition=disp,sink_result_digest=R('result'),issuer_root=ISSUER,verifier_root=VERIFIER,observed_at=10,expires_at=100)
 
 def lattice8():
+    # 2=valid, 1=stale/unknown, 0=forged/wrong. Route target is exact NOT_ACCEPTED idempotent retry.
     keeper=0; invalid_routes=0; rows=[]
     for axes in product(range(3), repeat=8):
         sig,opmatch,source,auth,proof,fence,idem_payload,authority=axes
@@ -32,7 +33,8 @@ def lattice8():
     return {'states':6561,'keepers':keeper,'invalid_routes':invalid_routes,'root':root}
 
 def recursion13d():
-    l=lattice8(); context_counts={}
+    l=lattice8(); context_counts={};
+    # Execute candidate under the unique hard keeper for all 3^5 nuisance contexts.
     op,cur=base(); e=signed()
     for ctx in product(range(3),repeat=5):
         d=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=e,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20)
