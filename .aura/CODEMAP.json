@@ -409,6 +409,7 @@
       ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
       ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
+      ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
       "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
@@ -1063,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1682,
+    "repo_file_count": 1686,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1240,6 +1241,7 @@
       ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
       ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
+      ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1342,6 +1344,7 @@
       "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
       "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
+      "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2724,10 +2727,12 @@
       "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/proof_aura_interaction_o18.py",
+      "tools/project006/proof_o20.py",
       "tools/project006/proof_physical_wake_o19.py",
       "tools/project006/proof_windows_liveness_fallback_o17.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_aura_interaction_contract.py",
+      "tools/project006/test_installed_runtime_attestation.py",
       "tools/project006/test_physical_wake_acceptance.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_liveness_fallback.py",
@@ -11967,6 +11972,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1945,
+      "lines": 43,
+      "tokens_est": 487,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          27
+        ]
+      },
+      "topology": {},
+      "digest8": "d62db041d3259ee2",
+      "vector": [
+        -0.131149,
+        0.191679,
+        0.189437,
+        0.1446,
+        -0.285837,
+        -0.256693,
+        -0.10873,
+        0.093037,
+        0.229791,
+        -0.059409,
+        0.196163,
+        -0.063893,
+        -0.18047,
+        -0.106488,
+        0.110972,
+        -0.014572,
+        0.135632,
+        0.142358,
+        -0.227549,
+        0.021298,
+        -0.249967,
+        -0.034749,
+        0.263418,
+        0.122181,
+        -0.27687,
+        -0.229791,
+        -0.115456,
+        -0.258935,
+        0.214098,
+        -0.052684,
+        -0.090795,
+        0.245484
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17955,6 +18013,53 @@
         0.040057,
         -0.219772,
         -0.124501
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3351,
+      "lines": 38,
+      "tokens_est": 838,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "816d91ef83dceac0",
+      "vector": [
+        0.228386,
+        0.193749,
+        -0.107157,
+        0.122311,
+        0.042214,
+        -0.202408,
+        -0.18942,
+        -0.252199,
+        -0.02273,
+        -0.042214,
+        0.256528,
+        0.104993,
+        -0.258693,
+        -0.107157,
+        0.258693,
+        0.159113,
+        -0.204573,
+        0.204573,
+        -0.224056,
+        -0.070356,
+        0.070356,
+        -0.150453,
+        -0.167772,
+        0.245704,
+        -0.133135,
+        -0.096333,
+        0.061697,
+        0.074685,
+        -0.273847,
+        -0.206738,
+        -0.269517,
+        0.100663
       ]
     },
     {
@@ -105746,6 +105851,53 @@
       ]
     },
     {
+      "path": "tools/project006/proof_o20.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2745,
+      "lines": 37,
+      "tokens_est": 687,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2ca8ccc96787d91a",
+      "vector": [
+        0.062303,
+        0.199125,
+        -0.289526,
+        -0.160033,
+        0.226001,
+        -0.101395,
+        0.247991,
+        0.116055,
+        0.152704,
+        -0.047644,
+        -0.201569,
+        -0.247991,
+        0.243104,
+        0.118498,
+        -0.074519,
+        0.196682,
+        0.189352,
+        0.023211,
+        -0.140487,
+        -0.189352,
+        0.020768,
+        0.306629,
+        0.008551,
+        -0.125828,
+        -0.235774,
+        0.106282,
+        0.072076,
+        0.289526,
+        -0.257764,
+        -0.106282,
+        -0.079406,
+        0.152704
+      ]
+    },
+    {
       "path": "tools/project006/proof_physical_wake_o19.py",
       "role": "python_module",
       "binary": false,
@@ -105931,6 +106083,53 @@
         0.251676,
         -0.064382,
         -0.190805
+      ]
+    },
+    {
+      "path": "tools/project006/test_installed_runtime_attestation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4988,
+      "lines": 42,
+      "tokens_est": 1247,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "738536b1396a4c96",
+      "vector": [
+        0.225917,
+        0.056769,
+        -0.293113,
+        0.283845,
+        0.093843,
+        0.059086,
+        -0.216649,
+        0.193478,
+        -0.216649,
+        -0.225917,
+        0.218966,
+        -0.09616,
+        0.154087,
+        -0.244454,
+        0.026647,
+        -0.23982,
+        -0.260674,
+        -0.038232,
+        0.165673,
+        -0.100794,
+        -0.061403,
+        0.20738,
+        -0.205063,
+        0.126282,
+        -0.059086,
+        -0.070672,
+        0.09616,
+        0.128599,
+        -0.093843,
+        -0.25604,
+        0.249088,
+        0.056769
       ]
     },
     {
@@ -107166,7 +107365,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788788647,
+  "generated_at_unix": 1788788859,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107345,6 +107544,7 @@
       ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
       ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
+      ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -107447,6 +107647,7 @@
       "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
       "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
+      "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108829,10 +109030,12 @@
       "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/proof_aura_interaction_o18.py",
+      "tools/project006/proof_o20.py",
       "tools/project006/proof_physical_wake_o19.py",
       "tools/project006/proof_windows_liveness_fallback_o17.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_aura_interaction_contract.py",
+      "tools/project006/test_installed_runtime_attestation.py",
       "tools/project006/test_physical_wake_acceptance.py",
       "tools/project006/test_terminal_outbox.py",
       "tools/project006/test_windows_liveness_fallback.py",
@@ -269815,6 +270018,56 @@
         "file_digest8": "8d982bfbd2822cff"
       },
       {
+        "semantic_id": "tools/project006/proof_o20.py#function:campaign:231643048102be38",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/project006/proof_o20.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "5d0d5d85b7f484a4",
+        "file_digest8": "2ca8ccc96787d91a"
+      },
+      {
+        "semantic_id": "tools/project006/proof_o20.py#function:d13:7dcfbf966e72af5d",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/project006/proof_o20.py",
+        "line": 10,
+        "end_line": 16,
+        "signature_hash": "6b299e931f9d9f0d",
+        "file_digest8": "2ca8ccc96787d91a"
+      },
+      {
+        "semantic_id": "tools/project006/proof_o20.py#function:hs:32c763bcc91824c0",
+        "name": "hs",
+        "kind": "function",
+        "file": "tools/project006/proof_o20.py",
+        "line": 22,
+        "end_line": 35,
+        "signature_hash": "b3e37fefbbbd45d5",
+        "file_digest8": "2ca8ccc96787d91a"
+      },
+      {
+        "semantic_id": "tools/project006/proof_o20.py#function:keeper:d522d355cdb440cc",
+        "name": "keeper",
+        "kind": "function",
+        "file": "tools/project006/proof_o20.py",
+        "line": 4,
+        "end_line": 4,
+        "signature_hash": "25d67670486c403b",
+        "file_digest8": "2ca8ccc96787d91a"
+      },
+      {
+        "semantic_id": "tools/project006/proof_o20.py#function:omega8:e237c92f4cf60566",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/project006/proof_o20.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "2ca8ccc96787d91a"
+      },
+      {
         "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:accept:8ce97d0606599884",
         "name": "accept",
         "kind": "function",
@@ -270173,6 +270426,186 @@
         "end_line": 37,
         "signature_hash": "9cda8e15238167c3",
         "file_digest8": "874f13ef334c45c9"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#class:Tests:04324674482b7054",
+        "name": "Tests",
+        "kind": "class",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 10,
+        "end_line": 40,
+        "signature_hash": "53e678e6ff418c3d",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#function:evidence:d166d4a6ad6c028d",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "86191629dc48444b",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#function:measurement:94340a8857be54f6",
+        "name": "measurement",
+        "kind": "function",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 6,
+        "end_line": 7,
+        "signature_hash": "78c31508e146a1e9",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_current_requires_exact_measured_manifest:0e728b07574c7aa5",
+        "name": "Tests.test_current_requires_exact_measured_manifest",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "c8021745ec88d275",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_expired_holds:c45ac99db63f645e",
+        "name": "Tests.test_expired_holds",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "c5e69e9709a25642",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_forged_evidence_holds:d335e0a518e5ff93",
+        "name": "Tests.test_forged_evidence_holds",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "7150f2000bb33c73",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_future_issued_holds:5bcf0b1ce356550a",
+        "name": "Tests.test_future_issued_holds",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "4c8a0562d8647686",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_host_incarnation_unbound_holds:7a211a17d8c3dbf1",
+        "name": "Tests.test_host_incarnation_unbound_holds",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "c30d4558fd8b799e",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_k27_move_does_not_change_technical_identity:4d207b46eae7758c",
+        "name": "Tests.test_k27_move_does_not_change_technical_identity",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "b7fffe5cd89a3dd1",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_missing_component_is_mixed:be079036c824303e",
+        "name": "Tests.test_missing_component_is_mixed",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "91cb14fa70ce1dc5",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_mixed_generation_same_head:7e748f24c43cd2c3",
+        "name": "Tests.test_mixed_generation_same_head",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "f065bb4a7e777b97",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_no_measurement_unknown:08b46d74c755aa47",
+        "name": "Tests.test_no_measurement_unknown",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "899cda4ca41ddba8",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_owner_report_does_not_override_exact_measurement:28cc54870b56043a",
+        "name": "Tests.test_owner_report_does_not_override_exact_measurement",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "559ffdb4f3104f0b",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_owner_stale_report_is_not_exact_head_or_design_failure:aa4a43b12756a015",
+        "name": "Tests.test_owner_stale_report_is_not_exact_head_or_design_failure",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "c6c58ceeb71680e3",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_release_root_excludes_host_volatility:975f47c6f2d6deb8",
+        "name": "Tests.test_release_root_excludes_host_volatility",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "b0251ef12de61f5d",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_source_incarnation_unresolved_holds:ac07948b01ff875e",
+        "name": "Tests.test_source_incarnation_unresolved_holds",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "429b014007298ae1",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_stale_measured_head:1e7a1595c6bc53f6",
+        "name": "Tests.test_stale_measured_head",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "d75926d2e50202a1",
+        "file_digest8": "738536b1396a4c96"
+      },
+      {
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_wrong_measurement_binding_holds:3710fe37dba24b38",
+        "name": "Tests.test_wrong_measurement_binding_holds",
+        "kind": "method",
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "965efc71f05451be",
+        "file_digest8": "738536b1396a4c96"
       },
       {
         "semantic_id": "tools/project006/test_physical_wake_acceptance.py#class:Tests:f03defde66619375",
@@ -272025,8 +272458,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "09f6b58215e56af5c3b52f71c8730ad7",
-    "payload_hash": "28a715ae86b3573c2067bb7286914266"
+    "record_fingerprint": "e282f528f7870f441a700d196e0157d5",
+    "payload_hash": "1f9275a9d7c698332d86fa702bbc471f"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272039,16 +272472,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1682,
-      "bytes": 26620410,
-      "tokens_est": 6645455,
+      "files": 1686,
+      "bytes": 26633439,
+      "tokens_est": 6648714,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1024,
-        "schema_or_lexicon": 280,
+        "python_module": 1026,
+        "schema_or_lexicon": 282,
         "support_file": 53
       }
     },
@@ -272735,16 +273168,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1682,
-    "total_bytes": 26620410,
-    "text_tokens_est": 6645455,
+    "file_count": 1686,
+    "total_bytes": 26633439,
+    "text_tokens_est": 6648714,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1024,
-      "schema_or_lexicon": 280,
+      "python_module": 1026,
+      "schema_or_lexicon": 282,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -396267,6 +396700,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#function:evidence:d166d4a6ad6c028d",
+        "signature_hash": "86191629dc48444b"
       }
     ],
     "claim": [
@@ -431067,6 +431508,14 @@
         "signature_hash": "779fe12d7757e6f1"
       },
       {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/project006/proof_o20.py#function:omega8:e237c92f4cf60566",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
         "file": "tools/project006/proof_physical_wake_o19.py",
         "kind": "function",
         "line": 5,
@@ -431119,17 +431568,25 @@
         "signature_hash": "cb33d0ed1005d09a"
       }
     ],
-    "accept": [
+    "keeper": [
       {
-        "file": "tools/project006/proof_physical_wake_o19.py",
+        "file": "tools/project006/proof_o20.py",
         "kind": "function",
         "line": 4,
         "end_line": 4,
-        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:accept:8ce97d0606599884",
-        "signature_hash": "7f8980620bde7ff6"
+        "semantic_id": "tools/project006/proof_o20.py#function:keeper:d522d355cdb440cc",
+        "signature_hash": "25d67670486c403b"
       }
     ],
     "d13": [
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tools/project006/proof_o20.py#function:d13:7dcfbf966e72af5d",
+        "signature_hash": "6b299e931f9d9f0d"
+      },
       {
         "file": "tools/project006/proof_physical_wake_o19.py",
         "kind": "function",
@@ -431139,7 +431596,25 @@
         "signature_hash": "6b299e931f9d9f0d"
       }
     ],
+    "campaign": [
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/project006/proof_o20.py#function:campaign:231643048102be38",
+        "signature_hash": "5d0d5d85b7f484a4"
+      }
+    ],
     "hs": [
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 35,
+        "semantic_id": "tools/project006/proof_o20.py#function:hs:32c763bcc91824c0",
+        "signature_hash": "b3e37fefbbbd45d5"
+      },
       {
         "file": "tools/project006/proof_physical_wake_o19.py",
         "kind": "function",
@@ -431147,6 +431622,16 @@
         "end_line": 26,
         "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:hs:6a8c8510a6488244",
         "signature_hash": "b3e37fefbbbd45d5"
+      }
+    ],
+    "accept": [
+      {
+        "file": "tools/project006/proof_physical_wake_o19.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:accept:8ce97d0606599884",
+        "signature_hash": "7f8980620bde7ff6"
       }
     ],
     "TxState": [
@@ -431429,6 +431914,184 @@
         "signature_hash": "e56e7f159a867437"
       }
     ],
+    "measurement": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#function:measurement:94340a8857be54f6",
+        "signature_hash": "78c31508e146a1e9"
+      }
+    ],
+    "Tests": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 40,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#class:Tests:04324674482b7054",
+        "signature_hash": "53e678e6ff418c3d"
+      },
+      {
+        "file": "tools/project006/test_physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 42,
+        "semantic_id": "tools/project006/test_physical_wake_acceptance.py#class:Tests:f03defde66619375",
+        "signature_hash": "53e678e6ff418c3d"
+      }
+    ],
+    "Tests.test_owner_stale_report_is_not_exact_head_or_design_failure": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_owner_stale_report_is_not_exact_head_or_design_failure:aa4a43b12756a015",
+        "signature_hash": "c6c58ceeb71680e3"
+      }
+    ],
+    "Tests.test_no_measurement_unknown": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_no_measurement_unknown:08b46d74c755aa47",
+        "signature_hash": "899cda4ca41ddba8"
+      }
+    ],
+    "Tests.test_current_requires_exact_measured_manifest": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_current_requires_exact_measured_manifest:0e728b07574c7aa5",
+        "signature_hash": "c8021745ec88d275"
+      }
+    ],
+    "Tests.test_owner_report_does_not_override_exact_measurement": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_owner_report_does_not_override_exact_measurement:28cc54870b56043a",
+        "signature_hash": "559ffdb4f3104f0b"
+      }
+    ],
+    "Tests.test_stale_measured_head": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_stale_measured_head:1e7a1595c6bc53f6",
+        "signature_hash": "d75926d2e50202a1"
+      }
+    ],
+    "Tests.test_mixed_generation_same_head": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_mixed_generation_same_head:7e748f24c43cd2c3",
+        "signature_hash": "f065bb4a7e777b97"
+      }
+    ],
+    "Tests.test_missing_component_is_mixed": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_missing_component_is_mixed:be079036c824303e",
+        "signature_hash": "91cb14fa70ce1dc5"
+      }
+    ],
+    "Tests.test_forged_evidence_holds": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_forged_evidence_holds:d335e0a518e5ff93",
+        "signature_hash": "7150f2000bb33c73"
+      }
+    ],
+    "Tests.test_wrong_measurement_binding_holds": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_wrong_measurement_binding_holds:3710fe37dba24b38",
+        "signature_hash": "965efc71f05451be"
+      }
+    ],
+    "Tests.test_source_incarnation_unresolved_holds": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_source_incarnation_unresolved_holds:ac07948b01ff875e",
+        "signature_hash": "429b014007298ae1"
+      }
+    ],
+    "Tests.test_host_incarnation_unbound_holds": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_host_incarnation_unbound_holds:7a211a17d8c3dbf1",
+        "signature_hash": "c30d4558fd8b799e"
+      }
+    ],
+    "Tests.test_expired_holds": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_expired_holds:c45ac99db63f645e",
+        "signature_hash": "c5e69e9709a25642"
+      }
+    ],
+    "Tests.test_future_issued_holds": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_future_issued_holds:5bcf0b1ce356550a",
+        "signature_hash": "4c8a0562d8647686"
+      }
+    ],
+    "Tests.test_k27_move_does_not_change_technical_identity": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_k27_move_does_not_change_technical_identity:4d207b46eae7758c",
+        "signature_hash": "b7fffe5cd89a3dd1"
+      }
+    ],
+    "Tests.test_release_root_excludes_host_volatility": [
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#method:Tests.test_release_root_excludes_host_volatility:975f47c6f2d6deb8",
+        "signature_hash": "b0251ef12de61f5d"
+      }
+    ],
     "ev": [
       {
         "file": "tools/project006/test_physical_wake_acceptance.py",
@@ -431437,16 +432100,6 @@
         "end_line": 6,
         "semantic_id": "tools/project006/test_physical_wake_acceptance.py#function:ev:58a4d3188a292ab8",
         "signature_hash": "48a4f286356dd43c"
-      }
-    ],
-    "Tests": [
-      {
-        "file": "tools/project006/test_physical_wake_acceptance.py",
-        "kind": "class",
-        "line": 7,
-        "end_line": 42,
-        "semantic_id": "tools/project006/test_physical_wake_acceptance.py#class:Tests:f03defde66619375",
-        "signature_hash": "53e678e6ff418c3d"
       }
     ],
     "Tests.fresh": [

@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1682
-- **total_bytes**: 26620410
-- **text_tokens_est**: 6645455
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1024, 'schema_or_lexicon': 280, 'support_file': 53}
+- **file_count**: 1686
+- **total_bytes**: 26633439
+- **text_tokens_est**: 6648714
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 282, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1682,
+  "repo_file_count": 1686,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -200,6 +200,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
     ".github/workflows/project006-o18-aura-interaction-proof.yml",
     ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
+    ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -302,6 +303,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
     "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
     "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
+    "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1684,10 +1686,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/physical_wake_acceptance.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
     "tools/project006/proof_aura_interaction_o18.py",
+    "tools/project006/proof_o20.py",
     "tools/project006/proof_physical_wake_o19.py",
     "tools/project006/proof_windows_liveness_fallback_o17.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_aura_interaction_contract.py",
+    "tools/project006/test_installed_runtime_attestation.py",
     "tools/project006/test_physical_wake_acceptance.py",
     "tools/project006/test_terminal_outbox.py",
     "tools/project006/test_windows_liveness_fallback.py",
@@ -1822,16 +1826,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1682,
-  "bytes": 26620410,
-  "tokens_est": 6645455,
+  "files": 1686,
+  "bytes": 26633439,
+  "tokens_est": 6648714,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1024,
-    "schema_or_lexicon": 280,
+    "python_module": 1026,
+    "schema_or_lexicon": 282,
     "support_file": 53
   }
 }
