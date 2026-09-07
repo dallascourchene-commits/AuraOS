@@ -29,7 +29,7 @@ def _oracle(lease: DemandCellLease, cell: DemandCellState, now: int) -> bool:
         and lease.configuration_root == cell.configuration_root
         and lease.support_epoch == cell.support_epoch
         and lease.fence_generation == cell.fence_generation
-        and lease.fence_generation >= cell.highest_accepted_fence
+        and lease.fence_generation == cell.highest_accepted_fence
     )
 
 
@@ -57,7 +57,7 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
         cfg_b = _root(f"cfg-b-{i % 37}")
         base = DemandCellState("cell", 4, cfg_a, 10, 21, 21)
         lease = DemandCellLease("cell", 4, cfg_a, 10, 21, "old", 100)
-        mode = i % 8
+        mode = i % 9
         if mode == 0:
             current, now = base, 50
         elif mode == 1:
@@ -72,8 +72,14 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
             current, now = base, 100
         elif mode == 6:
             current, now = DemandCellState("cell", 4, cfg_b, 11, 22, 22), 99
-        else:
+        elif mode == 7:
             current, now = base, 99
+        else:
+            # Current/issued fence has advanced but the protected resource has
+            # not installed it yet. This is the Greptile P1 regression case.
+            current = DemandCellState("cell", 4, cfg_a, 10, 22, 21)
+            lease = DemandCellLease("cell", 4, cfg_a, 10, 22, "new", 100)
+            now = 50
 
         expected = _oracle(lease, current, now)
         actual = compile_write(lease, current, now).disposition is LeaseDisposition.READY_D0
@@ -114,7 +120,7 @@ def run(seed: int = 541002, cases: int = 12000) -> dict[str, object]:
 
     encoded = json.dumps(counters, sort_keys=True, separators=(",", ":")).encode()
     return {
-        "schema": "aura.astra.o10.demand_lease_handoff.campaign.v1",
+        "schema": "aura.astra.o10r.demand_lease_handoff.campaign.v1",
         "seed": seed,
         **counters,
         "campaign_root": sha256(encoded).hexdigest(),
