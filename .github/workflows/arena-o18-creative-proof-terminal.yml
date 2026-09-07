@@ -1,0 +1,60 @@
+name: Arena O18 Creative Proof Terminal
+on:
+  pull_request:
+    paths:
+      - "tools/arena/o18_creative_proof_terminal.py"
+      - "artifacts/arena/o18_creative_proof_terminal/PROOF_RECEIPT_O18.json"
+      - ".github/workflows/arena-o18-creative-proof-terminal.yml"
+permissions:
+  contents: read
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout and source
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test "$(sha256sum tools/arena/o18_creative_proof_terminal.py | awk '{print $1}')" = "2e375f906034d290fdbb9bdbb27c97a5895b6ae69f044369edcceba7afc05db7"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.13"
+      - name: Three fresh stdlib virtual environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p proof-out
+          for i in 1 2 3; do
+            rm -rf ".venv-o18-$i"
+            python -m venv ".venv-o18-$i"
+            PY=".venv-o18-$i/bin/python"
+            "$PY" tools/arena/o18_creative_proof_terminal.py test
+            for mode in campaign omega8 13d hs1000; do
+              "$PY" tools/arena/o18_creative_proof_terminal.py "$mode" > "proof-out/$mode-$i.json"
+            done
+          done
+          for mode in campaign omega8 13d hs1000; do
+            cmp "proof-out/$mode-1.json" "proof-out/$mode-2.json"
+            cmp "proof-out/$mode-1.json" "proof-out/$mode-3.json"
+          done
+          python - <<'PY'
+          import json
+          c=json.load(open('proof-out/campaign-1.json'))
+          o=json.load(open('proof-out/omega8-1.json'))
+          d=json.load(open('proof-out/13d-1.json'))
+          h=json.load(open('proof-out/hs1000-1.json'))
+          assert c['cases']==30000 and c['oracle_mismatches']==0 and c['authority_minted']==0
+          assert c['naive_transport_or_operation_false_promotions']==7371
+          assert c['transport_without_proof_cases']==469 and c['wrong_attempt_challenge_cases']==62
+          assert o['states']==6561 and o['keepers']==1 and o['invalid_promotions']==0
+          assert d['states']==1594323 and d['lawful_contexts']==243 and d['hard_invalid_context_repairs']==0
+          assert h['raw_cells']==1000 and h['consequence_groups']==10 and h['claimed_breakthroughs']==0
+          PY
