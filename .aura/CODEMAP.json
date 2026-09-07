@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1685,
+    "repo_file_count": 1687,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2696,6 +2696,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_incremental_evidence.py",
+      "tests/test_k27_memory_navigator_invariant_support.py",
       "tests/test_k27_memory_navigator_review_regressions.py",
       "tests/test_k27_memory_navigator_route_admission.py",
       "tests/test_k27_memory_navigator_route_evidence_transaction.py",
@@ -2728,6 +2729,7 @@
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
       "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
+      "tools/arena/k27_memory_navigator/invariant_support.py",
       "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "tools/arena/k27_memory_navigator/reflexive_topology.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
@@ -104379,6 +104381,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_memory_navigator_invariant_support.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5810,
+      "lines": 142,
+      "tokens_est": 1453,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8fce888ac8df4ee",
+      "vector": [
+        -0.181154,
+        -0.188974,
+        -0.149876,
+        0.152482,
+        -0.144663,
+        0.324514,
+        0.089926,
+        -0.162909,
+        -0.108171,
+        0.277596,
+        0.230678,
+        -0.045614,
+        -0.115991,
+        -0.037795,
+        0.024762,
+        -0.194187,
+        0.084712,
+        -0.032582,
+        0.162909,
+        0.170728,
+        -0.168122,
+        -0.233285,
+        -0.235892,
+        0.20722,
+        0.121204,
+        0.069073,
+        -0.009123,
+        -0.246318,
+        -0.285416,
+        -0.142056,
+        -0.230678,
+        -0.217646
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_navigator_review_regressions.py",
       "role": "python_module",
       "binary": false,
@@ -105745,47 +105794,47 @@
       "path": "tools/arena/k27_memory_navigator/__init__.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 1962,
-      "lines": 44,
-      "tokens_est": 491,
+      "bytes": 2233,
+      "lines": 50,
+      "tokens_est": 559,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "78179835372d2a9c",
+      "digest8": "7e8242fbcf05eeb6",
       "vector": [
-        -0.221594,
-        0.197578,
-        0.125533,
-        0.26744,
-        -0.206311,
-        0.230326,
-        -0.079686,
-        0.099335,
-        -0.241242,
-        -0.073137,
-        0.145182,
-        -0.094969,
-        0.009824,
-        0.182296,
-        0.175747,
-        0.258708,
-        -0.228143,
-        -0.265257,
-        0.206311,
-        0.22596,
-        -0.180113,
-        -0.001092,
-        -0.145182,
-        -0.221594,
-        -0.049122,
-        -0.029473,
-        -0.221594,
-        -0.070954,
-        -0.234693,
-        0.125533,
-        0.053488,
-        -0.195395
+        0.311359,
+        0.111991,
+        -0.217828,
+        0.114452,
+        -0.033228,
+        0.269516,
+        -0.089839,
+        0.289207,
+        0.185831,
+        0.089839,
+        0.104607,
+        -0.29413,
+        0.156295,
+        -0.161218,
+        0.151372,
+        0.158756,
+        0.013537,
+        -0.249826,
+        0.139066,
+        0.114452,
+        0.003692,
+        0.111991,
+        0.279362,
+        0.161218,
+        0.008615,
+        -0.291669,
+        -0.052919,
+        0.006153,
+        0.070148,
+        -0.301514,
+        -0.158756,
+        0.072609
       ]
     },
     {
@@ -105880,6 +105929,53 @@
         -0.270649,
         0.138332,
         0.159983
+      ]
+    },
+    {
+      "path": "tools/arena/k27_memory_navigator/invariant_support.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5674,
+      "lines": 160,
+      "tokens_est": 1419,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d7635070581531c2",
+      "vector": [
+        0.297927,
+        0.018391,
+        0.204748,
+        -0.199844,
+        0.293022,
+        -0.239077,
+        0.096857,
+        -0.035555,
+        0.128734,
+        -0.275858,
+        0.295475,
+        -0.280762,
+        0.185131,
+        0.091953,
+        -0.055172,
+        -0.204748,
+        0.145898,
+        -0.087049,
+        0.040459,
+        -0.133638,
+        0.160611,
+        -0.013486,
+        0.116473,
+        0.038007,
+        -0.028199,
+        -0.094405,
+        0.133638,
+        -0.099309,
+        -0.302831,
+        -0.042911,
+        -0.229269,
+        -0.236625
       ]
     },
     {
@@ -107303,7 +107399,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788742845,
+  "generated_at_unix": 1788743128,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108937,6 +109033,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_incremental_evidence.py",
+      "tests/test_k27_memory_navigator_invariant_support.py",
       "tests/test_k27_memory_navigator_review_regressions.py",
       "tests/test_k27_memory_navigator_route_admission.py",
       "tests/test_k27_memory_navigator_route_evidence_transaction.py",
@@ -108969,6 +109066,7 @@
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
       "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
+      "tools/arena/k27_memory_navigator/invariant_support.py",
       "tools/arena/k27_memory_navigator/minimal_evidence.py",
       "tools/arena/k27_memory_navigator/reflexive_topology.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
@@ -267305,6 +267403,176 @@
         "file_digest8": "8e79954923428961"
       },
       {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#class:InvariantSupportTests:eaa006fbe6d2e865",
+        "name": "InvariantSupportTests",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 14,
+        "end_line": 137,
+        "signature_hash": "c67bbf62e77a74d8",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#function:support:a38e3ab3a26a2f19",
+        "name": "support",
+        "kind": "function",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "7af17f045f0feb1b",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_authority_never_minted:3efbcfbd450c6f04",
+        "name": "InvariantSupportTests.test_authority_never_minted",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 97,
+        "end_line": 101,
+        "signature_hash": "dd7babab3eaae1dd",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_changed_invariant_seeds_without_geometry:91e67618abb5396c",
+        "name": "InvariantSupportTests.test_changed_invariant_seeds_without_geometry",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 31,
+        "end_line": 36,
+        "signature_hash": "a958a17138351514",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_dense_support_collapses_to_eager:f769b9d82dd7a569",
+        "name": "InvariantSupportTests.test_dense_support_collapses_to_eager",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 38,
+        "end_line": 44,
+        "signature_hash": "457fe46809893de3",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_direct_geometry_seed_selects_component:f2b01180396bfcfc",
+        "name": "InvariantSupportTests.test_direct_geometry_seed_selects_component",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 15,
+        "end_line": 21,
+        "signature_hash": "86c5bd9e20edf55d",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_duplicate_invariant_rejected:ec02f85ae2b178ed",
+        "name": "InvariantSupportTests.test_duplicate_invariant_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 61,
+        "end_line": 65,
+        "signature_hash": "e16bb5aac5a9e9a7",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_hyperedges_transitively_couple:bd0579f82ea6b370",
+        "name": "InvariantSupportTests.test_hyperedges_transitively_couple",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 23,
+        "end_line": 29,
+        "signature_hash": "9f4c4205ca579047",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_no_seed_no_reproof:9845487ec1ee5f32",
+        "name": "InvariantSupportTests.test_no_seed_no_reproof",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "c19048a67054f0f1",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_random_matches_reference_closure:cc45e6b87d270dc5",
+        "name": "InvariantSupportTests.test_random_matches_reference_closure",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 103,
+        "end_line": 124,
+        "signature_hash": "f2ad068dedcf333f",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_random_stale_never_certifies_split:2ad035d231907d6a",
+        "name": "InvariantSupportTests.test_random_stale_never_certifies_split",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 126,
+        "end_line": 137,
+        "signature_hash": "ddfa67a18dce37f8",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_raw_state_rejected:d59631f35ec05660",
+        "name": "InvariantSupportTests.test_raw_state_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "eff6784024df069c",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_root_stable_across_input_order:24641293f4181f85",
+        "name": "InvariantSupportTests.test_root_stable_across_input_order",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 84,
+        "end_line": 95,
+        "signature_hash": "7d9ff5c5bd0d6920",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_stale_support_holds_global:e1493ace825af198",
+        "name": "InvariantSupportTests.test_stale_support_holds_global",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 46,
+        "end_line": 53,
+        "signature_hash": "03c154e2daab707d",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_unknown_changed_invariant_rejected:db84ebc15d1f85bf",
+        "name": "InvariantSupportTests.test_unknown_changed_invariant_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 71,
+        "end_line": 73,
+        "signature_hash": "067d7317a1d2b69b",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_unknown_segment_rejected:789951ed7ec1beaf",
+        "name": "InvariantSupportTests.test_unknown_segment_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "8ac3baa3104b9c1c",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_unknown_support_holds_global:73066f8e6e382c57",
+        "name": "InvariantSupportTests.test_unknown_support_holds_global",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "a44f22bc15757def",
+        "file_digest8": "c8fce888ac8df4ee"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_navigator_review_regressions.py#class:Binding:372fe9acb3f95e16",
         "name": "Binding",
         "kind": "class",
@@ -271255,6 +271523,96 @@
         "file_digest8": "d9b700355231be4f"
       },
       {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:HardInvariantSupport:a3f156ce42dbf1a8",
+        "name": "HardInvariantSupport",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 24,
+        "end_line": 37,
+        "signature_hash": "ef2da9ab51e416fe",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:InvariantSupportPlan:176c5e462e538d19",
+        "name": "InvariantSupportPlan",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 41,
+        "end_line": 49,
+        "signature_hash": "66f75bd7372e63be",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:SupportDisposition:3bb0303163926c67",
+        "name": "SupportDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 16,
+        "end_line": 20,
+        "signature_hash": "700d3e8c337ac8ae",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:SupportState:2dc068765239f15e",
+        "name": "SupportState",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 10,
+        "end_line": 13,
+        "signature_hash": "7cbe3014b8d46655",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#function:_support_root:bc271a67caa0bfb0",
+        "name": "_support_root",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 52,
+        "end_line": 62,
+        "signature_hash": "fd98e1211a1a8805",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#function:compile_invariant_support:ece718632799d572",
+        "name": "compile_invariant_support",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 65,
+        "end_line": 159,
+        "signature_hash": "7390ebecc3e2791d",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#method:HardInvariantSupport.__post_init__:03ba4dc84f07da8a",
+        "name": "HardInvariantSupport.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 29,
+        "end_line": 37,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#method:compile_invariant_support.find:876d5b80c1643d81",
+        "name": "compile_invariant_support.find",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 119,
+        "end_line": 123,
+        "signature_hash": "4fd129890f997915",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#method:compile_invariant_support.union:239dadbea9c98f81",
+        "name": "compile_invariant_support.union",
+        "kind": "method",
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "line": 125,
+        "end_line": 128,
+        "signature_hash": "58cb91e55826085a",
+        "file_digest8": "d7635070581531c2"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory_navigator/minimal_evidence.py#class:DecisionNode:b778615b6dfc8f77",
         "name": "DecisionNode",
         "kind": "class",
@@ -273435,8 +273793,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f223546345e8f5c075329faee6ffaffe",
-    "payload_hash": "4603f9e9a0e80fdd1b02a9932024f670"
+    "record_fingerprint": "919dbdf0caa13bb95d9b3b722fac04e4",
+    "payload_hash": "360b3bfdb4f429f479f29dffb69efe43"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273449,15 +273807,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1685,
-      "bytes": 26689173,
-      "tokens_est": 6662649,
+      "files": 1687,
+      "bytes": 26700928,
+      "tokens_est": 6665589,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1035,
+        "python_module": 1037,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -274145,15 +274503,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1685,
-    "total_bytes": 26689173,
-    "text_tokens_est": 6662649,
+    "file_count": 1687,
+    "total_bytes": 26700928,
+    "text_tokens_est": 6665589,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1035,
+      "python_module": 1037,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -430173,6 +430531,176 @@
         "signature_hash": "33fe587a9774159a"
       }
     ],
+    "support": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#function:support:a38e3ab3a26a2f19",
+        "signature_hash": "7af17f045f0feb1b"
+      }
+    ],
+    "InvariantSupportTests": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 137,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#class:InvariantSupportTests:eaa006fbe6d2e865",
+        "signature_hash": "c67bbf62e77a74d8"
+      }
+    ],
+    "InvariantSupportTests.test_direct_geometry_seed_selects_component": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 21,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_direct_geometry_seed_selects_component:f2b01180396bfcfc",
+        "signature_hash": "86c5bd9e20edf55d"
+      }
+    ],
+    "InvariantSupportTests.test_hyperedges_transitively_couple": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 29,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_hyperedges_transitively_couple:bd0579f82ea6b370",
+        "signature_hash": "9f4c4205ca579047"
+      }
+    ],
+    "InvariantSupportTests.test_changed_invariant_seeds_without_geometry": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 36,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_changed_invariant_seeds_without_geometry:91e67618abb5396c",
+        "signature_hash": "a958a17138351514"
+      }
+    ],
+    "InvariantSupportTests.test_dense_support_collapses_to_eager": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 44,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_dense_support_collapses_to_eager:f769b9d82dd7a569",
+        "signature_hash": "457fe46809893de3"
+      }
+    ],
+    "InvariantSupportTests.test_stale_support_holds_global": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 53,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_stale_support_holds_global:e1493ace825af198",
+        "signature_hash": "03c154e2daab707d"
+      }
+    ],
+    "InvariantSupportTests.test_unknown_support_holds_global": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_unknown_support_holds_global:73066f8e6e382c57",
+        "signature_hash": "a44f22bc15757def"
+      }
+    ],
+    "InvariantSupportTests.test_duplicate_invariant_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 65,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_duplicate_invariant_rejected:ec02f85ae2b178ed",
+        "signature_hash": "e16bb5aac5a9e9a7"
+      }
+    ],
+    "InvariantSupportTests.test_unknown_segment_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_unknown_segment_rejected:789951ed7ec1beaf",
+        "signature_hash": "8ac3baa3104b9c1c"
+      }
+    ],
+    "InvariantSupportTests.test_unknown_changed_invariant_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_unknown_changed_invariant_rejected:db84ebc15d1f85bf",
+        "signature_hash": "067d7317a1d2b69b"
+      }
+    ],
+    "InvariantSupportTests.test_raw_state_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_raw_state_rejected:d59631f35ec05660",
+        "signature_hash": "eff6784024df069c"
+      }
+    ],
+    "InvariantSupportTests.test_no_seed_no_reproof": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_no_seed_no_reproof:9845487ec1ee5f32",
+        "signature_hash": "c19048a67054f0f1"
+      }
+    ],
+    "InvariantSupportTests.test_root_stable_across_input_order": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 95,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_root_stable_across_input_order:24641293f4181f85",
+        "signature_hash": "7d9ff5c5bd0d6920"
+      }
+    ],
+    "InvariantSupportTests.test_authority_never_minted": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 101,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_authority_never_minted:3efbcfbd450c6f04",
+        "signature_hash": "dd7babab3eaae1dd"
+      }
+    ],
+    "InvariantSupportTests.test_random_matches_reference_closure": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 124,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_random_matches_reference_closure:cc45e6b87d270dc5",
+        "signature_hash": "f2ad068dedcf333f"
+      }
+    ],
+    "InvariantSupportTests.test_random_stale_never_certifies_split": [
+      {
+        "file": "tests/test_k27_memory_navigator_invariant_support.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 137,
+        "semantic_id": "tests/test_k27_memory_navigator_invariant_support.py#method:InvariantSupportTests.test_random_stale_never_certifies_split:2ad035d231907d6a",
+        "signature_hash": "ddfa67a18dce37f8"
+      }
+    ],
     "Seal": [
       {
         "file": "tests/test_k27_memory_navigator_review_regressions.py",
@@ -433801,6 +434329,96 @@
         "end_line": 171,
         "semantic_id": "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py#method:SpatialSeamTests.test_invalid_route_json_holds:27503566efc17b20",
         "signature_hash": "c1cbb7a146fe1ebb"
+      }
+    ],
+    "SupportState": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 13,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:SupportState:2dc068765239f15e",
+        "signature_hash": "7cbe3014b8d46655"
+      }
+    ],
+    "SupportDisposition": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 20,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:SupportDisposition:3bb0303163926c67",
+        "signature_hash": "700d3e8c337ac8ae"
+      }
+    ],
+    "HardInvariantSupport": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 37,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:HardInvariantSupport:a3f156ce42dbf1a8",
+        "signature_hash": "ef2da9ab51e416fe"
+      }
+    ],
+    "HardInvariantSupport.__post_init__": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 37,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#method:HardInvariantSupport.__post_init__:03ba4dc84f07da8a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "InvariantSupportPlan": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 49,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#class:InvariantSupportPlan:176c5e462e538d19",
+        "signature_hash": "66f75bd7372e63be"
+      }
+    ],
+    "_support_root": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 62,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#function:_support_root:bc271a67caa0bfb0",
+        "signature_hash": "fd98e1211a1a8805"
+      }
+    ],
+    "compile_invariant_support": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 159,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#function:compile_invariant_support:ece718632799d572",
+        "signature_hash": "7390ebecc3e2791d"
+      }
+    ],
+    "compile_invariant_support.find": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 123,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#method:compile_invariant_support.find:876d5b80c1643d81",
+        "signature_hash": "4fd129890f997915"
+      }
+    ],
+    "compile_invariant_support.union": [
+      {
+        "file": "tools/arena/k27_memory_navigator/invariant_support.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 128,
+        "semantic_id": "tools/arena/k27_memory_navigator/invariant_support.py#method:compile_invariant_support.union:239dadbea9c98f81",
+        "signature_hash": "58cb91e55826085a"
       }
     ],
     "EvidenceMode": [
