@@ -55,12 +55,11 @@ def compile_minimal_evidence(
 ) -> EvidencePlan:
     """Exact minimum-worst-case weighted single-bit decision tree.
 
-    This is intentionally finite/model-exact. It first enforces hard premise
-    admission; a uniform quotient requires no disclosure. Unsupported evidence
-    families fall back to full reification rather than overclaim optimality.
+    Structural identity/shape validation is public metadata validation, not an
+    evidence query. It therefore precedes every early return so malformed or
+    duplicate worlds cannot hide behind a hard-premise HOLD or zero-disclosure
+    outcome. Unsupported evidence families still fall back to full reification.
     """
-    if not hard_premises_valid:
-        return EvidencePlan(EvidenceMode.HOLD_BEFORE_QUERY, 0, None, 0)
     if not worlds:
         raise ValueError("at least one evidence world required")
     width = len(worlds[0].bits)
@@ -68,15 +67,20 @@ def compile_minimal_evidence(
         raise ValueError("all worlds must have same predicate width")
     if len(costs) != width or any(type(c) is not int or c <= 0 for c in costs):
         raise ValueError("costs must be positive exact ints matching predicate width")
+
+    by_id = {w.world_id: w for w in worlds}
+    if len(by_id) != len(worlds):
+        raise ValueError("duplicate world_id")
+    if type(hard_premises_valid) is not bool or type(supported_single_bit_family) is not bool:
+        raise ValueError("compiler flags must be exact bools")
+
+    if not hard_premises_valid:
+        return EvidencePlan(EvidenceMode.HOLD_BEFORE_QUERY, 0, None, 0)
     outcomes = {w.outcome for w in worlds}
     if len(outcomes) == 1:
         return EvidencePlan(EvidenceMode.ZERO_DISCLOSURE, 0, DecisionNode(outcome=next(iter(outcomes))), 0)
     if not supported_single_bit_family:
         return EvidencePlan(EvidenceMode.FULL_REIFY, None, None, width)
-
-    by_id = {w.world_id: w for w in worlds}
-    if len(by_id) != len(worlds):
-        raise ValueError("duplicate world_id")
 
     @lru_cache(maxsize=None)
     def solve(ids: tuple[str, ...], remaining: tuple[int, ...]):
@@ -100,7 +104,7 @@ def compile_minimal_evidence(
                 best = candidate
         return best
 
-    ids = tuple(sorted(w.world_id for w in worlds))
+    ids = tuple(sorted(by_id))
     cost, tree, depth = solve(ids, tuple(range(width)))
     if cost == inf or tree is None:
         return EvidencePlan(EvidenceMode.FULL_REIFY, None, None, width)
