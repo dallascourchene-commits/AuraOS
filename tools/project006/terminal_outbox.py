@@ -5,9 +5,10 @@ import json
 import sqlite3
 import subprocess
 from dataclasses import dataclass, asdict
+from contextlib import contextmanager
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable, Mapping
 
 SCHEMA = "AuraTerminalBusResponseV1"
 VERSION = "PROJECT006_TERMINAL_OUTBOX_V1"
@@ -80,8 +81,8 @@ class TerminalResponse:
 class OutboxJournal:
     """Durable transaction journal separating provider terminality from Drive return.
 
-    The provider effect is never invoked by this class. A caller may record ACK/EXECUTION/RESULT,
-    but retries here only retry the outbound writer for an already-decided response.
+    The provider effect is never invoked by this class. Retries here retry only the
+    bounded Drive writer for an already-decided response.
     """
     def __init__(self, path: str | Path):
         self.path = str(path)
@@ -103,10 +104,18 @@ class OutboxJournal:
         finally:
             con.close()
 
+    @contextmanager
     def _con(self):
         con = sqlite3.connect(self.path)
         con.row_factory = sqlite3.Row
-        return con
+        try:
+            yield con
+            con.commit()
+        except Exception:
+            con.rollback()
+            raise
+        finally:
+            con.close()
 
     def ingest(self, ident: CommandIdentity) -> None:
         ident.validate()
@@ -165,29 +174,41 @@ class OutboxJournal:
                 raise ValueError("COMMAND_NOT_INGESTED")
             return dict(row)
 
-class BusWriterCLI:
-    """Adapter for the installed bounded writer using JSON stdin."""
-    def __init__(self, argv: Sequence[str], *, timeout_s: int = 60):
-        if not argv or any(not isinstance(x, str) or not x for x in argv):
-            raise ValueError("INVALID_WRITER_ARGV")
-        self.argv = tuple(argv)
+class AuraDriveBusWriterV1:
+    """Exact adapter for installed ``aura_drive_bus_writer_v1.py`` line protocol.
+
+    Source-grounded invocation:
+      [python, script, --channel, aura_to_swarm, --kind, <kind>, --objective, <command_id>]
+    with canonical JSON on stdin. The installed writer owns OAuth refresh, Drive-root guard,
+    filename construction, and bounded upload.
+    """
+    def __init__(self, python: str, script: str, *, timeout_s: int = 60):
+        if not python or not script:
+            raise ValueError("INVALID_WRITER_BINDING")
+        self.python = python
+        self.script = script
         self.timeout_s = timeout_s
 
     def __call__(self, payload: Mapping[str, Any]) -> str:
-        p = subprocess.run(self.argv, input=json.dumps(payload, sort_keys=True)+"\n", text=True,
-                           capture_output=True, timeout=self.timeout_s, check=False)
+        kind = payload.get("kind")
+        command_id = payload.get("command_id")
+        if kind not in TERMINAL_KINDS or not isinstance(command_id, str) or not command_id:
+            raise ValueError("INVALID_TERMINAL_FOR_WRITER")
+        argv = [self.python, self.script, "--channel", "aura_to_swarm",
+                "--kind", str(kind), "--objective", command_id]
+        body = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False) + "\n"
+        p = subprocess.run(argv, input=body, text=True, capture_output=True,
+                           timeout=self.timeout_s, check=False)
         if p.returncode != 0:
             raise RuntimeError("BUS_WRITER_FAILED")
-        out = p.stdout.strip()
-        if not out:
-            raise RuntimeError("BUS_WRITER_EMPTY")
-        try:
-            obj = json.loads(out.splitlines()[-1])
-            if isinstance(obj, dict):
-                for key in ("file_id", "drive_file_id", "outbound_ref", "id"):
-                    val = obj.get(key)
-                    if isinstance(val, str) and val:
-                        return val
-        except json.JSONDecodeError:
-            pass
-        return out.splitlines()[-1]
+        fields: dict[str, str] = {}
+        for line in p.stdout.splitlines():
+            if "=" in line:
+                key, value = line.split("=", 1)
+                fields[key.strip()] = value.strip()
+        if fields.get("BUS_WRITE_OK") != "True":
+            raise RuntimeError("BUS_WRITER_NOT_OK")
+        file_id = fields.get("FILE_ID")
+        if not file_id:
+            raise RuntimeError("BUS_WRITER_MISSING_FILE_ID")
+        return file_id
