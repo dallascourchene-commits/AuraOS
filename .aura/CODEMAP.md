@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1697
-- **total_bytes**: 26754042
-- **text_tokens_est**: 6678868
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1042, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1699
+- **total_bytes**: 26763623
+- **text_tokens_est**: 6681264
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1044, 'schema_or_lexicon': 280, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1697,
+  "repo_file_count": 1699,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1693,6 +1693,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_runtime.py",
     "tools/arena/memory_city_anchor_locator.py",
+    "tools/arena/memory_city_component_projection_campaign.py",
+    "tools/arena/memory_city_component_projection_hs1000.py",
     "tools/arena/memory_city_contingent_hydration.py",
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
@@ -1837,15 +1839,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1697,
-  "bytes": 26754042,
-  "tokens_est": 6678868,
+  "files": 1699,
+  "bytes": 26763623,
+  "tokens_est": 6681264,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1042,
+    "python_module": 1044,
     "schema_or_lexicon": 280,
     "support_file": 49
   }
