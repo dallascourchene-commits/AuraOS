@@ -1,0 +1,58 @@
+{
+  "schema": "AURA-PROJECT006-EFFECT-ATTEMPT-RECOVERY-PROOF-v1",
+  "objective": "O11",
+  "authority": "D0_NONPROMOTING",
+  "gate10": false,
+  "effect_authority_minted": false,
+  "parents": [
+    {
+      "kind": "PR894_O10_ERAC",
+      "head": "e839ede40797874dfa932d9fe09760e17c17a676",
+      "transplanted_blob_sha": "b29aea4b10a6d7726ba83568dd3b76c665f9455c",
+      "consequence": "TECCAuthorizedEffect != SafelyRetryableEffect"
+    },
+    {
+      "kind": "PR896_PROJECT006_TERMINAL_OUTBOX_WAKE",
+      "head_at_cut": "7a8cbc46f54c92888ddfb2ef9e86ea92b8b776b5",
+      "consequence": "durable command-bound outbound return plus Windows wake/reconciliation"
+    }
+  ],
+  "keepers": [
+    "PreEffectRejection != PostEffectUncertainty",
+    "ACKPublished != TerminalReturn",
+    "DurableEffectAttempt != RemoteEffectAcceptance",
+    "NoDurableAttemptRecord => NoProviderCall",
+    "CompletionAmbiguous + NON_RETRYABLE => HOLD",
+    "ResultObserved => ReturnWriterOnly"
+  ],
+  "failed_first_zero_credit": [
+    "campaign direct entry initially lacked repository-root sys.path bootstrap",
+    "campaign oracle initially referenced a permit field not present in the implementation"
+  ],
+  "source_shaped_reference_proof": {
+    "fresh_virtual_environments": 3,
+    "focused_tests_passed": 45,
+    "focused_tests_total": 45,
+    "campaign_cases_total": 18000,
+    "oracle_mismatches": 0,
+    "false_provider_actions": 0,
+    "false_holds": 0,
+    "legacy_posteffect_ambiguity_rejected_per_env": 1000,
+    "legacy_ack_then_result_equivocation_per_env": 1000,
+    "campaign_root": "a058bdd58d21a7b745d797951fa8e98aec275e52a080169b30812187b8a0e2e8",
+    "omega8_states": 6561,
+    "omega8_keeper": 1,
+    "omega8_root": "885908733738d00b03dafcf298604ce41d0f9a6a597310e925f5ff9fae9d8a63",
+    "states_13d": 1594323,
+    "lawful_contexts_13d": 243,
+    "hard_invalid_context_repairs": 0,
+    "hs1000_raw_cells": 1000,
+    "hs1000_claimed_breakthroughs": 0
+  },
+  "published_exact_head_hosted_proof": {
+    "status": "PENDING",
+    "credit": 0,
+    "note": "Must be updated only after the head-pinned GitHub Actions workflow succeeds on the exact published semantic head."
+  },
+  "known_open_boundary": "The durable local effect-attempt record proves an effect may have escaped; it does not prove remote acceptance. Provider idempotency or query/reconcile remains required, and multi-consumer provider-call concurrency remains outside this D0 proof."
+}
