@@ -407,6 +407,7 @@
     ],
     "python -m venv": [
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o4-owner-row-convergence-proof.yml",
       "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
@@ -1061,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1675,
+    "repo_file_count": 1681,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1235,6 +1236,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o4-owner-row-convergence-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -2692,6 +2694,8 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
+      "tests/test_project006_o4_effect_attempt_journal.py",
+      "tests/test_project006_o4_owner_row_convergence.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2716,10 +2720,13 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "tools/project006/campaign_o4_owner_row_convergence.py",
       "tools/project006/effect_attempt_recovery.py",
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o4_effect_attempt_journal.py",
+      "tools/project006/o4_owner_row_convergence.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
@@ -11802,6 +11809,59 @@
         0.16699,
         0.16699,
         0.133847
+      ]
+    },
+    {
+      "path": ".github/workflows/project006-o4-owner-row-convergence-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2578,
+      "lines": 63,
+      "tokens_est": 645,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          38
+        ]
+      },
+      "topology": {},
+      "digest8": "43c67112b53950d5",
+      "vector": [
+        -0.245288,
+        0.275477,
+        -0.049058,
+        -0.149688,
+        0.124531,
+        0.031447,
+        -0.275477,
+        -0.124531,
+        -0.056605,
+        -0.086794,
+        -0.008805,
+        -0.260383,
+        0.084278,
+        -0.308182,
+        0.17233,
+        -0.031447,
+        -0.262898,
+        -0.003774,
+        0.096857,
+        -0.013837,
+        -0.164783,
+        -0.031447,
+        -0.200004,
+        -0.318245,
+        -0.227677,
+        0.046542,
+        -0.275477,
+        0.247804,
+        0.006289,
+        0.247804,
+        -0.114468,
+        0.076731
       ]
     },
     {
@@ -104315,6 +104375,100 @@
       ]
     },
     {
+      "path": "tests/test_project006_o4_effect_attempt_journal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6277,
+      "lines": 112,
+      "tokens_est": 1570,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1a210893ed75f07b",
+      "vector": [
+        -0.121831,
+        -0.163672,
+        -0.281811,
+        0.146443,
+        0.173517,
+        -0.102141,
+        0.222742,
+        0.062761,
+        -0.109525,
+        0.225203,
+        -0.028304,
+        -0.222742,
+        -0.301501,
+        -0.015998,
+        -0.126754,
+        0.062761,
+        -0.07999,
+        -0.168594,
+        -0.212897,
+        -0.25966,
+        0.023382,
+        -0.303962,
+        0.023382,
+        0.102141,
+        -0.043072,
+        -0.055378,
+        -0.011076,
+        0.124292,
+        0.188284,
+        0.274428,
+        0.267044,
+        -0.291656
+      ]
+    },
+    {
+      "path": "tests/test_project006_o4_owner_row_convergence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8149,
+      "lines": 149,
+      "tokens_est": 2038,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "44c28d03b3d69b0d",
+      "vector": [
+        0.156743,
+        -0.164033,
+        0.278249,
+        0.042527,
+        0.249087,
+        0.027946,
+        -0.251518,
+        -0.30498,
+        -0.066828,
+        0.205345,
+        0.066828,
+        0.268528,
+        0.10085,
+        0.078979,
+        -0.137302,
+        -0.052248,
+        0.127581,
+        -0.171324,
+        -0.232077,
+        0.130011,
+        0.239367,
+        -0.200485,
+        0.110571,
+        0.30498,
+        0.001215,
+        -0.047387,
+        -0.251518,
+        -0.086269,
+        -0.054678,
+        0.224786,
+        -0.071689,
+        -0.195625
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -105443,6 +105597,53 @@
       ]
     },
     {
+      "path": "tools/project006/campaign_o4_owner_row_convergence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3134,
+      "lines": 82,
+      "tokens_est": 784,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0cc3ca3f995b615d",
+      "vector": [
+        -0.232635,
+        -0.266739,
+        -0.110837,
+        0.264303,
+        -0.154684,
+        -0.188788,
+        0.198531,
+        0.225327,
+        -0.054809,
+        0.310586,
+        -0.161992,
+        0.254559,
+        0.147376,
+        -0.198531,
+        -0.084041,
+        0.062117,
+        0.010962,
+        -0.183916,
+        -0.076733,
+        -0.074297,
+        -0.227763,
+        -0.276482,
+        -0.171736,
+        -0.003654,
+        -0.01827,
+        -0.293534,
+        -0.066989,
+        0.103529,
+        0.198531,
+        -0.183916,
+        0.010962,
+        -0.045065
+      ]
+    },
+    {
       "path": "tools/project006/effect_attempt_recovery.py",
       "role": "python_module",
       "binary": false,
@@ -105628,6 +105829,100 @@
         0.010921,
         0.170055,
         0.020282
+      ]
+    },
+    {
+      "path": "tools/project006/o4_effect_attempt_journal.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6916,
+      "lines": 123,
+      "tokens_est": 1729,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "98149faaf4781977",
+      "vector": [
+        -0.255917,
+        -0.219812,
+        0.079642,
+        -0.058404,
+        -0.268659,
+        -0.122118,
+        0.200698,
+        0.064776,
+        -0.16247,
+        -0.141232,
+        0.270783,
+        0.130613,
+        0.0223,
+        -0.232555,
+        -0.156098,
+        0.113623,
+        -0.11787,
+        -0.092385,
+        -0.168841,
+        0.10088,
+        0.170965,
+        0.164594,
+        -0.262288,
+        0.255917,
+        -0.160346,
+        -0.253793,
+        -0.132737,
+        -0.149727,
+        -0.066899,
+        0.264412,
+        0.238926,
+        -0.054157
+      ]
+    },
+    {
+      "path": "tools/project006/o4_owner_row_convergence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9869,
+      "lines": 173,
+      "tokens_est": 2468,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e035bf40bf60ea5c",
+      "vector": [
+        -0.041777,
+        0.230373,
+        -0.251858,
+        -0.247084,
+        0.175465,
+        -0.046552,
+        -0.225598,
+        -0.201725,
+        0.247084,
+        0.137269,
+        0.242309,
+        0.051327,
+        -0.106234,
+        0.094298,
+        0.022679,
+        -0.03939,
+        0.290055,
+        0.204113,
+        0.304378,
+        0.194563,
+        -0.292442,
+        0.029841,
+        0.046552,
+        0.079974,
+        -0.235147,
+        -0.211274,
+        0.12772,
+        0.034616,
+        -0.175465,
+        -0.139656,
+        0.075199,
+        -0.089523
       ]
     },
     {
@@ -106816,7 +107111,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788781490,
+  "generated_at_unix": 1788786919,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106992,6 +107287,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o4-owner-row-convergence-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -108449,6 +108745,8 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
+      "tests/test_project006_o4_effect_attempt_journal.py",
+      "tests/test_project006_o4_owner_row_convergence.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -108473,10 +108771,13 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "tools/project006/campaign_o4_owner_row_convergence.py",
       "tools/project006/effect_attempt_recovery.py",
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o4_effect_attempt_journal.py",
+      "tools/project006/o4_owner_row_convergence.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
@@ -266958,6 +267259,306 @@
         "file_digest8": "95627abbf6d8f256"
       },
       {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#class:O4ActualJournalPathTests:7f3e965ce6d85a41",
+        "name": "O4ActualJournalPathTests",
+        "kind": "class",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 35,
+        "end_line": 108,
+        "signature_hash": "80b04bc43a2abe3a",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:currentness:db64da679255f722",
+        "name": "currentness",
+        "kind": "function",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "c4b8bba1b4bac02e",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:proof:691765e34bade838",
+        "name": "proof",
+        "kind": "function",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 26,
+        "end_line": 32,
+        "signature_hash": "a92b25bbe97939ca",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:root:324a72dad81f21fd",
+        "name": "root",
+        "kind": "function",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "867e86c2e64b6d67",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.fixture:1c555527226a8c7e",
+        "name": "O4ActualJournalPathTests.fixture",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 36,
+        "end_line": 47,
+        "signature_hash": "9af8e68102876a30",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving:df80d62bcf86267b",
+        "name": "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "7887fd79d44a125a",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt:00c2786eb2a3ea75",
+        "name": "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 83,
+        "end_line": 96,
+        "signature_hash": "d9b9c0f19a859c9e",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired:827f3a2ab1640138",
+        "name": "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 77,
+        "end_line": 77,
+        "signature_hash": "339892a90820e4b0",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider:62ecf9799ef6d377",
+        "name": "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 76,
+        "end_line": 81,
+        "signature_hash": "8898eb57122d9492",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound:775366c96c100879",
+        "name": "O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 49,
+        "end_line": 60,
+        "signature_hash": "5d1dd8fae0aec997",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider:8b6df36f0e7d95da",
+        "name": "O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "0f06f58970ee5d2e",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad:42cd1d6705b16306",
+        "name": "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "e445e4d5a9ee5e11",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider:a541fd176d9aa279",
+        "name": "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 69,
+        "end_line": 74,
+        "signature_hash": "4e77814bbbd5073d",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving:83c8240c5d69806b",
+        "name": "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "7887fd79d44a125a",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure:844feb7ee51b5a80",
+        "name": "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure",
+        "kind": "method",
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "line": 98,
+        "end_line": 108,
+        "signature_hash": "059251dece4fc6e0",
+        "file_digest8": "1a210893ed75f07b"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#class:O4OwnerRowConvergenceTests:d6ad4f7d894e1aef",
+        "name": "O4OwnerRowConvergenceTests",
+        "kind": "class",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 54,
+        "end_line": 144,
+        "signature_hash": "489763bc7d81ea6a",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:admission:294f4dd23c0b6637",
+        "name": "admission",
+        "kind": "function",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 27,
+        "end_line": 36,
+        "signature_hash": "e393c21ae7ca260b",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:owner_db:23936848e2bf319d",
+        "name": "owner_db",
+        "kind": "function",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 39,
+        "end_line": 51,
+        "signature_hash": "3160e4399cbd33d5",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:r:a0a03dff1a7b5d0f",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "7ce5d2fd5d4c523a",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:semantic:fae47fa5dc5a43d7",
+        "name": "semantic",
+        "kind": "function",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 19,
+        "end_line": 24,
+        "signature_hash": "57122fd242d8e037",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_atomic_owner_row_binds_candidate:bd2861a83e652cb6",
+        "name": "O4OwnerRowConvergenceTests.test_atomic_owner_row_binds_candidate",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 55,
+        "end_line": 64,
+        "signature_hash": "29b90fe12c5654e2",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_authority_cannot_be_minted:2863fcc4c1420b6f",
+        "name": "O4OwnerRowConvergenceTests.test_authority_cannot_be_minted",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 136,
+        "end_line": 139,
+        "signature_hash": "e1997b723959f5ad",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_bool_epoch_rejected:b11d2e512816dc26",
+        "name": "O4OwnerRowConvergenceTests.test_bool_epoch_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 141,
+        "end_line": 144,
+        "signature_hash": "09eca80ddbee4b72",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_consumer_rebind_keeps_stable_operation_changes_attempt:26f3340c26754db4",
+        "name": "O4OwnerRowConvergenceTests.test_consumer_rebind_keeps_stable_operation_changes_attempt",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 96,
+        "end_line": 110,
+        "signature_hash": "485661eeed097859",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_expired_authorization_holds:9e3cc75fe96f2d24",
+        "name": "O4OwnerRowConvergenceTests.test_expired_authorization_holds",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 86,
+        "end_line": 94,
+        "signature_hash": "2bd964285a3ed5cc",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_forged_proof_crossbind_holds:c11c366398c38a16",
+        "name": "O4OwnerRowConvergenceTests.test_forged_proof_crossbind_holds",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 76,
+        "end_line": 84,
+        "signature_hash": "69f0e030fae1fab7",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_legacy_unproofed_attempt_not_ready:9b7ddf9f06d8eee1",
+        "name": "O4OwnerRowConvergenceTests.test_legacy_unproofed_attempt_not_ready",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 128,
+        "end_line": 134,
+        "signature_hash": "5c44b9a44f93b6c8",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_provider_observed_locator_remains_separate:2ea30486b8899c47",
+        "name": "O4OwnerRowConvergenceTests.test_provider_observed_locator_remains_separate",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 117,
+        "end_line": 126,
+        "signature_hash": "1cd89441a9feca4f",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_recovery_mode_crosscast_fails_before_update:299d2045f91383cf",
+        "name": "O4OwnerRowConvergenceTests.test_recovery_mode_crosscast_fails_before_update",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 66,
+        "end_line": 74,
+        "signature_hash": "e678e7911162aa6e",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_semantic_movements_change_stable_operation:9c2bc33edc7cfeff",
+        "name": "O4OwnerRowConvergenceTests.test_semantic_movements_change_stable_operation",
+        "kind": "method",
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "line": 112,
+        "end_line": 115,
+        "signature_hash": "587f147757a5fe8e",
+        "file_digest8": "44c28d03b3d69b0d"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -269568,6 +270169,76 @@
         "file_digest8": "c7b936d137af3aeb"
       },
       {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:campaign:e4e051693e62acff",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 25,
+        "end_line": 39,
+        "signature_hash": "101bde732963efb2",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:classify:66390b6810e87e8e",
+        "name": "classify",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 15,
+        "end_line": 22,
+        "signature_hash": "6441fd481142692d",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:digest:9b44263fe4e58b8e",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "cf8a82ff0ebb16a7",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:hs1000:db645473b7c9a0f5",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:main:fa6dda7ad51b0b3d",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 72,
+        "end_line": 77,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:omega8:2c5a2ea7b8fff1a4",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 42,
+        "end_line": 49,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:sweep13d:5313812fcecb0b54",
+        "name": "sweep13d",
+        "kind": "function",
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "line": 52,
+        "end_line": 59,
+        "signature_hash": "fbf5850ecd742466",
+        "file_digest8": "0cc3ca3f995b615d"
+      },
+      {
         "semantic_id": "tools/project006/effect_attempt_recovery.py#class:EffectAttemptJournal:42cd651adebb3c5d",
         "name": "EffectAttemptJournal",
         "kind": "class",
@@ -269856,6 +270527,206 @@
         "end_line": 81,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "e076199c5c3983ac"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4EffectAttemptJournal:f8db5f2f9af0816c",
+        "name": "O4EffectAttemptJournal",
+        "kind": "class",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 34,
+        "end_line": 122,
+        "signature_hash": "754a0ccc9916c4e0",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4ProviderActionPermit:3ac7901116fb77e8",
+        "name": "O4ProviderActionPermit",
+        "kind": "class",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 22,
+        "end_line": 31,
+        "signature_hash": "49df931ccf210b30",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.__init__:b23e6a018609a69e",
+        "name": "O4EffectAttemptJournal.__init__",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "1f7191f1af3db8bb",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._permit:46c070c93bf1333e",
+        "name": "O4EffectAttemptJournal._permit",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 57,
+        "end_line": 64,
+        "signature_hash": "a70a973f8ef7cf9a",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._semantic:63b736f80f0bb6b8",
+        "name": "O4EffectAttemptJournal._semantic",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 49,
+        "end_line": 54,
+        "signature_hash": "5779cda475b2eff9",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.decide_and_persist:7318487e7db7f039",
+        "name": "O4EffectAttemptJournal.decide_and_persist",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 66,
+        "end_line": 122,
+        "signature_hash": "a7ef30185518849f",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4ProviderActionPermit.__post_init__:8623a92bb391a5d5",
+        "name": "O4ProviderActionPermit.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "98149faaf4781977"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#class:ProofAdmission:4e7477ce4a205734",
+        "name": "ProofAdmission",
+        "kind": "class",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 36,
+        "end_line": 60,
+        "signature_hash": "14184f2b1cd66e4c",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#class:SemanticEffectIdentity:2b406d154aec3a3a",
+        "name": "SemanticEffectIdentity",
+        "kind": "class",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 23,
+        "end_line": 32,
+        "signature_hash": "c7a1674b53c7988b",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:_root:4852d53196691c91",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:digest:1dba9da8e2eafa28",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:ensure_o4_columns:4efc99c9fcecac6f",
+        "name": "ensure_o4_columns",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 124,
+        "end_line": 128,
+        "signature_hash": "075d8d52ae3c481c",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:owner_bound_attempt_root:aee44797a50b005c",
+        "name": "owner_bound_attempt_root",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 105,
+        "end_line": 113,
+        "signature_hash": "2045670c658c1687",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:persist_owner_bound_provider_attempt:389f1c64f882f31f",
+        "name": "persist_owner_bound_provider_attempt",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 131,
+        "end_line": 163,
+        "signature_hash": "da95cfdb3441f3e7",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:proof_action_currentness_root:75193133dc60d613",
+        "name": "proof_action_currentness_root",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 86,
+        "end_line": 93,
+        "signature_hash": "c0fbc7215d64882b",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:proof_crossbind_root:61b16bc26e0f425c",
+        "name": "proof_crossbind_root",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 71,
+        "end_line": 83,
+        "signature_hash": "ae8ebefaef36a46a",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:provider_candidate_ready:97292798b28693ce",
+        "name": "provider_candidate_ready",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 166,
+        "end_line": 172,
+        "signature_hash": "722f9313fa54a60f",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:stable_provider_operation_root:82121aebc66441cd",
+        "name": "stable_provider_operation_root",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 63,
+        "end_line": 68,
+        "signature_hash": "45a17ef179607452",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:validate_admission:3c325d8f6c788a94",
+        "name": "validate_admission",
+        "kind": "function",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 96,
+        "end_line": 102,
+        "signature_hash": "eb1dd9d92864dec0",
+        "file_digest8": "e035bf40bf60ea5c"
+      },
+      {
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#method:ProofAdmission.__post_init__:c9c0c700d7682124",
+        "name": "ProofAdmission.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "line": 54,
+        "end_line": 60,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e035bf40bf60ea5c"
       },
       {
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:_changed:fb5eb9317f79eb5e",
@@ -271728,8 +272599,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d464994e69b4e2f526167f47011fd701",
-    "payload_hash": "108f5c0ee80a146b90f4d062d4994dca"
+    "record_fingerprint": "c627b1f759b0575f7141f7aea53129f5",
+    "payload_hash": "e5b4af8c8cf5c3daa2d0fa192d96057b"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271742,16 +272613,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1675,
-      "bytes": 26645127,
-      "tokens_est": 6651633,
+      "files": 1681,
+      "bytes": 26682050,
+      "tokens_est": 6660867,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1021,
-        "schema_or_lexicon": 276,
+        "python_module": 1026,
+        "schema_or_lexicon": 277,
         "support_file": 53
       }
     },
@@ -272438,16 +273309,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1675,
-    "total_bytes": 26645127,
-    "text_tokens_est": 6651633,
+    "file_count": 1681,
+    "total_bytes": 26682050,
+    "text_tokens_est": 6660867,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1021,
-      "schema_or_lexicon": 276,
+      "python_module": 1026,
+      "schema_or_lexicon": 277,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -273473,6 +274344,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 77,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:main:fa6dda7ad51b0b3d",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -290236,11 +291115,27 @@
         "signature_hash": "0bff111c4fc1adcb"
       },
       {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:digest:9b44263fe4e58b8e",
+        "signature_hash": "cf8a82ff0ebb16a7"
+      },
+      {
         "file": "tools/project006/effect_attempt_recovery.py",
         "kind": "function",
         "line": 36,
         "end_line": 38,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:digest:661e24830d40d6b6",
+        "signature_hash": "1191bf18035c2e8c"
+      },
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:digest:1dba9da8e2eafa28",
         "signature_hash": "1191bf18035c2e8c"
       }
     ],
@@ -369622,6 +370517,14 @@
         "end_line": 44,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_root:13df56a88fac23ff",
         "signature_hash": "9af4f640541857b1"
+      },
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:_root:4852d53196691c91",
+        "signature_hash": "9af4f640541857b1"
       }
     ],
     "_iter_nul_records": [
@@ -428114,6 +429017,14 @@
         "end_line": 25,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:root:4e00ae0b7a5032f8",
         "signature_hash": "8b9f1879e1b67fb7"
+      },
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:root:324a72dad81f21fd",
+        "signature_hash": "867e86c2e64b6d67"
       }
     ],
     "currentness": [
@@ -428124,6 +429035,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:currentness:4b54015bf7993fb5",
         "signature_hash": "97b254244bfe1746"
+      },
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:currentness:db64da679255f722",
+        "signature_hash": "c4b8bba1b4bac02e"
       },
       {
         "file": "tools/project006/campaign_effect_attempt_recovery_o11.py",
@@ -428532,6 +429451,286 @@
         "end_line": 352,
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_completion_ambiguous_zero_attempt_rejected_by_outbox:051850d58d59e20d",
         "signature_hash": "04a85b892fa86a4b"
+      }
+    ],
+    "proof": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 32,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#function:proof:691765e34bade838",
+        "signature_hash": "a92b25bbe97939ca"
+      }
+    ],
+    "O4ActualJournalPathTests": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 108,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#class:O4ActualJournalPathTests:7f3e965ce6d85a41",
+        "signature_hash": "80b04bc43a2abe3a"
+      }
+    ],
+    "O4ActualJournalPathTests.fixture": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 47,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.fixture:1c555527226a8c7e",
+        "signature_hash": "9af8e68102876a30"
+      }
+    ],
+    "O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 60,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_first_provider_candidate_is_owner_bound:775366c96c100879",
+        "signature_hash": "5d1dd8fae0aec997"
+      }
+    ],
+    "O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_missing_proof_owner_cannot_call_provider:8b6df36f0e7d95da",
+        "signature_hash": "0f06f58970ee5d2e"
+      }
+    ],
+    "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 74,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider:a541fd176d9aa279",
+        "signature_hash": "4e77814bbbd5073d"
+      }
+    ],
+    "O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_recovery_mode_crosscast_cannot_call_provider.bad:42cd1d6705b16306",
+        "signature_hash": "e445e4d5a9ee5e11"
+      }
+    ],
+    "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 81,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider:62ecf9799ef6d377",
+        "signature_hash": "8898eb57122d9492"
+      }
+    ],
+    "O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 77,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_expired_proof_cannot_call_provider.expired:827f3a2ab1640138",
+        "signature_hash": "339892a90820e4b0"
+      }
+    ],
+    "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 96,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt:00c2786eb2a3ea75",
+        "signature_hash": "d9b9c0f19a859c9e"
+      }
+    ],
+    "O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_consumer_rebind_keeps_operation_changes_attempt.moving:df80d62bcf86267b",
+        "signature_hash": "7887fd79d44a125a"
+      }
+    ],
+    "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 108,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure:844feb7ee51b5a80",
+        "signature_hash": "059251dece4fc6e0"
+      }
+    ],
+    "O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving": [
+      {
+        "file": "tests/test_project006_o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tests/test_project006_o4_effect_attempt_journal.py#method:O4ActualJournalPathTests.test_result_observed_survives_later_proof_failure.moving:83c8240c5d69806b",
+        "signature_hash": "7887fd79d44a125a"
+      }
+    ],
+    "r": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:r:a0a03dff1a7b5d0f",
+        "signature_hash": "7ce5d2fd5d4c523a"
+      }
+    ],
+    "semantic": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 24,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:semantic:fae47fa5dc5a43d7",
+        "signature_hash": "57122fd242d8e037"
+      }
+    ],
+    "admission": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 36,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:admission:294f4dd23c0b6637",
+        "signature_hash": "e393c21ae7ca260b"
+      }
+    ],
+    "owner_db": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 51,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#function:owner_db:23936848e2bf319d",
+        "signature_hash": "3160e4399cbd33d5"
+      }
+    ],
+    "O4OwnerRowConvergenceTests": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 144,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#class:O4OwnerRowConvergenceTests:d6ad4f7d894e1aef",
+        "signature_hash": "489763bc7d81ea6a"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_atomic_owner_row_binds_candidate": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 64,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_atomic_owner_row_binds_candidate:bd2861a83e652cb6",
+        "signature_hash": "29b90fe12c5654e2"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_recovery_mode_crosscast_fails_before_update": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 74,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_recovery_mode_crosscast_fails_before_update:299d2045f91383cf",
+        "signature_hash": "e678e7911162aa6e"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_forged_proof_crossbind_holds": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 84,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_forged_proof_crossbind_holds:c11c366398c38a16",
+        "signature_hash": "69f0e030fae1fab7"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_expired_authorization_holds": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 94,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_expired_authorization_holds:9e3cc75fe96f2d24",
+        "signature_hash": "2bd964285a3ed5cc"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_consumer_rebind_keeps_stable_operation_changes_attempt": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 110,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_consumer_rebind_keeps_stable_operation_changes_attempt:26f3340c26754db4",
+        "signature_hash": "485661eeed097859"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_semantic_movements_change_stable_operation": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 115,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_semantic_movements_change_stable_operation:9c2bc33edc7cfeff",
+        "signature_hash": "587f147757a5fe8e"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_provider_observed_locator_remains_separate": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 126,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_provider_observed_locator_remains_separate:2ea30486b8899c47",
+        "signature_hash": "1cd89441a9feca4f"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_legacy_unproofed_attempt_not_ready": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 134,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_legacy_unproofed_attempt_not_ready:9b7ddf9f06d8eee1",
+        "signature_hash": "5c44b9a44f93b6c8"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_authority_cannot_be_minted": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 139,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_authority_cannot_be_minted:2863fcc4c1420b6f",
+        "signature_hash": "e1997b723959f5ad"
+      }
+    ],
+    "O4OwnerRowConvergenceTests.test_bool_epoch_rejected": [
+      {
+        "file": "tests/test_project006_o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 144,
+        "semantic_id": "tests/test_project006_o4_owner_row_convergence.py#method:O4OwnerRowConvergenceTests.test_bool_epoch_rejected:b11d2e512816dc26",
+        "signature_hash": "09eca80ddbee4b72"
       }
     ],
     "test_default_dockerfile_launches_unified_showcase": [
@@ -430946,6 +432145,56 @@
         "signature_hash": "f5eb8725c9c32a3b"
       }
     ],
+    "classify": [
+      {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 22,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:classify:66390b6810e87e8e",
+        "signature_hash": "6441fd481142692d"
+      }
+    ],
+    "campaign": [
+      {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 39,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:campaign:e4e051693e62acff",
+        "signature_hash": "101bde732963efb2"
+      }
+    ],
+    "omega8": [
+      {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 49,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:omega8:2c5a2ea7b8fff1a4",
+        "signature_hash": "779fe12d7757e6f1"
+      }
+    ],
+    "sweep13d": [
+      {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 59,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:sweep13d:5313812fcecb0b54",
+        "signature_hash": "fbf5850ecd742466"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/project006/campaign_o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tools/project006/campaign_o4_owner_row_convergence.py#function:hs1000:db645473b7c9a0f5",
+        "signature_hash": "cb33d0ed1005d09a"
+      }
+    ],
     "ProviderActionPermit": [
       {
         "file": "tools/project006/effect_attempt_recovery.py",
@@ -431204,6 +432453,186 @@
         "end_line": 522,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:hard_o11_state:dec2593e744d1640",
         "signature_hash": "ac106c0df04d850d"
+      }
+    ],
+    "O4ProviderActionPermit": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 31,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4ProviderActionPermit:3ac7901116fb77e8",
+        "signature_hash": "49df931ccf210b30"
+      }
+    ],
+    "O4ProviderActionPermit.__post_init__": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4ProviderActionPermit.__post_init__:8623a92bb391a5d5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "O4EffectAttemptJournal": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 122,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#class:O4EffectAttemptJournal:f8db5f2f9af0816c",
+        "signature_hash": "754a0ccc9916c4e0"
+      }
+    ],
+    "O4EffectAttemptJournal.__init__": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.__init__:b23e6a018609a69e",
+        "signature_hash": "1f7191f1af3db8bb"
+      }
+    ],
+    "O4EffectAttemptJournal._semantic": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 54,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._semantic:63b736f80f0bb6b8",
+        "signature_hash": "5779cda475b2eff9"
+      }
+    ],
+    "O4EffectAttemptJournal._permit": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 64,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal._permit:46c070c93bf1333e",
+        "signature_hash": "a70a973f8ef7cf9a"
+      }
+    ],
+    "O4EffectAttemptJournal.decide_and_persist": [
+      {
+        "file": "tools/project006/o4_effect_attempt_journal.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 122,
+        "semantic_id": "tools/project006/o4_effect_attempt_journal.py#method:O4EffectAttemptJournal.decide_and_persist:7318487e7db7f039",
+        "signature_hash": "a7ef30185518849f"
+      }
+    ],
+    "SemanticEffectIdentity": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 32,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#class:SemanticEffectIdentity:2b406d154aec3a3a",
+        "signature_hash": "c7a1674b53c7988b"
+      }
+    ],
+    "ProofAdmission": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 60,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#class:ProofAdmission:4e7477ce4a205734",
+        "signature_hash": "14184f2b1cd66e4c"
+      }
+    ],
+    "ProofAdmission.__post_init__": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 60,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#method:ProofAdmission.__post_init__:c9c0c700d7682124",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "stable_provider_operation_root": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:stable_provider_operation_root:82121aebc66441cd",
+        "signature_hash": "45a17ef179607452"
+      }
+    ],
+    "proof_crossbind_root": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 83,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:proof_crossbind_root:61b16bc26e0f425c",
+        "signature_hash": "ae8ebefaef36a46a"
+      }
+    ],
+    "proof_action_currentness_root": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 93,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:proof_action_currentness_root:75193133dc60d613",
+        "signature_hash": "c0fbc7215d64882b"
+      }
+    ],
+    "validate_admission": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 102,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:validate_admission:3c325d8f6c788a94",
+        "signature_hash": "eb1dd9d92864dec0"
+      }
+    ],
+    "owner_bound_attempt_root": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 113,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:owner_bound_attempt_root:aee44797a50b005c",
+        "signature_hash": "2045670c658c1687"
+      }
+    ],
+    "ensure_o4_columns": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 128,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:ensure_o4_columns:4efc99c9fcecac6f",
+        "signature_hash": "075d8d52ae3c481c"
+      }
+    ],
+    "persist_owner_bound_provider_attempt": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 163,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:persist_owner_bound_provider_attempt:389f1c64f882f31f",
+        "signature_hash": "da95cfdb3441f3e7"
+      }
+    ],
+    "provider_candidate_ready": [
+      {
+        "file": "tools/project006/o4_owner_row_convergence.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 172,
+        "semantic_id": "tools/project006/o4_owner_row_convergence.py#function:provider_candidate_ready:97292798b28693ce",
+        "signature_hash": "722f9313fa54a60f"
       }
     ],
     "_first_text": [
