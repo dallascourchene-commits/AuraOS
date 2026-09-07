@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1722
-- **total_bytes**: 26794866
-- **text_tokens_est**: 6689090
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1051, 'schema_or_lexicon': 293, 'support_file': 53}
+- **file_count**: 1723
+- **total_bytes**: 26797137
+- **text_tokens_est**: 6689658
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1051, 'schema_or_lexicon': 294, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1722,
+  "repo_file_count": 1723,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -176,6 +176,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-connectome-bridge.yml",
     ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
     ".github/workflows/o19r-transactional-shared-truth-proof.yml",
+    ".github/workflows/o20r-exact-head-proof.yml",
     ".github/workflows/o5-consequence-admission-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -1862,16 +1863,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1722,
-  "bytes": 26794866,
-  "tokens_est": 6689090,
+  "files": 1723,
+  "bytes": 26797137,
+  "tokens_est": 6689658,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1051,
-    "schema_or_lexicon": 293,
+    "schema_or_lexicon": 294,
     "support_file": 53
   }
 }
