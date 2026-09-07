@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1702
-- **total_bytes**: 26656915
-- **text_tokens_est**: 6654628
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1029, 'schema_or_lexicon': 287, 'support_file': 49}
+- **file_count**: 1703
+- **total_bytes**: 26662024
+- **text_tokens_est**: 6655906
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1029, 'schema_or_lexicon': 288, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1702,
+  "repo_file_count": 1703,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,6 +166,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-airllm-exact-head-verify.yml",
     ".github/workflows/awj032-airllm-g1-source-contract.yml",
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
+    ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1842,16 +1843,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1702,
-  "bytes": 26656915,
-  "tokens_est": 6654628,
+  "files": 1703,
+  "bytes": 26662024,
+  "tokens_est": 6655906,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1029,
-    "schema_or_lexicon": 287,
+    "schema_or_lexicon": 288,
     "support_file": 49
   }
 }

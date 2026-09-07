@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788797709,
+  "generated_at_unix": 1788797781,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1702,
+    "repo_file_count": 1703,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1818,16 +1819,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1702,
-      "bytes": 26656915,
-      "tokens_est": 6654628,
+      "files": 1703,
+      "bytes": 26662024,
+      "tokens_est": 6655906,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1029,
-        "schema_or_lexicon": 287,
+        "schema_or_lexicon": 288,
         "support_file": 49
       }
     },
@@ -163341,6 +163342,12 @@
     "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
+    "python -m venv": [
+      ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
+      "README.md",
+      "examples/arena_navigation_domain_lens/README.md",
+      "examples/mini_aura_reference_arena/README.md"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -163674,11 +163681,6 @@
     ],
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
-    ],
-    "python -m venv": [
-      "README.md",
-      "examples/arena_navigation_domain_lens/README.md",
-      "examples/mini_aura_reference_arena/README.md"
     ],
     "python mini_aura_reference.py --out results_local.json": [
       "README.md",
@@ -173207,6 +173209,59 @@
         -0.064522,
         0.226515,
         -0.05354
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5109,
+      "lines": 104,
+      "tokens_est": 1278,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          48
+        ]
+      },
+      "topology": {},
+      "digest8": "38a195b380a6ea2c",
+      "vector": [
+        0.264708,
+        0.146803,
+        0.241589,
+        -0.010403,
+        -0.114437,
+        0.204599,
+        -0.123684,
+        0.00578,
+        0.174545,
+        0.260084,
+        0.146803,
+        -0.16761,
+        -0.137555,
+        -0.213847,
+        0.116749,
+        -0.135244,
+        -0.280891,
+        0.190728,
+        0.158362,
+        0.003468,
+        -0.137555,
+        0.253148,
+        0.239277,
+        -0.144491,
+        0.091318,
+        -0.028898,
+        0.290138,
+        -0.065888,
+        -0.21847,
+        0.276267,
+        0.038146,
+        -0.102878
       ]
     },
     {
@@ -294447,16 +294502,16 @@
     }
   },
   "summary": {
-    "file_count": 1702,
-    "total_bytes": 26656915,
-    "text_tokens_est": 6654628,
+    "file_count": 1703,
+    "total_bytes": 26662024,
+    "text_tokens_est": 6655906,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1029,
-      "schema_or_lexicon": 287,
+      "schema_or_lexicon": 288,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294614,6 +294669,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-source-gate-lexical-scope-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -459529,6 +459585,6 @@
       }
     ],
     "record_fingerprint": "e0e13594adf2372eda545da67497ad3a",
-    "payload_hash": "75c8947000371827ef7ffdfe4e67c4f8"
+    "payload_hash": "a85de1549b2ec264f47199a8c80a3eb0"
   }
 }
