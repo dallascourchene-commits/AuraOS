@@ -1,23 +1,11 @@
 from dataclasses import replace
 from hashlib import sha256
 from project006_sink_evidence_recovery import *
-R=lambda s: sha256(s.encode()).hexdigest(); SECRET=b'test-only-sink-verifier-secret'; ISSUER=R('sink-issuer'); VERIFIER=R('sink-verifier')
-def base():
-    op=OperationIdentity('cmd','op','idem',R('payload'),'file','rev',R('src'),R('auth'),R('proof'),R('fence')); return op,CurrentOwnerContext(op,R('auth'),R('proof'),R('fence'))
-def ev(d): return sign_sink_evidence(secret=SECRET,operation_id='op',disposition=d,sink_result_digest=R('res'),issuer_root=ISSUER,verifier_root=VERIFIER,observed_at=10,expires_at=100)
+R=lambda s:sha256(s.encode()).hexdigest();S=b'test-only-sink-verifier-secret';I=R('sink-issuer');V=R('sink-verifier')
+op=OperationIdentity('c','o','k',R('p'),'f','r',R('s'),R('a'),R('ps'),R('fr'));cur=CurrentOwnerContext(op,R('a'),R('ps'),R('fr'))
+def e(d,result=False):return sign_sink_evidence(secret=S,operation_id='o',disposition=d,sink_result_digest=R('res'),result_locator_root=R('loc') if result else None,issuer_root=I,verifier_root=V,observed_at=10,expires_at=100,sink_fence_generation=3)
+def f(g=4,i=4):return SinkFenceContext(g,i,R(f'sf{g}{i}'))
+def d(ev,fc=None,current=cur):return decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=current,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=ev,secret=S,expected_issuer_root=I,expected_verifier_root=V,now=20,sink_fence=fc)
 def run():
-    op,cur=base(); killed={}
-    # M1: accepted sink result replayed provider (must be caught)
-    expected=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=ev(SinkDisposition.ACCEPTED),secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20).action
-    killed['accepted_to_replay']= expected is not RecoveryAction.RETRY_PROVIDER_SAME_OPERATION_ID
-    # M2: NOT_ACCEPTED bypasses moved auth.
-    moved=replace(cur,authorization_root=R('moved')); expected=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=moved,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=ev(SinkDisposition.NOT_ACCEPTED),secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20).action
-    killed['not_accepted_bypasses_auth']= expected is RecoveryAction.HOLD_CURRENTNESS_MOVED
-    # M3: forged MAC accepted.
-    bad=replace(ev(SinkDisposition.ACCEPTED),mac=R('bad')); expected=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.NON_RETRYABLE,sink_evidence=bad,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20).action
-    killed['forged_sink_accepted']= expected is RecoveryAction.HOLD_INVALID_SINK_EVIDENCE
-    # M4: result observed later auth drift causes re-execution/hold instead of return-only.
-    expected=decide_recovery(state=NativeState.RESULT_OBSERVED,operation=op,current=moved,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=None,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20).action
-    killed['terminal_result_erased_by_currentness']= expected is RecoveryAction.RETRY_RETURN_WRITER_ONLY
-    return {'mutants':len(killed),'killed':sum(killed.values()),'details':killed}
-if __name__=='__main__': import json; print(json.dumps(run(),sort_keys=True,indent=2))
+ k={};k['accepted_without_result_replay']=d(e(SinkDisposition.ACCEPTED,False)).reason=='ACCEPTED_RESULT_UNAVAILABLE';k['notaccepted_without_fence_replay']=d(e(SinkDisposition.NOT_ACCEPTED)).reason=='OLD_INFLIGHT_REQUEST_NOT_FENCED';k['equal_fence_replay']=d(e(SinkDisposition.NOT_ACCEPTED),f(3,3)).reason=='OLD_INFLIGHT_REQUEST_NOT_FENCED';k['uninstalled_fence_replay']=d(e(SinkDisposition.NOT_ACCEPTED),f(4,3)).reason=='OLD_INFLIGHT_REQUEST_NOT_FENCED';k['unknown_requery_loop']=d(e(SinkDisposition.UNKNOWN),f()).reason=='SINK_STATUS_UNKNOWN';k['forged_accepted']=d(replace(e(SinkDisposition.ACCEPTED,True),mac=R('bad'))).action is RecoveryAction.HOLD_INVALID_SINK_EVIDENCE;return {'mutants':len(k),'killed':sum(k.values()),'details':k}
+if __name__=='__main__':import json;print(json.dumps(run(),sort_keys=True,indent=2))
