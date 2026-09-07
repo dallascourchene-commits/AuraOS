@@ -2,10 +2,13 @@ from __future__ import annotations
 
 """D0 mode-sealed semantic-to-effect handoff capsule.
 
-This supersedes the generic READY_D0 handoff shape: a Memory City read result may
-be cross-bound to the exact mutation boundary, but effect-bound use never becomes
-READY here. A fully current cross-binding is emitted only as HOLD_TECC_REQUIRED_D0
-with an exact TECC input root. Independent TECC remains the effect verifier.
+Memory City may cross-bind a current read result to the exact mutation boundary,
+but effect-bound use never becomes READY here. A fully current cross-binding is
+emitted only as HOLD_TECC_REQUIRED_D0 with an exact TECC input root.
+
+Migration rule: the read/effect seam must bind the same proof-algorithm identity
+as the current read owner. An unchanged outer certificate schema is not enough
+when reproof semantics change.
 """
 
 from dataclasses import dataclass
@@ -16,6 +19,7 @@ from typing import Mapping
 
 SCHEMA = "AURA-MEMORY-CITY-HORIZON-FENCED-HANDOFF-v2"
 READ_BINDING_SCHEMA = "AURA-MEMORY-CITY-READ-WORLD-BINDING-v1"
+EXPECTED_REPROOF_SEMANTICS = "HARD_COMPONENT_SEEDED_DIRECTED_REPROOF-v1"
 TECC_SCHEMA = "AURA-TECC-v1"
 D0 = "D0_NONPROMOTING"
 
@@ -69,23 +73,30 @@ class MutationBoundaryProjection:
     resource_fence_receipt_root: str
 
     def __post_init__(self):
-        _id(self.cell_id, "cell_id"); _id(self.holder, "holder")
-        _nn(self.revision, "revision"); _nn(self.support_epoch, "support_epoch")
-        _nn(self.fence_generation, "fence_generation"); _nn(self.installed_fence_generation, "installed_fence_generation")
-        if type(self.expires_at) is not int: raise ValueError("expires_at must be exact int")
+        _id(self.cell_id, "cell_id")
+        _id(self.holder, "holder")
+        _nn(self.revision, "revision")
+        _nn(self.support_epoch, "support_epoch")
+        _nn(self.fence_generation, "fence_generation")
+        _nn(self.installed_fence_generation, "installed_fence_generation")
+        if type(self.expires_at) is not int:
+            raise ValueError("expires_at must be exact int")
         for name in ("configuration_root", "transition_authority_receipt_root", "resource_fence_receipt_root"):
             _root(getattr(self, name), name)
 
     @property
     def boundary_root(self) -> str:
         return digest({
-            "schema": SCHEMA, "kind": "mutation_boundary",
-            "cell_id": self.cell_id, "revision": self.revision,
+            "schema": SCHEMA,
+            "kind": "mutation_boundary",
+            "cell_id": self.cell_id,
+            "revision": self.revision,
             "configuration_root": self.configuration_root,
             "support_epoch": self.support_epoch,
             "fence_generation": self.fence_generation,
             "installed_fence_generation": self.installed_fence_generation,
-            "holder": self.holder, "expires_at": self.expires_at,
+            "holder": self.holder,
+            "expires_at": self.expires_at,
             "transition_authority_receipt_root": self.transition_authority_receipt_root,
             "resource_fence_receipt_root": self.resource_fence_receipt_root,
         })
@@ -107,9 +118,12 @@ class HandoffVerificationContext:
 
     def __post_init__(self):
         _id(self.cell_id, "cell_id")
-        _nn(self.revision, "revision"); _nn(self.support_epoch, "support_epoch")
-        _nn(self.fence_generation, "fence_generation"); _nn(self.installed_fence_generation, "installed_fence_generation")
-        if type(self.now) is not int: raise ValueError("now must be exact int")
+        _nn(self.revision, "revision")
+        _nn(self.support_epoch, "support_epoch")
+        _nn(self.fence_generation, "fence_generation")
+        _nn(self.installed_fence_generation, "installed_fence_generation")
+        if type(self.now) is not int:
+            raise ValueError("now must be exact int")
         for name in ("configuration_root", "owner_evidence_root", "verifier_receipt_root", "transition_authority_receipt_root", "resource_fence_receipt_root"):
             _root(getattr(self, name), name)
 
@@ -138,19 +152,26 @@ class HandoffDecision:
     gate10: bool = False
 
     def __post_init__(self):
-        if self.semantic_handoff_root is not None: _root(self.semantic_handoff_root, "semantic_handoff_root")
-        if self.tecc_input_root is not None: _root(self.tecc_input_root, "tecc_input_root")
+        if self.semantic_handoff_root is not None:
+            _root(self.semantic_handoff_root, "semantic_handoff_root")
+        if self.tecc_input_root is not None:
+            _root(self.tecc_input_root, "tecc_input_root")
         if self.authority_minted or self.mutation_authority or self.effect_authority or self.gate10:
             raise ValueError("D0 handoff cannot mint authority")
 
 
 def canonical_read_binding_root(hydration, typed_closure) -> str:
-    """Recompute PR878's exact ReadWorldBinding identity from current objects."""
+    """Recompute the current PR878 ReadWorldBinding identity.
+
+    The proof-algorithm identity is semantic identity. This intentionally differs
+    from the pre-M3 same-schema binding that omitted reproof semantics.
+    """
     return digest({
         "schema": READ_BINDING_SCHEMA,
         "hydration_receipt_root": getattr(hydration, "receipt_root", None),
         "hydration_support_root": getattr(hydration, "support_root", None),
         "typed_closure_receipt_root": getattr(typed_closure, "receipt_root", None),
+        "typed_reproof_semantics": getattr(typed_closure, "reproof_semantics", None),
     })
 
 
@@ -178,7 +199,8 @@ def _admission_receipt_current(admission: Mapping[str, object], read_cert, hydra
     receipt = admission.get("receipt_root")
     if not isinstance(receipt, str):
         return False, "ADMISSION_RECEIPT_ROOT_MISSING"
-    payload = dict(admission); payload.pop("receipt_root", None)
+    payload = dict(admission)
+    payload.pop("receipt_root", None)
     if digest(payload) != receipt:
         return False, "ADMISSION_RECEIPT_ROOT_FORGED"
     return True, "EFFECT_MODE_TECC_SEALED"
@@ -193,6 +215,9 @@ def _read_consequence_current(read_cert, read_use, hydration, typed_closure) -> 
         return False, "ACTIVE_HYDRATION_NOT_READY", None
     if _status(typed_closure) != "READY_D0":
         return False, "ACTIVE_TYPED_CLOSURE_NOT_READY", None
+    reproof_semantics = getattr(typed_closure, "reproof_semantics", None)
+    if reproof_semantics != EXPECTED_REPROOF_SEMANTICS:
+        return False, "ACTIVE_REPROOF_SEMANTICS_NOT_CURRENT", None
     binding = canonical_read_binding_root(hydration, typed_closure)
     if binding not in tuple(getattr(read_cert, "binding_roots", ())):
         return False, "ACTIVE_READ_WORLD_NOT_CERTIFIED", None
@@ -207,10 +232,12 @@ def _read_consequence_current(read_cert, read_use, hydration, typed_closure) -> 
     if (getattr(typed_closure, "transition_model_root", None), getattr(typed_closure, "horizon", None), getattr(typed_closure, "future_congruence_root", None)) != (getattr(read_cert, "transition_model_root", None), getattr(read_cert, "horizon", None), getattr(read_cert, "future_congruence_root", None)):
         return False, "ACTIVE_TRANSITION_CONSEQUENCE_MOVED", None
     semantic = digest({
-        "schema": SCHEMA, "kind": "current_read_semantic",
+        "schema": SCHEMA,
+        "kind": "current_read_semantic",
         "read_certificate_root": getattr(read_cert, "receipt_root", None),
         "active_binding_root": binding,
         "typed_closure_receipt_root": getattr(typed_closure, "receipt_root", None),
+        "reproof_semantics": reproof_semantics,
         "coverage_receipt_root": getattr(read_cert, "coverage_receipt_root", None),
         "consequence_root": getattr(read_cert, "consequence_root", None),
         "reproof_item_ids": tuple(getattr(typed_closure, "reproof_item_ids", ())),
@@ -225,11 +252,7 @@ def compile_effect_handoff(read_cert, read_use, hydration, typed_closure,
                            admission: Mapping[str, object], evidence: EffectHandoffEvidence,
                            mutation: MutationBoundaryProjection,
                            verification: HandoffVerificationContext) -> HandoffDecision:
-    """Cross-bind current read semantics to the mutation boundary, then route to TECC.
-
-    This function intentionally has no READY_D0 effect disposition. A fully valid
-    cross-binding returns HOLD_TECC_REQUIRED_D0 with an exact TECC input root.
-    """
+    """Cross-bind current read semantics to mutation state, then route to TECC."""
     read_ok, reason, semantic = _read_consequence_current(read_cert, read_use, hydration, typed_closure)
     if not read_ok:
         return HandoffDecision(HandoffDisposition.HOLD, reason)
@@ -261,15 +284,24 @@ def compile_effect_handoff(read_cert, read_use, hydration, typed_closure,
     if verification.now >= mutation.expires_at:
         return HandoffDecision(HandoffDisposition.HOLD, "LEASE_EXPIRED", semantic)
     tecc_input = digest({
-        "schema": SCHEMA, "kind": "tecc_effect_handoff_input",
+        "schema": SCHEMA,
+        "kind": "tecc_effect_handoff_input",
         "semantic_handoff_root": semantic,
+        "reproof_semantics": EXPECTED_REPROOF_SEMANTICS,
         "admission_receipt_root": admission["receipt_root"],
         "mutation_boundary_root": mutation.boundary_root,
         "owner_evidence_root": evidence.owner_evidence_root,
         "verifier_receipt_root": evidence.verifier_receipt_root,
         "required_verifier_schema": TECC_SCHEMA,
-        "authority_minted": False, "mutation_authority": False,
-        "effect_authority": False, "gate10": False,
+        "authority_minted": False,
+        "mutation_authority": False,
+        "effect_authority": False,
+        "gate10": False,
     })
-    return HandoffDecision(HandoffDisposition.HOLD_TECC_REQUIRED_D0,
-        "EXACT_CURRENT_CROSS_BINDING_REQUIRES_INDEPENDENT_TECC", semantic, tecc_input, TECC_SCHEMA)
+    return HandoffDecision(
+        HandoffDisposition.HOLD_TECC_REQUIRED_D0,
+        "EXACT_CURRENT_CROSS_BINDING_REQUIRES_INDEPENDENT_TECC",
+        semantic,
+        tecc_input,
+        TECC_SCHEMA,
+    )
