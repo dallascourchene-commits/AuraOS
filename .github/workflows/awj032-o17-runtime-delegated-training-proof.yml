@@ -1,0 +1,60 @@
+name: AWJ032 O17 Runtime Delegated Training Proof
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/o17_runtime_delegated_training_reference.py"
+      - ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml"
+permissions:
+  contents: read
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout and source
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test "$(sha256sum tools/awj032/o17_runtime_delegated_training_reference.py | awk '{print $1}')" = "7b260fd5a9464d7e8fc5278b64beba9cdb9a074a84e711ca59bc0d2e40a15ff1"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.13"
+      - name: Three fresh stdlib virtual environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p proof-out
+          for i in 1 2 3; do
+            rm -rf ".venv-o17-$i"
+            python -m venv ".venv-o17-$i"
+            PY=".venv-o17-$i/bin/python"
+            "$PY" tools/awj032/o17_runtime_delegated_training_reference.py test
+            for mode in campaign mutations omega8 13d hs1000; do
+              "$PY" tools/awj032/o17_runtime_delegated_training_reference.py "$mode" > "proof-out/$mode-$i.json"
+            done
+          done
+          for mode in campaign mutations omega8 13d hs1000; do
+            cmp "proof-out/$mode-1.json" "proof-out/$mode-2.json"
+            cmp "proof-out/$mode-1.json" "proof-out/$mode-3.json"
+          done
+          python - <<'PY'
+          import json
+          c=json.load(open('proof-out/campaign-1.json'))
+          m=json.load(open('proof-out/mutations-1.json'))
+          o=json.load(open('proof-out/omega8-1.json'))
+          d=json.load(open('proof-out/13d-1.json'))
+          h=json.load(open('proof-out/hs1000-1.json'))
+          assert c['cases']==30000 and c['oracle_mismatches']==0 and c['unsafe_delegations']==0 and c['authority_minted']==0
+          assert c['naive_current_only_unsafe']==7503 and c['naive_admission_only_unsafe']==3649 and c['naive_shape_crossbind_unsafe']==869
+          assert m['modeled_mutants']==10 and m['killed']==10 and m['survivors']==[]
+          assert o['states']==6561 and o['keepers']==1 and o['hard_invalid_repairs']==0
+          assert d['states']==1594323 and d['lawful_contexts']==243 and d['hard_invalid_context_repairs']==0
+          assert h['raw_cells']==1000 and h['consequence_groups']==60 and h['claimed_breakthroughs']==0
+          PY
