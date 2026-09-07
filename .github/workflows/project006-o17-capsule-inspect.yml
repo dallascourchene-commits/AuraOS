@@ -21,15 +21,37 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-      - name: Decode and fingerprint exact source cone
+      - name: Characterize and decode source capsule
         shell: bash
         run: |
           set -euo pipefail
           CAPSULE=artifacts/arena/project006_o17_training_step_transaction/O17_EXACT_SOURCE.tar.gz.b64
-          echo "O17_B64_TEXT_SHA256=$(sha256sum "$CAPSULE" | awk '{print $1}')"
+          python - <<'PY'
+          import base64, hashlib, pathlib, re
+          p=pathlib.Path('artifacts/arena/project006_o17_training_step_transaction/O17_EXACT_SOURCE.tar.gz.b64')
+          b=p.read_bytes()
+          print('O17_B64_TEXT_SHA256='+hashlib.sha256(b).hexdigest())
+          print('O17_B64_TEXT_BYTES='+str(len(b)))
+          allowed=set(b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\r\n\t ')
+          bad=[(i,x) for i,x in enumerate(b) if x not in allowed]
+          print('O17_NON_B64_BYTES='+repr(bad[:40]))
+          s=re.sub(rb'\s+',b'',b)
+          print('O17_NORMALIZED_B64_BYTES='+str(len(s)))
+          print('O17_NORMALIZED_MOD4='+str(len(s)%4))
+          print('O17_NORMALIZED_TAIL='+repr(s[-32:]))
+          try:
+              raw=base64.b64decode(s, validate=True)
+              print('O17_STRICT_DECODE=PASS')
+          except Exception as e:
+              print('O17_STRICT_DECODE=FAIL:'+repr(e))
+              raw=base64.b64decode(s, validate=False)
+              print('O17_PERMISSIVE_DECODE=PASS')
+          pathlib.Path('/tmp/O17_EXACT_SOURCE.tar.gz').write_bytes(raw)
+          print('O17_ARCHIVE_SHA256='+hashlib.sha256(raw).hexdigest())
+          print('O17_ARCHIVE_BYTES='+str(len(raw)))
+          PY
+          gzip -t /tmp/O17_EXACT_SOURCE.tar.gz
           mkdir -p /tmp/o17-src
-          base64 -d "$CAPSULE" > /tmp/O17_EXACT_SOURCE.tar.gz
-          echo "O17_ARCHIVE_SHA256=$(sha256sum /tmp/O17_EXACT_SOURCE.tar.gz | awk '{print $1}')"
           echo "--- archive listing ---"
           tar -tzf /tmp/O17_EXACT_SOURCE.tar.gz | sort
           tar -xzf /tmp/O17_EXACT_SOURCE.tar.gz -C /tmp/o17-src
