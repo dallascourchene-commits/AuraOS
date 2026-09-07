@@ -1,0 +1,48 @@
+{
+  "schema": "AURA-O22-FROZEN-PROPOSALS-v1",
+  "objective": "Effect-Time Loaded Adapter Transition Seal",
+  "frozen_before_implementation": true,
+  "parents": [
+    "PR926 authenticated adapter transition source/topology binding",
+    "PR927 effect-time loaded process currentness"
+  ],
+  "proposals": [
+    {
+      "id": "P1",
+      "name": "at_use_dual_parent_recompute_plus_cross_binding",
+      "selected": true,
+      "consequence": "Transition and process owners remain separate; activation is admitted only when exact core/source/topology/runtime/dispatch identities agree at use."
+    },
+    {
+      "id": "P2",
+      "name": "trust_two_ready_booleans",
+      "selected": false,
+      "rejection": "Two valid parent proofs can refer to different loaded adapter worlds."
+    },
+    {
+      "id": "P3",
+      "name": "fold_adapter_identity_into_process_owner",
+      "selected": false,
+      "rejection": "Duplicates transition/source/topology ownership and couples generic process attestation to AWJ032 semantics."
+    },
+    {
+      "id": "P4",
+      "name": "fold_process_identity_into_transition_authority",
+      "selected": false,
+      "rejection": "Lets transition authority mint process currentness and cannot handle hot reload/fork/worker movement cleanly."
+    },
+    {
+      "id": "P5",
+      "name": "new_central_activation_authority_server",
+      "selected": false,
+      "rejection": "Creates a third authority owner when a pure cross-binding witness is sufficient."
+    }
+  ],
+  "authority_ceiling": {
+    "effect": false,
+    "training": false,
+    "checkpoint": false,
+    "project_write": false,
+    "gate10": false
+  }
+}
