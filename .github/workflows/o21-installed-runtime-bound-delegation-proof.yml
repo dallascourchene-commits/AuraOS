@@ -1,0 +1,54 @@
+name: O21 Installed Runtime Bound Delegation Proof
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  prove-o21:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Three fresh Python 3.13 environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=$(command -v python3.13 || command -v python3)
+          "$PY" --version
+          mkdir -p /tmp/o21-receipts
+          for i in 1 2 3; do
+            rm -rf "/tmp/o21-venv-$i"
+            "$PY" -m venv "/tmp/o21-venv-$i"
+            "/tmp/o21-venv-$i/bin/python" -m unittest -q tests/test_installed_runtime_bound_delegation.py
+            rm -f artifacts/arena/o21_installed_runtime_bound_delegation/PROOF_RECEIPT_O21.json
+            "/tmp/o21-venv-$i/bin/python" tools/arena/proof_o21_runtime_bound_delegation.py > "/tmp/o21-receipts/proof-$i.json"
+            cp artifacts/arena/o21_installed_runtime_bound_delegation/PROOF_RECEIPT_O21.json "/tmp/o21-receipts/file-$i.json"
+            cmp "/tmp/o21-receipts/proof-$i.json" "/tmp/o21-receipts/file-$i.json"
+          done
+          cmp /tmp/o21-receipts/proof-1.json /tmp/o21-receipts/proof-2.json
+          cmp /tmp/o21-receipts/proof-1.json /tmp/o21-receipts/proof-3.json
+          echo "O21_PROOF_SHA256=$(sha256sum /tmp/o21-receipts/proof-1.json | awk '{print $1}')"
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/o21-receipts/proof-1.json'))
+          assert p['campaign']['cases']==30000
+          assert p['campaign']['false_admit']==0
+          assert p['campaign']['false_hold']==0
+          assert p['campaign']['dual_pass_without_crossbind_unsafe']==10000
+          assert p['mutation']['survivors']==[]
+          assert p['omega8']['states']==6561 and p['omega8']['semantic_keepers']==1
+          assert p['sweep13d']['states']==1594323 and p['sweep13d']['semantic_keepers']==1
+          assert p['hs1000']['cells']==1000 and p['hs1000']['semantic_consequence_groups']==38
+          assert p['authority']=={'effect':False,'training':False,'checkpoint':False,'gate10':False}
+          print('O21_PROOF_ROOT='+p['proof_root'])
+          PY
+          echo O21_EXACT_HEAD_PROOF=PASS
