@@ -1,0 +1,54 @@
+{
+  "schema": "AURA-O14-CURRENT-OWNER-EFFECT-REFINEMENT-SEAL-v1",
+  "objective": "Preserve PR889 T1 current-owner read+lease handoff while binding PR887 effect-obligation refinement before TECC.",
+  "parents": [
+    {"artifact":"PR889/O13 current-owner T1 effect handoff","head":"51e4c8eeb327a5d5c8fe3f30e17907819cc86577","semantic_head":"1b71c8b92fc6be74ea9794b08fb1c1353abe24e0"},
+    {"artifact":"PR887/O8 consequence-refinement lattice","head":"b233d87bf32c0ae9b056c9c441558af8908f9392"}
+  ],
+  "adversarial_comparator": {"artifact":"PR890/O12C-R2","head":"7699b969b36213776da3a0ff1de96b4ea9c92ec9","disposition":"overlapping insight on stale PR888 lineage; useful falsifier, not parent"},
+  "keeper": "PR889CurrentOwnerTECC + SameReadSemantic + SameMutationBoundary != SameEffectTECC when intent/effect obligation/refinement differs.",
+  "proof": {
+    "fresh_venvs": 3,
+    "focused_tests": "36/36 PASS",
+    "campaign_cases_total": 60000,
+    "campaign_root": "500165d9876db22babe5f166b4b423c337582da79ef23862e0892d7978494674",
+    "candidate_false_tecc": 0,
+    "candidate_false_hold": 0,
+    "effect_ready": 0,
+    "pr889_unrefined_false_equivalence_per_env": 16000,
+    "lattice8_states": 6561,
+    "candidate_lattice_tecc_routes": 1,
+    "pr889_unrefined_false_lattice_routes": 2186,
+    "lattice_root": "0b0c39aeb133a057855396d52deeb5a1ee180d755bcfb04e2269ae4f24e341a4",
+    "sweep13d_states": 1594323,
+    "hard_states_executed": 6561,
+    "context_variants": 243,
+    "tecc_routes_13d": 243,
+    "hard_invalid_context_repairs": 0,
+    "factored13d_root": "7606f100e69d2d1aabfc62ec4da30e8f871f7fd18268866901353928d05dd817",
+    "hs1000_cells": 1000,
+    "hs1000_groups": 5,
+    "hs1000_freeze_root": "562ee5e9700d68d4bed56ac004511b4f6590b1f6e4c0953802f901fb348b6a37",
+    "hs1000_quotient_root": "4355f02716c57b2507c4ff151fa480dc1565620402031904a667651f5104a46e"
+  },
+  "failed_first": ["factored13d harness omitted digest import; first entire proof batch discarded before credit"],
+  "external_k27_scheme": "K27-B3MOD27-XYZ-v1",
+  "external_k27": [
+    {"name":"intent_governed","url":"https://arxiv.org/abs/2606.22916","k27":[24,20,17]},
+    {"name":"commit_time_authority","url":"https://arxiv.org/abs/2607.10487","k27":[5,3,9]},
+    {"name":"action_induction_vs_authorization","url":"https://arxiv.org/abs/2608.27146","k27":[25,1,22]},
+    {"name":"reddit_current_authority","url":"https://www.reddit.com/r/AI_Agents/comments/1w8fgeo/an_ai_agent_can_have_permission_and_still_be/","k27":[8,18,21]},
+    {"name":"reddit_step_permission","url":"https://www.reddit.com/r/AI_Agents/comments/1ujhmfg/broad_tool_permissions_are_the_wrong_abstraction/","k27":[8,6,26]}
+  ],
+  "google_scholar": "SCHOLAR_DIRECT_GAP: Scholar-domain query returned Scholar help/about pages rather than a stable task-specific paper result; no provenance fabricated.",
+  "authority": "D0_NONPROMOTING_GATE10_FALSE",
+  "source_sha256": {
+    "effect_refinement_seal.py": "d19b6df7c008decf9e7ee7c670aedc057af46055cc3427c69fb3846381f1eed7",
+    "test_effect_refinement_seal_o14.py": "9a0bd27d97e5c304ffe29e384a75f527603df10a91af6f2ca137bb251580440c",
+    "campaign_effect_refinement_seal_o14.py": "772dfd8dff16a4877bc652d077755e59fcea1add5ff1f5097acba7b900bdb464",
+    "o14_effect_refinement_lattice8.py": "83b4f0635fa3bfe7805160beb496ac3b20ba323661c3325d11d2eebaf3ae1d44",
+    "o14_effect_refinement_factored13d.py": "c645e251c1b10da0fd71819025ee51afb84133ae20d1a30e4f8544bddb666cb7",
+    "o14_effect_refinement_hs1000.py": "1f57ac711c5e7ce8837996cc0c43811e39d36047ef2b6f68df7ac688c4e7f074"
+  },
+  "local_receipt_sha256": "8b43533baab1b4917c9fc20ff94368b3ebc64778f0f30ab8d00fb7f302ef8703"
+}
