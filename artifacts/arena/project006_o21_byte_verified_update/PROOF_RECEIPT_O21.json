@@ -1,7 +1,7 @@
 {
   "objective": "O21_BYTE_VERIFIED_LAPTOP_UPDATE_TRANSACTION",
   "date": "2026-09-07",
-  "state": "ACHIEVED_LOCAL_D0_NONPROMOTING",
+  "state": "PUBLISHED_EXACT_HEAD_PENDING_D0_NONPROMOTING",
   "gate10": false,
   "foreign_parents": [
     {
@@ -26,7 +26,9 @@
     "K27Coordinate != ReleaseIdentity != InstalledCurrentness != DeploymentAuthority"
   ],
   "proof": {
-    "source_sha256": "433cfe221a7f5be136c8f526c8bcf57f64550c648b4f5d44ac0731461386d2f4",
+    "local_source_sha256": "433cfe221a7f5be136c8f526c8bcf57f64550c648b4f5d44ac0731461386d2f4",
+    "published_source_sha256": "7e5b97fed239c961c335066b9927cc8747322238999b4367d03a1a898215f2f9",
+    "published_byte_difference": "comment-only publication difference; first exact-head run correctly failed and receives zero hosted credit",
     "test_sha256": "be52314b5c85ab50da562bcd750c2827e74c615b6cbbf8595776d140b38c6baf",
     "proof_program_sha256": "e703d2fc8b3ef78a1f044645f650966bfab835f2afcea89b25aed839a7ab94b9",
     "focused_tests_per_env": 15,
