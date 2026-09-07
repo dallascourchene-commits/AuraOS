@@ -20,6 +20,34 @@ class SupportDisposition(str, Enum):
     HOLD_SUPPORT_UNCERTAINTY = "HOLD_SUPPORT_UNCERTAINTY"
 
 
+class SupportUseDisposition(str, Enum):
+    READY_D0 = "READY_D0"
+    REPROVE_SUPPORT_WORLD = "REPROVE_SUPPORT_WORLD"
+    HOLD_SUPPORT_UNCERTAINTY = "HOLD_SUPPORT_UNCERTAINTY"
+    HOLD_UNBOUND_SUPPORT_IDENTITY = "HOLD_UNBOUND_SUPPORT_IDENTITY"
+
+
+def _hex64(value: str, field: str) -> str:
+    if (not isinstance(value, str) or len(value) != 64 or value.lower() != value
+            or any(c not in "0123456789abcdef" for c in value)):
+        raise ValueError(f"{field} must be lowercase SHA-256 hex")
+    return value
+
+
+@dataclass(frozen=True)
+class SupportWorldIdentity:
+    configuration_root: str
+    support_generation: int
+    owner_incarnation: str
+
+    def __post_init__(self) -> None:
+        _hex64(self.configuration_root, "configuration_root")
+        if type(self.support_generation) is not int or self.support_generation < 0:
+            raise ValueError("support_generation must be non-negative exact int")
+        if not isinstance(self.owner_incarnation, str) or not self.owner_incarnation:
+            raise ValueError("owner_incarnation required")
+
+
 @dataclass(frozen=True)
 class HardInvariantSupport:
     invariant_id: str
@@ -43,7 +71,18 @@ class InvariantSupportPlan:
     reproof_segment_ids: tuple[str, ...]
     coordination_components: tuple[tuple[str, ...], ...]
     support_root: str
+    support_identity_root: str | None
     support_refresh_required: bool
+    authority_minted: bool = False
+    effect_authority: bool = False
+    gate10: bool = False
+
+
+@dataclass(frozen=True)
+class SupportUseDecision:
+    disposition: SupportUseDisposition
+    current_support_root: str
+    current_support_identity_root: str
     authority_minted: bool = False
     effect_authority: bool = False
     gate10: bool = False
@@ -62,6 +101,20 @@ def _support_root(supports: Sequence[HardInvariantSupport]) -> str:
     return sha256(raw).hexdigest()
 
 
+def _support_identity_root(support_root: str, identity: SupportWorldIdentity) -> str:
+    _hex64(support_root, "support_root")
+    if not isinstance(identity, SupportWorldIdentity):
+        raise ValueError("support_identity must be SupportWorldIdentity")
+    payload = {
+        "support_root": support_root,
+        "configuration_root": identity.configuration_root,
+        "support_generation": identity.support_generation,
+        "owner_incarnation": identity.owner_incarnation,
+    }
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return sha256(raw).hexdigest()
+
+
 def compile_invariant_support(
     segment_ids: Iterable[str],
     geometry_seed_segment_ids: Iterable[str],
@@ -69,12 +122,14 @@ def compile_invariant_support(
     *,
     changed_invariant_ids: Iterable[str] = (),
     eager_threshold: float = 0.5,
+    support_identity: SupportWorldIdentity | None = None,
 ) -> InvariantSupportPlan:
     """Expand a geometric route seed through CURRENT hard-invariant support.
 
-    This compiler does not claim that invariant coupling changes route geometry.
-    It expands the logical/evidence reproof cone. STALE or UNKNOWN support cannot
-    certify independence, so the result holds and requests support refresh.
+    Geometry and logical reproof remain separate. When support_identity is
+    supplied, the plan is bound to exact support membership/state plus current
+    configuration generation and owner incarnation. An unbound plan remains a
+    D0 planning hint and cannot later pass validate_support_use().
     """
     if not 0.0 < eager_threshold <= 1.0:
         raise ValueError("eager_threshold must be in (0,1]")
@@ -97,14 +152,18 @@ def compile_invariant_support(
         raise ValueError("duplicate invariant_id")
     if any(not s.segment_ids <= segment_set for s in supports):
         raise ValueError("support references unknown segment")
+    if support_identity is not None and not isinstance(support_identity, SupportWorldIdentity):
+        raise ValueError("support_identity must be SupportWorldIdentity or None")
 
     root = _support_root(supports)
+    identity_root = None if support_identity is None else _support_identity_root(root, support_identity)
     if any(s.state is not SupportState.CURRENT for s in supports):
         return InvariantSupportPlan(
             disposition=SupportDisposition.HOLD_SUPPORT_UNCERTAINTY,
             reproof_segment_ids=tuple(sorted(segments)),
             coordination_components=(tuple(sorted(segments)),),
             support_root=root,
+            support_identity_root=identity_root,
             support_refresh_required=True,
         )
 
@@ -155,5 +214,37 @@ def compile_invariant_support(
         reproof_segment_ids=tuple(sorted(reproof)),
         coordination_components=components,
         support_root=root,
+        support_identity_root=identity_root,
         support_refresh_required=False,
+    )
+
+
+def validate_support_use(
+    plan: InvariantSupportPlan,
+    current_supports: Sequence[HardInvariantSupport],
+    current_identity: SupportWorldIdentity,
+) -> SupportUseDecision:
+    """Require exact support/configuration identity at the plan use site."""
+    if not isinstance(plan, InvariantSupportPlan):
+        raise ValueError("plan must be InvariantSupportPlan")
+    if not isinstance(current_identity, SupportWorldIdentity):
+        raise ValueError("current_identity must be SupportWorldIdentity")
+    current_root = _support_root(current_supports)
+    current_identity_root = _support_identity_root(current_root, current_identity)
+
+    if plan.support_identity_root is None:
+        disposition = SupportUseDisposition.HOLD_UNBOUND_SUPPORT_IDENTITY
+    elif any(s.state is not SupportState.CURRENT for s in current_supports):
+        disposition = SupportUseDisposition.HOLD_SUPPORT_UNCERTAINTY
+    elif plan.support_identity_root != current_identity_root:
+        disposition = SupportUseDisposition.REPROVE_SUPPORT_WORLD
+    elif plan.disposition is SupportDisposition.HOLD_SUPPORT_UNCERTAINTY:
+        disposition = SupportUseDisposition.HOLD_SUPPORT_UNCERTAINTY
+    else:
+        disposition = SupportUseDisposition.READY_D0
+
+    return SupportUseDecision(
+        disposition=disposition,
+        current_support_root=current_root,
+        current_support_identity_root=current_identity_root,
     )
