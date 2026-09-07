@@ -405,6 +405,10 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
+    "python -m venv": [
+      ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      "README.md"
+    ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
     ],
@@ -671,9 +675,6 @@
     ],
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
-    ],
-    "python -m venv": [
-      "README.md"
     ],
     "python aura_daemon.py": [
       "README.md",
@@ -1060,7 +1061,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1665,
+    "repo_file_count": 1674,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1233,6 +1234,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1332,6 +1334,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2687,6 +2690,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2695,6 +2699,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
@@ -2709,6 +2714,11 @@
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "tools/project006/effect_attempt_recovery.py",
+      "tools/project006/o11_effect_attempt_factored13d.py",
+      "tools/project006/o11_effect_attempt_hs1000.py",
+      "tools/project006/o11_effect_attempt_lattice8.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
@@ -11741,6 +11751,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3292,
+      "lines": 79,
+      "tokens_est": 823,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          46
+        ]
+      },
+      "topology": {},
+      "digest8": "92727d54cc20cd47",
+      "vector": [
+        -0.140683,
+        0.295563,
+        0.107125,
+        -0.148427,
+        -0.158752,
+        0.138101,
+        0.016779,
+        -0.078731,
+        0.25168,
+        -0.045173,
+        -0.063243,
+        0.078731,
+        -0.143264,
+        -0.089056,
+        0.280075,
+        -0.282656,
+        -0.267168,
+        0.120032,
+        -0.034848,
+        0.17424,
+        0.029685,
+        0.153589,
+        -0.169077,
+        -0.176821,
+        -0.17424,
+        -0.243936,
+        -0.045173,
+        0.311051,
+        0.114869,
+        0.197472,
+        -0.295563,
+        0.127776
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17588,6 +17651,53 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2442,
+      "lines": 59,
+      "tokens_est": 611,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "65a7202e6698cb83",
+      "vector": [
+        -0.066071,
+        -0.220652,
+        -0.155828,
+        0.153335,
+        0.001247,
+        0.312902,
+        0.08851,
+        -0.260544,
+        -0.27301,
+        0.258051,
+        0.220652,
+        0.098483,
+        0.115936,
+        -0.008726,
+        -0.053605,
+        -0.155828,
+        0.28797,
+        -0.046125,
+        0.135882,
+        0.235612,
+        -0.205693,
+        -0.08851,
+        0.235612,
+        -0.128402,
+        -0.08851,
+        -0.235612,
+        0.100976,
+        0.170787,
+        -0.105963,
+        0.115936,
+        -0.258051,
+        0.100976
       ]
     },
     {
@@ -104110,6 +104220,53 @@
       ]
     },
     {
+      "path": "tests/test_project006_effect_attempt_recovery_o11.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8877,
+      "lines": 182,
+      "tokens_est": 2220,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "56c09268e6b40ed9",
+      "vector": [
+        -0.183866,
+        0.042061,
+        0.025236,
+        -0.094937,
+        -0.140603,
+        -0.248759,
+        -0.159831,
+        0.287215,
+        0.147813,
+        0.272794,
+        0.193479,
+        0.111761,
+        -0.234338,
+        0.241549,
+        0.265584,
+        0.159831,
+        0.099744,
+        -0.078113,
+        -0.15262,
+        -0.267987,
+        0.030043,
+        0.219918,
+        -0.205497,
+        -0.010816,
+        0.1382,
+        -0.181462,
+        0.063692,
+        0.008412,
+        -0.289618,
+        0.094937,
+        0.111761,
+        0.212707
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -104483,6 +104640,53 @@
         0.17504,
         0.005646,
         -0.077921
+      ]
+    },
+    {
+      "path": "tools/arena/effect_return_atomicity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11011,
+      "lines": 239,
+      "tokens_est": 2753,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "18f56ff517030a56",
+      "vector": [
+        0.178467,
+        0.249411,
+        -0.12526,
+        -0.205071,
+        -0.094222,
+        0.072052,
+        0.047665,
+        0.276015,
+        0.060967,
+        -0.218373,
+        -0.278232,
+        0.193986,
+        0.216156,
+        -0.092005,
+        -0.087571,
+        0.129694,
+        0.049882,
+        -0.10309,
+        -0.244977,
+        -0.189552,
+        0.162948,
+        -0.041014,
+        -0.19842,
+        0.280449,
+        -0.171816,
+        -0.22059,
+        -0.182901,
+        0.171816,
+        0.034363,
+        0.233892,
+        0.205071,
+        -0.123043
       ]
     },
     {
@@ -105144,6 +105348,241 @@
       ]
     },
     {
+      "path": "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5219,
+      "lines": 102,
+      "tokens_est": 1305,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9bcbd2c44a5ca06b",
+      "vector": [
+        -0.033308,
+        0.2751,
+        -0.131999,
+        0.240558,
+        0.146802,
+        -0.057981,
+        0.055513,
+        -0.124597,
+        0.191213,
+        -0.243025,
+        -0.141868,
+        0.181344,
+        0.028374,
+        -0.210951,
+        -0.22082,
+        -0.191213,
+        -0.24796,
+        -0.203549,
+        0.008635,
+        0.164073,
+        -0.173942,
+        -0.134466,
+        0.225755,
+        -0.314576,
+        0.203549,
+        -0.156671,
+        -0.270165,
+        0.151737,
+        0.035775,
+        -0.048112,
+        -0.082653,
+        -0.156671
+      ]
+    },
+    {
+      "path": "tools/project006/effect_attempt_recovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15165,
+      "lines": 318,
+      "tokens_est": 3792,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ce73bf5647fb1b61",
+      "vector": [
+        -0.245021,
+        0.181103,
+        -0.126654,
+        -0.299471,
+        0.086409,
+        -0.237919,
+        -0.024857,
+        -0.13849,
+        0.131388,
+        0.13849,
+        -0.008286,
+        0.084041,
+        0.010653,
+        0.216613,
+        0.14796,
+        0.039061,
+        -0.221348,
+        -0.256858,
+        -0.297103,
+        0.01302,
+        0.131388,
+        -0.126654,
+        -0.095878,
+        -0.290001,
+        -0.247389,
+        -0.121919,
+        0.188205,
+        0.131388,
+        -0.27343,
+        -0.055633,
+        0.252123,
+        -0.058
+      ]
+    },
+    {
+      "path": "tools/project006/o11_effect_attempt_factored13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2044,
+      "lines": 54,
+      "tokens_est": 511,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f662e1286c42797f",
+      "vector": [
+        -0.044368,
+        0.293786,
+        -0.195458,
+        -0.111519,
+        -0.142696,
+        -0.044368,
+        0.255414,
+        0.176272,
+        -0.2746,
+        -0.010792,
+        -0.262609,
+        0.226635,
+        -0.089935,
+        0.133103,
+        -0.21944,
+        0.008394,
+        0.245821,
+        0.029978,
+        -0.161882,
+        -0.116315,
+        -0.245821,
+        -0.051562,
+        0.226635,
+        0.176272,
+        0.056359,
+        0.183466,
+        0.238626,
+        0.243423,
+        0.073147,
+        -0.039571,
+        -0.121112,
+        -0.226635
+      ]
+    },
+    {
+      "path": "tools/project006/o11_effect_attempt_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1353,
+      "lines": 46,
+      "tokens_est": 339,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "53125c049b9fddc4",
+      "vector": [
+        0.208217,
+        -0.164015,
+        -0.264052,
+        0.196585,
+        -0.184953,
+        -0.189606,
+        -0.096548,
+        -0.187279,
+        -0.012795,
+        -0.129118,
+        0.005816,
+        -0.063977,
+        0.103527,
+        -0.115159,
+        -0.236135,
+        -0.268705,
+        -0.175647,
+        0.047692,
+        -0.157035,
+        0.287317,
+        -0.215197,
+        -0.154709,
+        -0.238461,
+        0.070957,
+        -0.043039,
+        -0.280337,
+        -0.161688,
+        0.131444,
+        -0.164015,
+        0.166341,
+        0.238461,
+        0.161688
+      ]
+    },
+    {
+      "path": "tools/project006/o11_effect_attempt_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 775,
+      "lines": 27,
+      "tokens_est": 194,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6b7ac6c528725d52",
+      "vector": [
+        -0.076447,
+        -0.129492,
+        0.279265,
+        -0.138852,
+        -0.057725,
+        -0.073327,
+        0.173176,
+        0.207499,
+        0.282385,
+        -0.023402,
+        -0.204378,
+        -0.279265,
+        0.251183,
+        0.085808,
+        0.026522,
+        0.288626,
+        -0.341671,
+        -0.157574,
+        -0.007801,
+        0.029643,
+        0.288626,
+        0.070206,
+        -0.11389,
+        0.026522,
+        -0.079567,
+        -0.254303,
+        0.148213,
+        -0.173176,
+        0.216859,
+        0.010921,
+        0.170055,
+        0.020282
+      ]
+    },
+    {
       "path": "tools/project006/project006_consumer_outbox_wrapper.py",
       "role": "python_module",
       "binary": false,
@@ -105194,47 +105633,47 @@
       "path": "tools/project006/terminal_outbox.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9363,
-      "lines": 215,
-      "tokens_est": 2341,
+      "bytes": 10751,
+      "lines": 236,
+      "tokens_est": 2688,
       "symbol_count": 16,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "8403c8ccdc3570ef",
+      "digest8": "e90eeec5219ed56e",
       "vector": [
-        0.238303,
-        -0.227322,
-        0.264659,
-        0.034043,
-        0.042829,
-        0.135075,
-        0.176806,
-        -0.143861,
-        0.007687,
-        0.139468,
-        0.110915,
-        -0.009884,
-        0.104326,
-        0.229518,
-        -0.227322,
-        -0.264659,
-        -0.15045,
-        0.07797,
-        0.260267,
-        -0.124093,
-        0.277838,
-        -0.139468,
-        -0.10213,
-        -0.280034,
-        -0.2405,
-        0.086756,
-        0.005491,
-        -0.075774,
-        0.071381,
-        -0.266856,
-        0.183395,
-        -0.229518
+        -0.096052,
+        -0.113516,
+        -0.240754,
+        -0.240754,
+        0.061124,
+        -0.143454,
+        -0.003742,
+        -0.185867,
+        0.001247,
+        0.101042,
+        0.185867,
+        -0.22329,
+        0.086073,
+        -0.143454,
+        -0.123496,
+        -0.273187,
+        0.188362,
+        -0.155929,
+        0.053639,
+        0.023701,
+        0.285661,
+        0.258218,
+        -0.303125,
+        -0.278177,
+        -0.116011,
+        0.108526,
+        -0.081083,
+        -0.225785,
+        -0.280672,
+        0.023701,
+        0.12599,
+        0.178382
       ]
     },
     {
@@ -106329,7 +106768,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788775036,
+  "generated_at_unix": 1788776284,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106504,6 +106943,7 @@
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -106603,6 +107043,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -107958,6 +108399,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -107966,6 +108408,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
+      "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
@@ -107980,6 +108423,11 @@
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "tools/project006/effect_attempt_recovery.py",
+      "tools/project006/o11_effect_attempt_factored13d.py",
+      "tools/project006/o11_effect_attempt_hs1000.py",
+      "tools/project006/o11_effect_attempt_lattice8.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
@@ -266041,6 +266489,216 @@
         "file_digest8": "bec72310a01d581a"
       },
       {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#class:EffectAttemptRecoveryO11Tests:f87196d50e460054",
+        "name": "EffectAttemptRecoveryO11Tests",
+        "kind": "class",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 21,
+        "end_line": 177,
+        "signature_hash": "a9896e22ba5a569d",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:root:4e00ae0b7a5032f8",
+        "name": "root",
+        "kind": "function",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "8b9f1879e1b67fb7",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.fixture:ba63b255175016c3",
+        "name": "EffectAttemptRecoveryO11Tests.fixture",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 22,
+        "end_line": 40,
+        "signature_hash": "95a80a808efcf6bd",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider.fail:3f99d76dc367457c",
+        "name": "EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider.fail",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "bce87073a67caddf",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider:3ece7d9e617adf9c",
+        "name": "EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 48,
+        "end_line": 56,
+        "signature_hash": "52becebd657af227",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_not_terminal_outbox_item:95515012b116540f",
+        "name": "EffectAttemptRecoveryO11Tests.test_ack_not_terminal_outbox_item",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 148,
+        "end_line": 151,
+        "signature_hash": "13467b7aa8707f58",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_published_then_first_attempt_is_durable_before_call:9b59bab0a10d3604",
+        "name": "EffectAttemptRecoveryO11Tests.test_ack_published_then_first_attempt_is_durable_before_call",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "98884c9c5cd6220b",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_with_provider_count_is_forbidden:a6ec0ee82fa9fab1",
+        "name": "EffectAttemptRecoveryO11Tests.test_ack_with_provider_count_is_forbidden",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 143,
+        "end_line": 146,
+        "signature_hash": "76c1bbe66332dad2",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ambiguous_post_effect_is_publishable_with_nonzero_count:e39f3f82ad7525fd",
+        "name": "EffectAttemptRecoveryO11Tests.test_ambiguous_post_effect_is_publishable_with_nonzero_count",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 127,
+        "end_line": 136,
+        "signature_hash": "91f53c92f0a9d70e",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ambiguous_without_attempt_rejected:53bd386e77dd61b9",
+        "name": "EffectAttemptRecoveryO11Tests.test_ambiguous_without_attempt_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 158,
+        "end_line": 161,
+        "signature_hash": "b15586a3dbdc05d8",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_binding_rejects_wrong_source:e0f0a72a08ee45de",
+        "name": "EffectAttemptRecoveryO11Tests.test_binding_rejects_wrong_source",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "ba91732f2d6140bc",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_completion_ambiguous_zero_attempt_rejected_by_outbox:051850d58d59e20d",
+        "name": "EffectAttemptRecoveryO11Tests.test_completion_ambiguous_zero_attempt_rejected_by_outbox",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 163,
+        "end_line": 166,
+        "signature_hash": "04a85b892fa86a4b",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_currentness_move_holds_before_effect:a713f4aeb290b4af",
+        "name": "EffectAttemptRecoveryO11Tests.test_currentness_move_holds_before_effect",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 168,
+        "end_line": 177,
+        "signature_hash": "ba878938023996e2",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_idempotent_crash_retries_exact_and_increments_attempt:45fa6eb32964cb80",
+        "name": "EffectAttemptRecoveryO11Tests.test_idempotent_crash_retries_exact_and_increments_attempt",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 77,
+        "end_line": 85,
+        "signature_hash": "fb8dea3c3790b853",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_nonretryable_crash_holds:cedc2bdf8ec7756a",
+        "name": "EffectAttemptRecoveryO11Tests.test_nonretryable_crash_holds",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "90fac38d5a007526",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_payload_move_holds_idempotency:e9a556d62957a8f8",
+        "name": "EffectAttemptRecoveryO11Tests.test_payload_move_holds_idempotency",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 96,
+        "end_line": 104,
+        "signature_hash": "f45243df6915744d",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_pre_effect_rejection_still_forbids_provider_count:cf3c37c30f0fdbed",
+        "name": "EffectAttemptRecoveryO11Tests.test_pre_effect_rejection_still_forbids_provider_count",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 138,
+        "end_line": 141,
+        "signature_hash": "cc853765a61f2379",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_queryable_crash_queries_not_resends:caddca3ed765d735",
+        "name": "EffectAttemptRecoveryO11Tests.test_queryable_crash_queries_not_resends",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 87,
+        "end_line": 94,
+        "signature_hash": "fd01f3618e009ebe",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only.writer:752dbb5917da710b",
+        "name": "EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only.writer",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 113,
+        "end_line": 117,
+        "signature_hash": "d577063fa44558fd",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only:60a0d3b1a78613f8",
+        "name": "EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 106,
+        "end_line": 125,
+        "signature_hash": "a4f244fd0c2a2c27",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_result_without_attempt_rejected:738c3311894a1fcf",
+        "name": "EffectAttemptRecoveryO11Tests.test_result_without_attempt_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "line": 153,
+        "end_line": 156,
+        "signature_hash": "cd73a7bbbe7c18e9",
+        "file_digest8": "56c09268e6b40ed9"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -266389,6 +267047,236 @@
         "end_line": 74,
         "signature_hash": "6cca0427257ffe2f",
         "file_digest8": "1397bda28a709ec7"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Action:cb6184229e5a7a61",
+        "name": "Action",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 51,
+        "end_line": 61,
+        "signature_hash": "aeff42a0655b7485",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:DurableEffectState:85487b567299a543",
+        "name": "DurableEffectState",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 107,
+        "end_line": 135,
+        "signature_hash": "40d94524b4c88f72",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectContract:a4bb756b4fc9f393",
+        "name": "EffectContract",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 65,
+        "end_line": 79,
+        "signature_hash": "0be891ec1ae8127a",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectIntent:1d0ea9f10367995f",
+        "name": "EffectIntent",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 83,
+        "end_line": 103,
+        "signature_hash": "f0173f902a8a994e",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Phase:bda145b0cbfa4e33",
+        "name": "Phase",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 40,
+        "end_line": 48,
+        "signature_hash": "5ed0b551036abbaa",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryContext:bffb26539dc93d91",
+        "name": "RecoveryContext",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 139,
+        "end_line": 154,
+        "signature_hash": "63c1667687edfe0d",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryDecision:acd5c7a9f7034022",
+        "name": "RecoveryDecision",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 158,
+        "end_line": 172,
+        "signature_hash": "7e6bde07fc4dcbb3",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryMode:62b22c69a62d7d1a",
+        "name": "RecoveryMode",
+        "kind": "class",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "f4798767cbd25b4f",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_id:47c3fe8fd9dba651",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_nn:df3f2c7a48889097",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "111700e86562b752",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_root:26f14279e478dee3",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:compile_initial_state:cdfc1961f4f75b78",
+        "name": "compile_initial_state",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 175,
+        "end_line": 187,
+        "signature_hash": "0a12b50d975fe572",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:decide_recovery:8b51f52175f87b54",
+        "name": "decide_recovery",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 197,
+        "end_line": 229,
+        "signature_hash": "4b9c60f261f495ae",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:digest:3035af4e3c569183",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "ca4017d839035e05",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:effect_attempt_root:8f1c6a323baff38b",
+        "name": "effect_attempt_root",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 190,
+        "end_line": 194,
+        "signature_hash": "05e9c11b28b0e397",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:hard13d_erac:d71e32e2e189fe6d",
+        "name": "hard13d_erac",
+        "kind": "function",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 232,
+        "end_line": 238,
+        "signature_hash": "2685a603736596df",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:DurableEffectState.__post_init__:5f8e5cd470a91d8e",
+        "name": "DurableEffectState.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 124,
+        "end_line": 135,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.__post_init__:0619c8725bcb75d3",
+        "name": "EffectContract.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 70,
+        "end_line": 74,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.contract_root:9f8d7703533536a2",
+        "name": "EffectContract.contract_root",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "674ed695d58d29da",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.__post_init__:3937a277a1a8e8f9",
+        "name": "EffectIntent.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 91,
+        "end_line": 96,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.identity_root:ac108adf2414f4a2",
+        "name": "EffectIntent.identity_root",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 99,
+        "end_line": 103,
+        "signature_hash": "58a8d7e492dc7d88",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryContext.__post_init__:eb3e606c7c9e988b",
+        "name": "RecoveryContext.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 149,
+        "end_line": 154,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
+      },
+      {
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryDecision.__post_init__:13b1cd78a451f3d7",
+        "name": "RecoveryDecision.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/effect_return_atomicity.py",
+        "line": 167,
+        "end_line": 172,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "18f56ff517030a56"
       },
       {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
@@ -268341,6 +269229,226 @@
         "file_digest8": "2630ed89a1cd55dd"
       },
       {
+        "semantic_id": "tools/project006/campaign_effect_attempt_recovery_o11.py#function:expected:5748f57a52805ba5",
+        "name": "expected",
+        "kind": "function",
+        "file": "tools/project006/campaign_effect_attempt_recovery_o11.py",
+        "line": 16,
+        "end_line": 28,
+        "signature_hash": "86212b3f1a5d692a",
+        "file_digest8": "9bcbd2c44a5ca06b"
+      },
+      {
+        "semantic_id": "tools/project006/campaign_effect_attempt_recovery_o11.py#function:run:7563d4c3048426da",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/campaign_effect_attempt_recovery_o11.py",
+        "line": 31,
+        "end_line": 97,
+        "signature_hash": "d5596f6dac4ced9b",
+        "file_digest8": "9bcbd2c44a5ca06b"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#class:EffectAttemptJournal:42cd651adebb3c5d",
+        "name": "EffectAttemptJournal",
+        "kind": "class",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 72,
+        "end_line": 306,
+        "signature_hash": "03d113b3fe13d2e9",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#class:ProviderActionPermit:191ace854d7d0ed0",
+        "name": "ProviderActionPermit",
+        "kind": "class",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 45,
+        "end_line": 69,
+        "signature_hash": "ed4867a105132b51",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_id:d195d919364ce2d8",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 38,
+        "end_line": 41,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_root:13df56a88fac23ff",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:digest:661e24830d40d6b6",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:hard_o11_state:dec2593e744d1640",
+        "name": "hard_o11_state",
+        "kind": "function",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 309,
+        "end_line": 317,
+        "signature_hash": "ac106c0df04d850d",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.__init__:9b8d9221fafdb1ef",
+        "name": "EffectAttemptJournal.__init__",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 82,
+        "end_line": 107,
+        "signature_hash": "cf93319cd87db237",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal._bind:e5be3ce509cbcce1",
+        "name": "EffectAttemptJournal._bind",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 125,
+        "end_line": 134,
+        "signature_hash": "b6aba815f30dcb7e",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal._con:254ac40dc89358e9",
+        "name": "EffectAttemptJournal._con",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 110,
+        "end_line": 122,
+        "signature_hash": "193a566b1dd74641",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal._state:84271ff127daec6f",
+        "name": "EffectAttemptJournal._state",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 155,
+        "end_line": 169,
+        "signature_hash": "21f6f3658b76d727",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.bind_admitted:6c88941c8a07c33d",
+        "name": "EffectAttemptJournal.bind_admitted",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 136,
+        "end_line": 152,
+        "signature_hash": "67553221e79d7b99",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.decide_and_persist:452dd04db9d34363",
+        "name": "EffectAttemptJournal.decide_and_persist",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 207,
+        "end_line": 226,
+        "signature_hash": "a7ef30185518849f",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.mark_return_written:8d8ed95079850ac2",
+        "name": "EffectAttemptJournal.mark_return_written",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 293,
+        "end_line": 306,
+        "signature_hash": "a72831f302cb66dd",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.publish_ack:f66daa5ad2feb451",
+        "name": "EffectAttemptJournal.publish_ack",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 178,
+        "end_line": 205,
+        "signature_hash": "81e33772a6e24ce3",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.record_ambiguous:50003cf093f6da5b",
+        "name": "EffectAttemptJournal.record_ambiguous",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 228,
+        "end_line": 236,
+        "signature_hash": "05e6543b2cfc6a9b",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.record_error_terminal:d646548d0cf0dfe3",
+        "name": "EffectAttemptJournal.record_error_terminal",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 252,
+        "end_line": 261,
+        "signature_hash": "dc47f7b49b133347",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.record_result:16ec09feed3b9846",
+        "name": "EffectAttemptJournal.record_result",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 238,
+        "end_line": 250,
+        "signature_hash": "9563b3c2c5865c4f",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.stage_final_terminal:cc6d3c2abce7f04f",
+        "name": "EffectAttemptJournal.stage_final_terminal",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 263,
+        "end_line": 291,
+        "signature_hash": "6cb24f8109b58da4",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.status:9f8422792c47e328",
+        "name": "EffectAttemptJournal.status",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 171,
+        "end_line": 176,
+        "signature_hash": "858a2a9c5face950",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:ProviderActionPermit.__post_init__:02d9fb6e404147dc",
+        "name": "ProviderActionPermit.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "line": 58,
+        "end_line": 69,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ce73bf5647fb1b61"
+      },
+      {
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:_changed:fb5eb9317f79eb5e",
         "name": "_changed",
         "kind": "function",
@@ -268465,160 +269573,160 @@
         "name": "AuraDriveBusWriterV1",
         "kind": "class",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 177,
-        "end_line": 214,
+        "line": 198,
+        "end_line": 235,
         "signature_hash": "5e3b038da22f496a",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#class:CommandIdentity:4b04b2e9ac2d7f14",
         "name": "CommandIdentity",
         "kind": "class",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 35,
-        "end_line": 45,
+        "line": 48,
+        "end_line": 58,
         "signature_hash": "ddfd1e80676f7fa5",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#class:OutboxJournal:a7c1a554443bd51c",
         "name": "OutboxJournal",
         "kind": "class",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 81,
-        "end_line": 175,
+        "line": 98,
+        "end_line": 196,
         "signature_hash": "c76f116521bf8994",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#class:TerminalResponse:6d15e9d1386cc572",
         "name": "TerminalResponse",
         "kind": "class",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 48,
-        "end_line": 79,
+        "line": 61,
+        "end_line": 96,
         "signature_hash": "7d68bc9a590dfeb5",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#class:TxState:a3806c9ae3b0a8aa",
         "name": "TxState",
         "kind": "class",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 23,
-        "end_line": 32,
+        "line": 36,
+        "end_line": 45,
         "signature_hash": "6507ca3db85236ac",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:AuraDriveBusWriterV1.__call__:cc9b0e7fc72c6963",
         "name": "AuraDriveBusWriterV1.__call__",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 192,
-        "end_line": 214,
+        "line": 213,
+        "end_line": 235,
         "signature_hash": "9cb33e97f0708e31",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:AuraDriveBusWriterV1.__init__:43f47e0ce9ab5d0c",
         "name": "AuraDriveBusWriterV1.__init__",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 185,
-        "end_line": 190,
+        "line": 206,
+        "end_line": 211,
         "signature_hash": "a418bb20e4c1b885",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:CommandIdentity.validate:74ca3446affb6d85",
         "name": "CommandIdentity.validate",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 42,
-        "end_line": 45,
+        "line": 55,
+        "end_line": 58,
         "signature_hash": "99559e6add5bcf3e",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.__init__:6a2d6dbae9577c91",
         "name": "OutboxJournal.__init__",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 87,
-        "end_line": 105,
+        "line": 106,
+        "end_line": 124,
         "signature_hash": "cf93319cd87db237",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal._con:6785a276d5ae2a5a",
         "name": "OutboxJournal._con",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 108,
-        "end_line": 118,
+        "line": 127,
+        "end_line": 137,
         "signature_hash": "2fd9623c279b1520",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.ingest:65e81c2f8b03b73f",
         "name": "OutboxJournal.ingest",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 120,
-        "end_line": 129,
+        "line": 139,
+        "end_line": 148,
         "signature_hash": "f74adb6e74645362",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.publish_pending:6c17a65e99f626b5",
         "name": "OutboxJournal.publish_pending",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 148,
-        "end_line": 168,
+        "line": 169,
+        "end_line": 189,
         "signature_hash": "3349cd6240f6aa6e",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.stage_terminal:8fa0b566f14244ef",
         "name": "OutboxJournal.stage_terminal",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 131,
-        "end_line": 146,
+        "line": 150,
+        "end_line": 167,
         "signature_hash": "b79697aa2b073e0e",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.status:124b435aeb75251a",
         "name": "OutboxJournal.status",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 170,
-        "end_line": 175,
+        "line": 191,
+        "end_line": 196,
         "signature_hash": "858a2a9c5face950",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:TerminalResponse.canonical:43a20e75722bc95f",
         "name": "TerminalResponse.canonical",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 55,
-        "end_line": 75,
+        "line": 68,
+        "end_line": 92,
         "signature_hash": "8e8956e5bf6a3e84",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/terminal_outbox.py#method:TerminalResponse.digest:27688ccfe0a514e0",
         "name": "TerminalResponse.digest",
         "kind": "method",
         "file": "tools/project006/terminal_outbox.py",
-        "line": 77,
-        "end_line": 79,
+        "line": 94,
+        "end_line": 96,
         "signature_hash": "78cc05eff2137397",
-        "file_digest8": "8403c8ccdc3570ef"
+        "file_digest8": "e90eeec5219ed56e"
       },
       {
         "semantic_id": "tools/project006/test_terminal_outbox.py#class:TerminalOutboxTests:e377b74436c00b0f",
@@ -270161,8 +271269,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "909ab06e64c02b4cdd5dc14ebf53c4ff",
-    "payload_hash": "313eb8d23c574018ac329d419fef5fcc"
+    "record_fingerprint": "25d0672b498a55a362f64e16b9a7a296",
+    "payload_hash": "846be57c6015ad81e5c2c085ef349ad5"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -270175,16 +271283,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1665,
-      "bytes": 26560137,
-      "tokens_est": 6630382,
+      "files": 1674,
+      "bytes": 26611703,
+      "tokens_est": 6643277,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1014,
-        "schema_or_lexicon": 273,
+        "python_module": 1021,
+        "schema_or_lexicon": 275,
         "support_file": 53
       }
     },
@@ -270871,16 +271979,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1665,
-    "total_bytes": 26560137,
-    "text_tokens_est": 6630382,
+    "file_count": 1674,
+    "total_bytes": 26611703,
+    "text_tokens_est": 6643277,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1014,
-      "schema_or_lexicon": 273,
+      "python_module": 1021,
+      "schema_or_lexicon": 275,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -272133,6 +273241,14 @@
         "end_line": 59,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_probe_campaign.py#function:run:5e54aa4b95795b0d",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/project006/campaign_effect_attempt_recovery_o11.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 97,
+        "semantic_id": "tools/project006/campaign_effect_attempt_recovery_o11.py#function:run:7563d4c3048426da",
+        "signature_hash": "d5596f6dac4ced9b"
       }
     ],
     "run.record": [
@@ -288645,12 +289761,28 @@
         "signature_hash": "3c60ab9e6d97eef8"
       },
       {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:digest:3035af4e3c569183",
+        "signature_hash": "ca4017d839035e05"
+      },
+      {
         "file": "tools/arena/frontier27_runtime.py",
         "kind": "function",
         "line": 21,
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
         "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:digest:661e24830d40d6b6",
+        "signature_hash": "1191bf18035c2e8c"
       }
     ],
     "_runtime_binding_digest": [
@@ -302999,6 +304131,22 @@
         "end_line": 126,
         "semantic_id": "scripts/aura_runtime_profile_v2_adapter.py#function:_id:0f03725d6ec856da",
         "signature_hash": "2cc123d979c37fb2"
+      },
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_id:47c3fe8fd9dba651",
+        "signature_hash": "d64cfb03b3a12a79"
+      },
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 41,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_id:d195d919364ce2d8",
+        "signature_hash": "d64cfb03b3a12a79"
       }
     ],
     "_privacy": [
@@ -367993,12 +369141,28 @@
         "signature_hash": "359c484fcebcc325"
       },
       {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_root:26f14279e478dee3",
+        "signature_hash": "9af4f640541857b1"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py",
         "kind": "function",
         "line": 65,
         "end_line": 66,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/host_observation_bridge.py#function:_root:c64c620aa1bf60b8",
         "signature_hash": "2e65e72bab661379"
+      },
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:_root:13df56a88fac23ff",
+        "signature_hash": "9af4f640541857b1"
       }
     ],
     "_iter_nul_records": [
@@ -426483,6 +427647,216 @@
         "signature_hash": "a7f899fb2c74e634"
       }
     ],
+    "root": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#function:root:4e00ae0b7a5032f8",
+        "signature_hash": "8b9f1879e1b67fb7"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 177,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#class:EffectAttemptRecoveryO11Tests:f87196d50e460054",
+        "signature_hash": "a9896e22ba5a569d"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.fixture": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 40,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.fixture:ba63b255175016c3",
+        "signature_hash": "95a80a808efcf6bd"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_binding_rejects_wrong_source": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_binding_rejects_wrong_source:e0f0a72a08ee45de",
+        "signature_hash": "ba91732f2d6140bc"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 56,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider:3ece7d9e617adf9c",
+        "signature_hash": "52becebd657af227"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider.fail": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_failure_forbids_provider.fail:3f99d76dc367457c",
+        "signature_hash": "bce87073a67caddf"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ack_published_then_first_attempt_is_durable_before_call": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_published_then_first_attempt_is_durable_before_call:9b59bab0a10d3604",
+        "signature_hash": "98884c9c5cd6220b"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_nonretryable_crash_holds": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_nonretryable_crash_holds:cedc2bdf8ec7756a",
+        "signature_hash": "90fac38d5a007526"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_idempotent_crash_retries_exact_and_increments_attempt": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 85,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_idempotent_crash_retries_exact_and_increments_attempt:45fa6eb32964cb80",
+        "signature_hash": "fb8dea3c3790b853"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_queryable_crash_queries_not_resends": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 94,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_queryable_crash_queries_not_resends:caddca3ed765d735",
+        "signature_hash": "fd01f3618e009ebe"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_payload_move_holds_idempotency": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 104,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_payload_move_holds_idempotency:e9a556d62957a8f8",
+        "signature_hash": "f45243df6915744d"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 125,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only:60a0d3b1a78613f8",
+        "signature_hash": "a4f244fd0c2a2c27"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only.writer": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 117,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_result_final_return_writer_retry_only.writer:752dbb5917da710b",
+        "signature_hash": "d577063fa44558fd"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ambiguous_post_effect_is_publishable_with_nonzero_count": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 136,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ambiguous_post_effect_is_publishable_with_nonzero_count:e39f3f82ad7525fd",
+        "signature_hash": "91f53c92f0a9d70e"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_pre_effect_rejection_still_forbids_provider_count": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 141,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_pre_effect_rejection_still_forbids_provider_count:cf3c37c30f0fdbed",
+        "signature_hash": "cc853765a61f2379"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ack_with_provider_count_is_forbidden": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 146,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_with_provider_count_is_forbidden:a6ec0ee82fa9fab1",
+        "signature_hash": "76c1bbe66332dad2"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ack_not_terminal_outbox_item": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 151,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ack_not_terminal_outbox_item:95515012b116540f",
+        "signature_hash": "13467b7aa8707f58"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_result_without_attempt_rejected": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 156,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_result_without_attempt_rejected:738c3311894a1fcf",
+        "signature_hash": "cd73a7bbbe7c18e9"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_ambiguous_without_attempt_rejected": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 161,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_ambiguous_without_attempt_rejected:53bd386e77dd61b9",
+        "signature_hash": "b15586a3dbdc05d8"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_completion_ambiguous_zero_attempt_rejected_by_outbox": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 166,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_completion_ambiguous_zero_attempt_rejected_by_outbox:051850d58d59e20d",
+        "signature_hash": "04a85b892fa86a4b"
+      }
+    ],
+    "EffectAttemptRecoveryO11Tests.test_currentness_move_holds_before_effect": [
+      {
+        "file": "tests/test_project006_effect_attempt_recovery_o11.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 177,
+        "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#method:EffectAttemptRecoveryO11Tests.test_currentness_move_holds_before_effect:a713f4aeb290b4af",
+        "signature_hash": "ba878938023996e2"
+      }
+    ],
     "test_default_dockerfile_launches_unified_showcase": [
       {
         "file": "tests/test_render_four_tab_deployment.py",
@@ -426811,6 +428185,214 @@
         "end_line": 268,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#function:exhaustive_omega8:062ea9ea2f2d36f1",
         "signature_hash": "033c7cd0343e1003"
+      }
+    ],
+    "_nn": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:_nn:df3f2c7a48889097",
+        "signature_hash": "111700e86562b752"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 130,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
+        "signature_hash": "0c3f98b7c2640bed"
+      }
+    ],
+    "RecoveryMode": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryMode:62b22c69a62d7d1a",
+        "signature_hash": "f4798767cbd25b4f"
+      }
+    ],
+    "Phase": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 48,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Phase:bda145b0cbfa4e33",
+        "signature_hash": "5ed0b551036abbaa"
+      }
+    ],
+    "Action": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 61,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:Action:cb6184229e5a7a61",
+        "signature_hash": "aeff42a0655b7485"
+      }
+    ],
+    "EffectContract": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 79,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectContract:a4bb756b4fc9f393",
+        "signature_hash": "0be891ec1ae8127a"
+      }
+    ],
+    "EffectContract.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 74,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.__post_init__:0619c8725bcb75d3",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectContract.contract_root": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectContract.contract_root:9f8d7703533536a2",
+        "signature_hash": "674ed695d58d29da"
+      }
+    ],
+    "EffectIntent": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 103,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:EffectIntent:1d0ea9f10367995f",
+        "signature_hash": "f0173f902a8a994e"
+      }
+    ],
+    "EffectIntent.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 96,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.__post_init__:3937a277a1a8e8f9",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectIntent.identity_root": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 103,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:EffectIntent.identity_root:ac108adf2414f4a2",
+        "signature_hash": "58a8d7e492dc7d88"
+      }
+    ],
+    "DurableEffectState": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 135,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:DurableEffectState:85487b567299a543",
+        "signature_hash": "40d94524b4c88f72"
+      }
+    ],
+    "DurableEffectState.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 135,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:DurableEffectState.__post_init__:5f8e5cd470a91d8e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RecoveryContext": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 139,
+        "end_line": 154,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryContext:bffb26539dc93d91",
+        "signature_hash": "63c1667687edfe0d"
+      }
+    ],
+    "RecoveryContext.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 154,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryContext.__post_init__:eb3e606c7c9e988b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RecoveryDecision": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "class",
+        "line": 158,
+        "end_line": 172,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#class:RecoveryDecision:acd5c7a9f7034022",
+        "signature_hash": "7e6bde07fc4dcbb3"
+      }
+    ],
+    "RecoveryDecision.__post_init__": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 172,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#method:RecoveryDecision.__post_init__:13b1cd78a451f3d7",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "compile_initial_state": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 187,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:compile_initial_state:cdfc1961f4f75b78",
+        "signature_hash": "0a12b50d975fe572"
+      }
+    ],
+    "effect_attempt_root": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 194,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:effect_attempt_root:8f1c6a323baff38b",
+        "signature_hash": "05e9c11b28b0e397"
+      }
+    ],
+    "decide_recovery": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 229,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:decide_recovery:8b51f52175f87b54",
+        "signature_hash": "4b9c60f261f495ae"
+      }
+    ],
+    "hard13d_erac": [
+      {
+        "file": "tools/arena/effect_return_atomicity.py",
+        "kind": "function",
+        "line": 232,
+        "end_line": 238,
+        "semantic_id": "tools/arena/effect_return_atomicity.py#function:hard13d_erac:d71e32e2e189fe6d",
+        "signature_hash": "2685a603736596df"
       }
     ],
     "stable": [
@@ -427907,16 +429489,6 @@
         "signature_hash": "b6a59051ed2ad26c"
       }
     ],
-    "_nn": [
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
-        "kind": "function",
-        "line": 128,
-        "end_line": 130,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
-        "signature_hash": "0c3f98b7c2640bed"
-      }
-    ],
     "_queue_class": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py",
@@ -428637,6 +430209,186 @@
         "signature_hash": "a18bebaafdbf6310"
       }
     ],
+    "expected": [
+      {
+        "file": "tools/project006/campaign_effect_attempt_recovery_o11.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 28,
+        "semantic_id": "tools/project006/campaign_effect_attempt_recovery_o11.py#function:expected:5748f57a52805ba5",
+        "signature_hash": "86212b3f1a5d692a"
+      }
+    ],
+    "ProviderActionPermit": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 69,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#class:ProviderActionPermit:191ace854d7d0ed0",
+        "signature_hash": "ed4867a105132b51"
+      }
+    ],
+    "ProviderActionPermit.__post_init__": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 69,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:ProviderActionPermit.__post_init__:02d9fb6e404147dc",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectAttemptJournal": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "class",
+        "line": 72,
+        "end_line": 306,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#class:EffectAttemptJournal:42cd651adebb3c5d",
+        "signature_hash": "03d113b3fe13d2e9"
+      }
+    ],
+    "EffectAttemptJournal.__init__": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 107,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.__init__:9b8d9221fafdb1ef",
+        "signature_hash": "cf93319cd87db237"
+      }
+    ],
+    "EffectAttemptJournal._con": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 122,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal._con:254ac40dc89358e9",
+        "signature_hash": "193a566b1dd74641"
+      }
+    ],
+    "EffectAttemptJournal._bind": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 134,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal._bind:e5be3ce509cbcce1",
+        "signature_hash": "b6aba815f30dcb7e"
+      }
+    ],
+    "EffectAttemptJournal.bind_admitted": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 152,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.bind_admitted:6c88941c8a07c33d",
+        "signature_hash": "67553221e79d7b99"
+      }
+    ],
+    "EffectAttemptJournal._state": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 169,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal._state:84271ff127daec6f",
+        "signature_hash": "21f6f3658b76d727"
+      }
+    ],
+    "EffectAttemptJournal.status": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 176,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.status:9f8422792c47e328",
+        "signature_hash": "858a2a9c5face950"
+      }
+    ],
+    "EffectAttemptJournal.publish_ack": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 205,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.publish_ack:f66daa5ad2feb451",
+        "signature_hash": "81e33772a6e24ce3"
+      }
+    ],
+    "EffectAttemptJournal.decide_and_persist": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 226,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.decide_and_persist:452dd04db9d34363",
+        "signature_hash": "a7ef30185518849f"
+      }
+    ],
+    "EffectAttemptJournal.record_ambiguous": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 228,
+        "end_line": 236,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.record_ambiguous:50003cf093f6da5b",
+        "signature_hash": "05e6543b2cfc6a9b"
+      }
+    ],
+    "EffectAttemptJournal.record_result": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 250,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.record_result:16ec09feed3b9846",
+        "signature_hash": "9563b3c2c5865c4f"
+      }
+    ],
+    "EffectAttemptJournal.record_error_terminal": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 252,
+        "end_line": 261,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.record_error_terminal:d646548d0cf0dfe3",
+        "signature_hash": "dc47f7b49b133347"
+      }
+    ],
+    "EffectAttemptJournal.stage_final_terminal": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 263,
+        "end_line": 291,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.stage_final_terminal:cc6d3c2abce7f04f",
+        "signature_hash": "6cb24f8109b58da4"
+      }
+    ],
+    "EffectAttemptJournal.mark_return_written": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "method",
+        "line": 293,
+        "end_line": 306,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#method:EffectAttemptJournal.mark_return_written:8d8ed95079850ac2",
+        "signature_hash": "a72831f302cb66dd"
+      }
+    ],
+    "hard_o11_state": [
+      {
+        "file": "tools/project006/effect_attempt_recovery.py",
+        "kind": "function",
+        "line": 309,
+        "end_line": 317,
+        "semantic_id": "tools/project006/effect_attempt_recovery.py#function:hard_o11_state:dec2593e744d1640",
+        "signature_hash": "ac106c0df04d850d"
+      }
+    ],
     "_first_text": [
       {
         "file": "tools/project006/project006_consumer_outbox_wrapper.py",
@@ -428731,8 +430483,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "class",
-        "line": 23,
-        "end_line": 32,
+        "line": 36,
+        "end_line": 45,
         "semantic_id": "tools/project006/terminal_outbox.py#class:TxState:a3806c9ae3b0a8aa",
         "signature_hash": "6507ca3db85236ac"
       }
@@ -428741,8 +430493,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "class",
-        "line": 35,
-        "end_line": 45,
+        "line": 48,
+        "end_line": 58,
         "semantic_id": "tools/project006/terminal_outbox.py#class:CommandIdentity:4b04b2e9ac2d7f14",
         "signature_hash": "ddfd1e80676f7fa5"
       }
@@ -428751,8 +430503,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 42,
-        "end_line": 45,
+        "line": 55,
+        "end_line": 58,
         "semantic_id": "tools/project006/terminal_outbox.py#method:CommandIdentity.validate:74ca3446affb6d85",
         "signature_hash": "99559e6add5bcf3e"
       }
@@ -428761,8 +430513,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "class",
-        "line": 48,
-        "end_line": 79,
+        "line": 61,
+        "end_line": 96,
         "semantic_id": "tools/project006/terminal_outbox.py#class:TerminalResponse:6d15e9d1386cc572",
         "signature_hash": "7d68bc9a590dfeb5"
       }
@@ -428771,8 +430523,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 55,
-        "end_line": 75,
+        "line": 68,
+        "end_line": 92,
         "semantic_id": "tools/project006/terminal_outbox.py#method:TerminalResponse.canonical:43a20e75722bc95f",
         "signature_hash": "8e8956e5bf6a3e84"
       }
@@ -428781,8 +430533,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 77,
-        "end_line": 79,
+        "line": 94,
+        "end_line": 96,
         "semantic_id": "tools/project006/terminal_outbox.py#method:TerminalResponse.digest:27688ccfe0a514e0",
         "signature_hash": "78cc05eff2137397"
       }
@@ -428791,8 +430543,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "class",
-        "line": 81,
-        "end_line": 175,
+        "line": 98,
+        "end_line": 196,
         "semantic_id": "tools/project006/terminal_outbox.py#class:OutboxJournal:a7c1a554443bd51c",
         "signature_hash": "c76f116521bf8994"
       }
@@ -428801,8 +430553,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 87,
-        "end_line": 105,
+        "line": 106,
+        "end_line": 124,
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.__init__:6a2d6dbae9577c91",
         "signature_hash": "cf93319cd87db237"
       }
@@ -428811,8 +430563,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 108,
-        "end_line": 118,
+        "line": 127,
+        "end_line": 137,
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal._con:6785a276d5ae2a5a",
         "signature_hash": "2fd9623c279b1520"
       }
@@ -428821,8 +430573,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 120,
-        "end_line": 129,
+        "line": 139,
+        "end_line": 148,
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.ingest:65e81c2f8b03b73f",
         "signature_hash": "f74adb6e74645362"
       }
@@ -428831,8 +430583,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 131,
-        "end_line": 146,
+        "line": 150,
+        "end_line": 167,
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.stage_terminal:8fa0b566f14244ef",
         "signature_hash": "b79697aa2b073e0e"
       }
@@ -428841,8 +430593,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 148,
-        "end_line": 168,
+        "line": 169,
+        "end_line": 189,
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.publish_pending:6c17a65e99f626b5",
         "signature_hash": "3349cd6240f6aa6e"
       }
@@ -428851,8 +430603,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 170,
-        "end_line": 175,
+        "line": 191,
+        "end_line": 196,
         "semantic_id": "tools/project006/terminal_outbox.py#method:OutboxJournal.status:124b435aeb75251a",
         "signature_hash": "858a2a9c5face950"
       }
@@ -428861,8 +430613,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "class",
-        "line": 177,
-        "end_line": 214,
+        "line": 198,
+        "end_line": 235,
         "semantic_id": "tools/project006/terminal_outbox.py#class:AuraDriveBusWriterV1:8c7e36404a2cad95",
         "signature_hash": "5e3b038da22f496a"
       }
@@ -428871,8 +430623,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 185,
-        "end_line": 190,
+        "line": 206,
+        "end_line": 211,
         "semantic_id": "tools/project006/terminal_outbox.py#method:AuraDriveBusWriterV1.__init__:43f47e0ce9ab5d0c",
         "signature_hash": "a418bb20e4c1b885"
       }
@@ -428881,8 +430633,8 @@
       {
         "file": "tools/project006/terminal_outbox.py",
         "kind": "method",
-        "line": 192,
-        "end_line": 214,
+        "line": 213,
+        "end_line": 235,
         "semantic_id": "tools/project006/terminal_outbox.py#method:AuraDriveBusWriterV1.__call__:cc9b0e7fc72c6963",
         "signature_hash": "9cb33e97f0708e31"
       }
