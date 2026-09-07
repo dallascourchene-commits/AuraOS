@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1699
-- **total_bytes**: 26763623
-- **text_tokens_est**: 6681264
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1044, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1700
+- **total_bytes**: 26768280
+- **text_tokens_est**: 6682429
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1044, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1699,
+  "repo_file_count": 1700,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -301,6 +301,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
     "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
     "artifacts/arena/memory_city_read_consequence/PROOF_RECEIPT_MC_O11.json",
+    "artifacts/arena/memory_city_read_consequence/PROOF_RECEIPT_MC_O12.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
     "arxiv_forager.py",
     "async_palace.py",
@@ -1839,16 +1840,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1699,
-  "bytes": 26763623,
-  "tokens_est": 6681264,
+  "files": 1700,
+  "bytes": 26768280,
+  "tokens_est": 6682429,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1044,
-    "schema_or_lexicon": 280,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
