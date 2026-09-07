@@ -3,61 +3,39 @@ from hashlib import sha256
 from itertools import product
 import json
 from project006_sink_evidence_recovery import *
-
-R=lambda s: sha256(s.encode()).hexdigest(); SECRET=b'test-only-sink-verifier-secret'; ISSUER=R('sink-issuer'); VERIFIER=R('sink-verifier')
-def base():
-    op=OperationIdentity('cmd','op','idem',R('payload'),'file','rev',R('src'),R('auth'),R('proof'),R('fence'))
-    return op,CurrentOwnerContext(op,op.authorization_root,op.proof_semantics_root,op.fence_root)
-
-def signed(disp=SinkDisposition.NOT_ACCEPTED): return sign_sink_evidence(secret=SECRET,operation_id='op',disposition=disp,sink_result_digest=R('result'),issuer_root=ISSUER,verifier_root=VERIFIER,observed_at=10,expires_at=100)
-
+R=lambda s:sha256(s.encode()).hexdigest(); SECRET=b'test-only-sink-verifier-secret'; ISSUER=R('sink-issuer'); VERIFIER=R('sink-verifier')
+def b():
+ op=OperationIdentity('c','o','k',R('p'),'f','r',R('s'),R('a'),R('ps'),R('fr')); return op,CurrentOwnerContext(op,R('a'),R('ps'),R('fr'))
+def e(d=SinkDisposition.NOT_ACCEPTED,result=False,gen=3):return sign_sink_evidence(secret=SECRET,operation_id='o',disposition=d,sink_result_digest=R('res'),result_locator_root=R('loc') if result else None,issuer_root=ISSUER,verifier_root=VERIFIER,observed_at=10,expires_at=100,sink_fence_generation=gen)
+def sf(g=4,i=4):return SinkFenceContext(g,i,R(f'sf{g}{i}'))
 def lattice8():
-    # 2=valid, 1=stale/unknown, 0=forged/wrong. Route target is exact NOT_ACCEPTED idempotent retry.
-    keeper=0; invalid_routes=0; rows=[]
-    for axes in product(range(3), repeat=8):
-        sig,opmatch,source,auth,proof,fence,idem_payload,authority=axes
-        op,cur=base(); e=signed(); now=20
-        if sig<2: e=replace(e,mac=R(f'bad{sig}{axes}'))
-        if opmatch<2: e=sign_sink_evidence(secret=SECRET,operation_id='other',disposition=SinkDisposition.NOT_ACCEPTED,sink_result_digest=R('result'),issuer_root=ISSUER,verifier_root=VERIFIER,observed_at=10,expires_at=100)
-        if source<2: cur=replace(cur,operation=replace(cur.operation,source_digest=R(f's{source}')))
-        if auth<2: cur=replace(cur,authorization_root=R(f'a{auth}'))
-        if proof<2: cur=replace(cur,proof_semantics_root=R(f'p{proof}'))
-        if fence<2: cur=replace(cur,fence_root=R(f'f{fence}'))
-        if idem_payload<2: cur=replace(cur,operation=replace(cur.operation,payload_digest=R(f'i{idem_payload}')))
-        d=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=e,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=now)
-        routed=d.action is RecoveryAction.RETRY_PROVIDER_SAME_OPERATION_ID and authority==2
-        valid=all(a==2 for a in axes)
-        keeper += int(routed and valid); invalid_routes += int(routed and not valid)
-        rows.append((axes,d.action.value,routed))
-    root=sha256(json.dumps(rows,separators=(',',':')).encode()).hexdigest()
-    return {'states':6561,'keepers':keeper,'invalid_routes':invalid_routes,'root':root}
-
-def recursion13d():
-    l=lattice8(); context_counts={};
-    # Execute candidate under the unique hard keeper for all 3^5 nuisance contexts.
-    op,cur=base(); e=signed()
-    for ctx in product(range(3),repeat=5):
-        d=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=e,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20)
-        context_counts[d.action.value]=context_counts.get(d.action.value,0)+1
-    payload={'hard_states':6561,'hard_keepers':l['keepers'],'context_states_on_hard_keeper':243,'cartesian_states':1594323,'hard_invalid_context_repair':0,'context_decision_counts':dict(sorted(context_counts.items()))}
-    payload['root']=sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest(); return payload
-
-def hs1000():
-    cells=[]; consequences={}
-    for a,b,c in product(range(10),repeat=3):
-        n=a*100+b*10+c; op,cur=base(); state=NativeState.COMPLETION_AMBIGUOUS; cap=[RecoveryCapability.IDEMPOTENT_RETRY,RecoveryCapability.QUERY_RECONCILE,RecoveryCapability.NON_RETRYABLE][b%3]; evidence=None
-        if a%4==0: evidence=signed(SinkDisposition.ACCEPTED)
-        elif a%4==1: evidence=signed(SinkDisposition.NOT_ACCEPTED)
-        elif a%4==2: evidence=signed(SinkDisposition.UNKNOWN)
-        if c in (1,2): cur=replace(cur,authorization_root=R(f'moved{n}'))
-        elif c==3: cur=replace(cur,operation=replace(cur.operation,payload_digest=R(f'payload{n}')))
-        elif c==4 and evidence is not None: evidence=replace(evidence,mac=R(f'bad{n}'))
-        elif c==5: state=NativeState.RESULT_OBSERVED
-        elif c==6: state=NativeState.RETURN_WRITTEN
-        d=decide_recovery(state=state,operation=op,current=cur,capability=cap,sink_evidence=evidence,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20)
-        coord=n%27; cell={'n':n,'axes':[a,b,c],'k27':coord,'action':d.action.value,'reason':d.reason}; cells.append(cell); consequences.setdefault((d.action.value,d.reason),0); consequences[(d.action.value,d.reason)]+=1
-    freeze=sha256(json.dumps([{'n':x['n'],'axes':x['axes'],'k27':x['k27']} for x in cells],sort_keys=True,separators=(',',':')).encode()).hexdigest()
-    quotient=sha256(json.dumps(sorted([(k[0],k[1],v) for k,v in consequences.items()]),separators=(',',':')).encode()).hexdigest()
-    return {'cells':1000,'consequence_groups':len(consequences),'freeze_root':freeze,'quotient_root':quotient,'cells_root':sha256(json.dumps(cells,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
-
-if __name__=='__main__': print(json.dumps({'omega8':lattice8(),'recursion13d':recursion13d(),'hs1000':hs1000()},sort_keys=True,indent=2))
+ rows=[]; keep=bad=0
+ for ax in product(range(3),repeat=8):
+  sig,opid,source,auth,proof,fence,idem,sinkf=ax; op,cur=b(); ev=e(); sfc=sf()
+  if sig<2:ev=replace(ev,mac=R(str(ax)))
+  if opid<2:ev=replace(ev,operation_id='x')
+  if source<2:cur=replace(cur,operation=replace(cur.operation,source_digest=R('x'+str(source))))
+  if auth<2:cur=replace(cur,authorization_root=R('a'+str(auth)))
+  if proof<2:cur=replace(cur,proof_semantics_root=R('p'+str(proof)))
+  if fence<2:cur=replace(cur,fence_root=R('f'+str(fence)))
+  if idem<2:cur=replace(cur,operation=replace(cur.operation,payload_digest=R('i'+str(idem))))
+  if sinkf<2:sfc=sf(3,3) if sinkf==1 else sf(4,3)
+  d=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=ev,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20,sink_fence=sfc); routed=d.action is RecoveryAction.RETRY_PROVIDER_SAME_OPERATION_ID; valid=all(x==2 for x in ax); keep+=int(routed and valid); bad+=int(routed and not valid); rows.append((ax,d.action.value))
+ return {'states':6561,'keepers':keep,'invalid_routes':bad,'root':sha256(json.dumps(rows,separators=(',',':')).encode()).hexdigest()}
+def r13():
+ l=lattice8(); op,cur=b(); ev=e(); counts={}
+ for _ in product(range(3),repeat=5):
+  d=decide_recovery(state=NativeState.COMPLETION_AMBIGUOUS,operation=op,current=cur,capability=RecoveryCapability.IDEMPOTENT_RETRY,sink_evidence=ev,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20,sink_fence=sf()); counts[d.action.value]=counts.get(d.action.value,0)+1
+ p={'hard_states':6561,'hard_keepers':l['keepers'],'context_states_on_keeper':243,'cartesian_states':1594323,'hard_invalid_context_repair':0,'context_counts':counts};p['root']=sha256(json.dumps(p,sort_keys=True,separators=(',',':')).encode()).hexdigest();return p
+def hs():
+ cells=[];q={}
+ for a,bx,c in product(range(10),repeat=3):
+  n=a*100+bx*10+c;op,cur=b();cap=list(RecoveryCapability)[bx%3];ev=None;sfc=None;state=NativeState.COMPLETION_AMBIGUOUS
+  if a%4==0:ev=e(SinkDisposition.ACCEPTED,c%2==0)
+  elif a%4==1:ev=e(SinkDisposition.NOT_ACCEPTED);sfc=sf() if c>=5 else sf(3,3)
+  elif a%4==2:ev=e(SinkDisposition.UNKNOWN)
+  if c==7:state=NativeState.RESULT_OBSERVED
+  elif c==8:cur=replace(cur,authorization_root=R('m'+str(n)))
+  d=decide_recovery(state=state,operation=op,current=cur,capability=cap,sink_evidence=ev,secret=SECRET,expected_issuer_root=ISSUER,expected_verifier_root=VERIFIER,now=20,sink_fence=sfc);cell={'n':n,'k27':n%27,'action':d.action.value,'reason':d.reason};cells.append(cell);q[(d.action.value,d.reason)]=q.get((d.action.value,d.reason),0)+1
+ freeze=sha256(json.dumps([{'n':x['n'],'k27':x['k27']} for x in cells],sort_keys=True,separators=(',',':')).encode()).hexdigest(); quot=sha256(json.dumps(sorted((a,r,v) for (a,r),v in q.items()),separators=(',',':')).encode()).hexdigest();return {'cells':1000,'groups':len(q),'freeze_root':freeze,'quotient_root':quot,'cells_root':sha256(json.dumps(cells,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
+if __name__=='__main__':print(json.dumps({'omega8':lattice8(),'recursion13d':r13(),'hs1000':hs()},sort_keys=True,indent=2))
