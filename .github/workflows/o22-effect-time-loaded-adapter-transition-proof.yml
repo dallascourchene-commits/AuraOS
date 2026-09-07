@@ -1,0 +1,64 @@
+name: O22 Effect-Time Loaded Adapter Transition Proof
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  prove-o22:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact donor identities
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test "$(git hash-object tools/awj032/training_o2_transition_reference/transition_envelope.py)" = "27b725edec7b4cc1141e9330d54388ff91599313"
+          test "$(git hash-object tools/arena/effect_time_loaded_process_currentness.py)" = "9ccd320b301e76f4ea1eed25b3345dac43437bc0"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - name: Three fresh Python 3.13 environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=$(command -v python3.13)
+          "$PY" --version
+          "$PY" - <<'PY'
+          import sys
+          assert sys.version_info[:2] == (3, 13), sys.version
+          PY
+          mkdir -p /tmp/o22-receipts
+          for i in 1 2 3; do
+            rm -rf "/tmp/o22-venv-$i"
+            "$PY" -m venv "/tmp/o22-venv-$i"
+            "/tmp/o22-venv-$i/bin/python" -m unittest -q tests/test_o22_effect_time_loaded_adapter_transition.py
+            rm -f artifacts/arena/o22_effect_time_loaded_adapter_transition/PROOF_RECEIPT_O22.json
+            "/tmp/o22-venv-$i/bin/python" -m tools.awj032.training_o22_effect_time_activation.proof_o22 > "/tmp/o22-receipts/proof-$i.json"
+            cp artifacts/arena/o22_effect_time_loaded_adapter_transition/PROOF_RECEIPT_O22.json "/tmp/o22-receipts/file-$i.json"
+            cmp "/tmp/o22-receipts/proof-$i.json" "/tmp/o22-receipts/file-$i.json"
+          done
+          cmp /tmp/o22-receipts/proof-1.json /tmp/o22-receipts/proof-2.json
+          cmp /tmp/o22-receipts/proof-1.json /tmp/o22-receipts/proof-3.json
+          echo "O22_PROOF_SHA256=$(sha256sum /tmp/o22-receipts/proof-1.json | awk '{print $1}')"
+          "$PY" - <<'PY'
+          import json
+          p=json.load(open('/tmp/o22-receipts/proof-1.json'))
+          assert p['campaign']['cases']==30000
+          assert p['campaign']['false_admit']==0
+          assert p['campaign']['false_hold']==0
+          assert p['campaign']['dual_parent_pass_without_crossbind_unsafe']==25000
+          assert p['mutation']['survivors']==[]
+          assert p['omega8']['states']==6561 and p['omega8']['semantic_keepers']==1
+          assert p['sweep13d']['states']==1594323 and p['sweep13d']['lawful_contexts']==243
+          assert p['hs1000']['cells']==1000 and p['hs1000']['semantic_consequence_groups']==38
+          assert p['authority']=={'effect':False,'training':False,'checkpoint':False,'project_write':False,'gate10':False}
+          print('O22_PROOF_ROOT='+p['proof_root'])
+          PY
+          echo O22_EXACT_HEAD_PROOF=PASS

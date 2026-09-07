@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1700
-- **total_bytes**: 26641495
-- **text_tokens_est**: 6650777
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 287, 'support_file': 49}
+- **file_count**: 1706
+- **total_bytes**: 26678439
+- **text_tokens_est**: 6660016
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1031, 'schema_or_lexicon': 289, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1700,
+  "repo_file_count": 1706,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -179,6 +179,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-replay-probes.yml",
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
+    ".github/workflows/o22-effect-time-loaded-adapter-transition-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
     ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -316,6 +317,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+    "artifacts/arena/o22_effect_time_loaded_adapter_transition/FROZEN_PROPOSALS_O22.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1680,6 +1682,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_o22_effect_time_loaded_adapter_transition.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1688,6 +1691,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/effect_time_loaded_process_currentness.py",
     "tools/awj032/README.md",
     "tools/awj032/airllm_hard_false_inspected_tree.py",
     "tools/awj032/airllm_hard_false_remediation.py",
@@ -1704,6 +1708,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/training_o1_reference/__init__.py",
     "tools/awj032/training_o1_reference/test_training_admission.py",
     "tools/awj032/training_o1_reference/training_admission.py",
+    "tools/awj032/training_o22_effect_time_activation/effect_time_activation.py",
+    "tools/awj032/training_o22_effect_time_activation/proof_o22.py",
     "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
     "tools/awj032/training_o2_transition_reference/transition_envelope.py",
     "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
@@ -1840,16 +1846,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1700,
-  "bytes": 26641495,
-  "tokens_est": 6650777,
+  "files": 1706,
+  "bytes": 26678439,
+  "tokens_est": 6660016,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1027,
-    "schema_or_lexicon": 287,
+    "python_module": 1031,
+    "schema_or_lexicon": 289,
     "support_file": 49
   }
 }
