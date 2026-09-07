@@ -39,7 +39,7 @@ class TrainingAdmissionTest(unittest.TestCase):
     def test_base_drift(self): self.assertEqual(good(observed_base_checkpoint_root=R('x')).action,'HOLD_REBIND_REQUIRED')
     def test_target_drift(self): self.assertEqual(good(observed_target_paths={'layers.0.q_proj'}).action,'HOLD_TARGET_TOPOLOGY_MISMATCH')
     def test_manifest_keys_independently_derived(self):
-        m=man()
+        m=man();
         with self.assertRaises(ValueError): AdapterManifest(m.base_checkpoint_root,m.base_config_root,m.tokenizer_root,m.runtime_root,AIRLLM_COMMIT,m.family,m.trainer_class,m.target_paths,16,32,False,(m.adapter_keys[0],),(m.adapter_value_roots[0],))
     def test_value_tamper(self):
         m=man(); v=vals(m.adapter_keys); v[m.adapter_keys[0]]=b'tampered'; self.assertEqual(good(m=m,provided_adapter_values=v).action,'HOLD_ADAPTER_VALUE_MISMATCH')
