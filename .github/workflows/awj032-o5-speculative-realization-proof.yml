@@ -1,0 +1,94 @@
+name: AWJ032 O5 Speculative Realization Reconciliation Proof
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-o5-speculative-realization-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact PR head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          mkdir -p .awj032-o5
+          printf '%s\n' "$TARGET_SHA" > .awj032-o5/exact_head.txt
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Hash exact semantic and Front Door binding bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            tools/awj032/speculative_realization_reconciliation_reference/speculative_realization_reconciliation.py \
+            tools/awj032/speculative_realization_reconciliation_reference/test_speculative_realization_reconciliation.py \
+            tools/awj032/speculative_realization_reconciliation_reference/prove_speculative_realization_reconciliation.py \
+            artifacts/arena/awj032_speculative_realization_reconciliation/FRONTDOOR_RUNTIME_BINDING_LOCAL.json \
+            artifacts/arena/awj032_speculative_realization_reconciliation/REBASE_MANIFEST.json \
+            > .awj032-o5/SHA256SUMS.txt
+          cat .awj032-o5/SHA256SUMS.txt
+
+      - name: Three fresh venv exact proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            rm -rf ".venv-o5-${i}"
+            python -m venv ".venv-o5-${i}"
+            P=".venv-o5-${i}/bin/python"
+            "$P" -m unittest tools.awj032.speculative_realization_reconciliation_reference.test_speculative_realization_reconciliation
+            "$P" -m tools.awj032.speculative_realization_reconciliation_reference.prove_speculative_realization_reconciliation \
+              --frontdoor-receipt artifacts/arena/awj032_speculative_realization_reconciliation/FRONTDOOR_RUNTIME_BINDING_LOCAL.json \
+              --out ".awj032-o5/proof-${i}.json"
+          done
+          cmp .awj032-o5/proof-1.json .awj032-o5/proof-2.json
+          cmp .awj032-o5/proof-1.json .awj032-o5/proof-3.json
+          sha256sum .awj032-o5/proof-1.json .awj032-o5/proof-2.json .awj032-o5/proof-3.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('.awj032-o5/proof-1.json').read_text())
+          assert r['status']=='PASS'
+          assert r['random_campaign']['cases']==24000
+          assert r['random_campaign']['false_module_decisions']==0
+          assert r['random_campaign']['authority_promotions']==0
+          assert r['oracle_customs']['wrong_same_bytes_false_reuse']>0
+          assert r['proof_consumer_audit']['status']=='PASS_DEPENDENCY_CLOSED_CONSUMER_CONE'
+          assert r['omega8']['states']==6561 and r['omega8']['hard_keeper_states']==1 and r['omega8']['false_admits']==0
+          assert r['factored_13d']['states']==1594323 and r['factored_13d']['contextual_lawful_states']==243
+          assert r['factored_13d']['hard_invalid_contextual_repairs']==0
+          assert r['hs1000']['frozen_cells']==1000 and r['hs1000']['breakthrough_claims']==0
+          assert not any(r['authority'].values())
+          print('AWJ032_O5_EXACT_HEAD_PASS', r['proof_root'])
+          PY
+
+      - name: Upload O5 proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: awj032-o5-speculative-realization-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .awj032-o5/
+          if-no-files-found: error
