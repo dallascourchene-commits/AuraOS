@@ -1,0 +1,52 @@
+name: Memory City M3 Exact-Head Proof
+
+on:
+  push:
+    branches:
+      - arena/memory-city-navigator-convergence-gpt56sol-r4
+    paths:
+      - 'tools/arena/memory_city_typed_closure.py'
+      - 'tools/arena/memory_city_read_consequence.py'
+      - 'tools/arena/memory_city_coverage_membrane.py'
+      - 'tools/arena/memory_city_adaptive_hydration.py'
+      - 'tests/test_memory_city_read_consequence.py'
+      - 'tests/test_memory_city_component_correct_read_consequence.py'
+      - 'tests/test_memory_city_mode_sealed_admission.py'
+      - '.github/workflows/memory-city-m3-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-three-venv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify checkout identity
+        run: test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+      - name: Reproduce focused owner cone in three fresh venvs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            python3 -m venv ".venv-m3-${i}"
+            ".venv-m3-${i}/bin/python" -m py_compile \
+              tools/arena/memory_city_typed_closure.py \
+              tools/arena/memory_city_read_consequence.py \
+              tools/arena/memory_city_coverage_membrane.py \
+              tools/arena/memory_city_adaptive_hydration.py
+            ".venv-m3-${i}/bin/python" -m unittest -v \
+              tests.test_memory_city_read_consequence \
+              tests.test_memory_city_component_correct_read_consequence \
+              tests.test_memory_city_mode_sealed_admission \
+              tests.test_memory_city_adaptive_hydration \
+              tests.test_memory_city_navigator_convergence \
+              tests.test_memory_city_quotient_controllability
+            rm -rf ".venv-m3-${i}"
+          done
+      - name: Assert no tracked mutation
+        run: test -z "$(git status --porcelain)"
