@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788787515,
+  "generated_at_unix": 1788788302,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1694,
+    "repo_file_count": 1698,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -292,6 +292,8 @@
       "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
       "artifacts/arena/awj032_airllm_training_o2/PROOF_RECEIPT_O2.json",
       "artifacts/arena/awj032_airllm_training_o2/README.md",
+      "artifacts/arena/awj032_airllm_training_o3/PROOF_RECEIPT_O3.json",
+      "artifacts/arena/awj032_airllm_training_o3/README.md",
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "arxiv_forager.py",
@@ -1684,6 +1686,8 @@
       "tools/awj032/training_o1_reference/training_admission.py",
       "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
       "tools/awj032/training_o2_transition_reference/transition_envelope.py",
+      "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+      "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
       "tools/awj032/training_r1_resolver_reference/test_resolver.py",
       "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
       "tools/construction_demo_assets/README.md",
@@ -1810,16 +1814,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1694,
-      "bytes": 26589571,
-      "tokens_est": 6637796,
+      "files": 1698,
+      "bytes": 26617044,
+      "tokens_est": 6644664,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 251,
+        "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1025,
-        "schema_or_lexicon": 284,
+        "python_module": 1027,
+        "schema_or_lexicon": 285,
         "support_file": 49
       }
     },
@@ -1944,6 +1948,7 @@
         "artifacts/arena/awj032_airllm_training_o1/OBJECTIVE.md",
         "artifacts/arena/awj032_airllm_training_o1/README.md",
         "artifacts/arena/awj032_airllm_training_o2/README.md",
+        "artifacts/arena/awj032_airllm_training_o3/README.md",
         "artifacts/arena/awj032_airllm_training_r1/README.md",
         "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
         "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
@@ -2093,8 +2098,7 @@
         "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md",
         "docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md",
         "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md",
-        "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
-        "docs/AURA_TENSOR_EVIDENCE_ARENAS.md"
+        "docs/AURA_SWARM_AND_MCP_COCKPIT.md"
       ]
     },
     {
@@ -18961,6 +18965,14 @@
         "line": 33,
         "end_line": 64,
         "semantic_id": "aura_background_workers.py#class:WorkerProposal:570dccb0ff6af35d",
+        "signature_hash": "b392c92f5952eeb0"
+      },
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 148,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:WorkerProposal:103dbe88581afd2f",
         "signature_hash": "b392c92f5952eeb0"
       }
     ],
@@ -102310,6 +102322,14 @@
         "signature_hash": "013604bc627266a0"
       },
       {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:canon:41c016d7f23e40f7",
+        "signature_hash": "587b60be49a94017"
+      },
+      {
         "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
         "kind": "function",
         "line": 11,
@@ -159966,6 +159986,14 @@
         "signature_hash": "8eebc2f0e42b29ea"
       },
       {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 24,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:jhash:34d1616f182b79fa",
+        "signature_hash": "e9abe50ab6671f5c"
+      },
+      {
         "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
         "kind": "function",
         "line": 12,
@@ -160102,6 +160130,14 @@
         "signature_hash": "d1b51a3f92a8a2b1"
       },
       {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 265,
+        "end_line": 267,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:omega8:52f9c12bc518e17d",
+        "signature_hash": "d1b51a3f92a8a2b1"
+      },
+      {
         "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
         "kind": "function",
         "line": 119,
@@ -160147,6 +160183,14 @@
         "line": 13,
         "end_line": 60,
         "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:T:c29fab64d0b15a6f",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 68,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#class:T:ddc2e7dca89844fc",
         "signature_hash": "1a51332cd1dc4f10"
       },
       {
@@ -160318,6 +160362,14 @@
         "signature_hash": "e3a9271fe0b6bc17"
       },
       {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_omega8:a3275f319bad5796",
+        "signature_hash": "e3a9271fe0b6bc17"
+      },
+      {
         "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
         "kind": "method",
         "line": 44,
@@ -160333,6 +160385,14 @@
         "line": 48,
         "end_line": 49,
         "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#method:T.test_factored13d:712142173059f240",
+        "signature_hash": "f9142c626c683cf4"
+      },
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 68,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_factored13d:36041fe0ba9f5239",
         "signature_hash": "f9142c626c683cf4"
       },
       {
@@ -160391,6 +160451,14 @@
         "line": 19,
         "end_line": 19,
         "semantic_id": "tools/awj032/training_o2_transition_reference/transition_envelope.py#function:isroot:91fcc355359a0eaa",
+        "signature_hash": "8b077fb3d0bf596c"
+      },
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:isroot:d76180f6b9caf9c3",
         "signature_hash": "8b077fb3d0bf596c"
       },
       {
@@ -160522,6 +160590,14 @@
         "signature_hash": "9fc3661eb163b130"
       },
       {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 256,
+        "end_line": 262,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:minimum_reopen_cone:2b69cc6ef4960359",
+        "signature_hash": "7b2b66fab11bbaf3"
+      },
+      {
         "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
         "kind": "function",
         "line": 115,
@@ -160540,6 +160616,14 @@
         "signature_hash": "164b4f1327724c8f"
       },
       {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 270,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:factored13d:e62e14c87bbc4563",
+        "signature_hash": "164b4f1327724c8f"
+      },
+      {
         "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
         "kind": "function",
         "line": 123,
@@ -160548,7 +160632,363 @@
         "signature_hash": "164b4f1327724c8f"
       }
     ],
+    "needroot": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:needroot:c9146228e9158aa7",
+        "signature_hash": "cd12b37fbef6dc1f"
+      },
+      {
+        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#function:needroot:3ecd03e38ff99bb8",
+        "signature_hash": "cd12b37fbef6dc1f"
+      }
+    ],
+    "TrainingOperation": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:TrainingOperation:6347cc923009afd2",
+        "signature_hash": "e47410985b8cc26a"
+      }
+    ],
+    "TrainingOperation.__post_init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:TrainingOperation.__post_init__:0de016044ea86ef5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TrainingOperation.operation_root": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:TrainingOperation.operation_root:0de789e9a5482569",
+        "signature_hash": "d102aa18a15b558d"
+      }
+    ],
+    "WorkcellLease": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:WorkcellLease:a9211c19595e300e",
+        "signature_hash": "3cf17775613fb4f2"
+      }
+    ],
+    "WorkcellLease.__post_init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkcellLease.__post_init__:906e3aadf40dfddd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "WorkcellLease.signed_payload": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkcellLease.signed_payload:21d8678152fbc902",
+        "signature_hash": "a2c10acded3911db"
+      }
+    ],
+    "WorkcellLease.lease_root": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkcellLease.lease_root:01d09b72be1e2af0",
+        "signature_hash": "7b3359d389d99ecd"
+      }
+    ],
+    "HostWorkcellAuthority": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:HostWorkcellAuthority:4e2bf392c368a02c",
+        "signature_hash": "4ee40a1334fa25ad"
+      }
+    ],
+    "HostWorkcellAuthority.__init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority.__init__:ec9585a821524bf4",
+        "signature_hash": "574fae700e90a077"
+      }
+    ],
+    "HostWorkcellAuthority._mac": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority._mac:0f36fbce38e418e7",
+        "signature_hash": "f97c649cd15961e6"
+      }
+    ],
+    "HostWorkcellAuthority.issue": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority.issue:ff6d7d6dfc51616f",
+        "signature_hash": "d0b6e3f178c5329e"
+      }
+    ],
+    "HostWorkcellAuthority.verify": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority.verify:d0665c29ea1f81b5",
+        "signature_hash": "7a919fb7a4eec8b7"
+      }
+    ],
+    "DelegatedTrainingCapsule": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 112,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:DelegatedTrainingCapsule:f224338bcc978215",
+        "signature_hash": "e3933b02bc56a3d0"
+      }
+    ],
+    "DelegatedTrainingCapsule.__post_init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DelegatedTrainingCapsule.__post_init__:23fd4a9992d3a3b6",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "DelegatedTrainingCapsule.capsule_root": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DelegatedTrainingCapsule.capsule_root:d52e22ae807ea6d4",
+        "signature_hash": "b95ddf7bdb177061"
+      }
+    ],
+    "DelegatedTrainingCapsule.public_payload": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DelegatedTrainingCapsule.public_payload:2cdd700088d79c02",
+        "signature_hash": "1215c9d5b6d12729"
+      }
+    ],
+    "DurableTrainingAttempt": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 135,
+        "end_line": 145,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:DurableTrainingAttempt:5ab5ad51ea904068",
+        "signature_hash": "28bc8949bf83a944"
+      }
+    ],
+    "DurableTrainingAttempt.__post_init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 143,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DurableTrainingAttempt.__post_init__:069b147ff88d5021",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "DurableTrainingAttempt.attempt_root": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 145,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DurableTrainingAttempt.attempt_root:e922d48b87594496",
+        "signature_hash": "d019633656fc063d"
+      }
+    ],
+    "WorkerProposal.__post_init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkerProposal.__post_init__:5c7f3f0ed8cb731c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "WorkerProposal.proposal_root": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkerProposal.proposal_root:a0523968a8070c74",
+        "signature_hash": "53f83e4546bcad07"
+      }
+    ],
+    "RecoveryVerdict": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 166,
+        "end_line": 179,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:RecoveryVerdict:6d18d0eaad53d219",
+        "signature_hash": "afb474e9f49e614b"
+      }
+    ],
+    "RecoveryVerdict.__post_init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 176,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryVerdict.__post_init__:e1161b1d13807245",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RecoveryVerdict.signed_payload": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 179,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryVerdict.signed_payload:2cab4fc5b017adfa",
+        "signature_hash": "a2c10acded3911db"
+      }
+    ],
+    "RecoveryAuthority": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "class",
+        "line": 181,
+        "end_line": 196,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:RecoveryAuthority:40bb02112ee6c7e3",
+        "signature_hash": "2a873e0d611a3922"
+      }
+    ],
+    "RecoveryAuthority.__init__": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryAuthority.__init__:c7bf67c498fa3417",
+        "signature_hash": "574fae700e90a077"
+      }
+    ],
+    "RecoveryAuthority.issue": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 189,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryAuthority.issue:746007b43e48b307",
+        "signature_hash": "150b82593502d929"
+      }
+    ],
+    "RecoveryAuthority.verify": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 196,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryAuthority.verify:c2760893d6731fcb",
+        "signature_hash": "2ebe20aa45919a02"
+      }
+    ],
+    "validate_delegate_payload": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 199,
+        "end_line": 201,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:validate_delegate_payload:0afc1c489d10a864",
+        "signature_hash": "e7542bb1ef241f10"
+      }
+    ],
+    "admit_delegation": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 224,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:admit_delegation:727cf9332539f9f8",
+        "signature_hash": "264ddc97e86d54b6"
+      }
+    ],
+    "validate_worker_proposal": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 227,
+        "end_line": 241,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:validate_worker_proposal:dab5f7b693ed2fda",
+        "signature_hash": "e43429780db40181"
+      }
+    ],
+    "retry_decision": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 244,
+        "end_line": 249,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:retry_decision:a122bb8c5cf11e96",
+        "signature_hash": "074d164b99a4e808"
+      }
+    ],
+    "semantic_operation_reopen": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 252,
+        "end_line": 253,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:semantic_operation_reopen:ce23e8cf67d30a03",
+        "signature_hash": "98a1a1238a780819"
+      }
+    ],
     "T.setUp": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.setUp:a73f52bdb1e2eaf4",
+        "signature_hash": "706017b0e7dd7cef"
+      },
       {
         "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
         "kind": "method",
@@ -160556,6 +160996,284 @@
         "end_line": 12,
         "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#method:T.setUp:7c48c458c040e2e2",
         "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "T.admit": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.admit:1de3e57726850411",
+        "signature_hash": "d7c1c5a47c5fe26e"
+      }
+    ],
+    "T.validate": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.validate:20785a0c78c0531a",
+        "signature_hash": "20b85383254c10ca"
+      }
+    ],
+    "T.test_valid_delegation": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_valid_delegation:f18d02ee8c03a47e",
+        "signature_hash": "3b712729c9c244a4"
+      }
+    ],
+    "T.test_valid_proposal": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_valid_proposal:d9ef38893d765c94",
+        "signature_hash": "e0e15f0a7f3a4a38"
+      }
+    ],
+    "T.test_glm_denied": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_glm_denied:f1d75953b0b44c2a",
+        "signature_hash": "7532591cbb761627"
+      }
+    ],
+    "T.test_forged_admission": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_forged_admission:8384a9cde30bd854",
+        "signature_hash": "33ce8e553ff0c19d"
+      }
+    ],
+    "T.test_expired_admission": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_expired_admission:0b20df0cda84f2c2",
+        "signature_hash": "5e91015c83663146"
+      }
+    ],
+    "T.test_expired_workcell": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_expired_workcell:7e47cce7e7b14359",
+        "signature_hash": "e33ae965b5092caf"
+      }
+    ],
+    "T.test_workcell_generation": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_workcell_generation:404ab4d475fbf8b9",
+        "signature_hash": "860548229c07a516"
+      }
+    ],
+    "T.test_wrong_current_capsule": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_wrong_current_capsule:b42cfce10a6d6166",
+        "signature_hash": "a72117495e18a795"
+      }
+    ],
+    "T.test_source_movement_rotates_operation": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_source_movement_rotates_operation:dbd3e08fbf84ab04",
+        "signature_hash": "75f618ff90fadd29"
+      }
+    ],
+    "T.test_benign_workcell_reissue_preserves_operation": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_benign_workcell_reissue_preserves_operation:5e7551d7850abc93",
+        "signature_hash": "03d67fa21657ceb8"
+      }
+    ],
+    "T.test_capsule_operation_mismatch": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_operation_mismatch:1aaa5c48f184b52b",
+        "signature_hash": "8f21ef72ac4168ce"
+      }
+    ],
+    "T.test_capsule_source_mismatch": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_source_mismatch:8e3408f53a6d9d75",
+        "signature_hash": "6c33154b5fdbe04b"
+      }
+    ],
+    "T.test_capsule_adapter_mismatch": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_adapter_mismatch:676ef3b459fdb192",
+        "signature_hash": "b570f87e637168f6"
+      }
+    ],
+    "T.test_capsule_lease_mismatch": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_lease_mismatch:716233e2c72ae86a",
+        "signature_hash": "3f46a9974fd3bf53"
+      }
+    ],
+    "T.test_private_fields_absent": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_private_fields_absent:6adbd04555f4a7f8",
+        "signature_hash": "89f136782edde5b4"
+      }
+    ],
+    "T.test_attempt_binding": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_attempt_binding:437d14284fb84b5a",
+        "signature_hash": "706c9c88ad360a3c"
+      }
+    ],
+    "T.test_proposal_capsule": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_proposal_capsule:ae29499d8ff9442a",
+        "signature_hash": "a56d09ffeb1ceead"
+      }
+    ],
+    "T.test_proposal_attempt": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_proposal_attempt:0216346408d2fc46",
+        "signature_hash": "f89d88325236b842"
+      }
+    ],
+    "T.test_proposal_worker": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_proposal_worker:3bcc02d6a8fc3a39",
+        "signature_hash": "4fcaaf037fc87d04"
+      }
+    ],
+    "T.test_worker_authority_widening_constructor": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_worker_authority_widening_constructor:ecbfd15362cffbb4",
+        "signature_hash": "d3bc584966f7ae94"
+      }
+    ],
+    "T.test_retry_not_started": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_not_started:1145bea9b0203f1f",
+        "signature_hash": "933a8bb1c09dd61b"
+      }
+    ],
+    "T.test_retry_unknown": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 57,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_unknown:034e98ccf81a4b49",
+        "signature_hash": "56ba589c89392891"
+      }
+    ],
+    "T.test_retry_completed": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_completed:73ceb2dc465cd41b",
+        "signature_hash": "ae90f6f3f9ac6b97"
+      }
+    ],
+    "T.test_retry_forged": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_forged:bfb05735ae8c8fcb",
+        "signature_hash": "d85dd9bc76306cc4"
+      }
+    ],
+    "T.test_minimum_reopen": [
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_minimum_reopen:b2412de2eea3e0ff",
+        "signature_hash": "252d96c85b6b3e31"
+      },
+      {
+        "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#method:T.test_minimum_reopen:2e587fb50d2b8add",
+        "signature_hash": "252d96c85b6b3e31"
       }
     ],
     "T.test_valid": [
@@ -160728,16 +161446,6 @@
         "signature_hash": "26beb673ad3a4856"
       }
     ],
-    "T.test_minimum_reopen": [
-      {
-        "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
-        "kind": "method",
-        "line": 37,
-        "end_line": 43,
-        "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#method:T.test_minimum_reopen:2e587fb50d2b8add",
-        "signature_hash": "252d96c85b6b3e31"
-      }
-    ],
     "T.test_random_forgery_campaign": [
       {
         "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
@@ -160756,16 +161464,6 @@
         "end_line": 66,
         "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#method:T.test_random_currentness_campaign:106fe7fe357e1550",
         "signature_hash": "ffd923ac16a5cdbf"
-      }
-    ],
-    "needroot": [
-      {
-        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
-        "kind": "function",
-        "line": 15,
-        "end_line": 17,
-        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#function:needroot:3ecd03e38ff99bb8",
-        "signature_hash": "cd12b37fbef6dc1f"
       }
     ],
     "AdmissionSemantic": [
@@ -180692,6 +181390,100 @@
         -0.207799,
         -0.04109,
         0.083354
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_airllm_training_o3/PROOF_RECEIPT_O3.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1613,
+      "lines": 1,
+      "tokens_est": 404,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "70297e67dd109c80",
+      "vector": [
+        0.09489,
+        -0.158149,
+        0.258897,
+        0.005857,
+        0.048031,
+        -0.078489,
+        -0.078489,
+        -0.167521,
+        -0.240153,
+        0.043345,
+        0.03163,
+        0.123005,
+        -0.127691,
+        0.139406,
+        0.09489,
+        0.073803,
+        -0.130034,
+        0.076146,
+        -0.106604,
+        0.270611,
+        -0.291698,
+        -0.261239,
+        -0.244839,
+        -0.036316,
+        -0.207352,
+        0.291698,
+        0.230781,
+        -0.123005,
+        -0.097233,
+        -0.265925,
+        -0.265925,
+        -0.247182
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_airllm_training_o3/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3505,
+      "lines": 33,
+      "tokens_est": 874,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e81188fb2dfb7b3e",
+      "vector": [
+        -0.006346,
+        -0.262743,
+        0.217048,
+        0.158661,
+        -0.046964,
+        -0.064734,
+        0.156123,
+        0.189124,
+        0.135814,
+        -0.031732,
+        0.283051,
+        -0.300822,
+        -0.021578,
+        -0.156123,
+        0.234818,
+        -0.019039,
+        0.019039,
+        -0.201817,
+        0.247511,
+        0.270359,
+        -0.011424,
+        0.036809,
+        0.097735,
+        -0.118044,
+        -0.181508,
+        -0.036809,
+        0.305899,
+        0.166277,
+        0.323669,
+        0.054579,
+        0.072349,
+        -0.229741
       ]
     },
     {
@@ -269005,6 +269797,100 @@
       ]
     },
     {
+      "path": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14173,
+      "lines": 271,
+      "tokens_est": 3544,
+      "symbol_count": 41,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "765f79bf82d1111c",
+      "vector": [
+        -0.216633,
+        -0.246753,
+        0.042863,
+        0.25602,
+        0.28614,
+        0.209682,
+        -0.163343,
+        0.026645,
+        0.170294,
+        0.123956,
+        -0.100786,
+        0.267605,
+        -0.072983,
+        -0.13554,
+        0.2259,
+        0.293091,
+        0.209682,
+        -0.005792,
+        -0.223583,
+        -0.026645,
+        -0.151759,
+        0.21895,
+        -0.096152,
+        0.079934,
+        -0.100786,
+        0.19578,
+        0.093836,
+        -0.191146,
+        -0.207365,
+        0.028962,
+        -0.121639,
+        0.2259
+      ]
+    },
+    {
+      "path": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8182,
+      "lines": 71,
+      "tokens_est": 2046,
+      "symbol_count": 31,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4e064dd200422c85",
+      "vector": [
+        0.045585,
+        -0.066424,
+        -0.204483,
+        0.04298,
+        0.029956,
+        -0.016932,
+        0.308677,
+        0.25137,
+        -0.027351,
+        0.235741,
+        -0.165409,
+        -0.04298,
+        -0.136756,
+        -0.019537,
+        -0.280024,
+        -0.282629,
+        0.235741,
+        0.246161,
+        -0.162805,
+        -0.019537,
+        0.108102,
+        -0.024746,
+        0.087263,
+        0.282629,
+        0.032561,
+        -0.089868,
+        -0.102892,
+        0.222717,
+        -0.168014,
+        0.233136,
+        -0.326912,
+        0.1602
+      ]
+    },
+    {
       "path": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
       "role": "python_module",
       "binary": false,
@@ -293097,16 +293983,16 @@
     }
   },
   "summary": {
-    "file_count": 1694,
-    "total_bytes": 26589571,
-    "text_tokens_est": 6637796,
+    "file_count": 1698,
+    "total_bytes": 26617044,
+    "text_tokens_est": 6644664,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 251,
+      "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1025,
-      "schema_or_lexicon": 284,
+      "python_module": 1027,
+      "schema_or_lexicon": 285,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293408,6 +294294,8 @@
       "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
       "artifacts/arena/awj032_airllm_training_o2/PROOF_RECEIPT_O2.json",
       "artifacts/arena/awj032_airllm_training_o2/README.md",
+      "artifacts/arena/awj032_airllm_training_o3/PROOF_RECEIPT_O3.json",
+      "artifacts/arena/awj032_airllm_training_o3/README.md",
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "arxiv_forager.py",
@@ -294800,6 +295688,8 @@
       "tools/awj032/training_o1_reference/training_admission.py",
       "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
       "tools/awj032/training_o2_transition_reference/transition_envelope.py",
+      "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+      "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
       "tools/awj032/training_r1_resolver_reference/test_resolver.py",
       "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
       "tools/construction_demo_assets/README.md",
@@ -455430,6 +456320,726 @@
         "file_digest8": "cdd4de92a4909a4a"
       },
       {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:DelegatedTrainingCapsule:f224338bcc978215",
+        "name": "DelegatedTrainingCapsule",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 112,
+        "end_line": 132,
+        "signature_hash": "e3933b02bc56a3d0",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:DurableTrainingAttempt:5ab5ad51ea904068",
+        "name": "DurableTrainingAttempt",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 135,
+        "end_line": 145,
+        "signature_hash": "28bc8949bf83a944",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:HostWorkcellAuthority:4e2bf392c368a02c",
+        "name": "HostWorkcellAuthority",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 84,
+        "end_line": 109,
+        "signature_hash": "4ee40a1334fa25ad",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:RecoveryAuthority:40bb02112ee6c7e3",
+        "name": "RecoveryAuthority",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 181,
+        "end_line": 196,
+        "signature_hash": "2a873e0d611a3922",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:RecoveryVerdict:6d18d0eaad53d219",
+        "name": "RecoveryVerdict",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 166,
+        "end_line": 179,
+        "signature_hash": "afb474e9f49e614b",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:TrainingOperation:6347cc923009afd2",
+        "name": "TrainingOperation",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 32,
+        "end_line": 55,
+        "signature_hash": "e47410985b8cc26a",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:WorkcellLease:a9211c19595e300e",
+        "name": "WorkcellLease",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 58,
+        "end_line": 82,
+        "signature_hash": "3cf17775613fb4f2",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#class:WorkerProposal:103dbe88581afd2f",
+        "name": "WorkerProposal",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 148,
+        "end_line": 163,
+        "signature_hash": "b392c92f5952eeb0",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:admit_delegation:727cf9332539f9f8",
+        "name": "admit_delegation",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 204,
+        "end_line": 224,
+        "signature_hash": "264ddc97e86d54b6",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:canon:41c016d7f23e40f7",
+        "name": "canon",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "587b60be49a94017",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:factored13d:e62e14c87bbc4563",
+        "name": "factored13d",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 268,
+        "end_line": 270,
+        "signature_hash": "164b4f1327724c8f",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:isroot:d76180f6b9caf9c3",
+        "name": "isroot",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 25,
+        "end_line": 25,
+        "signature_hash": "8b077fb3d0bf596c",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:jhash:34d1616f182b79fa",
+        "name": "jhash",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 24,
+        "end_line": 24,
+        "signature_hash": "e9abe50ab6671f5c",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:minimum_reopen_cone:2b69cc6ef4960359",
+        "name": "minimum_reopen_cone",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 256,
+        "end_line": 262,
+        "signature_hash": "7b2b66fab11bbaf3",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:needroot:c9146228e9158aa7",
+        "name": "needroot",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "cd12b37fbef6dc1f",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:omega8:52f9c12bc518e17d",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 265,
+        "end_line": 267,
+        "signature_hash": "d1b51a3f92a8a2b1",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:retry_decision:a122bb8c5cf11e96",
+        "name": "retry_decision",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 244,
+        "end_line": 249,
+        "signature_hash": "074d164b99a4e808",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:semantic_operation_reopen:ce23e8cf67d30a03",
+        "name": "semantic_operation_reopen",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 252,
+        "end_line": 253,
+        "signature_hash": "98a1a1238a780819",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:validate_delegate_payload:0afc1c489d10a864",
+        "name": "validate_delegate_payload",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 199,
+        "end_line": 201,
+        "signature_hash": "e7542bb1ef241f10",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:validate_worker_proposal:dab5f7b693ed2fda",
+        "name": "validate_worker_proposal",
+        "kind": "function",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 227,
+        "end_line": 241,
+        "signature_hash": "e43429780db40181",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DelegatedTrainingCapsule.__post_init__:23fd4a9992d3a3b6",
+        "name": "DelegatedTrainingCapsule.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 123,
+        "end_line": 129,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DelegatedTrainingCapsule.capsule_root:d52e22ae807ea6d4",
+        "name": "DelegatedTrainingCapsule.capsule_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 131,
+        "end_line": 131,
+        "signature_hash": "b95ddf7bdb177061",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DelegatedTrainingCapsule.public_payload:2cdd700088d79c02",
+        "name": "DelegatedTrainingCapsule.public_payload",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 132,
+        "end_line": 132,
+        "signature_hash": "1215c9d5b6d12729",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DurableTrainingAttempt.__post_init__:069b147ff88d5021",
+        "name": "DurableTrainingAttempt.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 141,
+        "end_line": 143,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:DurableTrainingAttempt.attempt_root:e922d48b87594496",
+        "name": "DurableTrainingAttempt.attempt_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 145,
+        "end_line": 145,
+        "signature_hash": "d019633656fc063d",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority.__init__:ec9585a821524bf4",
+        "name": "HostWorkcellAuthority.__init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "574fae700e90a077",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority._mac:0f36fbce38e418e7",
+        "name": "HostWorkcellAuthority._mac",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 89,
+        "end_line": 89,
+        "signature_hash": "f97c649cd15961e6",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority.issue:ff6d7d6dfc51616f",
+        "name": "HostWorkcellAuthority.issue",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 90,
+        "end_line": 98,
+        "signature_hash": "d0b6e3f178c5329e",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:HostWorkcellAuthority.verify:d0665c29ea1f81b5",
+        "name": "HostWorkcellAuthority.verify",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 99,
+        "end_line": 109,
+        "signature_hash": "7a919fb7a4eec8b7",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryAuthority.__init__:c7bf67c498fa3417",
+        "name": "RecoveryAuthority.__init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 182,
+        "end_line": 184,
+        "signature_hash": "574fae700e90a077",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryAuthority.issue:746007b43e48b307",
+        "name": "RecoveryAuthority.issue",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 185,
+        "end_line": 189,
+        "signature_hash": "150b82593502d929",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryAuthority.verify:c2760893d6731fcb",
+        "name": "RecoveryAuthority.verify",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 190,
+        "end_line": 196,
+        "signature_hash": "2ebe20aa45919a02",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryVerdict.__post_init__:e1161b1d13807245",
+        "name": "RecoveryVerdict.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 173,
+        "end_line": 176,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:RecoveryVerdict.signed_payload:2cab4fc5b017adfa",
+        "name": "RecoveryVerdict.signed_payload",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 178,
+        "end_line": 179,
+        "signature_hash": "a2c10acded3911db",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:TrainingOperation.__post_init__:0de016044ea86ef5",
+        "name": "TrainingOperation.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 47,
+        "end_line": 53,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:TrainingOperation.operation_root:0de789e9a5482569",
+        "name": "TrainingOperation.operation_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 55,
+        "end_line": 55,
+        "signature_hash": "d102aa18a15b558d",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkcellLease.__post_init__:906e3aadf40dfddd",
+        "name": "WorkcellLease.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 68,
+        "end_line": 72,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkcellLease.lease_root:01d09b72be1e2af0",
+        "name": "WorkcellLease.lease_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 82,
+        "end_line": 82,
+        "signature_hash": "7b3359d389d99ecd",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkcellLease.signed_payload:21d8678152fbc902",
+        "name": "WorkcellLease.signed_payload",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 74,
+        "end_line": 80,
+        "signature_hash": "a2c10acded3911db",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkerProposal.__post_init__:5c7f3f0ed8cb731c",
+        "name": "WorkerProposal.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 157,
+        "end_line": 161,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#method:WorkerProposal.proposal_root:a0523968a8070c74",
+        "name": "WorkerProposal.proposal_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "line": 163,
+        "end_line": 163,
+        "signature_hash": "53f83e4546bcad07",
+        "file_digest8": "765f79bf82d1111c"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#class:T:ddc2e7dca89844fc",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 9,
+        "end_line": 68,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.admit:1de3e57726850411",
+        "name": "T.admit",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "d7c1c5a47c5fe26e",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.setUp:a73f52bdb1e2eaf4",
+        "name": "T.setUp",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 10,
+        "end_line": 21,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_attempt_binding:437d14284fb84b5a",
+        "name": "T.test_attempt_binding",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 50,
+        "end_line": 50,
+        "signature_hash": "706c9c88ad360a3c",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_benign_workcell_reissue_preserves_operation:5e7551d7850abc93",
+        "name": "T.test_benign_workcell_reissue_preserves_operation",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "03d67fa21657ceb8",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_adapter_mismatch:676ef3b459fdb192",
+        "name": "T.test_capsule_adapter_mismatch",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 47,
+        "end_line": 47,
+        "signature_hash": "b570f87e637168f6",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_lease_mismatch:716233e2c72ae86a",
+        "name": "T.test_capsule_lease_mismatch",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 48,
+        "end_line": 48,
+        "signature_hash": "3f46a9974fd3bf53",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_operation_mismatch:1aaa5c48f184b52b",
+        "name": "T.test_capsule_operation_mismatch",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 45,
+        "end_line": 45,
+        "signature_hash": "8f21ef72ac4168ce",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_capsule_source_mismatch:8e3408f53a6d9d75",
+        "name": "T.test_capsule_source_mismatch",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 46,
+        "end_line": 46,
+        "signature_hash": "6c33154b5fdbe04b",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_expired_admission:0b20df0cda84f2c2",
+        "name": "T.test_expired_admission",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 35,
+        "end_line": 35,
+        "signature_hash": "5e91015c83663146",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_expired_workcell:7e47cce7e7b14359",
+        "name": "T.test_expired_workcell",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "e33ae965b5092caf",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_factored13d:36041fe0ba9f5239",
+        "name": "T.test_factored13d",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 68,
+        "end_line": 68,
+        "signature_hash": "f9142c626c683cf4",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_forged_admission:8384a9cde30bd854",
+        "name": "T.test_forged_admission",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "33ce8e553ff0c19d",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_glm_denied:f1d75953b0b44c2a",
+        "name": "T.test_glm_denied",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "7532591cbb761627",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_minimum_reopen:b2412de2eea3e0ff",
+        "name": "T.test_minimum_reopen",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 61,
+        "end_line": 66,
+        "signature_hash": "252d96c85b6b3e31",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_omega8:a3275f319bad5796",
+        "name": "T.test_omega8",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 67,
+        "end_line": 67,
+        "signature_hash": "e3a9271fe0b6bc17",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_private_fields_absent:6adbd04555f4a7f8",
+        "name": "T.test_private_fields_absent",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 49,
+        "end_line": 49,
+        "signature_hash": "89f136782edde5b4",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_proposal_attempt:0216346408d2fc46",
+        "name": "T.test_proposal_attempt",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 52,
+        "end_line": 52,
+        "signature_hash": "f89d88325236b842",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_proposal_capsule:ae29499d8ff9442a",
+        "name": "T.test_proposal_capsule",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 51,
+        "end_line": 51,
+        "signature_hash": "a56d09ffeb1ceead",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_proposal_worker:3bcc02d6a8fc3a39",
+        "name": "T.test_proposal_worker",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 53,
+        "end_line": 53,
+        "signature_hash": "4fcaaf037fc87d04",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_completed:73ceb2dc465cd41b",
+        "name": "T.test_retry_completed",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 58,
+        "end_line": 58,
+        "signature_hash": "ae90f6f3f9ac6b97",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_forged:bfb05735ae8c8fcb",
+        "name": "T.test_retry_forged",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "d85dd9bc76306cc4",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_not_started:1145bea9b0203f1f",
+        "name": "T.test_retry_not_started",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 56,
+        "end_line": 56,
+        "signature_hash": "933a8bb1c09dd61b",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_retry_unknown:034e98ccf81a4b49",
+        "name": "T.test_retry_unknown",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 57,
+        "end_line": 57,
+        "signature_hash": "56ba589c89392891",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_source_movement_rotates_operation:dbd3e08fbf84ab04",
+        "name": "T.test_source_movement_rotates_operation",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "75f618ff90fadd29",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_valid_delegation:f18d02ee8c03a47e",
+        "name": "T.test_valid_delegation",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "3b712729c9c244a4",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_valid_proposal:d9ef38893d765c94",
+        "name": "T.test_valid_proposal",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "e0e15f0a7f3a4a38",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_workcell_generation:404ab4d475fbf8b9",
+        "name": "T.test_workcell_generation",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "860548229c07a516",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_worker_authority_widening_constructor:ecbfd15362cffbb4",
+        "name": "T.test_worker_authority_widening_constructor",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "d3bc584966f7ae94",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.test_wrong_current_capsule:b42cfce10a6d6166",
+        "name": "T.test_wrong_current_capsule",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 39,
+        "end_line": 39,
+        "signature_hash": "a72117495e18a795",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#method:T.validate:20785a0c78c0531a",
+        "name": "T.validate",
+        "kind": "method",
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "20b85383254c10ca",
+        "file_digest8": "4e064dd200422c85"
+      },
+      {
         "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#class:T:ba31ffd4c80a0bf9",
         "name": "T",
         "kind": "class",
@@ -457150,7 +458760,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9ca893bf2e84c452036c98ce64f76652",
-    "payload_hash": "64e78fb3f14e99720bbea66a3b303b8b"
+    "record_fingerprint": "906fbd141c3a0f9300b6690ce0de77aa",
+    "payload_hash": "00412b71305b13944848adbc67650311"
   }
 }

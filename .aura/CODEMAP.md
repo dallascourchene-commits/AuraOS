@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1694
-- **total_bytes**: 26589571
-- **text_tokens_est**: 6637796
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 251, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1025, 'schema_or_lexicon': 284, 'support_file': 49}
+- **file_count**: 1698
+- **total_bytes**: 26617044
+- **text_tokens_est**: 6644664
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 285, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1694,
+  "repo_file_count": 1698,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -310,6 +310,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
     "artifacts/arena/awj032_airllm_training_o2/PROOF_RECEIPT_O2.json",
     "artifacts/arena/awj032_airllm_training_o2/README.md",
+    "artifacts/arena/awj032_airllm_training_o3/PROOF_RECEIPT_O3.json",
+    "artifacts/arena/awj032_airllm_training_o3/README.md",
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "arxiv_forager.py",
@@ -1702,6 +1704,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/training_o1_reference/training_admission.py",
     "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
     "tools/awj032/training_o2_transition_reference/transition_envelope.py",
+    "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+    "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
     "tools/awj032/training_r1_resolver_reference/test_resolver.py",
     "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
     "tools/construction_demo_assets/README.md",
@@ -1834,16 +1838,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1694,
-  "bytes": 26589571,
-  "tokens_est": 6637796,
+  "files": 1698,
+  "bytes": 26617044,
+  "tokens_est": 6644664,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 251,
+    "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1025,
-    "schema_or_lexicon": 284,
+    "python_module": 1027,
+    "schema_or_lexicon": 285,
     "support_file": 49
   }
 }
@@ -1978,6 +1982,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_o1/OBJECTIVE.md",
     "artifacts/arena/awj032_airllm_training_o1/README.md",
     "artifacts/arena/awj032_airllm_training_o2/README.md",
+    "artifacts/arena/awj032_airllm_training_o3/README.md",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
@@ -2127,8 +2132,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md",
     "docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md",
     "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md",
-    "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
-    "docs/AURA_TENSOR_EVIDENCE_ARENAS.md"
+    "docs/AURA_SWARM_AND_MCP_COCKPIT.md"
   ]
 }
 ```
