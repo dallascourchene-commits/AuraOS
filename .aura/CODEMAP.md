@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1702
-- **total_bytes**: 26811777
-- **text_tokens_est**: 6693306
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 279, 'support_file': 49}
+- **file_count**: 1703
+- **total_bytes**: 26827408
+- **text_tokens_est**: 6697214
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1049, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1702,
+  "repo_file_count": 1703,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1706,6 +1706,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_coverage_membrane.py",
     "tools/arena/memory_city_ecf_adapter.py",
+    "tools/arena/memory_city_effect_handoff_o13.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
     "tools/arena/memory_city_quotient_controllability.py",
@@ -1842,15 +1843,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1702,
-  "bytes": 26811777,
-  "tokens_est": 6693306,
+  "files": 1703,
+  "bytes": 26827408,
+  "tokens_est": 6697214,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1048,
+    "python_module": 1049,
     "schema_or_lexicon": 279,
     "support_file": 49
   }
