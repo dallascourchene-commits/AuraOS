@@ -1,0 +1,80 @@
+{
+  "schema": "aura.arena.proof_receipt.v1",
+  "objective": "O7-HFSC-HORIZON-FENCED-SPLIT-COMPILER",
+  "title": "Horizon-Fenced Semantic-to-Mutation Handoff",
+  "status": "D0_NONPROMOTING_LOCAL_REFERENCE",
+  "gate10": false,
+  "base_pr": 878,
+  "base_head_sha": "16982298dd11bda697a38e78c5ad4d1c788f3a9a",
+  "foreign_parents": [
+    {
+      "artifact_id": "1P0M_hLVknqZGkrBqNLkAB-W5xFIwdoH76kw3HUIPG0I",
+      "result": "Authority-Fenced Bi-Closure Quotient",
+      "result_root": "77155b3c606fac4cbc641abaf013bcdf9ef3695d01fff5d3f6e53a6392b51e32"
+    },
+    {
+      "artifact_id": "1Bb4DuOxzlRHDPQJLzf-0dmVeeK_HPusKzIHbgcE5b0k",
+      "result": "MC-O9 Typed Support-Influence-Horizon Closure",
+      "result_root": "a8c185f9a11e422ab6817fc7bcd3733e56599a5e55664969c4dab22ebe788a7b",
+      "campaign_root": "1f5f15176b8ce2b2f6475be84fb14030d6cfcfce2f382012f9a773e380f761a2"
+    }
+  ],
+  "keeper_laws": [
+    "ReadReady AND WriteReady != MutationReadyWithoutSemanticCrossBinding",
+    "SemanticHandoffRoot = H(SupportRoot, InfluenceRoot, TransitionModelRoot, Horizon, FutureCongruenceRoot, ClosureReceiptRoot)",
+    "SemanticHandoffMove => REBIND_REQUIRED",
+    "IssuedFence != ResourceInstalledFence",
+    "FullHiddenConfigurationIdentity != RequiredWhenConsequenceProjectionIsComplete",
+    "K27OrCacheLocality != SemanticHandoffProof != WriteAuthority"
+  ],
+  "evidence": {
+    "fresh_venvs": 3,
+    "focused_tests_per_env": 10,
+    "focused_tests_total": 30,
+    "campaign_cases_per_env": 12000,
+    "campaign_root": "5f76ef2181eff649717a672dd48c892f123a10a2738055c7ad496295708f17a1",
+    "campaign_file_sha256": "6d80317aad18b70d77d04da38e37c1e286e9bbf9b8015a6a665b07df58da5f4a",
+    "per_env": {
+      "oracle_ready": 3000,
+      "bridge_ready": 3000,
+      "uncrossbound_false_ready": 3000,
+      "bridge_false_ready": 0,
+      "bridge_false_hold": 0,
+      "full_config_false_hold": 1500,
+      "semantic_swap": 1500,
+      "horizon_move": 1500,
+      "fence_attack": 1500,
+      "receipt_attack": 1500,
+      "revision_move": 1500,
+      "valid_irrelevant_context": 1500
+    },
+    "hs1000": {
+      "cells": 1000,
+      "consequence_groups": 10,
+      "freeze_root": "fd021a8ca9c9a30852d3d4e7b57c8429359df1d19080ba81a9048ebaa2465cf1",
+      "quotient_root": "a41bf21d208b7cab957f0b030526d0e8b30c713ed3f6a2fae89fdafcbbd0748a",
+      "top27_root": "155b9d834e1b41d9e47fad6c273e3faf24a8b40c571d76e43716e2d6c4d0dc9c"
+    },
+    "omega8": {
+      "states": 6561,
+      "keepers": 1,
+      "hard_invalid_ready": 0
+    },
+    "recursion13d": {
+      "states": 1594323,
+      "ready_context_variants": 243,
+      "hard_invalid_repairs": 0,
+      "unresolved_repairs": 0,
+      "result_root": "09e2e166e5489e1cf4665da842a02615db376e0d0806bce607d8ecfac1e49c44"
+    }
+  },
+  "source_hashes": {
+    "tools/arena/memory_city_horizon_fenced_handoff.py": "5d66f3a0a7d8f1e2ea75563e37711e97fedfceb7f5137e20370aa17eb836be21",
+    "tests/test_memory_city_horizon_fenced_handoff.py": "46a827c3c9469f6908b2d3682f7c77034f023e0475ea227e71c56ba7b97dd0cb",
+    "tools/arena/campaign_memory_city_horizon_fenced_handoff.py": "c1de629238a1a450fcda39ea0581ebd5ccb7757e7f520cc3b6efd254dcc723a1"
+  },
+  "failed_first_scars": [
+    "Initial unittest invocation ran outside the frozen source directory and failed import before semantic execution; zero proof credit. All proof venvs were deleted/recreated before credited replay."
+  ],
+  "claim_ceiling": "Finite D0 reference bridge only. No production write authority, consensus/quorum/fencing proof, runtime/network/KV performance, canonical owner replacement, merge/deploy authority, native/private Transformer KV access, or Gate10."
+}
