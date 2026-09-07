@@ -5,7 +5,6 @@ import json
 
 from tools.project006.effect_attempt_recovery import hard_o11_state
 
-# Execute the real decision over every hard state.
 hard_rows = []
 keepers = []
 for axes in itertools.product(range(3), repeat=8):
@@ -14,12 +13,9 @@ for axes in itertools.product(range(3), repeat=8):
     if decision == "READY_RECOVERY_ACTION_D0":
         keepers.append(axes)
 
-# The five nuisance axes are intentionally not parameters of the hard decision.
-# Prove that factorization structurally, then execute every contextual variant on
-# each hard keeper.  A nuisance context therefore has no channel through which
-# to repair a hard-invalid state.
-signature = str(inspect.signature(hard_o11_state))
-if signature != "(axes)":
+signature_obj = inspect.signature(hard_o11_state)
+signature = str(signature_obj)
+if list(signature_obj.parameters) != ["axes"]:
     raise AssertionError("hard decision unexpectedly gained contextual inputs")
 context_rows = []
 for axes in keepers:
@@ -41,7 +37,7 @@ root = hashlib.sha256(json.dumps({
     "signature": signature,
 }, separators=(",", ":")).encode()).hexdigest()
 print(json.dumps({
-    "schema": "AURA-PROJECT006-O11-13D-v2",
+    "schema": "AURA-PROJECT006-O11R-13D-v3",
     "states": states,
     "hard_states_executed": len(hard_rows),
     "context_variants_per_keeper": context_count,
