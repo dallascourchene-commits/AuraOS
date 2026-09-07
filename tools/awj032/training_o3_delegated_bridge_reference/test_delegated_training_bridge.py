@@ -3,15 +3,18 @@ from dataclasses import replace
 from hashlib import sha256
 
 from tools.awj032.training_r1_resolver_reference.training_admission_resolver import AdmissionSemantic, OwnerResolver
+from tools.awj032.training_o1_reference.training_admission import SourceAuditVerifier
 from tools.awj032.training_o3_delegated_bridge_reference.delegated_training_bridge import *
 R=lambda s:sha256(s.encode()).hexdigest()
 
 class T(unittest.TestCase):
     def setUp(self):
         self.op=TrainingOperation(R('mission'),R('source'),R('intent'),R('contract'),R('payload'),R('base'),R('config'),R('tokenizer'),R('runtime'),R('adapter'),R('topology'),AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
+        self.source_ver=SourceAuditVerifier({'src':b'source-secret'},'src',2)
+        self.o1=self.source_ver.sign_admission(action='ADMIT_D0_ADAPTER_LOAD',reason='O3_TEST_INHERITED_O1',source_root=self.op.source_identity_root,adapter_root=self.op.adapter_spec_root,runtime_root=self.op.runtime_root,target_topology_root=self.op.target_topology_root,observed_at=990)
         self.adm_res=OwnerResolver({'a1':b'admission-secret'},'a1',4)
-        self.sem=AdmissionSemantic(self.op.source_identity_root,self.op.adapter_spec_root,self.op.runtime_root,self.op.target_topology_root,AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
-        self.receipt=self.adm_res.issue(self.sem,now=1000,ttl=100)
+        self.sem=AdmissionSemantic(self.o1.admission_root,self.op.source_identity_root,self.op.adapter_spec_root,self.op.runtime_root,self.op.target_topology_root,AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA')
+        self.receipt=self.adm_res.issue(self.sem,o1_admission=self.o1,source_verifier=self.source_ver,now=1000,ttl=100)
         self.host=HostWorkcellAuthority({'h1':b'host-secret'},'h1',9)
         self.current_capsule=R('current-capsule')
         self.lease=self.host.issue(operation_root=self.op.operation_root,current_capsule_root=self.current_capsule,admission_semantic_root=self.sem.semantic_root,admission_receipt_root=self.receipt.receipt_root,now=1000,ttl=80)
@@ -60,7 +63,7 @@ class T(unittest.TestCase):
         v=self.recovery.issue(self.attempt.attempt_root,'NOT_STARTED',1040); self.assertEqual('HOLD_RECOVERY_SIGNATURE',retry_decision(self.attempt,replace(v,mac=R('bad')),self.recovery))
     def test_minimum_reopen(self):
         c2=replace(self.capsule,opaque_work_handle='WK2',test_plan_root=R('plan2'))
-        op3=replace(self.op,source_identity_root=R('source3')); sem3=replace(self.sem,source_root=op3.source_identity_root,adapter_root=R('adapter3')); r3=self.adm_res.issue(sem3,now=1000,ttl=100)
+        op3=replace(self.op,source_identity_root=R('source3'),adapter_spec_root=R('adapter3')); o13=self.source_ver.sign_admission(action='ADMIT_D0_ADAPTER_LOAD',reason='O3_TEST_NEW_OPERATION',source_root=op3.source_identity_root,adapter_root=op3.adapter_spec_root,runtime_root=op3.runtime_root,target_topology_root=op3.target_topology_root,observed_at=991); sem3=AdmissionSemantic(o13.admission_root,op3.source_identity_root,op3.adapter_spec_root,op3.runtime_root,op3.target_topology_root,AIRLLM_COMMIT,'qwen3_5','AirLLMLoRA'); r3=self.adm_res.issue(sem3,o1_admission=o13,source_verifier=self.source_ver,now=1000,ttl=100)
         l3=self.host.issue(operation_root=op3.operation_root,current_capsule_root=self.current_capsule,admission_semantic_root=sem3.semantic_root,admission_receipt_root=r3.receipt_root,now=1000,ttl=80)
         c3=DelegatedTrainingCapsule(op3.operation_root,'WK3',op3.source_identity_root,sem3.adapter_root,sem3.semantic_root,r3.receipt_root,l3.lease_root,R('plan3'),'non_sol_worker',64)
         self.assertEqual((0,1),minimum_reopen_cone(self.op.operation_root,[self.capsule,c2,c3]))
