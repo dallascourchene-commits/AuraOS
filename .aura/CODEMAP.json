@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1655,
+    "repo_file_count": 1659,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1334,6 +1334,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
       "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
+      "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2395,6 +2396,7 @@
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_astra_effect_realisability_r1.py",
+      "tests/test_astra_temporal_repair_budget_r1.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2702,6 +2704,8 @@
       "tools/arena/frontier27_runtime.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
+      "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -2782,6 +2786,7 @@
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_astra_effect_realisability_r1.py",
+      "tests/test_astra_temporal_repair_budget_r1.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2817,8 +2822,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -17672,6 +17676,53 @@
         -0.147495,
         -0.30089,
         0.112096
+      ]
+    },
+    {
+      "path": "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2650,
+      "lines": 54,
+      "tokens_est": 663,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1278a8f0339956ea",
+      "vector": [
+        -0.267301,
+        0.177774,
+        -0.021742,
+        0.124058,
+        -0.029416,
+        -0.236606,
+        -0.057553,
+        -0.039648,
+        -0.23149,
+        -0.088248,
+        0.111269,
+        -0.236606,
+        -0.008953,
+        -0.065227,
+        -0.078016,
+        0.034532,
+        0.239164,
+        0.218701,
+        0.014068,
+        -0.157311,
+        0.203353,
+        -0.172659,
+        0.101037,
+        -0.308227,
+        0.083132,
+        0.280091,
+        -0.205911,
+        0.251954,
+        0.124058,
+        -0.193122,
+        0.282648,
+        0.218701
       ]
     },
     {
@@ -90376,6 +90427,53 @@
       ]
     },
     {
+      "path": "tests/test_astra_temporal_repair_budget_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2943,
+      "lines": 38,
+      "tokens_est": 736,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c395eed3645f0ae3",
+      "vector": [
+        -0.012195,
+        -0.165188,
+        0.005543,
+        -0.256097,
+        -0.280487,
+        -0.018847,
+        0.156319,
+        -0.189578,
+        0.174057,
+        0.11419,
+        -0.145232,
+        0.233924,
+        0.218403,
+        0.076496,
+        -0.156319,
+        0.200665,
+        0.238359,
+        -0.176275,
+        0.269401,
+        -0.162971,
+        0.256097,
+        -0.129711,
+        0.191796,
+        0.007761,
+        0.24501,
+        0.060975,
+        -0.012195,
+        -0.01663,
+        -0.189578,
+        0.125277,
+        0.271618,
+        0.185144
+      ]
+    },
+    {
       "path": "tests/test_aura_adaptive_execution.py",
       "role": "python_module",
       "binary": false,
@@ -104805,6 +104903,100 @@
       ]
     },
     {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5948,
+      "lines": 148,
+      "tokens_est": 1487,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cbe394a56414b5d4",
+      "vector": [
+        0.256411,
+        -0.210827,
+        0.049003,
+        -0.133334,
+        -0.279203,
+        -0.007977,
+        0.021653,
+        -0.267807,
+        -0.188035,
+        0.1151,
+        0.071795,
+        -0.149288,
+        0.067237,
+        -0.279203,
+        -0.153847,
+        -0.1151,
+        -0.286041,
+        0.119659,
+        0.267807,
+        0.110542,
+        0.094587,
+        0.217665,
+        -0.28832,
+        -0.103704,
+        -0.108263,
+        -0.014815,
+        -0.00114,
+        -0.149288,
+        -0.023932,
+        -0.203989,
+        -0.181197,
+        0.290599
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2377,
+      "lines": 41,
+      "tokens_est": 595,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "deddfeffd8967b09",
+      "vector": [
+        -0.277616,
+        0.039659,
+        -0.022416,
+        -0.081043,
+        0.222438,
+        0.112081,
+        0.218989,
+        0.26727,
+        0.118978,
+        0.067249,
+        -0.046557,
+        -0.005173,
+        0.260373,
+        0.239681,
+        -0.060351,
+        0.1914,
+        -0.153465,
+        -0.053454,
+        0.050005,
+        -0.336243,
+        0.250027,
+        0.074146,
+        0.1914,
+        0.077595,
+        0.091389,
+        0.367281,
+        -0.008622,
+        -0.26727,
+        0.022416,
+        0.105184,
+        0.250027,
+        0.070697
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -105849,7 +106041,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788739053,
+  "generated_at_unix": 1788739531,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106125,6 +106317,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/astra_effect_realisability_r1/EXTERNAL_COORDINATES.json",
       "artifacts/arena/astra_effect_realisability_r1/PROOF_RECEIPT.json",
+      "artifacts/arena/astra_effect_realisability_r1/TEMPORAL_REPAIR_BUDGET_PROOF_RECEIPT.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -107186,6 +107379,7 @@
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
       "tests/test_astra_effect_realisability_r1.py",
+      "tests/test_astra_temporal_repair_budget_r1.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -107493,6 +107687,8 @@
       "tools/arena/frontier27_runtime.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py",
       "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py",
+      "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+      "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -219601,6 +219797,126 @@
         "file_digest8": "34599a9ed49c66bf"
       },
       {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#class:TestTemporalBudget:e6a5860195424618",
+        "name": "TestTemporalBudget",
+        "kind": "class",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 6,
+        "end_line": 35,
+        "signature_hash": "bc6be10204cf0690",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_at_use_validity_drift_reopens:5cca6e792b350e33",
+        "name": "TestTemporalBudget.test_at_use_validity_drift_reopens",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "381eb290274b7f5a",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_externalization_frontier_cannot_be_bought_off:5c9462122c899550",
+        "name": "TestTemporalBudget.test_externalization_frontier_cannot_be_bought_off",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "3f1fdce2095a1a23",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_hard_domains_noncompensatory:be6f35d1c413ce53",
+        "name": "TestTemporalBudget.test_hard_domains_noncompensatory",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "ab8189e736a3ca45",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_insufficient_cost_holds:bd6f7a4edf227f8b",
+        "name": "TestTemporalBudget.test_insufficient_cost_holds",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "2bb29426fd363345",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_no_authority_promotion:57e8afe37e4d5c83",
+        "name": "TestTemporalBudget.test_no_authority_promotion",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "5dc21fad911a2f1e",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_plan_time_invalid_hard_rule_refused:20a16109f5782654",
+        "name": "TestTemporalBudget.test_plan_time_invalid_hard_rule_refused",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "a73e3cf1ed5acdaa",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_scalar_clock_aliases_distinct_time:7921fc98db3d7a34",
+        "name": "TestTemporalBudget.test_scalar_clock_aliases_distinct_time",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 7,
+        "end_line": 9,
+        "signature_hash": "98071d72f5317c0b",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_soft_domains_can_coarsen_under_error_budget:cc176bd3148bfd91",
+        "name": "TestTemporalBudget.test_soft_domains_can_coarsen_under_error_budget",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "71d0b14d6c095025",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_soft_media_rule_not_accidentally_authoritative_when_coarse:c968dd3c2545fe25",
+        "name": "TestTemporalBudget.test_soft_media_rule_not_accidentally_authoritative_when_coarse",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "3e769ec441e60bc7",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_tighter_error_compiles_media_exactness:d039c632ab0f3cf5",
+        "name": "TestTemporalBudget.test_tighter_error_compiles_media_exactness",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "369d1efab15fda1b",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_zero_error_compiles_both_soft_domains:459d3f09f5bbe38c",
+        "name": "TestTemporalBudget.test_zero_error_compiles_both_soft_domains",
+        "kind": "method",
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "2396ca6489b4924a",
+        "file_digest8": "c395eed3645f0ae3"
+      },
+      {
         "semantic_id": "tests/test_aura_adaptive_execution.py#class:Egress.__call__.Endpoint:698212a0a7fff320",
         "name": "Egress.__call__.Endpoint",
         "kind": "class",
@@ -267071,6 +267387,226 @@
         "file_digest8": "d0525e69c4d835bf"
       },
       {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:ConsequenceBudget:3a64fd961dbb3e98",
+        "name": "ConsequenceBudget",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 45,
+        "end_line": 51,
+        "signature_hash": "e0407f7896d9f192",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:ExactnessPlan:09f7034e7410db5c",
+        "name": "ExactnessPlan",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 54,
+        "end_line": 62,
+        "signature_hash": "db210f507ac2ea68",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:Sensitivity:e79a6f25517137c6",
+        "name": "Sensitivity",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "45b56636dd6cbafc",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:TemporalPoint:e13f4ba860d056c4",
+        "name": "TemporalPoint",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 15,
+        "end_line": 22,
+        "signature_hash": "1efc3d15bc4a0494",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:TemporalRepairLease:9371f529d516a0f1",
+        "name": "TemporalRepairLease",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 65,
+        "end_line": 73,
+        "signature_hash": "99575383b814143c",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:TemporalRule:269bea356dfa4807",
+        "name": "TemporalRule",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 25,
+        "end_line": 33,
+        "signature_hash": "c7a68025655a503a",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:UseDecision:8e9c17b0192ddfb8",
+        "name": "UseDecision",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 76,
+        "end_line": 82,
+        "signature_hash": "149011880994e7a2",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_canon:df6d10a0589b9b38",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "670c69469c93ee5a",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_rule_ok:480fa57615c3ee16",
+        "name": "_rule_ok",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 120,
+        "end_line": 125,
+        "signature_hash": "b12ffc83a72276e3",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_sensitivity_map:bcac9107978df877",
+        "name": "_sensitivity_map",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 84,
+        "end_line": 91,
+        "signature_hash": "6c23d56d6176d362",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:compile_exactness:bab1d9558c597fcf",
+        "name": "compile_exactness",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 93,
+        "end_line": 118,
+        "signature_hash": "738b8a0fba72d1b4",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:digest:015545c1f6b88066",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:issue_lease:849315d11f04783b",
+        "name": "issue_lease",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 127,
+        "end_line": 133,
+        "signature_hash": "6fe03b7503200969",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:plan_root:31c898292a6d82f3",
+        "name": "plan_root",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 145,
+        "end_line": 147,
+        "signature_hash": "6c0d676e8be65815",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:scalar_collision:22b83f198cba9081",
+        "name": "scalar_collision",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 142,
+        "end_line": 143,
+        "signature_hash": "b41a90d1676bd6c9",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:validate_at_use:2ee0d6766d4c84fc",
+        "name": "validate_at_use",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 135,
+        "end_line": 140,
+        "signature_hash": "b3d90da939ba2057",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:ConsequenceBudget.__post_init__:a7d877fd61e99f31",
+        "name": "ConsequenceBudget.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:Sensitivity.__post_init__:a06d158cd11917fe",
+        "name": "Sensitivity.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:TemporalPoint.as_dict:538240e09a3cb4b5",
+        "name": "TemporalPoint.as_dict",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 22,
+        "end_line": 22,
+        "signature_hash": "c238a075b0a2259e",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:TemporalRule.__post_init__:b46ea54086dbbfa0",
+        "name": "TemporalRule.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "cbe394a56414b5d4"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py#function:oracle:971afab0c19f9352",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+        "line": 6,
+        "end_line": 15,
+        "signature_hash": "74f205f67016321a",
+        "file_digest8": "deddfeffd8967b09"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py#function:run:1e04104f9a0219f9",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+        "line": 17,
+        "end_line": 39,
+        "signature_hash": "32e187127794ef19",
+        "file_digest8": "deddfeffd8967b09"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -268321,8 +268857,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3052321de78c79b1a24061b9ab149338",
-    "payload_hash": "df73fbcc97f334ff7a1633fdcd921ed2"
+    "record_fingerprint": "b85e20b7802b69cab28de9f2a476b735",
+    "payload_hash": "d0ffb9866702dcba86288a81b1b6e8d5"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -268335,16 +268871,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1655,
-      "bytes": 26503689,
-      "tokens_est": 6616262,
+      "files": 1659,
+      "bytes": 26517607,
+      "tokens_est": 6619743,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
-        "schema_or_lexicon": 275,
+        "python_module": 1009,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -269031,16 +269567,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1655,
-    "total_bytes": 26503689,
-    "text_tokens_est": 6616262,
+    "file_count": 1659,
+    "total_bytes": 26517607,
+    "text_tokens_est": 6619743,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
-      "schema_or_lexicon": 275,
+      "python_module": 1009,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -270269,6 +270805,14 @@
         "end_line": 52,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py#function:run:9503bcb71c08a8d7",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 39,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py#function:run:1e04104f9a0219f9",
+        "signature_hash": "32e187127794ef19"
       }
     ],
     "run.record": [
@@ -286770,6 +287314,14 @@
         "line": 14,
         "end_line": 14,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py#function:digest:2ab3e9c552988650",
+        "signature_hash": "6845cd2b39857deb"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:digest:015545c1f6b88066",
         "signature_hash": "6845cd2b39857deb"
       }
     ],
@@ -380123,6 +380675,126 @@
         "signature_hash": "9508557cfce38bb5"
       }
     ],
+    "TestTemporalBudget": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 6,
+        "end_line": 35,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#class:TestTemporalBudget:e6a5860195424618",
+        "signature_hash": "bc6be10204cf0690"
+      }
+    ],
+    "TestTemporalBudget.test_scalar_clock_aliases_distinct_time": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 7,
+        "end_line": 9,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_scalar_clock_aliases_distinct_time:7921fc98db3d7a34",
+        "signature_hash": "98071d72f5317c0b"
+      }
+    ],
+    "TestTemporalBudget.test_hard_domains_noncompensatory": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_hard_domains_noncompensatory:be6f35d1c413ce53",
+        "signature_hash": "ab8189e736a3ca45"
+      }
+    ],
+    "TestTemporalBudget.test_soft_domains_can_coarsen_under_error_budget": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_soft_domains_can_coarsen_under_error_budget:cc176bd3148bfd91",
+        "signature_hash": "71d0b14d6c095025"
+      }
+    ],
+    "TestTemporalBudget.test_tighter_error_compiles_media_exactness": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_tighter_error_compiles_media_exactness:d039c632ab0f3cf5",
+        "signature_hash": "369d1efab15fda1b"
+      }
+    ],
+    "TestTemporalBudget.test_zero_error_compiles_both_soft_domains": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_zero_error_compiles_both_soft_domains:459d3f09f5bbe38c",
+        "signature_hash": "2396ca6489b4924a"
+      }
+    ],
+    "TestTemporalBudget.test_insufficient_cost_holds": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_insufficient_cost_holds:bd6f7a4edf227f8b",
+        "signature_hash": "2bb29426fd363345"
+      }
+    ],
+    "TestTemporalBudget.test_plan_time_invalid_hard_rule_refused": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_plan_time_invalid_hard_rule_refused:20a16109f5782654",
+        "signature_hash": "a73e3cf1ed5acdaa"
+      }
+    ],
+    "TestTemporalBudget.test_at_use_validity_drift_reopens": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_at_use_validity_drift_reopens:5cca6e792b350e33",
+        "signature_hash": "381eb290274b7f5a"
+      }
+    ],
+    "TestTemporalBudget.test_soft_media_rule_not_accidentally_authoritative_when_coarse": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_soft_media_rule_not_accidentally_authoritative_when_coarse:c968dd3c2545fe25",
+        "signature_hash": "3e769ec441e60bc7"
+      }
+    ],
+    "TestTemporalBudget.test_externalization_frontier_cannot_be_bought_off": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_externalization_frontier_cannot_be_bought_off:5c9462122c899550",
+        "signature_hash": "3f1fdce2095a1a23"
+      }
+    ],
+    "TestTemporalBudget.test_no_authority_promotion": [
+      {
+        "file": "tests/test_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tests/test_astra_temporal_repair_budget_r1.py#method:TestTemporalBudget.test_no_authority_promotion:57e8afe37e4d5c83",
+        "signature_hash": "5dc21fad911a2f1e"
+      }
+    ],
     "Store": [
       {
         "file": "tests/test_aura_adaptive_execution.py",
@@ -425793,6 +426465,14 @@
         "end_line": 13,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1.py#function:_canon:85c47d140ae946bc",
         "signature_hash": "670c69469c93ee5a"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_canon:df6d10a0589b9b38",
+        "signature_hash": "670c69469c93ee5a"
       }
     ],
     "Effect": [
@@ -425983,6 +426663,14 @@
         "end_line": 31,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py#function:oracle:7b5efbcf6c7be1ce",
         "signature_hash": "e809292baa5bff03"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 15,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1_campaign.py#function:oracle:971afab0c19f9352",
+        "signature_hash": "74f205f67016321a"
       }
     ],
     "oracle.visit": [
@@ -426003,6 +426691,186 @@
         "end_line": 41,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_realisability_r1_campaign.py#function:case:e92826f8218e7af9",
         "signature_hash": "11cc037e9fe693ea"
+      }
+    ],
+    "TemporalPoint": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 22,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:TemporalPoint:e13f4ba860d056c4",
+        "signature_hash": "1efc3d15bc4a0494"
+      }
+    ],
+    "TemporalPoint.as_dict": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 22,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:TemporalPoint.as_dict:538240e09a3cb4b5",
+        "signature_hash": "c238a075b0a2259e"
+      }
+    ],
+    "TemporalRule": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:TemporalRule:269bea356dfa4807",
+        "signature_hash": "c7a68025655a503a"
+      }
+    ],
+    "TemporalRule.__post_init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:TemporalRule.__post_init__:b46ea54086dbbfa0",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "Sensitivity": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:Sensitivity:e79a6f25517137c6",
+        "signature_hash": "45b56636dd6cbafc"
+      }
+    ],
+    "Sensitivity.__post_init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:Sensitivity.__post_init__:a06d158cd11917fe",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ConsequenceBudget": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 51,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:ConsequenceBudget:3a64fd961dbb3e98",
+        "signature_hash": "e0407f7896d9f192"
+      }
+    ],
+    "ConsequenceBudget.__post_init__": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#method:ConsequenceBudget.__post_init__:a7d877fd61e99f31",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ExactnessPlan": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 62,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:ExactnessPlan:09f7034e7410db5c",
+        "signature_hash": "db210f507ac2ea68"
+      }
+    ],
+    "TemporalRepairLease": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 73,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:TemporalRepairLease:9371f529d516a0f1",
+        "signature_hash": "99575383b814143c"
+      }
+    ],
+    "UseDecision": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "class",
+        "line": 76,
+        "end_line": 82,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#class:UseDecision:8e9c17b0192ddfb8",
+        "signature_hash": "149011880994e7a2"
+      }
+    ],
+    "_sensitivity_map": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 91,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_sensitivity_map:bcac9107978df877",
+        "signature_hash": "6c23d56d6176d362"
+      }
+    ],
+    "compile_exactness": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 118,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:compile_exactness:bab1d9558c597fcf",
+        "signature_hash": "738b8a0fba72d1b4"
+      }
+    ],
+    "_rule_ok": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 125,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:_rule_ok:480fa57615c3ee16",
+        "signature_hash": "b12ffc83a72276e3"
+      }
+    ],
+    "issue_lease": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 133,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:issue_lease:849315d11f04783b",
+        "signature_hash": "6fe03b7503200969"
+      }
+    ],
+    "validate_at_use": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 140,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:validate_at_use:2ee0d6766d4c84fc",
+        "signature_hash": "b3d90da939ba2057"
+      }
+    ],
+    "scalar_collision": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 142,
+        "end_line": 143,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:scalar_collision:22b83f198cba9081",
+        "signature_hash": "b41a90d1676bd6c9"
+      }
+    ],
+    "plan_root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 147,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_astra_temporal_repair_budget_r1.py#function:plan_root:31c898292a6d82f3",
+        "signature_hash": "6c0d676e8be65815"
       }
     ],
     "_coordinates": [
