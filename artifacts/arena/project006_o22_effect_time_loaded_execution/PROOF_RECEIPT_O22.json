@@ -1,42 +1,20 @@
 {
   "objective": "O22_EFFECT_TIME_LOADED_EXECUTION_CURRENTNESS",
   "date": "2026-09-07",
-  "state": "LOCAL_PROOF_COMPLETE_HOSTED_PENDING_D0_NONPROMOTING",
+  "state": "LOCAL_PROOF_COMPLETE_HOSTED_RETRY_PENDING_D0_NONPROMOTING",
   "gate10": false,
   "foreign_parents": [
     {"title":"O20R Effect-Time Loaded Process Currentness","drive_id":"1ECuxmvJcxj-lAPqspLTA22m5WNQAWBF9-euG2IyTHHw","consequence":"InstalledRuntimeCurrent != LoadedProcessCurrent != EffectTimeExecutableIdentity; restarts/reloads/forks/JIT/plugin/mutation generation move require revalidation"},
     {"title":"AWJ032 R2 Core Source/Topology Binding","drive_id":"14LTtMbr1UtsDAj6bzwIu64Us6z6oT41uplqNYWbxqNA","consequence":"Authenticated observed roots do not authorize a detached core; exact source and target topology must bind to the actual subject"}
   ],
-  "keepers": [
-    "UpdateAccepted != EffectTimeExecutableCurrent",
-    "InstalledRuntimeCurrent != LoadedProcessCurrent != EffectTimeExecutableIdentity",
-    "LoadedAtT0 != ExecutedAtT1 without sufficient currentness relation",
-    "ActualCoreSourceTopology != CallerObservedSourceTopology",
-    "ProcessRestartOrForkOrReload => NewProcessOrLoadGeneration",
-    "UnresolvedAnswerBearingUnit => HOLD",
-    "HeterogeneousServingPopulationWithoutExactSelection => HOLD",
-    "K27Coordinate != ProcessIdentity != Currentness != EffectAuthority"
-  ],
+  "keepers": ["UpdateAccepted != EffectTimeExecutableCurrent","InstalledRuntimeCurrent != LoadedProcessCurrent != EffectTimeExecutableIdentity","LoadedAtT0 != ExecutedAtT1 without sufficient currentness relation","ActualCoreSourceTopology != CallerObservedSourceTopology","ProcessRestartOrForkOrReload => NewProcessOrLoadGeneration","UnresolvedAnswerBearingUnit => HOLD","HeterogeneousServingPopulationWithoutExactSelection => HOLD","K27Coordinate != ProcessIdentity != Currentness != EffectAuthority"],
   "proof": {
     "source_sha256":"02be832cb3941ef7ded274a461d2e2e0fc76a74e87909c85b362555e1d499541",
-    "test_sha256":"cd79c91a789763d64879f1b97882624a316c6b9a0e4fd3d38f404b235373af8e",
+    "test_git_blob_sha":"98c65eb111ebb3e3c4cd7a10b902f22fb6c30755",
     "proof_program_sha256":"da3f7bf1a9111bb5658958c142b0a6f6f4ab3172c9f024ab87458f473b086d77",
-    "fresh_envs":3,
-    "focused_tests_per_env":16,
-    "focused_test_executions":48,
-    "campaign_cases_per_env":30000,
-    "campaign_cases_total":90000,
-    "oracle_mismatches":0,
-    "unsafe_accepts":0,
-    "omega8_states":6561,
-    "omega8_keepers":1,
-    "factored13d_states":1594323,
-    "hard_invalid_contextual_repairs":0,
-    "hs1000_frozen_candidates":1000,
-    "hs1000_consequence_families":6,
-    "claimed_breakthroughs":0,
-    "deterministic_output_sha256":"143e10891f24bf98cd3c3747c433b2c820481397a13973942c082f2df3586d7b",
-    "result_root":"fb955c66999cece4e9b8e4b1401b42e24930f10f0a5e0a4ed60a3b50a88e2362"
+    "failed_first_hosted_run":34143183235,
+    "failed_first_disposition":"ZERO_CREDIT_TEST_SHA256_RECORDING_MISMATCH_BEFORE_TEST_EXECUTION",
+    "fresh_envs":3,"focused_tests_per_env":16,"focused_test_executions":48,"campaign_cases_per_env":30000,"campaign_cases_total":90000,"oracle_mismatches":0,"unsafe_accepts":0,"omega8_states":6561,"omega8_keepers":1,"factored13d_states":1594323,"hard_invalid_contextual_repairs":0,"hs1000_frozen_candidates":1000,"hs1000_consequence_families":6,"claimed_breakthroughs":0,"deterministic_output_sha256":"143e10891f24bf98cd3c3747c433b2c820481397a13973942c082f2df3586d7b","result_root":"fb955c66999cece4e9b8e4b1401b42e24930f10f0a5e0a4ed60a3b50a88e2362"
   },
   "external_coordinates": [
     {"coord":[12,2,6],"url":"https://arxiv.org/abs/2512.06500","role":"runtime integrity remeasurement pressure"},
