@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1687
-- **total_bytes**: 26569922
-- **text_tokens_est**: 6632882
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 249, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1689
+- **total_bytes**: 26574280
+- **text_tokens_est**: 6633973
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 249, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 284, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1687,
+  "repo_file_count": 1689,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,6 +166,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-airllm-exact-head-verify.yml",
     ".github/workflows/awj032-airllm-g1-source-contract.yml",
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
+    ".github/workflows/awj032-o17-runtime-delegated-training-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -308,6 +309,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_o1/PROOF_RECEIPT_O1.json",
     "artifacts/arena/awj032_airllm_training_o1/README.md",
     "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
+    "artifacts/arena/awj032_o17_runtime_delegated_training/PROOF_RECEIPT_O17.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1827,16 +1829,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1687,
-  "bytes": 26569922,
-  "tokens_est": 6632882,
+  "files": 1689,
+  "bytes": 26574280,
+  "tokens_est": 6633973,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 249,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1022,
-    "schema_or_lexicon": 282,
+    "schema_or_lexicon": 284,
     "support_file": 49
   }
 }
