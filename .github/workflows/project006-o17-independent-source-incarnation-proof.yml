@@ -1,0 +1,56 @@
+name: O17 Independent Source Incarnation Proof
+on:
+  push:
+    branches:
+      - project006/o17-independent-source-incarnation
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Three fresh venv proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .o17_proof && mkdir .o17_proof
+          for e in 1 2 3; do
+            python -m venv ".o17_proof/venv${e}"
+            py=".o17_proof/venv${e}/bin/python"
+            "$py" -m unittest tests.test_transport_source_identity_bridge_hosted -v > ".o17_proof/test${e}.out" 2>&1
+            "$py" tools/project006/campaign_transport_source_identity_bridge.py > ".o17_proof/campaign${e}.json"
+            "$py" tools/project006/o17_lattice8.py > ".o17_proof/omega8_${e}.json"
+            "$py" tools/project006/o17_sweep13d.py > ".o17_proof/sweep13d_${e}.json"
+            "$py" tools/project006/o17_hs1000.py > ".o17_proof/hs1000_${e}.json"
+          done
+          for stem in campaign omega8_ sweep13d_ hs1000_; do
+            if [ "$stem" = campaign ]; then
+              cmp .o17_proof/campaign1.json .o17_proof/campaign2.json
+              cmp .o17_proof/campaign1.json .o17_proof/campaign3.json
+            else
+              cmp ".o17_proof/${stem}1.json" ".o17_proof/${stem}2.json"
+              cmp ".o17_proof/${stem}1.json" ".o17_proof/${stem}3.json"
+            fi
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('.o17_proof')
+          c=json.loads((r/'campaign1.json').read_text())
+          o=json.loads((r/'omega8_1.json').read_text())
+          s=json.loads((r/'sweep13d_1.json').read_text())
+          h=json.loads((r/'hs1000_1.json').read_text())
+          assert c['false_bind']==0 and c['false_hold']==0 and c['effect_ready']==0
+          assert c['naive_shared_digest_unsafe']==18000 and c['naive_shape_trust_unsafe']==19000 and c['cases']==24000
+          assert o['states']==6561 and o['bind']==1 and o['invalid_bind']==0
+          assert s['cartesian_states']==1594323 and s['lawful_contextual_bind']==243 and s['hard_invalid_context_repair']==0
+          assert h['raw']==1000 and h['quotients']==100 and h['top27_count']==27
+          print('O17_EXACT_HEAD_PROOF=PASS')
+          PY
