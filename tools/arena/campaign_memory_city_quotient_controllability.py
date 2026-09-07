@@ -3,9 +3,13 @@ import itertools, json, random, sys
 from types import SimpleNamespace
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]; sys.path.insert(0,str(ROOT/'tools'/'arena'))
+from k27_dynamic_navigator import digest
+from memory_city_ecf_adapter import ECFCurrentCut, ECFLeafAdmissionWitness, ECFAdmissionIndex
 from memory_city_quotient_controllability import *
 
-def oracle_components(nodes, edges):
+REG=digest({'registry':'campaign'}); CUT=digest({'cut':'campaign'}); AUTH=digest({'auth':'campaign'}); GRANT=digest({'grant':'campaign'})
+
+def oracle_components(nodes,edges):
     adj={n:set() for n in nodes}
     for e in edges:
         for a in e.members:
@@ -22,11 +26,19 @@ def oracle_components(nodes, edges):
         groups.append(tuple(sorted(comp)))
     return tuple(sorted(groups))
 
+def ecf_for(availability):
+    cut=ECFCurrentCut('JUR-MEM',1,REG,'availability-owner','boot-1',AVAILABILITY_EVIDENCE_SCOPE,CUT)
+    witnesses=[]
+    for i,a in enumerate(sorted(availability.values(),key=lambda x:x.component_id)):
+        witnesses.append(ECFLeafAdmissionWitness(f'w{i}',a.evidence_root,'JUR-MEM',1,REG,'availability-owner','boot-1',AVAILABILITY_EVIDENCE_SCOPE,CUT,AUTH,GRANT))
+    return ECFAdmissionIndex(cut,tuple(witnesses),admitted_witness_roots=tuple(w.witness_root for w in witnesses))
+
 def main():
     rng=random.Random(20260907); cases=5000
     mismatch=false_ready=conflation=cycle_holds=ready=0
     support_only_smaller=reproof_larger=uncontrollable=late=stale=0
-    support_identity_checks=support_identity_false_ready=legacy_generation_only_false_ready=0; rows=[]
+    support_identity_checks=support_identity_false_ready=legacy_generation_only_false_ready=0
+    forged_availability_checks=forged_availability_false_ready=0; rows=[]
     for case in range(cases):
         n=rng.randint(8,60); nodes=[f'N{i}' for i in range(n)]; support=[]
         for j in range(rng.randint(0,max(1,n//5))): support.append(HardSupportEdge(f'h{j}',tuple(rng.sample(nodes,rng.randint(2,min(6,n))))))
@@ -53,35 +65,39 @@ def main():
         if len(support_cut)<len(q.components): support_only_smaller+=1
         if len(rep)>len(support_cut): reproof_larger+=1
         if len(rep)>len(support_cut) and support_components_for_items(q,direct)==tuple(sorted(rep)): conflation+=1
-        req=support_components_for_items(q,direct)
-        branch_components=tuple(sorted(c.members for c in q.components if c.component_id in set(req)))
+        req=support_components_for_items(q,direct); branch_components=tuple(sorted(c.members for c in q.components if c.component_id in set(req)))
         fake_plan=SimpleNamespace(branch_id='b',required_item_ids=tuple(direct),required_components=branch_components)
         stale_root=('0'*64 if q.support_world_root!='0'*64 else '1'*64)
         fake_strategy=SimpleNamespace(disposition='READY_D0',support_generation=q.support_generation,support_root=stale_root,branch_plans=(fake_plan,))
-        clean_avail={cid:ComponentAvailability(cid,True,True,0,f'id{case}') for cid in req}
-        identity_decision=validate_contingent_strategy_branch(q,fake_strategy,branch_id='b',availability=clean_avail,decision_tick=5)
+        identity_decision=validate_contingent_strategy_branch(q,fake_strategy,branch_id='b',availability={},decision_tick=5)
         support_identity_checks+=1; legacy_generation_only_false_ready+=1
         if identity_decision.status=='READY_CONTROLLABLE_SUPPORT_D0': support_identity_false_ready+=1
         if identity_decision.status!='HOLD_SUPPORT_WORLD_IDENTITY_MISMATCH': mismatch+=1
-        avail={}
+        availability={}
         for cid in req:
             mode=rng.random()
-            if mode<0.08: avail[cid]=ComponentAvailability(cid,False,True,0,f'e{case}'); stale+=1
-            elif mode<0.18: avail[cid]=ComponentAvailability(cid,True,False,0,f'e{case}'); uncontrollable+=1
-            elif mode<0.28: avail[cid]=ComponentAvailability(cid,True,True,6,f'e{case}'); late+=1
-            else: avail[cid]=ComponentAvailability(cid,True,True,2,f'e{case}')
-        d=compile_controllability_cut(q,direct,avail,decision_tick=5)
-        if any(not a.current for a in avail.values()): expected='HOLD_STALE_REQUIRED_SUPPORT'
-        elif any(not a.obtainable for a in avail.values()): expected='HOLD_UNCONTROLLABLE_SUPPORT'
-        elif any(a.available_by_tick>5 for a in avail.values()): expected='HOLD_LATE_REQUIRED_SUPPORT'
+            if mode<0.08: a=make_component_availability(q,cid,current=False,obtainable=True,available_by_tick=0); stale+=1
+            elif mode<0.18: a=make_component_availability(q,cid,current=True,obtainable=False,available_by_tick=0); uncontrollable+=1
+            elif mode<0.28: a=make_component_availability(q,cid,current=True,obtainable=True,available_by_tick=6); late+=1
+            else: a=make_component_availability(q,cid,current=True,obtainable=True,available_by_tick=2)
+            availability[cid]=a
+        index=ecf_for(availability); d=compile_controllability_cut(q,direct,availability,decision_tick=5,ecf_index=index)
+        if any(not a.current for a in availability.values()): expected='HOLD_STALE_REQUIRED_SUPPORT'
+        elif any(not a.obtainable for a in availability.values()): expected='HOLD_UNCONTROLLABLE_SUPPORT'
+        elif any(a.available_by_tick>5 for a in availability.values()): expected='HOLD_LATE_REQUIRED_SUPPORT'
         else: expected='READY_CONTROLLABLE_SUPPORT_D0'
         if d.status!=expected: mismatch+=1
         if d.status=='READY_CONTROLLABLE_SUPPORT_D0': ready+=1
-        if d.status=='READY_CONTROLLABLE_SUPPORT_D0' and any((not a.current or not a.obtainable or a.available_by_tick>5) for a in avail.values()): false_ready+=1
+        if d.status=='READY_CONTROLLABLE_SUPPORT_D0' and any((not a.current or not a.obtainable or a.available_by_tick>5) for a in availability.values()): false_ready+=1
+        target=next(iter(availability.values()))
+        forged=ComponentAvailability(target.component_id,not target.current,target.obtainable,target.available_by_tick,target.evidence_root)
+        forged_availability_checks+=1
+        forged_map=dict(availability); forged_map[target.component_id]=forged
+        if compile_controllability_cut(q,direct,forged_map,decision_tick=5,ecf_index=index).status=='READY_CONTROLLABLE_SUPPORT_D0': forged_availability_false_ready+=1
         rows.append((case,d.status,len(groups),len(q.dependencies),len(support_cut),len(rep)))
     false13=states13=0
     for axes in itertools.product(range(3),repeat=13):
         states13+=1; got=hard13d_quotient(axes); hard=axes[:8]; want='HOLD_HARD_INVALID' if 0 in hard else ('HOLD_UNRESOLVED' if 1 in hard else 'READY_D0'); false13+=got!=want
-    receipt={'schema':'aura.memory_city.quotient_controllability.campaign.v2','cases':cases,'oracle_mismatches':mismatch,'false_ready':false_ready,'semantic_conflation':conflation,'cycle_holds':cycle_holds,'ready':ready,'support_cut_not_global_cases':support_only_smaller,'reproof_larger_than_support_cases':reproof_larger,'uncontrollable_samples':uncontrollable,'late_samples':late,'stale_samples':stale,'support_identity_checks':support_identity_checks,'legacy_generation_only_false_ready':legacy_generation_only_false_ready,'support_identity_false_ready':support_identity_false_ready,'13d_states':states13,'13d_mismatches':false13,'8_crystalline_lenses':['identity','support','dependency-direction','currentness','obtainability','deadline','reproof','authority'],'authority_minted':False,'gate10':False}
+    receipt={'schema':'aura.memory_city.quotient_controllability.campaign.v3','cases':cases,'oracle_mismatches':mismatch,'false_ready':false_ready,'semantic_conflation':conflation,'cycle_holds':cycle_holds,'ready':ready,'support_cut_not_global_cases':support_only_smaller,'reproof_larger_than_support_cases':reproof_larger,'uncontrollable_samples':uncontrollable,'late_samples':late,'stale_samples':stale,'support_identity_checks':support_identity_checks,'legacy_generation_only_false_ready':legacy_generation_only_false_ready,'support_identity_false_ready':support_identity_false_ready,'forged_availability_checks':forged_availability_checks,'forged_availability_false_ready':forged_availability_false_ready,'13d_states':states13,'13d_mismatches':false13,'8_crystalline_lenses':['identity','support','dependency-direction','currentness','obtainability','deadline','reproof','authority'],'authority_minted':False,'gate10':False}
     receipt['campaign_root']=digest({'rows':rows,'receipt':receipt}); print(json.dumps(receipt,sort_keys=True,indent=2))
 if __name__=='__main__': main()
