@@ -1,0 +1,31 @@
+{
+  "schema": "AURA-ARENA-FROZEN-PROPOSALS-v1",
+  "objective": "O11_PROJECT006_EFFECT_ATTEMPT_RECOVERY",
+  "freeze_rule": "frozen before detailed PR896 implementation inspection",
+  "proposals": [
+    {
+      "id": "A",
+      "primitive": "graft O10 effect-attempt/recovery state directly into the Project006 terminal outbox",
+      "consequence": "one durable store owns both effect lifecycle and outbound final return",
+      "disposition": "REJECTED_OWNER_COLLAPSE"
+    },
+    {
+      "id": "B",
+      "primitive": "separate effect-attempt journal and final-return outbox with exact command/idempotency/source/intent/contract binding",
+      "consequence": "provider recovery and outbound publication remain distinct owner planes",
+      "disposition": "SELECTED"
+    },
+    {
+      "id": "C",
+      "primitive": "single append-only command lifecycle ledger from ingress through ACK/effect/result/return",
+      "consequence": "all lifecycle facts become one event stream",
+      "disposition": "HELD_AS_ARCHITECTURAL_ALTERNATIVE"
+    },
+    {
+      "id": "D",
+      "primitive": "delete provider retry logic from Project006 and require provider-specific adapters to expose retry/query/hold capability",
+      "consequence": "Project006 cannot decide uncertain external-effect recovery generically",
+      "disposition": "HELD_AS_DELETION_KILLSHOT"
+    }
+  ]
+}
