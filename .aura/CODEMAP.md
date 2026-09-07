@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1677
-- **total_bytes**: 26654992
-- **text_tokens_est**: 6654101
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1681
+- **total_bytes**: 26674204
+- **text_tokens_est**: 6658905
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1030, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1677,
+  "repo_file_count": 1681,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -297,6 +297,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1658,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_k27_spatial_nonfinite_canonicalization.py",
     "tests/test_k27_state_root_schema_snapshot.py",
     "tests/test_memory_city_anchor_locator.py",
+    "tests/test_memory_city_contingent_hydration.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_navigator.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1685,6 +1687,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_runtime.py",
     "tools/arena/memory_city_anchor_locator.py",
     "tools/arena/memory_city_contingent_hydration.py",
+    "tools/arena/memory_city_contingent_hydration_campaign.py",
+    "tools/arena/memory_city_contingent_hydration_hs1000.py",
     "tools/arena/memory_city_hydration_plan.py",
     "tools/arena/memory_city_navigator.py",
     "tools/construction_demo_assets/README.md",
@@ -1817,16 +1821,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1677,
-  "bytes": 26654992,
-  "tokens_est": 6654101,
+  "files": 1681,
+  "bytes": 26674204,
+  "tokens_est": 6658905,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1027,
-    "schema_or_lexicon": 275,
+    "python_module": 1030,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }
