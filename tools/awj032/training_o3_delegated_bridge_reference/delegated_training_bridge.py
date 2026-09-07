@@ -12,7 +12,7 @@ HEX = set('0123456789abcdef')
 PARENT_J235 = '17e4p6j8ajXLa95MxRoHiy5-DVdG3s_3-fyzT-NRPIks'
 PARENT_O17 = '1hNElhJANXg-9Q2Oq4RDzHeLfeIDx0a43XnIiqpK7ehk'
 PARENT_O17_RECEIPT = '7067a7cd0a75e075418098e0dbaf430d42803b3c7023bdbe1254e8be2dbc37d3'
-SUPPORTED = {('qwen3_5','AirLLMLoRA'),('qwen3_8','AirLLMLoRA'),('qwen4_exp','AirLLMLoRAQwen4Exp')}
+SUPPORTED = {('qwen3_5','AirLLMLoRA'),('qwen3_8_dense','AirLLMLoRA'),('qwen4_exp','AirLLMLoRAQwen4Exp')}
 PROHIBITED_DELEGATE_FIELDS = {
     'bootstrap_path','filesystem_path','credential','credentials','secret','token',
     'host_private_key','runtime_package_path','currentness_internals','k27_authority',
@@ -265,6 +265,7 @@ def minimum_reopen_cone(changed_root:str, capsules:list[DelegatedTrainingCapsule
 def omega8(state):
     if len(state)!=8 or any(v not in (0,1,2) for v in state): raise ValueError
     return 'KEEPER' if all(v==2 for v in state) else 'HOLD'
+
 def factored13d(state):
     if len(state)!=13 or any(v not in (0,1,2) for v in state): raise ValueError
     return 'KEEPER' if all(v==2 for v in state) else 'HOLD'
