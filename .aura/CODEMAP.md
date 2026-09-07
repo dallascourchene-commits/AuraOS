@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1699
-- **total_bytes**: 26750629
-- **text_tokens_est**: 6678020
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1036, 'schema_or_lexicon': 285, 'support_file': 53}
+- **file_count**: 1702
+- **total_bytes**: 26760542
+- **text_tokens_est**: 6680499
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1036, 'schema_or_lexicon': 287, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1699,
+  "repo_file_count": 1702,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -175,6 +175,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
     ".github/workflows/o5-consequence-admission-proof.yml",
+    ".github/workflows/o5-source-incarnation-stable-operation-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
     ".github/workflows/p2-1-planning-board-contracts.yml",
@@ -298,6 +299,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/o5_source_incarnation_stable_operation/ARENA_CONTRIBUTION_O5.md",
+    "artifacts/arena/o5_source_incarnation_stable_operation/PROOF_RECEIPT_O5.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -1839,16 +1842,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1699,
-  "bytes": 26750629,
-  "tokens_est": 6678020,
+  "files": 1702,
+  "bytes": 26760542,
+  "tokens_est": 6680499,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1036,
-    "schema_or_lexicon": 285,
+    "schema_or_lexicon": 287,
     "support_file": 53
   }
 }
@@ -1978,6 +1981,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "USER_GUIDE.md",
     "VSA_RENDERING_IMPLEMENTATION.md",
     "VSA_TEST_PLAN.md",
+    "artifacts/arena/o5_source_incarnation_stable_operation/ARENA_CONTRIBUTION_O5.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -2132,8 +2136,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
   ]
 }
 ```
