@@ -12,9 +12,15 @@ from dataclasses import dataclass
 from enum import Enum
 from hashlib import sha256
 import json
-from typing import Iterable
 
-from .demand_lease_handoff import DemandCellLease, canonical_lease_root
+try:
+    from .demand_lease_handoff import (
+        DemandCellLease, DemandCellState, LeaseDisposition, canonical_lease_root, compile_write,
+    )
+except ImportError:  # direct-script support for campaign sibling import
+    from demand_lease_handoff import (
+        DemandCellLease, DemandCellState, LeaseDisposition, canonical_lease_root, compile_write,
+    )
 
 SCHEMA = "AURA-MEMORY-CITY-ENVELOPE-BOUND-HORIZON-v1"
 
@@ -75,8 +81,6 @@ class PossibilityEnvelope:
         _nni(self.completeness_generation, "completeness_generation")
 
     def consequence_envelope_root(self) -> str:
-        # Exact set of consequence-relevant possible-world projections.
-        # Multiplicity and irrelevant configuration are intentionally quotiented.
         projections = sorted(set(w.relevant_projection() for w in self.worlds))
         return _hash({"schema": SCHEMA, "kind": "consequence_envelope", "projections": projections})
 
@@ -91,7 +95,6 @@ class PossibilityEnvelope:
         return _hash({"schema": SCHEMA, "kind": "uniform_consequence", "projection": projection})
 
     def full_hidden_root(self) -> str:
-        # Deliberately stricter baseline used only for falsification.
         return _hash({"schema": SCHEMA, "kind": "full_hidden", "worlds": sorted(tuple(w.__dict__.values()) for w in self.worlds)})
 
 
@@ -180,8 +183,19 @@ class HorizonDecision:
             raise ValueError("D0 horizon decision cannot mint authority")
 
 
+def _lease_gate(lease: DemandCellLease, cell: DemandCellState, now: int) -> HorizonDecision | None:
+    if type(now) is not int:
+        raise ValueError("now must be exact int")
+    lease_decision = compile_write(lease, cell, now)
+    if lease_decision.disposition is LeaseDisposition.READY_D0:
+        return None
+    disposition = HorizonDisposition.REBIND_REQUIRED if lease_decision.disposition is LeaseDisposition.REBIND_REQUIRED else HorizonDisposition.HOLD
+    return HorizonDecision(disposition, f"LEASE_NOT_CURRENT:{lease_decision.reason}")
+
+
 def issue_horizon_certificate(
     lease: DemandCellLease,
+    cell: DemandCellState,
     envelope: PossibilityEnvelope,
     completeness_receipt: EnvelopeCompletenessReceipt,
     verification: EnvelopeVerificationContext,
@@ -189,14 +203,18 @@ def issue_horizon_certificate(
     current_support_identity_root: str,
     observation_epoch: int,
     horizon: int,
+    now: int,
 ) -> tuple[HorizonDecision, HorizonCertificate | None]:
-    if not isinstance(lease, DemandCellLease) or not isinstance(envelope, PossibilityEnvelope):
-        raise ValueError("typed lease and envelope required")
+    if not isinstance(lease, DemandCellLease) or not isinstance(cell, DemandCellState) or not isinstance(envelope, PossibilityEnvelope):
+        raise ValueError("typed lease, cell and envelope required")
     if not isinstance(completeness_receipt, EnvelopeCompletenessReceipt) or not isinstance(verification, EnvelopeVerificationContext):
         raise ValueError("typed completeness evidence required")
     _root(current_support_identity_root, "current_support_identity_root")
     _nni(observation_epoch, "observation_epoch")
     _nni(horizon, "horizon")
+    lease_hold = _lease_gate(lease, cell, now)
+    if lease_hold is not None:
+        return lease_hold, None
     if not _completeness_current(envelope, completeness_receipt, verification):
         return HorizonDecision(HorizonDisposition.HOLD, "POSSIBILITY_ENVELOPE_COMPLETENESS_UNPROVED"), None
     uniform = envelope.uniform_consequence_root(current_support_identity_root)
@@ -218,6 +236,7 @@ def issue_horizon_certificate(
 def admit_horizon_certificate(
     certificate: HorizonCertificate,
     lease: DemandCellLease,
+    cell: DemandCellState,
     envelope: PossibilityEnvelope,
     completeness_receipt: EnvelopeCompletenessReceipt,
     verification: EnvelopeVerificationContext,
@@ -225,14 +244,18 @@ def admit_horizon_certificate(
     current_support_identity_root: str,
     observation_epoch: int,
     horizon: int,
+    now: int,
 ) -> HorizonDecision:
-    if not isinstance(certificate, HorizonCertificate) or not isinstance(lease, DemandCellLease) or not isinstance(envelope, PossibilityEnvelope):
-        raise ValueError("typed certificate, lease and envelope required")
+    if not isinstance(certificate, HorizonCertificate) or not isinstance(lease, DemandCellLease) or not isinstance(cell, DemandCellState) or not isinstance(envelope, PossibilityEnvelope):
+        raise ValueError("typed certificate, lease, cell and envelope required")
     if not isinstance(completeness_receipt, EnvelopeCompletenessReceipt) or not isinstance(verification, EnvelopeVerificationContext):
         raise ValueError("typed completeness evidence required")
     _root(current_support_identity_root, "current_support_identity_root")
     _nni(observation_epoch, "observation_epoch")
     _nni(horizon, "horizon")
+    lease_hold = _lease_gate(lease, cell, now)
+    if lease_hold is not None:
+        return lease_hold
     if not _completeness_current(envelope, completeness_receipt, verification):
         return HorizonDecision(HorizonDisposition.HOLD, "POSSIBILITY_ENVELOPE_COMPLETENESS_UNPROVED")
     if canonical_lease_root(lease) != certificate.lease_root:
