@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1679
-- **total_bytes**: 26664507
-- **text_tokens_est**: 6656478
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 278, 'support_file': 53}
+- **file_count**: 1683
+- **total_bytes**: 26687334
+- **text_tokens_est**: 6662183
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1023, 'schema_or_lexicon': 280, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1679,
+  "repo_file_count": 1683,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -198,6 +198,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/pr138-grounded-phase-integration.yml",
     ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
     ".github/workflows/project006-o11r2-stable-operation-proof.yml",
+    ".github/workflows/project006-o14-execution-basis-seal-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -298,9 +299,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
     "artifacts/ARENA-CONTRIBUTION__PROJECT006-O11R2__STABLE-PROVIDER-OPERATION-CROSSBIND__20260907.md",
+    "artifacts/ARENA-CONTRIBUTION__PROJECT006-O14__AUTHENTICATED-EXECUTION-BASIS-SEAL__20260907.md",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "artifacts/project006_o11r2_stable_operation_proof.json",
+    "artifacts/project006_o14_execution_basis_seal_proof.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1686,6 +1689,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/o11_effect_attempt_hs1000.py",
     "tools/project006/o11_effect_attempt_lattice8.py",
     "tools/project006/o11r2_stable_operation_reference.py",
+    "tools/project006/o14_execution_basis_seal.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
@@ -1819,16 +1823,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1679,
-  "bytes": 26664507,
-  "tokens_est": 6656478,
+  "files": 1683,
+  "bytes": 26687334,
+  "tokens_est": 6662183,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 241,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1022,
-    "schema_or_lexicon": 278,
+    "python_module": 1023,
+    "schema_or_lexicon": 280,
     "support_file": 53
   }
 }
@@ -1959,6 +1963,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "VSA_RENDERING_IMPLEMENTATION.md",
     "VSA_TEST_PLAN.md",
     "artifacts/ARENA-CONTRIBUTION__PROJECT006-O11R2__STABLE-PROVIDER-OPERATION-CROSSBIND__20260907.md",
+    "artifacts/ARENA-CONTRIBUTION__PROJECT006-O14__AUTHENTICATED-EXECUTION-BASIS-SEAL__20260907.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -2112,8 +2117,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_TOKEN_ECONOMY_STACK.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
+    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
   ]
 }
 ```
