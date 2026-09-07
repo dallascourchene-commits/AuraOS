@@ -1,0 +1,69 @@
+{
+  "schema_id": "AURA_PROJECT006_O18_PROOF_CARRYING_INTERACTION_V1",
+  "date": "2026-09-07",
+  "state": "ACHIEVED_REFERENCE_D0_NONPROMOTING",
+  "gate10": false,
+  "objective": "Make the agent-facing Aura command boundary two-phase and proof-carrying: inert agent intent first, independently authenticated owner admission second, with full Drive source identity and exact live currentness before an executable AuraCommandEnvelopeV1-candidate may be emitted.",
+  "stack_parent": "PR911 / O17 Windows liveness fallback",
+  "foreign_rebase_parents": [
+    {
+      "ref": "GitHub PR910",
+      "head": "c1d42f2205d307f46311b571e09ce44d34ff0180",
+      "keeper": "SameContentDigest != SameSourceIdentity"
+    },
+    {
+      "ref": "Drive 130YxAQkbDoHwEFxM4K_33jK6esLmVOwovXcQRk02hKA",
+      "title": "O16 PROOF-CARRYING TRAINING WORKCELL ADMISSION",
+      "keeper": "ReceiptShape != AdmissionAuthority"
+    }
+  ],
+  "new_keepers": [
+    "AgentInstruction != AuraCommandEnvelope",
+    "EnvelopeShape != AdmissionAuthority",
+    "ContentDigest != FullDriveSourceIdentity",
+    "CompiledEnvelope != ProviderPermit",
+    "BoundRevision != AtUseCurrentness",
+    "AgentDraft is inert and cannot self-set execution authority",
+    "Provider policy is owner-fixed rather than agent-selected"
+  ],
+  "implementation": {
+    "files": {
+      "tools/project006/aura_interaction_contract.py": "435786a6e9e9841410febfdeef88312509eb4912dea68a0f9f8e62467a3c18c0",
+      "tools/project006/test_aura_interaction_contract.py": "4bde4e0014aa12edd7bb27263f3564db9f20d51f5d90a52cc7a0cd8a2ac1fcfa",
+      "tools/project006/proof_aura_interaction_o18.py": "d4a494590c6eb59115d47f0609b8a326160b473f9d0a341271eaf4d1bce7f0ee"
+    },
+    "two_phase_flow": [
+      "AgentIntent + Full SourceIdentity -> inert AgentCommandDraft",
+      "OwnerAdmissionBinding + independent verifier + exact LiveCurrentness -> AuraCommandEnvelopeV1-candidate"
+    ]
+  },
+  "credited_local_proof": {
+    "fresh_venvs": 3,
+    "focused_tests_per_env": 10,
+    "focused_test_executions_total": 30,
+    "randomized_hard_axis_cases_per_env": 20000,
+    "randomized_cases_total": 60000,
+    "oracle_mismatches": 0,
+    "omega8_states": 6561,
+    "omega8_keepers": 1,
+    "omega8_invalid_accepts": 0,
+    "omega8_root": "f64a672c049b6b287fac0f151dbefec8cc9abcdc133aebd9db55dfb4a5ef25c9",
+    "factored13d_states": 1594323,
+    "factored13d_keeper_contexts": 243,
+    "hard_invalid_contextual_repairs": 0,
+    "factored13d_root": "a384b0b1fad266b405fbd0177db7abf86f3dd43307dfba488a12959036015691",
+    "hs1000_frozen_candidates": 1000,
+    "hs1000_consequence_groups": 5,
+    "hs1000_claimed_breakthroughs": 0,
+    "hs1000_freeze_root": "9b5533cfac04f77e98e1da971aa6aa80c7c8b19648a1dea35cc76acb56e7fab2",
+    "hs1000_quotient_root": "4db7a296cb3b5644a945fd63892f507fda5bef3f33aae210ad6d2adc945c3cc2",
+    "proof_output_sha256_all_envs": "4798ef1299f91c452d918751179aacb7dc2ab4fbd143abf38fc1e8229fea1186"
+  },
+  "external_research_status": {
+    "prior_pressure_preserved": ["arXiv:2609.03340 PlanFence", "arXiv:2606.04104 proof-carrying agent actions", "Reddit retry/idempotency discussions"],
+    "current_search_attempt": "WEB_SEARCH_503_SERVICE_UNAVAILABLE",
+    "google_scholar_direct": "GOOGLE_SCHOLAR_DIRECT_GAP"
+  },
+  "hosted_exact_head_proof": "PENDING_CREDIT_ZERO_UNTIL_GREEN",
+  "authority_ceiling": "D0 reference compiler only. It does not authenticate its own admission proof, mint owner authority, execute a provider, deploy the host, merge, promote canonical state, or invoke Gate10."
+}
