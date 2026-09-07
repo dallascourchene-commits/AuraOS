@@ -38,7 +38,9 @@ def route_identity_from_runtime(runtime: Any, object_id: str, *, objective_root:
 
     The bridge consumes runtime-observed local identity only. owner_incarnation,
     dependency_root and currentness_generation remain explicit caller/upstream
-    evidence and are never inferred from K27 locality.
+    evidence and are never inferred from K27 locality. The observed runtime state
+    root and revision are bound into RouteIdentity so admission cannot discard the
+    bridge receipt and silently replay a proof across a runtime incarnation change.
     """
     if not isinstance(object_id, str) or not object_id:
         raise RuntimeBridgeError("object_id required")
@@ -58,6 +60,9 @@ def route_identity_from_runtime(runtime: Any, object_id: str, *, objective_root:
         "truth_authority", "planning_authority", "effect_authority", "gate10"
     )):
         raise RuntimeBridgeError("runtime binding widened authority")
+    revision_id = getattr(binding, "revision_id", None)
+    if not isinstance(revision_id, str) or not revision_id.strip():
+        raise RuntimeBridgeError("revision_id required")
     path = tuple(binding.path)
     route = RouteIdentity(
         objective_root=objective_root,
@@ -69,12 +74,14 @@ def route_identity_from_runtime(runtime: Any, object_id: str, *, objective_root:
         owner_incarnation=owner_incarnation,
         currentness_generation=currentness_generation,
         k27=path,
+        runtime_state_root=state_root,
+        revision_id=revision_id,
     )
     receipt = RuntimeBridgeReceipt(
         object_id=object_id,
         runtime_state_root=state_root,
         registry_semantic_root=semantic,
-        revision_id=binding.revision_id,
+        revision_id=revision_id,
         lifecycle_epoch=binding.epoch,
         k27=path,
     )
