@@ -1,0 +1,50 @@
+{
+  "schema": "aura.k27.invariant_route_cut.receipt.v1",
+  "objective": "CERTIFIED_INVARIANT_ROUTE_SUPPORT_CUT",
+  "foreign_parents": [
+    {
+      "artifact_id": "1I3Tb1DZvxQSm62ir-tuDlZTrBGx3TrOvXACqzXiZ4FE",
+      "name": "Invariant-Support Coupling Compiler",
+      "campaign_root": "28620ec7ce8c1b1b8e0576d68ffdafa492e58b51a66df6e50bcb650ce27435e8"
+    },
+    {
+      "artifact_id": "1CmI6unwjDYYgJnAf2bmLtaKxwS8l_0c_tZMXZ3GFT1U",
+      "name": "Reflexive Support-Set Commit Membrane",
+      "result_root": "3f5d7c60c6ca23e640f6cb7f088f4c2c81c1a6f3a4e0190da95eec6ef4052006",
+      "campaign_root": "b355c4fe7f6999427d80e2cc4f5086c3843810ba695dc2e6777fa2120eedfcc7"
+    }
+  ],
+  "failed_first_scars": [
+    "campaign receipt encoded a Python list of SupportHyperedge objects because boolean 'and edges' returned the list; run discarded",
+    "first repaired oracle treated attempted no-op support additions as topology mutations; 29 disagreements and 5 derived classifications were discarded; oracle changed to exact pre/post support equality"
+  ],
+  "fresh_venvs": 3,
+  "tests_per_venv": 12,
+  "focused_tests_total": 36,
+  "hypergraph_cases_per_venv": 3000,
+  "hypergraph_cases_total": 9000,
+  "campaign_root": "07ff9b4a9f35e775f8c7b40c95a6c21e049d2ae5b85c44f14736f628949a4773",
+  "per_venv": {
+    "ready": 2687,
+    "holds_reflexive": 313,
+    "dense_cases": 279,
+    "oracle_mismatches": 0,
+    "false_unaffected": 0,
+    "naive_direct_false_locality_cases": 1069,
+    "mean_safe_cut_fraction_of_universe": 0.0948433196873837,
+    "13d_states": 1594323,
+    "13d_mismatches": 0
+  },
+  "keeper_laws": [
+    "HardInvariantSupportSet => CouplingHyperedge",
+    "ObservedDirectDependency != CompleteRouteSupport",
+    "IncompleteOrStaleSupportCannotProveIndependence",
+    "PostProbeSupportDisagreement => HOLD_REFLEXIVE_SUPPORT_AMBIGUITY",
+    "OnlyInvariantPostProbeSupportMayJustifyLocalReuse",
+    "DenseSupportMayCollapseToGlobalCoordination",
+    "RouteSupportCut != Authority"
+  ],
+  "authority_minted": false,
+  "effect_authority": false,
+  "gate10": false
+}
