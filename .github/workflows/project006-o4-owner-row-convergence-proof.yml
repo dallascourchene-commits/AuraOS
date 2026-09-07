@@ -7,8 +7,10 @@ on:
   pull_request:
     paths:
       - tools/project006/o4_owner_row_convergence.py
+      - tools/project006/o4_effect_attempt_journal.py
       - tools/project006/campaign_o4_owner_row_convergence.py
       - tests/test_project006_o4_owner_row_convergence.py
+      - tests/test_project006_o4_effect_attempt_journal.py
       - .github/workflows/project006-o4-owner-row-convergence-proof.yml
 
 permissions:
@@ -34,7 +36,9 @@ jobs:
           mkdir -p /tmp/o4-proof
           for n in 1 2 3; do
             python -m venv "/tmp/o4-venv-$n"
-            PYTHONPATH="$GITHUB_WORKSPACE" "/tmp/o4-venv-$n/bin/python" -m unittest tests.test_project006_o4_owner_row_convergence -v \
+            PYTHONPATH="$GITHUB_WORKSPACE" "/tmp/o4-venv-$n/bin/python" -m unittest \
+              tests.test_project006_o4_owner_row_convergence \
+              tests.test_project006_o4_effect_attempt_journal -v \
               > "/tmp/o4-proof/tests-$n.txt" 2>&1
             PYTHONPATH="$GITHUB_WORKSPACE" "/tmp/o4-venv-$n/bin/python" tools/project006/campaign_o4_owner_row_convergence.py \
               > "/tmp/o4-proof/campaign-$n.json"
