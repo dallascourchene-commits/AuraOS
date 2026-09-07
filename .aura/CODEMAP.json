@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788796783,
+  "generated_at_unix": 1788797106,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1707,
+    "repo_file_count": 1710,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -298,6 +298,7 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
       "artifacts/arena/awj032_selective_transfer_revalidation/REBASE_MANIFEST.json",
@@ -1679,6 +1680,8 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+      "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
       "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
       "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
@@ -1823,16 +1826,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1707,
-      "bytes": 26674334,
-      "tokens_est": 6658984,
+      "files": 1710,
+      "bytes": 26688089,
+      "tokens_est": 6662424,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1031,
-        "schema_or_lexicon": 290,
+        "python_module": 1033,
+        "schema_or_lexicon": 291,
         "support_file": 49
       }
     },
@@ -15923,6 +15926,14 @@
         "end_line": 162,
         "semantic_id": "aura_arena_state_packet.py#function:_hash:a45b3759164d8cd0",
         "signature_hash": "96a25c63c8c0337f"
+      },
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_hash:5ae11a6dd08e03e3",
+        "signature_hash": "8bac4ad6ab14c1a3"
       },
       {
         "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
@@ -134425,6 +134436,14 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
         "signature_hash": "b6d2f925be861055"
+      },
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:observation:438ac84f31304b5d",
+        "signature_hash": "5ab20f066e769058"
       }
     ],
     "expected_project_refs": [
@@ -158755,6 +158774,206 @@
         "signature_hash": "8da6b94eb23fc2af"
       }
     ],
+    "PortDecision": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
+        "signature_hash": "b355002f61262647"
+      }
+    ],
+    "StaticObservation": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:StaticObservation:36774d7655d36a13",
+        "signature_hash": "c10b985e06f4a4f4"
+      }
+    ],
+    "TrainingSkeleton": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:TrainingSkeleton:b6943438928f8352",
+        "signature_hash": "c0e1fdf246245b58"
+      }
+    ],
+    "PortReceipt": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortReceipt:55dab8a84c9ebe99",
+        "signature_hash": "e8bfa74defc8e48b"
+      }
+    ],
+    "selected_expert_slice_plan": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:selected_expert_slice_plan:80240f5365a356dc",
+        "signature_hash": "651741f651bf49fe"
+      }
+    ],
+    "_skeleton_ok": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_skeleton_ok:c5cd4f91265c4f20",
+        "signature_hash": "d9105cf42230de5f"
+      }
+    ],
+    "assess_port": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 189,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:assess_port:9bc4bebdbec49ace",
+        "signature_hash": "ff85ff1035995c67"
+      }
+    ],
+    "skeleton": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:skeleton:d656bcd8ff1aa4c5",
+        "signature_hash": "47a2313843e94941"
+      }
+    ],
+    "GLM53TrainingPortTests": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#class:GLM53TrainingPortTests:0b606b7889e7e9d3",
+        "signature_hash": "1f259e8045fee9f7"
+      }
+    ],
+    "GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit:0576419409f5ea49",
+        "signature_hash": "4882c219b533f57a"
+      }
+    ],
+    "GLM53TrainingPortTests.test_remote_code_fails_closed": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_remote_code_fails_closed:843c472c221b73d8",
+        "signature_hash": "7169d0feb3de70ca"
+      }
+    ],
+    "GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory:78e987d148d4f64e",
+        "signature_hash": "9dba398d960b1221"
+      }
+    ],
+    "GLM53TrainingPortTests.test_native_router_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_native_router_contract_is_mandatory:72f147d42596d190",
+        "signature_hash": "6a4804dd53f35693"
+      }
+    ],
+    "GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory:72367f076c564818",
+        "signature_hash": "3d3584a05304b438"
+      }
+    ],
+    "GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory:1efd65260f3d8e87",
+        "signature_hash": "eeef57f3177fe8a7"
+      }
+    ],
+    "GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only:474805e6ffe96232",
+        "signature_hash": "4624daf5c1ba163d"
+      }
+    ],
+    "GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts:26cc488f4b87f673",
+        "signature_hash": "77d503846f2924ac"
+      }
+    ],
+    "GLM53TrainingPortTests.test_eight_corner_crystalline_lattice": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_eight_corner_crystalline_lattice:bd7a78b8e843e82c",
+        "signature_hash": "a59b5b4a045b718b"
+      }
+    ],
+    "GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts:d0cdf5346aa04c6c",
+        "signature_hash": "9f0973d144d8f598"
+      }
+    ],
+    "GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived": [
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived:9ba5a631689d2915",
+        "signature_hash": "d405def07ce15937"
+      }
+    ],
     "ModelFamily": [
       {
         "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -182329,6 +182548,53 @@
         0.059949,
         0.003827,
         -0.264032
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1843,
+      "lines": 32,
+      "tokens_est": 461,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "24f528ee985352c5",
+      "vector": [
+        0.218976,
+        0.103983,
+        0.04037,
+        0.184723,
+        -0.030583,
+        0.299716,
+        -0.248336,
+        -0.089303,
+        0.12845,
+        0.030583,
+        -0.030583,
+        -0.045263,
+        0.240996,
+        0.236103,
+        0.218976,
+        0.263016,
+        -0.23855,
+        0.292376,
+        -0.101537,
+        -0.277696,
+        0.258123,
+        -0.10643,
+        0.126003,
+        -0.06239,
+        -0.15781,
+        -0.23121,
+        0.015903,
+        0.028137,
+        0.04771,
+        -0.184723,
+        0.074623,
+        -0.211636
       ]
     },
     {
@@ -270113,6 +270379,100 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6714,
+      "lines": 190,
+      "tokens_est": 1679,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8e57376da7e1446",
+      "vector": [
+        -0.027269,
+        0.24282,
+        -0.102582,
+        -0.071418,
+        -0.149328,
+        -0.29476,
+        0.31294,
+        0.00909,
+        0.149328,
+        -0.325925,
+        -0.00909,
+        0.105179,
+        -0.053239,
+        0.048045,
+        -0.016881,
+        0.31294,
+        0.032463,
+        -0.31294,
+        -0.014284,
+        0.133746,
+        -0.255805,
+        0.144134,
+        -0.011687,
+        0.084403,
+        0.087,
+        0.092194,
+        0.263596,
+        -0.068821,
+        -0.053239,
+        -0.289566,
+        -0.29476,
+        -0.006493
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5198,
+      "lines": 122,
+      "tokens_est": 1300,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cdef5d752d7c914a",
+      "vector": [
+        -0.207386,
+        -0.291299,
+        -0.11628,
+        0.281709,
+        0.032367,
+        0.243349,
+        0.255336,
+        0.226566,
+        0.291299,
+        0.041957,
+        -0.111485,
+        -0.147448,
+        -0.149845,
+        -0.080317,
+        -0.272119,
+        -0.089907,
+        0.027572,
+        0.149845,
+        -0.13546,
+        0.046752,
+        0.171423,
+        -0.245746,
+        0.123472,
+        -0.025174,
+        -0.046752,
+        0.039559,
+        -0.262529,
+        -0.264926,
+        0.020379,
+        -0.15464,
+        0.231361,
+        -0.022776
+      ]
+    },
+    {
       "path": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
       "role": "python_module",
       "binary": false,
@@ -295063,16 +295423,16 @@
     }
   },
   "summary": {
-    "file_count": 1707,
-    "total_bytes": 26674334,
-    "text_tokens_est": 6658984,
+    "file_count": 1710,
+    "total_bytes": 26688089,
+    "text_tokens_est": 6662424,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1031,
-      "schema_or_lexicon": 290,
+      "python_module": 1033,
+      "schema_or_lexicon": 291,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -295380,6 +295740,7 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
       "artifacts/arena/awj032_selective_transfer_revalidation/REBASE_MANIFEST.json",
@@ -296761,6 +297122,8 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+      "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
       "tools/awj032/model_capability_membrane_reference/test_capability_membrane.py",
       "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
@@ -455559,6 +455922,226 @@
         "file_digest8": "ea7fae03964050af"
       },
       {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
+        "name": "PortDecision",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 10,
+        "end_line": 17,
+        "signature_hash": "b355002f61262647",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortReceipt:55dab8a84c9ebe99",
+        "name": "PortReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 52,
+        "end_line": 60,
+        "signature_hash": "e8bfa74defc8e48b",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:StaticObservation:36774d7655d36a13",
+        "name": "StaticObservation",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 21,
+        "end_line": 37,
+        "signature_hash": "c10b985e06f4a4f4",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:TrainingSkeleton:b6943438928f8352",
+        "name": "TrainingSkeleton",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 41,
+        "end_line": 48,
+        "signature_hash": "c0e1fdf246245b58",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_hash:5ae11a6dd08e03e3",
+        "name": "_hash",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "8bac4ad6ab14c1a3",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:_skeleton_ok:c5cd4f91265c4f20",
+        "name": "_skeleton_ok",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 103,
+        "end_line": 112,
+        "signature_hash": "d9105cf42230de5f",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:assess_port:9bc4bebdbec49ace",
+        "name": "assess_port",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 115,
+        "end_line": 189,
+        "signature_hash": "ff85ff1035995c67",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#function:selected_expert_slice_plan:80240f5365a356dc",
+        "name": "selected_expert_slice_plan",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "line": 85,
+        "end_line": 100,
+        "signature_hash": "651741f651bf49fe",
+        "file_digest8": "c8e57376da7e1446"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#class:GLM53TrainingPortTests:0b606b7889e7e9d3",
+        "name": "GLM53TrainingPortTests",
+        "kind": "class",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 46,
+        "end_line": 117,
+        "signature_hash": "1f259e8045fee9f7",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:observation:438ac84f31304b5d",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 19,
+        "end_line": 38,
+        "signature_hash": "5ab20f066e769058",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#function:skeleton:d656bcd8ff1aa4c5",
+        "name": "skeleton",
+        "kind": "function",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "47a2313843e94941",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory:1efd65260f3d8e87",
+        "name": "GLM53TrainingPortTests.test_backward_recompute_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 67,
+        "end_line": 70,
+        "signature_hash": "eeef57f3177fe8a7",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_eight_corner_crystalline_lattice:bd7a78b8e843e82c",
+        "name": "GLM53TrainingPortTests.test_eight_corner_crystalline_lattice",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 84,
+        "end_line": 93,
+        "signature_hash": "a59b5b4a045b718b",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit:0576419409f5ea49",
+        "name": "GLM53TrainingPortTests.test_exact_static_contract_closes_to_empirical_hold_not_training_admit",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 47,
+        "end_line": 51,
+        "signature_hash": "4882c219b533f57a",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory:72367f076c564818",
+        "name": "GLM53TrainingPortTests.test_fp8_scale_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "3d3584a05304b438",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory:78e987d148d4f64e",
+        "name": "GLM53TrainingPortTests.test_grouped_expert_bank_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "9dba398d960b1221",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts:d0cdf5346aa04c6c",
+        "name": "GLM53TrainingPortTests.test_hyperscale_1000_routes_preserve_native_selected_set_and_address_all_experts",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 95,
+        "end_line": 110,
+        "signature_hash": "9f0973d144d8f598",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_native_router_contract_is_mandatory:72f147d42596d190",
+        "name": "GLM53TrainingPortTests.test_native_router_contract_is_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "6a4804dd53f35693",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_remote_code_fails_closed:843c472c221b73d8",
+        "name": "GLM53TrainingPortTests.test_remote_code_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "7169d0feb3de70ca",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only:474805e6ffe96232",
+        "name": "GLM53TrainingPortTests.test_slice_plan_is_unique_selected_first_axis_only",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 72,
+        "end_line": 78,
+        "signature_hash": "4624daf5c1ba163d",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts:26cc488f4b87f673",
+        "name": "GLM53TrainingPortTests.test_slice_plan_rejects_out_of_range_experts",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "77d503846f2924ac",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py#method:GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived:9ba5a631689d2915",
+        "name": "GLM53TrainingPortTests.test_y13_witness_is_stable_and_derived",
+        "kind": "method",
+        "file": "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
+        "line": 112,
+        "end_line": 117,
+        "signature_hash": "d405def07ce15937",
+        "file_digest8": "cdef5d752d7c914a"
+      },
+      {
         "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:AdapterIdentity:0ebd397490a13c9d",
         "name": "AdapterIdentity",
         "kind": "class",
@@ -460529,7 +461112,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "25fa66200358b72cd2104110c4bea9b8",
-    "payload_hash": "53805bdfc13b39b7354c439322213721"
+    "record_fingerprint": "081327d247cb0168aff54d37a189a9d8",
+    "payload_hash": "dab8e65086ed29b9e73e394236bc9fb1"
   }
 }
