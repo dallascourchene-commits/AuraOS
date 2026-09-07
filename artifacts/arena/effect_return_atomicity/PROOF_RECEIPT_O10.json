@@ -1,0 +1,76 @@
+{
+  "authority_ceiling": {
+    "claims": "Reference recovery-state compiler only; no provider exactly-once guarantee, no Windows broker installation, no WSL wake proof, no DeepSeek execution.",
+    "effect_authority": false,
+    "gate10": false,
+    "merge_authority": false,
+    "mutation_authority": false,
+    "provider_execution": false
+  },
+  "failed_first_scars": [
+    "Initial 24k campaign coupled ambiguous-completion phase to idempotent provider mode, so the non-idempotent blind-resend baseline was not exercised; entire campaign received zero proof credit and the generator was repaired before all credited venvs were recreated.",
+    "First repository-shaped replay invoked unittest in module mode with a filesystem path, so the test module never loaded; zero proof credit. All three environments were deleted/recreated and the exact publishable script was then executed from repository root."
+  ],
+  "hyperscale": {
+    "d13_hard_invalid_repaired": 0,
+    "d13_hard_valid_context_variants": 243,
+    "d13_root": "8cfa92bc7c907e85e7b4c8a4545bc06c0540c7a13537d8b7e5ba5d878e84924f",
+    "d13_states": 1594323,
+    "d13_unresolved_repaired": 0,
+    "hs1000_cells": 1000,
+    "hs1000_consequence_groups": 5,
+    "hs1000_freeze_root": "211106425b6dee93db1050910cbb8f4f6ac832ecd0f78edfc3ec1659383b62aa",
+    "hs1000_quotient_root": "e66c60d3113ad72756a73952dcd8c4ac0ea42e7ae7e853d35abf8641004c71ff",
+    "hyperscale_root": "bf47f50adc5d2c56ab1afb8b471cc477b0f39c9e7a2d9a35f24b227819cc9ad9",
+    "omega8_keeper": 1,
+    "omega8_root": "d5101a3b62f985ce55956e28ff8bdd58fb351dc9b14e72d2af88f66bce063b8a",
+    "omega8_states": 6561
+  },
+  "keeper_laws": [
+    "ACKWriteFailure => NoProviderEffect",
+    "ResultObserved + ReturnWriteFailure => RetryReturnWriterOnly",
+    "CompletionAmbiguous + IdempotentSameKeySamePayload => ExactRetryPermitted",
+    "CompletionAmbiguous + QueryableProviderOperation => QueryBeforeResend",
+    "CompletionAmbiguous + NonIdempotentNonQueryable => HOLD",
+    "SameIdempotencyKey + DifferentPayload => HOLD_IDEMPOTENCY_CONFLICT",
+    "EffectRecoveryCapability != AuraAuthority",
+    "K27Coordinate != Truth != Currentness != Authority"
+  ],
+  "local_proof": {
+    "campaign_cases_per_env": 24000,
+    "campaign_output_sha256": "463a8c2c42dd2adf46bf1d671b55894167e2147b2dc17e80b7f28a3024d85d17",
+    "campaign_root": "b126ec835bb0abc32df2c8259f0a5ee3605cdcaa8f42e782ad1f34a3144b5c7b",
+    "candidate_oracle_mismatches": 0,
+    "combined_output_sha256": "c37f21f83f1984a77a2d0d6db21091ca4c1354ac59792fdaed237ab893110a18",
+    "false_holds": 0,
+    "false_provider_executions": 0,
+    "focused_tests_per_env": 15,
+    "focused_tests_total": 45,
+    "fresh_venvs": 3,
+    "hyperscale_output_sha256": "d5af5c5fb077e8e2ea3c85cadee19321eb1a820dc8fe6713744833813641c631",
+    "naive_nonretryable_blind_resends_per_env": 666,
+    "test_output_sha256": "f70c5e12f81e6ca2a27c5a58d268b60f9b9764c638cc0c6fbef9bce3d25bd541"
+  },
+  "objective": "Effect-Return Atomicity Capsule",
+  "parents": [
+    {
+      "kind": "AuraOS strict effect handoff convergence",
+      "note": "current O14 TECC-input seam; currentness/effect-refinement/lease-fence remain upstream",
+      "pr": 891
+    },
+    {
+      "drive_id": "1FnBPVcjtp5X_yx9PPpCp1bpZCQ7d9yfFvygUUO27I1k",
+      "kind": "Project006 owner-host handoff",
+      "note": "event wake, ACK-before-effect, durable terminal return, no blind resend after ambiguous completion"
+    }
+  ],
+  "receipt_root": "8953be5caa846f966a337d17d051f0946f6b922dfbb3ec4c824ddbac17bccf5e",
+  "schema": "AURA-ERAC-PROOF-RECEIPT-O10-v1",
+  "source_sha256": {
+    "campaign_erac.py": "c05d09ed7e41c19e005619c16b71c09b5ce329f034af9e6f5b56cbf010b0bff2",
+    "effect_return_atomicity.py": "55a048b3627a181c90701f8e4f002b4a3c64742a1798565ce5b4fa31e88ac4d4",
+    "hyperscale_erac.py": "cb883d50b9851ed623cd450c90a09e0255d31618d37d9e93113323d619e111e3",
+    "test_effect_return_atomicity.py": "40d98a220021b695e5d60831a33abb7423c55a70961f6dec94e9cc046d85b798"
+  },
+  "state": "D0_NONPROMOTING_LOCAL_THREE_VENV_ACHIEVED"
+}
