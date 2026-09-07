@@ -13,7 +13,7 @@ class SupportFixedPoint:
 @dataclass(frozen=True)
 class AdaptiveHydrationStrategy:
     status:str; strategy:str; certified_support_cut:tuple[str,...]; selected_bytes:int; universe_bytes:int; expected_uses:int; modeled_total_bytes:int; strategy_root:str; authority_minted:bool=False; gate10:bool=False
-def compile_adaptive_hydration_strategy(hydration:SupportClosedHydration,fixed:SupportFixedPoint,*,expected_uses:int,shared_global_available:bool,read_certificate=None,read_coverage=None,current_program_root=None,current_sealed_domain_root=None,current_coverage_generation=None)->AdaptiveHydrationStrategy:
+def compile_adaptive_hydration_strategy(hydration:SupportClosedHydration,fixed:SupportFixedPoint,*,expected_uses:int,shared_global_available:bool,read_certificate=None,read_coverage=None,read_typed_closure=None,current_program_root=None,current_sealed_domain_root=None,current_coverage_generation=None)->AdaptiveHydrationStrategy:
     fixed.validate()
     if type(expected_uses) is not int or expected_uses<1:raise ValueError('expected_uses must be positive')
     if type(shared_global_available) is not bool:raise ValueError('shared_global_available must be bool')
@@ -24,7 +24,8 @@ def compile_adaptive_hydration_strategy(hydration:SupportClosedHydration,fixed:S
     certificate_root=''
     if fixed.support_root!=hydration.support_root:
         if read_certificate is None or read_coverage is None:return _out('HOLD_SUPPORT_IDENTITY_MISMATCH','NONE',hydration,expected_uses,0,fixed.support_root)
-        decision=validate_read_consequence_at_use(read_certificate,hydration=hydration,fixed_support_root=fixed.support_root,coverage=read_coverage,current_program_root=current_program_root,current_sealed_domain_root=current_sealed_domain_root,current_coverage_generation=current_coverage_generation,mutation_requested=False)
+        if read_typed_closure is None:return _out('HOLD_READ_TYPED_CLOSURE_REQUIRED','NONE',hydration,expected_uses,0,fixed.support_root,read_certificate.receipt_root)
+        decision=validate_read_consequence_at_use(read_certificate,hydration=hydration,typed_closure=read_typed_closure,fixed_support_root=fixed.support_root,coverage=read_coverage,current_program_root=current_program_root,current_sealed_domain_root=current_sealed_domain_root,current_coverage_generation=current_coverage_generation,mutation_requested=False)
         if decision.status!='READY_D0':return _out('HOLD_READ_CONSEQUENCE_CERTIFICATE','NONE',hydration,expected_uses,0,fixed.support_root,decision.certificate_root)
         certificate_root=decision.certificate_root
     local_cost=hydration.selected_bytes*expected_uses; global_cost=hydration.universe_bytes
