@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1700
-- **total_bytes**: 26641495
-- **text_tokens_est**: 6650777
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 287, 'support_file': 49}
+- **file_count**: 1704
+- **total_bytes**: 26663609
+- **text_tokens_est**: 6656307
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1030, 'schema_or_lexicon': 288, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1700,
+  "repo_file_count": 1704,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -167,6 +167,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-airllm-g1-source-contract.yml",
     ".github/workflows/awj032-airllm-tiny-runtime.yml",
     ".github/workflows/awj032-core-source-topology-binding-proof.yml",
+    ".github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1678,6 +1679,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_work_splitter.py",
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
+    "tests/test_awj032_effect_time_adapter_realization.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1704,6 +1706,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/training_o1_reference/__init__.py",
     "tools/awj032/training_o1_reference/test_training_admission.py",
     "tools/awj032/training_o1_reference/training_admission.py",
+    "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+    "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
     "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
     "tools/awj032/training_o2_transition_reference/transition_envelope.py",
     "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
@@ -1840,16 +1844,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1700,
-  "bytes": 26641495,
-  "tokens_est": 6650777,
+  "files": 1704,
+  "bytes": 26663609,
+  "tokens_est": 6656307,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1027,
-    "schema_or_lexicon": 287,
+    "python_module": 1030,
+    "schema_or_lexicon": 288,
     "support_file": 49
   }
 }

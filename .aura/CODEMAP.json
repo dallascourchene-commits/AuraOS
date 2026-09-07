@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788794293,
+  "generated_at_unix": 1788796608,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1700,
+    "repo_file_count": 1704,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,7 @@
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/awj032-core-source-topology-binding-proof.yml",
+      ".github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1660,6 +1661,7 @@
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
+      "tests/test_awj032_effect_time_adapter_realization.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -1686,6 +1688,8 @@
       "tools/awj032/training_o1_reference/__init__.py",
       "tools/awj032/training_o1_reference/test_training_admission.py",
       "tools/awj032/training_o1_reference/training_admission.py",
+      "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+      "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
       "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
       "tools/awj032/training_o2_transition_reference/transition_envelope.py",
       "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
@@ -1816,16 +1820,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1700,
-      "bytes": 26641495,
-      "tokens_est": 6650777,
+      "files": 1704,
+      "bytes": 26663609,
+      "tokens_est": 6656307,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 287,
+        "python_module": 1030,
+        "schema_or_lexicon": 288,
         "support_file": 49
       }
     },
@@ -3543,6 +3547,14 @@
         "line": 221,
         "end_line": 255,
         "semantic_id": "tools/awj032/airllm_tiny_fixture_probe.py#function:main:cf9f070d0bfcf82c",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:main:aafd0bc1415b4b98",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -100156,6 +100168,14 @@
         "end_line": 618,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_root:953ced6073ce4465",
         "signature_hash": "359c484fcebcc325"
+      },
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_root:2c4bda1c46b88c74",
+        "signature_hash": "2e65e72bab661379"
       }
     ],
     "_iter_nul_records": [
@@ -157788,6 +157808,166 @@
         "signature_hash": "55c463356493030d"
       }
     ],
+    "EffectTimeAdapterRealizationTest": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 72,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#class:EffectTimeAdapterRealizationTest:6e3f993291f6941f",
+        "signature_hash": "5dddae3aef66f89f"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.setUp": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 32,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.setUp:f8fdb0c57dc23e24",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.resolve": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 33,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.resolve:26b1a88ccf9b7014",
+        "signature_hash": "ec77d73517f98363"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.verify": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.verify:0c059843106c7c4e",
+        "signature_hash": "2ffa26748636be25"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_valid_composes_real_transition_and_effect_time_currentness": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_valid_composes_real_transition_and_effect_time_currentness:4539bda69382216c",
+        "signature_hash": "601ec5ea59f0f4cc"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_transition_hold_propagates": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_transition_hold_propagates:52953b0685a92e3a",
+        "signature_hash": "0664668278bf769c"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_cache_identity_must_match_stable_realization": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_cache_identity_must_match_stable_realization:c725d9495f6a0bfa",
+        "signature_hash": "65424ad8d9eb3176"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_loaded_adapter_unit_must_equal_cache_truth": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 50,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_loaded_adapter_unit_must_equal_cache_truth:2b65b75919d5ee22",
+        "signature_hash": "a1835cbd0f55ef3f"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_process_or_load_move_requires_rebind": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_process_or_load_move_requires_rebind:5c0d4ff61859d668",
+        "signature_hash": "a54d956b7efeb0ea"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_expired_process_projection_holds": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_expired_process_projection_holds:4932e13677e3be4a",
+        "signature_hash": "8fafa0625737837d"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_unverified_process_holds": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_unverified_process_holds:f88c498ff8da35b8",
+        "signature_hash": "426ea98e3467308c"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_projection_cannot_promote_authority": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_projection_cannot_promote_authority:f9b7f3f66386e536",
+        "signature_hash": "c39f527670e4318a"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_process_worker_rotation_preserves_immutable_cache_but_rotates_effect_witness": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 64,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_process_worker_rotation_preserves_immutable_cache_but_rotates_effect_witness:10f21fab0ded1f38",
+        "signature_hash": "befd761aae23ae96"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_semantic_core_change_rotates_cache_identity": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_semantic_core_change_rotates_cache_identity:0f66962bfd8f4243",
+        "signature_hash": "320d7a40e70f9390"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_k27_is_absent_from_cache_and_effect_identity": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 69,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_k27_is_absent_from_cache_and_effect_identity:cae026b53feec55f",
+        "signature_hash": "afbf63c3d9844a48"
+      }
+    ],
+    "EffectTimeAdapterRealizationTest.test_runtime_binding_is_stable_semantic_input": [
+      {
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_runtime_binding_is_stable_semantic_input:6c7c67a64b54f4a0",
+        "signature_hash": "097d4788b8509b5e"
+      }
+    ],
     "_git_blob_sha": [
       {
         "file": "tests/test_bilateral_intent_pr1_evidence.py",
@@ -159966,6 +160146,14 @@
         "signature_hash": "e9abe50ab6671f5c"
       },
       {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:jhash:1df3b75cbc8f2a7d",
+        "signature_hash": "e9abe50ab6671f5c"
+      },
+      {
         "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
         "kind": "function",
         "line": 17,
@@ -160328,6 +160516,14 @@
         "signature_hash": "bcd40329825ec898"
       },
       {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:omega8:c52e89cb99df359e",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
         "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
         "kind": "function",
         "line": 215,
@@ -160350,6 +160546,230 @@
         "end_line": 139,
         "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#function:omega8:2c371f14cf4e0351",
         "signature_hash": "b9a7dd18e91d0be6"
+      }
+    ],
+    "_canon": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_canon:99e5253319e8f853",
+        "signature_hash": "3973a7eaf2bd7224"
+      }
+    ],
+    "_isroot": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_isroot:06180e55a9bc6c95",
+        "signature_hash": "7e7342ccb64cfbe0"
+      }
+    ],
+    "_needroot": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_needroot:b7a3e3c6d1fb1285",
+        "signature_hash": "b7c9f80b01a51b7c"
+      }
+    ],
+    "_valid_int": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_valid_int:a15f00bce45eaa10",
+        "signature_hash": "7688fbae9c7517a1"
+      }
+    ],
+    "StableAdapterRealization": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:StableAdapterRealization:7ad0ce67b5a23130",
+        "signature_hash": "cfd2f92d334cd54c"
+      }
+    ],
+    "StableAdapterRealization.__post_init__": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:StableAdapterRealization.__post_init__:d98b0515bcf21f44",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "StableAdapterRealization.realization_root": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:StableAdapterRealization.realization_root:dfbd09a3fdd04a65",
+        "signature_hash": "af531af8e98cae0b"
+      }
+    ],
+    "StableAdapterRealization.cache_root": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:StableAdapterRealization.cache_root:edb26b7f4578911f",
+        "signature_hash": "d1698fe1734db7a9"
+      }
+    ],
+    "AtUseAdapterObservation": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:AtUseAdapterObservation:25f133277349f579",
+        "signature_hash": "d756e7d5063c4f32"
+      }
+    ],
+    "AtUseAdapterObservation.__post_init__": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:AtUseAdapterObservation.__post_init__:bda56d8bba92df58",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "VerifiedProcessProjection": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:VerifiedProcessProjection:a8c7beecd1de3e5d",
+        "signature_hash": "2d134ecc406f80c8"
+      }
+    ],
+    "VerifiedProcessProjection.__post_init__": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:VerifiedProcessProjection.__post_init__:de013544c85f705c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EffectTimeRealizationDecision": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:EffectTimeRealizationDecision:728768339a9bb70f",
+        "signature_hash": "18048a4eff2c9201"
+      }
+    ],
+    "admit_effect_time_realization": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:admit_effect_time_realization:438cfddce52a536c",
+        "signature_hash": "dff967ecc78a78cc"
+      }
+    ],
+    "admit_effect_time_realization.hold": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:admit_effect_time_realization.hold:53d2d2ece4ea3b35",
+        "signature_hash": "1c9ea77e6826dec3"
+      }
+    ],
+    "verify_effect_time_transition": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 151,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:verify_effect_time_transition:59207a46bd10b4a7",
+        "signature_hash": "86ca78b1b41be5a6"
+      }
+    ],
+    "model": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:model:96cba2cae128720e",
+        "signature_hash": "da2d3778f5a4ea11"
+      }
+    ],
+    "actual_campaign": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 61,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:actual_campaign:9d0c971a8945f7dc",
+        "signature_hash": "ebb7110db912e3b0"
+      }
+    ],
+    "factored13d": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 79,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:factored13d:12a4def77037df3c",
+        "signature_hash": "465a1a1f10add68b"
+      },
+      {
+        "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
+        "kind": "function",
+        "line": 216,
+        "end_line": 216,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/transition_envelope.py#function:factored13d:948cf07fe3f08c37",
+        "signature_hash": "0a3dbec2b8f9bcdc"
+      },
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
+        "kind": "function",
+        "line": 269,
+        "end_line": 271,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:factored13d:e62e14c87bbc4563",
+        "signature_hash": "164b4f1327724c8f"
+      },
+      {
+        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#function:factored13d:a3f759c13893102b",
+        "signature_hash": "0a3dbec2b8f9bcdc"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:hs1000:081ef8305fef7576",
+        "signature_hash": "cb33d0ed1005d09a"
       }
     ],
     "o1_fixture": [
@@ -160944,32 +161364,6 @@
         "end_line": 262,
         "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:minimum_reopen_cone:2b69cc6ef4960359",
         "signature_hash": "7b2b66fab11bbaf3"
-      }
-    ],
-    "factored13d": [
-      {
-        "file": "tools/awj032/training_o2_transition_reference/transition_envelope.py",
-        "kind": "function",
-        "line": 216,
-        "end_line": 216,
-        "semantic_id": "tools/awj032/training_o2_transition_reference/transition_envelope.py#function:factored13d:948cf07fe3f08c37",
-        "signature_hash": "0a3dbec2b8f9bcdc"
-      },
-      {
-        "file": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
-        "kind": "function",
-        "line": 269,
-        "end_line": 271,
-        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py#function:factored13d:e62e14c87bbc4563",
-        "signature_hash": "164b4f1327724c8f"
-      },
-      {
-        "file": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py",
-        "kind": "function",
-        "line": 140,
-        "end_line": 140,
-        "semantic_id": "tools/awj032/training_r1_resolver_reference/training_admission_resolver.py#function:factored13d:a3f759c13893102b",
-        "signature_hash": "0a3dbec2b8f9bcdc"
       }
     ],
     "TrainingOperation": [
@@ -163443,6 +163837,7 @@
     ],
     "python -m venv": [
       ".github/workflows/awj032-core-source-topology-binding-proof.yml",
+      ".github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml",
       "README.md",
       "examples/arena_navigation_domain_lens/README.md",
       "examples/mini_aura_reference_arena/README.md"
@@ -173361,6 +173756,59 @@
         -0.289841,
         0.178095,
         -0.217672
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2148,
+      "lines": 50,
+      "tokens_est": 537,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          40
+        ]
+      },
+      "topology": {},
+      "digest8": "254ae8f851fb17df",
+      "vector": [
+        0.069122,
+        0.155242,
+        -0.171106,
+        -0.264025,
+        0.073655,
+        0.223232,
+        -0.137112,
+        -0.044193,
+        0.25496,
+        -0.128046,
+        0.261759,
+        -0.166574,
+        0.223232,
+        -0.026063,
+        -0.139378,
+        0.010198,
+        0.288954,
+        -0.010198,
+        0.252694,
+        -0.259492,
+        -0.227764,
+        0.141644,
+        -0.202835,
+        -0.044193,
+        0.028329,
+        -0.223232,
+        0.191503,
+        0.264025,
+        -0.114449,
+        0.048726,
+        0.123514,
+        0.175639
       ]
     },
     {
@@ -268936,6 +269384,53 @@
       ]
     },
     {
+      "path": "tests/test_awj032_effect_time_adapter_realization.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6081,
+      "lines": 75,
+      "tokens_est": 1521,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8e13dced35613f87",
+      "vector": [
+        -0.10502,
+        -0.279684,
+        -0.222199,
+        0.005527,
+        -0.248731,
+        0.03427,
+        -0.27084,
+        0.222199,
+        -0.228832,
+        0.056379,
+        0.133762,
+        0.12934,
+        0.071856,
+        0.191246,
+        -0.228832,
+        0.12934,
+        0.184613,
+        -0.023215,
+        0.202301,
+        -0.162504,
+        0.089543,
+        -0.268629,
+        -0.195668,
+        0.023215,
+        0.208934,
+        0.266418,
+        -0.20009,
+        -0.195668,
+        -0.228832,
+        -0.009949,
+        -0.08291,
+        -0.036481
+      ]
+    },
+    {
       "path": "tests/test_bilateral_intent_pr1_evidence.py",
       "role": "python_module",
       "binary": false,
@@ -270177,6 +270672,100 @@
         0.05106,
         -0.248783,
         0.205327
+      ]
+    },
+    {
+      "path": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8669,
+      "lines": 152,
+      "tokens_est": 2168,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b66d60c201e991fa",
+      "vector": [
+        -0.252261,
+        0.239324,
+        -0.231562,
+        -0.311768,
+        0.228975,
+        -0.239324,
+        0.076325,
+        -0.076325,
+        -0.29107,
+        -0.040103,
+        0.086674,
+        0.0815,
+        -0.151356,
+        -0.099611,
+        -0.197928,
+        0.091849,
+        0.073738,
+        -0.016817,
+        0.275546,
+        -0.322118,
+        -0.221213,
+        0.184991,
+        0.01423,
+        0.089261,
+        0.184991,
+        0.027167,
+        -0.10996,
+        0.174642,
+        -0.029754,
+        -0.184991,
+        -0.102198,
+        -0.161706
+      ]
+    },
+    {
+      "path": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5216,
+      "lines": 107,
+      "tokens_est": 1304,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6a2d8b41df57c490",
+      "vector": [
+        -0.103834,
+        -0.003753,
+        -0.196408,
+        -0.12385,
+        0.066303,
+        0.303995,
+        0.301493,
+        -0.021267,
+        0.301493,
+        0.093826,
+        -0.013761,
+        -0.071308,
+        0.316505,
+        0.113842,
+        0.251453,
+        0.133858,
+        -0.106336,
+        -0.12385,
+        -0.083818,
+        -0.041283,
+        -0.319007,
+        0.216425,
+        -0.153874,
+        0.003753,
+        0.231437,
+        0.08632,
+        0.181396,
+        -0.103834,
+        -0.07381,
+        0.271469,
+        -0.226433,
+        0.071308
       ]
     },
     {
@@ -294460,16 +295049,16 @@
     }
   },
   "summary": {
-    "file_count": 1700,
-    "total_bytes": 26641495,
-    "text_tokens_est": 6650777,
+    "file_count": 1704,
+    "total_bytes": 26663609,
+    "text_tokens_est": 6656307,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 287,
+      "python_module": 1030,
+      "schema_or_lexicon": 288,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294628,6 +295217,7 @@
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
       ".github/workflows/awj032-core-source-topology-binding-proof.yml",
+      ".github/workflows/awj032-o4-effect-time-adapter-realization-proof.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -296139,6 +296729,7 @@
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
+      "tests/test_awj032_effect_time_adapter_realization.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -296165,6 +296756,8 @@
       "tools/awj032/training_o1_reference/__init__.py",
       "tools/awj032/training_o1_reference/test_training_admission.py",
       "tools/awj032/training_o1_reference/training_admission.py",
+      "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+      "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
       "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
       "tools/awj032/training_o2_transition_reference/transition_envelope.py",
       "tools/awj032/training_o3_delegated_bridge_reference/delegated_training_bridge.py",
@@ -453859,6 +454452,166 @@
         "file_digest8": "c823f53498b3e858"
       },
       {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#class:EffectTimeAdapterRealizationTest:6e3f993291f6941f",
+        "name": "EffectTimeAdapterRealizationTest",
+        "kind": "class",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 13,
+        "end_line": 72,
+        "signature_hash": "5dddae3aef66f89f",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.resolve:26b1a88ccf9b7014",
+        "name": "EffectTimeAdapterRealizationTest.resolve",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 33,
+        "end_line": 33,
+        "signature_hash": "ec77d73517f98363",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.setUp:f8fdb0c57dc23e24",
+        "name": "EffectTimeAdapterRealizationTest.setUp",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 14,
+        "end_line": 32,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_cache_identity_must_match_stable_realization:c725d9495f6a0bfa",
+        "name": "EffectTimeAdapterRealizationTest.test_cache_identity_must_match_stable_realization",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "65424ad8d9eb3176",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_expired_process_projection_holds:4932e13677e3be4a",
+        "name": "EffectTimeAdapterRealizationTest.test_expired_process_projection_holds",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "8fafa0625737837d",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_k27_is_absent_from_cache_and_effect_identity:cae026b53feec55f",
+        "name": "EffectTimeAdapterRealizationTest.test_k27_is_absent_from_cache_and_effect_identity",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 68,
+        "end_line": 69,
+        "signature_hash": "afbf63c3d9844a48",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_loaded_adapter_unit_must_equal_cache_truth:2b65b75919d5ee22",
+        "name": "EffectTimeAdapterRealizationTest.test_loaded_adapter_unit_must_equal_cache_truth",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 47,
+        "end_line": 50,
+        "signature_hash": "a1835cbd0f55ef3f",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_process_or_load_move_requires_rebind:5c0d4ff61859d668",
+        "name": "EffectTimeAdapterRealizationTest.test_process_or_load_move_requires_rebind",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "a54d956b7efeb0ea",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_process_worker_rotation_preserves_immutable_cache_but_rotates_effect_witness:10f21fab0ded1f38",
+        "name": "EffectTimeAdapterRealizationTest.test_process_worker_rotation_preserves_immutable_cache_but_rotates_effect_witness",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 60,
+        "end_line": 64,
+        "signature_hash": "befd761aae23ae96",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_projection_cannot_promote_authority:f9b7f3f66386e536",
+        "name": "EffectTimeAdapterRealizationTest.test_projection_cannot_promote_authority",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "c39f527670e4318a",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_runtime_binding_is_stable_semantic_input:6c7c67a64b54f4a0",
+        "name": "EffectTimeAdapterRealizationTest.test_runtime_binding_is_stable_semantic_input",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "097d4788b8509b5e",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_semantic_core_change_rotates_cache_identity:0f66962bfd8f4243",
+        "name": "EffectTimeAdapterRealizationTest.test_semantic_core_change_rotates_cache_identity",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "320d7a40e70f9390",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_transition_hold_propagates:52953b0685a92e3a",
+        "name": "EffectTimeAdapterRealizationTest.test_transition_hold_propagates",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "0664668278bf769c",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_unverified_process_holds:f88c498ff8da35b8",
+        "name": "EffectTimeAdapterRealizationTest.test_unverified_process_holds",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "426ea98e3467308c",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.test_valid_composes_real_transition_and_effect_time_currentness:4539bda69382216c",
+        "name": "EffectTimeAdapterRealizationTest.test_valid_composes_real_transition_and_effect_time_currentness",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "601ec5ea59f0f4cc",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
+        "semantic_id": "tests/test_awj032_effect_time_adapter_realization.py#method:EffectTimeAdapterRealizationTest.verify:0c059843106c7c4e",
+        "name": "EffectTimeAdapterRealizationTest.verify",
+        "kind": "method",
+        "file": "tests/test_awj032_effect_time_adapter_realization.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "2ffa26748636be25",
+        "file_digest8": "8e13dced35613f87"
+      },
+      {
         "semantic_id": "tests/test_bilateral_intent_pr1_evidence.py#function:_git_blob_sha:9438dd2bd66edc61",
         "name": "_git_blob_sha",
         "kind": "function",
@@ -456537,6 +457290,246 @@
         "end_line": 304,
         "signature_hash": "a80d2bab9a0c1d18",
         "file_digest8": "9285851b91baf19a"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:AtUseAdapterObservation:25f133277349f579",
+        "name": "AtUseAdapterObservation",
+        "kind": "class",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 44,
+        "end_line": 64,
+        "signature_hash": "d756e7d5063c4f32",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:EffectTimeRealizationDecision:728768339a9bb70f",
+        "name": "EffectTimeRealizationDecision",
+        "kind": "class",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 96,
+        "end_line": 105,
+        "signature_hash": "18048a4eff2c9201",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:StableAdapterRealization:7ad0ce67b5a23130",
+        "name": "StableAdapterRealization",
+        "kind": "class",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 24,
+        "end_line": 40,
+        "signature_hash": "cfd2f92d334cd54c",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#class:VerifiedProcessProjection:a8c7beecd1de3e5d",
+        "name": "VerifiedProcessProjection",
+        "kind": "class",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 68,
+        "end_line": 92,
+        "signature_hash": "2d134ecc406f80c8",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_canon:99e5253319e8f853",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "3973a7eaf2bd7224",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_isroot:06180e55a9bc6c95",
+        "name": "_isroot",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "7e7342ccb64cfbe0",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_needroot:b7a3e3c6d1fb1285",
+        "name": "_needroot",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "b7c9f80b01a51b7c",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_root:2c4bda1c46b88c74",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "2e65e72bab661379",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:_valid_int:a15f00bce45eaa10",
+        "name": "_valid_int",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "7688fbae9c7517a1",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:admit_effect_time_realization:438cfddce52a536c",
+        "name": "admit_effect_time_realization",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 108,
+        "end_line": 135,
+        "signature_hash": "dff967ecc78a78cc",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#function:verify_effect_time_transition:59207a46bd10b4a7",
+        "name": "verify_effect_time_transition",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 138,
+        "end_line": 151,
+        "signature_hash": "86ca78b1b41be5a6",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:AtUseAdapterObservation.__post_init__:bda56d8bba92df58",
+        "name": "AtUseAdapterObservation.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 57,
+        "end_line": 64,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:StableAdapterRealization.__post_init__:d98b0515bcf21f44",
+        "name": "StableAdapterRealization.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:StableAdapterRealization.cache_root:edb26b7f4578911f",
+        "name": "StableAdapterRealization.cache_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "d1698fe1734db7a9",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:StableAdapterRealization.realization_root:dfbd09a3fdd04a65",
+        "name": "StableAdapterRealization.realization_root",
+        "kind": "method",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "af531af8e98cae0b",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:VerifiedProcessProjection.__post_init__:de013544c85f705c",
+        "name": "VerifiedProcessProjection.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 83,
+        "end_line": 92,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py#method:admit_effect_time_realization.hold:53d2d2ece4ea3b35",
+        "name": "admit_effect_time_realization.hold",
+        "kind": "method",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization.py",
+        "line": 110,
+        "end_line": 111,
+        "signature_hash": "1c9ea77e6826dec3",
+        "file_digest8": "b66d60c201e991fa"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:actual_campaign:9d0c971a8945f7dc",
+        "name": "actual_campaign",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 32,
+        "end_line": 61,
+        "signature_hash": "ebb7110db912e3b0",
+        "file_digest8": "6a2d8b41df57c490"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:factored13d:12a4def77037df3c",
+        "name": "factored13d",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 72,
+        "end_line": 79,
+        "signature_hash": "465a1a1f10add68b",
+        "file_digest8": "6a2d8b41df57c490"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:hs1000:081ef8305fef7576",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 82,
+        "end_line": 92,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "6a2d8b41df57c490"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:jhash:1df3b75cbc8f2a7d",
+        "name": "jhash",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "e9abe50ab6671f5c",
+        "file_digest8": "6a2d8b41df57c490"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:main:aafd0bc1415b4b98",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 95,
+        "end_line": 104,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "6a2d8b41df57c490"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:model:96cba2cae128720e",
+        "name": "model",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "da2d3778f5a4ea11",
+        "file_digest8": "6a2d8b41df57c490"
+      },
+      {
+        "semantic_id": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py#function:omega8:c52e89cb99df359e",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/awj032/training_o2_transition_reference/effect_time_adapter_realization_proof.py",
+        "line": 64,
+        "end_line": 69,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "6a2d8b41df57c490"
       },
       {
         "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:TransitionTest:1059fd4de905c58f",
@@ -459609,7 +460602,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0b0dfca1e3af46955389923afa535582",
-    "payload_hash": "2c5920530e8d8bc150ee0a2c2d767699"
+    "record_fingerprint": "0129d1b8d3aadbfae47ca39e2417fc2a",
+    "payload_hash": "4bd0825cfbb458f692e325c7dc6e8d76"
   }
 }
