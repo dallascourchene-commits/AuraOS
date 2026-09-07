@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1665
-- **total_bytes**: 26560137
-- **text_tokens_est**: 6630382
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 273, 'support_file': 53}
+- **file_count**: 1671
+- **total_bytes**: 26594341
+- **text_tokens_est**: 6638935
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 274, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1665,
+  "repo_file_count": 1671,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -295,6 +295,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/project006_sink_evidence_recovery/PROOF_RECEIPT_O11.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1672,10 +1673,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/project006/campaign_sink_evidence_recovery.py",
+    "tools/project006/mutation_sink_evidence_recovery.py",
+    "tools/project006/o11_sink_evidence_hyperscale.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
+    "tools/project006/project006_sink_evidence_recovery.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
     "tools/project006/test_windows_wake_broker.py",
+    "tools/project006/tests/test_sink_evidence_recovery.py",
     "tools/project006/windows_wake_broker.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1805,16 +1811,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1665,
-  "bytes": 26560137,
-  "tokens_est": 6630382,
+  "files": 1671,
+  "bytes": 26594341,
+  "tokens_est": 6638935,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1014,
-    "schema_or_lexicon": 273,
+    "python_module": 1019,
+    "schema_or_lexicon": 274,
     "support_file": 53
   }
 }
