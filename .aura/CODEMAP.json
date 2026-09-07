@@ -362,6 +362,7 @@
     "python -m venv": [
       ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o15-workcell-stable-operation-proof.yml",
       "README.md"
     ],
     "python aura_router.py route --help": [
@@ -1062,7 +1063,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1684,
+    "repo_file_count": 1692,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1237,6 +1238,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o15-workcell-stable-operation-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1340,6 +1342,7 @@
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/PROOF_RECEIPT_MC_O14.json",
+      "artifacts/arena/project006_o15_workcell_stable_operation/PROOF_RECEIPT_O15.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2694,6 +2697,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_o15_pr905_interop.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
@@ -2729,6 +2733,11 @@
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o15_pr905_adapter.py",
+      "tools/project006/o15_reference/campaign_o15.py",
+      "tools/project006/o15_reference/hyperscale_o15.py",
+      "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+      "tools/project006/o15_reference/test_o15.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/tecc_effect_admission_bridge.py",
       "tools/project006/terminal_outbox.py",
@@ -11868,6 +11877,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o15-workcell-stable-operation-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3238,
+      "lines": 74,
+      "tokens_est": 810,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          41
+        ]
+      },
+      "topology": {},
+      "digest8": "0ed1ebf994edf07d",
+      "vector": [
+        -0.037336,
+        0.105219,
+        -0.112008,
+        -0.197993,
+        0.213833,
+        -0.288504,
+        0.191205,
+        0.270402,
+        0.062226,
+        -0.256825,
+        -0.225147,
+        -0.07354,
+        -0.037336,
+        -0.207044,
+        -0.109745,
+        0.225147,
+        -0.184417,
+        0.019234,
+        -0.150475,
+        -0.17084,
+        0.179891,
+        0.254563,
+        0.157263,
+        -0.078066,
+        0.182154,
+        0.173103,
+        -0.019234,
+        0.050913,
+        0.125584,
+        0.2523,
+        0.166314,
+        0.27719
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17903,6 +17965,53 @@
         -0.194291,
         -0.202115,
         0.063894
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o15_workcell_stable_operation/PROOF_RECEIPT_O15.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4047,
+      "lines": 92,
+      "tokens_est": 1012,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f98b3f9e7435681f",
+      "vector": [
+        -0.144254,
+        0.176016,
+        -0.255422,
+        0.213072,
+        -0.308359,
+        -0.072789,
+        -0.199838,
+        -0.062201,
+        0.00397,
+        -0.2316,
+        -0.165428,
+        0.038379,
+        0.173369,
+        0.00397,
+        0.059554,
+        -0.276596,
+        0.00397,
+        -0.276596,
+        -0.120432,
+        -0.09661,
+        0.260715,
+        -0.080729,
+        0.017205,
+        -0.263362,
+        0.260715,
+        0.141607,
+        0.221012,
+        -0.141607,
+        0.199838,
+        -0.112491,
+        0.08867,
+        -0.197191
       ]
     },
     {
@@ -104378,6 +104487,53 @@
       ]
     },
     {
+      "path": "tests/test_o15_pr905_interop.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4367,
+      "lines": 109,
+      "tokens_est": 1092,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "20685c5aa94a7b4b",
+      "vector": [
+        0.034014,
+        -0.235752,
+        -0.127846,
+        -0.012902,
+        0.059818,
+        0.238098,
+        -0.151303,
+        -0.057472,
+        0.261556,
+        -0.155995,
+        0.139574,
+        0.285013,
+        0.299088,
+        0.172416,
+        0.181799,
+        -0.270939,
+        0.005864,
+        0.043397,
+        0.273285,
+        0.00821,
+        0.102042,
+        0.287359,
+        -0.012902,
+        -0.111425,
+        0.282668,
+        -0.177107,
+        0.071547,
+        0.059818,
+        0.155995,
+        0.017593,
+        -0.226369,
+        0.207602
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -106023,6 +106179,241 @@
       ]
     },
     {
+      "path": "tools/project006/o15_pr905_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2091,
+      "lines": 56,
+      "tokens_est": 523,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fc80e6b377263958",
+      "vector": [
+        -0.116325,
+        0.19166,
+        -0.12962,
+        0.220464,
+        0.20717,
+        -0.211601,
+        -0.012186,
+        0.251484,
+        0.187228,
+        -0.016618,
+        0.220464,
+        0.180581,
+        -0.147345,
+        -0.049854,
+        -0.280289,
+        0.103031,
+        0.158424,
+        0.182797,
+        -0.278073,
+        -0.122973,
+        -0.134051,
+        0.280289,
+        -0.016618,
+        -0.147345,
+        0.204954,
+        -0.204954,
+        0.136267,
+        -0.258132,
+        -0.147345,
+        -0.078658,
+        -0.153993,
+        -0.11411
+      ]
+    },
+    {
+      "path": "tools/project006/o15_reference/campaign_o15.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1739,
+      "lines": 25,
+      "tokens_est": 435,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "245d70cfbcac004b",
+      "vector": [
+        -0.130975,
+        -0.013218,
+        0.239119,
+        0.23191,
+        -0.260748,
+        -0.23191,
+        0.205474,
+        0.123765,
+        -0.102136,
+        -0.215087,
+        -0.111749,
+        -0.27757,
+        -0.248732,
+        0.09012,
+        0.094927,
+        -0.056475,
+        -0.054072,
+        -0.102136,
+        0.006008,
+        0.020427,
+        0.094927,
+        0.073298,
+        -0.075701,
+        0.289586,
+        0.006008,
+        0.275167,
+        -0.251135,
+        -0.248732,
+        0.243926,
+        0.073298,
+        -0.282377,
+        0.03004
+      ]
+    },
+    {
+      "path": "tools/project006/o15_reference/hyperscale_o15.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1129,
+      "lines": 13,
+      "tokens_est": 283,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cc9f5e9110580f80",
+      "vector": [
+        0.153021,
+        0.207284,
+        -0.183408,
+        -0.018449,
+        0.15085,
+        0.033643,
+        -0.268058,
+        -0.10527,
+        -0.27674,
+        -0.085735,
+        0.231159,
+        -0.137827,
+        0.029302,
+        -0.252864,
+        0.14868,
+        0.224648,
+        0.02062,
+        -0.220307,
+        -0.27674,
+        0.009767,
+        -0.126975,
+        -0.098758,
+        -0.261546,
+        0.231159,
+        -0.120463,
+        -0.155191,
+        0.250694,
+        -0.161703,
+        -0.144339,
+        -0.174726,
+        0.211625,
+        -0.044495
+      ]
+    },
+    {
+      "path": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12803,
+      "lines": 157,
+      "tokens_est": 3201,
+      "symbol_count": 35,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "783a9be7a81ae6da",
+      "vector": [
+        0.069353,
+        0.230076,
+        -0.040731,
+        -0.05174,
+        0.245488,
+        0.271908,
+        0.212462,
+        0.219067,
+        -0.018714,
+        -0.245488,
+        0.265303,
+        0.119992,
+        -0.18384,
+        -0.012109,
+        0.256496,
+        0.260899,
+        -0.001101,
+        0.05174,
+        -0.003303,
+        0.137605,
+        0.100177,
+        0.053941,
+        -0.227874,
+        0.131,
+        -0.009908,
+        0.194849,
+        0.247689,
+        -0.201454,
+        0.102378,
+        0.155219,
+        0.263101,
+        0.223471
+      ]
+    },
+    {
+      "path": "tools/project006/o15_reference/test_o15.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6650,
+      "lines": 79,
+      "tokens_est": 1663,
+      "symbol_count": 35,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "99defea91777acd6",
+      "vector": [
+        0.068015,
+        -0.283189,
+        0.025969,
+        0.142213,
+        0.072961,
+        -0.189205,
+        -0.159525,
+        -0.166945,
+        -0.00371,
+        -0.315341,
+        -0.213937,
+        -0.033389,
+        0.1249,
+        -0.060595,
+        0.305448,
+        0.053175,
+        -0.174365,
+        -0.105114,
+        0.191678,
+        -0.149632,
+        -0.243616,
+        0.053175,
+        -0.285662,
+        -0.038336,
+        0.290608,
+        0.221357,
+        0.24609,
+        0.164472,
+        -0.053175,
+        0.213937,
+        0.147159,
+        -0.030916
+      ]
+    },
+    {
       "path": "tools/project006/project006_consumer_outbox_wrapper.py",
       "role": "python_module",
       "binary": false,
@@ -107255,7 +107646,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788782031,
+  "generated_at_unix": 1788783542,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107432,6 +107823,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o15-workcell-stable-operation-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -107535,6 +107927,7 @@
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/PROOF_RECEIPT_MC_O14.json",
+      "artifacts/arena/project006_o15_workcell_stable_operation/PROOF_RECEIPT_O15.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108889,6 +109282,7 @@
       "tests/test_consequence_admission_kernel.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_o15_pr905_interop.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
@@ -108924,6 +109318,11 @@
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o15_pr905_adapter.py",
+      "tools/project006/o15_reference/campaign_o15.py",
+      "tools/project006/o15_reference/hyperscale_o15.py",
+      "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+      "tools/project006/o15_reference/test_o15.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/tecc_effect_admission_bridge.py",
       "tools/project006/terminal_outbox.py",
@@ -266746,6 +267145,116 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_o15_pr905_interop.py#class:O15Pr905InteropTest:a54b501900e76df7",
+        "name": "O15Pr905InteropTest",
+        "kind": "class",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 60,
+        "end_line": 104,
+        "signature_hash": "3d0fd839e00a9664",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:current:00862491d4096bc3",
+        "name": "current",
+        "kind": "function",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "74a7320da5e8c341",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:lease:576d177e4ae3e06d",
+        "name": "lease",
+        "kind": "function",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 36,
+        "end_line": 41,
+        "signature_hash": "928377d933c15c46",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:operation:19b97a5324702853",
+        "name": "operation",
+        "kind": "function",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "43a283771971f7f2",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:pr905_permit:ec3109c628201439",
+        "name": "pr905_permit",
+        "kind": "function",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 44,
+        "end_line": 57,
+        "signature_hash": "bcdda543ca0f70bb",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:r:482610dd529e1c53",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "7ce5d2fd5d4c523a",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.gate:f65915fbd31a64ca",
+        "name": "O15Pr905InteropTest.gate",
+        "kind": "method",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "fe44246c07965caf",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_first_pr905_candidate_binds_current_workcell_and_stable_operation:b183e939615a34e3",
+        "name": "O15Pr905InteropTest.test_first_pr905_candidate_binds_current_workcell_and_stable_operation",
+        "kind": "method",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 65,
+        "end_line": 72,
+        "signature_hash": "5e366e98f1e37d89",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_pr905_missing_durable_attempt_root_fails_closed:8f280e33f3eb2e0c",
+        "name": "O15Pr905InteropTest.test_pr905_missing_durable_attempt_root_fails_closed",
+        "kind": "method",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 74,
+        "end_line": 83,
+        "signature_hash": "ed000b7462389616",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_pr905_rebind_and_workcell_reissue_preserve_operation_change_execution_witness:bed74412bd3ddac7",
+        "name": "O15Pr905InteropTest.test_pr905_rebind_and_workcell_reissue_preserve_operation_change_execution_witness",
+        "kind": "method",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 85,
+        "end_line": 97,
+        "signature_hash": "013895e50a6956b2",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_result_closure_does_not_revalidate_expired_workcell:744c1dcdc8f77da4",
+        "name": "O15Pr905InteropTest.test_result_closure_does_not_revalidate_expired_workcell",
+        "kind": "method",
+        "file": "tests/test_o15_pr905_interop.py",
+        "line": 99,
+        "end_line": 104,
+        "signature_hash": "1c336ee5d5bd46d7",
+        "file_digest8": "20685c5aa94a7b4b"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -270776,6 +271285,766 @@
         "file_digest8": "99a1ed1f3d156e56"
       },
       {
+        "semantic_id": "tools/project006/o15_pr905_adapter.py#function:_action_value:ed84751abb328d6d",
+        "name": "_action_value",
+        "kind": "function",
+        "file": "tools/project006/o15_pr905_adapter.py",
+        "line": 12,
+        "end_line": 16,
+        "signature_hash": "a5cbebffc9fbbd0a",
+        "file_digest8": "fc80e6b377263958"
+      },
+      {
+        "semantic_id": "tools/project006/o15_pr905_adapter.py#function:from_pr905_proof_bound_permit:399d387e01fc10c4",
+        "name": "from_pr905_proof_bound_permit",
+        "kind": "function",
+        "file": "tools/project006/o15_pr905_adapter.py",
+        "line": 19,
+        "end_line": 55,
+        "signature_hash": "ef4f73782a2d8050",
+        "file_digest8": "fc80e6b377263958"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/campaign_o15.py#function:run:8172db76cb072822",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/campaign_o15.py",
+        "line": 6,
+        "end_line": 23,
+        "signature_hash": "afa4843a190b4778",
+        "file_digest8": "245d70cfbcac004b"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/hyperscale_o15.py#function:d13:e94cc6035e0f5e1d",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/hyperscale_o15.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "6b299e931f9d9f0d",
+        "file_digest8": "cc9f5e9110580f80"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/hyperscale_o15.py#function:hs1000:c984422d63a70201",
+        "name": "hs1000",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/hyperscale_o15.py",
+        "line": 7,
+        "end_line": 11,
+        "signature_hash": "cb33d0ed1005d09a",
+        "file_digest8": "cc9f5e9110580f80"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/hyperscale_o15.py#function:omega8:fc9450b30d4390f9",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/hyperscale_o15.py",
+        "line": 4,
+        "end_line": 5,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "cc9f5e9110580f80"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:Action:1be8f3d4a6555570",
+        "name": "Action",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 24,
+        "end_line": 24,
+        "signature_hash": "aeff42a0655b7485",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:ExecutionPermit:ad7d871162b580cc",
+        "name": "ExecutionPermit",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 64,
+        "end_line": 69,
+        "signature_hash": "2beb375bb4851006",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:Gate:61734203ceecda66",
+        "name": "Gate",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 92,
+        "end_line": 151,
+        "signature_hash": "f41117875c6f04ea",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:HostCurrent:6925835513326847",
+        "name": "HostCurrent",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 47,
+        "end_line": 52,
+        "signature_hash": "5da5a97e94f211ca",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:ProofBoundAttempt:cd16ebac59ae4753",
+        "name": "ProofBoundAttempt",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 55,
+        "end_line": 61,
+        "signature_hash": "4f472b33186c7c91",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:SemanticOperation:295644b2c0dd631a",
+        "name": "SemanticOperation",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 26,
+        "end_line": 32,
+        "signature_hash": "3d759c9950fec961",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:WorkcellLease:1b2ee7703e5b8350",
+        "name": "WorkcellLease",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 35,
+        "end_line": 44,
+        "signature_hash": "3cf17775613fb4f2",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:H:293affc8299c1b84",
+        "name": "H",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "ec5eb98e9e7d57bb",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:I:9c4beb15a173c5ce",
+        "name": "I",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 13,
+        "end_line": 15,
+        "signature_hash": "d6a1fc09320b4b49",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:NN:cc4f7635c956eca1",
+        "name": "NN",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "98b8910a527b203e",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:R:fd349359cf8a81b9",
+        "name": "R",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 10,
+        "end_line": 12,
+        "signature_hash": "25f3b9d1b83dc867",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:execution_witness:4e00aa88faebb1bc",
+        "name": "execution_witness",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "9e8b0f947388ee2d",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:issue_lease:c664123325e38b4d",
+        "name": "issue_lease",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 72,
+        "end_line": 74,
+        "signature_hash": "dc23e4d373e6425b",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:public_surface_leaks:751f49eff573a98f",
+        "name": "public_surface_leaks",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 155,
+        "end_line": 156,
+        "signature_hash": "b59fa723ee54b17d",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:public_work_handle:cc6e7bbc934051a4",
+        "name": "public_work_handle",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 153,
+        "end_line": 154,
+        "signature_hash": "d1dd3f879800b677",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:sign:8305a7ed9a3eb43e",
+        "name": "sign",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "45e8549710fe2bd2",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:verify_lease:7f30ad179bec56bc",
+        "name": "verify_lease",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 76,
+        "end_line": 85,
+        "signature_hash": "36cd26da85acde0f",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:ExecutionPermit.__post_init__:855a6fbe06de59b8",
+        "name": "ExecutionPermit.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "488f6fefb16defba",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.__init__:7ac97f6e90c43232",
+        "name": "Gate.__init__",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 93,
+        "end_line": 95,
+        "signature_hash": "1bb3bc58a014e39f",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate._check_attempt:3f6074a1b739a071",
+        "name": "Gate._check_attempt",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 109,
+        "end_line": 112,
+        "signature_hash": "0ad0083c3be0b6ae",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate._sem:9f354d517a5d2b7c",
+        "name": "Gate._sem",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 108,
+        "end_line": 108,
+        "signature_hash": "14d09a05a98742c2",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.ambiguous:fe6b0a3eea20bf31",
+        "name": "Gate.ambiguous",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 125,
+        "end_line": 130,
+        "signature_hash": "f15a36398497ac46",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.con:29cdf2db390625f8",
+        "name": "Gate.con",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 97,
+        "end_line": 101,
+        "signature_hash": "accd49aa00025ef9",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.expose_first:910c8a35fe1191d8",
+        "name": "Gate.expose_first",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 113,
+        "end_line": 124,
+        "signature_hash": "39f988a98c606218",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.record_result:925d531456f0d58e",
+        "name": "Gate.record_result",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 142,
+        "end_line": 147,
+        "signature_hash": "faf88ac604dca480",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.retry:4de4c378452a0196",
+        "name": "Gate.retry",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 131,
+        "end_line": 141,
+        "signature_hash": "afb94e3ae027f832",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.return_writer_only:e433141498bd0376",
+        "name": "Gate.return_writer_only",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 148,
+        "end_line": 151,
+        "signature_hash": "d4d8c91a57ec2606",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.status:272008ebf7f7a04e",
+        "name": "Gate.status",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 102,
+        "end_line": 106,
+        "signature_hash": "85a9fe7e4e3d3253",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:HostCurrent.__post_init__:d868f5baa3c4e0b0",
+        "name": "HostCurrent.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 49,
+        "end_line": 52,
+        "signature_hash": "488f6fefb16defba",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:ProofBoundAttempt.__post_init__:30300fbecfde763e",
+        "name": "ProofBoundAttempt.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "488f6fefb16defba",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:SemanticOperation.__post_init__:02ac98e6f3ee3776",
+        "name": "SemanticOperation.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 28,
+        "end_line": 30,
+        "signature_hash": "488f6fefb16defba",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:SemanticOperation.root:18839517a34ce384",
+        "name": "SemanticOperation.root",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 32,
+        "end_line": 32,
+        "signature_hash": "3d3022af382c5b18",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:WorkcellLease.__post_init__:0ed2bfcbdca114b9",
+        "name": "WorkcellLease.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "488f6fefb16defba",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:WorkcellLease.root:22c25447325b1b19",
+        "name": "WorkcellLease.root",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 44,
+        "end_line": 44,
+        "signature_hash": "3d3022af382c5b18",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:WorkcellLease.unsigned:a303b73867ffe292",
+        "name": "WorkcellLease.unsigned",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "line": 42,
+        "end_line": 42,
+        "signature_hash": "2469807845f4b3f4",
+        "file_digest8": "783a9be7a81ae6da"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#class:T:489cb89b45fd8ba6",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 14,
+        "end_line": 77,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:att:a9a82c83f59ac6ca",
+        "name": "att",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "7315a1db0063dc86",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:cur:94047f4aba42e07e",
+        "name": "cur",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "652281152861352c",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:lease:7da93a3b380e5938",
+        "name": "lease",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "92768ddf2af030cb",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:op:d4b5e572230d930b",
+        "name": "op",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 6,
+        "end_line": 7,
+        "signature_hash": "61fb8bc2a9cfe45a",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:r:bc16fe99047c786a",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.bound:a20d28e665cd6935",
+        "name": "T.bound",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "023094a1b082764b",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.g:26eada806abd0d18",
+        "name": "T.g",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "9afe02c5ffd3d22b",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_01_first:f9ef93c06f4385af",
+        "name": "T.test_01_first",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "079f809a1ad043e6",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_02_reissue_preserves_operation:36a59442de5d64b0",
+        "name": "T.test_02_reissue_preserves_operation",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "9c1a456c5e2c3dba",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_03_card_move_holds:147ca15f7514df76",
+        "name": "T.test_03_card_move_holds",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "8558cd339e279d1a",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_04_progress_move_holds:522279b627553363",
+        "name": "T.test_04_progress_move_holds",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "36f690588b0f2ace",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_05_generation_move_holds:00fc7f40afd69aac",
+        "name": "T.test_05_generation_move_holds",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 28,
+        "end_line": 30,
+        "signature_hash": "495aa45c8f0caefa",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_06_expired_holds:61448672316e0384",
+        "name": "T.test_06_expired_holds",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "a4dc68ccc07fdff0",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_07_source_file_move_rotates:1a395fead0821a8d",
+        "name": "T.test_07_source_file_move_rotates",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 34,
+        "end_line": 34,
+        "signature_hash": "121151ec1f272c91",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_08_source_revision_move_rotates:e2a225733b07844f",
+        "name": "T.test_08_source_revision_move_rotates",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 35,
+        "end_line": 35,
+        "signature_hash": "31b618b0b816684c",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_09_source_digest_move_rotates:4a1f2b28a626129a",
+        "name": "T.test_09_source_digest_move_rotates",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "7745880f8c55fbc8",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_10_intent_move_rotates:42945b7c58ee4697",
+        "name": "T.test_10_intent_move_rotates",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 37,
+        "end_line": 37,
+        "signature_hash": "989b089306063242",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_11_contract_move_rotates:adb0cf2e53c07fd8",
+        "name": "T.test_11_contract_move_rotates",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 38,
+        "end_line": 38,
+        "signature_hash": "f43836d695bc2854",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_12_payload_move_rotates:2173802889a2a8a6",
+        "name": "T.test_12_payload_move_rotates",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 39,
+        "end_line": 39,
+        "signature_hash": "50f1caa97c713ab0",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_13_current_admission_excluded_from_op:1d8f44476382cd85",
+        "name": "T.test_13_current_admission_excluded_from_op",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "172316dfc808b0e9",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_14_first_count:ce34b438629a73f8",
+        "name": "T.test_14_first_count",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "626a221c704f5421",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_15_parent_op_mismatch:9f3cee8951062dd6",
+        "name": "T.test_15_parent_op_mismatch",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "b6c692de33c91d84",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_16_retry_new_workcell_same_op_new_witness:280b38a4ea97630f",
+        "name": "T.test_16_retry_new_workcell_same_op_new_witness",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "f486e9636dfea27d",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_17_retry_requires_recovery:03bc3b7029a8362c",
+        "name": "T.test_17_retry_requires_recovery",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "ed05cf50f59d3bb5",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_18_retry_attempt_new:4f48fe9d6c77d0c4",
+        "name": "T.test_18_retry_attempt_new",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 53,
+        "end_line": 55,
+        "signature_hash": "fbb78223afc23524",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_19_retry_semantic_move_holds:bf5b210a26960bfb",
+        "name": "T.test_19_retry_semantic_move_holds",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "8b1c6a0d385733b9",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_20_result_return_survives_expiry:ce39e8db275aecc5",
+        "name": "T.test_20_result_return_survives_expiry",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "7346a0cbd180e606",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_21_result_no_retry_needed:cea93ed9f820275e",
+        "name": "T.test_21_result_no_retry_needed",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "120c7d9f74e58f1c",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_22_public_handle_no_leak:ddfef2d895a4f2c6",
+        "name": "T.test_22_public_handle_no_leak",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 64,
+        "end_line": 64,
+        "signature_hash": "a6db5a72ec035b71",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_23_k27_not_identity:9d78aaf656c97c02",
+        "name": "T.test_23_k27_not_identity",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 65,
+        "end_line": 66,
+        "signature_hash": "6dd67dd958b5ee4f",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_24_mac_forge:cd5bb9bf959ef248",
+        "name": "T.test_24_mac_forge",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "ae1ada5489352aba",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_25_cross_session:e75792d1604af846",
+        "name": "T.test_25_cross_session",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "7e2491fdc491a160",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_26_witness_changes_on_admission_rebind:3f7c841880011df2",
+        "name": "T.test_26_witness_changes_on_admission_rebind",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 73,
+        "end_line": 74,
+        "signature_hash": "5836c794645e8cc6",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_27_authority_ceiling:6ea7f78e0de5b8b3",
+        "name": "T.test_27_authority_ceiling",
+        "kind": "method",
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "cc1d9a9964c33a6d",
+        "file_digest8": "99defea91777acd6"
+      },
+      {
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:_changed:fb5eb9317f79eb5e",
         "name": "_changed",
         "kind": "function",
@@ -273056,8 +274325,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3f1a0cc76e4e54463468a212787ef3cc",
-    "payload_hash": "334570ad61e0a2aa4284e65a4931b5d8"
+    "record_fingerprint": "2a6f579366e0ea6eb2bc7d11fac8925d",
+    "payload_hash": "b8e3260939a25578ec06c5c2ff7ee0ab"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273070,16 +274339,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1684,
-      "bytes": 26690863,
-      "tokens_est": 6663069,
+      "files": 1692,
+      "bytes": 26726927,
+      "tokens_est": 6672088,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 279,
+        "python_module": 1033,
+        "schema_or_lexicon": 281,
         "support_file": 53
       }
     },
@@ -273766,16 +275035,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1684,
-    "total_bytes": 26690863,
-    "text_tokens_est": 6663069,
+    "file_count": 1692,
+    "total_bytes": 26726927,
+    "text_tokens_est": 6672088,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 279,
+      "python_module": 1033,
+      "schema_or_lexicon": 281,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -275060,6 +276329,14 @@
         "end_line": 16,
         "semantic_id": "tools/project006/mc_o14_sweep13d.py#function:run:22a0a8cc1d55b803",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/project006/o15_reference/campaign_o15.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 23,
+        "semantic_id": "tools/project006/o15_reference/campaign_o15.py#function:run:8172db76cb072822",
+        "signature_hash": "afa4843a190b4778"
       }
     ],
     "run.record": [
@@ -428814,6 +430091,14 @@
         "end_line": 90,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#class:T:8f95aedea5c120a7",
         "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 77,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#class:T:489cb89b45fd8ba6",
+        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -429284,6 +430569,148 @@
         "end_line": 54,
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "signature_hash": "b87770abb7ee24ea"
+      }
+    ],
+    "r": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:r:482610dd529e1c53",
+        "signature_hash": "7ce5d2fd5d4c523a"
+      },
+      {
+        "file": "tests/test_tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_tecc_effect_admission_bridge.py#function:r:a7858cc5a2b1fc1d",
+        "signature_hash": "7ce5d2fd5d4c523a"
+      },
+      {
+        "file": "tools/project006/campaign_tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#function:r:bb6955a17d0a3bff",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:r:bc16fe99047c786a",
+        "signature_hash": "e5a2d5a687fa3045"
+      }
+    ],
+    "operation": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:operation:19b97a5324702853",
+        "signature_hash": "43a283771971f7f2"
+      }
+    ],
+    "current": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:current:00862491d4096bc3",
+        "signature_hash": "74a7320da5e8c341"
+      }
+    ],
+    "lease": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 41,
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:lease:576d177e4ae3e06d",
+        "signature_hash": "928377d933c15c46"
+      },
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:lease:7da93a3b380e5938",
+        "signature_hash": "92768ddf2af030cb"
+      }
+    ],
+    "pr905_permit": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 57,
+        "semantic_id": "tests/test_o15_pr905_interop.py#function:pr905_permit:ec3109c628201439",
+        "signature_hash": "bcdda543ca0f70bb"
+      }
+    ],
+    "O15Pr905InteropTest": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 104,
+        "semantic_id": "tests/test_o15_pr905_interop.py#class:O15Pr905InteropTest:a54b501900e76df7",
+        "signature_hash": "3d0fd839e00a9664"
+      }
+    ],
+    "O15Pr905InteropTest.gate": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.gate:f65915fbd31a64ca",
+        "signature_hash": "fe44246c07965caf"
+      }
+    ],
+    "O15Pr905InteropTest.test_first_pr905_candidate_binds_current_workcell_and_stable_operation": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 72,
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_first_pr905_candidate_binds_current_workcell_and_stable_operation:b183e939615a34e3",
+        "signature_hash": "5e366e98f1e37d89"
+      }
+    ],
+    "O15Pr905InteropTest.test_pr905_missing_durable_attempt_root_fails_closed": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 83,
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_pr905_missing_durable_attempt_root_fails_closed:8f280e33f3eb2e0c",
+        "signature_hash": "ed000b7462389616"
+      }
+    ],
+    "O15Pr905InteropTest.test_pr905_rebind_and_workcell_reissue_preserve_operation_change_execution_witness": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 97,
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_pr905_rebind_and_workcell_reissue_preserve_operation_change_execution_witness:bed74412bd3ddac7",
+        "signature_hash": "013895e50a6956b2"
+      }
+    ],
+    "O15Pr905InteropTest.test_result_closure_does_not_revalidate_expired_workcell": [
+      {
+        "file": "tests/test_o15_pr905_interop.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 104,
+        "semantic_id": "tests/test_o15_pr905_interop.py#method:O15Pr905InteropTest.test_result_closure_does_not_revalidate_expired_workcell:744c1dcdc8f77da4",
+        "signature_hash": "1c336ee5d5bd46d7"
       }
     ],
     "make_decision": [
@@ -429892,24 +431319,6 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
-      }
-    ],
-    "r": [
-      {
-        "file": "tests/test_tecc_effect_admission_bridge.py",
-        "kind": "function",
-        "line": 12,
-        "end_line": 12,
-        "semantic_id": "tests/test_tecc_effect_admission_bridge.py#function:r:a7858cc5a2b1fc1d",
-        "signature_hash": "7ce5d2fd5d4c523a"
-      },
-      {
-        "file": "tools/project006/campaign_tecc_effect_admission_bridge.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 10,
-        "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#function:r:bb6955a17d0a3bff",
-        "signature_hash": "e5a2d5a687fa3045"
       }
     ],
     "Ident": [
@@ -430685,6 +432094,14 @@
         "line": 54,
         "end_line": 65,
         "semantic_id": "tools/arena/effect_return_atomicity.py#class:Action:cb6184229e5a7a61",
+        "signature_hash": "aeff42a0655b7485"
+      },
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 24,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:Action:1be8f3d4a6555570",
         "signature_hash": "aeff42a0655b7485"
       }
     ],
@@ -432730,6 +434147,14 @@
         "end_line": 12,
         "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#class:I:80b18b603ecca898",
         "signature_hash": "736e88bf7791f813"
+      },
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:I:9c4beb15a173c5ce",
+        "signature_hash": "d6a1fc09320b4b49"
       }
     ],
     "N": [
@@ -433030,6 +434455,706 @@
         "end_line": 9,
         "semantic_id": "tools/project006/mc_o14_lattice8.py#function:hard_decision:4a2a1663ed5987af",
         "signature_hash": "469f4ee8f1880dc9"
+      }
+    ],
+    "_action_value": [
+      {
+        "file": "tools/project006/o15_pr905_adapter.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tools/project006/o15_pr905_adapter.py#function:_action_value:ed84751abb328d6d",
+        "signature_hash": "a5cbebffc9fbbd0a"
+      }
+    ],
+    "from_pr905_proof_bound_permit": [
+      {
+        "file": "tools/project006/o15_pr905_adapter.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 55,
+        "semantic_id": "tools/project006/o15_pr905_adapter.py#function:from_pr905_proof_bound_permit:399d387e01fc10c4",
+        "signature_hash": "ef4f73782a2d8050"
+      }
+    ],
+    "omega8": [
+      {
+        "file": "tools/project006/o15_reference/hyperscale_o15.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 5,
+        "semantic_id": "tools/project006/o15_reference/hyperscale_o15.py#function:omega8:fc9450b30d4390f9",
+        "signature_hash": "779fe12d7757e6f1"
+      }
+    ],
+    "d13": [
+      {
+        "file": "tools/project006/o15_reference/hyperscale_o15.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tools/project006/o15_reference/hyperscale_o15.py#function:d13:e94cc6035e0f5e1d",
+        "signature_hash": "6b299e931f9d9f0d"
+      }
+    ],
+    "hs1000": [
+      {
+        "file": "tools/project006/o15_reference/hyperscale_o15.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 11,
+        "semantic_id": "tools/project006/o15_reference/hyperscale_o15.py#function:hs1000:c984422d63a70201",
+        "signature_hash": "cb33d0ed1005d09a"
+      }
+    ],
+    "H": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:H:293affc8299c1b84",
+        "signature_hash": "ec5eb98e9e7d57bb"
+      }
+    ],
+    "R": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 12,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:R:fd349359cf8a81b9",
+        "signature_hash": "25f3b9d1b83dc867"
+      }
+    ],
+    "NN": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:NN:cc4f7635c956eca1",
+        "signature_hash": "98b8910a527b203e"
+      }
+    ],
+    "sign": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:sign:8305a7ed9a3eb43e",
+        "signature_hash": "45e8549710fe2bd2"
+      }
+    ],
+    "SemanticOperation": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 32,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:SemanticOperation:295644b2c0dd631a",
+        "signature_hash": "3d759c9950fec961"
+      }
+    ],
+    "SemanticOperation.__post_init__": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 30,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:SemanticOperation.__post_init__:02ac98e6f3ee3776",
+        "signature_hash": "488f6fefb16defba"
+      }
+    ],
+    "SemanticOperation.root": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 32,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:SemanticOperation.root:18839517a34ce384",
+        "signature_hash": "3d3022af382c5b18"
+      }
+    ],
+    "WorkcellLease": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 44,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:WorkcellLease:1b2ee7703e5b8350",
+        "signature_hash": "3cf17775613fb4f2"
+      }
+    ],
+    "WorkcellLease.__post_init__": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:WorkcellLease.__post_init__:0ed2bfcbdca114b9",
+        "signature_hash": "488f6fefb16defba"
+      }
+    ],
+    "WorkcellLease.unsigned": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 42,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:WorkcellLease.unsigned:a303b73867ffe292",
+        "signature_hash": "2469807845f4b3f4"
+      }
+    ],
+    "WorkcellLease.root": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 44,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:WorkcellLease.root:22c25447325b1b19",
+        "signature_hash": "3d3022af382c5b18"
+      }
+    ],
+    "HostCurrent": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 52,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:HostCurrent:6925835513326847",
+        "signature_hash": "5da5a97e94f211ca"
+      }
+    ],
+    "HostCurrent.__post_init__": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 52,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:HostCurrent.__post_init__:d868f5baa3c4e0b0",
+        "signature_hash": "488f6fefb16defba"
+      }
+    ],
+    "ProofBoundAttempt": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 61,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:ProofBoundAttempt:cd16ebac59ae4753",
+        "signature_hash": "4f472b33186c7c91"
+      }
+    ],
+    "ProofBoundAttempt.__post_init__": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:ProofBoundAttempt.__post_init__:30300fbecfde763e",
+        "signature_hash": "488f6fefb16defba"
+      }
+    ],
+    "ExecutionPermit": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 69,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:ExecutionPermit:ad7d871162b580cc",
+        "signature_hash": "2beb375bb4851006"
+      }
+    ],
+    "ExecutionPermit.__post_init__": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:ExecutionPermit.__post_init__:855a6fbe06de59b8",
+        "signature_hash": "488f6fefb16defba"
+      }
+    ],
+    "issue_lease": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 74,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:issue_lease:c664123325e38b4d",
+        "signature_hash": "dc23e4d373e6425b"
+      }
+    ],
+    "verify_lease": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 85,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:verify_lease:7f30ad179bec56bc",
+        "signature_hash": "36cd26da85acde0f"
+      }
+    ],
+    "execution_witness": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:execution_witness:4e00aa88faebb1bc",
+        "signature_hash": "9e8b0f947388ee2d"
+      }
+    ],
+    "Gate": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "class",
+        "line": 92,
+        "end_line": 151,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#class:Gate:61734203ceecda66",
+        "signature_hash": "f41117875c6f04ea"
+      }
+    ],
+    "Gate.__init__": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 95,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.__init__:7ac97f6e90c43232",
+        "signature_hash": "1bb3bc58a014e39f"
+      }
+    ],
+    "Gate.con": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 101,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.con:29cdf2db390625f8",
+        "signature_hash": "accd49aa00025ef9"
+      }
+    ],
+    "Gate.status": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 106,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.status:272008ebf7f7a04e",
+        "signature_hash": "85a9fe7e4e3d3253"
+      }
+    ],
+    "Gate._sem": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 108,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate._sem:9f354d517a5d2b7c",
+        "signature_hash": "14d09a05a98742c2"
+      }
+    ],
+    "Gate._check_attempt": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 112,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate._check_attempt:3f6074a1b739a071",
+        "signature_hash": "0ad0083c3be0b6ae"
+      }
+    ],
+    "Gate.expose_first": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 124,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.expose_first:910c8a35fe1191d8",
+        "signature_hash": "39f988a98c606218"
+      }
+    ],
+    "Gate.ambiguous": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 130,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.ambiguous:fe6b0a3eea20bf31",
+        "signature_hash": "f15a36398497ac46"
+      }
+    ],
+    "Gate.retry": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 141,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.retry:4de4c378452a0196",
+        "signature_hash": "afb94e3ae027f832"
+      }
+    ],
+    "Gate.record_result": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 147,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.record_result:925d531456f0d58e",
+        "signature_hash": "faf88ac604dca480"
+      }
+    ],
+    "Gate.return_writer_only": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 151,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#method:Gate.return_writer_only:e433141498bd0376",
+        "signature_hash": "d4d8c91a57ec2606"
+      }
+    ],
+    "public_work_handle": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 154,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:public_work_handle:cc6e7bbc934051a4",
+        "signature_hash": "d1dd3f879800b677"
+      }
+    ],
+    "public_surface_leaks": [
+      {
+        "file": "tools/project006/o15_reference/o15_workcell_stable_operation.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 156,
+        "semantic_id": "tools/project006/o15_reference/o15_workcell_stable_operation.py#function:public_surface_leaks:751f49eff573a98f",
+        "signature_hash": "b59fa723ee54b17d"
+      }
+    ],
+    "op": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:op:d4b5e572230d930b",
+        "signature_hash": "61fb8bc2a9cfe45a"
+      }
+    ],
+    "cur": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:cur:94047f4aba42e07e",
+        "signature_hash": "652281152861352c"
+      }
+    ],
+    "att": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#function:att:a9a82c83f59ac6ca",
+        "signature_hash": "7315a1db0063dc86"
+      }
+    ],
+    "T.g": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.g:26eada806abd0d18",
+        "signature_hash": "9afe02c5ffd3d22b"
+      }
+    ],
+    "T.bound": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.bound:a20d28e665cd6935",
+        "signature_hash": "023094a1b082764b"
+      }
+    ],
+    "T.test_01_first": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_01_first:f9ef93c06f4385af",
+        "signature_hash": "079f809a1ad043e6"
+      }
+    ],
+    "T.test_02_reissue_preserves_operation": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_02_reissue_preserves_operation:36a59442de5d64b0",
+        "signature_hash": "9c1a456c5e2c3dba"
+      }
+    ],
+    "T.test_03_card_move_holds": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_03_card_move_holds:147ca15f7514df76",
+        "signature_hash": "8558cd339e279d1a"
+      }
+    ],
+    "T.test_04_progress_move_holds": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_04_progress_move_holds:522279b627553363",
+        "signature_hash": "36f690588b0f2ace"
+      }
+    ],
+    "T.test_05_generation_move_holds": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 30,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_05_generation_move_holds:00fc7f40afd69aac",
+        "signature_hash": "495aa45c8f0caefa"
+      }
+    ],
+    "T.test_06_expired_holds": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_06_expired_holds:61448672316e0384",
+        "signature_hash": "a4dc68ccc07fdff0"
+      }
+    ],
+    "T.test_07_source_file_move_rotates": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 34,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_07_source_file_move_rotates:1a395fead0821a8d",
+        "signature_hash": "121151ec1f272c91"
+      }
+    ],
+    "T.test_08_source_revision_move_rotates": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 35,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_08_source_revision_move_rotates:e2a225733b07844f",
+        "signature_hash": "31b618b0b816684c"
+      }
+    ],
+    "T.test_09_source_digest_move_rotates": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_09_source_digest_move_rotates:4a1f2b28a626129a",
+        "signature_hash": "7745880f8c55fbc8"
+      }
+    ],
+    "T.test_10_intent_move_rotates": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 37,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_10_intent_move_rotates:42945b7c58ee4697",
+        "signature_hash": "989b089306063242"
+      }
+    ],
+    "T.test_11_contract_move_rotates": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 38,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_11_contract_move_rotates:adb0cf2e53c07fd8",
+        "signature_hash": "f43836d695bc2854"
+      }
+    ],
+    "T.test_12_payload_move_rotates": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 39,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_12_payload_move_rotates:2173802889a2a8a6",
+        "signature_hash": "50f1caa97c713ab0"
+      }
+    ],
+    "T.test_13_current_admission_excluded_from_op": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_13_current_admission_excluded_from_op:1d8f44476382cd85",
+        "signature_hash": "172316dfc808b0e9"
+      }
+    ],
+    "T.test_14_first_count": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_14_first_count:ce34b438629a73f8",
+        "signature_hash": "626a221c704f5421"
+      }
+    ],
+    "T.test_15_parent_op_mismatch": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_15_parent_op_mismatch:9f3cee8951062dd6",
+        "signature_hash": "b6c692de33c91d84"
+      }
+    ],
+    "T.test_16_retry_new_workcell_same_op_new_witness": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_16_retry_new_workcell_same_op_new_witness:280b38a4ea97630f",
+        "signature_hash": "f486e9636dfea27d"
+      }
+    ],
+    "T.test_17_retry_requires_recovery": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_17_retry_requires_recovery:03bc3b7029a8362c",
+        "signature_hash": "ed05cf50f59d3bb5"
+      }
+    ],
+    "T.test_18_retry_attempt_new": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 55,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_18_retry_attempt_new:4f48fe9d6c77d0c4",
+        "signature_hash": "fbb78223afc23524"
+      }
+    ],
+    "T.test_19_retry_semantic_move_holds": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_19_retry_semantic_move_holds:bf5b210a26960bfb",
+        "signature_hash": "8b1c6a0d385733b9"
+      }
+    ],
+    "T.test_20_result_return_survives_expiry": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_20_result_return_survives_expiry:ce39e8db275aecc5",
+        "signature_hash": "7346a0cbd180e606"
+      }
+    ],
+    "T.test_21_result_no_retry_needed": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_21_result_no_retry_needed:cea93ed9f820275e",
+        "signature_hash": "120c7d9f74e58f1c"
+      }
+    ],
+    "T.test_22_public_handle_no_leak": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 64,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_22_public_handle_no_leak:ddfef2d895a4f2c6",
+        "signature_hash": "a6db5a72ec035b71"
+      }
+    ],
+    "T.test_23_k27_not_identity": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_23_k27_not_identity:9d78aaf656c97c02",
+        "signature_hash": "6dd67dd958b5ee4f"
+      }
+    ],
+    "T.test_24_mac_forge": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_24_mac_forge:cd5bb9bf959ef248",
+        "signature_hash": "ae1ada5489352aba"
+      }
+    ],
+    "T.test_25_cross_session": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_25_cross_session:e75792d1604af846",
+        "signature_hash": "7e2491fdc491a160"
+      }
+    ],
+    "T.test_26_witness_changes_on_admission_rebind": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 74,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_26_witness_changes_on_admission_rebind:3f7c841880011df2",
+        "signature_hash": "5836c794645e8cc6"
+      }
+    ],
+    "T.test_27_authority_ceiling": [
+      {
+        "file": "tools/project006/o15_reference/test_o15.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tools/project006/o15_reference/test_o15.py#method:T.test_27_authority_ceiling:6ea7f78e0de5b8b3",
+        "signature_hash": "cc1d9a9964c33a6d"
       }
     ],
     "_first_text": [

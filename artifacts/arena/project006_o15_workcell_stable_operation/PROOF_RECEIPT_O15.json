@@ -1,0 +1,91 @@
+{
+  "authority": "D0_NONPROMOTING",
+  "campaign": {
+    "cases": 30000,
+    "naive_retry_without_recovery": 3045,
+    "oracle_mismatches": 0,
+    "root": "93d95726210f9f9c5f70d75b41528215f6a7956bfbcbb5afe649fda29e3e683e",
+    "schema": "AURA-P006-O15-WORKCELL-STABLE-OP-v1-campaign",
+    "unsafe_provider_candidates": 0
+  },
+  "campaign_cases_total": 90000,
+  "campaign_output_sha256": "86e038b71587bf20e9d939d434bde8e1d8d6fc4aec10dc0013b726cc01afa55a",
+  "claim_ceiling": "D0 reference/integration donor only; no provider/device/network effect, production key management, merge/deploy authority, canonical promotion, private/native Transformer KV access, or Gate10.",
+  "failed_first_scars": [
+    {
+      "credit": 0,
+      "detail": "Initial typed lease construction passed schema/kind envelope fields into WorkcellLease and aborted semantic tests.",
+      "kind": "LEASE_ENVELOPE_CONSTRUCTOR_MISMATCH"
+    },
+    {
+      "credit": 0,
+      "detail": "Combined three-venv command timed out after tests; third deterministic campaign was rerun from unchanged frozen bytes and compared byte-identically.",
+      "kind": "COMPOSITE_VENV_SHELL_TIMEOUT"
+    }
+  ],
+  "focused_tests_total": "81/81 PASS",
+  "fresh_venvs": 3,
+  "gate10": false,
+  "hosted_exact_head": "PENDING_ZERO_CREDIT",
+  "hyperscale": {
+    "d13": {
+      "contexts": 243,
+      "hard_invalid_contextual_repairs": 0,
+      "hard_states": 6561,
+      "lawful_contexts": 243,
+      "root": "a06962e11ba7fd7d08f3c8c9e1e7284d3ffd4bd1456c0923e76609d940542376",
+      "states": 1594323
+    },
+    "hs1000": {
+      "claimed_breakthroughs": 0,
+      "consequence_groups": 100,
+      "freeze_root": "ba2f676279c59f5f7479322b317a9a98f8f01d6914ee4b369219b0900eaa095e",
+      "quotient_root": "5ac3877270edb791871f2a82d263d5113446a7dadf0d74a02d5d3e1724e15481",
+      "raw_cells": 1000
+    },
+    "omega8": {
+      "invalid_promotions": 0,
+      "keeper": 1,
+      "root": "52afcfe59f3c7b050f5cf82b23785eda0a0632abc8f0ceb2f3f0b5c27eaca5be",
+      "states": 6561
+    },
+    "schema": "AURA-P006-O15-WORKCELL-STABLE-OP-v1-hyperscale"
+  },
+  "hyperscale_output_sha256": "4f4c779fca93278e4e614446c9037ec2b088906f8e745a9ba9a06e8f787ebfdb",
+  "keepers": [
+    "CurrentWorkcellLease != StableOperationIdentity != AttemptAdmission",
+    "WorkcellReissue + SameSemanticOperation => SameOperationRoot AND NewExecutionWitness",
+    "WorkcellCardOrProgressOrHostGenerationMoveBeforeProvider => HOLD_REISSUE",
+    "FullDriveSourceIdentityMove => NewOperationRoot",
+    "FreshAdmissionRebind => SameOperationRoot AND NewAttemptRoot AND NewExecutionWitness",
+    "ResultObserved => ReturnWriterOnly independent of later workcell expiry",
+    "AgentSurface => OpaqueHandleOnly",
+    "K27Coordinate != WorkcellIdentity != OperationIdentity != Currentness != EffectAuthority"
+  ],
+  "objective": "O15-WORKCELL-BOUND-STABLE-OPERATION-GATE",
+  "owner_adoption_surface": {
+    "github_pr": 905,
+    "head": "7067ed1aded0f34b40a924ef7511c4a6c752ed87"
+  },
+  "parents": [
+    {
+      "drive_id": "1joayr-MY-oCmdUPifathz_y3gtdTIllZos-lnEvi9b0",
+      "receipt_root": "bd1f0e0730391196c39125861ca06ea0775e15682eeee34f4afb894d8048a8d5",
+      "result": "O14 Invisible Proof-Carrying Workcell Gate"
+    },
+    {
+      "drive_id": "1gpsLe77dpTl1MM7yVguDUzqi7MaIAFVw",
+      "result": "O13-CASO Canonical-Admitted Stable Operation",
+      "result_root": "dbfbc1e1f1964f004441043037271a9b8f3365545c9e06cace511ae907e88e78"
+    }
+  ],
+  "receipt_root": "4d5ab79b47cad2fda588be75239d21826071f811e5bd353e228a5934e6be5e31",
+  "schema": "AURA-P006-O15-PROOF-RECEIPT-v1",
+  "source_sha256": {
+    "campaign_o15.py": "c48f6921b476fd487aeb8d83f84d38f7f1cd86e0459eb63d9b2294b07545cc1f",
+    "hyperscale_o15.py": "e4dac0baf98aac3c5d2744564d963d139c8ba890e6ae2ef9df5fb9ee59f375b0",
+    "o15_workcell_stable_operation.py": "714aeef451ea6d0c089b389dc85bd5c86f55aa5bd144f6c10dafdfc04535ed8d",
+    "test_o15.py": "4ba34c1a7eb8074bfc60eb6038cf88655a13a5d378817d72a1a845f0d21188cf"
+  },
+  "status": "LOCAL_EXACT_D0_PROVEN_HOSTED_PENDING"
+}
