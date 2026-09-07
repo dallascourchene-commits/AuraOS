@@ -1,0 +1,103 @@
+name: AWJ032 Source Gate Lexical Scope Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/airllm_source_admission.py'
+      - 'tools/awj032/airllm_scope_aware_source_admission.py'
+      - 'tools/awj032/test_airllm_source_admission.py'
+      - 'tools/awj032/test_airllm_scope_aware_source_admission.py'
+      - 'tools/awj032/airllm_hard_false_remediation.py'
+      - '.github/workflows/awj032-source-gate-lexical-scope-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-three-venv-scope-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify exact PR head and scanner bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          sha256sum tools/awj032/airllm_source_admission.py
+          sha256sum tools/awj032/airllm_scope_aware_source_admission.py
+          sha256sum tools/awj032/test_airllm_scope_aware_source_admission.py
+          sha256sum tools/awj032/airllm_hard_false_remediation.py
+      - name: Materialize exact pinned AirLLM fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --no-tags https://github.com/lyogavin/airllm.git .fixture
+          git -C .fixture checkout --detach c92cea691412715a218306acb01fc9c2c681a8f2
+          test "$(git -C .fixture rev-parse HEAD)" = c92cea691412715a218306acb01fc9c2c681a8f2
+      - name: Recreate three environments and prove structural discharge
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            rm -rf ".venv-${i}" ".fixture-${i}"
+            python -m venv ".venv-${i}"
+            cp -a .fixture ".fixture-${i}"
+            PYTHONPATH=.:tools/awj032 ".venv-${i}/bin/python" -m unittest \
+              tools.awj032.test_airllm_source_admission \
+              tools.awj032.test_airllm_scope_aware_source_admission
+            PYTHONPATH=. ".venv-${i}/bin/python" - "$i" <<'PY'
+          import json, shutil, sys
+          from pathlib import Path
+          from tools.awj032.airllm_hard_false_remediation import PINNED_MUTATION_SPECS, remediate_pinned_policy_files
+          from tools.awj032 import airllm_source_admission as v1
+          from tools.awj032 import airllm_scope_aware_source_admission as v2
+
+          i=sys.argv[1]
+          root=Path(f'.fixture-{i}')
+          inputs={path:(root/path).read_bytes() for path in PINNED_MUTATION_SPECS}
+          outputs,remediation=remediate_pinned_policy_files(inputs)
+          for path,raw in outputs.items(): (root/path).write_bytes(raw)
+          old=v1.audit_airllm_source(root)
+          new=v2.audit_airllm_source(root)
+          base_key=('REMOTE_CODE_OPAQUE_LOADER_KWARGS','air_llm/airllm/airllm_base.py',298,'from_config receives opaque **kwargs without explicit trust_remote_code=False')
+          auto_key=('REMOTE_CODE_OPAQUE_LOADER_KWARGS','air_llm/airllm/auto_model.py',60,'get_module_class receives opaque **kwargs without explicit trust_remote_code=False')
+          old_set={(f.code,f.path,f.line,f.detail) for f in old.findings}
+          new_set={(f.code,f.path,f.line,f.detail) for f in new.findings}
+          discharged={(f.code,f.path,f.line,f.detail) for f in new.discharged_findings}
+          assert base_key in old_set, (base_key,old_set)
+          assert base_key not in new_set, (base_key,new_set)
+          assert base_key in discharged, discharged
+          assert auto_key in new_set, (auto_key,new_set)
+          allowed={
+            ('NESTED_PIP_MUTATION','air_llm/setup.py',29,'pip install'),
+            ('NESTED_PIP_MUTATION','air_llm/airllm/airllm_base.py',124,'pip install'),
+            auto_key,
+          }
+          assert new_set <= allowed, {'unexpected':sorted(new_set-allowed),'all':sorted(new_set)}
+          assert old.source_digest == new.source_digest
+          receipt={
+            'schema':'AWJ032_LEXICAL_SCOPE_SOURCE_GATE_PROOF_V1',
+            'upstream_commit':'c92cea691412715a218306acb01fc9c2c681a8f2',
+            'remediation_logical_id':remediation['logical_id'],
+            'source_digest':new.source_digest,
+            'v1_base_false_positive_present':True,
+            'v2_base_false_positive_discharged':True,
+            'v2_same_scope_auto_model_opaque_preserved':True,
+            'remaining_exact_findings':sorted(new_set),
+            'discharged_exact_findings':sorted(discharged),
+            'status':'PASS',
+            'authority':'D0_SOURCE_STATIC_ONLY',
+          }
+          Path(f'/tmp/awj032-scope-{i}.json').write_text(json.dumps(receipt,sort_keys=True,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+          done
+          cmp /tmp/awj032-scope-1.json /tmp/awj032-scope-2.json
+          cmp /tmp/awj032-scope-1.json /tmp/awj032-scope-3.json
+          cat /tmp/awj032-scope-1.json
+          sha256sum /tmp/awj032-scope-1.json
+          echo AWJ032_SOURCE_GATE_LEXICAL_SCOPE_EXACT_HEAD=PASS
