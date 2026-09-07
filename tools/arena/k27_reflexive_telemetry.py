@@ -2,42 +2,299 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable
 from k27_dynamic_navigator import digest
+
+
+def _nonempty(value: str, field: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise ValueError(f'{field} must be nonempty')
+    return value
+
+
+def _hex64(value: str, field: str) -> str:
+    if not isinstance(value, str) or len(value) != 64 or value.lower() != value or any(c not in '0123456789abcdef' for c in value):
+        raise ValueError(f'{field} must be lowercase sha256 hex')
+    return value
+
+
 @dataclass(frozen=True)
 class ProbeTransition:
-    probe_id:str; pre_state_root:str; post_state_root:str; declared_effect:str; consequence_root:str; material_consequence:bool; collision_checked:bool; lawful_ancestry:bool; counterexample_root:str=''; evidence_polarity:str='positive'
+    probe_id: str
+    pre_state_root: str
+    post_state_root: str
+    declared_effect: str
+    consequence_root: str
+    material_consequence: bool
+    collision_checked: bool
+    lawful_ancestry: bool
+    counterexample_root: str = ''
+    evidence_polarity: str = 'positive'
+    evidence_root: str = ''
+
     def validate(self):
-        if not all(isinstance(x,str) and x for x in (self.probe_id,self.pre_state_root,self.post_state_root,self.declared_effect,self.consequence_root,self.evidence_polarity)): raise ValueError('probe string fields must be nonempty')
-        if self.declared_effect not in {'PASSIVE','MAY_MUTATE','CONSUMED_ONCE'}: raise ValueError('invalid declared_effect')
-        if self.evidence_polarity not in {'positive','negative'}: raise ValueError('invalid evidence_polarity')
-        if any(type(x) is not bool for x in (self.material_consequence,self.collision_checked,self.lawful_ancestry)): raise ValueError('admission flags must be bool')
+        if not all(isinstance(x, str) and x for x in (
+            self.probe_id, self.pre_state_root, self.post_state_root,
+            self.declared_effect, self.consequence_root, self.evidence_polarity,
+        )):
+            raise ValueError('probe string fields must be nonempty')
+        if self.declared_effect not in {'PASSIVE', 'MAY_MUTATE', 'CONSUMED_ONCE'}:
+            raise ValueError('invalid declared_effect')
+        if self.evidence_polarity not in {'positive', 'negative'}:
+            raise ValueError('invalid evidence_polarity')
+        if any(type(x) is not bool for x in (
+            self.material_consequence, self.collision_checked, self.lawful_ancestry,
+        )):
+            raise ValueError('admission flags must be bool')
+        if self.evidence_root:
+            _hex64(self.evidence_root, 'evidence_root')
+
+
+@dataclass(frozen=True)
+class VerifiedProbeEvidence:
+    evidence_id: str
+    probe_id: str
+    pre_state_root: str
+    post_state_root: str
+    declared_effect: str
+    consequence_root: str
+    material_consequence: bool
+    collision_checked: bool
+    lawful_ancestry: bool
+    counterexample_root: str
+    evidence_polarity: str
+    producer_id: str
+    producer_incarnation: str
+    observation_root: str
+    schema_root: str
+    batch_root: str
+
+    def validate(self) -> None:
+        for field in (
+            'evidence_id', 'probe_id', 'pre_state_root', 'post_state_root',
+            'declared_effect', 'consequence_root', 'evidence_polarity',
+            'producer_id', 'producer_incarnation',
+        ):
+            _nonempty(getattr(self, field), field)
+        if self.declared_effect not in {'PASSIVE', 'MAY_MUTATE', 'CONSUMED_ONCE'}:
+            raise ValueError('invalid declared_effect')
+        if self.evidence_polarity not in {'positive', 'negative'}:
+            raise ValueError('invalid evidence_polarity')
+        if any(type(getattr(self, field)) is not bool for field in (
+            'material_consequence', 'collision_checked', 'lawful_ancestry',
+        )):
+            raise ValueError('verified admission flags must be exact bool')
+        _hex64(self.observation_root, 'observation_root')
+        _hex64(self.schema_root, 'schema_root')
+        _hex64(self.batch_root, 'batch_root')
+
+    @property
+    def evidence_root(self) -> str:
+        self.validate()
+        return digest({
+            'schema': 'AURA-VERIFIED-PROBE-EVIDENCE-v1',
+            'evidence_id': self.evidence_id,
+            'probe_id': self.probe_id,
+            'pre_state_root': self.pre_state_root,
+            'post_state_root': self.post_state_root,
+            'declared_effect': self.declared_effect,
+            'consequence_root': self.consequence_root,
+            'material_consequence': self.material_consequence,
+            'collision_checked': self.collision_checked,
+            'lawful_ancestry': self.lawful_ancestry,
+            'counterexample_root': self.counterexample_root,
+            'evidence_polarity': self.evidence_polarity,
+            'producer_id': self.producer_id,
+            'producer_incarnation': self.producer_incarnation,
+            'observation_root': self.observation_root,
+            'schema_root': self.schema_root,
+            'batch_root': self.batch_root,
+        })
+
+
 @dataclass(frozen=True)
 class ProbeAdmission:
-    status:str; probe_id:str; state_changed:bool; consequence_root:str; transition_root:str; telemetry_reusable:bool; novelty_admitted:bool; reason:str; authority_minted:bool=False; gate10:bool=False
+    status: str
+    probe_id: str
+    state_changed: bool
+    consequence_root: str
+    transition_root: str
+    telemetry_reusable: bool
+    novelty_admitted: bool
+    reason: str
+    evidence_root: str = ''
+    authority_minted: bool = False
+    gate10: bool = False
+
+
 class ReflexiveTelemetryGate:
-    def __init__(self,inherited_consequence_roots:Iterable[str]=()): self.inherited=set(inherited_consequence_roots); self.consumed_once=set(); self.admitted=set()
+    """D0 telemetry admission over evidence pre-verified by its rightful owner.
+
+    ProbeTransition fields are candidate assertions, never provenance. Novelty can
+    only be admitted when those assertions exactly cross-bind to a content-addressed
+    VerifiedProbeEvidence record whose batch root was independently admitted by the
+    upstream telemetry/evidence owner. This layer does not verify signatures, mint
+    authority, or infer truth from K27 locality.
+    """
+
+    def __init__(
+        self,
+        inherited_consequence_roots: Iterable[str] = (),
+        *,
+        evidence_records: Iterable[VerifiedProbeEvidence] = (),
+        verified_batch_roots: Iterable[str] = (),
+    ):
+        self.inherited = set(inherited_consequence_roots)
+        self.consumed_once = set()
+        self.admitted = set()
+        self._evidence = {}
+        self._evidence_ids = set()
+        for record in evidence_records:
+            if not isinstance(record, VerifiedProbeEvidence):
+                raise ValueError('evidence records must be VerifiedProbeEvidence')
+            root = record.evidence_root
+            if root in self._evidence or record.evidence_id in self._evidence_ids:
+                raise ValueError('duplicate evidence identity')
+            self._evidence[root] = record
+            self._evidence_ids.add(record.evidence_id)
+        self._verified_batch_roots = set(verified_batch_roots)
+        for root in self._verified_batch_roots:
+            _hex64(root, 'verified_batch_root')
+
     @staticmethod
-    def _transition_root(p): return digest({'probe_id':p.probe_id,'pre_state_root':p.pre_state_root,'post_state_root':p.post_state_root,'declared_effect':p.declared_effect,'consequence_root':p.consequence_root,'counterexample_root':p.counterexample_root,'evidence_polarity':p.evidence_polarity})
-    def admit(self,p):
-        p.validate(); changed=p.pre_state_root!=p.post_state_root; root=self._transition_root(p)
-        if p.declared_effect=='PASSIVE' and changed:return ProbeAdmission('HOLD_UNDECLARED_PROBE_EFFECT',p.probe_id,changed,p.consequence_root,root,False,False,'passive probe changed state')
-        if p.declared_effect=='CONSUMED_ONCE' and p.probe_id in self.consumed_once:return ProbeAdmission('HOLD_CONSUMED_ONCE',p.probe_id,changed,p.consequence_root,root,False,False,'consumed-once probe reused')
-        if p.declared_effect=='CONSUMED_ONCE': self.consumed_once.add(p.probe_id)
-        if not p.lawful_ancestry or not p.collision_checked or not p.material_consequence:return ProbeAdmission('REJECT',p.probe_id,changed,p.consequence_root,root,False,False,'admission prerequisites failed')
-        if p.consequence_root in self.inherited or p.consequence_root in self.admitted:return ProbeAdmission('SUPPORT_NOT_DISCOVERY',p.probe_id,changed,p.consequence_root,root,not changed,False,'consequence already represented')
-        if not p.counterexample_root:return ProbeAdmission('HOLD_NEEDS_COUNTEREXAMPLE',p.probe_id,changed,p.consequence_root,root,not changed,False,'no discriminating counterexample')
-        self.admitted.add(p.consequence_root); return ProbeAdmission('ADMISSION_READY',p.probe_id,changed,p.consequence_root,root,not changed,True,'consequence-distinct counterexample survived D0 admission')
-    def compile_sequence(self,probes):
-        out=[]; expected=None
+    def _transition_root(p: ProbeTransition) -> str:
+        return digest({
+            'probe_id': p.probe_id,
+            'pre_state_root': p.pre_state_root,
+            'post_state_root': p.post_state_root,
+            'declared_effect': p.declared_effect,
+            'consequence_root': p.consequence_root,
+            'counterexample_root': p.counterexample_root,
+            'evidence_polarity': p.evidence_polarity,
+            'evidence_root': p.evidence_root,
+        })
+
+    @staticmethod
+    def _candidate_binding(p: ProbeTransition) -> tuple[object, ...]:
+        return (
+            p.probe_id, p.pre_state_root, p.post_state_root, p.declared_effect,
+            p.consequence_root, p.material_consequence, p.collision_checked,
+            p.lawful_ancestry, p.counterexample_root, p.evidence_polarity,
+        )
+
+    @staticmethod
+    def _evidence_binding(e: VerifiedProbeEvidence) -> tuple[object, ...]:
+        return (
+            e.probe_id, e.pre_state_root, e.post_state_root, e.declared_effect,
+            e.consequence_root, e.material_consequence, e.collision_checked,
+            e.lawful_ancestry, e.counterexample_root, e.evidence_polarity,
+        )
+
+    def _hold(self, status: str, p: ProbeTransition, changed: bool, reason: str) -> ProbeAdmission:
+        return ProbeAdmission(
+            status, p.probe_id, changed, p.consequence_root,
+            self._transition_root(p), False, False, reason, p.evidence_root,
+        )
+
+    def _verified_evidence(self, p: ProbeTransition, changed: bool):
+        if not p.evidence_root:
+            return None, self._hold(
+                'HOLD_NEEDS_VERIFIED_EVIDENCE', p, changed,
+                'novelty/support telemetry requires owner-verified evidence identity',
+            )
+        evidence = self._evidence.get(p.evidence_root)
+        if evidence is None:
+            return None, self._hold(
+                'HOLD_EVIDENCE_NOT_FOUND', p, changed,
+                'evidence root is not present in the bound evidence index',
+            )
+        if evidence.batch_root not in self._verified_batch_roots:
+            return None, self._hold(
+                'HOLD_UNVERIFIED_EVIDENCE_BATCH', p, changed,
+                'evidence batch root has not been admitted by upstream owner',
+            )
+        if self._candidate_binding(p) != self._evidence_binding(evidence):
+            return None, self._hold(
+                'HOLD_EVIDENCE_BINDING_MISMATCH', p, changed,
+                'caller assertions do not exactly match owner-verified evidence',
+            )
+        return evidence, None
+
+    def admit(self, p: ProbeTransition) -> ProbeAdmission:
+        p.validate()
+        changed = p.pre_state_root != p.post_state_root
+        root = self._transition_root(p)
+        if p.declared_effect == 'PASSIVE' and changed:
+            return ProbeAdmission(
+                'HOLD_UNDECLARED_PROBE_EFFECT', p.probe_id, changed,
+                p.consequence_root, root, False, False,
+                'passive probe changed state', p.evidence_root,
+            )
+
+        evidence, hold = self._verified_evidence(p, changed)
+        if hold is not None:
+            return hold
+        assert evidence is not None
+
+        # CONSUMED_ONCE local state is changed only after evidence has been verified,
+        # so an unverified caller cannot burn the one-use slot as a denial of service.
+        if p.declared_effect == 'CONSUMED_ONCE' and p.probe_id in self.consumed_once:
+            return ProbeAdmission(
+                'HOLD_CONSUMED_ONCE', p.probe_id, changed, evidence.consequence_root,
+                root, False, False, 'consumed-once probe reused', p.evidence_root,
+            )
+
+        if not evidence.lawful_ancestry or not evidence.collision_checked or not evidence.material_consequence:
+            return ProbeAdmission(
+                'REJECT', p.probe_id, changed, evidence.consequence_root, root,
+                False, False, 'verified admission prerequisites failed', p.evidence_root,
+            )
+
+        if p.declared_effect == 'CONSUMED_ONCE':
+            self.consumed_once.add(p.probe_id)
+
+        if evidence.consequence_root in self.inherited or evidence.consequence_root in self.admitted:
+            return ProbeAdmission(
+                'SUPPORT_NOT_DISCOVERY', p.probe_id, changed, evidence.consequence_root,
+                root, not changed, False, 'consequence already represented', p.evidence_root,
+            )
+        if not evidence.counterexample_root:
+            return ProbeAdmission(
+                'HOLD_NEEDS_COUNTEREXAMPLE', p.probe_id, changed, evidence.consequence_root,
+                root, not changed, False, 'no verified discriminating counterexample', p.evidence_root,
+            )
+        self.admitted.add(evidence.consequence_root)
+        return ProbeAdmission(
+            'ADMISSION_READY', p.probe_id, changed, evidence.consequence_root, root,
+            not changed, True, 'verified consequence-distinct counterexample survived D0 admission',
+            p.evidence_root,
+        )
+
+    def compile_sequence(self, probes):
+        out = []
+        expected = None
         for p in probes:
             p.validate()
-            if expected is not None and p.pre_state_root!=expected:
-                out.append(ProbeAdmission('HOLD_STATE_CHAIN_GAP',p.probe_id,p.pre_state_root!=p.post_state_root,p.consequence_root,self._transition_root(p),False,False,'probe pre-state does not equal prior post-state')); break
-            a=self.admit(p); out.append(a); expected=p.post_state_root
-            if a.status.startswith('HOLD_') or a.status=='REJECT': break
+            if expected is not None and p.pre_state_root != expected:
+                out.append(ProbeAdmission(
+                    'HOLD_STATE_CHAIN_GAP', p.probe_id,
+                    p.pre_state_root != p.post_state_root, p.consequence_root,
+                    self._transition_root(p), False, False,
+                    'probe pre-state does not equal prior post-state', p.evidence_root,
+                ))
+                break
+            a = self.admit(p)
+            out.append(a)
+            expected = p.post_state_root
+            if a.status.startswith('HOLD_') or a.status == 'REJECT':
+                break
         return tuple(out)
+
+
 def hard13d_admission(axes):
-    if len(axes)!=13 or any(type(x) is not int or x not in (0,1,2) for x in axes):return 'HOLD_MALFORMED'
-    hard=axes[:8]
-    if 0 in hard:return 'HOLD_HARD_INVALID'
-    if 1 in hard:return 'HOLD_UNRESOLVED'
+    if len(axes) != 13 or any(type(x) is not int or x not in (0, 1, 2) for x in axes):
+        return 'HOLD_MALFORMED'
+    hard = axes[:8]
+    if 0 in hard:
+        return 'HOLD_HARD_INVALID'
+    if 1 in hard:
+        return 'HOLD_UNRESOLVED'
     return 'READY_D0'
