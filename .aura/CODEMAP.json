@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1679,
+    "repo_file_count": 1683,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1338,6 +1338,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/k27_dynamic_navigator/invariant_route_cut_receipt_20260907.json",
       "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
       "artifacts/arena/k27_dynamic_navigator/reflexive_telemetry_receipt_20260907.json",
       "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
@@ -2699,6 +2700,7 @@
       "tests/test_k27_dynamic_navigator.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_invariant_route_cut.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_reflexive_telemetry.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -2712,10 +2714,12 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
+      "tools/arena/campaign_k27_invariant_route_cut.py",
       "tools/arena/campaign_k27_reflexive_telemetry.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_dynamic_navigator.py",
+      "tools/arena/k27_invariant_route_cut.py",
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -17710,6 +17714,53 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/k27_dynamic_navigator/invariant_route_cut_receipt_20260907.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2071,
+      "lines": 51,
+      "tokens_est": 518,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1d69a7ca58fbab95",
+      "vector": [
+        -0.01156,
+        -0.199086,
+        0.196517,
+        -0.068075,
+        -0.16826,
+        -0.006422,
+        -0.268445,
+        -0.134865,
+        0.286427,
+        0.204224,
+        0.16826,
+        -0.129727,
+        -0.037248,
+        0.204224,
+        -0.19138,
+        0.217068,
+        0.309547,
+        -0.134865,
+        -0.029542,
+        -0.047524,
+        -0.014129,
+        0.021835,
+        0.271014,
+        -0.044955,
+        0.232481,
+        0.014129,
+        0.091194,
+        -0.255601,
+        0.217068,
+        -0.314684,
+        -0.183673,
+        0.039817
       ]
     },
     {
@@ -104514,6 +104565,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_invariant_route_cut.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3401,
+      "lines": 53,
+      "tokens_est": 851,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8195bc57d0817281",
+      "vector": [
+        0.129109,
+        0.211159,
+        0.039819,
+        -0.076017,
+        0.097737,
+        -0.034992,
+        -0.271491,
+        -0.228052,
+        -0.143588,
+        -0.022926,
+        -0.01086,
+        0.305276,
+        -0.273904,
+        -0.054298,
+        0.034992,
+        -0.066364,
+        0.114629,
+        0.191853,
+        0.273904,
+        0.146002,
+        0.305276,
+        0.158068,
+        0.022926,
+        -0.281144,
+        -0.078431,
+        -0.030166,
+        -0.276317,
+        0.042232,
+        0.19668,
+        -0.302863,
+        -0.047058,
+        -0.187027
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105125,6 +105223,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_k27_invariant_route_cut.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3708,
+      "lines": 64,
+      "tokens_est": 927,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ad05ad31bbac4f65",
+      "vector": [
+        0.074353,
+        0.074353,
+        0.079394,
+        -0.091996,
+        0.190293,
+        -0.086955,
+        0.036546,
+        -0.034026,
+        -0.212977,
+        -0.273467,
+        -0.107119,
+        -0.281029,
+        -0.240702,
+        -0.195334,
+        0.134843,
+        -0.170129,
+        -0.318835,
+        -0.318835,
+        -0.05671,
+        0.270947,
+        0.084435,
+        -0.091996,
+        -0.218018,
+        -0.013862,
+        0.207936,
+        -0.05923,
+        0.263385,
+        -0.155007,
+        -0.084435,
+        -0.190293,
+        -0.160048,
+        0.147445
+      ]
+    },
+    {
       "path": "tools/arena/campaign_k27_reflexive_telemetry.py",
       "role": "python_module",
       "binary": false,
@@ -105310,6 +105455,53 @@
         -0.078003,
         0.253783,
         0.238402
+      ]
+    },
+    {
+      "path": "tools/arena/k27_invariant_route_cut.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5327,
+      "lines": 136,
+      "tokens_est": 1332,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e0115fe2e121c0f6",
+      "vector": [
+        -0.00517,
+        -0.118916,
+        0.249206,
+        -0.197504,
+        0.089962,
+        -0.174755,
+        -0.176823,
+        0.007238,
+        -0.236798,
+        0.263683,
+        -0.092031,
+        -0.249206,
+        0.240934,
+        0.127188,
+        -0.110644,
+        -0.243002,
+        0.034124,
+        -0.224389,
+        -0.013443,
+        0.16855,
+        -0.220253,
+        -0.195436,
+        0.185095,
+        -0.056873,
+        -0.166482,
+        -0.152006,
+        -0.224389,
+        -0.216117,
+        0.127188,
+        -0.176823,
+        0.23473,
+        -0.135461
       ]
     },
     {
@@ -107015,7 +107207,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788741801,
+  "generated_at_unix": 1788742138,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107291,6 +107483,7 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/k27_dynamic_navigator/invariant_route_cut_receipt_20260907.json",
       "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
       "artifacts/arena/k27_dynamic_navigator/reflexive_telemetry_receipt_20260907.json",
       "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
@@ -108652,6 +108845,7 @@
       "tests/test_k27_dynamic_navigator.py",
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
+      "tests/test_k27_invariant_route_cut.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_reflexive_telemetry.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
@@ -108665,10 +108859,12 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
+      "tools/arena/campaign_k27_invariant_route_cut.py",
       "tools/arena/campaign_k27_reflexive_telemetry.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/k27_dynamic_navigator.py",
+      "tools/arena/k27_invariant_route_cut.py",
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -266961,6 +267157,156 @@
         "file_digest8": "94c9ed628d66a22d"
       },
       {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#class:InvariantRouteCutTests:bdc44fc1e3c66204",
+        "name": "InvariantRouteCutTests",
+        "kind": "class",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 10,
+        "end_line": 50,
+        "signature_hash": "1f7a21f57b1e3e2c",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#function:e:6f8461ae8c317fb1",
+        "name": "e",
+        "kind": "function",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "c4245c3ef2e5203f",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#function:s:874edf26d9992ae1",
+        "name": "s",
+        "kind": "function",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "7d24de8f21db90e6",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_13d_context_cannot_repair_hard_invalid:56711a279a40ae85",
+        "name": "InvariantRouteCutTests.test_13d_context_cannot_repair_hard_invalid",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "4922729318940a71",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_crossing_invariant_expands_direct_dependency_cut:c06c32305b9b033f",
+        "name": "InvariantRouteCutTests.test_crossing_invariant_expands_direct_dependency_cut",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 11,
+        "end_line": 15,
+        "signature_hash": "15795581eacde6c0",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_dense_support_honestly_collapses_global:103f9418c3faeeca",
+        "name": "InvariantRouteCutTests.test_dense_support_honestly_collapses_global",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "37cc0029da9943be",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_disjoint_invariant_does_not_expand_cut:0474802939f1b123",
+        "name": "InvariantRouteCutTests.test_disjoint_invariant_does_not_expand_cut",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "ebb218b6f7f94960",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_incomplete_support_holds_and_cannot_prove_unaffected:2f2a3b157e192f4f",
+        "name": "InvariantRouteCutTests.test_incomplete_support_holds_and_cannot_prove_unaffected",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "e4b600b00ef07594",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_missing_invariant_in_one_belief_state_holds:ab3478f058ecd730",
+        "name": "InvariantRouteCutTests.test_missing_invariant_in_one_belief_state_holds",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 36,
+        "end_line": 38,
+        "signature_hash": "f5de3382f3a4ddda",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_no_authority:dc7022d3704a10cd",
+        "name": "InvariantRouteCutTests.test_no_authority",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 46,
+        "end_line": 48,
+        "signature_hash": "0ac2432ef5f76bbe",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_ready_cut_change_outside_is_unaffected:18ae671f7fe4eb92",
+        "name": "InvariantRouteCutTests.test_ready_cut_change_outside_is_unaffected",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 43,
+        "end_line": 45,
+        "signature_hash": "8161641fd7bf30cc",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_reflexive_identical_support_can_commit:0cb212cb34819346",
+        "name": "InvariantRouteCutTests.test_reflexive_identical_support_can_commit",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "6005790e74dd61de",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_reflexive_support_change_holds_and_overcouples_union:3e07b11fa0c6d5b8",
+        "name": "InvariantRouteCutTests.test_reflexive_support_change_holds_and_overcouples_union",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "e888c8ff96b4ef7e",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_stale_support_holds:1909c0f813896c2e",
+        "name": "InvariantRouteCutTests.test_stale_support_holds",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "63b568e5083941b9",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_unknown_support_holds:cbacd2e8b9696005",
+        "name": "InvariantRouteCutTests.test_unknown_support_holds",
+        "kind": "method",
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "c020955f85a3da54",
+        "file_digest8": "8195bc57d0817281"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_runtime.py#class:SafetyRegressionTests:a478fbf333c9f89b",
         "name": "SafetyRegressionTests",
         "kind": "class",
@@ -267809,6 +268155,16 @@
         "end_line": 32,
         "signature_hash": "1107cedc597d81be",
         "file_digest8": "573d7186837a402b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_k27_invariant_route_cut.py#function:main:0842a622ab4fea00",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/campaign_k27_invariant_route_cut.py",
+        "line": 9,
+        "end_line": 62,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "ad05ad31bbac4f65"
       },
       {
         "semantic_id": "tools/arena/campaign_k27_reflexive_telemetry.py#function:main:007a14481390d541",
@@ -269159,6 +269515,106 @@
         "end_line": 53,
         "signature_hash": "99559e6add5bcf3e",
         "file_digest8": "d73358ebc5d92be4"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:InvariantRouteCut:2fd925ddcbdd0914",
+        "name": "InvariantRouteCut",
+        "kind": "class",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 55,
+        "end_line": 64,
+        "signature_hash": "b62c5f2835698aa4",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportBeliefState:0afb0bc83c155bd5",
+        "name": "SupportBeliefState",
+        "kind": "class",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 35,
+        "end_line": 51,
+        "signature_hash": "ded1aeb0f034675a",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportHyperedge:a0f61439350a28d0",
+        "name": "SupportHyperedge",
+        "kind": "class",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 20,
+        "end_line": 31,
+        "signature_hash": "a58bf8a32cbc35f2",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hard_map:7ef3dd44817603cb",
+        "name": "_hard_map",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "a0baadc016a09ac6",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hold:3d48cf9ddd4ab32f",
+        "name": "_hold",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 116,
+        "end_line": 120,
+        "signature_hash": "46b358a3f3034dd8",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:affected_by_change:9813ea51e98f5c9d",
+        "name": "affected_by_change",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 123,
+        "end_line": 126,
+        "signature_hash": "f870c37c01d63831",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:compile_invariant_route_cut:fc2ffcf7340e9f56",
+        "name": "compile_invariant_route_cut",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 72,
+        "end_line": 113,
+        "signature_hash": "64a3850e45fde107",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:hard13d_route_cut:85ef48f3a623b5b0",
+        "name": "hard13d_route_cut",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 129,
+        "end_line": 135,
+        "signature_hash": "8b1f8058576af321",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportBeliefState.validate:c1c881ae1de5fde7",
+        "name": "SupportBeliefState.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 41,
+        "end_line": 51,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e0115fe2e121c0f6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportHyperedge.validate:77a2acb8b4b6ab34",
+        "name": "SupportHyperedge.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e0115fe2e121c0f6"
       },
       {
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:canon:37d3e0e603debb0a",
@@ -272071,8 +272527,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "87edf2ecaa28d88db6972015a6bf4ecd",
-    "payload_hash": "35b8164da56882bdfe1c2026dd7268d0"
+    "record_fingerprint": "964a46b695c7c0788af1a2e17bab01b3",
+    "payload_hash": "725db80381e77ec4f08d0cfc77cd7c00"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272085,16 +272541,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1679,
-      "bytes": 26651081,
-      "tokens_est": 6653123,
+      "files": 1683,
+      "bytes": 26665588,
+      "tokens_est": 6656751,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1026,
-        "schema_or_lexicon": 278,
+        "python_module": 1029,
+        "schema_or_lexicon": 279,
         "support_file": 49
       }
     },
@@ -272781,16 +273237,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1679,
-    "total_bytes": 26651081,
-    "text_tokens_est": 6653123,
+    "file_count": 1683,
+    "total_bytes": 26665588,
+    "text_tokens_est": 6656751,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1026,
-      "schema_or_lexicon": 278,
+      "python_module": 1029,
+      "schema_or_lexicon": 279,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -273824,6 +274280,14 @@
         "line": 13,
         "end_line": 32,
         "semantic_id": "tools/arena/campaign_k27_dynamic_navigator_telemetry.py#function:main:38e487537b960fe1",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/arena/campaign_k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 62,
+        "semantic_id": "tools/arena/campaign_k27_invariant_route_cut.py#function:main:0842a622ab4fea00",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -428633,6 +429097,156 @@
         "signature_hash": "5cf64e2bab72f15b"
       }
     ],
+    "e": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#function:e:6f8461ae8c317fb1",
+        "signature_hash": "c4245c3ef2e5203f"
+      }
+    ],
+    "s": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#function:s:874edf26d9992ae1",
+        "signature_hash": "7d24de8f21db90e6"
+      }
+    ],
+    "InvariantRouteCutTests": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 50,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#class:InvariantRouteCutTests:bdc44fc1e3c66204",
+        "signature_hash": "1f7a21f57b1e3e2c"
+      }
+    ],
+    "InvariantRouteCutTests.test_crossing_invariant_expands_direct_dependency_cut": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 15,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_crossing_invariant_expands_direct_dependency_cut:c06c32305b9b033f",
+        "signature_hash": "15795581eacde6c0"
+      }
+    ],
+    "InvariantRouteCutTests.test_disjoint_invariant_does_not_expand_cut": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_disjoint_invariant_does_not_expand_cut:0474802939f1b123",
+        "signature_hash": "ebb218b6f7f94960"
+      }
+    ],
+    "InvariantRouteCutTests.test_incomplete_support_holds_and_cannot_prove_unaffected": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_incomplete_support_holds_and_cannot_prove_unaffected:2f2a3b157e192f4f",
+        "signature_hash": "e4b600b00ef07594"
+      }
+    ],
+    "InvariantRouteCutTests.test_stale_support_holds": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_stale_support_holds:1909c0f813896c2e",
+        "signature_hash": "63b568e5083941b9"
+      }
+    ],
+    "InvariantRouteCutTests.test_unknown_support_holds": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_unknown_support_holds:cbacd2e8b9696005",
+        "signature_hash": "c020955f85a3da54"
+      }
+    ],
+    "InvariantRouteCutTests.test_reflexive_support_change_holds_and_overcouples_union": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_reflexive_support_change_holds_and_overcouples_union:3e07b11fa0c6d5b8",
+        "signature_hash": "e888c8ff96b4ef7e"
+      }
+    ],
+    "InvariantRouteCutTests.test_reflexive_identical_support_can_commit": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_reflexive_identical_support_can_commit:0cb212cb34819346",
+        "signature_hash": "6005790e74dd61de"
+      }
+    ],
+    "InvariantRouteCutTests.test_missing_invariant_in_one_belief_state_holds": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 38,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_missing_invariant_in_one_belief_state_holds:ab3478f058ecd730",
+        "signature_hash": "f5de3382f3a4ddda"
+      }
+    ],
+    "InvariantRouteCutTests.test_dense_support_honestly_collapses_global": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_dense_support_honestly_collapses_global:103f9418c3faeeca",
+        "signature_hash": "37cc0029da9943be"
+      }
+    ],
+    "InvariantRouteCutTests.test_ready_cut_change_outside_is_unaffected": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 45,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_ready_cut_change_outside_is_unaffected:18ae671f7fe4eb92",
+        "signature_hash": "8161641fd7bf30cc"
+      }
+    ],
+    "InvariantRouteCutTests.test_no_authority": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 48,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_no_authority:dc7022d3704a10cd",
+        "signature_hash": "0ac2432ef5f76bbe"
+      }
+    ],
+    "InvariantRouteCutTests.test_13d_context_cannot_repair_hard_invalid": [
+      {
+        "file": "tests/test_k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tests/test_k27_invariant_route_cut.py#method:InvariantRouteCutTests.test_13d_context_cannot_repair_hard_invalid:56711a279a40ae85",
+        "signature_hash": "4922729318940a71"
+      }
+    ],
     "provenance_leaf_manifest": [
       {
         "file": "tests/test_k27_memory_runtime.py",
@@ -430681,6 +431295,106 @@
         "end_line": 304,
         "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:summarize_traffic:da4631dd79c66e73",
         "signature_hash": "10df9b719f3315e2"
+      }
+    ],
+    "SupportHyperedge": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 31,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportHyperedge:a0f61439350a28d0",
+        "signature_hash": "a58bf8a32cbc35f2"
+      }
+    ],
+    "SupportHyperedge.validate": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportHyperedge.validate:77a2acb8b4b6ab34",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SupportBeliefState": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 51,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportBeliefState:0afb0bc83c155bd5",
+        "signature_hash": "ded1aeb0f034675a"
+      }
+    ],
+    "SupportBeliefState.validate": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportBeliefState.validate:c1c881ae1de5fde7",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "InvariantRouteCut": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 64,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:InvariantRouteCut:2fd925ddcbdd0914",
+        "signature_hash": "b62c5f2835698aa4"
+      }
+    ],
+    "_hard_map": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hard_map:7ef3dd44817603cb",
+        "signature_hash": "a0baadc016a09ac6"
+      }
+    ],
+    "compile_invariant_route_cut": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 113,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:compile_invariant_route_cut:fc2ffcf7340e9f56",
+        "signature_hash": "64a3850e45fde107"
+      }
+    ],
+    "_hold": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 120,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hold:3d48cf9ddd4ab32f",
+        "signature_hash": "46b358a3f3034dd8"
+      }
+    ],
+    "affected_by_change": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 126,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:affected_by_change:9813ea51e98f5c9d",
+        "signature_hash": "f870c37c01d63831"
+      }
+    ],
+    "hard13d_route_cut": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 135,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:hard13d_route_cut:85ef48f3a623b5b0",
+        "signature_hash": "8b1f8058576af321"
       }
     ],
     "classify_hold": [
