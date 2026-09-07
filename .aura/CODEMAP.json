@@ -1066,7 +1066,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1696,
+    "repo_file_count": 1697,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2742,6 +2742,7 @@
       "tools/project006/proof_o20.py",
       "tools/project006/proof_physical_wake_o19.py",
       "tools/project006/proof_windows_liveness_fallback_o17.py",
+      "tools/project006/runtime_activation_transaction.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_aura_interaction_contract.py",
       "tools/project006/test_installed_runtime_attestation.py",
@@ -106486,6 +106487,53 @@
       ]
     },
     {
+      "path": "tools/project006/runtime_activation_transaction.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15858,
+      "lines": 157,
+      "tokens_est": 3965,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed9ec1ec03063c6c",
+      "vector": [
+        0.246395,
+        -0.292236,
+        0.234935,
+        -0.134085,
+        0.063031,
+        -0.154713,
+        -0.051571,
+        -0.234935,
+        0.072199,
+        -0.085952,
+        -0.001146,
+        0.191386,
+        -0.193678,
+        -0.218891,
+        -0.248687,
+        -0.278484,
+        -0.030943,
+        0.234935,
+        0.177634,
+        0.262439,
+        0.131793,
+        -0.044695,
+        0.115748,
+        0.127209,
+        0.026359,
+        0.099704,
+        -0.044695,
+        -0.228059,
+        -0.248687,
+        -0.008022,
+        -0.058447,
+        0.292236
+      ]
+    },
+    {
       "path": "tools/project006/terminal_outbox.py",
       "role": "python_module",
       "binary": false,
@@ -107859,7 +107907,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788791195,
+  "generated_at_unix": 1788795728,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -109537,6 +109585,7 @@
       "tools/project006/proof_o20.py",
       "tools/project006/proof_physical_wake_o19.py",
       "tools/project006/proof_windows_liveness_fallback_o17.py",
+      "tools/project006/runtime_activation_transaction.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_aura_interaction_contract.py",
       "tools/project006/test_installed_runtime_attestation.py",
@@ -271582,6 +271631,296 @@
         "file_digest8": "7dd8ee530f9aa943"
       },
       {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationError:88ebab9352c8158c",
+        "name": "ActivationError",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "a9e023adba10ce97",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationJournal:776f4b248bd51dba",
+        "name": "ActivationJournal",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 76,
+        "end_line": 156,
+        "signature_hash": "21ad3b430ef804ad",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationPlan:4e39c6207e861420",
+        "name": "ActivationPlan",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "f7956415b67b9004",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationState:cdf76dab71a96c84",
+        "name": "ActivationState",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 10,
+        "end_line": 15,
+        "signature_hash": "d07476b6a4e0db1f",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:LoadedProcessAdmission:f0ec435a04922b4b",
+        "name": "LoadedProcessAdmission",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 47,
+        "end_line": 56,
+        "signature_hash": "b103e899a5df4b9b",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:PostInstallProofSet:048545cb641628d0",
+        "name": "PostInstallProofSet",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 63,
+        "end_line": 70,
+        "signature_hash": "6e94365793f0f67a",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:RetirementEvidence:d4cffee144b06a83",
+        "name": "RetirementEvidence",
+        "kind": "class",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 32,
+        "end_line": 40,
+        "signature_hash": "0d881d4ace2a8bec",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:_hex64:e14a7dfceb7c5195",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "19dd1ea1e95374fb",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:_mac:e083057e22040b55",
+        "name": "_mac",
+        "kind": "function",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "f97c649cd15961e6",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:_root:9496de28863a0f4e",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "34df9904ddea3a4f",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:sign_loaded:3ae876e9b2ff8632",
+        "name": "sign_loaded",
+        "kind": "function",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "fc9f33f707eab310",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:sign_postinstall:0dfd92526505977b",
+        "name": "sign_postinstall",
+        "kind": "function",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 72,
+        "end_line": 74,
+        "signature_hash": "990ae5f8e4838c48",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:sign_retirement:71387587f18c9dcc",
+        "name": "sign_retirement",
+        "kind": "function",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "0eef687b7696f920",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.__init__:416a67e4d5b7da5b",
+        "name": "ActivationJournal.__init__",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 77,
+        "end_line": 84,
+        "signature_hash": "c1fe456fd070f68a",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal._read:a87462d25e184f33",
+        "name": "ActivationJournal._read",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 85,
+        "end_line": 88,
+        "signature_hash": "f70011deb24378c6",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.bind_loaded:1e8666636622d03a",
+        "name": "ActivationJournal.bind_loaded",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 119,
+        "end_line": 132,
+        "signature_hash": "a02d23f13e489200",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.bind_postinstall:6bf455c8200d3115",
+        "name": "ActivationJournal.bind_postinstall",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 133,
+        "end_line": 146,
+        "signature_hash": "155dab08d6b392dd",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.mark_activated:89868c64497eeb57",
+        "name": "ActivationJournal.mark_activated",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 147,
+        "end_line": 156,
+        "signature_hash": "c682ca719ca5218e",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.prepare:6f17c633101b0eeb",
+        "name": "ActivationJournal.prepare",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 93,
+        "end_line": 105,
+        "signature_hash": "38600fdc5f01472a",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.retire_old:1092149218eb30be",
+        "name": "ActivationJournal.retire_old",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 106,
+        "end_line": 118,
+        "signature_hash": "b551487d424f05b1",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.status:c4568f75f849b322",
+        "name": "ActivationJournal.status",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 89,
+        "end_line": 92,
+        "signature_hash": "7321fa4dbabf758d",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationPlan.plan_root:0506795d96831c1a",
+        "name": "ActivationPlan.plan_root",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 29,
+        "end_line": 29,
+        "signature_hash": "ea4970fce6be4194",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationPlan.validate:d1ef5ce92e59afb9",
+        "name": "ActivationPlan.validate",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:LoadedProcessAdmission.unsigned:971fccc300937ade",
+        "name": "LoadedProcessAdmission.unsigned",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 49,
+        "end_line": 49,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:LoadedProcessAdmission.validate:19de8704c5fe29b0",
+        "name": "LoadedProcessAdmission.validate",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 50,
+        "end_line": 56,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:PostInstallProofSet.unsigned:0bad26847339dec1",
+        "name": "PostInstallProofSet.unsigned",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 65,
+        "end_line": 65,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:PostInstallProofSet.validate:fa92687e7c3bcbfa",
+        "name": "PostInstallProofSet.validate",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 66,
+        "end_line": 70,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:RetirementEvidence.unsigned:e22e411b9f202644",
+        "name": "RetirementEvidence.unsigned",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 34,
+        "end_line": 34,
+        "signature_hash": "51a4917a3d7ebe28",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:RetirementEvidence.validate:b50d731596386fd8",
+        "name": "RetirementEvidence.validate",
+        "kind": "method",
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "line": 35,
+        "end_line": 40,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "ed9ec1ec03063c6c"
+      },
+      {
         "semantic_id": "tools/project006/terminal_outbox.py#class:AuraDriveBusWriterV1:8c7e36404a2cad95",
         "name": "AuraDriveBusWriterV1",
         "kind": "class",
@@ -273892,8 +274231,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "6aa3abe2a936b2b5ff1ad90052e4bedf",
-    "payload_hash": "4f839997fc5c583132afd9ddef4a9613"
+    "record_fingerprint": "c6c806f7b0527f95a801f8cf26522794",
+    "payload_hash": "8214290b5bac7061e35842cf99413e1b"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273906,15 +274245,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1696,
-      "bytes": 26678224,
-      "tokens_est": 6659915,
+      "files": 1697,
+      "bytes": 26694082,
+      "tokens_est": 6663880,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1032,
+        "python_module": 1033,
         "schema_or_lexicon": 286,
         "support_file": 53
       }
@@ -274602,15 +274941,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1696,
-    "total_bytes": 26678224,
-    "text_tokens_est": 6659915,
+    "file_count": 1697,
+    "total_bytes": 26694082,
+    "text_tokens_est": 6663880,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1032,
+      "python_module": 1033,
       "schema_or_lexicon": 286,
       "support_file": 53
     },
@@ -340446,6 +340785,14 @@
         "end_line": 23,
         "semantic_id": "tools/project006/physical_wake_acceptance.py#function:_hex64:e431de9f9cd84eae",
         "signature_hash": "19dd1ea1e95374fb"
+      },
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:_hex64:e14a7dfceb7c5195",
+        "signature_hash": "19dd1ea1e95374fb"
       }
     ],
     "_utc_timestamp": [
@@ -371826,6 +372173,14 @@
         "end_line": 22,
         "semantic_id": "tools/project006/physical_wake_acceptance.py#function:_root:43ca8d348bd79bc3",
         "signature_hash": "769522c3b4bdf5c3"
+      },
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:_root:9496de28863a0f4e",
+        "signature_hash": "34df9904ddea3a4f"
       }
     ],
     "_iter_nul_records": [
@@ -433986,6 +434341,276 @@
         "end_line": 4,
         "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:accept:8ce97d0606599884",
         "signature_hash": "7f8980620bde7ff6"
+      }
+    ],
+    "ActivationError": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationError:88ebab9352c8158c",
+        "signature_hash": "a9e023adba10ce97"
+      }
+    ],
+    "ActivationState": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationState:cdf76dab71a96c84",
+        "signature_hash": "d07476b6a4e0db1f"
+      }
+    ],
+    "_mac": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:_mac:e083057e22040b55",
+        "signature_hash": "f97c649cd15961e6"
+      }
+    ],
+    "ActivationPlan": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationPlan:4e39c6207e861420",
+        "signature_hash": "f7956415b67b9004"
+      }
+    ],
+    "ActivationPlan.validate": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationPlan.validate:d1ef5ce92e59afb9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ActivationPlan.plan_root": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 29,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationPlan.plan_root:0506795d96831c1a",
+        "signature_hash": "ea4970fce6be4194"
+      }
+    ],
+    "RetirementEvidence": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 40,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:RetirementEvidence:d4cffee144b06a83",
+        "signature_hash": "0d881d4ace2a8bec"
+      }
+    ],
+    "RetirementEvidence.unsigned": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 34,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:RetirementEvidence.unsigned:e22e411b9f202644",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "RetirementEvidence.validate": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 40,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:RetirementEvidence.validate:b50d731596386fd8",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "sign_retirement": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:sign_retirement:71387587f18c9dcc",
+        "signature_hash": "0eef687b7696f920"
+      }
+    ],
+    "LoadedProcessAdmission": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 56,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:LoadedProcessAdmission:f0ec435a04922b4b",
+        "signature_hash": "b103e899a5df4b9b"
+      }
+    ],
+    "LoadedProcessAdmission.unsigned": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 49,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:LoadedProcessAdmission.unsigned:971fccc300937ade",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "LoadedProcessAdmission.validate": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 56,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:LoadedProcessAdmission.validate:19de8704c5fe29b0",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "sign_loaded": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:sign_loaded:3ae876e9b2ff8632",
+        "signature_hash": "fc9f33f707eab310"
+      }
+    ],
+    "PostInstallProofSet": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 70,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:PostInstallProofSet:048545cb641628d0",
+        "signature_hash": "6e94365793f0f67a"
+      }
+    ],
+    "PostInstallProofSet.unsigned": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 65,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:PostInstallProofSet.unsigned:0bad26847339dec1",
+        "signature_hash": "51a4917a3d7ebe28"
+      }
+    ],
+    "PostInstallProofSet.validate": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 70,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:PostInstallProofSet.validate:fa92687e7c3bcbfa",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "sign_postinstall": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 74,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#function:sign_postinstall:0dfd92526505977b",
+        "signature_hash": "990ae5f8e4838c48"
+      }
+    ],
+    "ActivationJournal": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "class",
+        "line": 76,
+        "end_line": 156,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#class:ActivationJournal:776f4b248bd51dba",
+        "signature_hash": "21ad3b430ef804ad"
+      }
+    ],
+    "ActivationJournal.__init__": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 84,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.__init__:416a67e4d5b7da5b",
+        "signature_hash": "c1fe456fd070f68a"
+      }
+    ],
+    "ActivationJournal._read": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 88,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal._read:a87462d25e184f33",
+        "signature_hash": "f70011deb24378c6"
+      }
+    ],
+    "ActivationJournal.status": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 92,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.status:c4568f75f849b322",
+        "signature_hash": "7321fa4dbabf758d"
+      }
+    ],
+    "ActivationJournal.prepare": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 105,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.prepare:6f17c633101b0eeb",
+        "signature_hash": "38600fdc5f01472a"
+      }
+    ],
+    "ActivationJournal.retire_old": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 118,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.retire_old:1092149218eb30be",
+        "signature_hash": "b551487d424f05b1"
+      }
+    ],
+    "ActivationJournal.bind_loaded": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 132,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.bind_loaded:1e8666636622d03a",
+        "signature_hash": "a02d23f13e489200"
+      }
+    ],
+    "ActivationJournal.bind_postinstall": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 146,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.bind_postinstall:6bf455c8200d3115",
+        "signature_hash": "155dab08d6b392dd"
+      }
+    ],
+    "ActivationJournal.mark_activated": [
+      {
+        "file": "tools/project006/runtime_activation_transaction.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 156,
+        "semantic_id": "tools/project006/runtime_activation_transaction.py#method:ActivationJournal.mark_activated:89868c64497eeb57",
+        "signature_hash": "c682ca719ca5218e"
       }
     ],
     "TxState": [

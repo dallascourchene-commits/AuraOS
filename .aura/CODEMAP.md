@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1696
-- **total_bytes**: 26678224
-- **text_tokens_est**: 6659915
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1032, 'schema_or_lexicon': 286, 'support_file': 53}
+- **file_count**: 1697
+- **total_bytes**: 26694082
+- **text_tokens_est**: 6663880
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1033, 'schema_or_lexicon': 286, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1696,
+  "repo_file_count": 1697,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1699,6 +1699,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/proof_o20.py",
     "tools/project006/proof_physical_wake_o19.py",
     "tools/project006/proof_windows_liveness_fallback_o17.py",
+    "tools/project006/runtime_activation_transaction.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_aura_interaction_contract.py",
     "tools/project006/test_installed_runtime_attestation.py",
@@ -1836,15 +1837,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1696,
-  "bytes": 26678224,
-  "tokens_est": 6659915,
+  "files": 1697,
+  "bytes": 26694082,
+  "tokens_est": 6663880,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1032,
+    "python_module": 1033,
     "schema_or_lexicon": 286,
     "support_file": 53
   }
