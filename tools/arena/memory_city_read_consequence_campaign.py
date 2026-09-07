@@ -27,7 +27,7 @@ def run(cases=8000):
             elif mode<0.32 and j==len(pos)-1: rep=tuple(sorted(set(base_r)|{'y'}))
             elif mode<0.46 and j==len(pos)-1: trust=r(f'other{i}')
             elif mode<0.52 and j==len(pos)-1: current=False
-            projections.append(ReadWorldProjection(w,r(f'world{i}-{w}'),hyd,rep,trust,current,(rng.randrange(27),rng.randrange(27))))
+            projections.append(ReadWorldProjection(w,r(f'world{i}-{w}'),hyd,rep,trust,r(f'projection{i}-{w}'),current,(rng.randrange(27),rng.randrange(27))))
         cert=compile_read_consequence_certificate(coverage=cv,projections=tuple(projections))
         oracle_ready=(all(x.current for x in projections) and len({x.hydration_cut for x in projections})==1 and len({x.reproof_cut for x in projections})==1 and len({x.read_obligation_root for x in projections})==1)
         stats['oracle_mismatch'] += int((cert.disposition is ReadConsequenceDisposition.READY)!=oracle_ready)
@@ -37,12 +37,12 @@ def run(cases=8000):
         stats['consequence_only_false_ready'] += int(consequence_equal and len({x.read_obligation_root for x in projections})>1)
         if cert.disposition is ReadConsequenceDisposition.READY:
             stats['ready']+=1; active=projections[0]
-            u=validate_read_consequence_at_use(cert,coverage=cv,active_world_id=active.world_id,active_world_root=active.world_root,read_obligation_root=active.read_obligation_root)
+            u=validate_read_consequence_at_use(cert,coverage=cv,active_world_id=active.world_id,active_world_root=active.world_root,active_projection_root=active.projection_root,read_obligation_root=active.read_obligation_root)
             stats['exact_use_mismatch'] += int(u.disposition is not ReadConsequenceDisposition.READY)
-            stats['unknown_member_false_ready'] += int(validate_read_consequence_at_use(cert,coverage=cv,active_world_id='ghost',active_world_root=r('ghost'),read_obligation_root=active.read_obligation_root).disposition is ReadConsequenceDisposition.READY)
-            stats['trust_move_false_ready'] += int(validate_read_consequence_at_use(cert,coverage=cv,active_world_id=active.world_id,active_world_root=active.world_root,read_obligation_root=r('moved')).disposition is ReadConsequenceDisposition.READY)
-            stats['mutation_false_ready'] += int(validate_read_consequence_at_use(cert,coverage=cv,active_world_id=active.world_id,active_world_root=active.world_root,read_obligation_root=active.read_obligation_root,mutation_requested=True).disposition is ReadConsequenceDisposition.READY)
-            mutated=tuple(ReadWorldProjection(x.world_id,x.world_root,x.hydration_item_ids,x.reproof_item_ids,x.read_obligation_root,x.current,tuple((v+11)%27 for v in x.k27_hint)) for x in projections)
+            stats['unknown_member_false_ready'] += int(validate_read_consequence_at_use(cert,coverage=cv,active_world_id='ghost',active_world_root=r('ghost'),active_projection_root=r('ghost-projection'),read_obligation_root=active.read_obligation_root).disposition is ReadConsequenceDisposition.READY)
+            stats['trust_move_false_ready'] += int(validate_read_consequence_at_use(cert,coverage=cv,active_world_id=active.world_id,active_world_root=active.world_root,active_projection_root=active.projection_root,read_obligation_root=r('moved')).disposition is ReadConsequenceDisposition.READY)
+            stats['mutation_false_ready'] += int(validate_read_consequence_at_use(cert,coverage=cv,active_world_id=active.world_id,active_world_root=active.world_root,active_projection_root=active.projection_root,read_obligation_root=active.read_obligation_root,mutation_requested=True).disposition is ReadConsequenceDisposition.READY)
+            mutated=tuple(ReadWorldProjection(x.world_id,x.world_root,x.hydration_item_ids,x.reproof_item_ids,x.read_obligation_root,x.projection_root,x.current,tuple((v+11)%27 for v in x.k27_hint)) for x in projections)
             c2=compile_read_consequence_certificate(coverage=cv,projections=mutated)
             stats['k27_semantic_mismatch'] += int(c2.receipt_root!=cert.receipt_root or c2.disposition!=cert.disposition)
         else: stats['hold']+=1
