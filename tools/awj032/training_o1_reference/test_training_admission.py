@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 import tools.awj032.training_o1_reference.training_admission as mod
 from tools.awj032.training_o1_reference.training_admission import *
-R=lambda s:sha256(s.encode()).hexdigest(); REPO=Path(__file__).resolve().parents[4]/'.awj032_airllm_upstream_fixture'
+R=lambda s:sha256(s.encode()).hexdigest(); REPO=Path(__file__).resolve().parents[3]/'.awj032_airllm_upstream_fixture'
 def targets(): return ('layers.0.q_proj','layers.0.v_proj')
 def keys(ts=None): return tuple(sorted(derived_expected_adapter_keys(ts or targets())))
 def vals(ks=None): ks=ks or keys(); return {k:k.encode() for k in ks}
