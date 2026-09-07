@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1674
-- **total_bytes**: 26545882
-- **text_tokens_est**: 6626867
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1020, 'schema_or_lexicon': 277, 'support_file': 49}
+- **file_count**: 1686
+- **total_bytes**: 26558471
+- **text_tokens_est**: 6630019
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 249, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 282, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1674,
+  "repo_file_count": 1686,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -299,6 +299,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/awj032_airllm_training_o1/CLAIM_CEILING.md",
+    "artifacts/arena/awj032_airllm_training_o1/EXTERNAL_COORDINATES.json",
+    "artifacts/arena/awj032_airllm_training_o1/FIXED_POINT.json",
+    "artifacts/arena/awj032_airllm_training_o1/HS1000_QUOTIENT.json",
+    "artifacts/arena/awj032_airllm_training_o1/J59_BINDING.md",
+    "artifacts/arena/awj032_airllm_training_o1/OBJECTIVE.md",
+    "artifacts/arena/awj032_airllm_training_o1/PROOF_RECEIPT_O1.json",
+    "artifacts/arena/awj032_airllm_training_o1/README.md",
+    "artifacts/arena/awj032_airllm_training_o1/REBASE_PARENTS.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1682,6 +1691,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/test_airllm_hard_false_remediation.py",
     "tools/awj032/test_airllm_runtime_hard_false.py",
     "tools/awj032/test_airllm_source_admission.py",
+    "tools/awj032/training_o1_reference/README.md",
+    "tools/awj032/training_o1_reference/REPRODUCE.md",
+    "tools/awj032/training_o1_reference/__init__.py",
     "tools/awj032/training_o1_reference/test_training_admission.py",
     "tools/awj032/training_o1_reference/training_admission.py",
     "tools/construction_demo_assets/README.md",
@@ -1814,16 +1826,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1674,
-  "bytes": 26545882,
-  "tokens_est": 6626867,
+  "files": 1686,
+  "bytes": 26558471,
+  "tokens_est": 6630019,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 243,
+    "knowledge_artifact": 249,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1020,
-    "schema_or_lexicon": 277,
+    "python_module": 1021,
+    "schema_or_lexicon": 282,
     "support_file": 49
   }
 }
@@ -1953,6 +1965,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "USER_GUIDE.md",
     "VSA_RENDERING_IMPLEMENTATION.md",
     "VSA_TEST_PLAN.md",
+    "artifacts/arena/awj032_airllm_training_o1/CLAIM_CEILING.md",
+    "artifacts/arena/awj032_airllm_training_o1/J59_BINDING.md",
+    "artifacts/arena/awj032_airllm_training_o1/OBJECTIVE.md",
+    "artifacts/arena/awj032_airllm_training_o1/README.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -2104,11 +2120,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
     "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
     "docs/AURA_TOKEN_ECONOMY_STACK.md",
-    "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
-    "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md"
   ]
 }
 ```
