@@ -19,11 +19,13 @@ def compile_adaptive_hydration_strategy(hydration:SupportClosedHydration,fixed:S
     if hydration.status!='READY_SUPPORT_CLOSED_HYDRATION_D0':return _out('HOLD_HYDRATION_NOT_READY','NONE',hydration,expected_uses,0,fixed.support_root)
     if not fixed.current:return _out('HOLD_SUPPORT_FIXED_POINT_STALE','NONE',hydration,expected_uses,0,fixed.support_root)
     if not fixed.converged or fixed.terminal_states!=1:return _out('HOLD_SUPPORT_NOT_CONVERGED','NONE',hydration,expected_uses,0,fixed.support_root)
+    if not hydration.support_root:return _out('HOLD_SUPPORT_IDENTITY_UNKNOWN','NONE',hydration,expected_uses,0,fixed.support_root)
+    if fixed.support_root!=hydration.support_root:return _out('HOLD_SUPPORT_IDENTITY_MISMATCH','NONE',hydration,expected_uses,0,fixed.support_root)
     local_cost=hydration.selected_bytes*expected_uses; global_cost=hydration.universe_bytes
     if shared_global_available and global_cost<local_cost:return _out('READY_ADAPTIVE_D0','GLOBAL_SHARED',hydration,expected_uses,global_cost,fixed.support_root)
     return _out('READY_ADAPTIVE_D0','LOCAL_SUPPORT_CLOSED',hydration,expected_uses,local_cost,fixed.support_root)
 def _out(status,strategy,h,e,cost,support_root):
-    payload={'status':status,'strategy':strategy,'cut':h.support_cut,'selected':h.selected_bytes,'universe':h.universe_bytes,'expected_uses':e,'cost':cost,'support_root':support_root}
+    payload={'status':status,'strategy':strategy,'cut':h.support_cut,'selected':h.selected_bytes,'universe':h.universe_bytes,'expected_uses':e,'cost':cost,'support_root':support_root,'hydration_support_root':h.support_root}
     return AdaptiveHydrationStrategy(status,strategy,h.support_cut,h.selected_bytes,h.universe_bytes,e,cost,digest(payload))
 def hard13d_strategy(axes):
     if len(axes)!=13 or any(type(x) is not int or x not in (0,1,2) for x in axes):return 'HOLD_MALFORMED'
