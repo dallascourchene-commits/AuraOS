@@ -1,0 +1,68 @@
+{
+  "schema": "AURA-MEMORY-CITY-HANDOFF-CURRENT-READ-SEAL-PROOF-v1",
+  "status": "PROMOTED_D0_MODEL_REFERENCE",
+  "objective": "O17-CURRENT-READ-USE-HANDOFF-SEAL",
+  "claim_ceiling": "D0 source-shaped/local model plus committed owner-consumable code; no hosted execution, merge, deploy, effect authority, Gate10, production attestation, native/private Transformer KV, latency or bandwidth claim",
+  "foreign_parents": [
+    {
+      "artifact_id": "1T0kDSv5jQeXeG_HUJVe7qKp0QYQ17JC7",
+      "result": "Memory City O16 Read-Consequence At-Use Currentness",
+      "consequence": "CertifiedAtCompile != CurrentAtUse; current typed-closure and coverage identity must be rebound at cross-world read use"
+    },
+    {
+      "artifact_id": "1_tSesZmst2pK6TVe8AKL8Kq_-jtN0kiW",
+      "result": "O8 Runtime Horizon Effect Quotient",
+      "result_root": "dc5502582fddad3ed66af57a65c6e191c86006aa53691f4952ad828fbcb90b95",
+      "consequence": "runtime effect reuse requires current envelope/support/obligation/auth/resource evidence; quotientability is layer-local and does not imply profitability"
+    }
+  ],
+  "target_parent_pr": 883,
+  "keeper_laws": [
+    "ReadValidatedAtT0 != ReadCurrentAtMutationBoundaryT1",
+    "CurrentReadUseRootMove => RebindBeforeMutationVerification",
+    "StaleReadyReadDecision != CurrentSemanticPermission",
+    "ReadCurrentnessSeal != EffectAuthority",
+    "RuntimeEffectQuotientability != ReadConsequenceIdentity",
+    "Quotientability != Profitability",
+    "K27Coordinate != SemanticTruth != Currentness != Authority"
+  ],
+  "local_model": {
+    "fresh_venvs": 3,
+    "focused_tests_per_env": 5,
+    "focused_tests_total": 15,
+    "cases_per_env": 20000,
+    "cases_total": 60000,
+    "semantic_moves_per_env": 12302,
+    "legacy_prior_ready_false_ready_per_env": 12302,
+    "sealed_false_ready_per_env": 0,
+    "sealed_false_hold_per_env": 0,
+    "authority_minted": 0,
+    "campaign_root": "2cd11811c4149c4c0181e2bdf9ef3354e06dd7daba83e0e447322f308504c1ec",
+    "receipt_sha256": "f1411ef1f1954f6726bff5f40d6b8844a9c113ac2c029e2560a05ebae689bf99"
+  },
+  "crystalline8": [
+    "current_read_use",
+    "semantic_handoff",
+    "owner_evidence",
+    "verifier_current",
+    "mutation_identity",
+    "installed_fence",
+    "lease_current",
+    "mode_authority"
+  ],
+  "recursion13d": {
+    "states": 1594323,
+    "hard_valid_context_variants": 243,
+    "hard_invalid_repairs": 0,
+    "root": "597867c922fedbc48d9cb3c18cffee56f209f6b156d2683302f5fbfd09381916"
+  },
+  "hs1000": {
+    "cells": 1000,
+    "construction": "10 boundaries x 10 mechanisms x 10 consequence classes",
+    "consequence_groups": 100,
+    "freeze_root": "1e2c011ce94f20d866be22510a17420a4124ce50e1c2c68713cd21554369420c",
+    "root": "3a65c4452adc6737737ebc4ce91d5cd4758704fd883ff412260f00ccf55c5a84",
+    "note": "search/falsifier geometry, not 1000 independently proved breakthroughs"
+  },
+  "integration_boundary": "The seal consumes a current read-use root supplied by the rightful read owner. It does not authenticate that upstream root, recompute read semantics, mint mutation/effect authority, or implement RHEQ runtime quotienting. PR883/current owner integration still requires exact-current rebase."
+}
