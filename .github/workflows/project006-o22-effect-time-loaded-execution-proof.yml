@@ -1,0 +1,49 @@
+name: project006-o22-effect-time-loaded-execution-proof
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/effect_time_loaded_execution.py'
+      - 'tools/project006/o22_reference/**'
+      - 'tests/test_project006_effect_time_loaded_execution_o22.py'
+      - 'artifacts/arena/project006_o22_effect_time_loaded_execution/**'
+      - '.github/workflows/project006-o22-effect-time-loaded-execution-proof.yml'
+permissions:
+  contents: read
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact head
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - name: Verify frozen source hashes
+        shell: bash
+        run: |
+          echo '02be832cb3941ef7ded274a461d2e2e0fc76a74e87909c85b362555e1d499541  tools/project006/effect_time_loaded_execution.py' | sha256sum -c -
+          echo 'cd79c91a789763d64879f1b97882624a316c6b9a0e4fd3d38f404b235373af8e  tests/test_project006_effect_time_loaded_execution_o22.py' | sha256sum -c -
+          echo 'da3f7bf1a9111bb5658958c142b0a6f6f4ab3172c9f024ab87458f473b086d77  tools/project006/o22_reference/proof_o22.py' | sha256sum -c -
+      - name: Three fresh venvs and deterministic proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3; do
+            python -m venv ".venv-o22-$i"
+            ".venv-o22-$i/bin/python" -m py_compile tools/project006/effect_time_loaded_execution.py tools/project006/o22_reference/proof_o22.py tests/test_project006_effect_time_loaded_execution_o22.py
+            PYTHONPATH=. ".venv-o22-$i/bin/python" -m unittest -q tests.test_project006_effect_time_loaded_execution_o22
+            PYTHONPATH=. ".venv-o22-$i/bin/python" tools/project006/o22_reference/proof_o22.py > "o22-proof-$i.json"
+          done
+          cmp o22-proof-1.json o22-proof-2.json
+          cmp o22-proof-1.json o22-proof-3.json
+          test "$(sha256sum o22-proof-1.json | awk '{print $1}')" = '143e10891f24bf98cd3c3747c433b2c820481397a13973942c082f2df3586d7b'
+          grep -q '"oracle_mismatches":0' o22-proof-1.json
+          grep -q '"unsafe_accepts":0' o22-proof-1.json
+          echo O22_EXACT_HEAD_PROOF=PASS
