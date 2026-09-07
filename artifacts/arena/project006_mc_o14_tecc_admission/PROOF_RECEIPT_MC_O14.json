@@ -1,0 +1,71 @@
+{
+  "schema": "AURA-MEMCITY-MC-O14-PROOF-RECEIPT-v1",
+  "proof_receipt_root": "82e0967788fc621090b4381363c7462f9ad316ae7e389761d3d8033b73dab7ae",
+  "result": {
+    "schema": "AURA-MEMCITY-MC-O14-RESULT-v1",
+    "objective": "MC-O14 Owner-Produced TECC Admission into Durable Effect Attempt",
+    "status": "ACHIEVED_D0_NONPROMOTING",
+    "semantic_head": "1ab8ec7da2f8da4acdf4dea96d57a8f890c1ceb3",
+    "owner_base_head": "489cc1cfde1c28974a12e71fccec309dad0a4925",
+    "campaign_root": "4dbe97ae0c27aa2c931130fd5a047f3f121f52b09666289ba97f53b63690b75c",
+    "omega8_root": "20e9c445e7f24a8eedd4e88e84685f7cf488c569d7959ac4a080e671fed13311",
+    "recursion13d_root": "c0c38703af20c60664eb61cc16270c404de18ef261813e6cb87f7dbe47a43b62",
+    "hs1000_freeze_root": "c0fcae0ecc23199d1cda6e03b8769106f39f20861e5cb81179671ce06bc6c504",
+    "hs1000_quotient_root": "a5e35fbea25ea402c6f58b24efdab189c91402fe84b4e80516b63b1d3ab7559b",
+    "hs1000_top27_root": "36916c106c53fdaa19f4459dfa331d4592829c0ff64da475a0037ed43e4c3e45",
+    "hosted_job_id": 101725372057,
+    "hosted_run_id": 34116786175,
+    "tests": "25/25 per environment x3",
+    "campaign_cases_per_environment": 24000,
+    "legacy_unproofed_false_admissions_per_environment": 21600,
+    "candidate_false_bind": 0,
+    "candidate_false_hold": 0,
+    "effect_ready": 0,
+    "omega8_states": 6561,
+    "omega8_lawful_bind": 1,
+    "recursion13d_cartesian_states": 1594323,
+    "recursion13d_lawful_contextual_bind": 243,
+    "recursion13d_hard_invalid_context_repair": 0,
+    "authority": "D0_NONPROMOTING",
+    "gate10": false,
+    "effect_authority": false
+  },
+  "result_root": "bfd58d4276c53bd80dcf38fd24dfe1fb477426f86cacb44407e6fca56d79d6b6",
+  "foreign_rebase_parents": [
+    {"name": "OAETC Owner-Atomic Effect Transaction Capsule", "result_root": "5d48192b4875bec890ad03e7b1c31b213abe595d5fc33c66fb34fb43161becb0"},
+    {"name": "SREC Sink Reconciliation Evidence Capsule", "proof_receipt_root": "b54627bd5e8475a9eb2718f05da1cc6c037b7f8495a0cf69d6aadcf89425c956"}
+  ],
+  "collision_constraints": [
+    "PR899 remains effect-attempt/final-return owner",
+    "PR901 recovery membrane is a donor only because its ancestry is behind the current PR899 semantic head",
+    "PR891 remains refined TECC producer owner",
+    "TECC consumer-admission membrane remains non-authorizing"
+  ],
+  "hosted_proof": {
+    "commit_sha": "1ab8ec7da2f8da4acdf4dea96d57a8f890c1ceb3",
+    "job_id": 101725372057,
+    "run_id": 34116786175,
+    "python": "CPython 3.13.15",
+    "fresh_venvs": 3,
+    "deterministic_outputs_byte_identical": true,
+    "marker": "MC_O14_EXACT_HEAD_PROOF=PASS",
+    "conclusion": "success"
+  },
+  "failed_first_scars": [
+    "initial unittest launched outside frozen workspace and failed import before implementation execution; zero proof credit",
+    "first bridge draft omitted producer semantic-head/proof-generation/proof-semantics identity; repaired before freeze",
+    "manual provider-byte publication differed from frozen local bytes; local byte proof was not substituted for hosted exact-head proof"
+  ],
+  "keeper_laws": [
+    "IdentityIntentContract != ProofBoundEffectAdmission",
+    "ExactProducerReceipt != PresentTenseConsumerEligibility",
+    "ConsumerEligibility != IndependentVerifierAuthorization",
+    "UnproofedDurableAdmission != PermissionToProgressProvider",
+    "RetroactiveProofAfterProviderAttempt != LawfulAuthorizationHistory",
+    "ProducerProofSemanticsMove => REPROVE",
+    "ParentJournalLineageMove => HOLD_OR_REPROVE",
+    "ResultObservedAfterAuthorizationExpiry != PermissionToEraseResult",
+    "K27Coordinate != TECCIdentity != Authorization != EffectAuthority"
+  ],
+  "claim_ceiling": "D0 reference/non-owning membrane only; no production key management, TECC authority owner, provider effect, merge/deploy authority, canonical promotion, native/private Transformer KV access, or Gate10."
+}
