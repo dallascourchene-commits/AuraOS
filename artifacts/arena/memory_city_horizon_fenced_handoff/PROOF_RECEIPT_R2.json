@@ -1,0 +1,46 @@
+{
+  "schema": "aura.arena.proof_receipt.v1",
+  "objective": "O7-R2-HORIZON-FENCED-SEMANTIC-HANDOFF",
+  "title": "Current-owner horizon-fenced read-consequence to mutation handoff",
+  "status": "D0_NONPROMOTING_LOCAL_REFERENCE",
+  "gate10": false,
+  "base_pr": 878,
+  "base_head_sha": "dcc2973422985c66d3f391e45a8f0d65968f56ee",
+  "supersedes_stale_pr": 879,
+  "keeper_laws": [
+    "ReadReady AND WriteReady != MutationReadyWithoutSemanticCrossBinding",
+    "ReadConsequenceCertificateMayRepresentMultipleSupportWorldsWithoutMintingMutationAuthority",
+    "SemanticHandoffBindsConsequenceCoverageMembershipHorizonAndCurrentMutationEvidence",
+    "CoverageGenerationOrMemberClassMove => REBIND_REQUIRED",
+    "FullHiddenConfigurationIdentity != RequiredWhenConsequenceProjectionAndMutationAuthorityAreCompleteAndCurrent",
+    "K27OrCacheLocality != SemanticHandoffProof != WriteAuthority"
+  ],
+  "evidence": {
+    "fresh_venvs": 3,
+    "focused_tests_per_env": 10,
+    "focused_tests_total": 30,
+    "campaign_cases_per_env": 12000,
+    "campaign_root": "d4128116e5c6f55ab4c305dbcb34590d0debf459278ab30003148152cfff18be",
+    "campaign_file_sha256_all_envs": "eb71b969380dc802482ecaa0628fa9de45b6d8dac1a3234b6c421be7d5780670",
+    "per_env": {
+      "oracle_ready": 3000,
+      "bridge_ready": 3000,
+      "uncrossbound_false_ready": 6000,
+      "bridge_false_ready": 0,
+      "bridge_false_hold": 0,
+      "full_config_false_hold": 1500,
+      "consequence_swap": 1500,
+      "coverage_move": 1500,
+      "member_move": 1500,
+      "horizon_move": 1500,
+      "fence_attack": 1500,
+      "receipt_attack": 1500,
+      "valid_irrelevant_context": 1500
+    }
+  },
+  "failed_first_scars": [
+    "Original O7 unittest invocation ran outside frozen source directory and failed import before semantic execution; zero proof credit.",
+    "Original PR879 base became semantically stale when PR878 added support-root cross-binding and ReadConsequenceCertificate; exact-current credit was revoked and R2 rebuilt from current PR878 head."
+  ],
+  "claim_ceiling": "Finite D0/source-shaped donor proof only. No production consensus/quorum/fencing correctness, runtime/network/KV performance, canonical owner replacement, merge/deploy authority, native/private Transformer KV access, effect authority, or Gate10."
+}
