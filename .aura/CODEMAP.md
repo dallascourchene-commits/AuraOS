@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1664
-- **total_bytes**: 26550878
-- **text_tokens_est**: 6628067
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 273, 'support_file': 53}
+- **file_count**: 1665
+- **total_bytes**: 26560137
+- **text_tokens_est**: 6630382
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 273, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1664,
+  "repo_file_count": 1665,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1672,6 +1672,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/project006/project006_consumer_outbox_wrapper.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
     "tools/project006/test_windows_wake_broker.py",
@@ -1804,15 +1805,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1664,
-  "bytes": 26550878,
-  "tokens_est": 6628067,
+  "files": 1665,
+  "bytes": 26560137,
+  "tokens_est": 6630382,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1013,
+    "python_module": 1014,
     "schema_or_lexicon": 273,
     "support_file": 53
   }
