@@ -29,7 +29,8 @@ from .route_evidence_transaction import (
 )
 from .invariant_support import (
     HardInvariantSupport, InvariantSupportPlan, SupportDisposition, SupportState,
-    compile_invariant_support,
+    SupportUseDecision, SupportUseDisposition, SupportWorldIdentity,
+    compile_invariant_support, validate_support_use,
 )
 
 __all__ = [
@@ -45,5 +46,6 @@ __all__ = [
     "execute_probe_program", "graph_root", "program_root",
     "RouteEvidenceTransaction", "TransactionDisposition", "certify",
     "HardInvariantSupport", "InvariantSupportPlan", "SupportDisposition",
-    "SupportState", "compile_invariant_support",
+    "SupportState", "SupportUseDecision", "SupportUseDisposition",
+    "SupportWorldIdentity", "compile_invariant_support", "validate_support_use",
 ]
