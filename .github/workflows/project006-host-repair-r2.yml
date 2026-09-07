@@ -1,0 +1,85 @@
+name: Project006 Host Repair R2
+
+on:
+  push:
+    branches:
+      - project006/event-wake-outbox-repair-r3-20260907
+    paths:
+      - '.github/workflows/project006-host-repair-r2.yml'
+      - 'tools/project006/terminal_outbox.py'
+      - 'tools/project006/project006_consumer_outbox_wrapper.py'
+      - 'tools/project006/windows_wake_broker.py'
+      - 'tools/project006/Install-AuraProject006Wake.ps1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repair-owner-host:
+    runs-on: self-hosted
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify owner-host bridge surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v wslpath >/dev/null || { echo 'HOST_REPAIR_BLOCKED_NO_WSLPATH'; exit 21; }
+          command -v powershell.exe >/dev/null || { echo 'HOST_REPAIR_BLOCKED_NO_WINDOWS_POWERSHELL'; exit 22; }
+          test -f tools/project006/Install-AuraProject006Wake.ps1
+          test -f tools/project006/terminal_outbox.py
+          test -f tools/project006/project006_consumer_outbox_wrapper.py
+          echo 'HOST_REPAIR_SURFACE_READY=True'
+
+      - name: Install Project006 wake and terminal outbox, then prove AWJ033 return
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo_win="$(wslpath -w "$GITHUB_WORKSPACE")"
+          installer_win="$(wslpath -w "$GITHUB_WORKSPACE/tools/project006/Install-AuraProject006Wake.ps1")"
+          set +e
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$installer_win" -RepoPath "$repo_win" > project006-host-repair.json
+          rc=$?
+          set -e
+          cat project006-host-repair.json
+          echo "PROJECT006_HOST_REPAIR_RC=${rc}"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('project006-host-repair.json')
+          if not p.exists() or not p.read_text(encoding='utf-8', errors='replace').strip():
+              raise SystemExit('HOST_REPAIR_RECEIPT_MISSING')
+          text=p.read_text(encoding='utf-8-sig', errors='replace').strip()
+          # PowerShell may emit incidental lines before the final JSON. Parse the last JSON object line.
+          receipt=None
+          for line in reversed(text.splitlines()):
+              line=line.strip()
+              if line.startswith('{') and line.endswith('}'):
+                  try:
+                      receipt=json.loads(line)
+                      break
+                  except Exception:
+                      pass
+          if receipt is None:
+              raise SystemExit('HOST_REPAIR_RECEIPT_JSON_MISSING')
+          print('status='+str(receipt.get('status')))
+          print('physical_acceptance='+str(receipt.get('physical_acceptance')))
+          print('task_state='+str(receipt.get('task_state')))
+          print('outbound_file_ids='+','.join(receipt.get('outbound_file_ids') or []))
+          if receipt.get('physical_acceptance') is not True:
+              raise SystemExit('PHYSICAL_ACCEPTANCE_FALSE')
+          if not (receipt.get('outbound_file_ids') or []):
+              raise SystemExit('OUTBOUND_FILE_ID_MISSING')
+          PY
+          test "$rc" -eq 0
+
+      - name: Upload host repair receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: project006-host-repair-r2
+          path: project006-host-repair.json
+          if-no-files-found: warn
+          retention-days: 7
