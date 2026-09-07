@@ -1,0 +1,55 @@
+name: O19 Authenticated Attenuated Delegation Proof
+on:
+  pull_request:
+    paths:
+      - 'tools/arena/o19_authenticated_attenuated_delegation.py'
+      - 'tools/arena/o19_authenticated_attenuated_delegation_proof.py'
+      - 'tests/test_o19_authenticated_attenuated_delegation.py'
+      - 'artifacts/arena/o19_authenticated_attenuated_delegation/PROOF_RECEIPT_O19.json'
+      - '.github/workflows/o19-authenticated-attenuated-delegation-proof.yml'
+permissions:
+  contents: read
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout and frozen source
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          echo 'e27392fdc3538de133851aaae4d016f8040867dc5f6416a5d9aee8a91d65a800  tools/arena/o19_authenticated_attenuated_delegation.py' | sha256sum -c -
+          echo '3d4748d41bab399a539a57e29f59f8eed34748e516b3be088586004c0d1d6ec9  tools/arena/o19_authenticated_attenuated_delegation_proof.py' | sha256sum -c -
+          echo '8c1bda5280180b66d1809f21d37dba46d279c1c0e42f9340424ad0bcb9b37436  tests/test_o19_authenticated_attenuated_delegation.py' | sha256sum -c -
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Three fresh stdlib virtual environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .o19-v1 .o19-v2 .o19-v3 /tmp/o19-1.json /tmp/o19-2.json /tmp/o19-3.json
+          for n in 1 2 3; do
+            python -m venv ".o19-v${n}"
+            PYTHONPATH=. ".o19-v${n}/bin/python" -m unittest -q tests.test_o19_authenticated_attenuated_delegation
+            PYTHONPATH=. ".o19-v${n}/bin/python" -m tools.arena.o19_authenticated_attenuated_delegation_proof > "/tmp/o19-${n}.json"
+          done
+          cmp /tmp/o19-1.json /tmp/o19-2.json
+          cmp /tmp/o19-1.json /tmp/o19-3.json
+          echo '348be80fb40599f5231fd2a7bc2e6468a220c9dd8f3a726c35ab62ed57ebd17d  /tmp/o19-1.json' | sha256sum -c -
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/o19-1.json'))
+          assert p['forged_parent_attack']=='ADMIT_DELEGATED_ATTEMPT_D0'
+          assert p['campaign']['oracle_mismatches']==0
+          assert p['campaign']['false_admit']==0
+          assert p['campaign']['false_hold']==0
+          assert p['campaign']['parent_shape_false_admits']==7413
+          assert p['omega8']['states']==6561 and p['omega8']['keepers']==1 and p['omega8']['invalid_promotions']==0
+          assert p['d13']['states']==1594323 and p['d13']['lawful_contexts']==243 and p['d13']['hard_invalid_context_repairs']==0
+          assert p['hs1000']['raw_cells']==1000 and p['hs1000']['consequence_groups']==10 and p['hs1000']['claimed_breakthroughs']==0
+          print('O19_EXACT_HEAD_PROOF=PASS')
+          PY
