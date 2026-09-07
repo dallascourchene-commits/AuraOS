@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1699
-- **total_bytes**: 26719207
-- **text_tokens_est**: 6670153
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 250, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1024, 'schema_or_lexicon': 286, 'support_file': 54}
+- **file_count**: 1701
+- **total_bytes**: 26728001
+- **text_tokens_est**: 6672352
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 250, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1024, 'schema_or_lexicon': 288, 'support_file': 54}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1699,
+  "repo_file_count": 1701,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -200,6 +200,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/project006-o11r2-stable-operation-proof.yml",
     ".github/workflows/project006-o14-execution-basis-seal-proof.yml",
     ".github/workflows/project006-o15-workcell-effect-fault-proof.yml",
+    ".github/workflows/project006-o17-capsule-inspect.yml",
+    ".github/workflows/project006-o17-training-step-transaction-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -1839,16 +1841,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1699,
-  "bytes": 26719207,
-  "tokens_est": 6670153,
+  "files": 1701,
+  "bytes": 26728001,
+  "tokens_est": 6672352,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 250,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1024,
-    "schema_or_lexicon": 286,
+    "schema_or_lexicon": 288,
     "support_file": 54
   }
 }

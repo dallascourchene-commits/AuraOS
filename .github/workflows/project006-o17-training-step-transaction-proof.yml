@@ -1,0 +1,91 @@
+name: Project006 O17 Recoverable Training Step Transaction Proof
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  exact-three-venv-training-transaction-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout and reconstruct frozen source capsule
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          P=artifacts/arena/project006_o17_training_step_transaction/capsule_parts
+          test "$(sha256sum "$P/part00.b64" | awk '{print $1}')" = "0ab21c0c110e33f9399b60097d63e80a139176284f6d1ce783c9ecdf04d92571"
+          test "$(sha256sum "$P/part01.b64" | awk '{print $1}')" = "f2d182552e8ac5c70b91265e1fe3b0faf29f2e03c30faa543b5ceac83717e1de"
+          test "$(sha256sum "$P/part02.b64" | awk '{print $1}')" = "4437816be70f41917bbcde9def594c0c22993a796c62e72bfca14022185281ee"
+          test "$(sha256sum "$P/part03.b64" | awk '{print $1}')" = "09b279a4166b96c54f6460b61aab7e1f01211cd6c918420c7710fc1f9f219901"
+          test "$(sha256sum "$P/part04.b64" | awk '{print $1}')" = "eaebbf4c0c970f30ebadb68e5b29de3070bbcc4a0d2f9d2cbefffa71c229495a"
+          cat "$P"/part0{0,1,2,3,4}.b64 > /tmp/o17_source.tar.gz.b64
+          test "$(wc -c < /tmp/o17_source.tar.gz.b64)" = "18480"
+          test "$(sha256sum /tmp/o17_source.tar.gz.b64 | awk '{print $1}')" = "b85befe69788938bec2184f6aa5e58c1188475f4e8526bb13adcb0f86816ed7e"
+          base64 -d /tmp/o17_source.tar.gz.b64 > /tmp/o17_source.tar.gz
+          gzip -t /tmp/o17_source.tar.gz
+          test "$(sha256sum /tmp/o17_source.tar.gz | awk '{print $1}')" = "e1f126d909b5929415da85d1e9b2ca7641d5535b37bae567755ca20f868977a6"
+          mkdir -p /tmp/o17-src
+          tar -xzf /tmp/o17_source.tar.gz -C /tmp/o17-src
+          cd /tmp/o17-src
+          echo 'ca16110e2771c2cca77b4b8bd16ca8575d25a97fd2908ab9252d1e6f901c043f  campaign_o17.py' | sha256sum -c -
+          echo 'c4f75974319fcef8e90eeea85eb1c1349b2270f837dc072ecdc0316677a5b23f  fault_matrix_o17.py' | sha256sum -c -
+          echo 'd24331f25a6d8643e92e8950c72b1b6ae3e5ccd57d2a6bf64d2abe0857164e63  hyperscale_o17.py' | sha256sum -c -
+          echo '8b124700293e6afdabada5b53ef25045e2d0d7fc3eee9a914b968c6c6f23e343  mutation_o17.py' | sha256sum -c -
+          echo '649b5bafc6a83949c66bfe5b123ce05c5bad746847a9f82364db93fc6ec01001  o16_parent_snapshot.py' | sha256sum -c -
+          echo '5257c771c80c8f16a427f0e8111bd93415866504f674f1b7600c6e4f6253c098  o17_training_step_transaction.py' | sha256sum -c -
+          echo '62f4d6b7e3a642493b470e4799219dba6089d4ef739f7af3d45ba73ca9001943  test_o17.py' | sha256sum -c -
+          echo 'e33f0e057c8f0aa6fb8247c10c49fbb3df6c91afc803bcdbe896698735833ea4  test_o17_o16_interop.py' | sha256sum -c -
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.13"
+      - name: Three fresh venv exact-byte proof campaigns
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/o17-proof
+          cd /tmp/o17-src
+          for i in 1 2 3; do
+            rm -rf "/tmp/.venv-o17-$i"
+            python -m venv "/tmp/.venv-o17-$i"
+            PY="/tmp/.venv-o17-$i/bin/python"
+            "$PY" - <<'PY'
+          import unittest
+          s=unittest.defaultTestLoader.loadTestsFromNames(['test_o17','test_o17_o16_interop'])
+          assert s.countTestCases()==33, s.countTestCases()
+          r=unittest.TextTestRunner(verbosity=0).run(s)
+          assert r.wasSuccessful()
+          PY
+            "$PY" campaign_o17.py > "/tmp/o17-proof/campaign-$i.json"
+            "$PY" fault_matrix_o17.py > "/tmp/o17-proof/fault-$i.json"
+            "$PY" mutation_o17.py > "/tmp/o17-proof/mutation-$i.json"
+            "$PY" hyperscale_o17.py > "/tmp/o17-proof/hyperscale-$i.json"
+          done
+          for kind in campaign fault mutation hyperscale; do
+            cmp "/tmp/o17-proof/$kind-1.json" "/tmp/o17-proof/$kind-2.json"
+            cmp "/tmp/o17-proof/$kind-1.json" "/tmp/o17-proof/$kind-3.json"
+          done
+          python - <<'PY'
+          import json
+          c=json.load(open('/tmp/o17-proof/campaign-1.json'))
+          f=json.load(open('/tmp/o17-proof/fault-1.json'))
+          m=json.load(open('/tmp/o17-proof/mutation-1.json'))
+          h=json.load(open('/tmp/o17-proof/hyperscale-1.json'))
+          assert c['cases']==30000 and c['oracle_mismatches']==0 and c['unsafe_training_replays']==0 and c['authority_minted']==0
+          assert c['root']=='3250a954553061e986423d6b6aa567fad39ed4027938f6a44085c98db84defb9'
+          assert f['cases']==60 and f['duplicate_training_mutations']==0 and f['committed_steps_left_unresolved']==0 and f['invalid_checkpoint_publications']==0
+          assert f['root']=='6b6e6fbff3e4de4a7cb9b19fa3e0c225fc30a69a86a9239a9dfc21763536d201'
+          assert m['mutants']==12 and m['killed']==12 and m['survivors']==[]
+          assert h['omega8']['states']==6561 and h['omega8']['keepers']==1 and h['omega8']['hard_invalid_repairs']==0
+          assert h['recursion13d']['states']==1594323 and h['recursion13d']['lawful_contexts']==243 and h['recursion13d']['hard_invalid_context_repairs']==0
+          assert h['recursion13d']['root']=='71a9e641cc8b9e1b72ce5ca7c77f74d86ae7f2421824c85e25e34f2a61f58ecd'
+          assert h['hs1000']['raw_cells']==1000 and h['hs1000']['consequence_groups']==100 and h['hs1000']['claimed_breakthroughs']==0
+          assert h['hs1000']['freeze_root']=='180b57bacd903966bbb2004a7f9399f86c1ad855811deaa35da88eae483c61b9'
+          print('O17_EXACT_HEAD_PROOF=PASS')
+          PY
