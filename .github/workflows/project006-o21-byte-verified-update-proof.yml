@@ -1,0 +1,49 @@
+name: project006-o21-byte-verified-update-proof
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/atomic_runtime_update.py'
+      - 'tests/test_project006_atomic_runtime_update_o21.py'
+      - 'tools/project006/o21_reference/proof_o21.py'
+      - 'artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json'
+      - '.github/workflows/project006-o21-byte-verified-update-proof.yml'
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Exact source hashes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib
+          expected={
+            'tools/project006/atomic_runtime_update.py':'433cfe221a7f5be136c8f526c8bcf57f64550c648b4f5d44ac0731461386d2f4',
+            'tests/test_project006_atomic_runtime_update_o21.py':'be52314b5c85ab50da562bcd750c2827e74c615b6cbbf8595776d140b38c6baf',
+            'tools/project006/o21_reference/proof_o21.py':'e703d2fc8b3ef78a1f044645f650966bfab835f2afcea89b25aed839a7ab94b9'
+          }
+          for p,h in expected.items():
+              got=hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+              assert got==h,(p,got,h)
+          print('O21_SOURCE_HASHES=PASS')
+          PY
+      - name: Three fresh venvs
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE/tools/project006:$GITHUB_WORKSPACE"
+          for i in 1 2 3; do
+            rm -rf ".o21-venv-$i"
+            python -m venv ".o21-venv-$i"
+            ".o21-venv-$i/bin/python" -m unittest -q tests/test_project006_atomic_runtime_update_o21.py
+            ".o21-venv-$i/bin/python" tools/project006/o21_reference/proof_o21.py > "o21-proof-$i.json"
+          done
+          cmp o21-proof-1.json o21-proof-2.json
+          cmp o21-proof-1.json o21-proof-3.json
+          printf '%s  %s\n' '1cbe3fb6d8be7d2c5b88c657eb848fdfae3597b79f0ca47ebc95550fc883ab34' o21-proof-1.json | sha256sum -c -
+          echo O21_EXACT_HEAD_PROOF=PASS
