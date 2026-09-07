@@ -146,9 +146,14 @@ class DemandLeaseHandoffTests(unittest.TestCase):
         self.assertEqual(moved.revision, 5)
         self.assertIs(compile_write(self.lease(), moved, 51).disposition, LeaseDisposition.REBIND_REQUIRED)
 
-    def test_dependency_closed_invalidation_preserves_unrelated_cells(self):
-        edges = {"a": frozenset({"b"}), "b": frozenset({"c"}), "x": frozenset({"y"})}
+    def test_dependency_closed_invalidation_follows_consumers_not_prerequisites(self):
+        # Repository convention: dependent -> dependencies. b depends on a; c depends on b.
+        edges = {"b": frozenset({"a"}), "c": frozenset({"b"}), "y": frozenset({"x"})}
         self.assertEqual(dependency_closed_invalidation(frozenset({"a"}), edges), frozenset({"a", "b", "c"}))
+
+    def test_changed_consumer_does_not_invalidate_its_unchanged_dependency(self):
+        edges = {"consumer": frozenset({"source"})}
+        self.assertEqual(dependency_closed_invalidation(frozenset({"consumer"}), edges), frozenset({"consumer"}))
 
     def test_k27_or_cache_locality_is_not_part_of_lease_authority(self):
         first = canonical_lease_root(self.lease())
@@ -176,6 +181,7 @@ class DemandLeaseHandoffTests(unittest.TestCase):
         self.assertEqual(payload["compiler_false_ready"], 0)
         self.assertEqual(payload["compiler_false_hold"], 0)
         self.assertEqual(payload["unsupported_transition_false_ready"], 0)
+        self.assertEqual(payload["invalidation_oracle_mismatches"], 0)
 
 
 if __name__ == "__main__":
