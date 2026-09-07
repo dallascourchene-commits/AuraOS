@@ -1,0 +1,11 @@
+{
+  "objective":"O20R-EFFECT-TIME-LOADED-PROCESS-CURRENTNESS",
+  "freeze_before_proof":true,
+  "alternatives":[
+    {"id":"A1","proposal":"Installed runtime attestation is sufficient execution identity","disposition":"REJECTED","reason":"disk/package/current installation may diverge from already-loaded in-memory code and dispatch"},
+    {"id":"A2","proposal":"One load-time process observation is valid for process lifetime","disposition":"REJECTED","reason":"hot reload, monkeypatch, JIT, plugin, lazy import, registry and worker population changes can alter execution after preflight"},
+    {"id":"A3","proposal":"Rehash disk files immediately before effect","disposition":"REJECTED","reason":"current disk bytes do not identify mapped/loaded code, retained bound methods, JIT output or in-memory dispatch"},
+    {"id":"A4","proposal":"Bind process/load incarnation and revalidate mutation/dispatch/worker identity at use","disposition":"SELECTED"}
+  ],
+  "selected_law":"InstalledRuntimeCurrent != LoadedProcessCurrent != EffectTimeExecutableIdentity"
+}
