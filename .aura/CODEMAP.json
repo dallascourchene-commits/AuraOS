@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1673,
+    "repo_file_count": 1675,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -2696,6 +2696,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_route_admission.py",
+      "tests/test_k27_memory_navigator_runtime_bridge.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_k27_state_root_schema_snapshot.py",
@@ -2723,6 +2724,7 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
+      "tools/arena/k27_memory_navigator/runtime_bridge.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -104367,6 +104369,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_memory_navigator_runtime_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2867,
+      "lines": 91,
+      "tokens_est": 717,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2d827f9a42df0cb0",
+      "vector": [
+        0.269712,
+        0.213836,
+        0.050504,
+        0.145064,
+        0.269712,
+        -0.001075,
+        0.177301,
+        -0.22673,
+        0.175152,
+        0.033311,
+        -0.27401,
+        0.256818,
+        0.071995,
+        -0.233178,
+        -0.121424,
+        -0.185897,
+        0.130021,
+        0.166555,
+        -0.125722,
+        -0.069846,
+        0.267563,
+        0.061249,
+        0.183748,
+        -0.243923,
+        -0.198792,
+        -0.13217,
+        -0.207388,
+        0.091337,
+        -0.009671,
+        -0.130021,
+        -0.029013,
+        0.246072
+      ]
+    },
+    {
       "path": "tests/test_k27_memory_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105636,6 +105685,53 @@
       ]
     },
     {
+      "path": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3082,
+      "lines": 82,
+      "tokens_est": 771,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a347ca15eb36dee6",
+      "vector": [
+        -0.17953,
+        0.048287,
+        0.174578,
+        0.028477,
+        0.182007,
+        0.028477,
+        -0.016096,
+        -0.172101,
+        -0.063145,
+        -0.258771,
+        -0.300868,
+        0.016096,
+        -0.162196,
+        0.268676,
+        0.172101,
+        0.075527,
+        0.251342,
+        0.293439,
+        0.290963,
+        -0.09286,
+        0.068098,
+        0.142386,
+        0.214198,
+        0.040859,
+        0.01362,
+        -0.058193,
+        -0.263724,
+        0.288487,
+        -0.078003,
+        0.251342,
+        -0.184483,
+        -0.011143
+      ]
+    },
+    {
       "path": "tools/arena/k27_memory_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -106727,7 +106823,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788740470,
+  "generated_at_unix": 1788740557,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108361,6 +108457,7 @@
       "tests/test_k27_epoch_invalidation.py",
       "tests/test_k27_epoch_republish_invalidation.py",
       "tests/test_k27_memory_navigator_route_admission.py",
+      "tests/test_k27_memory_navigator_runtime_bridge.py",
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_k27_state_root_schema_snapshot.py",
@@ -108388,6 +108485,7 @@
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_navigator/__init__.py",
       "tools/arena/k27_memory_navigator/route_card_admission.py",
+      "tools/arena/k27_memory_navigator/runtime_bridge.py",
       "tools/arena/k27_memory_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -266797,6 +266895,126 @@
         "file_digest8": "9284b0ef0e4884d7"
       },
       {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Binding:cc5aaae510c0fae7",
+        "name": "Binding",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 17,
+        "end_line": 25,
+        "signature_hash": "9212b43a4c8ff883",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Runtime:cfc84e17ec90166d",
+        "name": "Runtime",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 28,
+        "end_line": 36,
+        "signature_hash": "a198b666ef27f74d",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:RuntimeBridgeTests:ee718fc3619ca90b",
+        "name": "RuntimeBridgeTests",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 39,
+        "end_line": 86,
+        "signature_hash": "d4fcd1935c6b7704",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Seal:81e269cc49a96d7f",
+        "name": "Seal",
+        "kind": "class",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "b56d17e2d779a4ec",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:Runtime.__init__:93b9a274a7387c08",
+        "name": "Runtime.__init__",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "5505f1eef82043de",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:Runtime.read:54acf87a07a7f103",
+        "name": "Runtime.read",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "fd5bc87a1f79811c",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_authority_widening_rejected:90f4b9f78b76f0c8",
+        "name": "RuntimeBridgeTests.test_authority_widening_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "26beb673ad3a4856",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_bad_state_root_rejected:c39ff4481896002d",
+        "name": "RuntimeBridgeTests.test_bad_state_root_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 79,
+        "end_line": 86,
+        "signature_hash": "6e1c11d0f8cbec54",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_bool_generation_rejected:fbc823f1546c5ac5",
+        "name": "RuntimeBridgeTests.test_bool_generation_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 72,
+        "end_line": 77,
+        "signature_hash": "cb9a7ead6759e93f",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_bridge:0804e23dd5666ea6",
+        "name": "RuntimeBridgeTests.test_bridge",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 40,
+        "end_line": 48,
+        "signature_hash": "b17a093448e84deb",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_k27_not_source:52fe5a4c69b01612",
+        "name": "RuntimeBridgeTests.test_k27_not_source",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 50,
+        "end_line": 55,
+        "signature_hash": "fae155422c7452da",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_missing_incarnation_rejected:e5f5e6ec615526ac",
+        "name": "RuntimeBridgeTests.test_missing_incarnation_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "fc98eae55ade54b2",
+        "file_digest8": "2d827f9a42df0cb0"
+      },
+      {
         "semantic_id": "tests/test_k27_memory_runtime.py#class:SafetyRegressionTests:a478fbf333c9f89b",
         "name": "SafetyRegressionTests",
         "kind": "class",
@@ -270097,6 +270315,46 @@
         "file_digest8": "de55e41e3d2d95d5"
       },
       {
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#class:RuntimeBridgeError:476e3b31905e1ed9",
+        "name": "RuntimeBridgeError",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "d430f3dd5af1c894",
+        "file_digest8": "a347ca15eb36dee6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#class:RuntimeBridgeReceipt:7710b6be5477329f",
+        "name": "RuntimeBridgeReceipt",
+        "kind": "class",
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "line": 15,
+        "end_line": 24,
+        "signature_hash": "631f6cfa8f9a97f9",
+        "file_digest8": "a347ca15eb36dee6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#function:_hex64:03883f37bd226964",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "0adbe69cbb6b132b",
+        "file_digest8": "a347ca15eb36dee6"
+      },
+      {
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#function:route_identity_from_runtime:2d1edb18b9ffaa24",
+        "name": "route_identity_from_runtime",
+        "kind": "function",
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "line": 34,
+        "end_line": 81,
+        "signature_hash": "2b5ecf571daa1216",
+        "file_digest8": "a347ca15eb36dee6"
+      },
+      {
         "semantic_id": "tools/arena/k27_memory_runtime.py#class:K27MemoryRuntime:606b57434b2b86ed",
         "name": "K27MemoryRuntime",
         "kind": "class",
@@ -271647,8 +271905,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "5c4c0ce6eae49e621eacf594c4a25432",
-    "payload_hash": "5a107bfa8e90503649c0d3f3eb744544"
+    "record_fingerprint": "492df4ebf7faba145a171c42d48e31e3",
+    "payload_hash": "283fb4b4cc7aa222ae184f063c7bee0c"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271661,15 +271919,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1673,
-      "bytes": 26633020,
-      "tokens_est": 6648606,
+      "files": 1675,
+      "bytes": 26638969,
+      "tokens_est": 6650094,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1023,
+        "python_module": 1025,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -272357,15 +272615,15 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1673,
-    "total_bytes": 26633020,
-    "text_tokens_est": 6648606,
+    "file_count": 1675,
+    "total_bytes": 26638969,
+    "text_tokens_est": 6650094,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1023,
+      "python_module": 1025,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -338121,6 +338379,14 @@
         "end_line": 42,
         "semantic_id": "tools/arena/k27_memory_navigator/route_card_admission.py#function:_hex64:549de3872d25fd94",
         "signature_hash": "9f19f6079c8030ec"
+      },
+      {
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#function:_hex64:03883f37bd226964",
+        "signature_hash": "0adbe69cbb6b132b"
       }
     ],
     "_utc_timestamp": [
@@ -428329,6 +428595,126 @@
         "signature_hash": "4ebc5d6eccc642ef"
       }
     ],
+    "Seal": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Seal:81e269cc49a96d7f",
+        "signature_hash": "b56d17e2d779a4ec"
+      }
+    ],
+    "Binding": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Binding:cc5aaae510c0fae7",
+        "signature_hash": "9212b43a4c8ff883"
+      }
+    ],
+    "Runtime": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 36,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:Runtime:cfc84e17ec90166d",
+        "signature_hash": "a198b666ef27f74d"
+      }
+    ],
+    "Runtime.__init__": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:Runtime.__init__:93b9a274a7387c08",
+        "signature_hash": "5505f1eef82043de"
+      }
+    ],
+    "Runtime.read": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:Runtime.read:54acf87a07a7f103",
+        "signature_hash": "fd5bc87a1f79811c"
+      }
+    ],
+    "RuntimeBridgeTests": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 86,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#class:RuntimeBridgeTests:ee718fc3619ca90b",
+        "signature_hash": "d4fcd1935c6b7704"
+      }
+    ],
+    "RuntimeBridgeTests.test_bridge": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 48,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_bridge:0804e23dd5666ea6",
+        "signature_hash": "b17a093448e84deb"
+      }
+    ],
+    "RuntimeBridgeTests.test_k27_not_source": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 55,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_k27_not_source:52fe5a4c69b01612",
+        "signature_hash": "fae155422c7452da"
+      }
+    ],
+    "RuntimeBridgeTests.test_authority_widening_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_authority_widening_rejected:90f4b9f78b76f0c8",
+        "signature_hash": "26beb673ad3a4856"
+      }
+    ],
+    "RuntimeBridgeTests.test_missing_incarnation_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_missing_incarnation_rejected:e5f5e6ec615526ac",
+        "signature_hash": "fc98eae55ade54b2"
+      }
+    ],
+    "RuntimeBridgeTests.test_bool_generation_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 77,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_bool_generation_rejected:fbc823f1546c5ac5",
+        "signature_hash": "cb9a7ead6759e93f"
+      }
+    ],
+    "RuntimeBridgeTests.test_bad_state_root_rejected": [
+      {
+        "file": "tests/test_k27_memory_navigator_runtime_bridge.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 86,
+        "semantic_id": "tests/test_k27_memory_navigator_runtime_bridge.py#method:RuntimeBridgeTests.test_bad_state_root_rejected:c39ff4481896002d",
+        "signature_hash": "6e1c11d0f8cbec54"
+      }
+    ],
     "provenance_leaf_manifest": [
       {
         "file": "tests/test_k27_memory_runtime.py",
@@ -431437,6 +431823,36 @@
         "end_line": 267,
         "semantic_id": "tools/arena/k27_memory_navigator/route_card_admission.py#function:canonical_receipt_root:d673b48f7661295a",
         "signature_hash": "f4a1bcbee796d564"
+      }
+    ],
+    "RuntimeBridgeError": [
+      {
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#class:RuntimeBridgeError:476e3b31905e1ed9",
+        "signature_hash": "d430f3dd5af1c894"
+      }
+    ],
+    "RuntimeBridgeReceipt": [
+      {
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 24,
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#class:RuntimeBridgeReceipt:7710b6be5477329f",
+        "signature_hash": "631f6cfa8f9a97f9"
+      }
+    ],
+    "route_identity_from_runtime": [
+      {
+        "file": "tools/arena/k27_memory_navigator/runtime_bridge.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 81,
+        "semantic_id": "tools/arena/k27_memory_navigator/runtime_bridge.py#function:route_identity_from_runtime:2d1edb18b9ffaa24",
+        "signature_hash": "2b5ecf571daa1216"
       }
     ],
     "RuntimeBindingError": [
