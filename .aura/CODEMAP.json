@@ -361,6 +361,7 @@
     ],
     "python -m venv": [
       ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
+      ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
       ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       "README.md"
@@ -1063,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1696,
+    "repo_file_count": 1705,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1214,6 +1215,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -1338,6 +1340,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
+      "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -2406,6 +2410,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_attenuated_stable_operation_delegation_hosted.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2712,9 +2717,14 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/o18_campaign.py",
+      "tools/arena/o18_hs1000.py",
+      "tools/arena/o18_lattice8.py",
+      "tools/arena/o18_sweep13d.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -2825,6 +2835,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_attenuated_stable_operation_delegation_hosted.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -2861,8 +2872,7 @@
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_capability_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -10365,6 +10375,59 @@
       ]
     },
     {
+      "path": ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2107,
+      "lines": 40,
+      "tokens_est": 527,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          20
+        ]
+      },
+      "topology": {},
+      "digest8": "1edc1d6afce66370",
+      "vector": [
+        -0.082207,
+        -0.237358,
+        -0.188728,
+        0.191044,
+        -0.008105,
+        0.276724,
+        -0.140099,
+        -0.137783,
+        -0.137783,
+        0.195675,
+        0.121573,
+        -0.230411,
+        0.172518,
+        0.188728,
+        -0.100732,
+        0.070628,
+        -0.153993,
+        0.14473,
+        0.008105,
+        -0.237358,
+        -0.244305,
+        -0.191044,
+        -0.047472,
+        -0.100732,
+        0.181781,
+        0.181781,
+        -0.096101,
+        -0.29525,
+        -0.26283,
+        -0.149362,
+        0.116942,
+        -0.258199
+      ]
+    },
+    {
       "path": ".github/workflows/o5-consequence-admission-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17781,6 +17844,100 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1040,
+      "lines": 20,
+      "tokens_est": 260,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e03e5b0165d8328a",
+      "vector": [
+        -0.059665,
+        0.284287,
+        -0.186015,
+        0.1205,
+        -0.083063,
+        0.106461,
+        0.167296,
+        0.026908,
+        -0.230471,
+        -0.052646,
+        -0.097102,
+        0.052646,
+        -0.260889,
+        0.092423,
+        0.284287,
+        -0.129859,
+        -0.099442,
+        0.033927,
+        -0.291306,
+        -0.176656,
+        -0.012869,
+        -0.211753,
+        -0.176656,
+        0.080723,
+        0.150918,
+        0.202394,
+        0.155597,
+        0.200054,
+        0.272588,
+        -0.232811,
+        0.267908,
+        -0.197714
+      ]
+    },
+    {
+      "path": "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1881,
+      "lines": 42,
+      "tokens_est": 471,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "55189f8a4324d0b3",
+      "vector": [
+        0.149288,
+        0.080807,
+        -0.195854,
+        -0.132852,
+        0.253378,
+        -0.299945,
+        -0.015066,
+        -0.00137,
+        0.173941,
+        -0.250639,
+        -0.075329,
+        -0.039719,
+        0.110939,
+        -0.346512,
+        0.146548,
+        -0.058893,
+        0.258857,
+        -0.152027,
+        0.028762,
+        -0.078068,
+        0.261596,
+        0.06985,
+        0.108199,
+        -0.097242,
+        0.24516,
+        0.023283,
+        -0.24516,
+        0.269813,
+        0.135592,
+        -0.228725,
+        0.198594,
+        -0.089025
       ]
     },
     {
@@ -90814,6 +90971,53 @@
       ]
     },
     {
+      "path": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2959,
+      "lines": 33,
+      "tokens_est": 740,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c5e3d5b58432709c",
+      "vector": [
+        0.02334,
+        -0.202691,
+        0.104417,
+        -0.251828,
+        -0.052823,
+        0.246915,
+        -0.251828,
+        0.077391,
+        0.011056,
+        0.013513,
+        0.097046,
+        0.165838,
+        -0.173209,
+        -0.296052,
+        0.165838,
+        0.296052,
+        -0.138813,
+        0.008599,
+        0.01597,
+        -0.119158,
+        0.052823,
+        0.119158,
+        -0.060193,
+        0.143726,
+        -0.239544,
+        0.214975,
+        0.232173,
+        -0.242001,
+        -0.055279,
+        -0.31325,
+        -0.259199,
+        0.146183
+      ]
+    },
+    {
       "path": "tests/test_aura_adaptive_execution.py",
       "role": "python_module",
       "binary": false,
@@ -105196,6 +105400,53 @@
       ]
     },
     {
+      "path": "tools/arena/attenuated_stable_operation_delegation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3891,
+      "lines": 51,
+      "tokens_est": 973,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d730a72516c3e290",
+      "vector": [
+        0.123378,
+        -0.120982,
+        0.037133,
+        -0.164105,
+        -0.295868,
+        -0.092234,
+        0.132961,
+        -0.092234,
+        0.037133,
+        0.204832,
+        -0.097026,
+        -0.243163,
+        0.173688,
+        0.010781,
+        0.075464,
+        0.051507,
+        -0.18327,
+        -0.21681,
+        -0.264724,
+        -0.037133,
+        0.28389,
+        -0.293472,
+        0.204832,
+        0.300659,
+        0.06109,
+        -0.223997,
+        0.288681,
+        -0.235976,
+        -0.029946,
+        0.041925,
+        -0.130565,
+        0.073069
+      ]
+    },
+    {
       "path": "tools/arena/consequence_admission_kernel.py",
       "role": "python_module",
       "binary": false,
@@ -105334,6 +105585,194 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/o18_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2369,
+      "lines": 27,
+      "tokens_est": 593,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5dcb8d8344deace8",
+      "vector": [
+        -0.08071,
+        0.296849,
+        -0.324209,
+        0.261282,
+        0.190148,
+        0.097126,
+        0.198356,
+        0.02052,
+        -0.113541,
+        0.277698,
+        -0.088918,
+        0.149109,
+        0.165524,
+        -0.017784,
+        -0.025991,
+        -0.146373,
+        -0.198356,
+        -0.160052,
+        0.119013,
+        0.009576,
+        0.258546,
+        0.305057,
+        -0.064295,
+        0.050615,
+        0.162788,
+        -0.069766,
+        0.291378,
+        0.162788,
+        0.031463,
+        -0.228451,
+        0.091654,
+        0.162788
+      ]
+    },
+    {
+      "path": "tools/arena/o18_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1533,
+      "lines": 17,
+      "tokens_est": 384,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "df00216856e39c6f",
+      "vector": [
+        0.177236,
+        0.099008,
+        0.155234,
+        -0.020779,
+        -0.033003,
+        -0.187014,
+        -0.240796,
+        0.245685,
+        0.106341,
+        -0.008556,
+        -0.209016,
+        0.201682,
+        0.253019,
+        0.228573,
+        -0.277465,
+        -0.001222,
+        0.152789,
+        0.213905,
+        -0.267687,
+        0.304356,
+        -0.062338,
+        -0.020779,
+        0.17968,
+        0.174791,
+        -0.081895,
+        0.118565,
+        0.221239,
+        -0.130788,
+        -0.059893,
+        -0.270132,
+        0.152789,
+        0.059893
+      ]
+    },
+    {
+      "path": "tools/arena/o18_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 757,
+      "lines": 11,
+      "tokens_est": 190,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0fa6203c56431d0a",
+      "vector": [
+        0.047545,
+        0.069659,
+        0.049757,
+        0.016586,
+        -0.206766,
+        0.076293,
+        0.25984,
+        -0.231092,
+        0.211189,
+        -0.186864,
+        -0.018797,
+        -0.076293,
+        -0.211189,
+        0.116099,
+        -0.193498,
+        -0.184652,
+        0.144847,
+        0.189075,
+        0.144847,
+        -0.266474,
+        0.277531,
+        0.220035,
+        0.250994,
+        -0.162538,
+        0.197921,
+        -0.189075,
+        0.153693,
+        -0.197921,
+        -0.065236,
+        -0.242149,
+        -0.202344,
+        0.014374
+      ]
+    },
+    {
+      "path": "tools/arena/o18_sweep13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 788,
+      "lines": 14,
+      "tokens_est": 197,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "afd8c6a03b4abe18",
+      "vector": [
+        0.283868,
+        0.266514,
+        -0.293785,
+        0.06074,
+        0.214451,
+        0.142554,
+        -0.251639,
+        -0.028511,
+        0.016115,
+        -0.016115,
+        0.038428,
+        -0.006198,
+        -0.110324,
+        -0.107845,
+        0.006198,
+        -0.241722,
+        -0.023552,
+        0.008677,
+        -0.224368,
+        0.12272,
+        0.316098,
+        0.110324,
+        -0.147512,
+        -0.261556,
+        -0.177263,
+        -0.286348,
+        -0.177263,
+        -0.236764,
+        0.102887,
+        0.152471,
+        -0.068178,
+        0.189659
       ]
     },
     {
@@ -107838,7 +108277,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788787628,
+  "generated_at_unix": 1788788263,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107991,6 +108430,7 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
+      ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -108115,6 +108555,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
+      "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -109183,6 +109625,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_attenuated_stable_operation_delegation_hosted.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -109489,9 +109932,14 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/effect_return_atomicity.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/o18_campaign.py",
+      "tools/arena/o18_hs1000.py",
+      "tools/arena/o18_lattice8.py",
+      "tools/arena/o18_sweep13d.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -221511,6 +221959,156 @@
         "file_digest8": "6688cbcc0e635cdf"
       },
       {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#class:T:bb06013c00558931",
+        "name": "T",
+        "kind": "class",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 8,
+        "end_line": 31,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#function:fx:8c4229ab64f6414a",
+        "name": "fx",
+        "kind": "function",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 6,
+        "end_line": 7,
+        "signature_hash": "e44c7927600f93ab",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#function:r:f6d7936f1fd0856a",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_ancestor_stale_holds:567574f944c90f73",
+        "name": "T.test_ancestor_stale_holds",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "5b2f62d58ed38468",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_budget_escalation_holds:97d40f80856d6265",
+        "name": "T.test_budget_escalation_holds",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "a29a1ba56fd36830",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_creative_handoff_same_operation_new_attempt:6928724838926a31",
+        "name": "T.test_creative_handoff_same_operation_new_attempt",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "b5769a0e64928c89",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_k27_not_identity:066d3c19f7b72737",
+        "name": "T.test_k27_not_identity",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 31,
+        "end_line": 31,
+        "signature_hash": "e563ccea9fa3b513",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_lease_current:2acf50228c905bef",
+        "name": "T.test_lease_current",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "e6f7951089af5e01",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_proof_bound_admission_required:6d106531a180e734",
+        "name": "T.test_proof_bound_admission_required",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "c08d5f329f4dcac4",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_requested_budget_bounded:ee94674380e0f9aa",
+        "name": "T.test_requested_budget_bounded",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "ca330dbcf98583ad",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_requested_scope_bounded:a603c1653d20e6a0",
+        "name": "T.test_requested_scope_bounded",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "83457189aa3b991d",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_scope_escalation_holds:a1c3d6ccd206a0b8",
+        "name": "T.test_scope_escalation_holds",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "8d1eee8b9ac28427",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_source_incarnation_current:54ce952c9a77a4f7",
+        "name": "T.test_source_incarnation_current",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "5118667425258a52",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_valid_d0:60cce5217cc3f912",
+        "name": "T.test_valid_d0",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "c2efe78e9ccaf36c",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_workcell_current:1a6ac6e13c739053",
+        "name": "T.test_workcell_current",
+        "kind": "method",
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "ad2fd2e4df0e3548",
+        "file_digest8": "c5e3d5b58432709c"
+      },
+      {
         "semantic_id": "tests/test_aura_adaptive_execution.py#class:Egress.__call__.Endpoint:698212a0a7fff320",
         "name": "Egress.__call__.Endpoint",
         "kind": "class",
@@ -268521,6 +269119,126 @@
         "file_digest8": "1a3a8212f5926533"
       },
       {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:AttemptContext:6847d935983b4fdb",
+        "name": "AttemptContext",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "9d588f6e1da056fb",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Decision:7421ccf8778ece80",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DelegationHop:b8597b67fcf4bcb3",
+        "name": "DelegationHop",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "04fed0f44a8e7da0",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DomainAdmission:b4d6da1f9599c65a",
+        "name": "DomainAdmission",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "1567db25bd643d11",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:StableOperation:0acd80f66c1361b3",
+        "name": "StableOperation",
+        "kind": "class",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "eef650876707d887",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:chain_root:232f4d967a5b1d7b",
+        "name": "chain_root",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "c634720bdb02b011",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:decide:d192c6b1807fc94b",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 33,
+        "end_line": 50,
+        "signature_hash": "306b985492635361",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:digest:7c883a12673963ba",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:effective_authority:14b32987c6441933",
+        "name": "effective_authority",
+        "kind": "function",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "75554ec478f5044d",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:StableOperation.root:105f94d9b26981b0",
+        "name": "StableOperation.root",
+        "kind": "method",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "e3e717e8a95babdc",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:decide.hold:9f985eecf31e7bac",
+        "name": "decide.hold",
+        "kind": "method",
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "line": 35,
+        "end_line": 35,
+        "signature_hash": "2ed02c47fa2448ff",
+        "file_digest8": "d730a72516c3e290"
+      },
+      {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
         "name": "AdmissionError",
         "kind": "class",
@@ -269899,6 +270617,76 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/o18_campaign.py#function:base:ffab7ff9f32f59c7",
+        "name": "base",
+        "kind": "function",
+        "file": "tools/arena/o18_campaign.py",
+        "line": 6,
+        "end_line": 7,
+        "signature_hash": "fc255db21ad827bd",
+        "file_digest8": "5dcb8d8344deace8"
+      },
+      {
+        "semantic_id": "tools/arena/o18_campaign.py#function:r:4ddef604e29f6f3b",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/arena/o18_campaign.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "5dcb8d8344deace8"
+      },
+      {
+        "semantic_id": "tools/arena/o18_campaign.py#function:run:ba95247e17aeb8b9",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o18_campaign.py",
+        "line": 8,
+        "end_line": 25,
+        "signature_hash": "7948fa120ff468b2",
+        "file_digest8": "5dcb8d8344deace8"
+      },
+      {
+        "semantic_id": "tools/arena/o18_hs1000.py#function:h:eb29f1b491c82d12",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o18_hs1000.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "df00216856e39c6f"
+      },
+      {
+        "semantic_id": "tools/arena/o18_hs1000.py#function:run:1524662d5d99deb5",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o18_hs1000.py",
+        "line": 6,
+        "end_line": 15,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "df00216856e39c6f"
+      },
+      {
+        "semantic_id": "tools/arena/o18_lattice8.py#function:run:4ed072aa4bdf35fd",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o18_lattice8.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "0fa6203c56431d0a"
+      },
+      {
+        "semantic_id": "tools/arena/o18_sweep13d.py#function:run:135491358f4211ad",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o18_sweep13d.py",
+        "line": 6,
+        "end_line": 12,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "afd8c6a03b4abe18"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
@@ -274101,8 +274889,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "78f2673fc4d84ccbd0df1b24bc8e774b",
-    "payload_hash": "fffbb67a3e2bcf5047a97cdd3d94e4a5"
+    "record_fingerprint": "cdf00b0cd6861fd3fcb59e212e8dc69b",
+    "payload_hash": "457881d63c976e0d95f8e9139a0bbd41"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274115,16 +274903,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1696,
-      "bytes": 26727237,
-      "tokens_est": 6672171,
+      "files": 1705,
+      "bytes": 26744562,
+      "tokens_est": 6676506,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1033,
-        "schema_or_lexicon": 285,
+        "python_module": 1039,
+        "schema_or_lexicon": 288,
         "support_file": 53
       }
     },
@@ -274811,16 +275599,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1696,
-    "total_bytes": 26727237,
-    "text_tokens_est": 6672171,
+    "file_count": 1705,
+    "total_bytes": 26744562,
+    "text_tokens_est": 6676506,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1033,
-      "schema_or_lexicon": 285,
+      "python_module": 1039,
+      "schema_or_lexicon": 288,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -276059,6 +276847,38 @@
         "signature_hash": "d981aa5a48724e5c"
       },
       {
+        "file": "tools/arena/o18_campaign.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 25,
+        "semantic_id": "tools/arena/o18_campaign.py#function:run:ba95247e17aeb8b9",
+        "signature_hash": "7948fa120ff468b2"
+      },
+      {
+        "file": "tools/arena/o18_hs1000.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 15,
+        "semantic_id": "tools/arena/o18_hs1000.py#function:run:1524662d5d99deb5",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o18_lattice8.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/arena/o18_lattice8.py#function:run:4ed072aa4bdf35fd",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o18_sweep13d.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 12,
+        "semantic_id": "tools/arena/o18_sweep13d.py#function:run:135491358f4211ad",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 28,
@@ -276156,6 +276976,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
         "signature_hash": "9386d60514f2578d"
       },
       {
@@ -292639,6 +293467,14 @@
         "end_line": 28,
         "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
         "signature_hash": "bd189b17ea870e50"
+      },
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:digest:7c883a12673963ba",
+        "signature_hash": "6845cd2b39857deb"
       },
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -386039,6 +386875,236 @@
         "signature_hash": "901e6f55c33cb73f"
       }
     ],
+    "r": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#function:r:f6d7936f1fd0856a",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tests/test_tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_tecc_effect_admission_bridge.py#function:r:a7858cc5a2b1fc1d",
+        "signature_hash": "7ce5d2fd5d4c523a"
+      },
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:r:79f33ab10596e11d",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/arena/o18_campaign.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/o18_campaign.py#function:r:4ddef604e29f6f3b",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/project006/campaign_tecc_effect_admission_bridge.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#function:r:bb6955a17d0a3bff",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:r:7e46b8b13331afec",
+        "signature_hash": "e5a2d5a687fa3045"
+      }
+    ],
+    "fx": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#function:fx:8c4229ab64f6414a",
+        "signature_hash": "e44c7927600f93ab"
+      }
+    ],
+    "T": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 31,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#class:T:bb06013c00558931",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_frontier27_runtime.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 115,
+        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_tecc_effect_admission_bridge.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 136,
+        "semantic_id": "tests/test_tecc_effect_admission_bridge.py#class:T:6be9ab2a082b6062",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tests/test_transport_source_identity_bridge_hosted.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 31,
+        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#class:T:2c9669701b281082",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 64,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#class:T:67711ac0c485bf46",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 90,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#class:T:8f95aedea5c120a7",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.test_valid_d0": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_valid_d0:60cce5217cc3f912",
+        "signature_hash": "c2efe78e9ccaf36c"
+      }
+    ],
+    "T.test_creative_handoff_same_operation_new_attempt": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_creative_handoff_same_operation_new_attempt:6928724838926a31",
+        "signature_hash": "b5769a0e64928c89"
+      }
+    ],
+    "T.test_scope_escalation_holds": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_scope_escalation_holds:a1c3d6ccd206a0b8",
+        "signature_hash": "8d1eee8b9ac28427"
+      }
+    ],
+    "T.test_budget_escalation_holds": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_budget_escalation_holds:97d40f80856d6265",
+        "signature_hash": "a29a1ba56fd36830"
+      }
+    ],
+    "T.test_ancestor_stale_holds": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_ancestor_stale_holds:567574f944c90f73",
+        "signature_hash": "5b2f62d58ed38468"
+      }
+    ],
+    "T.test_proof_bound_admission_required": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_proof_bound_admission_required:6d106531a180e734",
+        "signature_hash": "c08d5f329f4dcac4"
+      }
+    ],
+    "T.test_source_incarnation_current": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_source_incarnation_current:54ce952c9a77a4f7",
+        "signature_hash": "5118667425258a52"
+      }
+    ],
+    "T.test_workcell_current": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_workcell_current:1a6ac6e13c739053",
+        "signature_hash": "ad2fd2e4df0e3548"
+      }
+    ],
+    "T.test_lease_current": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_lease_current:2acf50228c905bef",
+        "signature_hash": "e6f7951089af5e01"
+      }
+    ],
+    "T.test_requested_scope_bounded": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_requested_scope_bounded:a603c1653d20e6a0",
+        "signature_hash": "83457189aa3b991d"
+      }
+    ],
+    "T.test_requested_budget_bounded": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_requested_budget_bounded:ee94674380e0f9aa",
+        "signature_hash": "ca330dbcf98583ad"
+      }
+    ],
+    "T.test_k27_not_identity": [
+      {
+        "file": "tests/test_attenuated_stable_operation_delegation_hosted.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 31,
+        "semantic_id": "tests/test_attenuated_stable_operation_delegation_hosted.py#method:T.test_k27_not_identity:066d3c19f7b72737",
+        "signature_hash": "e563ccea9fa3b513"
+      }
+    ],
     "Store": [
       {
         "file": "tests/test_aura_adaptive_execution.py",
@@ -429899,48 +430965,6 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
-    "T": [
-      {
-        "file": "tests/test_frontier27_runtime.py",
-        "kind": "class",
-        "line": 12,
-        "end_line": 115,
-        "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tests/test_tecc_effect_admission_bridge.py",
-        "kind": "class",
-        "line": 75,
-        "end_line": 136,
-        "semantic_id": "tests/test_tecc_effect_admission_bridge.py#class:T:6be9ab2a082b6062",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tests/test_transport_source_identity_bridge_hosted.py",
-        "kind": "class",
-        "line": 19,
-        "end_line": 31,
-        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#class:T:2c9669701b281082",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py",
-        "kind": "class",
-        "line": 20,
-        "end_line": 64,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_host_observation_bridge.py#class:T:67711ac0c485bf46",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
-        "kind": "class",
-        "line": 13,
-        "end_line": 90,
-        "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#class:T:8f95aedea5c120a7",
-        "signature_hash": "1a51332cd1dc4f10"
-      }
-    ],
     "T.test_00_manifest": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -431099,40 +432123,6 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
-    "r": [
-      {
-        "file": "tests/test_tecc_effect_admission_bridge.py",
-        "kind": "function",
-        "line": 12,
-        "end_line": 13,
-        "semantic_id": "tests/test_tecc_effect_admission_bridge.py#function:r:a7858cc5a2b1fc1d",
-        "signature_hash": "7ce5d2fd5d4c523a"
-      },
-      {
-        "file": "tests/test_transport_source_identity_bridge_hosted.py",
-        "kind": "function",
-        "line": 11,
-        "end_line": 11,
-        "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:r:79f33ab10596e11d",
-        "signature_hash": "e5a2d5a687fa3045"
-      },
-      {
-        "file": "tools/project006/campaign_tecc_effect_admission_bridge.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 10,
-        "semantic_id": "tools/project006/campaign_tecc_effect_admission_bridge.py#function:r:bb6955a17d0a3bff",
-        "signature_hash": "e5a2d5a687fa3045"
-      },
-      {
-        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 10,
-        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:r:7e46b8b13331afec",
-        "signature_hash": "e5a2d5a687fa3045"
-      }
-    ],
     "Ident": [
       {
         "file": "tests/test_tecc_effect_admission_bridge.py",
@@ -431553,6 +432543,122 @@
         "signature_hash": "d03257d8bac0301d"
       }
     ],
+    "StableOperation": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:StableOperation:0acd80f66c1361b3",
+        "signature_hash": "eef650876707d887"
+      }
+    ],
+    "StableOperation.root": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:StableOperation.root:105f94d9b26981b0",
+        "signature_hash": "e3e717e8a95babdc"
+      }
+    ],
+    "DelegationHop": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DelegationHop:b8597b67fcf4bcb3",
+        "signature_hash": "04fed0f44a8e7da0"
+      }
+    ],
+    "DomainAdmission": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:DomainAdmission:b4d6da1f9599c65a",
+        "signature_hash": "1567db25bd643d11"
+      }
+    ],
+    "AttemptContext": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:AttemptContext:6847d935983b4fdb",
+        "signature_hash": "9d588f6e1da056fb"
+      }
+    ],
+    "Decision": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Decision:7421ccf8778ece80",
+        "signature_hash": "fc4b98c490ac6e3c"
+      },
+      {
+        "file": "tools/arena/consequence_admission_kernel.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
+        "signature_hash": "d6a166dc8cfde9f6"
+      }
+    ],
+    "chain_root": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:chain_root:232f4d967a5b1d7b",
+        "signature_hash": "c634720bdb02b011"
+      }
+    ],
+    "effective_authority": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:effective_authority:14b32987c6441933",
+        "signature_hash": "75554ec478f5044d"
+      }
+    ],
+    "decide": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 50,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#function:decide:d192c6b1807fc94b",
+        "signature_hash": "306b985492635361"
+      },
+      {
+        "file": "tools/project006/o17_lattice8.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/project006/o17_lattice8.py#function:decide:a1ed58c3c54d4b9a",
+        "signature_hash": "a4332d849df2fd41"
+      }
+    ],
+    "decide.hold": [
+      {
+        "file": "tools/arena/attenuated_stable_operation_delegation.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 35,
+        "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:decide.hold:9f985eecf31e7bac",
+        "signature_hash": "2ed02c47fa2448ff"
+      }
+    ],
     "AdmissionError": [
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -431571,16 +432677,6 @@
         "end_line": 25,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AxisState:ddf7497f0d0e8cf6",
         "signature_hash": "218775d645e58673"
-      }
-    ],
-    "Decision": [
-      {
-        "file": "tools/arena/consequence_admission_kernel.py",
-        "kind": "class",
-        "line": 27,
-        "end_line": 34,
-        "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
-        "signature_hash": "d6a166dc8cfde9f6"
       }
     ],
     "ConsequenceVector": [
@@ -432879,6 +433975,50 @@
         "signature_hash": "0d9f06875821b0a4"
       }
     ],
+    "base": [
+      {
+        "file": "tools/arena/o18_campaign.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": "tools/arena/o18_campaign.py#function:base:ffab7ff9f32f59c7",
+        "signature_hash": "fc255db21ad827bd"
+      },
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 19,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:base:797ccecf323f25be",
+        "signature_hash": "fc255db21ad827bd"
+      }
+    ],
+    "h": [
+      {
+        "file": "tools/arena/o18_hs1000.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/o18_hs1000.py#function:h:eb29f1b491c82d12",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/project006/mc_o14_hs1000.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/project006/mc_o14_hs1000.py#function:h:1a91973143c1aa98",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/project006/o17_hs1000.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/project006/o17_hs1000.py#function:h:1ef5fbb01f68bb3d",
+        "signature_hash": "b307e9c3443f5155"
+      }
+    ],
     "oracle": [
       {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
@@ -433999,16 +435139,6 @@
         "signature_hash": "6f15dd8196fb6381"
       }
     ],
-    "base": [
-      {
-        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
-        "kind": "function",
-        "line": 12,
-        "end_line": 19,
-        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:base:797ccecf323f25be",
-        "signature_hash": "fc255db21ad827bd"
-      }
-    ],
     "ProviderActionPermit": [
       {
         "file": "tools/project006/effect_attempt_recovery.py",
@@ -434269,24 +435399,6 @@
         "signature_hash": "ac106c0df04d850d"
       }
     ],
-    "h": [
-      {
-        "file": "tools/project006/mc_o14_hs1000.py",
-        "kind": "function",
-        "line": 5,
-        "end_line": 5,
-        "semantic_id": "tools/project006/mc_o14_hs1000.py#function:h:1a91973143c1aa98",
-        "signature_hash": "8ddde6051957f4eb"
-      },
-      {
-        "file": "tools/project006/o17_hs1000.py",
-        "kind": "function",
-        "line": 5,
-        "end_line": 5,
-        "semantic_id": "tools/project006/o17_hs1000.py#function:h:1ef5fbb01f68bb3d",
-        "signature_hash": "b307e9c3443f5155"
-      }
-    ],
     "build": [
       {
         "file": "tools/project006/mc_o14_hs1000.py",
@@ -434313,16 +435425,6 @@
         "end_line": 9,
         "semantic_id": "tools/project006/mc_o14_lattice8.py#function:hard_decision:4a2a1663ed5987af",
         "signature_hash": "469f4ee8f1880dc9"
-      }
-    ],
-    "decide": [
-      {
-        "file": "tools/project006/o17_lattice8.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 21,
-        "semantic_id": "tools/project006/o17_lattice8.py#function:decide:a1ed58c3c54d4b9a",
-        "signature_hash": "a4332d849df2fd41"
       }
     ],
     "_first_text": [

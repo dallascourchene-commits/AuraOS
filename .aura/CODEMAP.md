@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1696
-- **total_bytes**: 26727237
-- **text_tokens_est**: 6672171
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1033, 'schema_or_lexicon': 285, 'support_file': 53}
+- **file_count**: 1705
+- **total_bytes**: 26744562
+- **text_tokens_est**: 6676506
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1039, 'schema_or_lexicon': 288, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1696,
+  "repo_file_count": 1705,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -174,6 +174,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-replay-probes.yml",
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
+    ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
     ".github/workflows/o5-consequence-admission-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -298,6 +299,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
+    "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
     "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -1366,6 +1369,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_attenuated_stable_operation_delegation_hosted.py",
     "tests/test_aura_adaptive_execution.py",
     "tests/test_aura_adaptive_fusion_schema.py",
     "tests/test_aura_adaptive_planner.py",
@@ -1672,9 +1676,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/attenuated_stable_operation_delegation.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/effect_return_atomicity.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/o18_campaign.py",
+    "tools/arena/o18_hs1000.py",
+    "tools/arena/o18_lattice8.py",
+    "tools/arena/o18_sweep13d.py",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -1785,6 +1794,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_attenuated_stable_operation_delegation_hosted.py",
     "tests/test_aura_adaptive_execution.py",
     "tests/test_aura_adaptive_fusion_schema.py",
     "tests/test_aura_adaptive_planner.py",
@@ -1821,8 +1831,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
     "tests/test_aura_bilateral_planning_enforcement.py",
     "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_capability_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1836,16 +1845,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1696,
-  "bytes": 26727237,
-  "tokens_est": 6672171,
+  "files": 1705,
+  "bytes": 26744562,
+  "tokens_est": 6676506,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1033,
-    "schema_or_lexicon": 285,
+    "python_module": 1039,
+    "schema_or_lexicon": 288,
     "support_file": 53
   }
 }

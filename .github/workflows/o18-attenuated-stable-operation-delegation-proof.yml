@@ -1,0 +1,39 @@
+name: O18 Attenuated Stable Operation Delegation Proof
+on:
+  push:
+    branches: ["arena/o18-attenuated-stable-operation-delegation"]
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    permissions: {contents: read}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: "${{ github.sha }}"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - name: Exact-head three-venv proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .o18_proof && mkdir .o18_proof
+          for e in 1 2 3; do
+            python -m venv ".o18_proof/venv${e}"
+            py=".o18_proof/venv${e}/bin/python"
+            "$py" -m unittest tests.test_attenuated_stable_operation_delegation_hosted -v > ".o18_proof/test${e}.out" 2>&1
+            "$py" -m tools.arena.o18_campaign > ".o18_proof/campaign${e}.json"
+            "$py" -m tools.arena.o18_lattice8 > ".o18_proof/omega${e}.json"
+            "$py" -m tools.arena.o18_sweep13d > ".o18_proof/sweep${e}.json"
+            "$py" -m tools.arena.o18_hs1000 > ".o18_proof/hs${e}.json"
+          done
+          for stem in campaign omega sweep hs; do cmp ".o18_proof/${stem}1.json" ".o18_proof/${stem}2.json"; cmp ".o18_proof/${stem}1.json" ".o18_proof/${stem}3.json"; done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('.o18_proof');c=json.loads((r/'campaign1.json').read_text());o=json.loads((r/'omega1.json').read_text());s=json.loads((r/'sweep1.json').read_text());h=json.loads((r/'hs1.json').read_text())
+          assert c['cases']==24000 and c['false_admit']==0 and c['false_hold']==0 and c['authority_promotions']==0
+          assert c['naive_local_token_unsafe']==18000 and c['naive_handoff_trust_unsafe']==20000
+          assert o['states']==6561 and o['bind']==1 and o['invalid_bind']==0
+          assert s['cartesian_states']==1594323 and s['lawful_contextual_bind']==243 and s['hard_invalid_context_repair']==0
+          assert h['raw']==1000 and h['quotients']==100 and h['top27_count']==27
+          print('O18_EXACT_HEAD_PROOF=PASS')
+          PY
