@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1670
-- **total_bytes**: 26612685
-- **text_tokens_est**: 6643521
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1020, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1687
+- **total_bytes**: 26708925
+- **text_tokens_est**: 6667588
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1037, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1670,
+  "repo_file_count": 1687,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1654,6 +1654,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_huggingface_space_deployment.py",
     "tests/test_k27_epoch_invalidation.py",
     "tests/test_k27_epoch_republish_invalidation.py",
+    "tests/test_k27_memory_navigator_incremental_evidence.py",
+    "tests/test_k27_memory_navigator_invariant_support.py",
+    "tests/test_k27_memory_navigator_review_regressions.py",
+    "tests/test_k27_memory_navigator_route_admission.py",
+    "tests/test_k27_memory_navigator_route_evidence_transaction.py",
+    "tests/test_k27_memory_navigator_runtime_bridge.py",
     "tests/test_k27_memory_runtime.py",
     "tests/test_k27_spatial_nonfinite_canonicalization.py",
     "tests/test_k27_state_root_schema_snapshot.py",
@@ -1679,6 +1685,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_city_spatial_seam/campaign.py",
     "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
+    "tools/arena/k27_memory_navigator/__init__.py",
+    "tools/arena/k27_memory_navigator/campaign_incremental_route.py",
+    "tools/arena/k27_memory_navigator/campaign_route_evidence_transaction.py",
+    "tools/arena/k27_memory_navigator/invariant_support.py",
+    "tools/arena/k27_memory_navigator/minimal_evidence.py",
+    "tools/arena/k27_memory_navigator/reflexive_topology.py",
+    "tools/arena/k27_memory_navigator/route_card_admission.py",
+    "tools/arena/k27_memory_navigator/route_delta_planner.py",
+    "tools/arena/k27_memory_navigator/route_evidence_transaction.py",
+    "tools/arena/k27_memory_navigator/runtime_bridge.py",
+    "tools/arena/k27_memory_navigator/temporal_zone.py",
     "tools/arena/k27_memory_runtime.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
@@ -1810,15 +1827,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1670,
-  "bytes": 26612685,
-  "tokens_est": 6643521,
+  "files": 1687,
+  "bytes": 26708925,
+  "tokens_est": 6667588,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1020,
+    "python_module": 1037,
     "schema_or_lexicon": 275,
     "support_file": 49
   }
