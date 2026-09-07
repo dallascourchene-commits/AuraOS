@@ -1,0 +1,44 @@
+name: Project006 O19 physical wake acceptance proof
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/physical_wake_acceptance.py'
+      - 'tools/project006/test_physical_wake_acceptance.py'
+      - 'tools/project006/proof_physical_wake_o19.py'
+      - 'artifacts/arena/project006_o19_physical_wake_acceptance/**'
+      - '.github/workflows/project006-o19-physical-wake-acceptance-proof.yml'
+  workflow_dispatch:
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Three fresh venvs and deterministic proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$PWD/tools/project006:$PWD"
+          for n in 1 2 3; do
+            python -m venv ".o19-venv-$n"
+            ".o19-venv-$n/bin/python" -m unittest -v tools.project006.test_physical_wake_acceptance
+            ".o19-venv-$n/bin/python" tools/project006/proof_physical_wake_o19.py > ".o19-proof-$n.json"
+          done
+          cmp .o19-proof-1.json .o19-proof-2.json
+          cmp .o19-proof-1.json .o19-proof-3.json
+          python - <<'PY'
+          import hashlib,json
+          p=open('.o19-proof-1.json','rb').read()
+          x=json.loads(p)
+          assert x['omega8']=={'invalid_accepts':0,'keepers':1,'root':'7147510d6cb4ae33fcdb45d856ff4d1d049af8dc6f4c2601bc70953b74749620','states':6561}
+          assert x['factored13d']['states']==1594323
+          assert x['factored13d']['hard_invalid_contextual_repairs']==0
+          assert x['hs1000']['frozen_candidates']==1000
+          assert x['hs1000']['claimed_breakthroughs']==0
+          assert hashlib.sha256(p).hexdigest()=='5bb7169f47a6d8f5b3faf4c1750948fd5d1b7fb5f118b22fea35bd3eaf326dc9'
+          print('O19_EXACT_HEAD_PROOF=PASS')
+          PY
