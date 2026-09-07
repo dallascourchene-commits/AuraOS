@@ -1060,7 +1060,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1244,6 +1244,7 @@
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/triadic-confluence-proof.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -1977,7 +1978,9 @@
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/benchmark_frontier27.py",
+      "benchmarks/benchmark_triadic_confluence.py",
       "benchmarks/check_frontier27_thresholds.py",
+      "benchmarks/check_triadic_confluence_thresholds.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -2153,6 +2156,7 @@
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/TRIADIC_CONFLUENCE_IMPLEMENTATION.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -2688,6 +2692,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_triadic_confluence_runtime.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -2696,6 +2701,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/triadic_confluence_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -2732,7 +2738,9 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/benchmark_frontier27.py",
+      "benchmarks/benchmark_triadic_confluence.py",
       "benchmarks/check_frontier27_thresholds.py",
+      "benchmarks/check_triadic_confluence_thresholds.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
@@ -2810,9 +2818,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -12488,6 +12494,53 @@
         0.111675,
         0.019984,
         0.240982
+      ]
+    },
+    {
+      "path": ".github/workflows/triadic-confluence-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1408,
+      "lines": 37,
+      "tokens_est": 352,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "73073983183b7715",
+      "vector": [
+        -0.010101,
+        -0.194161,
+        0.081929,
+        0.102131,
+        -0.263745,
+        -0.135801,
+        0.090908,
+        0.277213,
+        -0.120088,
+        -0.214363,
+        -0.016835,
+        -0.097642,
+        0.041526,
+        0.234565,
+        -0.218852,
+        -0.227831,
+        0.028058,
+        -0.023569,
+        0.093152,
+        0.180693,
+        -0.252522,
+        0.079685,
+        -0.115599,
+        0.286191,
+        -0.113354,
+        0.257011,
+        0.248032,
+        -0.158247,
+        -0.263745,
+        0.200895,
+        0.059483,
+        0.241298
       ]
     },
     {
@@ -67171,6 +67224,53 @@
       ]
     },
     {
+      "path": "benchmarks/benchmark_triadic_confluence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2597,
+      "lines": 69,
+      "tokens_est": 650,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cc46391ca69a1b29",
+      "vector": [
+        -0.291083,
+        0.286369,
+        0.010606,
+        -0.128453,
+        0.017677,
+        -0.031819,
+        -0.243944,
+        0.133167,
+        -0.088385,
+        -0.18502,
+        -0.170878,
+        0.001178,
+        -0.248658,
+        -0.053031,
+        0.241587,
+        -0.133167,
+        -0.199162,
+        0.043603,
+        0.241587,
+        -0.201519,
+        -0.114312,
+        -0.288726,
+        0.107241,
+        0.29344,
+        0.088385,
+        -0.142595,
+        0.121383,
+        -0.156737,
+        -0.262799,
+        -0.022391,
+        -0.104884,
+        0.20859
+      ]
+    },
+    {
       "path": "benchmarks/check_frontier27_thresholds.py",
       "role": "python_module",
       "binary": false,
@@ -67215,6 +67315,53 @@
         0.029575,
         -0.247247,
         -0.225953
+      ]
+    },
+    {
+      "path": "benchmarks/check_triadic_confluence_thresholds.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1451,
+      "lines": 36,
+      "tokens_est": 363,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "38a0ed92c066b902",
+      "vector": [
+        0.272689,
+        -0.105683,
+        0.311831,
+        0.319659,
+        0.110902,
+        -0.016962,
+        0.157873,
+        -0.178748,
+        0.134387,
+        -0.136997,
+        0.030009,
+        -0.050885,
+        0.17092,
+        0.251813,
+        -0.087417,
+        -0.103074,
+        0.108293,
+        0.058713,
+        -0.027399,
+        0.030009,
+        -0.288346,
+        0.236156,
+        -0.032618,
+        0.243985,
+        0.228328,
+        0.131778,
+        -0.040447,
+        -0.2205,
+        -0.288346,
+        -0.223109,
+        -0.142216,
+        -0.07176
       ]
     },
     {
@@ -76263,6 +76410,53 @@
         -0.189079,
         -0.036163,
         -0.209744
+      ]
+    },
+    {
+      "path": "docs/TRIADIC_CONFLUENCE_IMPLEMENTATION.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4364,
+      "lines": 70,
+      "tokens_est": 1090,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "89f317fbb19e30b3",
+      "vector": [
+        0.26873,
+        0.083101,
+        0.242828,
+        0.104686,
+        -0.160806,
+        0.270888,
+        0.046407,
+        -0.063675,
+        0.223402,
+        0.208293,
+        -0.055041,
+        -0.061516,
+        0.214768,
+        0.037773,
+        -0.134905,
+        -0.223402,
+        -0.137063,
+        0.016189,
+        -0.262255,
+        0.104686,
+        0.242828,
+        0.22556,
+        -0.206134,
+        0.044249,
+        0.132746,
+        -0.182391,
+        -0.227719,
+        -0.193183,
+        0.191025,
+        0.083101,
+        0.219085,
+        -0.21261
       ]
     },
     {
@@ -104141,6 +104335,53 @@
       ]
     },
     {
+      "path": "tests/test_triadic_confluence_runtime.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6594,
+      "lines": 123,
+      "tokens_est": 1649,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "593e705055f29a1c",
+      "vector": [
+        0.176893,
+        0.061108,
+        0.073973,
+        0.080406,
+        0.239073,
+        0.101847,
+        0.142586,
+        0.266947,
+        0.269092,
+        0.256227,
+        -0.241218,
+        -0.215488,
+        -0.10828,
+        -0.086838,
+        -0.116857,
+        -0.007505,
+        0.224064,
+        -0.007505,
+        0.239073,
+        0.176893,
+        -0.172605,
+        0.112568,
+        0.224064,
+        -0.110424,
+        0.198334,
+        0.08255,
+        0.204767,
+        -0.194046,
+        -0.146875,
+        0.234785,
+        -0.230497,
+        0.138298
+      ]
+    },
+    {
       "path": "third_party/pascal/LICENSE",
       "role": "support_file",
       "binary": false,
@@ -104514,6 +104755,53 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/triadic_confluence_runtime.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11904,
+      "lines": 321,
+      "tokens_est": 2976,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "57b7d0a0ea66a302",
+      "vector": [
+        0.022029,
+        0.12638,
+        -0.182033,
+        0.200584,
+        0.195947,
+        0.16812,
+        -0.246962,
+        -0.045218,
+        -0.001159,
+        -0.286383,
+        -0.182033,
+        0.263194,
+        -0.27247,
+        -0.172758,
+        -0.244643,
+        0.040581,
+        -0.001159,
+        -0.228411,
+        0.172758,
+        0.263194,
+        -0.277108,
+        0.070726,
+        -0.082321,
+        0.035943,
+        0.075364,
+        -0.075364,
+        -0.263194,
+        -0.244643,
+        0.010435,
+        0.091596,
+        -0.128699,
+        -0.154206
       ]
     },
     {
@@ -105561,7 +105849,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788813457,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -105747,6 +106035,7 @@
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
+      ".github/workflows/triadic-confluence-proof.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
@@ -106480,7 +106769,9 @@
       "aura_workspace/security_accuracy/SECURITY_ACCURACY_RESULTS.json",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/benchmark_frontier27.py",
+      "benchmarks/benchmark_triadic_confluence.py",
       "benchmarks/check_frontier27_thresholds.py",
+      "benchmarks/check_triadic_confluence_thresholds.py",
       "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
@@ -106656,6 +106947,7 @@
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/TRIADIC_CONFLUENCE_IMPLEMENTATION.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -107191,6 +107483,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_triadic_confluence_runtime.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -107199,6 +107492,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/triadic_confluence_runtime.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -201407,6 +201701,46 @@
         "file_digest8": "a7fb9383bc283e6a"
       },
       {
+        "semantic_id": "benchmarks/benchmark_triadic_confluence.py#function:art:e3c7c809517fb2e6",
+        "name": "art",
+        "kind": "function",
+        "file": "benchmarks/benchmark_triadic_confluence.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "7c19b473c63c5ce5",
+        "file_digest8": "cc46391ca69a1b29"
+      },
+      {
+        "semantic_id": "benchmarks/benchmark_triadic_confluence.py#function:c:83ea478e5d0402df",
+        "name": "c",
+        "kind": "function",
+        "file": "benchmarks/benchmark_triadic_confluence.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "c153c66c1476e20f",
+        "file_digest8": "cc46391ca69a1b29"
+      },
+      {
+        "semantic_id": "benchmarks/benchmark_triadic_confluence.py#function:run:92a38cd4730fa3f4",
+        "name": "run",
+        "kind": "function",
+        "file": "benchmarks/benchmark_triadic_confluence.py",
+        "line": 9,
+        "end_line": 64,
+        "signature_hash": "088c9fff235646f8",
+        "file_digest8": "cc46391ca69a1b29"
+      },
+      {
+        "semantic_id": "benchmarks/check_triadic_confluence_thresholds.py#function:main:b1401de289b40a29",
+        "name": "main",
+        "kind": "function",
+        "file": "benchmarks/check_triadic_confluence_thresholds.py",
+        "line": 7,
+        "end_line": 32,
+        "signature_hash": "0c0882d2e1b3f74c",
+        "file_digest8": "38a0ed92c066b902"
+      },
+      {
         "semantic_id": "benchmarks/refactor_code_quality/generate_fixture.py#function:_ablation_tokens:d4e25fe816dc8ce1",
         "name": "_ablation_tokens",
         "kind": "function",
@@ -265297,6 +265631,236 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#class:TestTriadicConfluence:0564233da7e270dd",
+        "name": "TestTriadicConfluence",
+        "kind": "class",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 11,
+        "end_line": 120,
+        "signature_hash": "994323fe044af0df",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#function:art:697586bd2b3d9386",
+        "name": "art",
+        "kind": "function",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 5,
+        "end_line": 6,
+        "signature_hash": "c2bf4f0b5ea3d16e",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#function:c:844c5db2491cf6f7",
+        "name": "c",
+        "kind": "function",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 8,
+        "end_line": 9,
+        "signature_hash": "7e02d7f27b4d91ea",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_authority_ceiling_is_meet:d07f8b7bb0a396cd",
+        "name": "TestTriadicConfluence.test_authority_ceiling_is_meet",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "1b7a8a180fab81cf",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_commutative_for_compatible_parents:3a6924c10714ef82",
+        "name": "TestTriadicConfluence.test_commutative_for_compatible_parents",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 91,
+        "end_line": 95,
+        "signature_hash": "143725216212d3a4",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_complementary_preserves_both:d9f102922a068251",
+        "name": "TestTriadicConfluence.test_complementary_preserves_both",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 19,
+        "end_line": 23,
+        "signature_hash": "aa10b2c481a1e71b",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_conflict_holds:2538835940a3389d",
+        "name": "TestTriadicConfluence.test_conflict_holds",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "edf1bf0c2e2e6451",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_deterministic_digest:66bdffbbf41f9784",
+        "name": "TestTriadicConfluence.test_deterministic_digest",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 97,
+        "end_line": 99,
+        "signature_hash": "875fe5b182fc7004",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_dominance_is_scoped:5fa76968f189a3da",
+        "name": "TestTriadicConfluence.test_dominance_is_scoped",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "73ef95a74a5f5b35",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_equivalent_dedupes_provenance:3384117f8c9baa09",
+        "name": "TestTriadicConfluence.test_equivalent_dedupes_provenance",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 25,
+        "end_line": 32,
+        "signature_hash": "ea662f20bd3c30fb",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_foreign_parents_required:700df12ae943717a",
+        "name": "TestTriadicConfluence.test_foreign_parents_required",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "111d8522fa66ec81",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_idempotence_semantic_normal_form:306f934177c73fbc",
+        "name": "TestTriadicConfluence.test_idempotence_semantic_normal_form",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 84,
+        "end_line": 89,
+        "signature_hash": "89984e5d176ba8fa",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_material_semantic_delta_resets_debt:97f8d985d837cef6",
+        "name": "TestTriadicConfluence.test_material_semantic_delta_resets_debt",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "61d652c3666da6a0",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_multi_clause_same_topic_does_not_drop_unpaired:f0299ad4d44dcadf",
+        "name": "TestTriadicConfluence.test_multi_clause_same_topic_does_not_drop_unpaired",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 110,
+        "end_line": 115,
+        "signature_hash": "f252efbd50defdfc",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_multiclause_commutative:fc7070baa0491371",
+        "name": "TestTriadicConfluence.test_multiclause_commutative",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 117,
+        "end_line": 120,
+        "signature_hash": "9e0ebe0c7538e069",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_provenance_retains_both_parents:b5577d4ddedd8b91",
+        "name": "TestTriadicConfluence.test_provenance_retains_both_parents",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 101,
+        "end_line": 103,
+        "signature_hash": "d85466d6c0ddb871",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_refinement_debt_increments_on_noop:9a1574f4df8c0b11",
+        "name": "TestTriadicConfluence.test_refinement_debt_increments_on_noop",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "526cc0fa4743c4b2",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_regressive_compression_gets_zero_credit:dad561329adae5de",
+        "name": "TestTriadicConfluence.test_regressive_compression_gets_zero_credit",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "d31522acf0563093",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_specialization_preserves_both:83da11f018d977a5",
+        "name": "TestTriadicConfluence.test_specialization_preserves_both",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "f9b66e931d01b92c",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_unknown_delta_cannot_earn_generation_on_same_state:0c260be8d5a3ee84",
+        "name": "TestTriadicConfluence.test_unknown_delta_cannot_earn_generation_on_same_state",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 105,
+        "end_line": 108,
+        "signature_hash": "18c7dba2628849d9",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_unverified_compression_gets_zero_credit:74f51700e9d80b0e",
+        "name": "TestTriadicConfluence.test_unverified_compression_gets_zero_credit",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 63,
+        "end_line": 67,
+        "signature_hash": "2587b19ded6fa10f",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_verified_compression_can_earn_amendment_without_semantic_change:82fd580e9012d00b",
+        "name": "TestTriadicConfluence.test_verified_compression_can_earn_amendment_without_semantic_change",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 54,
+        "end_line": 61,
+        "signature_hash": "0d2d48eb0d17af26",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_verified_parents_required:7c803c1fd8f63b6e",
+        "name": "TestTriadicConfluence.test_verified_parents_required",
+        "kind": "method",
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "97c840eac93a74f7",
+        "file_digest8": "593e705055f29a1c"
+      },
+      {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
         "name": "AdmissionError",
         "kind": "class",
@@ -266405,6 +266969,216 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:Artifact:a13897f308f147f9",
+        "name": "Artifact",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 59,
+        "end_line": 66,
+        "signature_hash": "aa78e2ea6ef9aae7",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:Clause:ae12e5b03f5c927a",
+        "name": "Clause",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 42,
+        "end_line": 55,
+        "signature_hash": "8508b7e7cc132807",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:ClauseDecision:fd22ca43ebfcfb21",
+        "name": "ClauseDecision",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 89,
+        "end_line": 93,
+        "signature_hash": "f59300ef81a42e7b",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:ConfluenceResult:c2a2805e75d9e129",
+        "name": "ConfluenceResult",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 97,
+        "end_line": 112,
+        "signature_hash": "7d09735fd913536d",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:MaterialDelta:b092c1a3c106243b",
+        "name": "MaterialDelta",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 70,
+        "end_line": 85,
+        "signature_hash": "1c6eaf3300236315",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:RebaseAction:8db54eb4de182ac3",
+        "name": "RebaseAction",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 27,
+        "end_line": 32,
+        "signature_hash": "dd9d702070aa299d",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:Relation:2f136455bf1efaef",
+        "name": "Relation",
+        "kind": "class",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 17,
+        "end_line": 24,
+        "signature_hash": "7edb3251e18391d0",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_group:127650462f665e5e",
+        "name": "_group",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 178,
+        "end_line": 182,
+        "signature_hash": "b6c0855bf0fd2912",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_normal_form:5db5323fd2b10e98",
+        "name": "_normal_form",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 185,
+        "end_line": 202,
+        "signature_hash": "3336010111213a30",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_relation:c7de0234a1d45a2d",
+        "name": "_relation",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 149,
+        "end_line": 175,
+        "signature_hash": "dedc96c0a710d669",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_with_provenance:ed40062462858a15",
+        "name": "_with_provenance",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 136,
+        "end_line": 146,
+        "signature_hash": "a9c37c0cef34a393",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:canonical_json:cbd354d803af0ccb",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 128,
+        "end_line": 129,
+        "signature_hash": "2af8a10abc3d606e",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:canonicalize:f495b6b575b46d82",
+        "name": "canonicalize",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 115,
+        "end_line": 125,
+        "signature_hash": "a094ebc28d3b1a0f",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:confluence_rebase:f4266d136965684b",
+        "name": "confluence_rebase",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 218,
+        "end_line": 316,
+        "signature_hash": "bae4933d514e97f7",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:digest:17f3ec9dc4c2fb0d",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 132,
+        "end_line": 133,
+        "signature_hash": "3c60ab9e6d97eef8",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:result_digest:3d3d0b2615c79b54",
+        "name": "result_digest",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 319,
+        "end_line": 320,
+        "signature_hash": "f07619614478728e",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:semantic_normal_form_hash:806b6e8f8944abde",
+        "name": "semantic_normal_form_hash",
+        "kind": "function",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 205,
+        "end_line": 215,
+        "signature_hash": "c73c2988f0b3f328",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:Clause.exact_key:2f2f48e57c5337f8",
+        "name": "Clause.exact_key",
+        "kind": "method",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "a2435f45edec127f",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:Clause.semantic_key:b7bd5fda7b88d89b",
+        "name": "Clause.semantic_key",
+        "kind": "method",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "4639e1db33c65bc1",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:ConfluenceResult.to_canonical_dict:d121f47d4c22c9fa",
+        "name": "ConfluenceResult.to_canonical_dict",
+        "kind": "method",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "0ad7eadefdda4a52",
+        "file_digest8": "57b7d0a0ea66a302"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:MaterialDelta.earns_generation:0295aa114ee1e2e2",
+        "name": "MaterialDelta.earns_generation",
+        "kind": "method",
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "line": 77,
+        "end_line": 85,
+        "signature_hash": "7b390294d7bb322b",
+        "file_digest8": "57b7d0a0ea66a302"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -267657,8 +268431,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "b57862def7d8dcfd657ae4f0250d3c4c",
+    "payload_hash": "350db4f2bfdbfe587b33d5880b8d9ebd"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,16 +268445,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1655,
+      "bytes": 26511568,
+      "tokens_est": 6618233,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 273,
+        "python_module": 1007,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -268367,16 +269141,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1655,
+    "total_bytes": 26511568,
+    "text_tokens_est": 6618233,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 273,
+      "python_module": 1007,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -269101,6 +269875,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "benchmarks/check_triadic_confluence_thresholds.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 32,
+        "semantic_id": "benchmarks/check_triadic_confluence_thresholds.py#function:main:b1401de289b40a29",
+        "signature_hash": "0c0882d2e1b3f74c"
+      },
+      {
         "file": "benchmarks/refactor_code_quality/generate_fixture.py",
         "kind": "function",
         "line": 389,
@@ -269557,6 +270339,14 @@
         "end_line": 109,
         "semantic_id": "aura_persistence_cli.py#function:run:7f94baca3e3b884a",
         "signature_hash": "0a9464444ccb9a05"
+      },
+      {
+        "file": "benchmarks/benchmark_triadic_confluence.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 64,
+        "semantic_id": "benchmarks/benchmark_triadic_confluence.py#function:run:92a38cd4730fa3f4",
+        "signature_hash": "088c9fff235646f8"
       },
       {
         "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -286091,6 +286881,14 @@
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
         "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 132,
+        "end_line": 133,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:digest:17f3ec9dc4c2fb0d",
+        "signature_hash": "3c60ab9e6d97eef8"
       }
     ],
     "_runtime_binding_digest": [
@@ -311395,6 +312193,14 @@
         "end_line": 63,
         "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:canonical_json:db24948aa4a8caf8",
         "signature_hash": "c9911db40069043d"
+      },
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 129,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:canonical_json:cbd354d803af0ccb",
+        "signature_hash": "2af8a10abc3d606e"
       }
     ],
     "stable_digest": [
@@ -352005,6 +352811,14 @@
         "end_line": 404,
         "semantic_id": "aura_spatial_projection.py#function:_relation:233f9a749602a82f",
         "signature_hash": "a3afcb510ac0f4e4"
+      },
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 175,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_relation:c7de0234a1d45a2d",
+        "signature_hash": "dedc96c0a710d669"
       }
     ],
     "_position": [
@@ -362537,6 +363351,42 @@
         "end_line": 51,
         "semantic_id": "benchmarks/benchmark_frontier27.py#function:retrieval:3fb0932639b34b8d",
         "signature_hash": "52e064a4a926d241"
+      }
+    ],
+    "c": [
+      {
+        "file": "benchmarks/benchmark_triadic_confluence.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "benchmarks/benchmark_triadic_confluence.py#function:c:83ea478e5d0402df",
+        "signature_hash": "c153c66c1476e20f"
+      },
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#function:c:844c5db2491cf6f7",
+        "signature_hash": "7e02d7f27b4d91ea"
+      }
+    ],
+    "art": [
+      {
+        "file": "benchmarks/benchmark_triadic_confluence.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "benchmarks/benchmark_triadic_confluence.py#function:art:e3c7c809517fb2e6",
+        "signature_hash": "7c19b473c63c5ce5"
+      },
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 6,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#function:art:697586bd2b3d9386",
+        "signature_hash": "c2bf4f0b5ea3d16e"
       }
     ],
     "_diff": [
@@ -405935,6 +406785,14 @@
         "end_line": 36,
         "semantic_id": "tests/test_aura_ifc_storey_index.py#class:Relation:378c2bf7e3ed3eb2",
         "signature_hash": "96f2382594be1948"
+      },
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 24,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:Relation:2f136455bf1efaef",
+        "signature_hash": "7edb3251e18391d0"
       }
     ],
     "Relation.__init__": [
@@ -423907,6 +424765,216 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "TestTriadicConfluence": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 120,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#class:TestTriadicConfluence:0564233da7e270dd",
+        "signature_hash": "994323fe044af0df"
+      }
+    ],
+    "TestTriadicConfluence.test_foreign_parents_required": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_foreign_parents_required:700df12ae943717a",
+        "signature_hash": "111d8522fa66ec81"
+      }
+    ],
+    "TestTriadicConfluence.test_verified_parents_required": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_verified_parents_required:7c803c1fd8f63b6e",
+        "signature_hash": "97c840eac93a74f7"
+      }
+    ],
+    "TestTriadicConfluence.test_complementary_preserves_both": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 23,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_complementary_preserves_both:d9f102922a068251",
+        "signature_hash": "aa10b2c481a1e71b"
+      }
+    ],
+    "TestTriadicConfluence.test_equivalent_dedupes_provenance": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 32,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_equivalent_dedupes_provenance:3384117f8c9baa09",
+        "signature_hash": "ea662f20bd3c30fb"
+      }
+    ],
+    "TestTriadicConfluence.test_conflict_holds": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_conflict_holds:2538835940a3389d",
+        "signature_hash": "edf1bf0c2e2e6451"
+      }
+    ],
+    "TestTriadicConfluence.test_dominance_is_scoped": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_dominance_is_scoped:5fa76968f189a3da",
+        "signature_hash": "73ef95a74a5f5b35"
+      }
+    ],
+    "TestTriadicConfluence.test_specialization_preserves_both": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_specialization_preserves_both:83da11f018d977a5",
+        "signature_hash": "f9b66e931d01b92c"
+      }
+    ],
+    "TestTriadicConfluence.test_authority_ceiling_is_meet": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_authority_ceiling_is_meet:d07f8b7bb0a396cd",
+        "signature_hash": "1b7a8a180fab81cf"
+      }
+    ],
+    "TestTriadicConfluence.test_verified_compression_can_earn_amendment_without_semantic_change": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 61,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_verified_compression_can_earn_amendment_without_semantic_change:82fd580e9012d00b",
+        "signature_hash": "0d2d48eb0d17af26"
+      }
+    ],
+    "TestTriadicConfluence.test_unverified_compression_gets_zero_credit": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 67,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_unverified_compression_gets_zero_credit:74f51700e9d80b0e",
+        "signature_hash": "2587b19ded6fa10f"
+      }
+    ],
+    "TestTriadicConfluence.test_regressive_compression_gets_zero_credit": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_regressive_compression_gets_zero_credit:dad561329adae5de",
+        "signature_hash": "d31522acf0563093"
+      }
+    ],
+    "TestTriadicConfluence.test_refinement_debt_increments_on_noop": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_refinement_debt_increments_on_noop:9a1574f4df8c0b11",
+        "signature_hash": "526cc0fa4743c4b2"
+      }
+    ],
+    "TestTriadicConfluence.test_material_semantic_delta_resets_debt": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_material_semantic_delta_resets_debt:97f8d985d837cef6",
+        "signature_hash": "61d652c3666da6a0"
+      }
+    ],
+    "TestTriadicConfluence.test_idempotence_semantic_normal_form": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 89,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_idempotence_semantic_normal_form:306f934177c73fbc",
+        "signature_hash": "89984e5d176ba8fa"
+      }
+    ],
+    "TestTriadicConfluence.test_commutative_for_compatible_parents": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 95,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_commutative_for_compatible_parents:3a6924c10714ef82",
+        "signature_hash": "143725216212d3a4"
+      }
+    ],
+    "TestTriadicConfluence.test_deterministic_digest": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 99,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_deterministic_digest:66bdffbbf41f9784",
+        "signature_hash": "875fe5b182fc7004"
+      }
+    ],
+    "TestTriadicConfluence.test_provenance_retains_both_parents": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 103,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_provenance_retains_both_parents:b5577d4ddedd8b91",
+        "signature_hash": "d85466d6c0ddb871"
+      }
+    ],
+    "TestTriadicConfluence.test_unknown_delta_cannot_earn_generation_on_same_state": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 108,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_unknown_delta_cannot_earn_generation_on_same_state:0c260be8d5a3ee84",
+        "signature_hash": "18c7dba2628849d9"
+      }
+    ],
+    "TestTriadicConfluence.test_multi_clause_same_topic_does_not_drop_unpaired": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 115,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_multi_clause_same_topic_does_not_drop_unpaired:f0299ad4d44dcadf",
+        "signature_hash": "f252efbd50defdfc"
+      }
+    ],
+    "TestTriadicConfluence.test_multiclause_commutative": [
+      {
+        "file": "tests/test_triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 120,
+        "semantic_id": "tests/test_triadic_confluence_runtime.py#method:TestTriadicConfluence.test_multiclause_commutative:fc7070baa0491371",
+        "signature_hash": "9e0ebe0c7538e069"
+      }
+    ],
     "AdmissionError": [
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -424975,6 +426043,176 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "RebaseAction": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 32,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:RebaseAction:8db54eb4de182ac3",
+        "signature_hash": "dd9d702070aa299d"
+      }
+    ],
+    "Clause": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 55,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:Clause:ae12e5b03f5c927a",
+        "signature_hash": "8508b7e7cc132807"
+      }
+    ],
+    "Clause.semantic_key": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:Clause.semantic_key:b7bd5fda7b88d89b",
+        "signature_hash": "4639e1db33c65bc1"
+      }
+    ],
+    "Clause.exact_key": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:Clause.exact_key:2f2f48e57c5337f8",
+        "signature_hash": "a2435f45edec127f"
+      }
+    ],
+    "Artifact": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 66,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:Artifact:a13897f308f147f9",
+        "signature_hash": "aa78e2ea6ef9aae7"
+      }
+    ],
+    "MaterialDelta": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 85,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:MaterialDelta:b092c1a3c106243b",
+        "signature_hash": "1c6eaf3300236315"
+      }
+    ],
+    "MaterialDelta.earns_generation": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 85,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:MaterialDelta.earns_generation:0295aa114ee1e2e2",
+        "signature_hash": "7b390294d7bb322b"
+      }
+    ],
+    "ClauseDecision": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 93,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:ClauseDecision:fd22ca43ebfcfb21",
+        "signature_hash": "f59300ef81a42e7b"
+      }
+    ],
+    "ConfluenceResult": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "class",
+        "line": 97,
+        "end_line": 112,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#class:ConfluenceResult:c2a2805e75d9e129",
+        "signature_hash": "7d09735fd913536d"
+      }
+    ],
+    "ConfluenceResult.to_canonical_dict": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#method:ConfluenceResult.to_canonical_dict:d121f47d4c22c9fa",
+        "signature_hash": "0ad7eadefdda4a52"
+      }
+    ],
+    "canonicalize": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 125,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:canonicalize:f495b6b575b46d82",
+        "signature_hash": "a094ebc28d3b1a0f"
+      }
+    ],
+    "_with_provenance": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 146,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_with_provenance:ed40062462858a15",
+        "signature_hash": "a9c37c0cef34a393"
+      }
+    ],
+    "_group": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 182,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_group:127650462f665e5e",
+        "signature_hash": "b6c0855bf0fd2912"
+      }
+    ],
+    "_normal_form": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 202,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:_normal_form:5db5323fd2b10e98",
+        "signature_hash": "3336010111213a30"
+      }
+    ],
+    "semantic_normal_form_hash": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 205,
+        "end_line": 215,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:semantic_normal_form_hash:806b6e8f8944abde",
+        "signature_hash": "c73c2988f0b3f328"
+      }
+    ],
+    "confluence_rebase": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 316,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:confluence_rebase:f4266d136965684b",
+        "signature_hash": "bae4933d514e97f7"
+      }
+    ],
+    "result_digest": [
+      {
+        "file": "tools/arena/triadic_confluence_runtime.py",
+        "kind": "function",
+        "line": 319,
+        "end_line": 320,
+        "semantic_id": "tools/arena/triadic_confluence_runtime.py#function:result_digest:3d3d0b2615c79b54",
+        "signature_hash": "f07619614478728e"
       }
     ],
     "_coordinates": [
