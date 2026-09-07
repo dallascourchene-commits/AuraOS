@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1671
-- **total_bytes**: 26594341
-- **text_tokens_est**: 6638935
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 274, 'support_file': 53}
+- **file_count**: 1672
+- **total_bytes**: 26594908
+- **text_tokens_est**: 6639077
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 275, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1671,
+  "repo_file_count": 1672,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -296,6 +296,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
     "artifacts/arena/project006_sink_evidence_recovery/PROOF_RECEIPT_O11.json",
+    "artifacts/arena/project006_sink_evidence_recovery/PROOF_RECEIPT_O11R1.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1811,16 +1812,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1671,
-  "bytes": 26594341,
-  "tokens_est": 6638935,
+  "files": 1672,
+  "bytes": 26594908,
+  "tokens_est": 6639077,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1019,
-    "schema_or_lexicon": 274,
+    "schema_or_lexicon": 275,
     "support_file": 53
   }
 }
