@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1700
-- **total_bytes**: 26804937
-- **text_tokens_est**: 6691596
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1047, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1706
+- **total_bytes**: 26832076
+- **text_tokens_est**: 6698382
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1051, 'schema_or_lexicon': 280, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1700,
+  "repo_file_count": 1706,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -169,6 +169,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/frontier27-proof.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/memory-city-m3-proof.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -297,6 +298,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/memory_city_consequence_refinement/PROOF_RECEIPT_O8.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
     "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
@@ -1663,8 +1665,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_adaptive_hydration.py",
     "tests/test_memory_city_anchor_locator.py",
     "tests/test_memory_city_component_correct_read_consequence.py",
+    "tests/test_memory_city_consequence_refinement.py",
     "tests/test_memory_city_contingent_hydration.py",
     "tests/test_memory_city_hydration_plan.py",
+    "tests/test_memory_city_mode_sealed_admission.py",
     "tests/test_memory_city_navigator.py",
     "tests/test_memory_city_navigator_convergence.py",
     "tests/test_memory_city_quotient_controllability.py",
@@ -1678,6 +1682,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_memory_city_consequence_refinement.py",
     "tools/arena/campaign_memory_city_quotient_controllability.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
@@ -1699,6 +1704,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_reflexive_telemetry.py",
     "tools/arena/memory_city_adaptive_hydration.py",
     "tools/arena/memory_city_anchor_locator.py",
+    "tools/arena/memory_city_consequence_refinement.py",
     "tools/arena/memory_city_contingent_hydration.py",
     "tools/arena/memory_city_contingent_hydration_campaign.py",
     "tools/arena/memory_city_contingent_hydration_hs1000.py",
@@ -1840,16 +1846,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1700,
-  "bytes": 26804937,
-  "tokens_est": 6691596,
+  "files": 1706,
+  "bytes": 26832076,
+  "tokens_est": 6698382,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1047,
-    "schema_or_lexicon": 278,
+    "python_module": 1051,
+    "schema_or_lexicon": 280,
     "support_file": 49
   }
 }
