@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1675
-- **total_bytes**: 26636433
-- **text_tokens_est**: 6649459
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 276, 'support_file': 53}
+- **file_count**: 1682
+- **total_bytes**: 26669264
+- **text_tokens_est**: 6657669
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 278, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1675,
+  "repo_file_count": 1682,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -197,6 +197,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
     ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+    ".github/workflows/project006-o12r2-consumer-admission-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -298,6 +299,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+    "artifacts/arena/project006_o12r2_consumer_admission/PROOF_RECEIPT_O12R2.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1653,6 +1655,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
+    "tests/test_project006_consumer_admitted_currentness_o12r2.py",
     "tests/test_project006_effect_attempt_recovery_o11.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1678,10 +1681,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/campaign_effect_attempt_recovery_o11.py",
+    "tools/project006/consumer_admitted_currentness.py",
     "tools/project006/effect_attempt_recovery.py",
     "tools/project006/o11_effect_attempt_factored13d.py",
     "tools/project006/o11_effect_attempt_hs1000.py",
     "tools/project006/o11_effect_attempt_lattice8.py",
+    "tools/project006/o12r2_reference/campaign_o12r2.py",
+    "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+    "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
@@ -1815,16 +1822,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1675,
-  "bytes": 26636433,
-  "tokens_est": 6649459,
+  "files": 1682,
+  "bytes": 26669264,
+  "tokens_est": 6657669,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1021,
-    "schema_or_lexicon": 276,
+    "python_module": 1026,
+    "schema_or_lexicon": 278,
     "support_file": 53
   }
 }

@@ -407,6 +407,7 @@
     ],
     "python -m venv": [
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o12r2-consumer-admission-proof.yml",
       "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
@@ -1061,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1675,
+    "repo_file_count": 1682,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1235,6 +1236,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o12r2-consumer-admission-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1336,6 +1338,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+      "artifacts/arena/project006_o12r2_consumer_admission/PROOF_RECEIPT_O12R2.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2691,6 +2694,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_project006_consumer_admitted_currentness_o12r2.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -2716,10 +2720,14 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "tools/project006/consumer_admitted_currentness.py",
       "tools/project006/effect_attempt_recovery.py",
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o12r2_reference/campaign_o12r2.py",
+      "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+      "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
@@ -11805,6 +11813,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o12r2-consumer-admission-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2848,
+      "lines": 60,
+      "tokens_est": 712,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          39
+        ]
+      },
+      "topology": {},
+      "digest8": "0a16425883cab19c",
+      "vector": [
+        -0.032744,
+        -0.254556,
+        -0.220756,
+        -0.265119,
+        0.254556,
+        -0.049644,
+        0.115131,
+        0.246106,
+        0.172169,
+        -0.265119,
+        0.017956,
+        -0.058094,
+        0.047531,
+        0.144706,
+        0.153156,
+        0.212306,
+        0.096119,
+        0.201744,
+        -0.193294,
+        0.260894,
+        0.212306,
+        -0.174281,
+        0.161606,
+        0.222869,
+        0.045419,
+        -0.134144,
+        0.178506,
+        -0.098231,
+        -0.009506,
+        -0.222869,
+        -0.132031,
+        0.208081
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17746,6 +17807,53 @@
         0.115936,
         -0.258051,
         0.100976
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o12r2_consumer_admission/PROOF_RECEIPT_O12R2.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2591,
+      "lines": 55,
+      "tokens_est": 648,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f6a47e71192bbed",
+      "vector": [
+        0.214923,
+        0.130363,
+        0.059896,
+        -0.273645,
+        -0.05285,
+        -0.156201,
+        0.243109,
+        -0.268947,
+        0.252505,
+        -0.118618,
+        0.196132,
+        0.233714,
+        -0.285389,
+        -0.088083,
+        -0.022314,
+        -0.066943,
+        -0.001174,
+        0.13741,
+        0.278342,
+        0.019965,
+        -0.03171,
+        0.015268,
+        0.050501,
+        -0.128014,
+        0.280691,
+        -0.285389,
+        0.128014,
+        -0.050501,
+        -0.071641,
+        -0.156201,
+        -0.191434,
+        -0.268947
       ]
     },
     {
@@ -104268,6 +104376,53 @@
       ]
     },
     {
+      "path": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6507,
+      "lines": 102,
+      "tokens_est": 1627,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6f7274bc9fb9c740",
+      "vector": [
+        -0.275096,
+        0.175846,
+        -0.121905,
+        0.238417,
+        -0.231944,
+        0.057177,
+        -0.234102,
+        -0.20821,
+        -0.190949,
+        -0.266466,
+        -0.050704,
+        -0.01834,
+        0.02697,
+        0.270781,
+        0.091699,
+        -0.223314,
+        -0.061492,
+        0.132694,
+        0.195265,
+        0.184476,
+        -0.104645,
+        0.145639,
+        -0.134851,
+        -0.255678,
+        -0.085226,
+        -0.001079,
+        0.275096,
+        -0.124063,
+        -0.050704,
+        -0.182319,
+        -0.240575,
+        -0.149955
+      ]
+    },
+    {
       "path": "tests/test_project006_effect_attempt_recovery_o11.py",
       "role": "python_module",
       "binary": false,
@@ -105443,6 +105598,53 @@
       ]
     },
     {
+      "path": "tools/project006/consumer_admitted_currentness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12096,
+      "lines": 288,
+      "tokens_est": 3024,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3480c847a4658353",
+      "vector": [
+        -0.153921,
+        -0.096711,
+        -0.023156,
+        -0.320101,
+        0.08309,
+        -0.077641,
+        0.21113,
+        0.292858,
+        0.066744,
+        -0.129402,
+        -0.099435,
+        0.042226,
+        0.039502,
+        -0.02588,
+        0.333722,
+        -0.156645,
+        -0.287409,
+        -0.145748,
+        0.216579,
+        0.126678,
+        -0.205682,
+        0.273788,
+        -0.036778,
+        0.265615,
+        -0.162093,
+        0.017708,
+        -0.001362,
+        0.24927,
+        -0.156645,
+        -0.074917,
+        -0.053123,
+        0.26834
+      ]
+    },
+    {
       "path": "tools/project006/effect_attempt_recovery.py",
       "role": "python_module",
       "binary": false,
@@ -105628,6 +105830,147 @@
         0.010921,
         0.170055,
         0.020282
+      ]
+    },
+    {
+      "path": "tools/project006/o12r2_reference/campaign_o12r2.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2214,
+      "lines": 40,
+      "tokens_est": 554,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "debddc6d8a897910",
+      "vector": [
+        0.206335,
+        0.135718,
+        -0.054066,
+        0.109236,
+        -0.272539,
+        -0.166613,
+        -0.076134,
+        0.087168,
+        0.020965,
+        -0.257091,
+        -0.091582,
+        -0.098202,
+        0.270332,
+        -0.223989,
+        -0.009931,
+        0.208542,
+        -0.228403,
+        0.036412,
+        -0.239437,
+        0.235023,
+        -0.235023,
+        -0.043032,
+        -0.107029,
+        -0.199715,
+        -0.250471,
+        0.177647,
+        -0.12027,
+        -0.040826,
+        -0.268125,
+        -0.135718,
+        0.281366,
+        0.054066
+      ]
+    },
+    {
+      "path": "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1442,
+      "lines": 27,
+      "tokens_est": 361,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a7b51605c9b069aa",
+      "vector": [
+        -0.066674,
+        0.075714,
+        0.073454,
+        0.071194,
+        -0.157078,
+        0.249743,
+        0.150298,
+        0.044072,
+        -0.028251,
+        0.285905,
+        -0.19098,
+        -0.265564,
+        0.233922,
+        0.048593,
+        0.288165,
+        -0.240703,
+        0.102835,
+        -0.18194,
+        -0.200021,
+        -0.236182,
+        0.00113,
+        -0.012431,
+        0.035032,
+        -0.159338,
+        -0.062153,
+        0.098315,
+        -0.249743,
+        -0.261044,
+        0.279125,
+        -0.118656,
+        -0.168379,
+        0.222622
+      ]
+    },
+    {
+      "path": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5133,
+      "lines": 78,
+      "tokens_est": 1284,
+      "symbol_count": 31,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5136bd89fc44b6bf",
+      "vector": [
+        0.333542,
+        0.111181,
+        -0.325505,
+        -0.202268,
+        0.065637,
+        0.038846,
+        0.127255,
+        -0.129934,
+        0.202268,
+        0.212984,
+        0.186194,
+        -0.025451,
+        0.076353,
+        0.320146,
+        0.070995,
+        0.245133,
+        -0.129934,
+        0.076353,
+        -0.151366,
+        -0.020093,
+        0.221022,
+        0.0576,
+        -0.186194,
+        0.11386,
+        -0.030809,
+        -0.006698,
+        -0.0576,
+        0.156724,
+        -0.14065,
+        0.333542,
+        0.277282,
+        0.11386
       ]
     },
     {
@@ -106816,7 +107159,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788780396,
+  "generated_at_unix": 1788780868,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106992,6 +107335,7 @@
       ".github/workflows/phase3-local-verification-bundle.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
+      ".github/workflows/project006-o12r2-consumer-admission-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -107093,6 +107437,7 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+      "artifacts/arena/project006_o12r2_consumer_admission/PROOF_RECEIPT_O12R2.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108448,6 +108793,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_project006_consumer_admitted_currentness_o12r2.py",
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -108473,10 +108819,14 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/campaign_effect_attempt_recovery_o11.py",
+      "tools/project006/consumer_admitted_currentness.py",
       "tools/project006/effect_attempt_recovery.py",
       "tools/project006/o11_effect_attempt_factored13d.py",
       "tools/project006/o11_effect_attempt_hs1000.py",
       "tools/project006/o11_effect_attempt_lattice8.py",
+      "tools/project006/o12r2_reference/campaign_o12r2.py",
+      "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+      "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/terminal_outbox.py",
       "tools/project006/test_terminal_outbox.py",
@@ -266538,6 +266888,136 @@
         "file_digest8": "bec72310a01d581a"
       },
       {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#class:O12R2Integration:b4bcfe26214cb229",
+        "name": "O12R2Integration",
+        "kind": "class",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 19,
+        "end_line": 99,
+        "signature_hash": "aa0da963a7fe9f65",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#function:r:c9b57db2af5792d7",
+        "name": "r",
+        "kind": "function",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "0a38978db5ecc8b8",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.admission:2f7ff4462a3d4cc1",
+        "name": "O12R2Integration.admission",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 31,
+        "end_line": 39,
+        "signature_hash": "6ad52d77a7e4f761",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.cut:c4f2c0bcda95346a",
+        "name": "O12R2Integration.cut",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "6dfe7417f707631b",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.prepared:de45c44a96d8e65e",
+        "name": "O12R2Integration.prepared",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 46,
+        "end_line": 51,
+        "signature_hash": "93cdce596b9357d1",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.resolver:6c9408c39cafc0e2",
+        "name": "O12R2Integration.resolver",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "d5dedd1164d69b60",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.setUp:d65ebca22956a377",
+        "name": "O12R2Integration.setUp",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 20,
+        "end_line": 28,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.tearDown:fdd76b392076370a",
+        "name": "O12R2Integration.tearDown",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 29,
+        "end_line": 29,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_first_provider_attempt_binds_exact_canonical_admission:e766f34a6db4164f",
+        "name": "O12R2Integration.test_first_provider_attempt_binds_exact_canonical_admission",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 53,
+        "end_line": 60,
+        "signature_hash": "131793f6d7774c6d",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_fresh_rebind_allows_contract_retry_and_changes_attempt_root:ca3d7bd4170eedfe",
+        "name": "O12R2Integration.test_fresh_rebind_allows_contract_retry_and_changes_attempt_root",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 71,
+        "end_line": 81,
+        "signature_hash": "511de5fa92f9c48a",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_post_result_consumer_drift_does_not_erase_owed_return:57d5257409d1ac3a",
+        "name": "O12R2Integration.test_post_result_consumer_drift_does_not_erase_owed_return",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 83,
+        "end_line": 91,
+        "signature_hash": "fc188e0ebb6a4c3c",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_raw_structural_resolver_is_not_canonical_factory:03e7856acac2992f",
+        "name": "O12R2Integration.test_raw_structural_resolver_is_not_canonical_factory",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 93,
+        "end_line": 99,
+        "signature_hash": "8383a53202b12d16",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_stale_consumer_generation_holds_before_retry:9963d692636aea47",
+        "name": "O12R2Integration.test_stale_consumer_generation_holds_before_retry",
+        "kind": "method",
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "0111aa98597431a8",
+        "file_digest8": "6f7274bc9fb9c740"
+      },
+      {
         "semantic_id": "tests/test_project006_effect_attempt_recovery_o11.py#class:EffectAttemptRecoveryO11Tests.test_wrapper_migrates_ack_to_ack_route_not_final_outbox.FakeWriter:3883aa36d365a7dd",
         "name": "EffectAttemptRecoveryO11Tests.test_wrapper_migrates_ack_to_ack_route_not_final_outbox.FakeWriter",
         "kind": "class",
@@ -269488,6 +269968,206 @@
         "file_digest8": "c7b936d137af3aeb"
       },
       {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:AdmissionDisposition:72f722681cfc9de6",
+        "name": "AdmissionDisposition",
+        "kind": "class",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "3386456a49862bbd",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:CanonicalConsumerAdmission:38271acef018d342",
+        "name": "CanonicalConsumerAdmission",
+        "kind": "class",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 76,
+        "end_line": 151,
+        "signature_hash": "1d73c5dd81ad4ea7",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:CanonicalConsumerAdmissionResolver:9a29ebbd6f8b0794",
+        "name": "CanonicalConsumerAdmissionResolver",
+        "kind": "class",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 190,
+        "end_line": 266,
+        "signature_hash": "e87edbd8b1d13251",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:CanonicalConsumerCut:f7de73d731aea19d",
+        "name": "CanonicalConsumerCut",
+        "kind": "class",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 172,
+        "end_line": 183,
+        "signature_hash": "5e2fc4bfb50254c2",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:ProviderActionCurrentness:693448214b2acbda",
+        "name": "ProviderActionCurrentness",
+        "kind": "class",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 18,
+        "end_line": 45,
+        "signature_hash": "0bffd4334ca859bd",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:_id:c4abb13340e5881d",
+        "name": "_id",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "d64cfb03b3a12a79",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:_nn:654d7b3ec0409e0c",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 65,
+        "end_line": 68,
+        "signature_hash": "111700e86562b752",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:_root:14660df0c3881639",
+        "name": "_root",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "9af4f640541857b1",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:build_canonical_effect_attempt_journal:a7860990b2309492",
+        "name": "build_canonical_effect_attempt_journal",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 276,
+        "end_line": 287,
+        "signature_hash": "41c3e25ccf1e2bcf",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:digest:72aa0f993e52772a",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 48,
+        "end_line": 50,
+        "signature_hash": "1191bf18035c2e8c",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:k27_reopen_coordinate:0da9d48135beb5a4",
+        "name": "k27_reopen_coordinate",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 269,
+        "end_line": 273,
+        "signature_hash": "97661f82aac253ea",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:sign_consumer_admission:1b386436c1cd7e4e",
+        "name": "sign_consumer_admission",
+        "kind": "function",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 154,
+        "end_line": 168,
+        "signature_hash": "9f12037dd7d636b2",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmission.__post_init__:ed0e9a84051cb50e",
+        "name": "CanonicalConsumerAdmission.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 100,
+        "end_line": 120,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmission.receipt_root:99edc54809d6cbd9",
+        "name": "CanonicalConsumerAdmission.receipt_root",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 150,
+        "end_line": 151,
+        "signature_hash": "8b41c9839e1ab268",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmission.unsigned_payload:68320af1d73228c9",
+        "name": "CanonicalConsumerAdmission.unsigned_payload",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 122,
+        "end_line": 147,
+        "signature_hash": "8c5079af15197710",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmissionResolver.__call__:4a47bfc3da398ab7",
+        "name": "CanonicalConsumerAdmissionResolver.__call__",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 243,
+        "end_line": 266,
+        "signature_hash": "c1abc3fd103dc1e2",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmissionResolver.__init__:2d0998dca5fb5f9d",
+        "name": "CanonicalConsumerAdmissionResolver.__init__",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 197,
+        "end_line": 204,
+        "signature_hash": "fd5ff93829883569",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmissionResolver._verify:2b7b7f0895ed088d",
+        "name": "CanonicalConsumerAdmissionResolver._verify",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 206,
+        "end_line": 241,
+        "signature_hash": "3a0921b828462aa4",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerCut.__post_init__:fea1a26e00f7a121",
+        "name": "CanonicalConsumerCut.__post_init__",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 179,
+        "end_line": 183,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:ProviderActionCurrentness.identity_root:d8b7890d6d41d796",
+        "name": "ProviderActionCurrentness.identity_root",
+        "kind": "method",
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "line": 31,
+        "end_line": 45,
+        "signature_hash": "58a8d7e492dc7d88",
+        "file_digest8": "3480c847a4658353"
+      },
+      {
         "semantic_id": "tools/project006/effect_attempt_recovery.py#class:EffectAttemptJournal:42cd651adebb3c5d",
         "name": "EffectAttemptJournal",
         "kind": "class",
@@ -269746,6 +270426,366 @@
         "end_line": 76,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "4229a201a9e1d5b3"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/campaign_o12r2.py#function:mutate:4768fddb41605d9c",
+        "name": "mutate",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/campaign_o12r2.py",
+        "line": 7,
+        "end_line": 17,
+        "signature_hash": "b9c9fc979a622e3d",
+        "file_digest8": "debddc6d8a897910"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/campaign_o12r2.py#function:run:d1a0174e68caba21",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/campaign_o12r2.py",
+        "line": 23,
+        "end_line": 37,
+        "signature_hash": "8967c2e2c2b98c6d",
+        "file_digest8": "debddc6d8a897910"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/campaign_o12r2.py#function:structural_baseline:aec603ff2b8e68f7",
+        "name": "structural_baseline",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/campaign_o12r2.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "e00c32aa8683aa72",
+        "file_digest8": "debddc6d8a897910"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/hyperscale_o12r2.py#function:hard8:781594d957268106",
+        "name": "hard8",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+        "line": 4,
+        "end_line": 5,
+        "signature_hash": "3f1937422d83e046",
+        "file_digest8": "a7b51605c9b069aa"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/hyperscale_o12r2.py#function:run:46ec6f574e6ab02f",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+        "line": 7,
+        "end_line": 24,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "a7b51605c9b069aa"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#class:T:2834ab0eb4bfd864",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 37,
+        "end_line": 75,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:contract:e3295542debc9754",
+        "name": "contract",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "427aae678664fdbc",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:intent:4e8fa630702f8dee",
+        "name": "intent",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "27b1cbf7214cf93d",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:make:4e5605d070606e40",
+        "name": "make",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 19,
+        "end_line": 28,
+        "signature_hash": "46196f6bfeabf2b8",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:r:69fba93b0fdba615",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "0a38978db5ecc8b8",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:resolver:6a726469704064f8",
+        "name": "resolver",
+        "kind": "function",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 30,
+        "end_line": 35,
+        "signature_hash": "b30a8cb3731968b8",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_auth_moved:cb0088003876881a",
+        "name": "T.test_auth_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 49,
+        "end_line": 49,
+        "signature_hash": "6bee8c8e3005529e",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_authority_rejected:fdd43920a1a32c33",
+        "name": "T.test_authority_rejected",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 70,
+        "end_line": 71,
+        "signature_hash": "642de8826a832693",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_bad_mac:95b9ddc94d8160ee",
+        "name": "T.test_bad_mac",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "5546a7fca09fbb5e",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_command_moved:bc82d9edbf1d2e2e",
+        "name": "T.test_command_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 50,
+        "end_line": 50,
+        "signature_hash": "34e0bbe9adf20393",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_contract_moved:9498b95c05a6ba82",
+        "name": "T.test_contract_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 52,
+        "end_line": 52,
+        "signature_hash": "5952124d3c67a5aa",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_currentness_identity_binds_receipt:572b0832914e492c",
+        "name": "T.test_currentness_identity_binds_receipt",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "ed157e348fa5b3d6",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_currentness_moved:fa0e02fb869ba956",
+        "name": "T.test_currentness_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 45,
+        "end_line": 45,
+        "signature_hash": "ef0db63b659f5586",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_cut_generation_moved:6fc3fceda2836ae4",
+        "name": "T.test_cut_generation_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 44,
+        "end_line": 44,
+        "signature_hash": "23a5c61c74d4c1ac",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_expired:a01cf98369c8bf11",
+        "name": "T.test_expired",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 53,
+        "end_line": 53,
+        "signature_hash": "5c66c7c412bc77f4",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_future:6c8e21d66a666ddf",
+        "name": "T.test_future",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 54,
+        "end_line": 54,
+        "signature_hash": "247a2c112e839bc6",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_generation_moved:5fb3328302c10777",
+        "name": "T.test_generation_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 43,
+        "end_line": 43,
+        "signature_hash": "d8668336f6ba4a57",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_intent_moved:fac829562e7159c2",
+        "name": "T.test_intent_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 51,
+        "end_line": 51,
+        "signature_hash": "f8b5fdd0253d9f25",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_k27_is_only_projection:e6a4332f5948753d",
+        "name": "T.test_k27_is_only_projection",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 68,
+        "end_line": 69,
+        "signature_hash": "ce4185908b2e6e4e",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_owner_moved:ce45dd7868d12d68",
+        "name": "T.test_owner_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 55,
+        "end_line": 55,
+        "signature_hash": "286b6fdf30c4292e",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_proof_semantics_moved:6bc6d0c6a3dddab0",
+        "name": "T.test_proof_semantics_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 47,
+        "end_line": 47,
+        "signature_hash": "17a7d691d20d8b7a",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_provider_raises.boom:f6851e0c00da3858",
+        "name": "T.test_provider_raises.boom",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 60,
+        "end_line": 60,
+        "signature_hash": "9f2d5ff609a104ad",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_provider_raises:4980bbb9ef60d79b",
+        "name": "T.test_provider_raises",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "c6cd28810cc11ffc",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_receipt_root_changes_generation:63d4af5b57f4568a",
+        "name": "T.test_receipt_root_changes_generation",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 63,
+        "end_line": 63,
+        "signature_hash": "2e28072821c7ee99",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_receipt_root_changes_observer_receipt:be1b4a270d3fe53b",
+        "name": "T.test_receipt_root_changes_observer_receipt",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 64,
+        "end_line": 64,
+        "signature_hash": "1b0ab228320f463e",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_same_lineage_rejected:76b050fa984f80cc",
+        "name": "T.test_same_lineage_rejected",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "b196811f51973eab",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_same_observer_owner_rejected:25d25e4aee4e205c",
+        "name": "T.test_same_observer_owner_rejected",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 72,
+        "end_line": 73,
+        "signature_hash": "0eeaf4b89d511eba",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_source_moved:7e4410557c6df125",
+        "name": "T.test_source_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 48,
+        "end_line": 48,
+        "signature_hash": "4f16ecbc2d340d9b",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_valid:5592e059303a8cbc",
+        "name": "T.test_valid",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "5ed9c72955b811a9",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_verifier_moved:db25a55eac63e182",
+        "name": "T.test_verifier_moved",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 46,
+        "end_line": 46,
+        "signature_hash": "51963f6cb8c18af3",
+        "file_digest8": "5136bd89fc44b6bf"
+      },
+      {
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_wrong_type:678e528ff79755a0",
+        "name": "T.test_wrong_type",
+        "kind": "method",
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "33151130d7b04dbc",
+        "file_digest8": "5136bd89fc44b6bf"
       },
       {
         "semantic_id": "tools/project006/project006_consumer_outbox_wrapper.py#function:_changed:fb5eb9317f79eb5e",
@@ -271618,8 +272658,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4347646b64463d591ecbb7a09ba62860",
-    "payload_hash": "39cab51c6c61bc4b7dff594b67959c44"
+    "record_fingerprint": "c096729b30f05267317e207dbecf4f1e",
+    "payload_hash": "0635bab6b2cac2efef8411bf617f0884"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -271632,16 +272672,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1675,
-      "bytes": 26636433,
-      "tokens_est": 6649459,
+      "files": 1682,
+      "bytes": 26669264,
+      "tokens_est": 6657669,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1021,
-        "schema_or_lexicon": 276,
+        "python_module": 1026,
+        "schema_or_lexicon": 278,
         "support_file": 53
       }
     },
@@ -272328,16 +273368,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1675,
-    "total_bytes": 26636433,
-    "text_tokens_est": 6649459,
+    "file_count": 1682,
+    "total_bytes": 26669264,
+    "text_tokens_est": 6657669,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1021,
-      "schema_or_lexicon": 276,
+      "python_module": 1026,
+      "schema_or_lexicon": 278,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -273598,6 +274638,22 @@
         "end_line": 117,
         "semantic_id": "tools/project006/campaign_effect_attempt_recovery_o11.py#function:run:2814a5fdf66460e4",
         "signature_hash": "cd091b632ab9c186"
+      },
+      {
+        "file": "tools/project006/o12r2_reference/campaign_o12r2.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 37,
+        "semantic_id": "tools/project006/o12r2_reference/campaign_o12r2.py#function:run:d1a0174e68caba21",
+        "signature_hash": "8967c2e2c2b98c6d"
+      },
+      {
+        "file": "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 24,
+        "semantic_id": "tools/project006/o12r2_reference/hyperscale_o12r2.py#function:run:46ec6f574e6ab02f",
+        "signature_hash": "26799ab4ad82cbfb"
       }
     ],
     "run.record": [
@@ -290126,6 +291182,14 @@
         "signature_hash": "0bff111c4fc1adcb"
       },
       {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 50,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:digest:72aa0f993e52772a",
+        "signature_hash": "1191bf18035c2e8c"
+      },
+      {
         "file": "tools/project006/effect_attempt_recovery.py",
         "kind": "function",
         "line": 31,
@@ -304487,6 +305551,14 @@
         "line": 23,
         "end_line": 26,
         "semantic_id": "tools/arena/effect_return_atomicity.py#function:_id:47c3fe8fd9dba651",
+        "signature_hash": "d64cfb03b3a12a79"
+      },
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:_id:c4abb13340e5881d",
         "signature_hash": "d64cfb03b3a12a79"
       },
       {
@@ -369506,6 +370578,14 @@
         "signature_hash": "2e65e72bab661379"
       },
       {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:_root:14660df0c3881639",
+        "signature_hash": "9af4f640541857b1"
+      },
+      {
         "file": "tools/project006/effect_attempt_recovery.py",
         "kind": "function",
         "line": 36,
@@ -427304,6 +428384,14 @@
         "end_line": 90,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py#class:T:8f95aedea5c120a7",
         "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 75,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#class:T:2834ab0eb4bfd864",
+        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_00_manifest": [
@@ -427994,6 +429082,144 @@
         "end_line": 383,
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_quorum_policy_boolean_parameters_are_strict:774427495a3346f4",
         "signature_hash": "a7f899fb2c74e634"
+      }
+    ],
+    "r": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#function:r:c9b57db2af5792d7",
+        "signature_hash": "0a38978db5ecc8b8"
+      },
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:r:69fba93b0fdba615",
+        "signature_hash": "0a38978db5ecc8b8"
+      }
+    ],
+    "O12R2Integration": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 99,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#class:O12R2Integration:b4bcfe26214cb229",
+        "signature_hash": "aa0da963a7fe9f65"
+      }
+    ],
+    "O12R2Integration.setUp": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 28,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.setUp:d65ebca22956a377",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "O12R2Integration.tearDown": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 29,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.tearDown:fdd76b392076370a",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "O12R2Integration.admission": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 39,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.admission:2f7ff4462a3d4cc1",
+        "signature_hash": "6ad52d77a7e4f761"
+      }
+    ],
+    "O12R2Integration.cut": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.cut:c4f2c0bcda95346a",
+        "signature_hash": "6dfe7417f707631b"
+      }
+    ],
+    "O12R2Integration.resolver": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.resolver:6c9408c39cafc0e2",
+        "signature_hash": "d5dedd1164d69b60"
+      }
+    ],
+    "O12R2Integration.prepared": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 51,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.prepared:de45c44a96d8e65e",
+        "signature_hash": "93cdce596b9357d1"
+      }
+    ],
+    "O12R2Integration.test_first_provider_attempt_binds_exact_canonical_admission": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 60,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_first_provider_attempt_binds_exact_canonical_admission:e766f34a6db4164f",
+        "signature_hash": "131793f6d7774c6d"
+      }
+    ],
+    "O12R2Integration.test_stale_consumer_generation_holds_before_retry": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_stale_consumer_generation_holds_before_retry:9963d692636aea47",
+        "signature_hash": "0111aa98597431a8"
+      }
+    ],
+    "O12R2Integration.test_fresh_rebind_allows_contract_retry_and_changes_attempt_root": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 81,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_fresh_rebind_allows_contract_retry_and_changes_attempt_root:ca3d7bd4170eedfe",
+        "signature_hash": "511de5fa92f9c48a"
+      }
+    ],
+    "O12R2Integration.test_post_result_consumer_drift_does_not_erase_owed_return": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 91,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_post_result_consumer_drift_does_not_erase_owed_return:57d5257409d1ac3a",
+        "signature_hash": "fc188e0ebb6a4c3c"
+      }
+    ],
+    "O12R2Integration.test_raw_structural_resolver_is_not_canonical_factory": [
+      {
+        "file": "tests/test_project006_consumer_admitted_currentness_o12r2.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 99,
+        "semantic_id": "tests/test_project006_consumer_admitted_currentness_o12r2.py#method:O12R2Integration.test_raw_structural_resolver_is_not_canonical_factory:03e7856acac2992f",
+        "signature_hash": "8383a53202b12d16"
       }
     ],
     "root": [
@@ -428690,6 +429916,14 @@
         "end_line": 130,
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/liveness_witness.py#function:_nn:d6dbe5c7750e0a0c",
         "signature_hash": "0c3f98b7c2640bed"
+      },
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 68,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:_nn:654d7b3ec0409e0c",
+        "signature_hash": "111700e86562b752"
       }
     ],
     "RecoveryMode": [
@@ -428790,6 +430024,14 @@
         "end_line": 157,
         "semantic_id": "tools/arena/effect_return_atomicity.py#class:ProviderActionCurrentness:43bc2e86b1703f45",
         "signature_hash": "0bffd4334ca859bd"
+      },
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 45,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:ProviderActionCurrentness:693448214b2acbda",
+        "signature_hash": "0bffd4334ca859bd"
       }
     ],
     "ProviderActionCurrentness.__post_init__": [
@@ -428809,6 +430051,14 @@
         "line": 143,
         "end_line": 157,
         "semantic_id": "tools/arena/effect_return_atomicity.py#method:ProviderActionCurrentness.identity_root:a8d36d942da1489b",
+        "signature_hash": "58a8d7e492dc7d88"
+      },
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 45,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:ProviderActionCurrentness.identity_root:d8b7890d6d41d796",
         "signature_hash": "58a8d7e492dc7d88"
       }
     ],
@@ -430756,6 +432006,146 @@
         "signature_hash": "f5eb8725c9c32a3b"
       }
     ],
+    "AdmissionDisposition": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:AdmissionDisposition:72f722681cfc9de6",
+        "signature_hash": "3386456a49862bbd"
+      }
+    ],
+    "CanonicalConsumerAdmission": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "class",
+        "line": 76,
+        "end_line": 151,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:CanonicalConsumerAdmission:38271acef018d342",
+        "signature_hash": "1d73c5dd81ad4ea7"
+      }
+    ],
+    "CanonicalConsumerAdmission.__post_init__": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 120,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmission.__post_init__:ed0e9a84051cb50e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CanonicalConsumerAdmission.unsigned_payload": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 147,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmission.unsigned_payload:68320af1d73228c9",
+        "signature_hash": "8c5079af15197710"
+      }
+    ],
+    "CanonicalConsumerAdmission.receipt_root": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 151,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmission.receipt_root:99edc54809d6cbd9",
+        "signature_hash": "8b41c9839e1ab268"
+      }
+    ],
+    "sign_consumer_admission": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 154,
+        "end_line": 168,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:sign_consumer_admission:1b386436c1cd7e4e",
+        "signature_hash": "9f12037dd7d636b2"
+      }
+    ],
+    "CanonicalConsumerCut": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "class",
+        "line": 172,
+        "end_line": 183,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:CanonicalConsumerCut:f7de73d731aea19d",
+        "signature_hash": "5e2fc4bfb50254c2"
+      }
+    ],
+    "CanonicalConsumerCut.__post_init__": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 183,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerCut.__post_init__:fea1a26e00f7a121",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CanonicalConsumerAdmissionResolver": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "class",
+        "line": 190,
+        "end_line": 266,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#class:CanonicalConsumerAdmissionResolver:9a29ebbd6f8b0794",
+        "signature_hash": "e87edbd8b1d13251"
+      }
+    ],
+    "CanonicalConsumerAdmissionResolver.__init__": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 204,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmissionResolver.__init__:2d0998dca5fb5f9d",
+        "signature_hash": "fd5ff93829883569"
+      }
+    ],
+    "CanonicalConsumerAdmissionResolver._verify": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 241,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmissionResolver._verify:2b7b7f0895ed088d",
+        "signature_hash": "3a0921b828462aa4"
+      }
+    ],
+    "CanonicalConsumerAdmissionResolver.__call__": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 266,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#method:CanonicalConsumerAdmissionResolver.__call__:4a47bfc3da398ab7",
+        "signature_hash": "c1abc3fd103dc1e2"
+      }
+    ],
+    "k27_reopen_coordinate": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 269,
+        "end_line": 273,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:k27_reopen_coordinate:0da9d48135beb5a4",
+        "signature_hash": "97661f82aac253ea"
+      }
+    ],
+    "build_canonical_effect_attempt_journal": [
+      {
+        "file": "tools/project006/consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 276,
+        "end_line": 287,
+        "semantic_id": "tools/project006/consumer_admitted_currentness.py#function:build_canonical_effect_attempt_journal:a7860990b2309492",
+        "signature_hash": "41c3e25ccf1e2bcf"
+      }
+    ],
     "ProviderActionPermit": [
       {
         "file": "tools/project006/effect_attempt_recovery.py",
@@ -430984,6 +432374,326 @@
         "end_line": 409,
         "semantic_id": "tools/project006/effect_attempt_recovery.py#function:hard_o11_state:dec2593e744d1640",
         "signature_hash": "ac106c0df04d850d"
+      }
+    ],
+    "mutate": [
+      {
+        "file": "tools/project006/o12r2_reference/campaign_o12r2.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 17,
+        "semantic_id": "tools/project006/o12r2_reference/campaign_o12r2.py#function:mutate:4768fddb41605d9c",
+        "signature_hash": "b9c9fc979a622e3d"
+      }
+    ],
+    "structural_baseline": [
+      {
+        "file": "tools/project006/o12r2_reference/campaign_o12r2.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tools/project006/o12r2_reference/campaign_o12r2.py#function:structural_baseline:aec603ff2b8e68f7",
+        "signature_hash": "e00c32aa8683aa72"
+      }
+    ],
+    "hard8": [
+      {
+        "file": "tools/project006/o12r2_reference/hyperscale_o12r2.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 5,
+        "semantic_id": "tools/project006/o12r2_reference/hyperscale_o12r2.py#function:hard8:781594d957268106",
+        "signature_hash": "3f1937422d83e046"
+      }
+    ],
+    "intent": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:intent:4e8fa630702f8dee",
+        "signature_hash": "27b1cbf7214cf93d"
+      }
+    ],
+    "contract": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:contract:e3295542debc9754",
+        "signature_hash": "427aae678664fdbc"
+      }
+    ],
+    "make": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 28,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:make:4e5605d070606e40",
+        "signature_hash": "46196f6bfeabf2b8"
+      }
+    ],
+    "resolver": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 35,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#function:resolver:6a726469704064f8",
+        "signature_hash": "b30a8cb3731968b8"
+      }
+    ],
+    "T.test_valid": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_valid:5592e059303a8cbc",
+        "signature_hash": "5ed9c72955b811a9"
+      }
+    ],
+    "T.test_bad_mac": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_bad_mac:95b9ddc94d8160ee",
+        "signature_hash": "5546a7fca09fbb5e"
+      }
+    ],
+    "T.test_generation_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 43,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_generation_moved:5fb3328302c10777",
+        "signature_hash": "d8668336f6ba4a57"
+      }
+    ],
+    "T.test_cut_generation_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 44,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_cut_generation_moved:6fc3fceda2836ae4",
+        "signature_hash": "23a5c61c74d4c1ac"
+      }
+    ],
+    "T.test_currentness_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 45,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_currentness_moved:fa0e02fb869ba956",
+        "signature_hash": "ef0db63b659f5586"
+      }
+    ],
+    "T.test_verifier_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 46,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_verifier_moved:db25a55eac63e182",
+        "signature_hash": "51963f6cb8c18af3"
+      }
+    ],
+    "T.test_proof_semantics_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 47,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_proof_semantics_moved:6bc6d0c6a3dddab0",
+        "signature_hash": "17a7d691d20d8b7a"
+      }
+    ],
+    "T.test_source_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 48,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_source_moved:7e4410557c6df125",
+        "signature_hash": "4f16ecbc2d340d9b"
+      }
+    ],
+    "T.test_auth_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 49,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_auth_moved:cb0088003876881a",
+        "signature_hash": "6bee8c8e3005529e"
+      }
+    ],
+    "T.test_command_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 50,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_command_moved:bc82d9edbf1d2e2e",
+        "signature_hash": "34e0bbe9adf20393"
+      }
+    ],
+    "T.test_intent_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 51,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_intent_moved:fac829562e7159c2",
+        "signature_hash": "f8b5fdd0253d9f25"
+      }
+    ],
+    "T.test_contract_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 52,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_contract_moved:9498b95c05a6ba82",
+        "signature_hash": "5952124d3c67a5aa"
+      }
+    ],
+    "T.test_expired": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 53,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_expired:a01cf98369c8bf11",
+        "signature_hash": "5c66c7c412bc77f4"
+      }
+    ],
+    "T.test_future": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 54,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_future:6c8e21d66a666ddf",
+        "signature_hash": "247a2c112e839bc6"
+      }
+    ],
+    "T.test_owner_moved": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 55,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_owner_moved:ce45dd7868d12d68",
+        "signature_hash": "286b6fdf30c4292e"
+      }
+    ],
+    "T.test_wrong_type": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_wrong_type:678e528ff79755a0",
+        "signature_hash": "33151130d7b04dbc"
+      }
+    ],
+    "T.test_provider_raises": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_provider_raises:4980bbb9ef60d79b",
+        "signature_hash": "c6cd28810cc11ffc"
+      }
+    ],
+    "T.test_provider_raises.boom": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 60,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_provider_raises.boom:f6851e0c00da3858",
+        "signature_hash": "9f2d5ff609a104ad"
+      }
+    ],
+    "T.test_receipt_root_changes_generation": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 63,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_receipt_root_changes_generation:63d4af5b57f4568a",
+        "signature_hash": "2e28072821c7ee99"
+      }
+    ],
+    "T.test_receipt_root_changes_observer_receipt": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 64,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_receipt_root_changes_observer_receipt:be1b4a270d3fe53b",
+        "signature_hash": "1b0ab228320f463e"
+      }
+    ],
+    "T.test_currentness_identity_binds_receipt": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_currentness_identity_binds_receipt:572b0832914e492c",
+        "signature_hash": "ed157e348fa5b3d6"
+      }
+    ],
+    "T.test_k27_is_only_projection": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 69,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_k27_is_only_projection:e6a4332f5948753d",
+        "signature_hash": "ce4185908b2e6e4e"
+      }
+    ],
+    "T.test_authority_rejected": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_authority_rejected:fdd43920a1a32c33",
+        "signature_hash": "642de8826a832693"
+      }
+    ],
+    "T.test_same_observer_owner_rejected": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 73,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_same_observer_owner_rejected:25d25e4aee4e205c",
+        "signature_hash": "0eeaf4b89d511eba"
+      }
+    ],
+    "T.test_same_lineage_rejected": [
+      {
+        "file": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tools/project006/o12r2_reference/test_consumer_admitted_currentness.py#method:T.test_same_lineage_rejected:76b050fa984f80cc",
+        "signature_hash": "b196811f51973eab"
       }
     ],
     "_first_text": [
