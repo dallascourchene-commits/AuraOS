@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1689
-- **total_bytes**: 26651094
-- **text_tokens_est**: 6653129
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1029, 'schema_or_lexicon': 282, 'support_file': 53}
+- **file_count**: 1694
+- **total_bytes**: 26667273
+- **text_tokens_est**: 6657171
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1030, 'schema_or_lexicon': 284, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1689,
+  "repo_file_count": 1694,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -173,6 +173,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/model-cognome-replay-probes.yml",
     ".github/workflows/model-cognome-telemetry.yml",
     ".github/workflows/model-connectome-bridge.yml",
+    ".github/workflows/o21-installed-runtime-bound-delegation-proof.yml",
     ".github/workflows/o5-consequence-admission-proof.yml",
     ".github/workflows/p1-1-authority-contracts.yml",
     ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -300,6 +301,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/o21_installed_runtime_bound_delegation/CREATION_LEDGER.md",
+    "artifacts/arena/o21_installed_runtime_bound_delegation/FROZEN_PROPOSALS.md",
+    "artifacts/arena/o21_installed_runtime_bound_delegation/LOCAL_PROOF_RECEIPT_O21.json",
     "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
     "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
     "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
@@ -1671,6 +1675,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/installed_runtime_bound_delegation.py",
+    "tools/arena/proof_o21_runtime_bound_delegation.py",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -1829,16 +1834,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1689,
-  "bytes": 26651094,
-  "tokens_est": 6653129,
+  "files": 1694,
+  "bytes": 26667273,
+  "tokens_est": 6657171,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1029,
-    "schema_or_lexicon": 282,
+    "python_module": 1030,
+    "schema_or_lexicon": 284,
     "support_file": 53
   }
 }
@@ -1968,6 +1973,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "USER_GUIDE.md",
     "VSA_RENDERING_IMPLEMENTATION.md",
     "VSA_TEST_PLAN.md",
+    "artifacts/arena/o21_installed_runtime_bound_delegation/CREATION_LEDGER.md",
+    "artifacts/arena/o21_installed_runtime_bound_delegation/FROZEN_PROPOSALS.md",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -2121,9 +2128,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_TOKEN_ECONOMY_STACK.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
   ]
 }
 ```
