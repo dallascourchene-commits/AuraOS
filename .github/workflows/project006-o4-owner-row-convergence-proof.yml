@@ -1,0 +1,58 @@
+name: Project006 O4 Owner Row Convergence Proof
+
+on:
+  push:
+    branches:
+      - arena/o4-owner-row-convergence-gpt56sol-20260907
+  pull_request:
+    paths:
+      - tools/project006/o4_owner_row_convergence.py
+      - tools/project006/campaign_o4_owner_row_convergence.py
+      - tests/test_project006_o4_owner_row_convergence.py
+      - .github/workflows/project006-o4-owner-row-convergence-proof.yml
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run three fresh deterministic environments
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          rm -rf /tmp/o4-venv-{1,2,3} /tmp/o4-proof
+          mkdir -p /tmp/o4-proof
+          for n in 1 2 3; do
+            python -m venv "/tmp/o4-venv-$n"
+            PYTHONPATH="$GITHUB_WORKSPACE" "/tmp/o4-venv-$n/bin/python" -m unittest tests.test_project006_o4_owner_row_convergence -v \
+              > "/tmp/o4-proof/tests-$n.txt" 2>&1
+            PYTHONPATH="$GITHUB_WORKSPACE" "/tmp/o4-venv-$n/bin/python" tools/project006/campaign_o4_owner_row_convergence.py \
+              > "/tmp/o4-proof/campaign-$n.json"
+          done
+          cmp /tmp/o4-proof/campaign-1.json /tmp/o4-proof/campaign-2.json
+          cmp /tmp/o4-proof/campaign-1.json /tmp/o4-proof/campaign-3.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/o4-proof/campaign-1.json'))
+          assert x['campaign']['repaired_false_provider_candidates'] == 0
+          assert x['campaign']['repaired_false_holds'] == 0
+          assert x['omega8']['states'] == 6561 and len(x['omega8']['keepers']) == 1
+          assert x['omega8']['invalid_ready'] == 0
+          assert x['sweep13d']['states'] == 1594323
+          assert x['sweep13d']['hard_invalid_context_repairs'] == 0
+          assert x['hs1000']['frozen_candidates'] == 1000
+          assert x['hs1000']['claimed_breakthroughs'] == 0
+          assert x['native_private_transformer_kv_accessed'] is False
+          print('O4_OWNER_ROW_EXACT_HEAD_PROOF=PASS')
+          print('O4_RESULT_ROOT='+x['result_root'])
+          PY
