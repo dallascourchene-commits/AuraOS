@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1703
-- **total_bytes**: 26827408
-- **text_tokens_est**: 6697214
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1049, 'schema_or_lexicon': 279, 'support_file': 49}
+- **file_count**: 1708
+- **total_bytes**: 26852300
+- **text_tokens_est**: 6703439
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1053, 'schema_or_lexicon': 280, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1703,
+  "repo_file_count": 1708,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -170,6 +170,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
     ".github/workflows/memory-city-m3-proof.yml",
+    ".github/workflows/memory-city-o13-effect-handoff-proof.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -1665,6 +1666,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_memory_city_anchor_locator.py",
     "tests/test_memory_city_component_correct_read_consequence.py",
     "tests/test_memory_city_contingent_hydration.py",
+    "tests/test_memory_city_effect_handoff_o13.py",
     "tests/test_memory_city_hydration_plan.py",
     "tests/test_memory_city_mode_sealed_admission.py",
     "tests/test_memory_city_navigator.py",
@@ -1680,6 +1682,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena/campaign_memory_city_effect_handoff_o13.py",
     "tools/arena/campaign_memory_city_quotient_controllability.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
@@ -1713,6 +1716,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_read_consequence.py",
     "tools/arena/memory_city_support_hydration.py",
     "tools/arena/memory_city_typed_closure.py",
+    "tools/arena/o13_effect_handoff_hs1000.py",
+    "tools/arena/o13_effect_handoff_lattice.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1843,16 +1848,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1703,
-  "bytes": 26827408,
-  "tokens_est": 6697214,
+  "files": 1708,
+  "bytes": 26852300,
+  "tokens_est": 6703439,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1049,
-    "schema_or_lexicon": 279,
+    "python_module": 1053,
+    "schema_or_lexicon": 280,
     "support_file": 49
   }
 }
