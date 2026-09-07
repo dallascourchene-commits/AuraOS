@@ -1064,7 +1064,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1677,
+    "repo_file_count": 1692,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1338,6 +1338,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
+      "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2698,9 +2700,13 @@
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_k27_state_root_schema_snapshot.py",
+      "tests/test_memory_city_adaptive_hydration.py",
       "tests/test_memory_city_anchor_locator.py",
+      "tests/test_memory_city_contingent_hydration.py",
       "tests/test_memory_city_hydration_plan.py",
       "tests/test_memory_city_navigator.py",
+      "tests/test_memory_city_navigator_convergence.py",
+      "tests/test_memory_city_quotient_controllability.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -2709,8 +2715,11 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_memory_city_quotient_controllability.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/k27_dynamic_navigator.py",
+      "tools/arena/k27_invariant_route_cut.py",
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -2724,10 +2733,16 @@
       "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_runtime.py",
+      "tools/arena/k27_reflexive_telemetry.py",
+      "tools/arena/memory_city_adaptive_hydration.py",
       "tools/arena/memory_city_anchor_locator.py",
       "tools/arena/memory_city_contingent_hydration.py",
+      "tools/arena/memory_city_contingent_hydration_campaign.py",
+      "tools/arena/memory_city_contingent_hydration_hs1000.py",
       "tools/arena/memory_city_hydration_plan.py",
       "tools/arena/memory_city_navigator.py",
+      "tools/arena/memory_city_quotient_controllability.py",
+      "tools/arena/memory_city_support_hydration.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -17708,6 +17723,100 @@
         0.17453,
         -0.115909,
         -0.20384
+      ]
+    },
+    {
+      "path": "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4059,
+      "lines": 74,
+      "tokens_est": 1015,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f3b7856bb0220c46",
+      "vector": [
+        -0.278333,
+        0.158477,
+        0.046611,
+        0.102544,
+        -0.262352,
+        -0.081236,
+        0.049274,
+        0.158477,
+        -0.046611,
+        -0.225064,
+        -0.227727,
+        0.019976,
+        0.249035,
+        -0.225064,
+        -0.302305,
+        -0.118525,
+        -0.326276,
+        -0.16114,
+        0.201093,
+        0.113198,
+        0.011986,
+        0.051938,
+        0.169131,
+        0.097217,
+        0.273006,
+        -0.206419,
+        0.105207,
+        -0.067919,
+        0.121188,
+        -0.209083,
+        -0.09189,
+        -0.179785
+      ]
+    },
+    {
+      "path": "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3726,
+      "lines": 83,
+      "tokens_est": 932,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d6fcbb5b68d676ae",
+      "vector": [
+        -0.070425,
+        0.292093,
+        -0.105061,
+        -0.252839,
+        -0.192804,
+        0.27362,
+        0.125842,
+        -0.222822,
+        -0.215894,
+        0.042717,
+        -0.086589,
+        -0.218203,
+        0.003464,
+        0.275929,
+        -0.243603,
+        0.185877,
+        0.05888,
+        -0.153551,
+        0.255148,
+        0.234367,
+        0.081971,
+        -0.068116,
+        -0.045026,
+        -0.259766,
+        0.125842,
+        -0.17895,
+        0.176641,
+        -0.091207,
+        0.003464,
+        0.218203,
+        -0.042717,
+        -0.137387
       ]
     },
     {
@@ -104465,6 +104574,53 @@
       ]
     },
     {
+      "path": "tests/test_memory_city_adaptive_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2629,
+      "lines": 22,
+      "tokens_est": 658,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "17e3168b2f5bd332",
+      "vector": [
+        0.309338,
+        0.142674,
+        -0.289136,
+        0.248733,
+        -0.130048,
+        0.016414,
+        0.107321,
+        -0.061868,
+        0.094695,
+        0.205804,
+        0.135098,
+        -0.069443,
+        0.046716,
+        0.061868,
+        -0.296711,
+        0.253783,
+        -0.051767,
+        -0.231056,
+        0.023989,
+        0.003788,
+        0.069443,
+        0.193178,
+        0.104796,
+        -0.145199,
+        0.228531,
+        -0.066918,
+        0.183077,
+        0.286611,
+        -0.178027,
+        -0.306812,
+        0.170451,
+        0.122472
+      ]
+    },
+    {
       "path": "tests/test_memory_city_anchor_locator.py",
       "role": "python_module",
       "binary": false,
@@ -104509,6 +104665,53 @@
         0.015187,
         0.100787,
         0.037277
+      ]
+    },
+    {
+      "path": "tests/test_memory_city_contingent_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6457,
+      "lines": 99,
+      "tokens_est": 1615,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6bc19498f3f5e1f3",
+      "vector": [
+        0.300988,
+        -0.157306,
+        0.048307,
+        -0.147397,
+        0.283647,
+        0.300988,
+        -0.045829,
+        0.266306,
+        -0.132534,
+        0.026011,
+        0.045829,
+        0.258874,
+        -0.246488,
+        0.082988,
+        -0.189511,
+        0.164738,
+        0.11767,
+        -0.30842,
+        -0.006193,
+        0.105284,
+        0.194465,
+        -0.174647,
+        0.221715,
+        0.09042,
+        0.053261,
+        -0.11767,
+        0.139966,
+        -0.139966,
+        0.028489,
+        0.300988,
+        0.073079,
+        -0.011148
       ]
     },
     {
@@ -104603,6 +104806,100 @@
         -0.287635,
         -0.175979,
         0.180834
+      ]
+    },
+    {
+      "path": "tests/test_memory_city_navigator_convergence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2887,
+      "lines": 32,
+      "tokens_est": 722,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1ad6251d6709c3f4",
+      "vector": [
+        0.29879,
+        0.151239,
+        -0.23977,
+        -0.197964,
+        0.094678,
+        0.121729,
+        0.256984,
+        -0.138944,
+        0.038117,
+        -0.077464,
+        -0.116811,
+        -0.023362,
+        -0.08976,
+        -0.087301,
+        -0.00123,
+        -0.247147,
+        -0.229933,
+        -0.092219,
+        0.183209,
+        -0.040576,
+        0.062709,
+        -0.03074,
+        -0.138944,
+        -0.165995,
+        0.229933,
+        -0.200423,
+        0.202882,
+        -0.17829,
+        -0.303709,
+        0.259443,
+        0.306168,
+        0.126648
+      ]
+    },
+    {
+      "path": "tests/test_memory_city_quotient_controllability.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5440,
+      "lines": 82,
+      "tokens_est": 1360,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5f68114661543606",
+      "vector": [
+        0.089883,
+        0.183675,
+        -0.069041,
+        -0.207123,
+        0.016935,
+        0.207123,
+        -0.181069,
+        -0.254018,
+        0.248808,
+        -0.209728,
+        -0.235781,
+        -0.016935,
+        0.074251,
+        -0.212333,
+        -0.069041,
+        -0.282677,
+        -0.048198,
+        0.113331,
+        -0.316546,
+        0.056014,
+        0.01954,
+        -0.084673,
+        -0.05862,
+        -0.204517,
+        0.134174,
+        0.050804,
+        -0.173253,
+        0.316546,
+        0.053409,
+        -0.274861,
+        -0.165438,
+        -0.212333
       ]
     },
     {
@@ -104982,6 +105279,53 @@
       ]
     },
     {
+      "path": "tools/arena/campaign_memory_city_quotient_controllability.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6089,
+      "lines": 109,
+      "tokens_est": 1523,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "56e6974408ca3f6b",
+      "vector": [
+        0.028515,
+        0.251205,
+        0.08283,
+        -0.128997,
+        0.052957,
+        -0.243058,
+        -0.161586,
+        -0.248489,
+        -0.137144,
+        -0.270215,
+        -0.023084,
+        0.213185,
+        -0.066535,
+        0.028515,
+        -0.107271,
+        0.210469,
+        -0.039378,
+        -0.188743,
+        -0.253921,
+        0.267499,
+        -0.259352,
+        0.321814,
+        -0.014937,
+        -0.335392,
+        0.061104,
+        -0.08283,
+        0.052957,
+        0.243058,
+        0.107271,
+        0.050241,
+        0.142576,
+        -0.020368
+      ]
+    },
+    {
       "path": "tools/arena/consequence_admission_kernel.py",
       "role": "python_module",
       "binary": false,
@@ -105073,6 +105417,100 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/k27_dynamic_navigator.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7949,
+      "lines": 100,
+      "tokens_est": 1988,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d39d051ef188dc66",
+      "vector": [
+        -0.214089,
+        0.226609,
+        0.199065,
+        -0.16401,
+        -0.256656,
+        -0.01878,
+        -0.048827,
+        -0.038811,
+        0.001252,
+        0.219097,
+        0.136466,
+        0.266672,
+        0.00626,
+        0.166514,
+        -0.264168,
+        -0.276688,
+        0.211585,
+        -0.131458,
+        -0.27168,
+        -0.146482,
+        0.111426,
+        0.136466,
+        -0.056339,
+        0.204073,
+        -0.10141,
+        0.156498,
+        -0.061347,
+        0.214089,
+        0.191553,
+        -0.148986,
+        -0.27168,
+        -0.063851
+      ]
+    },
+    {
+      "path": "tools/arena/k27_invariant_route_cut.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4359,
+      "lines": 64,
+      "tokens_est": 1090,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "083f5c35142bd3ac",
+      "vector": [
+        -0.027937,
+        -0.008503,
+        -0.149403,
+        0.210136,
+        -0.110534,
+        -0.309738,
+        0.020649,
+        -0.309738,
+        -0.210136,
+        -0.227141,
+        -0.003644,
+        -0.246576,
+        -0.098387,
+        -0.078953,
+        0.093529,
+        -0.08867,
+        -0.003644,
+        -0.270869,
+        0.166408,
+        0.086241,
+        -0.003644,
+        0.01822,
+        0.304879,
+        0.261152,
+        0.200419,
+        0.144544,
+        -0.253864,
+        0.032796,
+        0.212565,
+        -0.236858,
+        -0.202848,
+        -0.006073
       ]
     },
     {
@@ -105687,6 +106125,100 @@
       ]
     },
     {
+      "path": "tools/arena/k27_reflexive_telemetry.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4117,
+      "lines": 44,
+      "tokens_est": 1030,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0fa1c7ec7716d11c",
+      "vector": [
+        -0.119463,
+        -0.049873,
+        -0.202971,
+        -0.114824,
+        -0.170496,
+        0.163537,
+        -0.202971,
+        0.024357,
+        -0.022037,
+        0.161217,
+        0.170496,
+        -0.175135,
+        -0.184414,
+        0.233127,
+        0.121783,
+        0.200651,
+        -0.274881,
+        -0.084668,
+        -0.247045,
+        -0.00348,
+        -0.14034,
+        -0.082348,
+        -0.200651,
+        0.284159,
+        -0.219209,
+        0.066111,
+        0.147299,
+        -0.2772,
+        -0.114824,
+        0.254004,
+        -0.191373,
+        -0.21225
+      ]
+    },
+    {
+      "path": "tools/arena/memory_city_adaptive_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2789,
+      "lines": 34,
+      "tokens_est": 698,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d928e2ecfc35dd75",
+      "vector": [
+        -0.126492,
+        -0.211608,
+        -0.069748,
+        0.029554,
+        -0.150135,
+        -0.270717,
+        0.079205,
+        -0.289631,
+        -0.16905,
+        -0.211608,
+        -0.202151,
+        0.27781,
+        0.140678,
+        -0.09812,
+        -0.256531,
+        0.204515,
+        0.209244,
+        0.178507,
+        -0.133585,
+        -0.02719,
+        0.079205,
+        0.249438,
+        -0.296724,
+        0.154864,
+        -0.067384,
+        0.062655,
+        -0.057926,
+        -0.199786,
+        0.017733,
+        0.04374,
+        -0.029554,
+        -0.299089
+      ]
+    },
+    {
       "path": "tools/arena/memory_city_anchor_locator.py",
       "role": "python_module",
       "binary": false,
@@ -105781,6 +106313,100 @@
       ]
     },
     {
+      "path": "tools/arena/memory_city_contingent_hydration_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5684,
+      "lines": 95,
+      "tokens_est": 1421,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "130f16f7037af27a",
+      "vector": [
+        -0.139317,
+        -0.245925,
+        0.149009,
+        -0.086013,
+        -0.081167,
+        0.010903,
+        0.202313,
+        -0.161123,
+        -0.003634,
+        0.241079,
+        -0.146586,
+        0.010903,
+        -0.180507,
+        -0.178084,
+        -0.260462,
+        -0.161123,
+        0.071476,
+        -0.284691,
+        -0.231388,
+        -0.207158,
+        -0.04967,
+        0.117511,
+        -0.12478,
+        -0.272577,
+        -0.236233,
+        0.265308,
+        0.238656,
+        -0.059361,
+        -0.204736,
+        -0.00848,
+        0.207158,
+        0.136894
+      ]
+    },
+    {
+      "path": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2324,
+      "lines": 34,
+      "tokens_est": 581,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "06560718d7d5a44a",
+      "vector": [
+        0.22421,
+        -0.139961,
+        -0.020383,
+        0.15355,
+        -0.066583,
+        -0.028536,
+        -0.281281,
+        -0.324764,
+        -0.126373,
+        -0.04756,
+        0.126373,
+        -0.112784,
+        -0.194315,
+        -0.254104,
+        0.19975,
+        -0.014947,
+        -0.014947,
+        -0.191597,
+        -0.0231,
+        -0.08289,
+        0.237798,
+        0.221492,
+        -0.316611,
+        0.115502,
+        0.074737,
+        -0.338353,
+        -0.0231,
+        0.22421,
+        -0.126373,
+        -0.273128,
+        0.039407,
+        -0.020383
+      ]
+    },
+    {
       "path": "tools/arena/memory_city_hydration_plan.py",
       "role": "python_module",
       "binary": false,
@@ -105872,6 +106498,100 @@
         0.024733,
         -0.233007,
         -0.212179
+      ]
+    },
+    {
+      "path": "tools/arena/memory_city_quotient_controllability.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13198,
+      "lines": 334,
+      "tokens_est": 3300,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d4ccc4ce18d4e590",
+      "vector": [
+        -0.167485,
+        -0.272683,
+        -0.045678,
+        -0.225621,
+        -0.181327,
+        -0.015226,
+        0.012458,
+        0.211779,
+        -0.084435,
+        0.017994,
+        0.150875,
+        -0.073361,
+        -0.131497,
+        0.280988,
+        0.145338,
+        0.1924,
+        0.031836,
+        0.137033,
+        -0.280988,
+        -0.070593,
+        -0.233926,
+        0.120423,
+        -0.139802,
+        0.267146,
+        0.073361,
+        0.095508,
+        -0.006921,
+        0.195169,
+        -0.042909,
+        0.256073,
+        -0.297598,
+        0.322513
+      ]
+    },
+    {
+      "path": "tools/arena/memory_city_support_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2134,
+      "lines": 24,
+      "tokens_est": 534,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7d1d0c527ee52302",
+      "vector": [
+        -0.076454,
+        0.221314,
+        0.317887,
+        0.296427,
+        0.095232,
+        -0.215949,
+        -0.10328,
+        0.325935,
+        0.11401,
+        -0.132788,
+        0.140836,
+        0.100597,
+        -0.242775,
+        -0.038898,
+        0.218631,
+        0.159614,
+        0.063041,
+        -0.006706,
+        -0.143519,
+        -0.277649,
+        0.006706,
+        -0.09255,
+        -0.207901,
+        0.052311,
+        -0.135471,
+        -0.122058,
+        -0.210584,
+        -0.071089,
+        -0.124741,
+        0.202536,
+        -0.288379,
+        0.10328
       ]
     },
     {
@@ -106919,7 +107639,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788742675,
+  "generated_at_unix": 1788743455,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107195,6 +107915,8 @@
       "arch_reasoner_accel",
       "arch_reasoner_accel.py",
       "arch_reasoner_accel.rs",
+      "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
+      "artifacts/arena/memory_city_quotient_controllability/PROOF_RECEIPT.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -108555,9 +109277,13 @@
       "tests/test_k27_memory_runtime.py",
       "tests/test_k27_spatial_nonfinite_canonicalization.py",
       "tests/test_k27_state_root_schema_snapshot.py",
+      "tests/test_memory_city_adaptive_hydration.py",
       "tests/test_memory_city_anchor_locator.py",
+      "tests/test_memory_city_contingent_hydration.py",
       "tests/test_memory_city_hydration_plan.py",
       "tests/test_memory_city_navigator.py",
+      "tests/test_memory_city_navigator_convergence.py",
+      "tests/test_memory_city_quotient_controllability.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -108566,8 +109292,11 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/campaign_memory_city_quotient_controllability.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/k27_dynamic_navigator.py",
+      "tools/arena/k27_invariant_route_cut.py",
       "tools/arena/k27_memory/README.md",
       "tools/arena/k27_memory/__init__.py",
       "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py",
@@ -108581,10 +109310,16 @@
       "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
       "tools/arena/k27_memory_runtime.py",
+      "tools/arena/k27_reflexive_telemetry.py",
+      "tools/arena/memory_city_adaptive_hydration.py",
       "tools/arena/memory_city_anchor_locator.py",
       "tools/arena/memory_city_contingent_hydration.py",
+      "tools/arena/memory_city_contingent_hydration_campaign.py",
+      "tools/arena/memory_city_contingent_hydration_hs1000.py",
       "tools/arena/memory_city_hydration_plan.py",
       "tools/arena/memory_city_navigator.py",
+      "tools/arena/memory_city_quotient_controllability.py",
+      "tools/arena/memory_city_support_hydration.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -267093,6 +267828,136 @@
         "file_digest8": "0ffb774bbbc04b79"
       },
       {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#class:AdaptiveTests:3d0e0305330a8fec",
+        "name": "AdaptiveTests",
+        "kind": "class",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 8,
+        "end_line": 20,
+        "signature_hash": "7f3fece886652215",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#function:f:cfd73d31f0186705",
+        "name": "f",
+        "kind": "function",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "5782c54647bdc781",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#function:h:6731ba5509ed40d4",
+        "name": "h",
+        "kind": "function",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "967677b2b5c1753e",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_13d_noncompensation:3079e94da1324ec1",
+        "name": "AdaptiveTests.test_13d_noncompensation",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "21461dd2d7d4ddec",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_global_shared_when_reuse_crosses_break_even:262941d550afd9a1",
+        "name": "AdaptiveTests.test_global_shared_when_reuse_crosses_break_even",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 10,
+        "end_line": 10,
+        "signature_hash": "ac8025811f4c3f13",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_local_for_one_use:5290febcf9d93f6f",
+        "name": "AdaptiveTests.test_local_for_one_use",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "54afed782c89259f",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_multiple_terminal_states_hold:1c64ebca539df862",
+        "name": "AdaptiveTests.test_multiple_terminal_states_hold",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 13,
+        "end_line": 13,
+        "signature_hash": "2e187ae4d6e24390",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_never_shrinks_certified_cut:1eefff053bbdbfc7",
+        "name": "AdaptiveTests.test_never_shrinks_certified_cut",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "be69f0777698462b",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_no_authority:996b8c5185a7c663",
+        "name": "AdaptiveTests.test_no_authority",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "0ac2432ef5f76bbe",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_no_shared_capability_forces_local:4445f2e07f7ca947",
+        "name": "AdaptiveTests.test_no_shared_capability_forces_local",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 11,
+        "end_line": 11,
+        "signature_hash": "d459a8bd326951a9",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_not_converged_holds:36f8c9ef3e3f6e86",
+        "name": "AdaptiveTests.test_not_converged_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "68ddc839cc6a5b0b",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_stale_fixed_point_holds:593c51198afb2cd3",
+        "name": "AdaptiveTests.test_stale_fixed_point_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "e93a639eb824e05d",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_unready_hydration_holds:7cf6c22f2cebf0ea",
+        "name": "AdaptiveTests.test_unready_hydration_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "5c8d572811581c6d",
+        "file_digest8": "17e3168b2f5bd332"
+      },
+      {
         "semantic_id": "tests/test_memory_city_anchor_locator.py#class:AnchorTests:1bf89b213d69d30d",
         "name": "AnchorTests",
         "kind": "class",
@@ -267181,6 +268046,166 @@
         "end_line": 25,
         "signature_hash": "18e118712ee0468c",
         "file_digest8": "0d1b5713a638e54f"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#class:TestContingentHydration:837fc5e116dfb45c",
+        "name": "TestContingentHydration",
+        "kind": "class",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 21,
+        "end_line": 96,
+        "signature_hash": "97c7a4ce7d072f2f",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#function:item:c76ae203cacd0365",
+        "name": "item",
+        "kind": "function",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "df81b37598994181",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#function:loc:1cbbe9934bbd515d",
+        "name": "loc",
+        "kind": "function",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 9,
+        "end_line": 16,
+        "signature_hash": "e3837c2d74077c3e",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_capacity_holds_even_when_deadline_fits:647d6a23ce0e0d5c",
+        "name": "TestContingentHydration.test_capacity_holds_even_when_deadline_fits",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 79,
+        "end_line": 81,
+        "signature_hash": "2482f5549aeaa280",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_clairvoyant_false_ready_is_held:d8be8fc075fbe355",
+        "name": "TestContingentHydration.test_clairvoyant_false_ready_is_held",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 29,
+        "end_line": 34,
+        "signature_hash": "4e23fbdf62c8b5a2",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_common_component_prefetch_restores_ready:0af503f344f93cab",
+        "name": "TestContingentHydration.test_common_component_prefetch_restores_ready",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "520b10581d2c0acf",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_dense_support_collapses_global:52e2d72420012e9c",
+        "name": "TestContingentHydration.test_dense_support_collapses_global",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "5aa2cf5d9541b3bd",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_exact_component_limit_fails_closed:d28f4fc05108f0e1",
+        "name": "TestContingentHydration.test_exact_component_limit_fails_closed",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "39e0d4da47e9f995",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_fixed_union_false_hold_can_be_avoided:3ca15f6b1a56c9ce",
+        "name": "TestContingentHydration.test_fixed_union_false_hold_can_be_avoided",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 44,
+        "end_line": 49,
+        "signature_hash": "d727935e3dfd55a1",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_invariant_closure_expands_demand:1199f26f018f3299",
+        "name": "TestContingentHydration.test_invariant_closure_expands_demand",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 22,
+        "end_line": 27,
+        "signature_hash": "7751fcdd04af7e87",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_k27_hint_does_not_change_safety_disposition:13fb5c0d1ce127ae",
+        "name": "TestContingentHydration.test_k27_hint_does_not_change_safety_disposition",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 71,
+        "end_line": 77,
+        "signature_hash": "8f8f704f556a2e25",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_no_authority_promotion:72a4da1920bfa2bf",
+        "name": "TestContingentHydration.test_no_authority_promotion",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 92,
+        "end_line": 96,
+        "signature_hash": "5dc21fad911a2f1e",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_order_is_canonical:5439133cca2513e1",
+        "name": "TestContingentHydration.test_order_is_canonical",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 64,
+        "end_line": 69,
+        "signature_hash": "a4fd31ebd51cce0a",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_support_generation_change_invalidates:1d9a34eecc670448",
+        "name": "TestContingentHydration.test_support_generation_change_invalidates",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 51,
+        "end_line": 53,
+        "signature_hash": "7ae49053efc80f6f",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_unknown_branch_holds:4206aa066cb289bb",
+        "name": "TestContingentHydration.test_unknown_branch_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "e9d58df9863ba522",
+        "file_digest8": "6bc19498f3f5e1f3"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_unknown_support_item_fails_closed:e576e0667197eebd",
+        "name": "TestContingentHydration.test_unknown_support_item_fails_closed",
+        "kind": "method",
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "line": 83,
+        "end_line": 85,
+        "signature_hash": "de7d5da760718da1",
+        "file_digest8": "6bc19498f3f5e1f3"
       },
       {
         "semantic_id": "tests/test_memory_city_hydration_plan.py#class:HydrationPlanTests:e65e6ec45f409b69",
@@ -267543,6 +268568,346 @@
         "file_digest8": "0aa9b0145451a3ee"
       },
       {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#class:B:849ff60ba0e6f56e",
+        "name": "B",
+        "kind": "class",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 12,
+        "end_line": 12,
+        "signature_hash": "b0eda92d25c655c4",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#class:ConvergenceTests:f2fb2c89af47d056",
+        "name": "ConvergenceTests",
+        "kind": "class",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 18,
+        "end_line": 30,
+        "signature_hash": "7e3f825bad70b900",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#class:RT:bad7fb868a617b5b",
+        "name": "RT",
+        "kind": "class",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 13,
+        "end_line": 16,
+        "signature_hash": "9dfa44528437f68e",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#function:loc:20524ebd8c4bf0c5",
+        "name": "loc",
+        "kind": "function",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "ea86a81daac64467",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_dynamic_invalidation_remains_read_only:318f1ee64f603ee9",
+        "name": "ConvergenceTests.test_dynamic_invalidation_remains_read_only",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "34b9aeffb0d1ea65",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_negative_scar_narrowing_reuses_nonauthoritatively:e23b1f5edb9b085b",
+        "name": "ConvergenceTests.test_negative_scar_narrowing_reuses_nonauthoritatively",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "bec726ac1d793b70",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_reflexive_passive_state_change_holds:0892c48690c39ce6",
+        "name": "ConvergenceTests.test_reflexive_passive_state_change_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "ecddf63c4fa379a6",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_support_ambiguity_blocks_span_hydration:a448cf81bda910bb",
+        "name": "ConvergenceTests.test_support_ambiguity_blocks_span_hydration",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "e8adc4e96578500d",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_support_closed_hydration_uses_pr874_spans:7d0b6625394e3bbe",
+        "name": "ConvergenceTests.test_support_closed_hydration_uses_pr874_spans",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "cee6136e3a894558",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_support_closure_expands_direct_route:1ba13fd03a644dd7",
+        "name": "ConvergenceTests.test_support_closure_expands_direct_route",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "179c0d78ebf755ee",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:RT.invalidation_cone:96487479a9147833",
+        "name": "RT.invalidation_cone",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 15,
+        "end_line": 15,
+        "signature_hash": "6bdb51e89282bac0",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:RT.read:fb5ca7d92d32d0aa",
+        "name": "RT.read",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 16,
+        "end_line": 16,
+        "signature_hash": "2745e5ac3b88ec36",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:RT.route_projection:7b1fe1938c4ff35c",
+        "name": "RT.route_projection",
+        "kind": "method",
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "line": 14,
+        "end_line": 14,
+        "signature_hash": "a933ff09066816a7",
+        "file_digest8": "1ad6251d6709c3f4"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_contingent_branch_binds_exact_support_partition.Plan:b4fbea29b4ff9042",
+        "name": "QTests.test_parent_contingent_branch_binds_exact_support_partition.Plan",
+        "kind": "class",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "3afe218a3cdbfefa",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_contingent_branch_binds_exact_support_partition.Strat:9460daf7f381d083",
+        "name": "QTests.test_parent_contingent_branch_binds_exact_support_partition.Strat",
+        "kind": "class",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "3cef014265a25103",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_partition_mismatch_holds.Plan:8353077b06a201ff",
+        "name": "QTests.test_parent_partition_mismatch_holds.Plan",
+        "kind": "class",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "3afe218a3cdbfefa",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_partition_mismatch_holds.Strat:9b1c1756a3deb8d5",
+        "name": "QTests.test_parent_partition_mismatch_holds.Strat",
+        "kind": "class",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 70,
+        "end_line": 71,
+        "signature_hash": "3cef014265a25103",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests:fee31b54d708e19d",
+        "name": "QTests",
+        "kind": "class",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 9,
+        "end_line": 79,
+        "signature_hash": "0c4ed393303ee305",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#function:de:67c872ae9552a0d7",
+        "name": "de",
+        "kind": "function",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 7,
+        "end_line": 7,
+        "signature_hash": "d259cde7373b4739",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#function:se:7b4aa7be2a4a4db1",
+        "name": "se",
+        "kind": "function",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "6c71e98694565040",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_13d_noncompensation:d0cc7411c24c464d",
+        "name": "QTests.test_13d_noncompensation",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "21461dd2d7d4ddec",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_cycle_holds_without_merging_support_components:836b079237a838b7",
+        "name": "QTests.test_cycle_holds_without_merging_support_components",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "32f91a21a4b7f152",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_dependency_does_not_expand_hydration_support:5a36701ef94ca7c3",
+        "name": "QTests.test_dependency_does_not_expand_hydration_support",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "58a05282a59bf17b",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_incomplete_support_holds:8de177140da0c827",
+        "name": "QTests.test_incomplete_support_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "754217a2343e1bf7",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_internal_dependency_is_quotiented_away:e2f746201807e17f",
+        "name": "QTests.test_internal_dependency_is_quotiented_away",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "84b178b8c85792a7",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_late_required_support_holds:1ee3c2c5ed9ad609",
+        "name": "QTests.test_late_required_support_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "02c0e90d9d6a0e41",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_parent_contingent_branch_binds_exact_support_partition:3b586f891e8084c1",
+        "name": "QTests.test_parent_contingent_branch_binds_exact_support_partition",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 51,
+        "end_line": 62,
+        "signature_hash": "1add2104d2cfd6ce",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_parent_partition_mismatch_holds:566e0601070de6a6",
+        "name": "QTests.test_parent_partition_mismatch_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 64,
+        "end_line": 75,
+        "signature_hash": "b02b55463bb4c7cd",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_ready_preserves_separate_reproof_cone:fd908fcd7bd50829",
+        "name": "QTests.test_ready_preserves_separate_reproof_cone",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "24b0a66af08c8b99",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_stale_required_support_precedes_availability:2efd09fd207a7af7",
+        "name": "QTests.test_stale_required_support_precedes_availability",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "359f1164f5bf86a7",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_stale_support_holds:396243e6a6646967",
+        "name": "QTests.test_stale_support_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "63b568e5083941b9",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_support_and_dependency_are_distinct_algebras:2e401868ee1db3fb",
+        "name": "QTests.test_support_and_dependency_are_distinct_algebras",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 10,
+        "end_line": 15,
+        "signature_hash": "dda7fff4ea576d3a",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_support_does_not_imply_downstream_reproof:007d57d8d4aea49e",
+        "name": "QTests.test_support_does_not_imply_downstream_reproof",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 20,
+        "end_line": 22,
+        "signature_hash": "6c2d4e3991cfe5e1",
+        "file_digest8": "5f68114661543606"
+      },
+      {
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_unobtainable_required_support_holds:e0a77191aeb127a2",
+        "name": "QTests.test_unobtainable_required_support_holds",
+        "kind": "method",
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "ac0ed107a4cd782d",
+        "file_digest8": "5f68114661543606"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -267821,6 +269186,26 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_quotient_controllability.py#function:main:e5bf374d01e6a38f",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_quotient_controllability.py",
+        "line": 26,
+        "end_line": 106,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "56e6974408ca3f6b"
+      },
+      {
+        "semantic_id": "tools/arena/campaign_memory_city_quotient_controllability.py#function:oracle_components:b00662d90061d7a5",
+        "name": "oracle_components",
+        "kind": "function",
+        "file": "tools/arena/campaign_memory_city_quotient_controllability.py",
+        "line": 8,
+        "end_line": 23,
+        "signature_hash": "a80dd6f51c633611",
+        "file_digest8": "56e6974408ca3f6b"
       },
       {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
@@ -268931,6 +270316,326 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:AtUseCapsule:b25ffd0d0b695720",
+        "name": "AtUseCapsule",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "5356b663222b1ec5",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectDisposition:99090139bd6d162e",
+        "name": "EffectDisposition",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "5f61ef6974d7b225",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectIntent:d9ab361e9e06de74",
+        "name": "EffectIntent",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "f0173f902a8a994e",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:InvalidationPlan:3a0008ce4a2f6b33",
+        "name": "InvalidationPlan",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "6b71ed67e04c3afa",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:K27DynamicNavigator:dcb3e9a6ce62ca3d",
+        "name": "K27DynamicNavigator",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 42,
+        "end_line": 91,
+        "signature_hash": "40bc97e0e06f534e",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:LawField:b14151d3d3f3d1d6",
+        "name": "LawField",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "5ad051463526d163",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:NegativeRouteScar:18fafc4b5f99df43",
+        "name": "NegativeRouteScar",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "e692488fff839243",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:RouteRegistration:0fba3fd76a3c35da",
+        "name": "RouteRegistration",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "4ce34f200ddf512e",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficEvent:8e1f148a1acb8fb1",
+        "name": "TrafficEvent",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 12,
+        "end_line": 17,
+        "signature_hash": "816b041e222d3924",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficSummary:5ee54e50268395fe",
+        "name": "TrafficSummary",
+        "kind": "class",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "b901a163f7a88999",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:canonical:929605e431d93a86",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 7,
+        "end_line": 8,
+        "signature_hash": "8405a7944186ce60",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:digest:4c83be23abb83c07",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "3c60ab9e6d97eef8",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:summarize_traffic:da4631dd79c66e73",
+        "name": "summarize_traffic",
+        "kind": "function",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 92,
+        "end_line": 99,
+        "signature_hash": "10df9b719f3315e2",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.__init__:38cc610fb90c72cd",
+        "name": "K27DynamicNavigator.__init__",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 43,
+        "end_line": 43,
+        "signature_hash": "eb0869bbca4a2264",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.capture_at_use:9da6baaaf6bc752e",
+        "name": "K27DynamicNavigator.capture_at_use",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "0f12cb82bfc7ace5",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.classify_negative_scar:b3bfd532db0c50b1",
+        "name": "K27DynamicNavigator.classify_negative_scar",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 84,
+        "end_line": 91,
+        "signature_hash": "1391480ce9935ae7",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.compile_effect:f66146f2c71b1a49",
+        "name": "K27DynamicNavigator.compile_effect",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 66,
+        "end_line": 78,
+        "signature_hash": "c6caf67ee1623717",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.plan_invalidation:ef22c419bf18d4e3",
+        "name": "K27DynamicNavigator.plan_invalidation",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 55,
+        "end_line": 64,
+        "signature_hash": "b4af862beca0272d",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.record:e87893b062c8bf07",
+        "name": "K27DynamicNavigator.record",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 46,
+        "end_line": 49,
+        "signature_hash": "a96d88c79c914ba6",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.register_route:ccb493315ad0c059",
+        "name": "K27DynamicNavigator.register_route",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "e4a180408945f5bd",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.traffic:9714802d49b7ec58",
+        "name": "K27DynamicNavigator.traffic",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 45,
+        "end_line": 45,
+        "signature_hash": "426471c9f068eb81",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:TrafficEvent.validate:3a31d8f3ebd146ea",
+        "name": "TrafficEvent.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "line": 14,
+        "end_line": 17,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "d39d051ef188dc66"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:InvariantRouteCut:2fd925ddcbdd0914",
+        "name": "InvariantRouteCut",
+        "kind": "class",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "b62c5f2835698aa4",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportBeliefState:0afb0bc83c155bd5",
+        "name": "SupportBeliefState",
+        "kind": "class",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 13,
+        "end_line": 22,
+        "signature_hash": "ded1aeb0f034675a",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportHyperedge:a0f61439350a28d0",
+        "name": "SupportHyperedge",
+        "kind": "class",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 6,
+        "end_line": 11,
+        "signature_hash": "a58bf8a32cbc35f2",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hard_map:6cc509ecd6bbb4c2",
+        "name": "_hard_map",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "eb7db1b8db329feb",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hold:3d48cf9ddd4ab32f",
+        "name": "_hold",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "46b358a3f3034dd8",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:affected_by_change:346dd7a8e3dc2f7e",
+        "name": "affected_by_change",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "89e400d126014e7e",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:compile_invariant_route_cut:fc2ffcf7340e9f56",
+        "name": "compile_invariant_route_cut",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 30,
+        "end_line": 54,
+        "signature_hash": "64a3850e45fde107",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:hard13d_route_cut:350b10c81c0d8dc1",
+        "name": "hard13d_route_cut",
+        "kind": "function",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 58,
+        "end_line": 63,
+        "signature_hash": "92cfae92fd173f06",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportBeliefState.validate:c1c881ae1de5fde7",
+        "name": "SupportBeliefState.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 15,
+        "end_line": 22,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "083f5c35142bd3ac"
+      },
+      {
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportHyperedge.validate:77a2acb8b4b6ab34",
+        "name": "SupportHyperedge.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "line": 8,
+        "end_line": 11,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "083f5c35142bd3ac"
       },
       {
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:canon:37d3e0e603debb0a",
@@ -270503,6 +272208,156 @@
         "file_digest8": "c97d492793347deb"
       },
       {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#class:ProbeAdmission:df29233ed02e6001",
+        "name": "ProbeAdmission",
+        "kind": "class",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "b7a1a224176be38d",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#class:ProbeTransition:a6c49c0375e5e4b6",
+        "name": "ProbeTransition",
+        "kind": "class",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 6,
+        "end_line": 12,
+        "signature_hash": "6530d061478ca6df",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#class:ReflexiveTelemetryGate:1dd0dba21f6db220",
+        "name": "ReflexiveTelemetryGate",
+        "kind": "class",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 16,
+        "end_line": 37,
+        "signature_hash": "1fbc1fab9ad0ce1c",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#function:hard13d_admission:8d19b88946ff71b8",
+        "name": "hard13d_admission",
+        "kind": "function",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 38,
+        "end_line": 43,
+        "signature_hash": "9f33977965e22802",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ProbeTransition.validate:5dbda2342789c443",
+        "name": "ProbeTransition.validate",
+        "kind": "method",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 8,
+        "end_line": 12,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate.__init__:fe04a78554890f22",
+        "name": "ReflexiveTelemetryGate.__init__",
+        "kind": "method",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 17,
+        "end_line": 17,
+        "signature_hash": "2b2257f33fa1cb38",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate._transition_root:29ff6e38bdd62f1b",
+        "name": "ReflexiveTelemetryGate._transition_root",
+        "kind": "method",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "04caa714443e2fc4",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate.admit:9907c4b48ca111c4",
+        "name": "ReflexiveTelemetryGate.admit",
+        "kind": "method",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 20,
+        "end_line": 28,
+        "signature_hash": "15a6100604b16205",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate.compile_sequence:36e8d572e5c0f402",
+        "name": "ReflexiveTelemetryGate.compile_sequence",
+        "kind": "method",
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "line": 29,
+        "end_line": 37,
+        "signature_hash": "1af4655e94cf3ddf",
+        "file_digest8": "0fa1c7ec7716d11c"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#class:AdaptiveHydrationStrategy:4a9113721c6048f9",
+        "name": "AdaptiveHydrationStrategy",
+        "kind": "class",
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "733cc7ff2541c30d",
+        "file_digest8": "d928e2ecfc35dd75"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#class:SupportFixedPoint:063bfeecd1ff60ea",
+        "name": "SupportFixedPoint",
+        "kind": "class",
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "line": 6,
+        "end_line": 11,
+        "signature_hash": "0dc4c4c7488d1b4e",
+        "file_digest8": "d928e2ecfc35dd75"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#function:_out:39f4c3edbea2e4a3",
+        "name": "_out",
+        "kind": "function",
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "ff3d687adf87ce95",
+        "file_digest8": "d928e2ecfc35dd75"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#function:compile_adaptive_hydration_strategy:864122b1c089806f",
+        "name": "compile_adaptive_hydration_strategy",
+        "kind": "function",
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "line": 15,
+        "end_line": 24,
+        "signature_hash": "5835a28c41a3a01e",
+        "file_digest8": "d928e2ecfc35dd75"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#function:hard13d_strategy:a386cefe52c14ef7",
+        "name": "hard13d_strategy",
+        "kind": "function",
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "line": 28,
+        "end_line": 33,
+        "signature_hash": "35430a4c5b7c8b63",
+        "file_digest8": "d928e2ecfc35dd75"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#method:SupportFixedPoint.validate:72db004b3184b411",
+        "name": "SupportFixedPoint.validate",
+        "kind": "method",
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "line": 8,
+        "end_line": 11,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "d928e2ecfc35dd75"
+      },
+      {
         "semantic_id": "tools/arena/memory_city_anchor_locator.py#class:AnchorDisposition:1e09dac3880e7286",
         "name": "AnchorDisposition",
         "kind": "class",
@@ -270783,6 +272638,96 @@
         "file_digest8": "dff2e83770011c41"
       },
       {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:h:456b7b6819d79287",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "130f16f7037af27a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:locator:c1c27b3814eec9f1",
+        "name": "locator",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "line": 14,
+        "end_line": 16,
+        "signature_hash": "7a7e516a0849d561",
+        "file_digest8": "130f16f7037af27a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:make_case:d29f2aaa2e10227d",
+        "name": "make_case",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "line": 53,
+        "end_line": 63,
+        "signature_hash": "6fe522742be8458f",
+        "file_digest8": "130f16f7037af27a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:oracle_components:df2c21b74ac7f419",
+        "name": "oracle_components",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "line": 18,
+        "end_line": 33,
+        "signature_hash": "8e23deb0d1460ff4",
+        "file_digest8": "130f16f7037af27a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:oracle_ready:caeb6500807c1d95",
+        "name": "oracle_ready",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "line": 35,
+        "end_line": 51,
+        "signature_hash": "da92bbbe0746a9fa",
+        "file_digest8": "130f16f7037af27a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:run:4f65f9b8b62a1a9c",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "line": 65,
+        "end_line": 92,
+        "signature_hash": "fbfdf6eacf736b3d",
+        "file_digest8": "130f16f7037af27a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:canon:88636fb047c7dcb8",
+        "name": "canon",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "line": 8,
+        "end_line": 8,
+        "signature_hash": "ceba26963124d7c5",
+        "file_digest8": "06560718d7d5a44a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:generate:f14ec3d8d224858f",
+        "name": "generate",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "line": 11,
+        "end_line": 31,
+        "signature_hash": "919481582a70064e",
+        "file_digest8": "06560718d7d5a44a"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:root:82733b686a2a7f01",
+        "name": "root",
+        "kind": "function",
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "347125fa41d4265b",
+        "file_digest8": "06560718d7d5a44a"
+      },
+      {
         "semantic_id": "tools/arena/memory_city_hydration_plan.py#class:HydrationPlan:c5821d10150a55d7",
         "name": "HydrationPlan",
         "kind": "class",
@@ -271021,6 +272966,276 @@
         "end_line": 161,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "bf72add2882868d1"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:ComponentAvailability:7c29e05956cb4e2f",
+        "name": "ComponentAvailability",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 88,
+        "end_line": 101,
+        "signature_hash": "db4fc183c24a2634",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:ControllabilityDecision:41a0372ef8852d66",
+        "name": "ControllabilityDecision",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 105,
+        "end_line": 115,
+        "signature_hash": "e063b8071c0e5d78",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:DependencyEdge:437942ec483a0a36",
+        "name": "DependencyEdge",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 43,
+        "end_line": 52,
+        "signature_hash": "8f46c6afc268c673",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:HardSupportEdge:1b94ae33777bb33f",
+        "name": "HardSupportEdge",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 29,
+        "end_line": 39,
+        "signature_hash": "1fa3b1ae20875a8d",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:HardSupportQuotient:7fd7cf3eb53d0f35",
+        "name": "HardSupportQuotient",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 70,
+        "end_line": 84,
+        "signature_hash": "49219ecdcff735f5",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:LiftedDependency:d7f393f6ae83ffac",
+        "name": "LiftedDependency",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "d59b91939564b781",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:QuotientComponent:c9b61d99a20560a2",
+        "name": "QuotientComponent",
+        "kind": "class",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 56,
+        "end_line": 59,
+        "signature_hash": "2937364578855fed",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:_component_id:3f0a7bd77c84005f",
+        "name": "_component_id",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "caeffc3c50ef18c9",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:_decision:c06c0aa457e84e1e",
+        "name": "_decision",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 278,
+        "end_line": 280,
+        "signature_hash": "9067a58745a28321",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:_hold:ddb39f3590628f22",
+        "name": "_hold",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 214,
+        "end_line": 217,
+        "signature_hash": "45496e7e7f0fad3d",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:canonical:c13e8e59739fc92d",
+        "name": "canonical",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "1d37540cc7d21fba",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:compile_controllability_cut:a12308220f8430cc",
+        "name": "compile_controllability_cut",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 242,
+        "end_line": 275,
+        "signature_hash": "9581e47eec651d8d",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:compile_hard_support_quotient:9ffded82826ca246",
+        "name": "compile_hard_support_quotient",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 123,
+        "end_line": 211,
+        "signature_hash": "adfe5b48c4402d85",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:digest:4188cf8c2a92bc86",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "ca4017d839035e05",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:hard13d_quotient:2a386b2b45274c27",
+        "name": "hard13d_quotient",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 283,
+        "end_line": 289,
+        "signature_hash": "4bce63404cc6a4ec",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:reproof_cone:676639c9eec77c02",
+        "name": "reproof_cone",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 226,
+        "end_line": 239,
+        "signature_hash": "1b60cd2ad9dc3503",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:support_components_for_items:030d3503bef5cb35",
+        "name": "support_components_for_items",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 220,
+        "end_line": 223,
+        "signature_hash": "2a656bf1dbe5ba1a",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:validate_contingent_strategy_branch:ce77f8bb86fd4efb",
+        "name": "validate_contingent_strategy_branch",
+        "kind": "function",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 292,
+        "end_line": 333,
+        "signature_hash": "2b4a7496019d7781",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:ComponentAvailability.validate:75a64f94d10e7f7b",
+        "name": "ComponentAvailability.validate",
+        "kind": "method",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 95,
+        "end_line": 101,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:DependencyEdge.validate:9589fb661d275f1c",
+        "name": "DependencyEdge.validate",
+        "kind": "method",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:HardSupportEdge.validate:175163a68eb005bf",
+        "name": "HardSupportEdge.validate",
+        "kind": "method",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 33,
+        "end_line": 39,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:HardSupportQuotient.component_for:f653bf30cb3ac8ea",
+        "name": "HardSupportQuotient.component_for",
+        "kind": "method",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 80,
+        "end_line": 84,
+        "signature_hash": "d00c604996af941b",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:compile_hard_support_quotient.find:bd3be7a4d995e8cf",
+        "name": "compile_hard_support_quotient.find",
+        "kind": "method",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 145,
+        "end_line": 149,
+        "signature_hash": "105ce426a9e19637",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:compile_hard_support_quotient.union:037eaf3a70a39cab",
+        "name": "compile_hard_support_quotient.union",
+        "kind": "method",
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "line": 150,
+        "end_line": 154,
+        "signature_hash": "8d8b490f75da7e1e",
+        "file_digest8": "d4ccc4ce18d4e590"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_support_hydration.py#class:SupportClosedHydration:9fd3b185b4eb8c85",
+        "name": "SupportClosedHydration",
+        "kind": "class",
+        "file": "tools/arena/memory_city_support_hydration.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "3fb0243c5fd00cb7",
+        "file_digest8": "7d1d0c527ee52302"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_support_hydration.py#function:_out:4547d9b14182d755",
+        "name": "_out",
+        "kind": "function",
+        "file": "tools/arena/memory_city_support_hydration.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "3038afcb3ca40732",
+        "file_digest8": "7d1d0c527ee52302"
+      },
+      {
+        "semantic_id": "tools/arena/memory_city_support_hydration.py#function:compile_support_closed_hydration:8561d01a37ddac60",
+        "name": "compile_support_closed_hydration",
+        "kind": "function",
+        "file": "tools/arena/memory_city_support_hydration.py",
+        "line": 11,
+        "end_line": 20,
+        "signature_hash": "e9ade15e49334edb",
+        "file_digest8": "7d1d0c527ee52302"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -272273,8 +274488,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9da75367fc3edf23473473c16d46d059",
-    "payload_hash": "1c42ff8e9bcc7bb67c2f25339bd16f2e"
+    "record_fingerprint": "cf5cc3946bf76e4b23ee71808ef17079",
+    "payload_hash": "a937e9c123cd5bb224d733d2bdd325b1"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272287,16 +274502,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1677,
-      "bytes": 26654992,
-      "tokens_est": 6654101,
+      "files": 1692,
+      "bytes": 26728833,
+      "tokens_est": 6672568,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 275,
+        "python_module": 1040,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -272983,16 +275198,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1677,
-    "total_bytes": 26654992,
-    "text_tokens_est": 6654101,
+    "file_count": 1692,
+    "total_bytes": 26728833,
+    "text_tokens_est": 6672568,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 275,
+      "python_module": 1040,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -274021,6 +276236,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/arena/campaign_memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 106,
+        "semantic_id": "tools/arena/campaign_memory_city_quotient_controllability.py#function:main:e5bf374d01e6a38f",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -274221,6 +276444,14 @@
         "end_line": 182,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:run:145d96f58ea52f8e",
         "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 92,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:run:4f65f9b8b62a1a9c",
+        "signature_hash": "fbfdf6eacf736b3d"
       }
     ],
     "run.record": [
@@ -290733,12 +292964,28 @@
         "signature_hash": "0bff111c4fc1adcb"
       },
       {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:digest:4c83be23abb83c07",
+        "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
         "file": "tools/arena/memory_city_navigator.py",
         "kind": "function",
         "line": 25,
         "end_line": 26,
         "semantic_id": "tools/arena/memory_city_navigator.py#function:digest:1cbc7a6984c8e37c",
         "signature_hash": "3c60ab9e6d97eef8"
+      },
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:digest:4188cf8c2a92bc86",
+        "signature_hash": "ca4017d839035e05"
       }
     ],
     "_runtime_binding_digest": [
@@ -316594,6 +318841,14 @@
         "line": 1157,
         "end_line": 1181,
         "semantic_id": "aura_ephemeral_workspace_contracts.py#class:DependencyEdge:ecb25a89764b5797",
+        "signature_hash": "8f46c6afc268c673"
+      },
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 52,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:DependencyEdge:437942ec483a0a36",
         "signature_hash": "8f46c6afc268c673"
       }
     ],
@@ -345495,6 +347750,14 @@
         "signature_hash": "8405a7944186ce60"
       },
       {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:canonical:929605e431d93a86",
+        "signature_hash": "8405a7944186ce60"
+      },
+      {
         "file": "tools/arena/k27_memory/persistent_memory.py",
         "kind": "function",
         "line": 17,
@@ -345509,6 +347772,14 @@
         "end_line": 22,
         "semantic_id": "tools/arena/memory_city_navigator.py#function:canonical:a6bdb755bbd8417e",
         "signature_hash": "8405a7944186ce60"
+      },
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:canonical:c13e8e59739fc92d",
+        "signature_hash": "1d37540cc7d21fba"
       }
     ],
     "tokens": [
@@ -367281,6 +369552,14 @@
         "end_line": 199,
         "semantic_id": "scripts/aura_source_anchor_map.py#function:generate:57b3457eec06a284",
         "signature_hash": "5e206b8b2edb8cd1"
+      },
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 31,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:generate:f14ec3d8d224858f",
+        "signature_hash": "919481582a70064e"
       }
     ],
     "CognitiveRouter": [
@@ -372410,6 +374689,14 @@
         "line": 26,
         "end_line": 27,
         "semantic_id": "tools/arena/k27_memory/campaign_epoch_invalidation_gate10.py#function:canon:37d3e0e603debb0a",
+        "signature_hash": "ceba26963124d7c5"
+      },
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 8,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:canon:88636fb047c7dcb8",
         "signature_hash": "ceba26963124d7c5"
       }
     ],
@@ -420597,6 +422884,14 @@
         "end_line": 27,
         "semantic_id": "tests/test_aura_shadow_tool_observability.py#function:_decision:54ec1730b687141b",
         "signature_hash": "5a7f6afd4061ff16"
+      },
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 278,
+        "end_line": 280,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:_decision:c06c0aa457e84e1e",
+        "signature_hash": "9067a58745a28321"
       }
     ],
     "test_wrapper_forwards_only_original_tool_arguments": [
@@ -428999,6 +431294,144 @@
         "signature_hash": "227f60c8356d95b3"
       }
     ],
+    "h": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#function:h:6731ba5509ed40d4",
+        "signature_hash": "967677b2b5c1753e"
+      },
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:h:456b7b6819d79287",
+        "signature_hash": "8ddde6051957f4eb"
+      }
+    ],
+    "f": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#function:f:cfd73d31f0186705",
+        "signature_hash": "5782c54647bdc781"
+      }
+    ],
+    "AdaptiveTests": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 20,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#class:AdaptiveTests:3d0e0305330a8fec",
+        "signature_hash": "7f3fece886652215"
+      }
+    ],
+    "AdaptiveTests.test_local_for_one_use": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_local_for_one_use:5290febcf9d93f6f",
+        "signature_hash": "54afed782c89259f"
+      }
+    ],
+    "AdaptiveTests.test_global_shared_when_reuse_crosses_break_even": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 10,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_global_shared_when_reuse_crosses_break_even:262941d550afd9a1",
+        "signature_hash": "ac8025811f4c3f13"
+      }
+    ],
+    "AdaptiveTests.test_no_shared_capability_forces_local": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 11,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_no_shared_capability_forces_local:4445f2e07f7ca947",
+        "signature_hash": "d459a8bd326951a9"
+      }
+    ],
+    "AdaptiveTests.test_stale_fixed_point_holds": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_stale_fixed_point_holds:593c51198afb2cd3",
+        "signature_hash": "e93a639eb824e05d"
+      }
+    ],
+    "AdaptiveTests.test_multiple_terminal_states_hold": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 13,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_multiple_terminal_states_hold:1c64ebca539df862",
+        "signature_hash": "2e187ae4d6e24390"
+      }
+    ],
+    "AdaptiveTests.test_not_converged_holds": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_not_converged_holds:36f8c9ef3e3f6e86",
+        "signature_hash": "68ddc839cc6a5b0b"
+      }
+    ],
+    "AdaptiveTests.test_never_shrinks_certified_cut": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_never_shrinks_certified_cut:1eefff053bbdbfc7",
+        "signature_hash": "be69f0777698462b"
+      }
+    ],
+    "AdaptiveTests.test_unready_hydration_holds": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_unready_hydration_holds:7cf6c22f2cebf0ea",
+        "signature_hash": "5c8d572811581c6d"
+      }
+    ],
+    "AdaptiveTests.test_no_authority": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_no_authority:996b8c5185a7c663",
+        "signature_hash": "0ac2432ef5f76bbe"
+      }
+    ],
+    "AdaptiveTests.test_13d_noncompensation": [
+      {
+        "file": "tests/test_memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_memory_city_adaptive_hydration.py#method:AdaptiveTests.test_13d_noncompensation:3079e94da1324ec1",
+        "signature_hash": "21461dd2d7d4ddec"
+      }
+    ],
     "AnchorTests": [
       {
         "file": "tests/test_memory_city_anchor_locator.py",
@@ -429087,6 +431520,174 @@
         "end_line": 28,
         "semantic_id": "tests/test_memory_city_anchor_locator.py#method:AnchorTests.test_reordered_anchors_hold:59fc5b34ba84e75d",
         "signature_hash": "5be4f43a7a18592a"
+      }
+    ],
+    "loc": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 16,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#function:loc:1cbbe9934bbd515d",
+        "signature_hash": "e3837c2d74077c3e"
+      },
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#function:loc:20524ebd8c4bf0c5",
+        "signature_hash": "ea86a81daac64467"
+      }
+    ],
+    "item": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#function:item:c76ae203cacd0365",
+        "signature_hash": "df81b37598994181"
+      }
+    ],
+    "TestContingentHydration": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 96,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#class:TestContingentHydration:837fc5e116dfb45c",
+        "signature_hash": "97c7a4ce7d072f2f"
+      }
+    ],
+    "TestContingentHydration.test_invariant_closure_expands_demand": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 27,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_invariant_closure_expands_demand:1199f26f018f3299",
+        "signature_hash": "7751fcdd04af7e87"
+      }
+    ],
+    "TestContingentHydration.test_clairvoyant_false_ready_is_held": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 34,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_clairvoyant_false_ready_is_held:d8be8fc075fbe355",
+        "signature_hash": "4e23fbdf62c8b5a2"
+      }
+    ],
+    "TestContingentHydration.test_common_component_prefetch_restores_ready": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_common_component_prefetch_restores_ready:0af503f344f93cab",
+        "signature_hash": "520b10581d2c0acf"
+      }
+    ],
+    "TestContingentHydration.test_fixed_union_false_hold_can_be_avoided": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 49,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_fixed_union_false_hold_can_be_avoided:3ca15f6b1a56c9ce",
+        "signature_hash": "d727935e3dfd55a1"
+      }
+    ],
+    "TestContingentHydration.test_support_generation_change_invalidates": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 53,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_support_generation_change_invalidates:1d9a34eecc670448",
+        "signature_hash": "7ae49053efc80f6f"
+      }
+    ],
+    "TestContingentHydration.test_unknown_branch_holds": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_unknown_branch_holds:4206aa066cb289bb",
+        "signature_hash": "e9d58df9863ba522"
+      }
+    ],
+    "TestContingentHydration.test_dense_support_collapses_global": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_dense_support_collapses_global:52e2d72420012e9c",
+        "signature_hash": "5aa2cf5d9541b3bd"
+      }
+    ],
+    "TestContingentHydration.test_order_is_canonical": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 69,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_order_is_canonical:5439133cca2513e1",
+        "signature_hash": "a4fd31ebd51cce0a"
+      }
+    ],
+    "TestContingentHydration.test_k27_hint_does_not_change_safety_disposition": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 77,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_k27_hint_does_not_change_safety_disposition:13fb5c0d1ce127ae",
+        "signature_hash": "8f8f704f556a2e25"
+      }
+    ],
+    "TestContingentHydration.test_capacity_holds_even_when_deadline_fits": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 81,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_capacity_holds_even_when_deadline_fits:647d6a23ce0e0d5c",
+        "signature_hash": "2482f5549aeaa280"
+      }
+    ],
+    "TestContingentHydration.test_unknown_support_item_fails_closed": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 85,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_unknown_support_item_fails_closed:e576e0667197eebd",
+        "signature_hash": "de7d5da760718da1"
+      }
+    ],
+    "TestContingentHydration.test_exact_component_limit_fails_closed": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_exact_component_limit_fails_closed:d28f4fc05108f0e1",
+        "signature_hash": "39e0d4da47e9f995"
+      }
+    ],
+    "TestContingentHydration.test_no_authority_promotion": [
+      {
+        "file": "tests/test_memory_city_contingent_hydration.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 96,
+        "semantic_id": "tests/test_memory_city_contingent_hydration.py#method:TestContingentHydration.test_no_authority_promotion:72a4da1920bfa2bf",
+        "signature_hash": "5dc21fad911a2f1e"
       }
     ],
     "HydrationPlanTests": [
@@ -429449,6 +432050,336 @@
         "signature_hash": "1f916d5473e53b69"
       }
     ],
+    "B": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 12,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#class:B:849ff60ba0e6f56e",
+        "signature_hash": "b0eda92d25c655c4"
+      }
+    ],
+    "RT": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 16,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#class:RT:bad7fb868a617b5b",
+        "signature_hash": "9dfa44528437f68e"
+      }
+    ],
+    "RT.route_projection": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 14,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:RT.route_projection:7b1fe1938c4ff35c",
+        "signature_hash": "a933ff09066816a7"
+      }
+    ],
+    "RT.invalidation_cone": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 15,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:RT.invalidation_cone:96487479a9147833",
+        "signature_hash": "6bdb51e89282bac0"
+      }
+    ],
+    "RT.read": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 16,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:RT.read:fb5ca7d92d32d0aa",
+        "signature_hash": "2745e5ac3b88ec36"
+      }
+    ],
+    "ConvergenceTests": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 30,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#class:ConvergenceTests:f2fb2c89af47d056",
+        "signature_hash": "7e3f825bad70b900"
+      }
+    ],
+    "ConvergenceTests.test_dynamic_invalidation_remains_read_only": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_dynamic_invalidation_remains_read_only:318f1ee64f603ee9",
+        "signature_hash": "34b9aeffb0d1ea65"
+      }
+    ],
+    "ConvergenceTests.test_reflexive_passive_state_change_holds": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_reflexive_passive_state_change_holds:0892c48690c39ce6",
+        "signature_hash": "ecddf63c4fa379a6"
+      }
+    ],
+    "ConvergenceTests.test_support_closure_expands_direct_route": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_support_closure_expands_direct_route:1ba13fd03a644dd7",
+        "signature_hash": "179c0d78ebf755ee"
+      }
+    ],
+    "ConvergenceTests.test_support_closed_hydration_uses_pr874_spans": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_support_closed_hydration_uses_pr874_spans:7d0b6625394e3bbe",
+        "signature_hash": "cee6136e3a894558"
+      }
+    ],
+    "ConvergenceTests.test_support_ambiguity_blocks_span_hydration": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_support_ambiguity_blocks_span_hydration:a448cf81bda910bb",
+        "signature_hash": "e8adc4e96578500d"
+      }
+    ],
+    "ConvergenceTests.test_negative_scar_narrowing_reuses_nonauthoritatively": [
+      {
+        "file": "tests/test_memory_city_navigator_convergence.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tests/test_memory_city_navigator_convergence.py#method:ConvergenceTests.test_negative_scar_narrowing_reuses_nonauthoritatively:e23b1f5edb9b085b",
+        "signature_hash": "bec726ac1d793b70"
+      }
+    ],
+    "se": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#function:se:7b4aa7be2a4a4db1",
+        "signature_hash": "6c71e98694565040"
+      }
+    ],
+    "de": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 7,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#function:de:67c872ae9552a0d7",
+        "signature_hash": "d259cde7373b4739"
+      }
+    ],
+    "QTests": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 79,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests:fee31b54d708e19d",
+        "signature_hash": "0c4ed393303ee305"
+      }
+    ],
+    "QTests.test_support_and_dependency_are_distinct_algebras": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_support_and_dependency_are_distinct_algebras:2e401868ee1db3fb",
+        "signature_hash": "dda7fff4ea576d3a"
+      }
+    ],
+    "QTests.test_dependency_does_not_expand_hydration_support": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_dependency_does_not_expand_hydration_support:5a36701ef94ca7c3",
+        "signature_hash": "58a05282a59bf17b"
+      }
+    ],
+    "QTests.test_support_does_not_imply_downstream_reproof": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 22,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_support_does_not_imply_downstream_reproof:007d57d8d4aea49e",
+        "signature_hash": "6c2d4e3991cfe5e1"
+      }
+    ],
+    "QTests.test_internal_dependency_is_quotiented_away": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_internal_dependency_is_quotiented_away:e2f746201807e17f",
+        "signature_hash": "84b178b8c85792a7"
+      }
+    ],
+    "QTests.test_cycle_holds_without_merging_support_components": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_cycle_holds_without_merging_support_components:836b079237a838b7",
+        "signature_hash": "32f91a21a4b7f152"
+      }
+    ],
+    "QTests.test_stale_support_holds": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_stale_support_holds:396243e6a6646967",
+        "signature_hash": "63b568e5083941b9"
+      }
+    ],
+    "QTests.test_incomplete_support_holds": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_incomplete_support_holds:8de177140da0c827",
+        "signature_hash": "754217a2343e1bf7"
+      }
+    ],
+    "QTests.test_unobtainable_required_support_holds": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_unobtainable_required_support_holds:e0a77191aeb127a2",
+        "signature_hash": "ac0ed107a4cd782d"
+      }
+    ],
+    "QTests.test_late_required_support_holds": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_late_required_support_holds:1ee3c2c5ed9ad609",
+        "signature_hash": "02c0e90d9d6a0e41"
+      }
+    ],
+    "QTests.test_stale_required_support_precedes_availability": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_stale_required_support_precedes_availability:2efd09fd207a7af7",
+        "signature_hash": "359f1164f5bf86a7"
+      }
+    ],
+    "QTests.test_ready_preserves_separate_reproof_cone": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_ready_preserves_separate_reproof_cone:fd908fcd7bd50829",
+        "signature_hash": "24b0a66af08c8b99"
+      }
+    ],
+    "QTests.test_parent_contingent_branch_binds_exact_support_partition": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 62,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_parent_contingent_branch_binds_exact_support_partition:3b586f891e8084c1",
+        "signature_hash": "1add2104d2cfd6ce"
+      }
+    ],
+    "QTests.test_parent_contingent_branch_binds_exact_support_partition.Plan": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_contingent_branch_binds_exact_support_partition.Plan:b4fbea29b4ff9042",
+        "signature_hash": "3afe218a3cdbfefa"
+      }
+    ],
+    "QTests.test_parent_contingent_branch_binds_exact_support_partition.Strat": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_contingent_branch_binds_exact_support_partition.Strat:9460daf7f381d083",
+        "signature_hash": "3cef014265a25103"
+      }
+    ],
+    "QTests.test_parent_partition_mismatch_holds": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 75,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_parent_partition_mismatch_holds:566e0601070de6a6",
+        "signature_hash": "b02b55463bb4c7cd"
+      }
+    ],
+    "QTests.test_parent_partition_mismatch_holds.Plan": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_partition_mismatch_holds.Plan:8353077b06a201ff",
+        "signature_hash": "3afe218a3cdbfefa"
+      }
+    ],
+    "QTests.test_parent_partition_mismatch_holds.Strat": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#class:QTests.test_parent_partition_mismatch_holds.Strat:9b1c1756a3deb8d5",
+        "signature_hash": "3cef014265a25103"
+      }
+    ],
+    "QTests.test_13d_noncompensation": [
+      {
+        "file": "tests/test_memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tests/test_memory_city_quotient_controllability.py#method:QTests.test_13d_noncompensation:d0cc7411c24c464d",
+        "signature_hash": "21461dd2d7d4ddec"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -429707,6 +432638,24 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "oracle_components": [
+      {
+        "file": "tools/arena/campaign_memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 23,
+        "semantic_id": "tools/arena/campaign_memory_city_quotient_controllability.py#function:oracle_components:b00662d90061d7a5",
+        "signature_hash": "a80dd6f51c633611"
+      },
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 33,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:oracle_components:df2c21b74ac7f419",
+        "signature_hash": "8e23deb0d1460ff4"
       }
     ],
     "AdmissionError": [
@@ -430777,6 +433726,314 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "TrafficEvent": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 17,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficEvent:8e1f148a1acb8fb1",
+        "signature_hash": "816b041e222d3924"
+      }
+    ],
+    "TrafficEvent.validate": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 17,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:TrafficEvent.validate:3a31d8f3ebd146ea",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "RouteRegistration": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:RouteRegistration:0fba3fd76a3c35da",
+        "signature_hash": "4ce34f200ddf512e"
+      }
+    ],
+    "InvalidationPlan": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:InvalidationPlan:3a0008ce4a2f6b33",
+        "signature_hash": "6b71ed67e04c3afa"
+      }
+    ],
+    "LawField": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:LawField:b14151d3d3f3d1d6",
+        "signature_hash": "5ad051463526d163"
+      }
+    ],
+    "EffectIntent": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectIntent:d9ab361e9e06de74",
+        "signature_hash": "f0173f902a8a994e"
+      }
+    ],
+    "EffectDisposition": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:EffectDisposition:99090139bd6d162e",
+        "signature_hash": "5f61ef6974d7b225"
+      }
+    ],
+    "AtUseCapsule": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:AtUseCapsule:b25ffd0d0b695720",
+        "signature_hash": "5356b663222b1ec5"
+      }
+    ],
+    "NegativeRouteScar": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:NegativeRouteScar:18fafc4b5f99df43",
+        "signature_hash": "e692488fff839243"
+      }
+    ],
+    "TrafficSummary": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:TrafficSummary:5ee54e50268395fe",
+        "signature_hash": "b901a163f7a88999"
+      }
+    ],
+    "K27DynamicNavigator": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 91,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#class:K27DynamicNavigator:dcb3e9a6ce62ca3d",
+        "signature_hash": "40bc97e0e06f534e"
+      }
+    ],
+    "K27DynamicNavigator.__init__": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 43,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.__init__:38cc610fb90c72cd",
+        "signature_hash": "eb0869bbca4a2264"
+      }
+    ],
+    "K27DynamicNavigator.traffic": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 45,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.traffic:9714802d49b7ec58",
+        "signature_hash": "426471c9f068eb81"
+      }
+    ],
+    "K27DynamicNavigator.record": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 49,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.record:e87893b062c8bf07",
+        "signature_hash": "a96d88c79c914ba6"
+      }
+    ],
+    "K27DynamicNavigator.register_route": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.register_route:ccb493315ad0c059",
+        "signature_hash": "e4a180408945f5bd"
+      }
+    ],
+    "K27DynamicNavigator.plan_invalidation": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 64,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.plan_invalidation:ef22c419bf18d4e3",
+        "signature_hash": "b4af862beca0272d"
+      }
+    ],
+    "K27DynamicNavigator.compile_effect": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 78,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.compile_effect:f66146f2c71b1a49",
+        "signature_hash": "c6caf67ee1623717"
+      }
+    ],
+    "K27DynamicNavigator.capture_at_use": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.capture_at_use:9da6baaaf6bc752e",
+        "signature_hash": "0f12cb82bfc7ace5"
+      }
+    ],
+    "K27DynamicNavigator.classify_negative_scar": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 91,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#method:K27DynamicNavigator.classify_negative_scar:b3bfd532db0c50b1",
+        "signature_hash": "1391480ce9935ae7"
+      }
+    ],
+    "summarize_traffic": [
+      {
+        "file": "tools/arena/k27_dynamic_navigator.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 99,
+        "semantic_id": "tools/arena/k27_dynamic_navigator.py#function:summarize_traffic:da4631dd79c66e73",
+        "signature_hash": "10df9b719f3315e2"
+      }
+    ],
+    "SupportHyperedge": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 6,
+        "end_line": 11,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportHyperedge:a0f61439350a28d0",
+        "signature_hash": "a58bf8a32cbc35f2"
+      }
+    ],
+    "SupportHyperedge.validate": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportHyperedge.validate:77a2acb8b4b6ab34",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SupportBeliefState": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 22,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:SupportBeliefState:0afb0bc83c155bd5",
+        "signature_hash": "ded1aeb0f034675a"
+      }
+    ],
+    "SupportBeliefState.validate": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 22,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#method:SupportBeliefState.validate:c1c881ae1de5fde7",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "InvariantRouteCut": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#class:InvariantRouteCut:2fd925ddcbdd0914",
+        "signature_hash": "b62c5f2835698aa4"
+      }
+    ],
+    "_hard_map": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hard_map:6cc509ecd6bbb4c2",
+        "signature_hash": "eb7db1b8db329feb"
+      }
+    ],
+    "_hold": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:_hold:3d48cf9ddd4ab32f",
+        "signature_hash": "46b358a3f3034dd8"
+      },
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 214,
+        "end_line": 217,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:_hold:ddb39f3590628f22",
+        "signature_hash": "45496e7e7f0fad3d"
+      }
+    ],
+    "compile_invariant_route_cut": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 54,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:compile_invariant_route_cut:fc2ffcf7340e9f56",
+        "signature_hash": "64a3850e45fde107"
+      }
+    ],
+    "affected_by_change": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:affected_by_change:346dd7a8e3dc2f7e",
+        "signature_hash": "89e400d126014e7e"
+      }
+    ],
+    "hard13d_route_cut": [
+      {
+        "file": "tools/arena/k27_invariant_route_cut.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 63,
+        "semantic_id": "tools/arena/k27_invariant_route_cut.py#function:hard13d_route_cut:350b10c81c0d8dc1",
+        "signature_hash": "92cfae92fd173f06"
       }
     ],
     "classify_hold": [
@@ -432299,6 +435556,164 @@
         "signature_hash": "68b55e056016a527"
       }
     ],
+    "ProbeTransition": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "class",
+        "line": 6,
+        "end_line": 12,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#class:ProbeTransition:a6c49c0375e5e4b6",
+        "signature_hash": "6530d061478ca6df"
+      }
+    ],
+    "ProbeTransition.validate": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 12,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ProbeTransition.validate:5dbda2342789c443",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ProbeAdmission": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#class:ProbeAdmission:df29233ed02e6001",
+        "signature_hash": "b7a1a224176be38d"
+      }
+    ],
+    "ReflexiveTelemetryGate": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 37,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#class:ReflexiveTelemetryGate:1dd0dba21f6db220",
+        "signature_hash": "1fbc1fab9ad0ce1c"
+      }
+    ],
+    "ReflexiveTelemetryGate.__init__": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 17,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate.__init__:fe04a78554890f22",
+        "signature_hash": "2b2257f33fa1cb38"
+      }
+    ],
+    "ReflexiveTelemetryGate._transition_root": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate._transition_root:29ff6e38bdd62f1b",
+        "signature_hash": "04caa714443e2fc4"
+      }
+    ],
+    "ReflexiveTelemetryGate.admit": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 28,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate.admit:9907c4b48ca111c4",
+        "signature_hash": "15a6100604b16205"
+      }
+    ],
+    "ReflexiveTelemetryGate.compile_sequence": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 37,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#method:ReflexiveTelemetryGate.compile_sequence:36e8d572e5c0f402",
+        "signature_hash": "1af4655e94cf3ddf"
+      }
+    ],
+    "hard13d_admission": [
+      {
+        "file": "tools/arena/k27_reflexive_telemetry.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 43,
+        "semantic_id": "tools/arena/k27_reflexive_telemetry.py#function:hard13d_admission:8d19b88946ff71b8",
+        "signature_hash": "9f33977965e22802"
+      }
+    ],
+    "SupportFixedPoint": [
+      {
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "kind": "class",
+        "line": 6,
+        "end_line": 11,
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#class:SupportFixedPoint:063bfeecd1ff60ea",
+        "signature_hash": "0dc4c4c7488d1b4e"
+      }
+    ],
+    "SupportFixedPoint.validate": [
+      {
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#method:SupportFixedPoint.validate:72db004b3184b411",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AdaptiveHydrationStrategy": [
+      {
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#class:AdaptiveHydrationStrategy:4a9113721c6048f9",
+        "signature_hash": "733cc7ff2541c30d"
+      }
+    ],
+    "compile_adaptive_hydration_strategy": [
+      {
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 24,
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#function:compile_adaptive_hydration_strategy:864122b1c089806f",
+        "signature_hash": "5835a28c41a3a01e"
+      }
+    ],
+    "_out": [
+      {
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#function:_out:39f4c3edbea2e4a3",
+        "signature_hash": "ff3d687adf87ce95"
+      },
+      {
+        "file": "tools/arena/memory_city_support_hydration.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tools/arena/memory_city_support_hydration.py#function:_out:4547d9b14182d755",
+        "signature_hash": "3038afcb3ca40732"
+      }
+    ],
+    "hard13d_strategy": [
+      {
+        "file": "tools/arena/memory_city_adaptive_hydration.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 33,
+        "semantic_id": "tools/arena/memory_city_adaptive_hydration.py#function:hard13d_strategy:a386cefe52c14ef7",
+        "signature_hash": "35430a4c5b7c8b63"
+      }
+    ],
     "AnchorDisposition": [
       {
         "file": "tools/arena/memory_city_anchor_locator.py",
@@ -432579,6 +435994,46 @@
         "signature_hash": "9b9fc58f0d6bb043"
       }
     ],
+    "locator": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 16,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:locator:c1c27b3814eec9f1",
+        "signature_hash": "7a7e516a0849d561"
+      }
+    ],
+    "oracle_ready": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 51,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:oracle_ready:caeb6500807c1d95",
+        "signature_hash": "da92bbbe0746a9fa"
+      }
+    ],
+    "make_case": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_campaign.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 63,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_campaign.py#function:make_case:d29f2aaa2e10227d",
+        "signature_hash": "6fe522742be8458f"
+      }
+    ],
+    "root": [
+      {
+        "file": "tools/arena/memory_city_contingent_hydration_hs1000.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/arena/memory_city_contingent_hydration_hs1000.py#function:root:82733b686a2a7f01",
+        "signature_hash": "347125fa41d4265b"
+      }
+    ],
     "HydrationPlanDisposition": [
       {
         "file": "tools/arena/memory_city_hydration_plan.py",
@@ -432797,6 +436252,216 @@
         "end_line": 257,
         "semantic_id": "tools/arena/memory_city_navigator.py#function:evaluate_route_at_use:b35cc4cb9da537e0",
         "signature_hash": "df746a50b9680c32"
+      }
+    ],
+    "HardSupportEdge": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 39,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:HardSupportEdge:1b94ae33777bb33f",
+        "signature_hash": "1fa3b1ae20875a8d"
+      }
+    ],
+    "HardSupportEdge.validate": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 39,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:HardSupportEdge.validate:175163a68eb005bf",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "DependencyEdge.validate": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:DependencyEdge.validate:9589fb661d275f1c",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuotientComponent": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:QuotientComponent:c9b61d99a20560a2",
+        "signature_hash": "2937364578855fed"
+      }
+    ],
+    "LiftedDependency": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:LiftedDependency:d7f393f6ae83ffac",
+        "signature_hash": "d59b91939564b781"
+      }
+    ],
+    "HardSupportQuotient": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 84,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:HardSupportQuotient:7fd7cf3eb53d0f35",
+        "signature_hash": "49219ecdcff735f5"
+      }
+    ],
+    "HardSupportQuotient.component_for": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 84,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:HardSupportQuotient.component_for:f653bf30cb3ac8ea",
+        "signature_hash": "d00c604996af941b"
+      }
+    ],
+    "ComponentAvailability": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 101,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:ComponentAvailability:7c29e05956cb4e2f",
+        "signature_hash": "db4fc183c24a2634"
+      }
+    ],
+    "ComponentAvailability.validate": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 101,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:ComponentAvailability.validate:75a64f94d10e7f7b",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ControllabilityDecision": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "class",
+        "line": 105,
+        "end_line": 115,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#class:ControllabilityDecision:41a0372ef8852d66",
+        "signature_hash": "e063b8071c0e5d78"
+      }
+    ],
+    "_component_id": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:_component_id:3f0a7bd77c84005f",
+        "signature_hash": "caeffc3c50ef18c9"
+      }
+    ],
+    "compile_hard_support_quotient": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 211,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:compile_hard_support_quotient:9ffded82826ca246",
+        "signature_hash": "adfe5b48c4402d85"
+      }
+    ],
+    "compile_hard_support_quotient.find": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 149,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:compile_hard_support_quotient.find:bd3be7a4d995e8cf",
+        "signature_hash": "105ce426a9e19637"
+      }
+    ],
+    "compile_hard_support_quotient.union": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 154,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#method:compile_hard_support_quotient.union:037eaf3a70a39cab",
+        "signature_hash": "8d8b490f75da7e1e"
+      }
+    ],
+    "support_components_for_items": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 220,
+        "end_line": 223,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:support_components_for_items:030d3503bef5cb35",
+        "signature_hash": "2a656bf1dbe5ba1a"
+      }
+    ],
+    "reproof_cone": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 226,
+        "end_line": 239,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:reproof_cone:676639c9eec77c02",
+        "signature_hash": "1b60cd2ad9dc3503"
+      }
+    ],
+    "compile_controllability_cut": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 275,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:compile_controllability_cut:a12308220f8430cc",
+        "signature_hash": "9581e47eec651d8d"
+      }
+    ],
+    "hard13d_quotient": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 283,
+        "end_line": 289,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:hard13d_quotient:2a386b2b45274c27",
+        "signature_hash": "4bce63404cc6a4ec"
+      }
+    ],
+    "validate_contingent_strategy_branch": [
+      {
+        "file": "tools/arena/memory_city_quotient_controllability.py",
+        "kind": "function",
+        "line": 292,
+        "end_line": 333,
+        "semantic_id": "tools/arena/memory_city_quotient_controllability.py#function:validate_contingent_strategy_branch:ce77f8bb86fd4efb",
+        "signature_hash": "2b4a7496019d7781"
+      }
+    ],
+    "SupportClosedHydration": [
+      {
+        "file": "tools/arena/memory_city_support_hydration.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/memory_city_support_hydration.py#class:SupportClosedHydration:9fd3b185b4eb8c85",
+        "signature_hash": "3fb0243c5fd00cb7"
+      }
+    ],
+    "compile_support_closed_hydration": [
+      {
+        "file": "tools/arena/memory_city_support_hydration.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 20,
+        "semantic_id": "tools/arena/memory_city_support_hydration.py#function:compile_support_closed_hydration:8561d01a37ddac60",
+        "signature_hash": "e9ade15e49334edb"
       }
     ],
     "_coordinates": [
