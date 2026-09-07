@@ -27,6 +27,10 @@ from .reflexive_topology import (
 from .route_evidence_transaction import (
     RouteEvidenceTransaction, TransactionDisposition, certify,
 )
+from .invariant_support import (
+    HardInvariantSupport, InvariantSupportPlan, SupportDisposition, SupportState,
+    compile_invariant_support,
+)
 
 __all__ = [
     "Admission", "CapacityEnvelope", "Disposition", "Polarity", "ProofReceipt",
@@ -40,4 +44,6 @@ __all__ = [
     "ProbeStep", "TopologyCertificate", "TopologyDisposition", "components",
     "execute_probe_program", "graph_root", "program_root",
     "RouteEvidenceTransaction", "TransactionDisposition", "certify",
+    "HardInvariantSupport", "InvariantSupportPlan", "SupportDisposition",
+    "SupportState", "compile_invariant_support",
 ]
