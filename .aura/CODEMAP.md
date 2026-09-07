@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1676
-- **total_bytes**: 26661329
-- **text_tokens_est**: 6655683
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 276, 'support_file': 53}
+- **file_count**: 1682
+- **total_bytes**: 26684383
+- **text_tokens_est**: 6661448
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 277, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1676,
+  "repo_file_count": 1682,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -298,6 +298,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+    "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1655,6 +1656,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_project006_effect_attempt_recovery_o11.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_tecc_effect_admission_bridge.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1678,7 +1680,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/campaign_effect_attempt_recovery_o11.py",
+    "tools/project006/campaign_tecc_effect_admission_bridge.py",
     "tools/project006/effect_attempt_recovery.py",
+    "tools/project006/mc_o14_hs1000.py",
+    "tools/project006/mc_o14_lattice8.py",
+    "tools/project006/mc_o14_sweep13d.py",
     "tools/project006/o11_effect_attempt_factored13d.py",
     "tools/project006/o11_effect_attempt_hs1000.py",
     "tools/project006/o11_effect_attempt_lattice8.py",
@@ -1816,16 +1822,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1676,
-  "bytes": 26661329,
-  "tokens_est": 6655683,
+  "files": 1682,
+  "bytes": 26684383,
+  "tokens_est": 6661448,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1022,
-    "schema_or_lexicon": 276,
+    "python_module": 1027,
+    "schema_or_lexicon": 277,
     "support_file": 53
   }
 }
