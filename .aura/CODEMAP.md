@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1687
-- **total_bytes**: 26637330
-- **text_tokens_est**: 6649687
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 282, 'support_file': 53}
+- **file_count**: 1689
+- **total_bytes**: 26651094
+- **text_tokens_est**: 6653129
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1029, 'schema_or_lexicon': 282, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1687,
+  "repo_file_count": 1689,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1658,6 +1658,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_consequence_admission_kernel.py",
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_installed_runtime_bound_delegation.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1669,6 +1670,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/attenuated_stable_operation_delegation.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/installed_runtime_bound_delegation.py",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
     "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -1827,15 +1829,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1687,
-  "bytes": 26637330,
-  "tokens_est": 6649687,
+  "files": 1689,
+  "bytes": 26651094,
+  "tokens_est": 6653129,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1027,
+    "python_module": 1029,
     "schema_or_lexicon": 282,
     "support_file": 53
   }
