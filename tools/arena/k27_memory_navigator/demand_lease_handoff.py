@@ -3,9 +3,9 @@ from __future__ import annotations
 """D0 configuration-bound demand-cell lease handoff donor.
 
 Locality and cache residency never authorize mutation. A mutable lease is
-valid only for the exact immutable cell revision and authenticated support /
-configuration generation whose fencing generation has been installed at the
-mutation boundary.
+valid only for the exact immutable cell revision and support/configuration
+state whose proof-carrying transition evidence and protected-resource fence
+receipt agree at the mutation boundary.
 """
 
 from dataclasses import dataclass
@@ -14,7 +14,7 @@ from hashlib import sha256
 import json
 from typing import Mapping, FrozenSet
 
-SCHEMA = "AURA-MEMORY-CITY-DEMAND-LEASE-HANDOFF-v1"
+SCHEMA = "AURA-MEMORY-CITY-DEMAND-LEASE-HANDOFF-v2"
 
 
 class LeaseDisposition(str, Enum):
@@ -41,6 +41,10 @@ def _nonnegative_int(value: int, field: str) -> int:
     if type(value) is not int or value < 0:
         raise ValueError(f"{field} must be a non-negative exact int")
     return value
+
+
+def _canonical_root(payload: Mapping[str, object]) -> str:
+    return sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -86,14 +90,14 @@ class DemandCellLease:
 
 @dataclass(frozen=True)
 class ConfigurationTransition:
+    """Proposed transition values only; this object carries no authentication."""
+
     cell_id: str
     old_configuration_root: str
     new_configuration_root: str
     old_support_epoch: int
     new_support_epoch: int
     new_fence_generation: int
-    authenticated: bool
-    installed_at_resource: bool
 
     def __post_init__(self) -> None:
         _id(self.cell_id, "cell_id")
@@ -102,8 +106,83 @@ class ConfigurationTransition:
         _nonnegative_int(self.old_support_epoch, "old_support_epoch")
         _nonnegative_int(self.new_support_epoch, "new_support_epoch")
         _nonnegative_int(self.new_fence_generation, "new_fence_generation")
-        if type(self.authenticated) is not bool or type(self.installed_at_resource) is not bool:
-            raise ValueError("transition flags must be exact bools")
+
+    def canonical_claim_root(self) -> str:
+        return _canonical_root({
+            "schema": SCHEMA,
+            "kind": "configuration_transition_claim",
+            "cell_id": self.cell_id,
+            "old_configuration_root": self.old_configuration_root,
+            "new_configuration_root": self.new_configuration_root,
+            "old_support_epoch": self.old_support_epoch,
+            "new_support_epoch": self.new_support_epoch,
+            "new_fence_generation": self.new_fence_generation,
+        })
+
+
+@dataclass(frozen=True)
+class TransitionAuthorityEvidence:
+    """Owner/verifier-produced receipt binding one exact transition claim.
+
+    The handoff compiler does not infer authentication from booleans. It only
+    accepts a receipt when its claim root, authority source and verifier receipt
+    roots are exact current roots supplied by the owner boundary.
+    """
+
+    transition_claim_root: str
+    authority_source_root: str
+    verifier_receipt_root: str
+
+    def __post_init__(self) -> None:
+        _root(self.transition_claim_root, "transition_claim_root")
+        _root(self.authority_source_root, "authority_source_root")
+        _root(self.verifier_receipt_root, "verifier_receipt_root")
+
+
+@dataclass(frozen=True)
+class ResourceFenceReceipt:
+    """Observed protected-resource fence state, separate from transition intent."""
+
+    cell_id: str
+    configuration_root: str
+    support_epoch: int
+    installed_fence_generation: int
+    resource_state_root: str
+    observer_receipt_root: str
+
+    def __post_init__(self) -> None:
+        _id(self.cell_id, "cell_id")
+        _root(self.configuration_root, "configuration_root")
+        _nonnegative_int(self.support_epoch, "support_epoch")
+        _nonnegative_int(self.installed_fence_generation, "installed_fence_generation")
+        _root(self.resource_state_root, "resource_state_root")
+        _root(self.observer_receipt_root, "observer_receipt_root")
+
+    def canonical_state_root(self) -> str:
+        return _canonical_root({
+            "schema": SCHEMA,
+            "kind": "resource_fence_state",
+            "cell_id": self.cell_id,
+            "configuration_root": self.configuration_root,
+            "support_epoch": self.support_epoch,
+            "installed_fence_generation": self.installed_fence_generation,
+        })
+
+
+@dataclass(frozen=True)
+class TransitionVerificationContext:
+    """Current owner-bound verifier/resource roots used to reject stale receipts."""
+
+    authority_source_root: str
+    verifier_receipt_root: str
+    resource_state_root: str
+    observer_receipt_root: str
+
+    def __post_init__(self) -> None:
+        _root(self.authority_source_root, "authority_source_root")
+        _root(self.verifier_receipt_root, "verifier_receipt_root")
+        _root(self.resource_state_root, "resource_state_root")
+        _root(self.observer_receipt_root, "observer_receipt_root")
 
 
 @dataclass(frozen=True)
@@ -150,10 +229,24 @@ def compile_write(lease: DemandCellLease, cell: DemandCellState, now: int) -> Le
 def apply_configuration_transition(
     cell: DemandCellState,
     transition: ConfigurationTransition,
+    authority_evidence: TransitionAuthorityEvidence,
+    resource_receipt: ResourceFenceReceipt,
+    verification: TransitionVerificationContext,
 ) -> tuple[LeaseDecision, DemandCellState]:
-    """Install an authenticated support/configuration handoff at the resource."""
+    """Apply a transition only when independent receipts bind the exact claim/state.
+
+    No caller-provided `authenticated=True` or `installed_at_resource=True` flag
+    exists. The transition, authority receipt, protected-resource observation,
+    and current verifier/resource roots must all agree exactly.
+    """
     if not isinstance(cell, DemandCellState) or not isinstance(transition, ConfigurationTransition):
         raise ValueError("typed cell and transition required")
+    if not isinstance(authority_evidence, TransitionAuthorityEvidence):
+        raise ValueError("typed transition authority evidence required")
+    if not isinstance(resource_receipt, ResourceFenceReceipt):
+        raise ValueError("typed resource fence receipt required")
+    if not isinstance(verification, TransitionVerificationContext):
+        raise ValueError("typed transition verification context required")
     if transition.cell_id != cell.cell_id:
         return LeaseDecision(LeaseDisposition.HOLD, "CELL_MISMATCH"), cell
     if (
@@ -161,8 +254,12 @@ def apply_configuration_transition(
         or transition.old_support_epoch != cell.support_epoch
     ):
         return LeaseDecision(LeaseDisposition.HOLD, "TRANSITION_BASE_STALE"), cell
-    if not transition.authenticated:
-        return LeaseDecision(LeaseDisposition.HOLD, "TRANSITION_UNAUTHENTICATED"), cell
+    if authority_evidence.transition_claim_root != transition.canonical_claim_root():
+        return LeaseDecision(LeaseDisposition.HOLD, "TRANSITION_EVIDENCE_CLAIM_MISMATCH"), cell
+    if authority_evidence.authority_source_root != verification.authority_source_root:
+        return LeaseDecision(LeaseDisposition.HOLD, "AUTHORITY_SOURCE_ROOT_STALE"), cell
+    if authority_evidence.verifier_receipt_root != verification.verifier_receipt_root:
+        return LeaseDecision(LeaseDisposition.HOLD, "VERIFIER_RECEIPT_ROOT_STALE"), cell
     if transition.new_configuration_root == cell.configuration_root:
         return LeaseDecision(LeaseDisposition.HOLD, "CONFIGURATION_ROOT_NOT_ADVANCED"), cell
     if transition.new_support_epoch <= cell.support_epoch:
@@ -171,8 +268,21 @@ def apply_configuration_transition(
         return LeaseDecision(LeaseDisposition.HOLD, "FENCE_NOT_MONOTONIC"), cell
     if transition.new_fence_generation <= cell.highest_accepted_fence:
         return LeaseDecision(LeaseDisposition.HOLD, "FENCE_NOT_ABOVE_ACCEPTED"), cell
-    if not transition.installed_at_resource:
-        return LeaseDecision(LeaseDisposition.HOLD, "FENCE_NOT_INSTALLED_AT_RESOURCE"), cell
+
+    if resource_receipt.cell_id != transition.cell_id:
+        return LeaseDecision(LeaseDisposition.HOLD, "RESOURCE_CELL_MISMATCH"), cell
+    if resource_receipt.resource_state_root != verification.resource_state_root:
+        return LeaseDecision(LeaseDisposition.HOLD, "RESOURCE_STATE_ROOT_STALE"), cell
+    if resource_receipt.observer_receipt_root != verification.observer_receipt_root:
+        return LeaseDecision(LeaseDisposition.HOLD, "RESOURCE_OBSERVER_ROOT_STALE"), cell
+    if resource_receipt.resource_state_root != resource_receipt.canonical_state_root():
+        return LeaseDecision(LeaseDisposition.HOLD, "RESOURCE_STATE_RECEIPT_MALFORMED"), cell
+    if (
+        resource_receipt.configuration_root != transition.new_configuration_root
+        or resource_receipt.support_epoch != transition.new_support_epoch
+        or resource_receipt.installed_fence_generation != transition.new_fence_generation
+    ):
+        return LeaseDecision(LeaseDisposition.HOLD, "FENCE_NOT_VERIFIED_AT_RESOURCE"), cell
 
     next_state = DemandCellState(
         cell_id=cell.cell_id,
@@ -182,7 +292,7 @@ def apply_configuration_transition(
         fence_generation=transition.new_fence_generation,
         highest_accepted_fence=transition.new_fence_generation,
     )
-    return LeaseDecision(LeaseDisposition.READY_D0, "CONFIGURATION_TRANSITION_INSTALLED"), next_state
+    return LeaseDecision(LeaseDisposition.READY_D0, "PROOF_BOUND_CONFIGURATION_TRANSITION_INSTALLED"), next_state
 
 
 def grant_current_lease(
@@ -257,4 +367,4 @@ def canonical_lease_root(lease: DemandCellLease) -> str:
         "effect_authority": False,
         "gate10": False,
     }
-    return sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return _canonical_root(payload)
