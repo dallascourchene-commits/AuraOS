@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1675
-- **total_bytes**: 26613067
-- **text_tokens_est**: 6643618
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 276, 'support_file': 53}
+- **file_count**: 1681
+- **total_bytes**: 26653381
+- **text_tokens_est**: 6653698
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 277, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1675,
+  "repo_file_count": 1681,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -298,6 +298,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.rs",
     "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
     "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
+    "artifacts/arena/project006_o12r1_owner_auth_recovery/PROOF_RECEIPT_O12R1.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1682,6 +1683,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/o11_effect_attempt_factored13d.py",
     "tools/project006/o11_effect_attempt_hs1000.py",
     "tools/project006/o11_effect_attempt_lattice8.py",
+    "tools/project006/o12r1_reference/campaign_o12r1.py",
+    "tools/project006/o12r1_reference/hyperscale_o12r1.py",
+    "tools/project006/o12r1_reference/mutation_o12r1.py",
+    "tools/project006/o12r1_reference/o12r1_recovery.py",
+    "tools/project006/o12r1_reference/test_o12r1.py",
     "tools/project006/project006_consumer_outbox_wrapper.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
@@ -1815,16 +1821,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1675,
-  "bytes": 26613067,
-  "tokens_est": 6643618,
+  "files": 1681,
+  "bytes": 26653381,
+  "tokens_est": 6653698,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1021,
-    "schema_or_lexicon": 276,
+    "python_module": 1026,
+    "schema_or_lexicon": 277,
     "support_file": 53
   }
 }
