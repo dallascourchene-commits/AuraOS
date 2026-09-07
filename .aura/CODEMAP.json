@@ -363,6 +363,7 @@
       ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
       ".github/workflows/o19r-transactional-shared-truth-proof.yml",
+      ".github/workflows/o20r-exact-head-proof.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
       ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       "README.md"
@@ -1065,7 +1066,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1715,
+    "repo_file_count": 1728,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1218,6 +1219,7 @@
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
       ".github/workflows/o19r-transactional-shared-truth-proof.yml",
+      ".github/workflows/o20r-exact-head-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -1347,6 +1349,11 @@
       "artifacts/arena/o19r_transactional_shared_truth/FROZEN_PROPOSALS_O19R.json",
       "artifacts/arena/o19r_transactional_shared_truth/PROOF_RECEIPT_O19R.json",
       "artifacts/arena/o19r_transactional_shared_truth/RESULT_O19R.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/EXTERNAL_COORDINATES.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/FROZEN_ALTERNATIVES.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/PROOF_RECEIPT.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/RESULT.json",
+      "artifacts/arena/o20r_loaded_process_currentness/FROZEN_PROPOSALS_O20R.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -2181,6 +2188,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/O20R_EFFECT_TIME_LOADED_PROCESS_CURRENTNESS.md",
       "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
@@ -2709,6 +2717,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_time_loaded_process_currentness_hosted.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -2726,6 +2735,7 @@
       "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/effect_return_atomicity.py",
+      "tools/arena/effect_time_loaded_process_currentness.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/o18_campaign.py",
       "tools/arena/o18_hs1000.py",
@@ -2735,6 +2745,10 @@
       "tools/arena/o19r_hs1000.py",
       "tools/arena/o19r_lattice8.py",
       "tools/arena/o19r_sweep13d.py",
+      "tools/arena/o20r_campaign.py",
+      "tools/arena/o20r_hs1000.py",
+      "tools/arena/o20r_lattice8.py",
+      "tools/arena/o20r_sweep13d.py",
       "tools/arena/transactional_shared_truth_commit.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
@@ -10492,6 +10506,59 @@
       ]
     },
     {
+      "path": ".github/workflows/o20r-exact-head-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2271,
+      "lines": 52,
+      "tokens_est": 568,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          24
+        ]
+      },
+      "topology": {},
+      "digest8": "39e35cbf692fe102",
+      "vector": [
+        -0.232725,
+        0.131436,
+        -0.063909,
+        0.027734,
+        -0.242372,
+        0.290605,
+        -0.165199,
+        -0.242372,
+        -0.095261,
+        -0.162787,
+        -0.25443,
+        -0.174846,
+        0.261665,
+        0.160376,
+        -0.068732,
+        -0.071144,
+        0.266489,
+        0.213432,
+        -0.288194,
+        -0.141082,
+        0.129024,
+        -0.278547,
+        -0.097672,
+        -0.010852,
+        -0.085614,
+        0.078379,
+        0.227902,
+        -0.148317,
+        0.013264,
+        0.056674,
+        -0.114554,
+        0.179669
+      ]
+    },
+    {
       "path": ".github/workflows/o5-consequence-admission-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -18143,6 +18210,241 @@
         0.250785,
         -0.010121,
         -0.025866
+      ]
+    },
+    {
+      "path": "artifacts/arena/o20r_effect_time_loaded_process_currentness/EXTERNAL_COORDINATES.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 900,
+      "lines": 14,
+      "tokens_est": 225,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ab301e4228b8adf3",
+      "vector": [
+        0.242523,
+        -0.062154,
+        -0.24496,
+        -0.274209,
+        0.137714,
+        0.305896,
+        0.074341,
+        0.064592,
+        -0.240085,
+        0.125527,
+        0.159651,
+        0.035343,
+        -0.205962,
+        -0.001219,
+        0.230336,
+        -0.035343,
+        0.10359,
+        -0.225461,
+        0.059717,
+        -0.252272,
+        -0.059717,
+        -0.1889,
+        0.213274,
+        0.079216,
+        0.079216,
+        0.281521,
+        -0.288834,
+        0.198649,
+        0.03778,
+        -0.054842,
+        -0.11334,
+        -0.193775
+      ]
+    },
+    {
+      "path": "artifacts/arena/o20r_effect_time_loaded_process_currentness/FROZEN_ALTERNATIVES.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1059,
+      "lines": 12,
+      "tokens_est": 265,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9d4adbd1d2a4fb7f",
+      "vector": [
+        -0.273461,
+        -0.036017,
+        -0.196091,
+        0.257453,
+        0.12139,
+        -0.174748,
+        -0.073368,
+        0.065364,
+        0.260121,
+        0.265457,
+        0.030681,
+        -0.102715,
+        0.004002,
+        0.254785,
+        -0.225438,
+        -0.12139,
+        -0.081371,
+        -0.284132,
+        0.12139,
+        0.334823,
+        0.017341,
+        0.129394,
+        0.022677,
+        0.24945,
+        -0.094711,
+        -0.17208,
+        -0.004002,
+        0.041353,
+        0.150737,
+        -0.217435,
+        -0.025345,
+        -0.281464
+      ]
+    },
+    {
+      "path": "artifacts/arena/o20r_effect_time_loaded_process_currentness/PROOF_RECEIPT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1561,
+      "lines": 26,
+      "tokens_est": 391,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a5d82478c2650d74",
+      "vector": [
+        -0.22907,
+        0.059806,
+        -0.01467,
+        -0.089145,
+        0.050779,
+        -0.082375,
+        -0.174906,
+        0.104943,
+        -0.066577,
+        0.222299,
+        -0.287748,
+        0.073348,
+        -0.287748,
+        0.10043,
+        -0.269693,
+        -0.046265,
+        0.005642,
+        -0.206502,
+        -0.244868,
+        -0.073348,
+        -0.267436,
+        0.27195,
+        -0.226813,
+        0.163621,
+        0.012413,
+        -0.039495,
+        -0.132026,
+        -0.22907,
+        0.208758,
+        0.02144,
+        0.22907,
+        -0.274207
+      ]
+    },
+    {
+      "path": "artifacts/arena/o20r_effect_time_loaded_process_currentness/RESULT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2797,
+      "lines": 52,
+      "tokens_est": 700,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3025e5af9a8310d2",
+      "vector": [
+        -0.117618,
+        0.161898,
+        0.006919,
+        0.065036,
+        -0.208945,
+        -0.112083,
+        0.006919,
+        -0.076106,
+        0.092711,
+        -0.25876,
+        0.2809,
+        0.25876,
+        0.2809,
+        0.073338,
+        -0.175735,
+        0.112083,
+        0.076106,
+        0.056733,
+        0.253225,
+        -0.023524,
+        -0.023524,
+        -0.062268,
+        -0.123153,
+        -0.197875,
+        0.172968,
+        -0.253225,
+        0.128688,
+        0.255992,
+        0.308574,
+        0.233852,
+        0.26983,
+        0.114851
+      ]
+    },
+    {
+      "path": "artifacts/arena/o20r_loaded_process_currentness/FROZEN_PROPOSALS_O20R.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1905,
+      "lines": 27,
+      "tokens_est": 477,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8290d64ec22fff78",
+      "vector": [
+        -0.057364,
+        -0.092485,
+        -0.015219,
+        -0.151019,
+        -0.296186,
+        0.115899,
+        -0.293844,
+        -0.263406,
+        0.113557,
+        -0.200189,
+        -0.026926,
+        0.232968,
+        0.019902,
+        0.268089,
+        0.230627,
+        0.291503,
+        0.122923,
+        -0.151019,
+        0.18614,
+        0.019902,
+        0.188482,
+        -0.108875,
+        -0.010536,
+        0.183799,
+        0.211896,
+        0.108875,
+        -0.11824,
+        -0.043316,
+        -0.298527,
+        0.225944,
+        -0.122923,
+        0.087802
       ]
     },
     {
@@ -77448,6 +77750,53 @@
       ]
     },
     {
+      "path": "docs/arena/O20R_EFFECT_TIME_LOADED_PROCESS_CURRENTNESS.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1409,
+      "lines": 15,
+      "tokens_est": 352,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3363a8636e0620b0",
+      "vector": [
+        0.143037,
+        0.296892,
+        0.231985,
+        -0.207945,
+        -0.118997,
+        0.167077,
+        0.176693,
+        -0.205541,
+        -0.049282,
+        0.169481,
+        0.025242,
+        0.179097,
+        -0.147845,
+        -0.244004,
+        -0.001202,
+        0.061302,
+        -0.210349,
+        0.087745,
+        -0.01803,
+        -0.102169,
+        0.159865,
+        -0.058898,
+        0.171885,
+        -0.198329,
+        0.205541,
+        0.210349,
+        -0.001202,
+        0.287276,
+        -0.296892,
+        -0.070918,
+        -0.183905,
+        -0.270448
+      ]
+    },
+    {
       "path": "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -104994,6 +105343,53 @@
       ]
     },
     {
+      "path": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4915,
+      "lines": 64,
+      "tokens_est": 1229,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7e9aa0060bfab76c",
+      "vector": [
+        -0.284687,
+        -0.185996,
+        0.02404,
+        -0.082243,
+        -0.188526,
+        0.150568,
+        0.06706,
+        -0.234076,
+        0.039224,
+        -0.236607,
+        0.006326,
+        0.203709,
+        -0.178404,
+        0.064529,
+        -0.135384,
+        -0.25432,
+        0.163221,
+        -0.11261,
+        0.307462,
+        0.011387,
+        0.256851,
+        -0.20624,
+        0.203709,
+        -0.097426,
+        -0.279626,
+        0.049346,
+        0.117671,
+        -0.153098,
+        -0.142976,
+        -0.183465,
+        -0.044285,
+        -0.272034
+      ]
+    },
+    {
       "path": "tests/test_frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -105793,6 +106189,53 @@
       ]
     },
     {
+      "path": "tools/arena/effect_time_loaded_process_currentness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6821,
+      "lines": 143,
+      "tokens_est": 1706,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f0d236fb89710737",
+      "vector": [
+        0.10315,
+        -0.141689,
+        0.257308,
+        0.180229,
+        -0.021537,
+        0.153025,
+        -0.259575,
+        0.116752,
+        -0.245973,
+        -0.207433,
+        -0.094082,
+        -0.055542,
+        0.218769,
+        0.230104,
+        0.214234,
+        0.189297,
+        0.046474,
+        0.243706,
+        -0.057809,
+        -0.085014,
+        -0.223303,
+        -0.261842,
+        -0.128087,
+        0.091815,
+        -0.284512,
+        -0.109951,
+        0.200632,
+        0.023804,
+        -0.282245,
+        -0.073679,
+        0.150758,
+        -0.10315
+      ]
+    },
+    {
       "path": "tools/arena/frontier27_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -106213,6 +106656,194 @@
         -0.267185,
         -0.238937,
         0.213042
+      ]
+    },
+    {
+      "path": "tools/arena/o20r_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4122,
+      "lines": 62,
+      "tokens_est": 1031,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ea80fb6be7c05e88",
+      "vector": [
+        -0.036666,
+        -0.233902,
+        -0.213673,
+        0.160571,
+        -0.21873,
+        0.064481,
+        -0.211144,
+        0.031608,
+        0.021494,
+        -0.195972,
+        -0.27689,
+        0.127698,
+        -0.102411,
+        0.188386,
+        -0.284476,
+        0.099883,
+        -0.039194,
+        -0.307234,
+        -0.021494,
+        0.04678,
+        -0.20103,
+        0.281947,
+        0.266775,
+        -0.087239,
+        0.125169,
+        -0.261718,
+        0.069539,
+        -0.178271,
+        -0.094825,
+        -0.054366,
+        -0.1808,
+        -0.208616
+      ]
+    },
+    {
+      "path": "tools/arena/o20r_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1617,
+      "lines": 18,
+      "tokens_est": 405,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1df94d72ae2ed327",
+      "vector": [
+        0.188723,
+        -0.160028,
+        -0.164443,
+        -0.023176,
+        0.0607,
+        0.023176,
+        -0.133541,
+        0.122504,
+        0.109261,
+        -0.129126,
+        -0.221832,
+        -0.201967,
+        -0.237283,
+        -0.014347,
+        0.184308,
+        -0.281429,
+        0.120297,
+        0.217418,
+        0.226247,
+        -0.080566,
+        0.24832,
+        -0.082773,
+        0.237283,
+        0.168857,
+        0.069529,
+        -0.107053,
+        -0.221832,
+        -0.232869,
+        -0.268185,
+        -0.2726,
+        0.051871,
+        0.210796
+      ]
+    },
+    {
+      "path": "tools/arena/o20r_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 802,
+      "lines": 11,
+      "tokens_est": 201,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "502ead065b832024",
+      "vector": [
+        -0.308429,
+        0.238999,
+        -0.273714,
+        -0.129514,
+        0.001335,
+        0.182921,
+        0.295077,
+        0.300418,
+        0.070765,
+        0.004006,
+        0.10281,
+        -0.113491,
+        -0.209625,
+        -0.137525,
+        -0.257692,
+        -0.188262,
+        -0.001335,
+        0.10815,
+        0.297748,
+        -0.001335,
+        -0.070765,
+        0.065424,
+        -0.124173,
+        -0.038721,
+        0.17224,
+        0.110821,
+        -0.03605,
+        -0.060084,
+        -0.214966,
+        -0.319111,
+        -0.17491,
+        -0.006676
+      ]
+    },
+    {
+      "path": "tools/arena/o20r_sweep13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 975,
+      "lines": 12,
+      "tokens_est": 244,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1474ae7eb9becca6",
+      "vector": [
+        0.304029,
+        -0.065237,
+        0.016002,
+        -0.092316,
+        -0.286796,
+        -0.001231,
+        0.26464,
+        0.094778,
+        -0.210481,
+        0.254793,
+        0.011078,
+        0.01354,
+        -0.13909,
+        0.18094,
+        -0.301567,
+        -0.003693,
+        0.198172,
+        -0.267102,
+        0.003693,
+        0.227714,
+        0.230176,
+        -0.067699,
+        -0.040619,
+        -0.188325,
+        -0.168631,
+        -0.092316,
+        -0.116934,
+        -0.087393,
+        0.308952,
+        -0.18094,
+        -0.166169,
+        -0.09724
       ]
     },
     {
@@ -108764,7 +109395,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788790511,
+  "generated_at_unix": 1788794405,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108919,6 +109550,7 @@
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
       ".github/workflows/o19r-transactional-shared-truth-proof.yml",
+      ".github/workflows/o20r-exact-head-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -109048,6 +109680,11 @@
       "artifacts/arena/o19r_transactional_shared_truth/FROZEN_PROPOSALS_O19R.json",
       "artifacts/arena/o19r_transactional_shared_truth/PROOF_RECEIPT_O19R.json",
       "artifacts/arena/o19r_transactional_shared_truth/RESULT_O19R.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/EXTERNAL_COORDINATES.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/FROZEN_ALTERNATIVES.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/PROOF_RECEIPT.json",
+      "artifacts/arena/o20r_effect_time_loaded_process_currentness/RESULT.json",
+      "artifacts/arena/o20r_loaded_process_currentness/FROZEN_PROPOSALS_O20R.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -109882,6 +110519,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/O20R_EFFECT_TIME_LOADED_PROCESS_CURRENTNESS.md",
       "docs/arena/O5_CONSEQUENCE_ADMISSION_KERNEL_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
@@ -110410,6 +111048,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_consequence_admission_kernel.py",
+      "tests/test_effect_time_loaded_process_currentness_hosted.py",
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -110427,6 +111066,7 @@
       "tools/arena/attenuated_stable_operation_delegation.py",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/effect_return_atomicity.py",
+      "tools/arena/effect_time_loaded_process_currentness.py",
       "tools/arena/frontier27_runtime.py",
       "tools/arena/o18_campaign.py",
       "tools/arena/o18_hs1000.py",
@@ -110436,6 +111076,10 @@
       "tools/arena/o19r_hs1000.py",
       "tools/arena/o19r_lattice8.py",
       "tools/arena/o19r_sweep13d.py",
+      "tools/arena/o20r_campaign.py",
+      "tools/arena/o20r_hs1000.py",
+      "tools/arena/o20r_lattice8.py",
+      "tools/arena/o20r_sweep13d.py",
       "tools/arena/transactional_shared_truth_commit.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
@@ -267956,6 +268600,276 @@
         "file_digest8": "f087b81e7b3ac934"
       },
       {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#class:O20RTests:1ba2fe7bd12e4ef1",
+        "name": "O20RTests",
+        "kind": "class",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 11,
+        "end_line": 61,
+        "signature_hash": "1484ce415ce2dc75",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#function:base:c942788fe7d11862",
+        "name": "base",
+        "kind": "function",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "f3e679e8284ecbfb",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_authority_ceiling:b2db7cb809b57641",
+        "name": "O20RTests.test_authority_ceiling",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "1714946bf0778d30",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_dispatch_move:8b9434fbd9082ab6",
+        "name": "O20RTests.test_dispatch_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "914998b7c1d8605e",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_host_move:83b62a0c68076ac6",
+        "name": "O20RTests.test_host_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "d9818d47316ac0a3",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_immutable_cut_move:1816663269bd2486",
+        "name": "O20RTests.test_immutable_cut_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "295ed297030d0196",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_immutable_cut_stale:fc89c1b07511a218",
+        "name": "O20RTests.test_immutable_cut_stale",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "fd6b0701219ba93a",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_immutable_valid:10d84450850038ba",
+        "name": "O20RTests.test_immutable_valid",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "4f8ae9e6d812e906",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_expired:484878cc42b4cf1f",
+        "name": "O20RTests.test_installed_expired",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "86b8e29ee22f694b",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_not_current:2a5b6db1f2a735c6",
+        "name": "O20RTests.test_installed_not_current",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "b936cf11728fda1c",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_root_move:9524fca96c006f76",
+        "name": "O20RTests.test_installed_root_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "ab97b9cfa5f52d52",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_unauthenticated:b4aaa05fbd108a65",
+        "name": "O20RTests.test_installed_unauthenticated",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "818ad1da7c7cf059",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_load_generation_move:6569b8143cdbd184",
+        "name": "O20RTests.test_load_generation_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "ac70376dad9f10af",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_loaded_units_move:15d3f2e7452cbae7",
+        "name": "O20RTests.test_loaded_units_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "e16c288fbf5def72",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_malformed_time:e50269e389e7bfe8",
+        "name": "O20RTests.test_malformed_time",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "b15abbc35274ddaf",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_mutation_generation_move:0fa4d73f169e9a57",
+        "name": "O20RTests.test_mutation_generation_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "70e3a80e75e30950",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_population_incomplete:8b1bb8a135a30c5e",
+        "name": "O20RTests.test_population_incomplete",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "0a9de159216c2958",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_population_root_move:96d746aeeea7c751",
+        "name": "O20RTests.test_population_root_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "44a6c54cb0863844",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_expired:3ea377ff410af6aa",
+        "name": "O20RTests.test_process_expired",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "5788a4a6b27fe4fa",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_generation_move:13799125ac80e722",
+        "name": "O20RTests.test_process_generation_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "410083894cc969af",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_id_restart:1e5dce6515f690cd",
+        "name": "O20RTests.test_process_id_restart",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "5e010125b69a4eba",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_start_aba:c1582ff9b0be097a",
+        "name": "O20RTests.test_process_start_aba",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "ba1c20748e84f5ef",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_unauthenticated:d12c2d17d4bbae9c",
+        "name": "O20RTests.test_process_unauthenticated",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "ec0160c2fd855fc9",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_unobservable_mutation_holds:e594da06f34e0182",
+        "name": "O20RTests.test_unobservable_mutation_holds",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "b98e6d592a2be13f",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_unresolved_lazy_unit:4bb23023cd94460d",
+        "name": "O20RTests.test_unresolved_lazy_unit",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "e6d8193c85c378f0",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_versioned_valid:184756de200b3477",
+        "name": "O20RTests.test_versioned_valid",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "e89e0b098b08bec0",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_worker_selection_move:d486eeb88b973f67",
+        "name": "O20RTests.test_worker_selection_move",
+        "kind": "method",
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "ee94f7f3cbdca92a",
+        "file_digest8": "7e9aa0060bfab76c"
+      },
+      {
         "semantic_id": "tests/test_frontier27_runtime.py#class:T:d22573cdc0227be9",
         "name": "T",
         "kind": "class",
@@ -270556,6 +271470,126 @@
         "file_digest8": "f867ba406ee45857"
       },
       {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:AtUseObservation:7b892d7ba080092b",
+        "name": "AtUseObservation",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 74,
+        "end_line": 88,
+        "signature_hash": "4214cfc71b14d3d7",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Decision:a64674c43d355396",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 91,
+        "end_line": 100,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Disposition:9ddb38ddfe3aaf4b",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 17,
+        "end_line": 19,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:InstalledRuntimeAttestation:499f25f59f70a3ce",
+        "name": "InstalledRuntimeAttestation",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "a061e0a3a4f42397",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:LoadedProcessWitness:6aec458517d64fe2",
+        "name": "LoadedProcessWitness",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 32,
+        "end_line": 71,
+        "signature_hash": "1d989e603d868667",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:MutationModel:3a11c089a61893e5",
+        "name": "MutationModel",
+        "kind": "class",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "b997e4d4b7d1769f",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:decide:c90040d898e3dfac",
+        "name": "decide",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 106,
+        "end_line": 142,
+        "signature_hash": "1f8dd72eb8d750f7",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:digest:7dca12121e1213e4",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:installed_root:7a4f49f9179c3340",
+        "name": "installed_root",
+        "kind": "function",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "49867ce218d6ec11",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.binding_root:5d5c0b112bcd0bfd",
+        "name": "LoadedProcessWitness.binding_root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 53,
+        "end_line": 71,
+        "signature_hash": "8f6c876409ac77f8",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.loaded_units_root:0fccd18bbd944c79",
+        "name": "LoadedProcessWitness.loaded_units_root",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "e0c5f04e07a29504",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:decide.hold:68a5e162292797cf",
+        "name": "decide.hold",
+        "kind": "method",
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "line": 108,
+        "end_line": 108,
+        "signature_hash": "2ed02c47fa2448ff",
+        "file_digest8": "f0d236fb89710737"
+      },
+      {
         "semantic_id": "tools/arena/frontier27_runtime.py#class:CapabilityManifest:5d8e6d0f35ef9478",
         "name": "CapabilityManifest",
         "kind": "class",
@@ -271534,6 +272568,126 @@
         "end_line": 10,
         "signature_hash": "26799ab4ad82cbfb",
         "file_digest8": "ad4007e225f77df7"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_campaign.py#function:base:d8ed08862f7130f3",
+        "name": "base",
+        "kind": "function",
+        "file": "tools/arena/o20r_campaign.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "fc255db21ad827bd",
+        "file_digest8": "ea80fb6be7c05e88"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_campaign.py#function:installed_only:1694e2806b5eda07",
+        "name": "installed_only",
+        "kind": "function",
+        "file": "tools/arena/o20r_campaign.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "7871b3692d845ba9",
+        "file_digest8": "ea80fb6be7c05e88"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_campaign.py#function:load_time_only:3fe105ecf53921c6",
+        "name": "load_time_only",
+        "kind": "function",
+        "file": "tools/arena/o20r_campaign.py",
+        "line": 46,
+        "end_line": 49,
+        "signature_hash": "428725a03e4ef02e",
+        "file_digest8": "ea80fb6be7c05e88"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_campaign.py#function:oracle:a89e37e49e998178",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/o20r_campaign.py",
+        "line": 12,
+        "end_line": 25,
+        "signature_hash": "f7f5f4b577c42283",
+        "file_digest8": "ea80fb6be7c05e88"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_campaign.py#function:run:626b3ef200286efd",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o20r_campaign.py",
+        "line": 51,
+        "end_line": 60,
+        "signature_hash": "7948fa120ff468b2",
+        "file_digest8": "ea80fb6be7c05e88"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_campaign.py#function:scenario:522877274f0aacbc",
+        "name": "scenario",
+        "kind": "function",
+        "file": "tools/arena/o20r_campaign.py",
+        "line": 27,
+        "end_line": 41,
+        "signature_hash": "9a87e940967b9726",
+        "file_digest8": "ea80fb6be7c05e88"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_hs1000.py#function:h:ae6e2ea31f990622",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o20r_hs1000.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "1df94d72ae2ed327"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_hs1000.py#function:run:7e44ee4448d0b378",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o20r_hs1000.py",
+        "line": 6,
+        "end_line": 16,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "1df94d72ae2ed327"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_lattice8.py#function:h:baeb7785a6ffbce6",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o20r_lattice8.py",
+        "line": 4,
+        "end_line": 4,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "502ead065b832024"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_lattice8.py#function:run:989d75a9bf6a8515",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o20r_lattice8.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "502ead065b832024"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_sweep13d.py#function:h:cdd043c6fe8b99b1",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o20r_sweep13d.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "1474ae7eb9becca6"
+      },
+      {
+        "semantic_id": "tools/arena/o20r_sweep13d.py#function:run:e5e7680ca91d3c38",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o20r_sweep13d.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "1474ae7eb9becca6"
       },
       {
         "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:AttemptAdmission:39889d4458349d45",
@@ -275896,8 +277050,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "44693123d2d595e41b70e3be92644813",
-    "payload_hash": "aeb5eab649934e7a66ae294553f79db3"
+    "record_fingerprint": "1f5aa78633e82098dc9544a7ee13afe0",
+    "payload_hash": "1591966b1e03bd9ea1f02efac779123b"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -275910,16 +277064,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1715,
-      "bytes": 26773709,
-      "tokens_est": 6683797,
+      "files": 1728,
+      "bytes": 26804863,
+      "tokens_est": 6691591,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 240,
+        "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1045,
-        "schema_or_lexicon": 292,
+        "python_module": 1051,
+        "schema_or_lexicon": 298,
         "support_file": 53
       }
     },
@@ -276606,16 +277760,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1715,
-    "total_bytes": 26773709,
-    "text_tokens_est": 6683797,
+    "file_count": 1728,
+    "total_bytes": 26804863,
+    "text_tokens_est": 6691591,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 240,
+      "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1045,
-      "schema_or_lexicon": 292,
+      "python_module": 1051,
+      "schema_or_lexicon": 298,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -277918,6 +279072,38 @@
         "signature_hash": "26799ab4ad82cbfb"
       },
       {
+        "file": "tools/arena/o20r_campaign.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 60,
+        "semantic_id": "tools/arena/o20r_campaign.py#function:run:626b3ef200286efd",
+        "signature_hash": "7948fa120ff468b2"
+      },
+      {
+        "file": "tools/arena/o20r_hs1000.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 16,
+        "semantic_id": "tools/arena/o20r_hs1000.py#function:run:7e44ee4448d0b378",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o20r_lattice8.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/arena/o20r_lattice8.py#function:run:989d75a9bf6a8515",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o20r_sweep13d.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "tools/arena/o20r_sweep13d.py#function:run:e5e7680ca91d3c38",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 28,
@@ -278023,6 +279209,14 @@
         "line": 9,
         "end_line": 10,
         "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 19,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Disposition:9ddb38ddfe3aaf4b",
         "signature_hash": "9386d60514f2578d"
       },
       {
@@ -294538,6 +295732,14 @@
         "end_line": 14,
         "semantic_id": "tools/arena/effect_return_atomicity.py#function:digest:3035af4e3c569183",
         "signature_hash": "ca4017d839035e05"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:digest:7dca12121e1213e4",
+        "signature_hash": "6845cd2b39857deb"
       },
       {
         "file": "tools/arena/frontier27_runtime.py",
@@ -432036,6 +433238,300 @@
         "signature_hash": "6077ba9b80f59a19"
       }
     ],
+    "base": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#function:base:c942788fe7d11862",
+        "signature_hash": "f3e679e8284ecbfb"
+      },
+      {
+        "file": "tools/arena/o18_campaign.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": "tools/arena/o18_campaign.py#function:base:ffab7ff9f32f59c7",
+        "signature_hash": "fc255db21ad827bd"
+      },
+      {
+        "file": "tools/arena/o20r_campaign.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "tools/arena/o20r_campaign.py#function:base:d8ed08862f7130f3",
+        "signature_hash": "fc255db21ad827bd"
+      },
+      {
+        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 19,
+        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:base:797ccecf323f25be",
+        "signature_hash": "fc255db21ad827bd"
+      }
+    ],
+    "O20RTests": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 61,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#class:O20RTests:1ba2fe7bd12e4ef1",
+        "signature_hash": "1484ce415ce2dc75"
+      }
+    ],
+    "O20RTests.test_versioned_valid": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_versioned_valid:184756de200b3477",
+        "signature_hash": "e89e0b098b08bec0"
+      }
+    ],
+    "O20RTests.test_immutable_valid": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_immutable_valid:10d84450850038ba",
+        "signature_hash": "4f8ae9e6d812e906"
+      }
+    ],
+    "O20RTests.test_installed_not_current": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_not_current:2a5b6db1f2a735c6",
+        "signature_hash": "b936cf11728fda1c"
+      }
+    ],
+    "O20RTests.test_installed_unauthenticated": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_unauthenticated:b4aaa05fbd108a65",
+        "signature_hash": "818ad1da7c7cf059"
+      }
+    ],
+    "O20RTests.test_installed_expired": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_expired:484878cc42b4cf1f",
+        "signature_hash": "86b8e29ee22f694b"
+      }
+    ],
+    "O20RTests.test_process_unauthenticated": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_unauthenticated:d12c2d17d4bbae9c",
+        "signature_hash": "ec0160c2fd855fc9"
+      }
+    ],
+    "O20RTests.test_process_expired": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_expired:3ea377ff410af6aa",
+        "signature_hash": "5788a4a6b27fe4fa"
+      }
+    ],
+    "O20RTests.test_host_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_host_move:83b62a0c68076ac6",
+        "signature_hash": "d9818d47316ac0a3"
+      }
+    ],
+    "O20RTests.test_installed_root_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_installed_root_move:9524fca96c006f76",
+        "signature_hash": "ab97b9cfa5f52d52"
+      }
+    ],
+    "O20RTests.test_unresolved_lazy_unit": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_unresolved_lazy_unit:4bb23023cd94460d",
+        "signature_hash": "e6d8193c85c378f0"
+      }
+    ],
+    "O20RTests.test_population_incomplete": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_population_incomplete:8b1bb8a135a30c5e",
+        "signature_hash": "0a9de159216c2958"
+      }
+    ],
+    "O20RTests.test_worker_selection_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_worker_selection_move:d486eeb88b973f67",
+        "signature_hash": "ee94f7f3cbdca92a"
+      }
+    ],
+    "O20RTests.test_population_root_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_population_root_move:96d746aeeea7c751",
+        "signature_hash": "44a6c54cb0863844"
+      }
+    ],
+    "O20RTests.test_process_id_restart": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_id_restart:1e5dce6515f690cd",
+        "signature_hash": "5e010125b69a4eba"
+      }
+    ],
+    "O20RTests.test_process_start_aba": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_start_aba:c1582ff9b0be097a",
+        "signature_hash": "ba1c20748e84f5ef"
+      }
+    ],
+    "O20RTests.test_process_generation_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_process_generation_move:13799125ac80e722",
+        "signature_hash": "410083894cc969af"
+      }
+    ],
+    "O20RTests.test_load_generation_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_load_generation_move:6569b8143cdbd184",
+        "signature_hash": "ac70376dad9f10af"
+      }
+    ],
+    "O20RTests.test_loaded_units_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_loaded_units_move:15d3f2e7452cbae7",
+        "signature_hash": "e16c288fbf5def72"
+      }
+    ],
+    "O20RTests.test_dispatch_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_dispatch_move:8b9434fbd9082ab6",
+        "signature_hash": "914998b7c1d8605e"
+      }
+    ],
+    "O20RTests.test_mutation_generation_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_mutation_generation_move:0fa4d73f169e9a57",
+        "signature_hash": "70e3a80e75e30950"
+      }
+    ],
+    "O20RTests.test_unobservable_mutation_holds": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_unobservable_mutation_holds:e594da06f34e0182",
+        "signature_hash": "b98e6d592a2be13f"
+      }
+    ],
+    "O20RTests.test_immutable_cut_move": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_immutable_cut_move:1816663269bd2486",
+        "signature_hash": "295ed297030d0196"
+      }
+    ],
+    "O20RTests.test_immutable_cut_stale": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_immutable_cut_stale:fc89c1b07511a218",
+        "signature_hash": "fd6b0701219ba93a"
+      }
+    ],
+    "O20RTests.test_malformed_time": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_malformed_time:e50269e389e7bfe8",
+        "signature_hash": "b15abbc35274ddaf"
+      }
+    ],
+    "O20RTests.test_authority_ceiling": [
+      {
+        "file": "tests/test_effect_time_loaded_process_currentness_hosted.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tests/test_effect_time_loaded_process_currentness_hosted.py#method:O20RTests.test_authority_ceiling:b2db7cb809b57641",
+        "signature_hash": "1714946bf0778d30"
+      }
+    ],
     "T.test_00_manifest": [
       {
         "file": "tests/test_frontier27_runtime.py",
@@ -433922,6 +435418,14 @@
         "signature_hash": "d6a166dc8cfde9f6"
       },
       {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:Decision:a64674c43d355396",
+        "signature_hash": "fc4b98c490ac6e3c"
+      },
+      {
         "file": "tools/arena/transactional_shared_truth_commit.py",
         "kind": "class",
         "line": 47,
@@ -433960,6 +435464,14 @@
         "signature_hash": "306b985492635361"
       },
       {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 142,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:decide:c90040d898e3dfac",
+        "signature_hash": "1f8dd72eb8d750f7"
+      },
+      {
         "file": "tools/project006/o17_lattice8.py",
         "kind": "function",
         "line": 17,
@@ -433975,6 +435487,14 @@
         "line": 35,
         "end_line": 35,
         "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#method:decide.hold:9f985eecf31e7bac",
+        "signature_hash": "2ed02c47fa2448ff"
+      },
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 108,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:decide.hold:68a5e162292797cf",
         "signature_hash": "2ed02c47fa2448ff"
       }
     ],
@@ -434512,6 +436032,76 @@
         "end_line": 334,
         "semantic_id": "tools/arena/effect_return_atomicity.py#function:hard13d_erac:d71e32e2e189fe6d",
         "signature_hash": "2685a603736596df"
+      }
+    ],
+    "MutationModel": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:MutationModel:3a11c089a61893e5",
+        "signature_hash": "b997e4d4b7d1769f"
+      }
+    ],
+    "InstalledRuntimeAttestation": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:InstalledRuntimeAttestation:499f25f59f70a3ce",
+        "signature_hash": "a061e0a3a4f42397"
+      }
+    ],
+    "LoadedProcessWitness": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 71,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:LoadedProcessWitness:6aec458517d64fe2",
+        "signature_hash": "1d989e603d868667"
+      }
+    ],
+    "LoadedProcessWitness.loaded_units_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.loaded_units_root:0fccd18bbd944c79",
+        "signature_hash": "e0c5f04e07a29504"
+      }
+    ],
+    "LoadedProcessWitness.binding_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 71,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#method:LoadedProcessWitness.binding_root:5d5c0b112bcd0bfd",
+        "signature_hash": "8f6c876409ac77f8"
+      }
+    ],
+    "AtUseObservation": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 88,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#class:AtUseObservation:7b892d7ba080092b",
+        "signature_hash": "4214cfc71b14d3d7"
+      }
+    ],
+    "installed_root": [
+      {
+        "file": "tools/arena/effect_time_loaded_process_currentness.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/arena/effect_time_loaded_process_currentness.py#function:installed_root:7a4f49f9179c3340",
+        "signature_hash": "49867ce218d6ec11"
       }
     ],
     "stable": [
@@ -435294,24 +436884,6 @@
         "signature_hash": "0d9f06875821b0a4"
       }
     ],
-    "base": [
-      {
-        "file": "tools/arena/o18_campaign.py",
-        "kind": "function",
-        "line": 6,
-        "end_line": 7,
-        "semantic_id": "tools/arena/o18_campaign.py#function:base:ffab7ff9f32f59c7",
-        "signature_hash": "fc255db21ad827bd"
-      },
-      {
-        "file": "tools/project006/campaign_transport_source_identity_bridge.py",
-        "kind": "function",
-        "line": 12,
-        "end_line": 19,
-        "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:base:797ccecf323f25be",
-        "signature_hash": "fc255db21ad827bd"
-      }
-    ],
     "h": [
       {
         "file": "tools/arena/o18_hs1000.py",
@@ -435346,6 +436918,30 @@
         "signature_hash": "8ddde6051957f4eb"
       },
       {
+        "file": "tools/arena/o20r_hs1000.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/o20r_hs1000.py#function:h:ae6e2ea31f990622",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/arena/o20r_lattice8.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": "tools/arena/o20r_lattice8.py#function:h:baeb7785a6ffbce6",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/arena/o20r_sweep13d.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/o20r_sweep13d.py#function:h:cdd043c6fe8b99b1",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
         "file": "tools/project006/mc_o14_hs1000.py",
         "kind": "function",
         "line": 5,
@@ -435372,6 +436968,14 @@
         "signature_hash": "4254d9fe748f45b7"
       },
       {
+        "file": "tools/arena/o20r_campaign.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 25,
+        "semantic_id": "tools/arena/o20r_campaign.py#function:oracle:a89e37e49e998178",
+        "signature_hash": "f7f5f4b577c42283"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 9,
@@ -435396,6 +437000,34 @@
         "end_line": 43,
         "semantic_id": "tools/arena/o19r_campaign.py#function:scenario:bb135d2f16fac029",
         "signature_hash": "9a87e940967b9726"
+      },
+      {
+        "file": "tools/arena/o20r_campaign.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 41,
+        "semantic_id": "tools/arena/o20r_campaign.py#function:scenario:522877274f0aacbc",
+        "signature_hash": "9a87e940967b9726"
+      }
+    ],
+    "installed_only": [
+      {
+        "file": "tools/arena/o20r_campaign.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/arena/o20r_campaign.py#function:installed_only:1694e2806b5eda07",
+        "signature_hash": "7871b3692d845ba9"
+      }
+    ],
+    "load_time_only": [
+      {
+        "file": "tools/arena/o20r_campaign.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 49,
+        "semantic_id": "tools/arena/o20r_campaign.py#function:load_time_only:3fe105ecf53921c6",
+        "signature_hash": "428725a03e4ef02e"
       }
     ],
     "CommitMode": [
