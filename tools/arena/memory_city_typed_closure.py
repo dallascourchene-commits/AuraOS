@@ -6,7 +6,8 @@ from typing import Iterable
 from memory_city_navigator import NavigatorError, digest
 from memory_city_contingent_hydration import (
     ContingentHydrationStrategy, DemandBranch, HydrationItem, InvariantSupport,
-    StrategyDisposition, compile_contingent_hydration, validate_strategy_at_use,
+    StrategyDisposition, compile_contingent_hydration, invariant_components,
+    validate_strategy_at_use,
 )
 
 D0='D0_NONPROMOTING'
@@ -69,6 +70,7 @@ class TypedClosureUseDecision:
 
 
 def directed_descendants(item_ids:Iterable[str], graph:InfluenceGraph, universe:Iterable[str])->tuple[str,...]:
+    """Raw item-level directed reachability retained as a diagnostic baseline."""
     universe=set(universe); starts=set(item_ids)
     if not starts.issubset(universe): raise NavigatorError('changed evidence references unknown item')
     adj={x:set() for x in universe}
@@ -83,6 +85,32 @@ def directed_descendants(item_ids:Iterable[str], graph:InfluenceGraph, universe:
     return tuple(sorted(seen))
 
 
+def typed_reproof_descendants(item_ids:Iterable[str], graph:InfluenceGraph,
+                              support:InvariantSupport, universe:Iterable[str])->tuple[str,...]:
+    """Return the hard-component-seeded directed reproof closure.
+
+    Hard-invariant support components are indivisible reproof units. Directed
+    influence edges are lifted between those components and retain direction.
+    Cycles therefore become reachable reproof SCCs without rewriting support
+    identity or turning influence into an undirected hydration relation.
+    """
+    universe=tuple(sorted(set(universe))); starts=set(item_ids)
+    if not starts.issubset(set(universe)): raise NavigatorError('changed evidence references unknown item')
+    components=invariant_components(universe,support)
+    item_to_component={item:component for component in components for item in component}
+    adjacency={component:set() for component in components}
+    for a,b in graph.edges:
+        if a not in item_to_component or b not in item_to_component: raise NavigatorError('influence references unknown item')
+        source,target=item_to_component[a],item_to_component[b]
+        if source!=target: adjacency[source].add(target)
+    seen={item_to_component[x] for x in starts}; stack=sorted(seen,reverse=True)
+    while stack:
+        component=stack.pop()
+        for target in sorted(adjacency[component]):
+            if target not in seen: seen.add(target); stack.append(target)
+    return tuple(sorted(item for component in seen for item in component))
+
+
 def compile_typed_closure(
     items:tuple[HydrationItem,...], branches:tuple[DemandBranch,...], support:InvariantSupport,
     influence:InfluenceGraph, *, changed_evidence_item_ids:tuple[str,...], max_resident_bytes:int,
@@ -93,7 +121,7 @@ def compile_typed_closure(
     if not isinstance(transition_model_root,str) or not transition_model_root: raise NavigatorError('transition_model_root required')
     base=compile_contingent_hydration(items,branches,support,max_resident_bytes=max_resident_bytes,reveal_tick=reveal_tick,deadline_tick=deadline_tick)
     universe=tuple(x.item_id for x in items)
-    reproof=directed_descendants(changed_evidence_item_ids,influence,universe)
+    reproof=typed_reproof_descendants(changed_evidence_item_ids,influence,support,universe)
     disp=TypedClosureDisposition.READY; reason=''
     if base.disposition is not StrategyDisposition.READY:
         disp=TypedClosureDisposition.HOLD_BASE_HYDRATION; reason='base_hydration_not_ready'
@@ -119,7 +147,7 @@ def validate_typed_closure_at_use(cert:TypedClosureCertificate, *, branch_id:str
         return TypedClosureUseDecision(TypedClosureDisposition.HOLD_FUTURE_CONGRUENCE,branch_id,(),(), 'h0_requires_exact_transition_rebind')
     if cert.disposition is not TypedClosureDisposition.READY:
         return TypedClosureUseDecision(cert.disposition,branch_id,(),(),cert.reason)
-    return TypedClosureUseDecision(TypedClosureDisposition.READY,branch_id,base.hydrate_item_ids,cert.reproof_item_ids,'typed_support_hydration_plus_directed_reproof')
+    return TypedClosureUseDecision(TypedClosureDisposition.READY,branch_id,base.hydrate_item_ids,cert.reproof_item_ids,'typed_support_component_seeded_directed_reproof')
 
 
 def symmetrized_union_closure(starts:Iterable[str], support:InvariantSupport, influence:InfluenceGraph, universe:Iterable[str])->tuple[str,...]:
