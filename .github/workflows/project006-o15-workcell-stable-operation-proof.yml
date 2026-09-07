@@ -1,0 +1,73 @@
+name: Project006 O15 Workcell Stable Operation Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/project006/o15_reference/**"
+      - "tools/project006/o15_pr905_adapter.py"
+      - "tests/test_o15_pr905_interop.py"
+      - "artifacts/arena/project006_o15_workcell_stable_operation/**"
+      - ".github/workflows/project006-o15-workcell-stable-operation-proof.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact checkout identity
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.13"
+      - name: Run O15 reference and PR905 interop in three fresh venvs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD"
+          for i in 1 2 3; do
+            rm -rf ".venv-o15-$i"
+            python -m venv ".venv-o15-$i"
+            PY="$ROOT/.venv-o15-$i/bin/python"
+            PYTHONPATH="$ROOT" "$PY" tests/test_o15_pr905_interop.py -v
+            cd "$ROOT/tools/project006/o15_reference"
+            "$PY" test_o15.py -v
+            "$PY" campaign_o15.py > "$ROOT/o15-campaign-$i.json"
+            "$PY" hyperscale_o15.py > "$ROOT/o15-hyperscale-$i.json"
+            cd "$ROOT"
+          done
+          cmp o15-campaign-1.json o15-campaign-2.json
+          cmp o15-campaign-1.json o15-campaign-3.json
+          cmp o15-hyperscale-1.json o15-hyperscale-2.json
+          cmp o15-hyperscale-1.json o15-hyperscale-3.json
+          python - <<'PY'
+          import json
+          c=json.load(open('o15-campaign-1.json'))
+          h=json.load(open('o15-hyperscale-1.json'))
+          assert c['cases']==30000
+          assert c['oracle_mismatches']==0
+          assert c['unsafe_provider_candidates']==0
+          assert c['naive_retry_without_recovery']==3045
+          assert h['omega8']['states']==6561 and h['omega8']['keeper']==1
+          assert h['d13']['states']==1594323
+          assert h['d13']['hard_invalid_contextual_repairs']==0
+          assert h['hs1000']['raw_cells']==1000
+          assert h['hs1000']['consequence_groups']==100
+          assert h['hs1000']['claimed_breakthroughs']==0
+          PY
+          sha256sum tools/project006/o15_reference/o15_workcell_stable_operation.py | grep '^714aeef451ea6d0c089b389dc85bd5c86f55aa5bd144f6c10dafdfc04535ed8d '
+          sha256sum tools/project006/o15_reference/test_o15.py | grep '^4ba34c1a7eb8074bfc60eb6038cf88655a13a5d378817d72a1a845f0d21188cf '
+          sha256sum tools/project006/o15_reference/campaign_o15.py | grep '^c48f6921b476fd487aeb8d83f84d38f7f1cd86e0459eb63d9b2294b07545cc1f '
+          sha256sum tools/project006/o15_reference/hyperscale_o15.py | grep '^e4dac0baf98aac3c5d2744564d963d139c8ba890e6ae2ef9df5fb9ee59f375b0 '
+          git diff --exit-code
