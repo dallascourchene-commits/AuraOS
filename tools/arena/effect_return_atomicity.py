@@ -270,6 +270,15 @@ def _currentness_failure(intent: EffectIntent, currentness: ProviderActionCurren
 
 def decide_recovery(state: DurableEffectState, intent: EffectIntent, contract: EffectContract,
                     context: RecoveryContext, currentness: ProviderActionCurrentness | None) -> RecoveryDecision:
+    # Once a terminal local outcome exists, the system owes its outbound return.
+    # Later action currentness cannot retroactively erase an already-observed result.
+    if state.phase in (Phase.RESULT_OBSERVED, Phase.ERROR_TERMINAL):
+        return RecoveryDecision(Action.RETRY_RETURN_WRITER_ONLY,
+                                "TERMINAL_LOCAL_RESULT_EXISTS_DO_NOT_REEXECUTE_PROVIDER", state.intent_root)
+    if state.phase is Phase.RETURN_WRITTEN:
+        return RecoveryDecision(Action.NOOP_TERMINAL,
+                                "COMMAND_ALREADY_HAS_DURABLE_BOUND_RETURN", state.intent_root)
+
     if state.intent_root != intent.identity_root or context.current_intent_root != intent.identity_root:
         return RecoveryDecision(Action.HOLD_REBIND_REQUIRED, "INTENT_IDENTITY_MOVED", intent.identity_root)
     if state.contract_root != contract.contract_root or context.current_contract_root != contract.contract_root:
@@ -310,12 +319,6 @@ def decide_recovery(state: DurableEffectState, intent: EffectIntent, contract: E
             return RecoveryDecision(Action.QUERY_PROVIDER_STATUS, "RECONCILE_EXTERNAL_OPERATION_BEFORE_ANY_RESEND", intent.identity_root,
                                     currentness_root=currentness_root)
         return RecoveryDecision(Action.HOLD_COMPLETION_AMBIGUOUS, "NON_IDEMPOTENT_NONQUERYABLE_EFFECT_MAY_HAVE_ESCAPED", intent.identity_root,
-                                currentness_root=currentness_root)
-    if state.phase in (Phase.RESULT_OBSERVED, Phase.ERROR_TERMINAL):
-        return RecoveryDecision(Action.RETRY_RETURN_WRITER_ONLY, "TERMINAL_LOCAL_RESULT_EXISTS_DO_NOT_REEXECUTE_PROVIDER", intent.identity_root,
-                                currentness_root=currentness_root)
-    if state.phase is Phase.RETURN_WRITTEN:
-        return RecoveryDecision(Action.NOOP_TERMINAL, "COMMAND_ALREADY_HAS_DURABLE_BOUND_RETURN", intent.identity_root,
                                 currentness_root=currentness_root)
     raise AssertionError("unhandled phase")
 
