@@ -52,8 +52,11 @@ class CurrentEffectSubclassDecision:
     current_effect_handoff_root: str
     semantic_handoff_root: str
     current_read_use_root: str
+    read_owner_receipt_root: str
     effect_escalation_root: str
     mutation_snapshot_root: str
+    owner_evidence_root: str
+    verifier_receipt_root: str
     read_binding_root: str
     obligation_root: str
     intent_binding_root: str
@@ -66,9 +69,10 @@ class CurrentEffectSubclassDecision:
     def __post_init__(self) -> None:
         for field in (
             "current_effect_handoff_root", "semantic_handoff_root",
-            "current_read_use_root", "effect_escalation_root",
-            "mutation_snapshot_root", "read_binding_root", "obligation_root",
-            "intent_binding_root",
+            "current_read_use_root", "read_owner_receipt_root",
+            "effect_escalation_root", "mutation_snapshot_root",
+            "owner_evidence_root", "verifier_receipt_root",
+            "read_binding_root", "obligation_root", "intent_binding_root",
         ):
             _root(getattr(self, field), field)
         if self.authority_minted or self.mutation_authority or self.effect_authority or self.gate10:
@@ -89,6 +93,10 @@ def _mutation_snapshot_root(mutation: MutationBoundaryProjection, verification: 
         "expires_at": mutation.expires_at,
         "transition_authority_receipt_root": mutation.transition_authority_receipt_root,
         "resource_fence_receipt_root": mutation.resource_fence_receipt_root,
+        "verification_owner_evidence_root": verification.owner_evidence_root,
+        "verification_verifier_receipt_root": verification.verifier_receipt_root,
+        "verification_transition_authority_receipt_root": verification.transition_authority_receipt_root,
+        "verification_resource_fence_receipt_root": verification.resource_fence_receipt_root,
         "verification_now": verification.now,
     })
 
@@ -100,16 +108,20 @@ def _selected_child(plan: EffectRefinementPlan, read_binding_root: str, obligati
     return None
 
 
-def _decision(status, reason, *, semantic_root, current_read_root, escalation_root,
-              mutation_root, read_binding_root, obligation_root, intent_root):
+def _decision(status, reason, *, semantic_root, current_read_root, read_owner_root,
+              escalation_root, mutation_root, owner_evidence_root, verifier_receipt_root,
+              read_binding_root, obligation_root, intent_root):
     root = digest({
         "schema": SCHEMA,
         "status": status,
         "reason": reason,
         "semantic_handoff_root": semantic_root,
         "current_read_use_root": current_read_root,
+        "read_owner_receipt_root": read_owner_root,
         "effect_escalation_root": escalation_root,
         "mutation_snapshot_root": mutation_root,
+        "owner_evidence_root": owner_evidence_root,
+        "verifier_receipt_root": verifier_receipt_root,
         "read_binding_root": read_binding_root,
         "obligation_root": obligation_root,
         "intent_binding_root": intent_root,
@@ -119,8 +131,9 @@ def _decision(status, reason, *, semantic_root, current_read_root, escalation_ro
         "gate10": False,
     })
     return CurrentEffectSubclassDecision(
-        status, reason, root, semantic_root, current_read_root, escalation_root,
-        mutation_root, read_binding_root, obligation_root, intent_root,
+        status, reason, root, semantic_root, current_read_root, read_owner_root,
+        escalation_root, mutation_root, owner_evidence_root, verifier_receipt_root,
+        read_binding_root, obligation_root, intent_root,
     )
 
 
@@ -149,6 +162,7 @@ def compile_current_effect_subclass_handoff(
 
     semantic_root = semantic_handoff_root(cert)
     current_read_root = read_use_root(cert, use_decision)
+    read_owner_root = current_read.read_owner_receipt_root
     mutation_root = _mutation_snapshot_root(mutation, verification)
     intent_root = intent.binding_root
 
@@ -162,7 +176,9 @@ def compile_current_effect_subclass_handoff(
         return _decision(
             "HOLD_EFFECT_REFINEMENT_D0", binding_state,
             semantic_root=semantic_root, current_read_root=current_read_root,
-            escalation_root=placeholder, mutation_root=mutation_root,
+            read_owner_root=read_owner_root, escalation_root=placeholder,
+            mutation_root=mutation_root, owner_evidence_root=evidence.owner_evidence_root,
+            verifier_receipt_root=evidence.verifier_receipt_root,
             read_binding_root=read_binding_root, obligation_root=obligation_root,
             intent_root=intent_root,
         )
@@ -175,7 +191,9 @@ def compile_current_effect_subclass_handoff(
         return _decision(
             "REBIND_REQUIRED", handoff.reason,
             semantic_root=semantic_root, current_read_root=current_read_root,
-            escalation_root=escalation_root, mutation_root=mutation_root,
+            read_owner_root=read_owner_root, escalation_root=escalation_root,
+            mutation_root=mutation_root, owner_evidence_root=evidence.owner_evidence_root,
+            verifier_receipt_root=evidence.verifier_receipt_root,
             read_binding_root=read_binding_root, obligation_root=obligation_root,
             intent_root=intent_root,
         )
@@ -183,7 +201,9 @@ def compile_current_effect_subclass_handoff(
         return _decision(
             "HOLD_HANDOFF_D0", handoff.reason,
             semantic_root=semantic_root, current_read_root=current_read_root,
-            escalation_root=escalation_root, mutation_root=mutation_root,
+            read_owner_root=read_owner_root, escalation_root=escalation_root,
+            mutation_root=mutation_root, owner_evidence_root=evidence.owner_evidence_root,
+            verifier_receipt_root=evidence.verifier_receipt_root,
             read_binding_root=read_binding_root, obligation_root=obligation_root,
             intent_root=intent_root,
         )
@@ -192,7 +212,9 @@ def compile_current_effect_subclass_handoff(
         "READY_CURRENT_EFFECT_SUBCLASS_D0",
         "CURRENT_READ_EFFECT_SUBCLASS_AND_FENCE_CROSS_BOUND",
         semantic_root=semantic_root, current_read_root=current_read_root,
-        escalation_root=escalation_root, mutation_root=mutation_root,
+        read_owner_root=read_owner_root, escalation_root=escalation_root,
+        mutation_root=mutation_root, owner_evidence_root=evidence.owner_evidence_root,
+        verifier_receipt_root=evidence.verifier_receipt_root,
         read_binding_root=read_binding_root, obligation_root=obligation_root,
         intent_root=intent_root,
     )
