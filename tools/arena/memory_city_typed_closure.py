@@ -12,6 +12,7 @@ from memory_city_contingent_hydration import (
 
 D0='D0_NONPROMOTING'
 SCHEMA='AURA-MEMORY-CITY-TYPED-CLOSURE-v1'
+REPROOF_SEMANTICS='HARD_COMPONENT_SEEDED_DIRECTED_REPROOF-v1'
 
 class TypedClosureDisposition(str, Enum):
     READY='READY_D0'
@@ -20,6 +21,7 @@ class TypedClosureDisposition(str, Enum):
     HOLD_INFLUENCE_IDENTITY='HOLD_INFLUENCE_IDENTITY'
     HOLD_FUTURE_CONGRUENCE='HOLD_FUTURE_CONGRUENCE'
     HOLD_SUPPORT_IDENTITY='HOLD_SUPPORT_IDENTITY'
+    HOLD_REPROOF_SEMANTICS='HOLD_REPROOF_SEMANTICS'
 
 @dataclass(frozen=True)
 class InfluenceGraph:
@@ -56,6 +58,7 @@ class TypedClosureCertificate:
     authority:str=D0
     effect_authority:bool=False
     gate10:bool=False
+    reproof_semantics:str=''
 
 @dataclass(frozen=True)
 class TypedClosureUseDecision:
@@ -87,13 +90,7 @@ def directed_descendants(item_ids:Iterable[str], graph:InfluenceGraph, universe:
 
 def typed_reproof_descendants(item_ids:Iterable[str], graph:InfluenceGraph,
                               support:InvariantSupport, universe:Iterable[str])->tuple[str,...]:
-    """Return the hard-component-seeded directed reproof closure.
-
-    Hard-invariant support components are indivisible reproof units. Directed
-    influence edges are lifted between those components and retain direction.
-    Cycles therefore become reachable reproof SCCs without rewriting support
-    identity or turning influence into an undirected hydration relation.
-    """
+    """Return the hard-component-seeded directed reproof closure."""
     universe=tuple(sorted(set(universe))); starts=set(item_ids)
     if not starts.issubset(set(universe)): raise NavigatorError('changed evidence references unknown item')
     components=invariant_components(universe,support)
@@ -129,12 +126,14 @@ def compile_typed_closure(
         disp=TypedClosureDisposition.HOLD_INCOMPLETE_RELATION; reason='support_or_influence_completeness_unknown'
     elif horizon>0 and not future_congruence_root:
         disp=TypedClosureDisposition.HOLD_FUTURE_CONGRUENCE; reason='persistent_reuse_requires_future_congruence'
-    payload={'schema':SCHEMA,'disposition':disp.value,'base_receipt':base.receipt_root,'support_root':support.support_root,'influence_root':influence.influence_root,'reproof':list(reproof),'horizon':horizon,'transition_model_root':transition_model_root,'future_congruence_root':future_congruence_root,'support_complete':support_complete}
-    return TypedClosureCertificate(disp,base,support.support_root,influence.influence_root,reproof,horizon,transition_model_root,future_congruence_root,digest(payload),reason)
+    payload={'schema':SCHEMA,'disposition':disp.value,'base_receipt':base.receipt_root,'support_root':support.support_root,'influence_root':influence.influence_root,'reproof':list(reproof),'reproof_semantics':REPROOF_SEMANTICS,'horizon':horizon,'transition_model_root':transition_model_root,'future_congruence_root':future_congruence_root,'support_complete':support_complete}
+    return TypedClosureCertificate(disp,base,support.support_root,influence.influence_root,reproof,horizon,transition_model_root,future_congruence_root,digest(payload),reason,reproof_semantics=REPROOF_SEMANTICS)
 
 
 def validate_typed_closure_at_use(cert:TypedClosureCertificate, *, branch_id:str, support:InvariantSupport,
     influence:InfluenceGraph, transition_model_root:str, future_congruence_root:str|None=None)->TypedClosureUseDecision:
+    if cert.reproof_semantics!=REPROOF_SEMANTICS:
+        return TypedClosureUseDecision(TypedClosureDisposition.HOLD_REPROOF_SEMANTICS,branch_id,(),(), 'legacy_or_unknown_reproof_semantics')
     base=validate_strategy_at_use(cert.hydration,branch_id=branch_id,support=support)
     if base.disposition is not StrategyDisposition.READY:
         return TypedClosureUseDecision(TypedClosureDisposition.HOLD_SUPPORT_IDENTITY,branch_id,(),(),base.reason)
