@@ -64,22 +64,24 @@ def run(cases=10000):
         stats['legacy_item_only_underreproof']+=int(moved)
         stats['repair_smaller_than_legacy']+=int(bool(set(legacy)-set(cert.reproof_item_ids)))
 
+        # Bind the old vs repaired derived projection to the same concrete world.
         p=z(f'program{i%19}'); d=z(f'domain{i%23}'); g=i%7; world='w0'; world_root=z(f'world{i}'); trust=z(f'trust{i%31}')
         coverage=compile_coverage_certificate(program_root=p,sealed_domain_root=d,generation=g,obligations=(world,),positive=(PositiveTrace(world,p,d,g,z(f'trace{i}')),))
-        hyd=components(ids,support.hyperedges)[0]
+        hyd=components(ids,support.hyperedges)[0]  # arbitrary current hydration cut; projection test is reproof-focused
         old_projection_root=H({'support':support.support_root,'influence':influence.influence_root,'reproof':legacy})
         new_projection_root=H({'support':support.support_root,'influence':influence.influence_root,'reproof':expected})
         old_projection=ReadWorldProjection(world,world_root,hyd,legacy,trust,old_projection_root,True,())
         old_read=compile_read_consequence_certificate(coverage=coverage,projections=(old_projection,))
         use_new=validate_read_consequence_at_use(old_read,coverage=coverage,active_world_id=world,active_world_root=world_root,active_projection_root=new_projection_root,read_obligation_root=trust)
         stats['projection_bound_false_ready']+=int(moved and use_new.disposition is ReadConsequenceDisposition.READY)
-        stats['legacy_projection_unbound_false_ready']+=int(moved)
+        stats['legacy_projection_unbound_false_ready']+=int(moved)  # v1 ignored active projection receipt
         fresh_projection=ReadWorldProjection(world,world_root,hyd,expected,trust,new_projection_root,True,())
         fresh=compile_read_consequence_certificate(coverage=coverage,projections=(fresh_projection,))
         fresh_use=validate_read_consequence_at_use(fresh,coverage=coverage,active_world_id=world,active_world_root=world_root,active_projection_root=new_projection_root,read_obligation_root=trust)
         stats['fresh_recompiled_mismatch']+=int(fresh_use.disposition is not ReadConsequenceDisposition.READY)
         stats['consequence_root_failed_to_move']+=int(moved and fresh.consequence_root==old_read.consequence_root)
 
+        # K27 is a locator hint and cannot change the reproof result.
         mutated=tuple(HydrationItem(x.item_id,SourceSpanLocator(x.locator.source_id,x.locator.parent_export_sha256,x.locator.start_line,x.locator.end_line,x.locator.span_sha256,x.locator.span_bytes,tuple((v+13)%27 for v in x.locator.k27_hint)),x.duration_ticks) for x in items)
         cert2=compile_typed_closure(mutated,(branch,),support,influence,changed_evidence_item_ids=changed,max_resident_bytes=1000,reveal_tick=0,deadline_tick=100,transition_model_root='t')
         stats['k27_reproof_mismatch']+=int(cert2.reproof_item_ids!=cert.reproof_item_ids)
