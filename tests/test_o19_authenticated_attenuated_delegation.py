@@ -36,7 +36,7 @@ class O19Tests(unittest.TestCase):
         cu=cs[1].unsigned; cu['grant_root']=gs[1].grant_root; cu['generation']=1; cs[1]=sign_currentness(cu,CK['observer-2'])
         with self.assertRaises(AuthenticationError): run(op,gs,cs,a,u)
     def test_self_observer_rejected(self):
-        op,gs,cs,a,u=fixture(); cs[1]=replace(cs[1],observer='worker-b',signature='0'*64)
+        op,gs,cs,a,u=fixture(); x=cs[1].unsigned; x['observer']='worker-b'; x['signature']=''; cs[1]=replace(cs[1],observer='worker-b',signature='0'*64)
         with self.assertRaises(AuthenticationError): run(op,gs,cs,a,u)
     def test_owner_verifier_same_rejected(self):
         op,gs,cs,a,u=fixture(); x=a.unsigned; x['verifier']='domain-owner'; a=sign_admission(x,AOK['domain-owner'],AOK['domain-owner'])
