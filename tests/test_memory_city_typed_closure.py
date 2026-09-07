@@ -15,7 +15,17 @@ class TypedClosureTests(unittest.TestCase):
  def base(self):
   items=tuple(it(x) for x in 'abcd'); branches=(DemandBranch('A',('a',)),); support=InvariantSupport(1,(('a','b'),)); influence=InfluenceGraph(1,(('a','c'),('c','d'))); return items,branches,support,influence
  def test_separate_hydration_and_reproof(self):
-  i,b,s,g=self.base(); c=compile_typed_closure(i,b,s,g,changed_evidence_item_ids=('a',),max_resident_bytes=20,reveal_tick=0,deadline_tick=5,transition_model_root='t'); self.assertEqual(c.hydration.branch_plans[0].required_item_ids,('a','b')); self.assertEqual(c.reproof_item_ids,('a','c','d'))
+  i,b,s,g=self.base(); c=compile_typed_closure(i,b,s,g,changed_evidence_item_ids=('a',),max_resident_bytes=20,reveal_tick=0,deadline_tick=5,transition_model_root='t'); self.assertEqual(c.hydration.branch_plans[0].required_item_ids,('a','b')); self.assertEqual(c.reproof_item_ids,('a','b','c','d'))
+ def test_changed_support_peer_is_reproof_seed(self):
+  i,b,s,g=self.base(); self.assertEqual(typed_reproof_descendants(('a',),g,s,tuple(x.item_id for x in i)),('a','b','c','d')); self.assertEqual(directed_descendants(('a',),g,tuple(x.item_id for x in i)),('a','c','d'))
+ def test_influence_destination_expands_whole_hard_component(self):
+  i=tuple(it(x) for x in 'abcd'); s=InvariantSupport(1,(('c','d'),)); g=InfluenceGraph(1,(('a','c'),)); self.assertEqual(typed_reproof_descendants(('a',),g,s,tuple(x.item_id for x in i)),('a','c','d'))
+ def test_influence_direction_preserved_across_support_quotient(self):
+  i=tuple(it(x) for x in 'abc'); s=InvariantSupport(1,(('a','b'),)); g=InfluenceGraph(1,(('c','a'),)); self.assertEqual(typed_reproof_descendants(('a',),g,s,tuple(x.item_id for x in i)),('a','b'))
+ def test_directed_cycle_is_reproof_unit_not_support_identity_rewrite(self):
+  i=tuple(it(x) for x in 'abcd'); s=InvariantSupport(1,(('a','b'),)); g=InfluenceGraph(1,(('a','c'),('c','a'))); self.assertEqual(typed_reproof_descendants(('a',),g,s,tuple(x.item_id for x in i)),('a','b','c')); self.assertEqual(invariant_components(tuple(x.item_id for x in i),s),(('a','b'),('c',),('d',)))
+ def test_no_support_reduces_to_raw_directed_reachability(self):
+  i=tuple(it(x) for x in 'abcd'); s=InvariantSupport(1,()); g=InfluenceGraph(1,(('a','b'),('b','c'))); u=tuple(x.item_id for x in i); self.assertEqual(typed_reproof_descendants(('a',),g,s,u),directed_descendants(('a',),g,u))
  def test_support_only_misses_directed_descendants(self):
   i,b,s,g=self.base(); c=compile_typed_closure(i,b,s,g,changed_evidence_item_ids=('a',),max_resident_bytes=20,reveal_tick=0,deadline_tick=5,transition_model_root='t'); self.assertIn('d',c.reproof_item_ids); self.assertNotIn('d',c.hydration.branch_plans[0].required_item_ids)
  def test_symmetrized_union_overexpands(self):
