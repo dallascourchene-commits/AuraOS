@@ -36,11 +36,11 @@ class O20RTests(unittest.TestCase):
     def test_population_root_move(self):
         a,p,u=base(); self.assertEqual(decide(a,p,replace(u,serving_population_root="other")).reason,"SERVING_WORKER_SELECTION_MOVED")
     def test_process_id_restart(self):
-        a,p,u=base(); self.assertEqual(decide(a,p,replace(u,process_id="pid2")).reason,"PROCESS_INCARCATION_MOVED")
+        a,p,u=base(); self.assertEqual(decide(a,p,replace(u,process_id="pid2")).reason,"PROCESS_INCARNATION_MOVED")
     def test_process_start_aba(self):
-        a,p,u=base(); self.assertEqual(decide(a,p,replace(u,process_start_nonce="new-start")).reason,"PROCESS_INCARCATION_MOVED")
+        a,p,u=base(); self.assertEqual(decide(a,p,replace(u,process_start_nonce="new-start")).reason,"PROCESS_INCARNATION_MOVED")
     def test_process_generation_move(self):
-        a,p,u=base(); self.assertEqual(decide(a,p,replace(u,process_generation=4)).reason,"PROCESS_INCARCATION_MOVED")
+        a,p,u=base(); self.assertEqual(decide(a,p,replace(u,process_generation=4)).reason,"PROCESS_INCARNATION_MOVED")
     def test_load_generation_move(self):
         a,p,u=base(); self.assertEqual(decide(a,p,replace(u,load_generation=10)).reason,"LOAD_GENERATION_MOVED")
     def test_loaded_units_move(self):
