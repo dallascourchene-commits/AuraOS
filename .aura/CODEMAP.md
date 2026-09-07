@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1666
-- **total_bytes**: 26563581
-- **text_tokens_est**: 6631243
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 53}
+- **file_count**: 1671
+- **total_bytes**: 26579759
+- **text_tokens_est**: 6635290
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1017, 'schema_or_lexicon': 276, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1666,
+  "repo_file_count": 1671,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -197,6 +197,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
     ".github/workflows/project006-host-repair-r2.yml",
+    ".github/workflows/project006-o17-nonadmin-windows-liveness-proof.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
     ".github/workflows/render-four-tab-demo.yml",
@@ -296,6 +297,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/project006_o17_nonadmin_windows_liveness/PROOF_RECEIPT_O17.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1674,9 +1676,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/project006_consumer_outbox_wrapper.py",
+    "tools/project006/proof_windows_liveness_fallback_o17.py",
     "tools/project006/terminal_outbox.py",
     "tools/project006/test_terminal_outbox.py",
+    "tools/project006/test_windows_liveness_fallback.py",
     "tools/project006/test_windows_wake_broker.py",
+    "tools/project006/windows_liveness_contract.py",
     "tools/project006/windows_wake_broker.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1806,16 +1811,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1666,
-  "bytes": 26563581,
-  "tokens_est": 6631243,
+  "files": 1671,
+  "bytes": 26579759,
+  "tokens_est": 6635290,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1014,
-    "schema_or_lexicon": 274,
+    "python_module": 1017,
+    "schema_or_lexicon": 276,
     "support_file": 53
   }
 }
