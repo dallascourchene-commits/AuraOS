@@ -1,0 +1,73 @@
+name: Memory City O13 Current-Owner Effect Handoff Proof
+
+on:
+  push:
+    branches:
+      - arena/current-read-effect-handoff-o13-gpt56sol
+    paths:
+      - 'tools/arena/memory_city_effect_handoff_o13.py'
+      - 'tools/arena/campaign_memory_city_effect_handoff_o13.py'
+      - 'tools/arena/o13_effect_handoff_lattice.py'
+      - 'tools/arena/o13_effect_handoff_hs1000.py'
+      - 'tests/test_memory_city_effect_handoff_o13.py'
+      - '.github/workflows/memory-city-o13-effect-handoff-proof.yml'
+  pull_request:
+    paths:
+      - 'tools/arena/memory_city_effect_handoff_o13.py'
+      - 'tools/arena/campaign_memory_city_effect_handoff_o13.py'
+      - 'tools/arena/o13_effect_handoff_lattice.py'
+      - 'tools/arena/o13_effect_handoff_hs1000.py'
+      - 'tests/test_memory_city_effect_handoff_o13.py'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-three-venv-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - name: Exact checkout and three fresh venvs
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "HEAD=$(git rev-parse HEAD)"
+          for i in 1 2 3; do
+            python -m venv ".venv-o13-$i"
+            PY=".venv-o13-$i/bin/python"
+            "$PY" -m unittest tests/test_memory_city_effect_handoff_o13.py -v
+            "$PY" tools/arena/campaign_memory_city_effect_handoff_o13.py > "o13-campaign-$i.json"
+            "$PY" tools/arena/o13_effect_handoff_lattice.py > "o13-lattice-$i.json"
+            "$PY" tools/arena/o13_effect_handoff_hs1000.py > "o13-hs1000-$i.json"
+          done
+          cmp o13-campaign-1.json o13-campaign-2.json
+          cmp o13-campaign-1.json o13-campaign-3.json
+          cmp o13-lattice-1.json o13-lattice-2.json
+          cmp o13-lattice-1.json o13-lattice-3.json
+          cmp o13-hs1000-1.json o13-hs1000-2.json
+          cmp o13-hs1000-1.json o13-hs1000-3.json
+          python - <<'PY'
+          import json
+          campaign=json.load(open('o13-campaign-1.json'))
+          lattice=json.load(open('o13-lattice-1.json'))
+          hs=json.load(open('o13-hs1000-1.json'))
+          assert campaign['cases']==24000
+          assert campaign['false_tecc_route']==0
+          assert campaign['false_hold']==0
+          assert campaign['effect_ready']==0
+          assert lattice['lattice8_states']==6561
+          assert lattice['lattice8_tecc_routes']==1
+          assert lattice['lattice8_hard_invalid_routes']==0
+          assert lattice['sweep13d_states']==1594323
+          assert lattice['sweep13d_hard_valid_contexts']==243
+          assert lattice['sweep13d_hard_invalid_context_repairs']==0
+          assert lattice['sweep13d_contextual_decision_variations']==0
+          assert hs['raw_challenge_cells']==1000
+          assert hs['claim_breakthroughs']==0
+          PY
+          git diff --exit-code
