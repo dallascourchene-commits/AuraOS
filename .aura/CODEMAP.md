@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1675
-- **total_bytes**: 26637129
-- **text_tokens_est**: 6649633
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1023, 'schema_or_lexicon': 277, 'support_file': 49}
+- **file_count**: 1679
+- **total_bytes**: 26651081
+- **text_tokens_est**: 6653123
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1026, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1675,
+  "repo_file_count": 1679,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -298,6 +298,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
     "artifacts/arena/k27_dynamic_navigator/real_navigation_traffic_20260907.json",
+    "artifacts/arena/k27_dynamic_navigator/reflexive_telemetry_receipt_20260907.json",
     "artifacts/arena/k27_dynamic_navigator/telemetry_receipt_20260907.json",
     "arxiv_forager.py",
     "async_palace.py",
@@ -1658,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_k27_epoch_invalidation.py",
     "tests/test_k27_epoch_republish_invalidation.py",
     "tests/test_k27_memory_runtime.py",
+    "tests/test_k27_reflexive_telemetry.py",
     "tests/test_k27_spatial_nonfinite_canonicalization.py",
     "tests/test_k27_state_root_schema_snapshot.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1669,6 +1671,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
     "tools/arena/campaign_k27_dynamic_navigator_telemetry.py",
+    "tools/arena/campaign_k27_reflexive_telemetry.py",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
     "tools/arena/k27_dynamic_navigator.py",
@@ -1685,6 +1688,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_runtime.py",
+    "tools/arena/k27_reflexive_telemetry.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1815,16 +1819,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1675,
-  "bytes": 26637129,
-  "tokens_est": 6649633,
+  "files": 1679,
+  "bytes": 26651081,
+  "tokens_est": 6653123,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1023,
-    "schema_or_lexicon": 277,
+    "python_module": 1026,
+    "schema_or_lexicon": 278,
     "support_file": 49
   }
 }
