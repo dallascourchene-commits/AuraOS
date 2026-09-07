@@ -1,0 +1,68 @@
+{
+  "schema": "AURA-MEMORY-CITY-COVERAGE-MEMBRANE-PROOF-v1",
+  "objective": "MC-O10-PROOF-CARRYING-COVERAGE-BOUND-TYPED-CLOSURE",
+  "status": "PROMOTED_D0_MODEL_REFERENCE",
+  "branch": "arena/memcity-navigator-routecard-gpt56sol-20260906",
+  "result_root": "bd069f159500fce5cf0551b3f73091706916a7ab0644c564c1ad7a480b977868",
+  "campaign_root": "aed9c4c4b67e5b9aa5e83e7b2c340006f5a71758e27b7d68d4e11c3687facb08",
+  "focused_tests": "48/48 PASS",
+  "fresh_venvs": 3,
+  "randomized_cases_total": 15000,
+  "foreign_donors": [
+    {"result": "COVM-01 Coverage Obligation Membrane", "root": "7f55b793173dec3bd4878286b83aacbae1934e181c744f247b9cc2101c26c61e"},
+    {"result": "Quotient-Safe Fenced Mutation Cut", "root": "9d89b5bc8aab6ce41adc3a9df866e77fd13ece399ebce487db1f04dc1da9f976"}
+  ],
+  "local_frozen_sha256": {
+    "source": "85474fdb730ffba97bb164ed32f849dc33afe293a9d6caf378a135e81a3823b5",
+    "tests": "cd19112bef7ae9e60a2452eb8620ffedb3426edc5a641eb1e925e3568b354e44",
+    "campaign_output": "d8e007fb9a60dfd1d9515b5da129ae0f31fb64bc5dcf8d6c8480ee6547c2a301",
+    "hs1000_output": "31387326a191f0e6f8224a29c29c9078e1c39e6c0a90b044160d67886cce75c5"
+  },
+  "github_blobs": {
+    "source": "4f7ab51cae81b129240f5963dd6059dab56699fd",
+    "tests": "24fff0ddf10ededb3bd2b4c7d62836e8389a0bc6",
+    "campaign": "6b7a7363e9359d0d13a6b038aee4d82a83a7ca31",
+    "hs1000": "4932296d5bb247f63164fa80832dfc33a682eeb1"
+  },
+  "per_env_stats": {
+    "ready": 2042,
+    "hold": 2958,
+    "naive_no_observation_false_ready": 2958,
+    "sampled_subset_false_ready": 1214,
+    "oracle_mismatch": 0,
+    "exact_use_mismatch": 0,
+    "domain_move_false_ready": 0,
+    "program_move_false_ready": 0,
+    "generation_move_false_ready": 0,
+    "mutation_false_ready": 0
+  },
+  "omega8": {"states": 6561, "strict_ready": 1},
+  "recursion13d": {"states": 1594323, "hard_ready_context_variants": 243, "hard_invalid_repairs": 0},
+  "hs1000": {
+    "raw": 1000,
+    "freeze_root": "9b57907f67461205c4d33f49123643406ce196ebd6d6924ceae974e1e44bf264",
+    "quotients": 100,
+    "quotient_root": "db7136fa91b67b48e5b7670e5514da5f14312584256a5b7a6b823b6a778088b9",
+    "top27_count": 27,
+    "top27_root": "692bb7300ae6a9c9f42c0ade90d08c907779aa0e17e730eeeec2b5c38f9f8f2b",
+    "candidate_semantics": "frozen advancement candidates, not promoted breakthroughs"
+  },
+  "keeper_laws": [
+    "CoverageComplete != CallerBooleanTrue",
+    "EveryObligation => CurrentCompletePositiveTrace OR CurrentSoundNegativeProof",
+    "UnseenBranch => PENDING",
+    "ProgramOrDomainOrGenerationMove => CoverageRebind",
+    "NoObservation != CertifiedAbsence",
+    "SampledSubset != PossibilityCompleteness",
+    "CoverageProofMayEnableReadAdmissionButNeverMutationAuthority",
+    "K27Coordinate != CoverageProof != Currentness != Authority"
+  ],
+  "external_pressure": [
+    {"id": "arXiv:2404.13295", "role": "missing declared dependencies are incremental-build correctness defects"},
+    {"id": "arXiv:2608.06397", "role": "bounded symbolic execution can leave substantial behavior unreached; target later runs from explicit coverage"},
+    {"id": "Reddit:r/bazel:1igsyj2", "role": "practitioner action/input identity pressure for safe cache reuse"},
+    {"id": "Reddit:r/bazel:zux9tm", "role": "undeclared inclusion/dependency pressure"},
+    {"id": "GoogleScholar", "role": "SCHOLAR_DIRECT_GAP_no_stable_task_specific_primary_result"}
+  ],
+  "claim_ceiling": "D0 finite branch/domain proof membrane and read-only typed-admission reference only; no exhaustive real-program path coverage, solver completeness, production dependency discovery, mutation authority, lease/fencing correctness, effect authority, canonical promotion, merge/deploy authority, Gate10, or native/private Transformer KV claim."
+}

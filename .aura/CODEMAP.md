@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1670
-- **total_bytes**: 26612685
-- **text_tokens_est**: 6643521
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1020, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1700
+- **total_bytes**: 26768280
+- **text_tokens_est**: 6682429
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1044, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1670,
+  "repo_file_count": 1700,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -297,6 +297,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "arch_reasoner_accel",
     "arch_reasoner_accel.py",
     "arch_reasoner_accel.rs",
+    "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
+    "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
+    "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
+    "artifacts/arena/memory_city_read_consequence/PROOF_RECEIPT_MC_O11.json",
+    "artifacts/arena/memory_city_read_consequence/PROOF_RECEIPT_MC_O12.json",
+    "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
     "arxiv_forager.py",
     "async_palace.py",
     "aura.lexc",
@@ -1657,6 +1663,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_k27_memory_runtime.py",
     "tests/test_k27_spatial_nonfinite_canonicalization.py",
     "tests/test_k27_state_root_schema_snapshot.py",
+    "tests/test_memory_city_anchor_locator.py",
+    "tests/test_memory_city_contingent_hydration.py",
+    "tests/test_memory_city_coverage_membrane.py",
+    "tests/test_memory_city_hydration_plan.py",
+    "tests/test_memory_city_navigator.py",
+    "tests/test_memory_city_read_consequence.py",
+    "tests/test_memory_city_typed_closure.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1680,6 +1693,23 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/k27_memory_city_spatial_seam/k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_city_spatial_seam/test_k27_memory_city_spatial_seam.py",
     "tools/arena/k27_memory_runtime.py",
+    "tools/arena/memory_city_anchor_locator.py",
+    "tools/arena/memory_city_component_projection_campaign.py",
+    "tools/arena/memory_city_component_projection_hs1000.py",
+    "tools/arena/memory_city_contingent_hydration.py",
+    "tools/arena/memory_city_contingent_hydration_campaign.py",
+    "tools/arena/memory_city_contingent_hydration_hs1000.py",
+    "tools/arena/memory_city_coverage_membrane.py",
+    "tools/arena/memory_city_coverage_membrane_campaign.py",
+    "tools/arena/memory_city_coverage_membrane_hs1000.py",
+    "tools/arena/memory_city_hydration_plan.py",
+    "tools/arena/memory_city_navigator.py",
+    "tools/arena/memory_city_read_consequence.py",
+    "tools/arena/memory_city_read_consequence_campaign.py",
+    "tools/arena/memory_city_read_consequence_hs1000.py",
+    "tools/arena/memory_city_typed_closure.py",
+    "tools/arena/memory_city_typed_closure_campaign.py",
+    "tools/arena/memory_city_typed_closure_hs1000.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1810,16 +1840,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1670,
-  "bytes": 26612685,
-  "tokens_est": 6643521,
+  "files": 1700,
+  "bytes": 26768280,
+  "tokens_est": 6682429,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1020,
-    "schema_or_lexicon": 275,
+    "python_module": 1044,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
