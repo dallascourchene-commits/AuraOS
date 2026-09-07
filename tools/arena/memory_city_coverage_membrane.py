@@ -5,6 +5,7 @@ from hashlib import sha256
 import json
 
 D0 = "D0_NONPROMOTING"
+TECC_SCHEMA = "AURA-TECC-v1"
 
 def digest(v):
     return sha256(json.dumps(v, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
@@ -16,6 +17,10 @@ class CoverageDisposition(str, Enum):
     HOLD_CONFLICT = "HOLD_EVIDENCE_CONFLICT"
     HOLD_IDENTITY = "HOLD_COVERAGE_IDENTITY"
     HOLD_MUTATION = "HOLD_MUTATION_AUTHORITY"
+
+class AdmissionMode(str, Enum):
+    READ_ONLY = "READ_ONLY"
+    EFFECT_BOUND = "EFFECT_BOUND"
 
 @dataclass(frozen=True)
 class PositiveTrace:
@@ -135,17 +140,31 @@ def validate_coverage_at_use(cert: CoverageCertificate, *, program_root: str, se
 
 def compile_proof_carrying_typed_admission(*, typed_closure_receipt_root: str, coverage: CoverageCertificate,
                                             support_root: str, influence_root: str, transition_model_root: str,
-                                            future_congruence_root: str | None, horizon: int) -> dict:
+                                            future_congruence_root: str | None, horizon: int,
+                                            mode: AdmissionMode = AdmissionMode.READ_ONLY) -> dict:
     for name, root in (("typed", typed_closure_receipt_root), ("support", support_root), ("influence", influence_root), ("transition", transition_model_root)):
         if not isinstance(root, str) or not root:
             raise ValueError(f"{name} root required")
     if type(horizon) is not int or horizon < 0:
         raise ValueError("horizon must be nonnegative")
-    ready = coverage.disposition is CoverageDisposition.READY and (horizon == 0 or bool(future_congruence_root))
-    disposition = "READY_D0" if ready else "HOLD_D0"
+    if not isinstance(mode, AdmissionMode):
+        raise ValueError("mode must be AdmissionMode")
+
+    read_ready = coverage.disposition is CoverageDisposition.READY and (horizon == 0 or bool(future_congruence_root))
+    if mode is AdmissionMode.EFFECT_BOUND:
+        disposition = "HOLD_TECC_REQUIRED_D0"
+        reason = "effect_bound_use_requires_independent_tecc_verification"
+        required_verifier_schema = TECC_SCHEMA
+    else:
+        disposition = "READY_D0" if read_ready else "HOLD_D0"
+        reason = "read_only_coverage_and_horizon_ready" if read_ready else "read_only_coverage_or_horizon_not_ready"
+        required_verifier_schema = None
+
     payload = {
-        "schema": "AURA-MEMORY-CITY-PROOF-CARRYING-TYPED-ADMISSION-v1",
+        "schema": "AURA-MEMORY-CITY-PROOF-CARRYING-TYPED-ADMISSION-v2",
         "disposition": disposition,
+        "reason": reason,
+        "admission_mode": mode.value,
         "typed_closure_receipt_root": typed_closure_receipt_root,
         "coverage_receipt_root": coverage.receipt_root,
         "support_root": support_root,
@@ -153,7 +172,11 @@ def compile_proof_carrying_typed_admission(*, typed_closure_receipt_root: str, c
         "transition_model_root": transition_model_root,
         "future_congruence_root": future_congruence_root,
         "horizon": horizon,
+        "required_verifier_schema": required_verifier_schema,
+        "authority_minted": False,
         "mutation_authority": False,
+        "effect_authority": False,
+        "gate10": False,
     }
     payload["receipt_root"] = digest(payload)
     return payload

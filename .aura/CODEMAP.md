@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1693
-- **total_bytes**: 26733132
-- **text_tokens_est**: 6673640
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1038, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1695
+- **total_bytes**: 26742476
+- **text_tokens_est**: 6675977
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1039, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1693,
+  "repo_file_count": 1695,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -300,6 +300,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT.json",
     "artifacts/arena/memory_city_contingent_hydration/PROOF_RECEIPT_MC_O8.json",
     "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O10.json",
+    "artifacts/arena/memory_city_coverage_membrane/PROOF_RECEIPT_MC_O11_MODE_SEAL.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9.json",
     "artifacts/arena/memory_city_typed_closure/PROOF_RECEIPT_MC_O9_REPROOF_REPAIR.json",
     "arxiv_forager.py",
@@ -1699,6 +1700,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/arena/memory_city_coverage_membrane_campaign.py",
     "tools/arena/memory_city_coverage_membrane_hs1000.py",
     "tools/arena/memory_city_hydration_plan.py",
+    "tools/arena/memory_city_mode_sealed_admission_campaign.py",
     "tools/arena/memory_city_navigator.py",
     "tools/arena/memory_city_typed_closure.py",
     "tools/arena/memory_city_typed_closure_campaign.py",
@@ -1833,16 +1835,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1693,
-  "bytes": 26733132,
-  "tokens_est": 6673640,
+  "files": 1695,
+  "bytes": 26742476,
+  "tokens_est": 6675977,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1038,
-    "schema_or_lexicon": 280,
+    "python_module": 1039,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
