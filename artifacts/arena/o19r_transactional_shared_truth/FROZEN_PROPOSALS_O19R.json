@@ -1,0 +1,42 @@
+{
+  "alternatives": [
+    {
+      "design": "Admission immediately mutates shared truth",
+      "disposition": "REJECT",
+      "id": "A",
+      "why": "collapses admission into commit and cannot represent crash/retry/conflict boundary"
+    },
+    {
+      "design": "Global exact-prestate transaction for every domain",
+      "disposition": "REJECT",
+      "id": "B",
+      "why": "unnecessarily serializes disjoint collaborative patches"
+    },
+    {
+      "design": "Last-write-wins key merge",
+      "disposition": "REJECT",
+      "id": "C",
+      "why": "silently loses conflicting legitimate writes"
+    },
+    {
+      "design": "Dual-mode transaction membrane",
+      "disposition": "SELECT",
+      "id": "D",
+      "why": "exact-prestate for training-like transitions; key-preconditions for composable collaborative patches; publication separate"
+    }
+  ],
+  "authority_ceiling": "D0_NONPROMOTING",
+  "frozen_before_implementation": true,
+  "objective": "Transactional Shared-Truth Commit",
+  "parents": [
+    {
+      "artifact": "PR914 recoverable training-step transaction",
+      "consequence": "TrainingExecutionAdmitted != TrainingStepCommitted != CheckpointPublished"
+    },
+    {
+      "artifact": "O-AVX12 parallel-view creative lens",
+      "consequence": "ParallelView != ParallelTruth; identical patches dedupe, disjoint compose, conflicts HOLD"
+    }
+  ],
+  "schema": "AURA-O19R-FROZEN-PROPOSALS-v1"
+}

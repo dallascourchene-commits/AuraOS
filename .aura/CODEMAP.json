@@ -362,6 +362,7 @@
     "python -m venv": [
       ".github/workflows/mc-o14-tecc-effect-admission-proof.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      ".github/workflows/o19r-transactional-shared-truth-proof.yml",
       ".github/workflows/project006-o11-effect-attempt-recovery-proof.yml",
       ".github/workflows/project006-o17-independent-source-incarnation-proof.yml",
       "README.md"
@@ -1064,7 +1065,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1705,
+    "repo_file_count": 1715,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1216,6 +1217,7 @@
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      ".github/workflows/o19r-transactional-shared-truth-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -1342,6 +1344,9 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
+      "artifacts/arena/o19r_transactional_shared_truth/FROZEN_PROPOSALS_O19R.json",
+      "artifacts/arena/o19r_transactional_shared_truth/PROOF_RECEIPT_O19R.json",
+      "artifacts/arena/o19r_transactional_shared_truth/RESULT_O19R.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -2710,6 +2715,7 @@
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_tecc_effect_admission_bridge.py",
+      "tests/test_transactional_shared_truth_commit_hosted.py",
       "tests/test_transport_source_identity_bridge_hosted.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2725,6 +2731,11 @@
       "tools/arena/o18_hs1000.py",
       "tools/arena/o18_lattice8.py",
       "tools/arena/o18_sweep13d.py",
+      "tools/arena/o19r_campaign.py",
+      "tools/arena/o19r_hs1000.py",
+      "tools/arena/o19r_lattice8.py",
+      "tools/arena/o19r_sweep13d.py",
+      "tools/arena/transactional_shared_truth_commit.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -10428,6 +10439,59 @@
       ]
     },
     {
+      "path": ".github/workflows/o19r-transactional-shared-truth-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2212,
+      "lines": 53,
+      "tokens_est": 553,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          25
+        ]
+      },
+      "topology": {},
+      "digest8": "75ee165874528ce5",
+      "vector": [
+        0.10405,
+        0.001169,
+        0.199917,
+        0.18355,
+        -0.101712,
+        -0.246681,
+        0.097036,
+        0.106389,
+        -0.153153,
+        0.164844,
+        0.281754,
+        -0.010522,
+        0.23499,
+        0.047933,
+        0.227976,
+        -0.139124,
+        -0.272402,
+        -0.1438,
+        0.001169,
+        0.249019,
+        0.237328,
+        0.094698,
+        0.244343,
+        -0.024551,
+        -0.237328,
+        -0.237328,
+        0.122756,
+        0.11808,
+        0.286431,
+        0.227976,
+        -0.017537,
+        0.07833
+      ]
+    },
+    {
       "path": ".github/workflows/o5-consequence-admission-proof.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -17938,6 +18002,147 @@
         -0.228725,
         0.198594,
         -0.089025
+      ]
+    },
+    {
+      "path": "artifacts/arena/o19r_transactional_shared_truth/FROZEN_PROPOSALS_O19R.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1421,
+      "lines": 43,
+      "tokens_est": 356,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f130ae1beaae66d5",
+      "vector": [
+        -0.046975,
+        -0.280582,
+        0.242494,
+        0.120612,
+        -0.039358,
+        -0.107916,
+        0.298356,
+        -0.049514,
+        -0.184092,
+        -0.25265,
+        -0.18917,
+        0.163778,
+        0.265346,
+        -0.28566,
+        -0.300895,
+        0.039358,
+        0.168857,
+        0.19171,
+        -0.019044,
+        -0.00127,
+        0.181553,
+        -0.090142,
+        -0.308513,
+        -0.026662,
+        0.181553,
+        0.115534,
+        -0.110455,
+        -0.077446,
+        0.163778,
+        0.176474,
+        -0.087602,
+        0.06221
+      ]
+    },
+    {
+      "path": "artifacts/arena/o19r_transactional_shared_truth/PROOF_RECEIPT_O19R.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1881,
+      "lines": 40,
+      "tokens_est": 471,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7393495eb8f87e64",
+      "vector": [
+        -0.181307,
+        -0.234698,
+        0.25472,
+        0.058953,
+        0.19688,
+        0.270292,
+        0.259169,
+        0.25472,
+        -0.130141,
+        0.065627,
+        -0.263619,
+        -0.181307,
+        0.154612,
+        -0.19243,
+        0.119018,
+        -0.16796,
+        0.050054,
+        -0.147938,
+        0.021134,
+        0.25472,
+        -0.179083,
+        -0.201329,
+        0.2258,
+        0.263619,
+        -0.147938,
+        -0.070076,
+        0.045605,
+        0.01446,
+        -0.04783,
+        0.01446,
+        -0.092322,
+        -0.223575
+      ]
+    },
+    {
+      "path": "artifacts/arena/o19r_transactional_shared_truth/RESULT_O19R.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2502,
+      "lines": 49,
+      "tokens_est": 626,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "760960e48fd83bba",
+      "vector": [
+        -0.046109,
+        -0.277776,
+        -0.039361,
+        -0.113584,
+        -0.046109,
+        -0.001125,
+        0.169814,
+        0.273277,
+        0.271028,
+        -0.219297,
+        0.176562,
+        -0.059604,
+        0.250785,
+        -0.228293,
+        -0.025866,
+        -0.055105,
+        -0.005623,
+        0.23729,
+        -0.093342,
+        -0.04161,
+        -0.271028,
+        0.01462,
+        0.259782,
+        0.246287,
+        0.01462,
+        0.151821,
+        0.248536,
+        -0.176562,
+        0.277776,
+        0.250785,
+        -0.010121,
+        -0.025866
       ]
     },
     {
@@ -105071,6 +105276,53 @@
       ]
     },
     {
+      "path": "tests/test_transactional_shared_truth_commit_hosted.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7599,
+      "lines": 85,
+      "tokens_est": 1900,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5237c339e4b44d18",
+      "vector": [
+        -0.227019,
+        -0.065459,
+        -0.165738,
+        -0.268801,
+        0.229804,
+        0.090529,
+        -0.101671,
+        0.12674,
+        0.054317,
+        -0.204735,
+        -0.338439,
+        0.274372,
+        0.277158,
+        0.140668,
+        -0.257659,
+        0.032033,
+        -0.059888,
+        -0.037604,
+        -0.168523,
+        0.107242,
+        -0.01532,
+        -0.190807,
+        -0.132311,
+        -0.045961,
+        0.20752,
+        -0.243732,
+        0.224233,
+        -0.115598,
+        -0.115598,
+        -0.243732,
+        -0.135097,
+        -0.006964
+      ]
+    },
+    {
       "path": "tests/test_transport_source_identity_bridge_hosted.py",
       "role": "python_module",
       "binary": false,
@@ -105773,6 +106025,241 @@
         0.152471,
         -0.068178,
         0.189659
+      ]
+    },
+    {
+      "path": "tools/arena/o19r_campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3206,
+      "lines": 57,
+      "tokens_est": 802,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c5f2d9dd435cbb5b",
+      "vector": [
+        0.169024,
+        -0.015584,
+        0.166627,
+        0.128267,
+        0.092304,
+        -0.305682,
+        -0.013186,
+        0.188204,
+        -0.140254,
+        -0.159434,
+        0.051546,
+        0.274515,
+        -0.185807,
+        0.077919,
+        0.157037,
+        -0.262527,
+        -0.116279,
+        -0.276912,
+        -0.154639,
+        -0.013186,
+        0.037161,
+        -0.27931,
+        0.073124,
+        0.214577,
+        0.173819,
+        -0.099497,
+        0.101894,
+        -0.252937,
+        -0.264925,
+        -0.267322,
+        0.166627,
+        0.056341
+      ]
+    },
+    {
+      "path": "tools/arena/o19r_hs1000.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1566,
+      "lines": 18,
+      "tokens_est": 392,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c1e9a6c94751a9a1",
+      "vector": [
+        0.20911,
+        -0.243426,
+        -0.073993,
+        0.112598,
+        0.151203,
+        0.031098,
+        -0.179084,
+        0.1319,
+        0.125466,
+        -0.24557,
+        -0.241281,
+        0.037533,
+        -0.078282,
+        0.073993,
+        0.140479,
+        -0.241281,
+        -0.185518,
+        -0.260583,
+        0.24986,
+        0.262728,
+        0.153347,
+        0.106164,
+        0.185518,
+        -0.260583,
+        0.080427,
+        0.236991,
+        -0.056835,
+        0.243426,
+        -0.157637,
+        -0.007507,
+        0.234847,
+        0.065414
+      ]
+    },
+    {
+      "path": "tools/arena/o19r_lattice8.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 775,
+      "lines": 11,
+      "tokens_est": 194,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "689ec787a3f2b59d",
+      "vector": [
+        -0.251377,
+        0.276862,
+        -0.093832,
+        0.29308,
+        -0.225892,
+        0.096149,
+        -0.144802,
+        -0.105416,
+        -0.288446,
+        0.158703,
+        0.061396,
+        0.202723,
+        0.06603,
+        -0.061396,
+        0.098466,
+        -0.003475,
+        0.11005,
+        0.188822,
+        0.063713,
+        0.283813,
+        0.209674,
+        0.20504,
+        -0.216624,
+        -0.133218,
+        -0.114684,
+        -0.024327,
+        -0.054446,
+        -0.184189,
+        0.070664,
+        -0.181872,
+        -0.207357,
+        0.295397
+      ]
+    },
+    {
+      "path": "tools/arena/o19r_sweep13d.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 948,
+      "lines": 12,
+      "tokens_est": 237,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ad4007e225f77df7",
+      "vector": [
+        0.069445,
+        -0.140066,
+        0.213042,
+        0.238937,
+        -0.008239,
+        0.102401,
+        0.083569,
+        -0.133004,
+        -0.069445,
+        -0.170669,
+        -0.300142,
+        -0.100047,
+        0.288372,
+        -0.022364,
+        0.050612,
+        -0.276602,
+        0.255415,
+        -0.069445,
+        0.19421,
+        -0.290726,
+        -0.090631,
+        0.048258,
+        0.158899,
+        0.245999,
+        0.222458,
+        0.133004,
+        0.048258,
+        -0.003531,
+        -0.095339,
+        -0.267185,
+        -0.238937,
+        0.213042
+      ]
+    },
+    {
+      "path": "tools/arena/transactional_shared_truth_commit.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7037,
+      "lines": 133,
+      "tokens_est": 1760,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bf452fd6aba05eb4",
+      "vector": [
+        -0.207247,
+        0.056963,
+        -0.180584,
+        -0.093322,
+        0.231487,
+        0.115137,
+        -0.144225,
+        0.243606,
+        0.28239,
+        -0.081202,
+        0.170888,
+        -0.146649,
+        -0.202399,
+        0.236335,
+        0.238759,
+        -0.003636,
+        0.030299,
+        -0.146649,
+        0.112713,
+        -0.056963,
+        -0.19028,
+        0.035147,
+        -0.093322,
+        0.292085,
+        0.134529,
+        0.27027,
+        0.265422,
+        -0.088474,
+        -0.187856,
+        -0.103018,
+        -0.052115,
+        -0.294509
       ]
     },
     {
@@ -108277,7 +108764,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788788263,
+  "generated_at_unix": 1788790511,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -108431,6 +108918,7 @@
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
       ".github/workflows/o18-attenuated-stable-operation-delegation-proof.yml",
+      ".github/workflows/o19r-transactional-shared-truth-proof.yml",
       ".github/workflows/o5-consequence-admission-proof.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/p2-1-apply-review-fixes.yml",
@@ -108557,6 +109045,9 @@
       "arch_reasoner_accel.rs",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/PROOF_RECEIPT_O18.json",
       "artifacts/arena/o18_attenuated_stable_operation_delegation/RESULT_O18.json",
+      "artifacts/arena/o19r_transactional_shared_truth/FROZEN_PROPOSALS_O19R.json",
+      "artifacts/arena/o19r_transactional_shared_truth/PROOF_RECEIPT_O19R.json",
+      "artifacts/arena/o19r_transactional_shared_truth/RESULT_O19R.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/FROZEN_PROPOSALS_O11.json",
       "artifacts/arena/project006_effect_attempt_recovery_o11/PROOF_RECEIPT_O11.json",
       "artifacts/arena/project006_mc_o14_tecc_admission/FROZEN_PROPOSALS_MC_O14.json",
@@ -109925,6 +110416,7 @@
       "tests/test_project006_effect_attempt_recovery_o11.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_tecc_effect_admission_bridge.py",
+      "tests/test_transactional_shared_truth_commit_hosted.py",
       "tests/test_transport_source_identity_bridge_hosted.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -109940,6 +110432,11 @@
       "tools/arena/o18_hs1000.py",
       "tools/arena/o18_lattice8.py",
       "tools/arena/o18_sweep13d.py",
+      "tools/arena/o19r_campaign.py",
+      "tools/arena/o19r_hs1000.py",
+      "tools/arena/o19r_lattice8.py",
+      "tools/arena/o19r_sweep13d.py",
+      "tools/arena/transactional_shared_truth_commit.py",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-2",
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/.v5-stage-marker-3",
@@ -268969,6 +269466,246 @@
         "file_digest8": "4341386db833cd7d"
       },
       {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#class:O19Tests:11fb69634d6543e8",
+        "name": "O19Tests",
+        "kind": "class",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 7,
+        "end_line": 72,
+        "signature_hash": "519dfa5a0dbb03fb",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#function:_mk_variant:bc9e258cf89b98b7",
+        "name": "_mk_variant",
+        "kind": "function",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 74,
+        "end_line": 82,
+        "signature_hash": "3751113a9394269f",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#function:adm:b398cfa2e926ebd5",
+        "name": "adm",
+        "kind": "function",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 4,
+        "end_line": 5,
+        "signature_hash": "a389faa56a98a547",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_attempt_mismatch_holds:f188e69c029e8a1a",
+        "name": "O19Tests.test_attempt_mismatch_holds",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 47,
+        "end_line": 49,
+        "signature_hash": "40c1b8469e3e57fa",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_authority_ceiling_false_on_commit:112732897ff463d1",
+        "name": "O19Tests.test_authority_ceiling_false_on_commit",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "bf84fbc71a072c4e",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_authority_ceiling_false_on_publish:0187cf87a144f338",
+        "name": "O19Tests.test_authority_ceiling_false_on_publish",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 62,
+        "end_line": 64,
+        "signature_hash": "d3224d36fa743e1f",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_different_operation_same_patch_not_dedup:ad4f783348388e5a",
+        "name": "O19Tests.test_different_operation_same_patch_not_dedup",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 68,
+        "end_line": 70,
+        "signature_hash": "4b5a8d24dc75154f",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_disjoint_key_patches_compose:9165611cee537654",
+        "name": "O19Tests.test_disjoint_key_patches_compose",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "8847291a527772db",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_duplicate_write_keys_rejected:998f0226fbce4c3a",
+        "name": "O19Tests.test_duplicate_write_keys_rejected",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 53,
+        "end_line": 55,
+        "signature_hash": "90ff22bfebf37756",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_empty_writes_rejected:7f8a1fe4a1330bb3",
+        "name": "O19Tests.test_empty_writes_rejected",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "7671563850d8cb0b",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_exact_commit:348712d1bfc2645b",
+        "name": "O19Tests.test_exact_commit",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 8,
+        "end_line": 11,
+        "signature_hash": "f817520c091ee256",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_exact_resume_required:73be40bd11325b89",
+        "name": "O19Tests.test_exact_resume_required",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "466d0641233ba5de",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_exact_stale_prestate_holds:2f07a8cd53950ee9",
+        "name": "O19Tests.test_exact_stale_prestate_holds",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "0a960a4e15e3333c",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_identical_commit_dedup:a5164854ddf10d21",
+        "name": "O19Tests.test_identical_commit_dedup",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "82ba90a377074d60",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_operation_mismatch_holds:55728b045f01b44d",
+        "name": "O19Tests.test_operation_mismatch_holds",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "8d8d72a283afba02",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_precondition_coverage_required:d2ac091a8fe41302",
+        "name": "O19Tests.test_precondition_coverage_required",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "83161863915791dd",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_publication_idempotent:9b3839475612fcf6",
+        "name": "O19Tests.test_publication_idempotent",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "d3724faa6fcadc37",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_publication_separate:05efa763805173c0",
+        "name": "O19Tests.test_publication_separate",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 35,
+        "end_line": 37,
+        "signature_hash": "db94ec49d68d1591",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_publish_requires_commit:d3b376c3d2c6033e",
+        "name": "O19Tests.test_publish_requires_commit",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 34,
+        "end_line": 34,
+        "signature_hash": "a4aae2ff15c19530",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_same_patch_other_attempt_dedups_by_operation_patch:5e26b9fd9ec6ac6b",
+        "name": "O19Tests.test_same_patch_other_attempt_dedups_by_operation_patch",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "5f1d17f9de0e8fbc",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_same_target_conflict_holds:685acf9bb388ffa5",
+        "name": "O19Tests.test_same_target_conflict_holds",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "24922058ae1a18d9",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_stale_admission_holds:2034ab98097eb5ed",
+        "name": "O19Tests.test_stale_admission_holds",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "0b34006330668ccd",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_unproofed_admission_holds:d291b39f7b2ea368",
+        "name": "O19Tests.test_unproofed_admission_holds",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "307fa36da427f2ae",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:_mk_variant.test:3d839573a8126d6a",
+        "name": "_mk_variant.test",
+        "kind": "method",
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "line": 75,
+        "end_line": 81,
+        "signature_hash": "68b294fb76975c9f",
+        "file_digest8": "5237c339e4b44d18"
+      },
+      {
         "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#class:T:2c9669701b281082",
         "name": "T",
         "kind": "class",
@@ -270687,6 +271424,276 @@
         "end_line": 12,
         "signature_hash": "26799ab4ad82cbfb",
         "file_digest8": "afd8c6a03b4abe18"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_campaign.py#function:fixture:a9c026aeb4cbb9a5",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/arena/o19r_campaign.py",
+        "line": 8,
+        "end_line": 13,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "c5f2d9dd435cbb5b"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_campaign.py#function:oracle:b69542c9eb91c74c",
+        "name": "oracle",
+        "kind": "function",
+        "file": "tools/arena/o19r_campaign.py",
+        "line": 15,
+        "end_line": 23,
+        "signature_hash": "4254d9fe748f45b7",
+        "file_digest8": "c5f2d9dd435cbb5b"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_campaign.py#function:r:e0bf1bdf19157daa",
+        "name": "r",
+        "kind": "function",
+        "file": "tools/arena/o19r_campaign.py",
+        "line": 6,
+        "end_line": 6,
+        "signature_hash": "e5a2d5a687fa3045",
+        "file_digest8": "c5f2d9dd435cbb5b"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_campaign.py#function:run:39510acbda451a24",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o19r_campaign.py",
+        "line": 45,
+        "end_line": 55,
+        "signature_hash": "7948fa120ff468b2",
+        "file_digest8": "c5f2d9dd435cbb5b"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_campaign.py#function:scenario:bb135d2f16fac029",
+        "name": "scenario",
+        "kind": "function",
+        "file": "tools/arena/o19r_campaign.py",
+        "line": 25,
+        "end_line": 43,
+        "signature_hash": "9a87e940967b9726",
+        "file_digest8": "c5f2d9dd435cbb5b"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_hs1000.py#function:h:a997f6dca9655f45",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o19r_hs1000.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "c1e9a6c94751a9a1"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_hs1000.py#function:run:45e3e4554b8d9eee",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o19r_hs1000.py",
+        "line": 6,
+        "end_line": 16,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "c1e9a6c94751a9a1"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_lattice8.py#function:h:3003e78d5afc713a",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o19r_lattice8.py",
+        "line": 4,
+        "end_line": 4,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "689ec787a3f2b59d"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_lattice8.py#function:run:2ec324ecc194b851",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o19r_lattice8.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "689ec787a3f2b59d"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_sweep13d.py#function:h:4535ede50641bbaf",
+        "name": "h",
+        "kind": "function",
+        "file": "tools/arena/o19r_sweep13d.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "8ddde6051957f4eb",
+        "file_digest8": "ad4007e225f77df7"
+      },
+      {
+        "semantic_id": "tools/arena/o19r_sweep13d.py#function:run:89867816393d57b4",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/o19r_sweep13d.py",
+        "line": 6,
+        "end_line": 10,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "ad4007e225f77df7"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:AttemptAdmission:39889d4458349d45",
+        "name": "AttemptAdmission",
+        "kind": "class",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 23,
+        "end_line": 31,
+        "signature_hash": "b9831a48115d2712",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:CommitMode:918975023c32c207",
+        "name": "CommitMode",
+        "kind": "class",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "2f5e0eca0dcbdf43",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:CommitProposal:d80413b81cee3fdc",
+        "name": "CommitProposal",
+        "kind": "class",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 34,
+        "end_line": 44,
+        "signature_hash": "fa48ff8b3b7a0699",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:Decision:1de6042799c35e23",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 47,
+        "end_line": 57,
+        "signature_hash": "fc4b98c490ac6e3c",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:Disposition:ade2c41f1ee38ed4",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 16,
+        "end_line": 20,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:SharedTruthStore:bfb99f4e6fdbc4f1",
+        "name": "SharedTruthStore",
+        "kind": "class",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 82,
+        "end_line": 132,
+        "signature_hash": "a5368c84f161b217",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#function:digest:abbc1cf2dfed732c",
+        "name": "digest",
+        "kind": "function",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "6845cd2b39857deb",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#function:evaluate_snapshot:981a121045630284",
+        "name": "evaluate_snapshot",
+        "kind": "function",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 62,
+        "end_line": 80,
+        "signature_hash": "33444946f603f6ec",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#function:state_root:b2400013510dc030",
+        "name": "state_root",
+        "kind": "function",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "90f1410bf0f5cbc6",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:CommitProposal.patch_root:d4f667afa6896c3c",
+        "name": "CommitProposal.patch_root",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "4f308cb6a2f52aa7",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.__init__:b4c454eb1f9d0a04",
+        "name": "SharedTruthStore.__init__",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 83,
+        "end_line": 95,
+        "signature_hash": "5c714610188f7859",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.commit:415cee49bd512e44",
+        "name": "SharedTruthStore.commit",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 102,
+        "end_line": 125,
+        "signature_hash": "28fed7369812f5b8",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.publish:a812a12ab3a8cc96",
+        "name": "SharedTruthStore.publish",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 126,
+        "end_line": 132,
+        "signature_hash": "e9f389a5a593557d",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.seed:e1329340fe2be0e3",
+        "name": "SharedTruthStore.seed",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 96,
+        "end_line": 99,
+        "signature_hash": "b9cd671f274abfb0",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.state:08de5d35b09270f8",
+        "name": "SharedTruthStore.state",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 100,
+        "end_line": 100,
+        "signature_hash": "f690bd7d3b182ac1",
+        "file_digest8": "bf452fd6aba05eb4"
+      },
+      {
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.state_root:2bd65b751d0537fd",
+        "name": "SharedTruthStore.state_root",
+        "kind": "method",
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "line": 101,
+        "end_line": 101,
+        "signature_hash": "36c7018b40b982e5",
+        "file_digest8": "bf452fd6aba05eb4"
       },
       {
         "semantic_id": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py#function:oracle:196957304c36f078",
@@ -274889,8 +275896,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "cdf00b0cd6861fd3fcb59e212e8dc69b",
-    "payload_hash": "457881d63c976e0d95f8e9139a0bbd41"
+    "record_fingerprint": "44693123d2d595e41b70e3be92644813",
+    "payload_hash": "aeb5eab649934e7a66ae294553f79db3"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -274903,16 +275910,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1705,
-      "bytes": 26744562,
-      "tokens_est": 6676506,
+      "files": 1715,
+      "bytes": 26773709,
+      "tokens_est": 6683797,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1039,
-        "schema_or_lexicon": 288,
+        "python_module": 1045,
+        "schema_or_lexicon": 292,
         "support_file": 53
       }
     },
@@ -275599,16 +276606,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1705,
-    "total_bytes": 26744562,
-    "text_tokens_est": 6676506,
+    "file_count": 1715,
+    "total_bytes": 26773709,
+    "text_tokens_est": 6683797,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1039,
-      "schema_or_lexicon": 288,
+      "python_module": 1045,
+      "schema_or_lexicon": 292,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -276879,6 +277886,38 @@
         "signature_hash": "26799ab4ad82cbfb"
       },
       {
+        "file": "tools/arena/o19r_campaign.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 55,
+        "semantic_id": "tools/arena/o19r_campaign.py#function:run:39510acbda451a24",
+        "signature_hash": "7948fa120ff468b2"
+      },
+      {
+        "file": "tools/arena/o19r_hs1000.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 16,
+        "semantic_id": "tools/arena/o19r_hs1000.py#function:run:45e3e4554b8d9eee",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o19r_lattice8.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/arena/o19r_lattice8.py#function:run:2ec324ecc194b851",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
+        "file": "tools/arena/o19r_sweep13d.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 10,
+        "semantic_id": "tools/arena/o19r_sweep13d.py#function:run:89867816393d57b4",
+        "signature_hash": "26799ab4ad82cbfb"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 28,
@@ -276984,6 +278023,14 @@
         "line": 9,
         "end_line": 10,
         "semantic_id": "tools/arena/attenuated_stable_operation_delegation.py#class:Disposition:fd9d6ef57f034ca1",
+        "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 20,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:Disposition:ade2c41f1ee38ed4",
         "signature_hash": "9386d60514f2578d"
       },
       {
@@ -293499,6 +294546,14 @@
         "end_line": 22,
         "semantic_id": "tools/arena/frontier27_runtime.py#function:digest:8ad79878742b377c",
         "signature_hash": "0bff111c4fc1adcb"
+      },
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#function:digest:abbc1cf2dfed732c",
+        "signature_hash": "6845cd2b39857deb"
       },
       {
         "file": "tools/project006/effect_attempt_recovery.py",
@@ -386825,6 +387880,14 @@
         "end_line": 18,
         "semantic_id": "tests/test_transport_source_identity_bridge_hosted.py#function:fixture:e11220ceea6bac0d",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/arena/o19r_campaign.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 13,
+        "semantic_id": "tools/arena/o19r_campaign.py#function:fixture:a9c026aeb4cbb9a5",
+        "signature_hash": "c73d3075455b50af"
       }
     ],
     "session": [
@@ -386906,6 +387969,14 @@
         "line": 5,
         "end_line": 5,
         "semantic_id": "tools/arena/o18_campaign.py#function:r:4ddef604e29f6f3b",
+        "signature_hash": "e5a2d5a687fa3045"
+      },
+      {
+        "file": "tools/arena/o19r_campaign.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 6,
+        "semantic_id": "tools/arena/o19r_campaign.py#function:r:e0bf1bdf19157daa",
         "signature_hash": "e5a2d5a687fa3045"
       },
       {
@@ -432423,6 +433494,246 @@
         "signature_hash": "8874952747f7a66d"
       }
     ],
+    "adm": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 5,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#function:adm:b398cfa2e926ebd5",
+        "signature_hash": "a389faa56a98a547"
+      }
+    ],
+    "O19Tests": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 72,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#class:O19Tests:11fb69634d6543e8",
+        "signature_hash": "519dfa5a0dbb03fb"
+      }
+    ],
+    "O19Tests.test_exact_commit": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_exact_commit:348712d1bfc2645b",
+        "signature_hash": "f817520c091ee256"
+      }
+    ],
+    "O19Tests.test_exact_stale_prestate_holds": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_exact_stale_prestate_holds:2f07a8cd53950ee9",
+        "signature_hash": "0a960a4e15e3333c"
+      }
+    ],
+    "O19Tests.test_exact_resume_required": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_exact_resume_required:73be40bd11325b89",
+        "signature_hash": "466d0641233ba5de"
+      }
+    ],
+    "O19Tests.test_disjoint_key_patches_compose": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_disjoint_key_patches_compose:9165611cee537654",
+        "signature_hash": "8847291a527772db"
+      }
+    ],
+    "O19Tests.test_same_target_conflict_holds": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_same_target_conflict_holds:685acf9bb388ffa5",
+        "signature_hash": "24922058ae1a18d9"
+      }
+    ],
+    "O19Tests.test_identical_commit_dedup": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_identical_commit_dedup:a5164854ddf10d21",
+        "signature_hash": "82ba90a377074d60"
+      }
+    ],
+    "O19Tests.test_publish_requires_commit": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 34,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_publish_requires_commit:d3b376c3d2c6033e",
+        "signature_hash": "a4aae2ff15c19530"
+      }
+    ],
+    "O19Tests.test_publication_separate": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_publication_separate:05efa763805173c0",
+        "signature_hash": "db94ec49d68d1591"
+      }
+    ],
+    "O19Tests.test_stale_admission_holds": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_stale_admission_holds:2034ab98097eb5ed",
+        "signature_hash": "0b34006330668ccd"
+      }
+    ],
+    "O19Tests.test_unproofed_admission_holds": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_unproofed_admission_holds:d291b39f7b2ea368",
+        "signature_hash": "307fa36da427f2ae"
+      }
+    ],
+    "O19Tests.test_operation_mismatch_holds": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_operation_mismatch_holds:55728b045f01b44d",
+        "signature_hash": "8d8d72a283afba02"
+      }
+    ],
+    "O19Tests.test_attempt_mismatch_holds": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 49,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_attempt_mismatch_holds:f188e69c029e8a1a",
+        "signature_hash": "40c1b8469e3e57fa"
+      }
+    ],
+    "O19Tests.test_precondition_coverage_required": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_precondition_coverage_required:d2ac091a8fe41302",
+        "signature_hash": "83161863915791dd"
+      }
+    ],
+    "O19Tests.test_duplicate_write_keys_rejected": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 55,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_duplicate_write_keys_rejected:998f0226fbce4c3a",
+        "signature_hash": "90ff22bfebf37756"
+      }
+    ],
+    "O19Tests.test_empty_writes_rejected": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_empty_writes_rejected:7f8a1fe4a1330bb3",
+        "signature_hash": "7671563850d8cb0b"
+      }
+    ],
+    "O19Tests.test_authority_ceiling_false_on_commit": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_authority_ceiling_false_on_commit:112732897ff463d1",
+        "signature_hash": "bf84fbc71a072c4e"
+      }
+    ],
+    "O19Tests.test_authority_ceiling_false_on_publish": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 64,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_authority_ceiling_false_on_publish:0187cf87a144f338",
+        "signature_hash": "d3224d36fa743e1f"
+      }
+    ],
+    "O19Tests.test_same_patch_other_attempt_dedups_by_operation_patch": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_same_patch_other_attempt_dedups_by_operation_patch:5e26b9fd9ec6ac6b",
+        "signature_hash": "5f1d17f9de0e8fbc"
+      }
+    ],
+    "O19Tests.test_different_operation_same_patch_not_dedup": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 70,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_different_operation_same_patch_not_dedup:ad4f783348388e5a",
+        "signature_hash": "4b5a8d24dc75154f"
+      }
+    ],
+    "O19Tests.test_publication_idempotent": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:O19Tests.test_publication_idempotent:9b3839475612fcf6",
+        "signature_hash": "d3724faa6fcadc37"
+      }
+    ],
+    "_mk_variant": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 82,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#function:_mk_variant:bc9e258cf89b98b7",
+        "signature_hash": "3751113a9394269f"
+      }
+    ],
+    "_mk_variant.test": [
+      {
+        "file": "tests/test_transactional_shared_truth_commit_hosted.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 81,
+        "semantic_id": "tests/test_transactional_shared_truth_commit_hosted.py#method:_mk_variant.test:3d839573a8126d6a",
+        "signature_hash": "68b294fb76975c9f"
+      }
+    ],
     "T.test_physical_evidence_is_fail_closed": [
       {
         "file": "tests/test_transport_source_identity_bridge_hosted.py",
@@ -432609,6 +433920,14 @@
         "end_line": 34,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
         "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 57,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:Decision:1de6042799c35e23",
+        "signature_hash": "fc4b98c490ac6e3c"
       }
     ],
     "chain_root": [
@@ -434003,6 +435322,30 @@
         "signature_hash": "8ddde6051957f4eb"
       },
       {
+        "file": "tools/arena/o19r_hs1000.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/o19r_hs1000.py#function:h:a997f6dca9655f45",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/arena/o19r_lattice8.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": "tools/arena/o19r_lattice8.py#function:h:3003e78d5afc713a",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
+        "file": "tools/arena/o19r_sweep13d.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "tools/arena/o19r_sweep13d.py#function:h:4535ede50641bbaf",
+        "signature_hash": "8ddde6051957f4eb"
+      },
+      {
         "file": "tools/project006/mc_o14_hs1000.py",
         "kind": "function",
         "line": 5,
@@ -434021,6 +435364,14 @@
     ],
     "oracle": [
       {
+        "file": "tools/arena/o19r_campaign.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 23,
+        "semantic_id": "tools/arena/o19r_campaign.py#function:oracle:b69542c9eb91c74c",
+        "signature_hash": "4254d9fe748f45b7"
+      },
+      {
         "file": "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/campaign.py",
         "kind": "function",
         "line": 9,
@@ -434035,6 +435386,146 @@
         "end_line": 49,
         "semantic_id": "tools/project006/campaign_transport_source_identity_bridge.py#function:oracle:26868b50c367f71e",
         "signature_hash": "4df0604ad91753f1"
+      }
+    ],
+    "scenario": [
+      {
+        "file": "tools/arena/o19r_campaign.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 43,
+        "semantic_id": "tools/arena/o19r_campaign.py#function:scenario:bb135d2f16fac029",
+        "signature_hash": "9a87e940967b9726"
+      }
+    ],
+    "CommitMode": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:CommitMode:918975023c32c207",
+        "signature_hash": "2f5e0eca0dcbdf43"
+      }
+    ],
+    "AttemptAdmission": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 31,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:AttemptAdmission:39889d4458349d45",
+        "signature_hash": "b9831a48115d2712"
+      }
+    ],
+    "CommitProposal": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 44,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:CommitProposal:d80413b81cee3fdc",
+        "signature_hash": "fa48ff8b3b7a0699"
+      }
+    ],
+    "CommitProposal.patch_root": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:CommitProposal.patch_root:d4f667afa6896c3c",
+        "signature_hash": "4f308cb6a2f52aa7"
+      }
+    ],
+    "state_root": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#function:state_root:b2400013510dc030",
+        "signature_hash": "90f1410bf0f5cbc6"
+      }
+    ],
+    "evaluate_snapshot": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 80,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#function:evaluate_snapshot:981a121045630284",
+        "signature_hash": "33444946f603f6ec"
+      }
+    ],
+    "SharedTruthStore": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "class",
+        "line": 82,
+        "end_line": 132,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#class:SharedTruthStore:bfb99f4e6fdbc4f1",
+        "signature_hash": "a5368c84f161b217"
+      }
+    ],
+    "SharedTruthStore.__init__": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 95,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.__init__:b4c454eb1f9d0a04",
+        "signature_hash": "5c714610188f7859"
+      }
+    ],
+    "SharedTruthStore.seed": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 99,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.seed:e1329340fe2be0e3",
+        "signature_hash": "b9cd671f274abfb0"
+      }
+    ],
+    "SharedTruthStore.state": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 100,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.state:08de5d35b09270f8",
+        "signature_hash": "f690bd7d3b182ac1"
+      }
+    ],
+    "SharedTruthStore.state_root": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 101,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.state_root:2bd65b751d0537fd",
+        "signature_hash": "36c7018b40b982e5"
+      }
+    ],
+    "SharedTruthStore.commit": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 125,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.commit:415cee49bd512e44",
+        "signature_hash": "28fed7369812f5b8"
+      }
+    ],
+    "SharedTruthStore.publish": [
+      {
+        "file": "tools/arena/transactional_shared_truth_commit.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 132,
+        "semantic_id": "tools/arena/transactional_shared_truth_commit.py#method:SharedTruthStore.publish:a812a12ab3a8cc96",
+        "signature_hash": "e9f389a5a593557d"
       }
     ],
     "ProbeStep": [
