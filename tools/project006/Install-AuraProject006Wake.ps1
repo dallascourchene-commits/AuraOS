@@ -19,6 +19,7 @@ if (-not $repoWsl) { throw 'WSL_REPO_PATH_UNRESOLVED' }
 $bin = '/home/john_of_wick/.config/aura-drive/bin'
 $wrapper = "$bin/project006_consumer_outbox_wrapper.py"
 $outbox = "$bin/terminal_outbox.py"
+$bridgePython = '/home/john_of_wick/.local/lib/aura/project006/egress-venv/bin/python'
 
 $consumerBefore = (& wsl.exe @distroArgs -- sha256sum $Consumer 2>$null | Out-String).Trim()
 & wsl.exe @distroArgs -- install -m 0644 "$repoWsl/tools/project006/terminal_outbox.py" $outbox
@@ -33,9 +34,10 @@ if ($consumerBefore -and $consumerAfter -and ($consumerBefore.Split(' ')[0] -ne 
 }
 
 # Correctness fallback lives on Windows so it can START WSL. It runs the existing
-# consumer unchanged and then bridges newly produced terminal receipts to Drive.
+# consumer unchanged under the installed Project006 venv and then bridges newly
+# produced terminal receipts to Drive.
 $argDistro = if ($Distro) { "-d `"$Distro`" " } else { "" }
-$wakeCmd = "wsl.exe ${argDistro}-- python3 $wrapper once"
+$wakeCmd = "wsl.exe ${argDistro}-- $bridgePython $wrapper once"
 $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -WindowStyle Hidden -Command `"$wakeCmd`""
 $triggerLogon = New-ScheduledTaskTrigger -AtLogOn
 $triggerRepeat = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 2)
@@ -44,15 +46,23 @@ Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger @($triggerLo
 
 # Immediate zero-provider proof: run the existing consumer and flush any current or
 # historical local-only terminal for the exact AWJ033 diagnostic onto the outbound bus.
-$canaryRaw = (& wsl.exe @distroArgs -- python3 $wrapper once --command-id $CanaryCommandId 2>&1 | Out-String).Trim()
+$canaryRaw = (& wsl.exe @distroArgs -- $bridgePython $wrapper once --command-id $CanaryCommandId 2>&1 | Out-String).Trim()
 $canaryExit = $LASTEXITCODE
+$canaryObj = $null
+try { $canaryObj = $canaryRaw | ConvertFrom-Json } catch { $canaryObj = $null }
+$published = @()
+if ($null -ne $canaryObj -and $null -ne $canaryObj.published) { $published = @($canaryObj.published) }
+$outboundIds = @($published | Where-Object { $_.status -eq 'RETURN_WRITTEN' -and $_.outbound_file_id } | ForEach-Object { [string]$_.outbound_file_id })
+$canaryVerified = ($canaryExit -eq 0 -and $outboundIds.Count -gt 0)
+
 Start-ScheduledTask -TaskName $TaskName
 Start-Sleep -Milliseconds 500
 $task = Get-ScheduledTask -TaskName $TaskName
 $taskInfo = Get-ScheduledTaskInfo -TaskName $TaskName
 
 $result = [ordered]@{
-  status = if ($canaryExit -eq 0) { 'INSTALLED_AND_CANARY_INVOKED' } else { 'INSTALLED_CANARY_FAILED' }
+  status = if ($canaryVerified) { 'INSTALLED_CANARY_RETURN_WRITTEN' } elseif ($canaryExit -ne 0) { 'INSTALLED_CANARY_FAILED' } else { 'INSTALLED_CANARY_NO_OUTBOUND' }
+  physical_acceptance = $canaryVerified
   task = $TaskName
   task_state = [string]$task.State
   last_task_result = $taskInfo.LastTaskResult
@@ -65,7 +75,8 @@ $result = [ordered]@{
   wrapper_sha256 = $wrapperHash
   canary_command_id = $CanaryCommandId
   canary_exit_code = $canaryExit
+  outbound_file_ids = $outboundIds
   canary_result = $canaryRaw
 }
-Write-Output ($result | ConvertTo-Json -Compress -Depth 6)
-if ($canaryExit -ne 0) { exit $canaryExit }
+Write-Output ($result | ConvertTo-Json -Compress -Depth 8)
+if (-not $canaryVerified) { exit 23 }
