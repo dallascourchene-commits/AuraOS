@@ -1,15 +1,23 @@
 {
-  "schema": "AURA-AWJ032-AIRLLM-TRAINING-O1-PROOF-v1",
+  "schema": "AURA-AWJ032-AIRLLM-TRAINING-O1-PROOF-v2-HISTORICAL",
   "date": "2026-09-07",
-  "state": "ACHIEVED_D0_NONPROMOTING",
+  "state": "HISTORICAL_D0_PROOF_SUPERSEDED_BY_O4_CURRENTNESS",
   "gate10": false,
-  "objective": "Bind the new AirLLM streamed-LoRA training generation to exact source/family/base/runtime/target/adapter identity and fail closed on unsupported GLM routing or partial adapter state.",
+  "objective": "Bind the AirLLM streamed-LoRA training generation to exact source/family/base/runtime/target/adapter identity and fail closed on unsupported GLM routing or partial adapter state.",
   "airllm": {
     "repo": "lyogavin/airllm",
     "commit": "55e435087d951da8c25ab3672e969025241a398e",
     "airllm_lora_sha256": "442c70a85a53603089ce14604bdc48550e343e3b3405dccc080a4d841bc50172",
     "lora_linear_sha256": "acda13718742c7f79c2713b04d06787c81999a85d6792aa1fa836ab77e1745f5",
     "readme_sha256": "746f35e0bee6598643666792c050c8833b5d441d36e0a60dd0846ae0d34ece73"
+  },
+  "current_family_contract": {
+    "accepted_family_ids": ["qwen3_5", "qwen3_8_dense", "qwen4_exp"],
+    "qwen3_5_trainer": "AirLLMLoRA",
+    "qwen3_8_dense_trainer": "AirLLMLoRA",
+    "qwen4_exp_trainer": "AirLLMLoRAQwen4Exp",
+    "flash_next_alias_admitted": false,
+    "glm_streamed_training": "HOLD_PORT_REQUIRED"
   },
   "source_findings": {
     "qwen3_5_training_route": "AirLLMLoRA -> AirLLMQwen3_5",
@@ -18,42 +26,26 @@
     "partial_adapter_load_guard_required": true,
     "adapter_provenance_envelope_required": true
   },
-  "keepers": [
-    "AIRLLM_TRAINING_ADVERTISED != GLM_TRAINING_SUPPORTED",
-    "ADAPTER_STATE_KEYS_MUST_EQUAL_EXPECTED_KEYS",
-    "ADAPTER_IDENTITY_BINDS_BASE_CONFIG_TOKENIZER_RUNTIME_SOURCE_TARGETS_AND_VALUES",
-    "QWEN_TRAINING_ROUTE_IS_MODEL_SPECIFIC",
-    "GLM_CURRENT_ROUTE=HOLD_PORT_REQUIRED"
-  ],
-  "local_reference_proof": {
+  "historical_local_reference_proof": {
     "focused_tests_per_env": 26,
     "fresh_envs": 3,
     "focused_total": 78,
     "random_key_coverage_cases_per_env": 5000,
     "random_identity_drift_cases_per_env": 5000,
     "omega8_states": 6561,
-    "omega8_keepers": 1,
     "factored_13d_states": 1594323,
-    "factored_13d_hard_invalid_context_repairs": 0,
     "hs1000_cells": 1000,
-    "hs1000_consequence_groups": 6,
     "hs1000_credit_as_breakthroughs": false,
-    "reference_receipt_root": "ed8975dead9f66ebbf559c41865a757cdc437a5d99102d755d47fceffa3209ed",
-    "proof_json_sha256_all_three_envs": "eaa80578ce053001638573ec7be59139b739689c3b9c637c1f65e504d8fb4624"
+    "reference_receipt_root": "ed8975dead9f66ebbf559c41865a757cdc437a5d99102d755d47fceffa3209ed"
   },
-  "published_byte_reproof": {
-    "published_head_before_receipt": "0b6d98be6016f9ed5e117091a22c521a24065640",
-    "airllm_fixture_head": "55e435087d951da8c25ab3672e969025241a398e",
-    "fresh_envs": 3,
-    "focused_tests_per_env": 26,
-    "focused_total": 78,
-    "all_pass": true,
-    "training_admission_sha256": "cbb2647cd1057d2052171c0054641a615c00b3c8a949351850860aa54aafe077",
-    "test_training_admission_sha256": "20aa901049202d395ee318027d986a6001c31c26b41c1329b57c6a9dcffe26a1"
+  "currentness": {
+    "current_proof_path": "artifacts/arena/awj032_airllm_training_o4/PROOF_RECEIPT_O4_PUBLISHED.json",
+    "current_o4_receipt_root": "d4f5112e9bea6eef7d2bdc235c403d600c64e20c9a0c2b1801936e9fcb6b552e",
+    "historical_counts_are_not_current_head_proof": true
   },
   "failed_first_scars_zero_credit": [
     "Initial unittest invocation used a filesystem path as a module name and failed before semantic proof.",
-    "First published test file resolved the upstream fixture one parent too high; repaired before credited published-byte reproof."
+    "First published test file resolved the upstream fixture one parent too high; repaired before credited historical reproof."
   ],
-  "authority_ceiling": "D0 reference/source-admission only; no model training, generation, tensor-payload read, checkpoint split/delete/copy/move, provider spend, main merge, deploy, or Gate10 promotion."
+  "authority_ceiling": "D0 only. Bounded reading/hashing of explicitly supplied adapter evidence bytes is allowed for root comparison; model/checkpoint tensor materialization, model execution, training, generation, checkpoint mutation, provider spend, main merge, deploy, or Gate10 promotion are not authorized."
 }
