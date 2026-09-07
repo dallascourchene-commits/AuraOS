@@ -1,0 +1,66 @@
+{
+  "schema": "AURA-MEMORY-CITY-O12C-M3-REPROOF-SEMANTICS-MIGRATION-PROOF-v1",
+  "status": "PROMOTED_D0_EXACT_BRANCH_REFERENCE",
+  "authority": "D0_NONPROMOTING_GATE10_FALSE",
+  "objective": "Bind proof-algorithm identity through the exact-current read-to-TECC effect handoff so legacy same-schema typed-closure proofs cannot survive an algorithm migration.",
+  "keeper_laws": [
+    "AlgorithmIdentityIsSemanticIdentity",
+    "SameOuterSchema != SameProofSemantics",
+    "CurrentReadBindingMustBindCurrentReproofSemantics",
+    "LegacyOrUnknownReproofSemantics => HOLD_BEFORE_TECC"
+  ],
+  "parents": [
+    {
+      "title": "0108__ARENA-CONTRIBUTION__M3__REPROOF-SEMANTICS-MIGRATION-FENCE__GPT56SOL__20260906",
+      "drive_id": "1S1gtzu-EjHoq5bpAU1TQukawVJtWZZ4RzAub1gx3ctE",
+      "campaign_root": "d9062189a53622005e0afab6fb073f689b06757a5d99cb905b5409c279d8d4e1"
+    },
+    {
+      "title": "PR888 O12C exact-current read-to-TECC effect seam",
+      "pr": 888,
+      "head_at_rebase": "dbe1e09fd3dbf6b2707f5ce2e04186c6d53cfddd",
+      "campaign_root": "d5acff1e9f5f9a5284ff4e8ae4ae881d6daab8df87807e36d3ac432d1f452d4e"
+    }
+  ],
+  "exact_git_blobs": {
+    "tools/arena/memory_city_horizon_fenced_handoff.py": "1048d700cecad228d5fbe1de55f7bac084331fba",
+    "tests/test_memory_city_horizon_fenced_handoff.py": "cfcd9350ecd46ea5cc150e7a4cdd24426a125120",
+    "tools/arena/campaign_memory_city_horizon_fenced_handoff.py": "e3adf6450c237dd2d569cddd50fabfc2e154780b"
+  },
+  "three_fresh_venv_exact_replay": {
+    "focused_tests_per_env": 19,
+    "focused_tests_total": 57,
+    "focused_tests_pass": 57,
+    "campaign_cases_per_env": 18000,
+    "campaign_cases_total": 54000,
+    "campaign_root": "b17866ff4a4a0e4c3be9e947ec182fd2398d92ff87ba4b20ac648f14c6c107fa",
+    "campaign_output_sha256": "19361deaa2ca11e95f13e2de80d08e2990d275d19d94c18f7b86a5b8b66841bc",
+    "candidate_false_route": 0,
+    "candidate_false_hold": 0,
+    "legacy_semantics_false_route": 0,
+    "effect_ready": 0,
+    "pre_m3_binding_false_hold_current_per_env": 1000,
+    "pre_m3_binding_false_route_legacy_per_env": 1000,
+    "legacy_false_effect_upgrade_per_env": 13000
+  },
+  "failed_first_zero_credit": "An inherited regression initially expected membership failure for a moved reproof set; the implementation already failed closed at ACTIVE_COMPONENT_REPROOF_MOVED. The test expectation was corrected, all venvs were recreated, and only the corrected rerun receives proof credit.",
+  "omega8": {
+    "states": 6561,
+    "tecc_route_states": 1,
+    "root": "7e62cfb44c9ebd0ee853f2d6ceb42838646695b79dede9b7d65ee1a6c65f3463"
+  },
+  "sweep13d": {
+    "states": 1594323,
+    "hard_valid_contextual_routes": 243,
+    "hard_invalid_repaired": 0,
+    "root": "39c091c1828db8f5d3ea742a6106df0a3890b3728ea504171bee6ac25d534b5e"
+  },
+  "hs1000": {
+    "challenge_cells": 1000,
+    "consequence_groups": 100,
+    "freeze_root": "c3a3cdcc9eff8aba1ed0fd90f917fc37189132e2a516b7c5213181455d4e1110",
+    "quotient_root": "694285223c45fb04f456c47a6928ed65ea4ed857287f3b4725d572d342ecb3f4",
+    "claim": "challenge/search cells only; not 1000 independently proved breakthroughs"
+  },
+  "claim_ceiling": "No effect or mutation authority, no TECC verification claim, no merge/deploy authority, no production fencing/attestation guarantee, no native/private Transformer KV access, no Gate10."
+}
