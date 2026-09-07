@@ -410,6 +410,7 @@
       ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
       ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
+      ".github/workflows/project006-o21-byte-verified-update-proof.yml",
       "README.md"
     ],
     "python tools/apply_sco_construction_completion.py": [
@@ -1064,7 +1065,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1686,
+    "repo_file_count": 1691,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1242,6 +1243,7 @@
       ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
       ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
+      ".github/workflows/project006-o21-byte-verified-update-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1345,6 +1347,7 @@
       "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
       "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
+      "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -2700,6 +2703,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_project006_atomic_runtime_update_o21.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -2722,8 +2726,10 @@
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/atomic_runtime_update.py",
       "tools/project006/aura_interaction_contract.py",
       "tools/project006/installed_runtime_attestation.py",
+      "tools/project006/o21_reference/proof_o21.py",
       "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/proof_aura_interaction_o18.py",
@@ -12025,6 +12031,59 @@
       ]
     },
     {
+      "path": ".github/workflows/project006-o21-byte-verified-update-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2181,
+      "lines": 50,
+      "tokens_est": 546,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          42
+        ]
+      },
+      "topology": {},
+      "digest8": "9a04d0d70745334c",
+      "vector": [
+        0.040415,
+        0.243642,
+        0.190526,
+        0.125862,
+        0.128172,
+        -0.197454,
+        0.204382,
+        0.162813,
+        0.040415,
+        -0.178979,
+        0.139719,
+        -0.269045,
+        0.278283,
+        0.294449,
+        -0.017321,
+        0.045033,
+        -0.051962,
+        -0.278283,
+        -0.107387,
+        0.21362,
+        0.232095,
+        0.139719,
+        0.047343,
+        -0.183597,
+        -0.21362,
+        -0.063509,
+        -0.028868,
+        -0.245951,
+        -0.061199,
+        -0.234404,
+        -0.176669,
+        -0.153575
+      ]
+    },
+    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -18060,6 +18119,53 @@
         -0.206738,
         -0.269517,
         0.100663
+      ]
+    },
+    {
+      "path": "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3377,
+      "lines": 62,
+      "tokens_est": 845,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "de999f7cd23535aa",
+      "vector": [
+        -0.162861,
+        0.221445,
+        0.045695,
+        0.179265,
+        0.277684,
+        0.130055,
+        0.265968,
+        0.090218,
+        -0.212071,
+        -0.022262,
+        0.263624,
+        0.237848,
+        0.176921,
+        -0.097248,
+        -0.115995,
+        0.265968,
+        -0.289401,
+        -0.176921,
+        0.031635,
+        0.108965,
+        -0.111308,
+        -0.284714,
+        0.043352,
+        -0.158175,
+        -0.181608,
+        0.183951,
+        0.026948,
+        -0.214415,
+        0.172235,
+        -0.071472,
+        -0.064442,
+        0.141771
       ]
     },
     {
@@ -104582,6 +104688,53 @@
       ]
     },
     {
+      "path": "tests/test_project006_atomic_runtime_update_o21.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4322,
+      "lines": 55,
+      "tokens_est": 1081,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d3e76bbf00394be8",
+      "vector": [
+        0.276759,
+        -0.103339,
+        -0.217368,
+        0.02732,
+        -0.148476,
+        0.062954,
+        0.039198,
+        0.250627,
+        0.169856,
+        -0.283886,
+        0.250627,
+        0.02732,
+        -0.165105,
+        -0.148476,
+        0.079583,
+        0.134222,
+        0.122344,
+        -0.098588,
+        -0.217368,
+        -0.250627,
+        -0.219744,
+        0.072456,
+        -0.046324,
+        -0.245876,
+        -0.236373,
+        0.248251,
+        0.233998,
+        0.001188,
+        0.079583,
+        0.191237,
+        0.226871,
+        0.100964
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -105616,6 +105769,53 @@
       ]
     },
     {
+      "path": "tools/project006/atomic_runtime_update.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10305,
+      "lines": 174,
+      "tokens_est": 2577,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a6444d5391d92fa2",
+      "vector": [
+        -0.266267,
+        0.025301,
+        -0.165062,
+        0.24458,
+        0.061446,
+        0.073495,
+        0.148194,
+        0.03494,
+        0.063856,
+        -0.131326,
+        -0.304822,
+        -0.189158,
+        -0.261448,
+        0.03494,
+        0.03494,
+        0.015663,
+        0.254219,
+        -0.049398,
+        0.006024,
+        0.17952,
+        -0.001205,
+        -0.201207,
+        0.280725,
+        0.153013,
+        0.116868,
+        0.218074,
+        -0.215665,
+        -0.261448,
+        -0.263858,
+        -0.302412,
+        0.013253,
+        0.092772
+      ]
+    },
+    {
       "path": "tools/project006/aura_interaction_contract.py",
       "role": "python_module",
       "binary": false,
@@ -105707,6 +105907,53 @@
         -0.120049,
         0.186859,
         -0.149279
+      ]
+    },
+    {
+      "path": "tools/project006/o21_reference/proof_o21.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2234,
+      "lines": 37,
+      "tokens_est": 559,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "46127e4ad673197f",
+      "vector": [
+        -0.161784,
+        0.032357,
+        -0.16418,
+        0.025166,
+        -0.204926,
+        -0.204926,
+        0.106657,
+        0.293607,
+        0.017976,
+        0.001198,
+        -0.180958,
+        -0.166577,
+        -0.188148,
+        -0.260052,
+        -0.248068,
+        -0.025166,
+        0.142609,
+        0.188148,
+        -0.063515,
+        0.049134,
+        -0.082689,
+        0.243275,
+        -0.231291,
+        0.065912,
+        -0.238481,
+        0.250465,
+        -0.267242,
+        -0.171371,
+        0.16418,
+        0.272036,
+        0.161784,
+        0.063515
       ]
     },
     {
@@ -107365,7 +107612,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788788859,
+  "generated_at_unix": 1788790677,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -107545,6 +107792,7 @@
       ".github/workflows/project006-o18-aura-interaction-proof.yml",
       ".github/workflows/project006-o19-physical-wake-acceptance-proof.yml",
       ".github/workflows/project006-o20-installed-runtime-currentness-proof.yml",
+      ".github/workflows/project006-o21-byte-verified-update-proof.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -107648,6 +107896,7 @@
       "artifacts/arena/project006_o18_aura_interaction/PROOF_RECEIPT_O18.json",
       "artifacts/arena/project006_o19_physical_wake_acceptance/PROOF_RECEIPT_O19.json",
       "artifacts/arena/project006_o20_installed_runtime_attestation/PROOF_RECEIPT_O20.json",
+      "artifacts/arena/project006_o21_byte_verified_update/PROOF_RECEIPT_O21.json",
       "arxiv_forager.py",
       "async_palace.py",
       "aura.lexc",
@@ -109003,6 +109252,7 @@
       "tests/test_frontier27_runtime.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
+      "tests/test_project006_atomic_runtime_update_o21.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
@@ -109025,8 +109275,10 @@
       "tools/arena/worker_cells/gpt56sol_gen25_admission_liveness/test_liveness_witness.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project006/atomic_runtime_update.py",
       "tools/project006/aura_interaction_contract.py",
       "tools/project006/installed_runtime_attestation.py",
+      "tools/project006/o21_reference/proof_o21.py",
       "tools/project006/physical_wake_acceptance.py",
       "tools/project006/project006_consumer_outbox_wrapper.py",
       "tools/project006/proof_aura_interaction_o18.py",
@@ -267098,6 +267350,186 @@
         "file_digest8": "bec72310a01d581a"
       },
       {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#class:Tests:80e6936cb85823fd",
+        "name": "Tests",
+        "kind": "class",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 9,
+        "end_line": 53,
+        "signature_hash": "53e678e6ff418c3d",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.journal:d290d17261c2c522",
+        "name": "Tests.journal",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "accff1145fd6fb41",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.ready:7bf9f9b65b36bef0",
+        "name": "Tests.ready",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "bc26f66fe7e5d20a",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_accept_only_after_both_witnesses:75913c28ffd88001",
+        "name": "Tests.test_accept_only_after_both_witnesses",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "9b1e7cc2e6a93e21",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_backup_required_before_stage:b57e0f0f68e1c384",
+        "name": "Tests.test_backup_required_before_stage",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "54462263bc01defe",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_commit_equivocation_rejected:5943e9ea2e2d1b53",
+        "name": "Tests.test_commit_equivocation_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 34,
+        "end_line": 36,
+        "signature_hash": "157f28edab0a53c5",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_commit_is_idempotent_never_reapply:532212d6f81f100e",
+        "name": "Tests.test_commit_is_idempotent_never_reapply",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "91af0b17f0012352",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_crash_reopen_after_commit_never_reapplies:e8f83c7704e5defe",
+        "name": "Tests.test_crash_reopen_after_commit_never_reapplies",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 46,
+        "end_line": 48,
+        "signature_hash": "ec667d1938369c9a",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_extra_payload_rejected:2599eda2001ad500",
+        "name": "Tests.test_extra_payload_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 20,
+        "end_line": 23,
+        "signature_hash": "c443af189a9f2f5e",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_hash_mismatch_rejected:30a2c395870f164b",
+        "name": "Tests.test_hash_mismatch_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "f6338654acdda207",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_materialize_exact_bytes:f1f52cd82515afcc",
+        "name": "Tests.test_materialize_exact_bytes",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "b6acf35f42bede02",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_post_install_requires_o20_and_o19:cf3c5485395a03ed",
+        "name": "Tests.test_post_install_requires_o20_and_o19",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "d23d3c810a5adc19",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_published_release_not_accepted_without_host_witnesses:5e7a15bceda7e52d",
+        "name": "Tests.test_published_release_not_accepted_without_host_witnesses",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "e68f785339536487",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_rollback_restores_exact_backup:22262cd6fe8868e3",
+        "name": "Tests.test_rollback_restores_exact_backup",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "b2e3a3bd679048b0",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_staged_bytes_must_match_target:79581a73b9618e2c",
+        "name": "Tests.test_staged_bytes_must_match_target",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 29,
+        "end_line": 31,
+        "signature_hash": "5ec307bdfb1c33b9",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_tx_identity_conflict_rejected:4b7ba22ecf43d65c",
+        "name": "Tests.test_tx_identity_conflict_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "22321a042c2b2ee5",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_unsafe_path_rejected:81adfe980cff4c42",
+        "name": "Tests.test_unsafe_path_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "4764a8a4021da6eb",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_wrong_rollback_bytes_rejected:a6c100a2f6dbb799",
+        "name": "Tests.test_wrong_rollback_bytes_rejected",
+        "kind": "method",
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "line": 43,
+        "end_line": 45,
+        "signature_hash": "c6589c3e1d518ceb",
+        "file_digest8": "d3e76bbf00394be8"
+      },
+      {
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_default_dockerfile_launches_unified_showcase:7d46bc0e639a3867",
         "name": "test_default_dockerfile_launches_unified_showcase",
         "kind": "function",
@@ -269398,6 +269830,226 @@
         "file_digest8": "2630ed89a1cd55dd"
       },
       {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:ReleaseManifest:d3cbbacf5932c783",
+        "name": "ReleaseManifest",
+        "kind": "class",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 31,
+        "end_line": 48,
+        "signature_hash": "6f89a62032b7d51d",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateError:ea77bd9c10dcd19b",
+        "name": "UpdateError",
+        "kind": "class",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 9,
+        "end_line": 9,
+        "signature_hash": "cdecdef7fce4910f",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateJournal:68c1c04f97920d49",
+        "name": "UpdateJournal",
+        "kind": "class",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 61,
+        "end_line": 155,
+        "signature_hash": "d9e68f9ed968e1b5",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateReceipt:62fb2320846ab1af",
+        "name": "UpdateReceipt",
+        "kind": "class",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 51,
+        "end_line": 59,
+        "signature_hash": "b8b833802c59c25a",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateState:8e372b424ebabbf8",
+        "name": "UpdateState",
+        "kind": "class",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 10,
+        "end_line": 17,
+        "signature_hash": "0c985bbde96d3ced",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:_hex64:df4d9c37ecaa802a",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 19,
+        "end_line": 19,
+        "signature_hash": "19dd1ea1e95374fb",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:_jroot:3e0f4cc79121b009",
+        "name": "_jroot",
+        "kind": "function",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 20,
+        "end_line": 20,
+        "signature_hash": "2bab4ee9492cd346",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:materialize_release:b3eb4b4843c96de8",
+        "name": "materialize_release",
+        "kind": "function",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 165,
+        "end_line": 173,
+        "signature_hash": "36fb2f1931b86c8d",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:safe_relpath:ac02a9661a151411",
+        "name": "safe_relpath",
+        "kind": "function",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 23,
+        "end_line": 28,
+        "signature_hash": "f548d6b74d9aea9b",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:sha256_bytes:e0ef1d4cf3bd470c",
+        "name": "sha256_bytes",
+        "kind": "function",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "2d39314df90fa7b2",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:tree_root:b9b4a846e079ae6a",
+        "name": "tree_root",
+        "kind": "function",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 157,
+        "end_line": 163,
+        "signature_hash": "392bdf7fc88fe0c1",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:ReleaseManifest.release_root:4630ce1698abc37e",
+        "name": "ReleaseManifest.release_root",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "227cebd21efb6d86",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:ReleaseManifest.validate:f40e71f6b21d52af",
+        "name": "ReleaseManifest.validate",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.__init__:5d92cb60555588da",
+        "name": "UpdateJournal.__init__",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 62,
+        "end_line": 73,
+        "signature_hash": "c1fe456fd070f68a",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal._read:b6eb26edd520d641",
+        "name": "UpdateJournal._read",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "3db5b548e006d54f",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal._receipt:9f5fd78b8a7dfc72",
+        "name": "UpdateJournal._receipt",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 78,
+        "end_line": 79,
+        "signature_hash": "72e4deb5c6df7815",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.commit:f3cea25f289a1dcf",
+        "name": "UpdateJournal.commit",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 117,
+        "end_line": 131,
+        "signature_hash": "061a973dc547117d",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.post_install_attest:3c692739a9d14cd2",
+        "name": "UpdateJournal.post_install_attest",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 132,
+        "end_line": 142,
+        "signature_hash": "073bd7a7320c5a41",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.prepare:8ae26bef8ad3185f",
+        "name": "UpdateJournal.prepare",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 80,
+        "end_line": 91,
+        "signature_hash": "bdbd4ff0f7cfcdfd",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.record_backup:e54e61f62a5d6cd9",
+        "name": "UpdateJournal.record_backup",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 92,
+        "end_line": 104,
+        "signature_hash": "6c9018996a2b5765",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.record_staged:6d6d37286b651f47",
+        "name": "UpdateJournal.record_staged",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 105,
+        "end_line": 116,
+        "signature_hash": "3963d2906ec2396a",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.rollback:a113882edd181ef5",
+        "name": "UpdateJournal.rollback",
+        "kind": "method",
+        "file": "tools/project006/atomic_runtime_update.py",
+        "line": 143,
+        "end_line": 155,
+        "signature_hash": "50537b7af0f06cf4",
+        "file_digest8": "a6444d5391d92fa2"
+      },
+      {
         "semantic_id": "tools/project006/aura_interaction_contract.py#class:AgentCommandDraft:29526934d1064675",
         "name": "AgentCommandDraft",
         "kind": "class",
@@ -269706,6 +270358,56 @@
         "end_line": 36,
         "signature_hash": "99559e6add5bcf3e",
         "file_digest8": "ab827f898c606a41"
+      },
+      {
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:campaign:466c54a74d672944",
+        "name": "campaign",
+        "kind": "function",
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "5d0d5d85b7f484a4",
+        "file_digest8": "46127e4ad673197f"
+      },
+      {
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:d13:597d9f98e4efbc51",
+        "name": "d13",
+        "kind": "function",
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "line": 10,
+        "end_line": 16,
+        "signature_hash": "6b299e931f9d9f0d",
+        "file_digest8": "46127e4ad673197f"
+      },
+      {
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:hs:4cbd618ff16c37b6",
+        "name": "hs",
+        "kind": "function",
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "line": 22,
+        "end_line": 35,
+        "signature_hash": "b3e37fefbbbd45d5",
+        "file_digest8": "46127e4ad673197f"
+      },
+      {
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:keeper:d8d8812b134eeb0b",
+        "name": "keeper",
+        "kind": "function",
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "line": 4,
+        "end_line": 4,
+        "signature_hash": "25d67670486c403b",
+        "file_digest8": "46127e4ad673197f"
+      },
+      {
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:omega8:02b66c79706d970d",
+        "name": "omega8",
+        "kind": "function",
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "779fe12d7757e6f1",
+        "file_digest8": "46127e4ad673197f"
       },
       {
         "semantic_id": "tools/project006/physical_wake_acceptance.py#class:AcceptanceContract:deb1d34604357297",
@@ -272458,8 +273160,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e282f528f7870f441a700d196e0157d5",
-    "payload_hash": "1f9275a9d7c698332d86fa702bbc471f"
+    "record_fingerprint": "e2eb25c7053c218910dd3c9238a29f36",
+    "payload_hash": "397f8fa7ae7a585c629af1bfc3043e5e"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -272472,16 +273174,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1686,
-      "bytes": 26633439,
-      "tokens_est": 6648714,
+      "files": 1691,
+      "bytes": 26655858,
+      "tokens_est": 6654322,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1026,
-        "schema_or_lexicon": 282,
+        "python_module": 1029,
+        "schema_or_lexicon": 284,
         "support_file": 53
       }
     },
@@ -273168,16 +273870,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1686,
-    "total_bytes": 26633439,
-    "text_tokens_est": 6648714,
+    "file_count": 1691,
+    "total_bytes": 26655858,
+    "text_tokens_est": 6654322,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1026,
-      "schema_or_lexicon": 282,
+      "python_module": 1029,
+      "schema_or_lexicon": 284,
       "support_file": 53
     },
     "topology_nodes": 11478,
@@ -338974,6 +339676,14 @@
         "signature_hash": "3956785c98c04eb6"
       },
       {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 19,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:_hex64:df4d9c37ecaa802a",
+        "signature_hash": "19dd1ea1e95374fb"
+      },
+      {
         "file": "tools/project006/installed_runtime_attestation.py",
         "kind": "function",
         "line": 8,
@@ -370787,6 +371497,14 @@
         "line": 30,
         "end_line": 30,
         "semantic_id": "scripts/aura_security_accuracy_harness.py#function:sha256_bytes:1e2caf7d84b610f1",
+        "signature_hash": "2d39314df90fa7b2"
+      },
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:sha256_bytes:e0ef1d4cf3bd470c",
         "signature_hash": "2d39314df90fa7b2"
       }
     ],
@@ -428844,6 +429562,202 @@
         "signature_hash": "a7f899fb2c74e634"
       }
     ],
+    "Tests": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 53,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#class:Tests:80e6936cb85823fd",
+        "signature_hash": "53e678e6ff418c3d"
+      },
+      {
+        "file": "tools/project006/test_installed_runtime_attestation.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 40,
+        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#class:Tests:04324674482b7054",
+        "signature_hash": "53e678e6ff418c3d"
+      },
+      {
+        "file": "tools/project006/test_physical_wake_acceptance.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 42,
+        "semantic_id": "tools/project006/test_physical_wake_acceptance.py#class:Tests:f03defde66619375",
+        "signature_hash": "53e678e6ff418c3d"
+      }
+    ],
+    "Tests.journal": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.journal:d290d17261c2c522",
+        "signature_hash": "accff1145fd6fb41"
+      }
+    ],
+    "Tests.ready": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.ready:7bf9f9b65b36bef0",
+        "signature_hash": "bc26f66fe7e5d20a"
+      }
+    ],
+    "Tests.test_materialize_exact_bytes": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_materialize_exact_bytes:f1f52cd82515afcc",
+        "signature_hash": "b6acf35f42bede02"
+      }
+    ],
+    "Tests.test_hash_mismatch_rejected": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_hash_mismatch_rejected:30a2c395870f164b",
+        "signature_hash": "f6338654acdda207"
+      }
+    ],
+    "Tests.test_extra_payload_rejected": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 23,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_extra_payload_rejected:2599eda2001ad500",
+        "signature_hash": "c443af189a9f2f5e"
+      }
+    ],
+    "Tests.test_unsafe_path_rejected": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_unsafe_path_rejected:81adfe980cff4c42",
+        "signature_hash": "4764a8a4021da6eb"
+      }
+    ],
+    "Tests.test_backup_required_before_stage": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_backup_required_before_stage:b57e0f0f68e1c384",
+        "signature_hash": "54462263bc01defe"
+      }
+    ],
+    "Tests.test_staged_bytes_must_match_target": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 31,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_staged_bytes_must_match_target:79581a73b9618e2c",
+        "signature_hash": "5ec307bdfb1c33b9"
+      }
+    ],
+    "Tests.test_commit_is_idempotent_never_reapply": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_commit_is_idempotent_never_reapply:532212d6f81f100e",
+        "signature_hash": "91af0b17f0012352"
+      }
+    ],
+    "Tests.test_commit_equivocation_rejected": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 36,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_commit_equivocation_rejected:5943e9ea2e2d1b53",
+        "signature_hash": "157f28edab0a53c5"
+      }
+    ],
+    "Tests.test_post_install_requires_o20_and_o19": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_post_install_requires_o20_and_o19:cf3c5485395a03ed",
+        "signature_hash": "d23d3c810a5adc19"
+      }
+    ],
+    "Tests.test_accept_only_after_both_witnesses": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_accept_only_after_both_witnesses:75913c28ffd88001",
+        "signature_hash": "9b1e7cc2e6a93e21"
+      }
+    ],
+    "Tests.test_rollback_restores_exact_backup": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_rollback_restores_exact_backup:22262cd6fe8868e3",
+        "signature_hash": "b2e3a3bd679048b0"
+      }
+    ],
+    "Tests.test_wrong_rollback_bytes_rejected": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 45,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_wrong_rollback_bytes_rejected:a6c100a2f6dbb799",
+        "signature_hash": "c6589c3e1d518ceb"
+      }
+    ],
+    "Tests.test_crash_reopen_after_commit_never_reapplies": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 48,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_crash_reopen_after_commit_never_reapplies:e8f83c7704e5defe",
+        "signature_hash": "ec667d1938369c9a"
+      }
+    ],
+    "Tests.test_tx_identity_conflict_rejected": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_tx_identity_conflict_rejected:4b7ba22ecf43d65c",
+        "signature_hash": "22321a042c2b2ee5"
+      }
+    ],
+    "Tests.test_published_release_not_accepted_without_host_witnesses": [
+      {
+        "file": "tests/test_project006_atomic_runtime_update_o21.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tests/test_project006_atomic_runtime_update_o21.py#method:Tests.test_published_release_not_accepted_without_host_witnesses:5e7a15bceda7e52d",
+        "signature_hash": "e68f785339536487"
+      }
+    ],
     "test_default_dockerfile_launches_unified_showcase": [
       {
         "file": "tests/test_render_four_tab_deployment.py",
@@ -430998,6 +431912,206 @@
         "signature_hash": "a18bebaafdbf6310"
       }
     ],
+    "UpdateError": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 9,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateError:ea77bd9c10dcd19b",
+        "signature_hash": "cdecdef7fce4910f"
+      }
+    ],
+    "UpdateState": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateState:8e372b424ebabbf8",
+        "signature_hash": "0c985bbde96d3ced"
+      }
+    ],
+    "_jroot": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 20,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:_jroot:3e0f4cc79121b009",
+        "signature_hash": "2bab4ee9492cd346"
+      }
+    ],
+    "safe_relpath": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 28,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:safe_relpath:ac02a9661a151411",
+        "signature_hash": "f548d6b74d9aea9b"
+      }
+    ],
+    "ReleaseManifest": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 48,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:ReleaseManifest:d3cbbacf5932c783",
+        "signature_hash": "6f89a62032b7d51d"
+      }
+    ],
+    "ReleaseManifest.validate": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:ReleaseManifest.validate:f40e71f6b21d52af",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ReleaseManifest.release_root": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:ReleaseManifest.release_root:4630ce1698abc37e",
+        "signature_hash": "227cebd21efb6d86"
+      }
+    ],
+    "UpdateReceipt": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 59,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateReceipt:62fb2320846ab1af",
+        "signature_hash": "b8b833802c59c25a"
+      }
+    ],
+    "UpdateJournal": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 155,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#class:UpdateJournal:68c1c04f97920d49",
+        "signature_hash": "d9e68f9ed968e1b5"
+      }
+    ],
+    "UpdateJournal.__init__": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 73,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.__init__:5d92cb60555588da",
+        "signature_hash": "c1fe456fd070f68a"
+      }
+    ],
+    "UpdateJournal._read": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal._read:b6eb26edd520d641",
+        "signature_hash": "3db5b548e006d54f"
+      }
+    ],
+    "UpdateJournal._receipt": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 79,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal._receipt:9f5fd78b8a7dfc72",
+        "signature_hash": "72e4deb5c6df7815"
+      }
+    ],
+    "UpdateJournal.prepare": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 91,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.prepare:8ae26bef8ad3185f",
+        "signature_hash": "bdbd4ff0f7cfcdfd"
+      }
+    ],
+    "UpdateJournal.record_backup": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 104,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.record_backup:e54e61f62a5d6cd9",
+        "signature_hash": "6c9018996a2b5765"
+      }
+    ],
+    "UpdateJournal.record_staged": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 116,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.record_staged:6d6d37286b651f47",
+        "signature_hash": "3963d2906ec2396a"
+      }
+    ],
+    "UpdateJournal.commit": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 131,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.commit:f3cea25f289a1dcf",
+        "signature_hash": "061a973dc547117d"
+      }
+    ],
+    "UpdateJournal.post_install_attest": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 142,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.post_install_attest:3c692739a9d14cd2",
+        "signature_hash": "073bd7a7320c5a41"
+      }
+    ],
+    "UpdateJournal.rollback": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 155,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#method:UpdateJournal.rollback:a113882edd181ef5",
+        "signature_hash": "50537b7af0f06cf4"
+      }
+    ],
+    "tree_root": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 163,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:tree_root:b9b4a846e079ae6a",
+        "signature_hash": "392bdf7fc88fe0c1"
+      }
+    ],
+    "materialize_release": [
+      {
+        "file": "tools/project006/atomic_runtime_update.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 173,
+        "semantic_id": "tools/project006/atomic_runtime_update.py#function:materialize_release:b3eb4b4843c96de8",
+        "signature_hash": "36fb2f1931b86c8d"
+      }
+    ],
     "InteractionError": [
       {
         "file": "tools/project006/aura_interaction_contract.py",
@@ -431278,6 +432392,136 @@
         "signature_hash": "65ef3d8945e72adb"
       }
     ],
+    "keeper": [
+      {
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:keeper:d8d8812b134eeb0b",
+        "signature_hash": "25d67670486c403b"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 4,
+        "semantic_id": "tools/project006/proof_o20.py#function:keeper:d522d355cdb440cc",
+        "signature_hash": "25d67670486c403b"
+      }
+    ],
+    "omega8": [
+      {
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:omega8:02b66c79706d970d",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_aura_interaction_o18.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 15,
+        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:omega8:4762b29dbf9ff32c",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/project006/proof_o20.py#function:omega8:e237c92f4cf60566",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_physical_wake_o19.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:omega8:cf5e45886f4d7602",
+        "signature_hash": "779fe12d7757e6f1"
+      },
+      {
+        "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 20,
+        "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:omega8:1352668bf00264d9",
+        "signature_hash": "779fe12d7757e6f1"
+      }
+    ],
+    "d13": [
+      {
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:d13:597d9f98e4efbc51",
+        "signature_hash": "6b299e931f9d9f0d"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tools/project006/proof_o20.py#function:d13:7dcfbf966e72af5d",
+        "signature_hash": "6b299e931f9d9f0d"
+      },
+      {
+        "file": "tools/project006/proof_physical_wake_o19.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 16,
+        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:d13:66792b044ab2b756",
+        "signature_hash": "6b299e931f9d9f0d"
+      }
+    ],
+    "campaign": [
+      {
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:campaign:466c54a74d672944",
+        "signature_hash": "5d0d5d85b7f484a4"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tools/project006/proof_o20.py#function:campaign:231643048102be38",
+        "signature_hash": "5d0d5d85b7f484a4"
+      }
+    ],
+    "hs": [
+      {
+        "file": "tools/project006/o21_reference/proof_o21.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 35,
+        "semantic_id": "tools/project006/o21_reference/proof_o21.py#function:hs:4cbd618ff16c37b6",
+        "signature_hash": "b3e37fefbbbd45d5"
+      },
+      {
+        "file": "tools/project006/proof_o20.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 35,
+        "semantic_id": "tools/project006/proof_o20.py#function:hs:32c763bcc91824c0",
+        "signature_hash": "b3e37fefbbbd45d5"
+      },
+      {
+        "file": "tools/project006/proof_physical_wake_o19.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 26,
+        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:hs:6a8c8510a6488244",
+        "signature_hash": "b3e37fefbbbd45d5"
+      }
+    ],
     "WitnessError": [
       {
         "file": "tools/project006/physical_wake_acceptance.py",
@@ -431498,40 +432742,6 @@
         "signature_hash": "493c3741ecc7660a"
       }
     ],
-    "omega8": [
-      {
-        "file": "tools/project006/proof_aura_interaction_o18.py",
-        "kind": "function",
-        "line": 11,
-        "end_line": 15,
-        "semantic_id": "tools/project006/proof_aura_interaction_o18.py#function:omega8:4762b29dbf9ff32c",
-        "signature_hash": "779fe12d7757e6f1"
-      },
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 5,
-        "end_line": 9,
-        "semantic_id": "tools/project006/proof_o20.py#function:omega8:e237c92f4cf60566",
-        "signature_hash": "779fe12d7757e6f1"
-      },
-      {
-        "file": "tools/project006/proof_physical_wake_o19.py",
-        "kind": "function",
-        "line": 5,
-        "end_line": 9,
-        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:omega8:cf5e45886f4d7602",
-        "signature_hash": "779fe12d7757e6f1"
-      },
-      {
-        "file": "tools/project006/proof_windows_liveness_fallback_o17.py",
-        "kind": "function",
-        "line": 7,
-        "end_line": 20,
-        "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:omega8:1352668bf00264d9",
-        "signature_hash": "779fe12d7757e6f1"
-      }
-    ],
     "factored13d": [
       {
         "file": "tools/project006/proof_aura_interaction_o18.py",
@@ -431566,62 +432776,6 @@
         "end_line": 51,
         "semantic_id": "tools/project006/proof_windows_liveness_fallback_o17.py#function:hs1000:4311e3dfcdc56259",
         "signature_hash": "cb33d0ed1005d09a"
-      }
-    ],
-    "keeper": [
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 4,
-        "end_line": 4,
-        "semantic_id": "tools/project006/proof_o20.py#function:keeper:d522d355cdb440cc",
-        "signature_hash": "25d67670486c403b"
-      }
-    ],
-    "d13": [
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 16,
-        "semantic_id": "tools/project006/proof_o20.py#function:d13:7dcfbf966e72af5d",
-        "signature_hash": "6b299e931f9d9f0d"
-      },
-      {
-        "file": "tools/project006/proof_physical_wake_o19.py",
-        "kind": "function",
-        "line": 10,
-        "end_line": 16,
-        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:d13:66792b044ab2b756",
-        "signature_hash": "6b299e931f9d9f0d"
-      }
-    ],
-    "campaign": [
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 21,
-        "semantic_id": "tools/project006/proof_o20.py#function:campaign:231643048102be38",
-        "signature_hash": "5d0d5d85b7f484a4"
-      }
-    ],
-    "hs": [
-      {
-        "file": "tools/project006/proof_o20.py",
-        "kind": "function",
-        "line": 22,
-        "end_line": 35,
-        "semantic_id": "tools/project006/proof_o20.py#function:hs:32c763bcc91824c0",
-        "signature_hash": "b3e37fefbbbd45d5"
-      },
-      {
-        "file": "tools/project006/proof_physical_wake_o19.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 26,
-        "semantic_id": "tools/project006/proof_physical_wake_o19.py#function:hs:6a8c8510a6488244",
-        "signature_hash": "b3e37fefbbbd45d5"
       }
     ],
     "accept": [
@@ -431922,24 +433076,6 @@
         "end_line": 7,
         "semantic_id": "tools/project006/test_installed_runtime_attestation.py#function:measurement:94340a8857be54f6",
         "signature_hash": "78c31508e146a1e9"
-      }
-    ],
-    "Tests": [
-      {
-        "file": "tools/project006/test_installed_runtime_attestation.py",
-        "kind": "class",
-        "line": 10,
-        "end_line": 40,
-        "semantic_id": "tools/project006/test_installed_runtime_attestation.py#class:Tests:04324674482b7054",
-        "signature_hash": "53e678e6ff418c3d"
-      },
-      {
-        "file": "tools/project006/test_physical_wake_acceptance.py",
-        "kind": "class",
-        "line": 7,
-        "end_line": 42,
-        "semantic_id": "tools/project006/test_physical_wake_acceptance.py#class:Tests:f03defde66619375",
-        "signature_hash": "53e678e6ff418c3d"
       }
     ],
     "Tests.test_owner_stale_report_is_not_exact_head_or_design_failure": [
