@@ -172,6 +172,17 @@ class PreimportSourceProxyTests(unittest.TestCase):
             self.assertEqual(proxy.receipt.start_method, "subprocess-source-attested-v1")
             self.assertEqual(proxy.generate("route")["text"], "route")
 
+    def test_12_nonfinite_or_boolean_timeout_fails_before_subprocess_start(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            path, source = self._target(root, "class Target:\n    def ok(self): return 1\n")
+            for value in (float("nan"), float("inf"), float("-inf"), True, False, 0, -1):
+                with self.subTest(value=value), self.assertRaises(ValueError):
+                    PreimportSourceObjectProxy(
+                        "preimport_target", "Target", str(path), digest(source),
+                        import_roots=(str(root),), timeout_seconds=value,
+                    )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

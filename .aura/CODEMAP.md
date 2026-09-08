@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1674
-- **total_bytes**: 26735254
-- **text_tokens_est**: 6674162
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1028, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1675
+- **total_bytes**: 26738625
+- **text_tokens_est**: 6675007
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1028, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1674,
+  "repo_file_count": 1675,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -144,6 +144,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/umc_final5_payload/part-19",
     ".github/umc_final5_payload/part-20",
     ".github/umc_final5_payload/part-21",
+    ".github/workflows/airllm-finite-timeout-owner-repair.yml",
     ".github/workflows/amd-track3.yml",
     ".github/workflows/architect-code-quality-benchmark.yml",
     ".github/workflows/architect-consolidation-benchmark.yml",
@@ -1814,16 +1815,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1674,
-  "bytes": 26735254,
-  "tokens_est": 6674162,
+  "files": 1675,
+  "bytes": 26738625,
+  "tokens_est": 6675007,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1028,
-    "schema_or_lexicon": 273,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }

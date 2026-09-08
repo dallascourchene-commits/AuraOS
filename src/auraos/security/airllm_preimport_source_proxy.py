@@ -11,6 +11,7 @@ from __future__ import annotations
 import base64
 from hashlib import sha256
 import json
+import math
 import os
 from pathlib import Path
 import pickle
@@ -218,7 +219,6 @@ main()
 
 BOOTSTRAP_SOURCE_SHA256 = sha256(_BOOTSTRAP.encode("utf-8")).hexdigest()
 
-
 class PreimportSourceObjectProxy:
     def __init__(
         self,
@@ -237,8 +237,13 @@ class PreimportSourceObjectProxy:
             raise IsolationBoundaryError("qualname must contain public identifiers")
         if not isinstance(expected_source_sha256,str) or _HEX64.fullmatch(expected_source_sha256) is None:
             raise IsolationBoundaryError("expected source SHA-256 must be exact lowercase 64-hex")
-        if not isinstance(timeout_seconds,(int,float)) or isinstance(timeout_seconds,bool) or timeout_seconds<=0:
-            raise ValueError("timeout_seconds must be positive")
+        if (
+            not isinstance(timeout_seconds,(int,float))
+            or isinstance(timeout_seconds,bool)
+            or not math.isfinite(float(timeout_seconds))
+            or timeout_seconds<=0
+        ):
+            raise ValueError("timeout_seconds must be a finite positive duration")
         path=str(Path(source_path).resolve(strict=True))
         if not Path(path).is_file():
             raise IsolationBoundaryError("source_path must resolve to a regular file")

@@ -11,6 +11,7 @@
     ],
     "python -m py_compile": [
       ".github/scripts/umc_publish_five_files.sh",
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
       ".github/workflows/amd-track3.yml",
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
@@ -81,6 +82,10 @@
       "docs/AURA_CONSTRUCTION_FOUNDRY_DECISION_PR3.md",
       "docs/AURA_PASCAL_SPATIAL_PRESENTATION_PR2.md",
       "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python -m pip": [
       ".github/workflows/amd-track3.yml",
@@ -1025,9 +1030,6 @@
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
     ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
-    ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
     ],
@@ -1060,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1674,
+    "repo_file_count": 1675,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1181,6 +1183,7 @@
       ".github/umc_final5_payload/part-19",
       ".github/umc_final5_payload/part-20",
       ".github/umc_final5_payload/part-21",
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
       ".github/workflows/amd-track3.yml",
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
@@ -8450,6 +8453,63 @@
         0.139281,
         0.048266,
         0.004137
+      ]
+    },
+    {
+      "path": ".github/workflows/airllm-finite-timeout-owner-repair.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2037,
+      "lines": 53,
+      "tokens_est": 510,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          42
+        ],
+        "python -m unittest": [
+          50
+        ]
+      },
+      "topology": {},
+      "digest8": "b1103550907fa7a5",
+      "vector": [
+        -0.216861,
+        -0.113487,
+        -0.266301,
+        -0.15169,
+        0.243828,
+        -0.171916,
+        0.11124,
+        0.174163,
+        0.203377,
+        0.153938,
+        0.198883,
+        0.22585,
+        0.088767,
+        0.219108,
+        0.016854,
+        -0.198883,
+        0.192141,
+        -0.050563,
+        -0.084272,
+        0.270795,
+        -0.093261,
+        -0.095509,
+        -0.257312,
+        0.156185,
+        -0.032585,
+        -0.279784,
+        0.055058,
+        0.20113,
+        0.165174,
+        0.239334,
+        0.091014,
+        0.138207
       ]
     },
     {
@@ -84737,94 +84797,94 @@
       "path": "src/auraos/security/airllm_preimport_source_proxy.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 17584,
-      "lines": 383,
-      "tokens_est": 4396,
+      "bytes": 17717,
+      "lines": 387,
+      "tokens_est": 4430,
       "symbol_count": 19,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c7c4fc729afa38db",
+      "digest8": "4f46409a14bbfb5e",
       "vector": [
-        0.149352,
-        0.082442,
-        0.135014,
-        0.182806,
-        -0.056156,
-        0.244937,
-        -0.063325,
-        0.089611,
-        0.22104,
-        0.187586,
-        0.182806,
-        0.013143,
-        -0.254495,
-        -0.005974,
-        -0.178027,
-        -0.168469,
-        -0.072884,
-        0.276002,
-        -0.22104,
-        -0.278391,
-        0.099169,
-        -0.115897,
-        -0.189975,
-        0.058546,
-        0.292729,
-        -0.163689,
-        0.1613,
-        0.304677,
-        0.058546,
-        -0.120676,
-        0.271222,
-        -0.089611
+        -0.119237,
+        0.147969,
+        -0.038788,
+        0.242784,
+        0.280135,
+        0.176701,
+        0.007183,
+        -0.25715,
+        -0.219799,
+        -0.044534,
+        -0.271516,
+        -0.007183,
+        -0.010056,
+        0.061773,
+        -0.225545,
+        -0.268643,
+        0.047408,
+        -0.061773,
+        -0.124983,
+        -0.274389,
+        -0.150842,
+        -0.124983,
+        0.087632,
+        -0.007183,
+        -0.053154,
+        0.308867,
+        0.268643,
+        -0.027295,
+        -0.018676,
+        0.007183,
+        -0.291628,
+        -0.277262
       ]
     },
     {
       "path": "src/auraos/security/airllm_process_isolation.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 14164,
-      "lines": 387,
-      "tokens_est": 3541,
+      "bytes": 14385,
+      "lines": 393,
+      "tokens_est": 3597,
       "symbol_count": 23,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "1d4b441aa0f89a9e",
+      "digest8": "f8c22bf2ebb07382",
       "vector": [
-        0.248221,
-        0.056571,
-        -0.190495,
-        -0.271311,
-        -0.100443,
-        0.243603,
-        -0.091207,
-        -0.063498,
-        -0.024245,
-        -0.13046,
-        0.264384,
-        0.061189,
-        -0.08428,
-        0.165096,
-        0.17895,
-        -0.098134,
-        -0.25053,
-        -0.049644,
-        0.252839,
-        0.252839,
-        -0.225131,
-        0.05888,
-        -0.215894,
-        0.024245,
-        0.190495,
-        0.232058,
-        -0.176641,
-        0.148933,
-        0.271311,
-        -0.176641,
-        0.095825,
-        -0.15586
+        0.248621,
+        0.110923,
+        -0.105823,
+        -0.070124,
+        -0.121123,
+        -0.179772,
+        0.223121,
+        -0.121123,
+        0.024225,
+        0.210372,
+        0.29452,
+        -0.200172,
+        0.192522,
+        -0.218021,
+        0.169572,
+        -0.141523,
+        0.003825,
+        0.200172,
+        0.082874,
+        -0.225671,
+        -0.30472,
+        0.085424,
+        -0.29452,
+        0.001275,
+        -0.233321,
+        -0.141523,
+        0.093073,
+        0.075224,
+        0.029325,
+        -0.075224,
+        -0.256271,
+        -0.218021
       ]
     },
     {
@@ -85489,94 +85549,94 @@
       "path": "src/auraos/security/test_airllm_preimport_source_proxy.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9075,
-      "lines": 178,
-      "tokens_est": 2269,
-      "symbol_count": 14,
+      "bytes": 9722,
+      "lines": 188,
+      "tokens_est": 2431,
+      "symbol_count": 15,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "dde81622fea82a1a",
+      "digest8": "06c5ae5a6cb51220",
       "vector": [
-        -0.026468,
-        -0.175195,
-        0.112175,
-        -0.228131,
-        -0.036551,
-        0.265943,
-        0.102092,
-        0.003781,
-        -0.039072,
-        -0.197882,
-        0.099571,
-        0.240735,
-        -0.308796,
-        -0.124779,
-        -0.253339,
-        0.119737,
-        -0.270985,
-        -0.139904,
-        0.180236,
-        0.185278,
-        -0.137383,
-        0.157549,
-        0.092009,
-        0.104613,
-        -0.139904,
-        0.202923,
-        0.207965,
-        -0.293672,
-        -0.263422,
-        0.157549,
-        0.071842,
-        -0.104613
+        -0.26159,
+        0.240847,
+        -0.178619,
+        0.040333,
+        0.123305,
+        0.26159,
+        -0.21319,
+        -0.031114,
+        -0.229324,
+        0.252371,
+        -0.263895,
+        -0.167095,
+        0.102562,
+        0.293857,
+        -0.063381,
+        -0.247762,
+        0.144047,
+        0.11639,
+        0.100257,
+        -0.051857,
+        0.06799,
+        0.065686,
+        -0.26159,
+        0.012676,
+        -0.139438,
+        -0.289247,
+        -0.065686,
+        0.054162,
+        0.11639,
+        -0.088733,
+        -0.176314,
+        0.215495
       ]
     },
     {
       "path": "src/auraos/security/test_airllm_process_isolation.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6415,
-      "lines": 163,
-      "tokens_est": 1604,
-      "symbol_count": 26,
+      "bytes": 6748,
+      "lines": 168,
+      "tokens_est": 1687,
+      "symbol_count": 27,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "faf75dabc46ab464",
+      "digest8": "7d742001d2761f39",
       "vector": [
-        -0.065476,
-        0.098856,
-        -0.062909,
-        0.178455,
-        0.098856,
-        -0.227242,
-        -0.204132,
-        -0.181023,
-        0.324814,
-        -0.211835,
-        -0.27346,
-        -0.055206,
-        -0.098856,
-        0.252919,
-        0.237512,
-        0.27346,
-        0.026961,
-        0.068044,
-        0.134804,
-        -0.237512,
-        0.147643,
-        0.222106,
-        -0.10656,
-        0.075747,
-        -0.008987,
-        0.183591,
-        0.245215,
-        -0.134804,
-        -0.181023,
-        0.247783,
-        0.062909,
-        -0.052638
+        0.06649,
+        0.280302,
+        -0.126462,
+        0.029986,
+        0.25162,
+        -0.006519,
+        -0.196863,
+        0.259442,
+        0.063883,
+        0.118639,
+        0.029986,
+        0.084742,
+        0.082135,
+        -0.071705,
+        0.082135,
+        -0.191648,
+        0.037808,
+        -0.311591,
+        0.173396,
+        -0.08735,
+        0.063883,
+        0.26205,
+        0.212508,
+        0.123854,
+        -0.147321,
+        -0.301161,
+        0.170788,
+        -0.131677,
+        0.07692,
+        0.285517,
+        0.23076,
+        -0.282909
       ]
     },
     {
@@ -106761,7 +106821,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788656932,
+  "generated_at_unix": 1788898989,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106884,6 +106944,7 @@
       ".github/umc_final5_payload/part-19",
       ".github/umc_final5_payload/part-20",
       ".github/umc_final5_payload/part-21",
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
       ".github/workflows/amd-track3.yml",
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
@@ -209917,79 +209978,79 @@
         "kind": "class",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "line": 222,
-        "end_line": 379,
+        "end_line": 384,
         "signature_hash": "c582ee9f64b6c896",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_canonical_json:a679a4c040f79926",
         "name": "_canonical_json",
         "kind": "function",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 34,
-        "end_line": 35,
+        "line": 35,
+        "end_line": 36,
         "signature_hash": "caa6df7371712507",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_digest:15df5459449f8deb",
         "name": "_digest",
         "kind": "function",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 38,
-        "end_line": 39,
+        "line": 39,
+        "end_line": 40,
         "signature_hash": "514f786724465716",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_pickled:d767f6480490a5bf",
         "name": "_pickled",
         "kind": "function",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 42,
-        "end_line": 47,
+        "line": 43,
+        "end_line": 48,
         "signature_hash": "9b7afe5c00843e5d",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_receipt_root:878e0d1113c3b1d7",
         "name": "_receipt_root",
         "kind": "function",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 59,
-        "end_line": 68,
+        "line": 60,
+        "end_line": 69,
         "signature_hash": "bafec1cf44dcfaf1",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_unpickle:eabcd172d4a94bfa",
         "name": "_unpickle",
         "kind": "function",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 50,
-        "end_line": 56,
+        "line": 51,
+        "end_line": 57,
         "signature_hash": "9e4df1c7cc55892a",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.__enter__:8f6ef783979a551a",
         "name": "PreimportSourceObjectProxy.__enter__",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 378,
-        "end_line": 378,
+        "line": 383,
+        "end_line": 383,
         "signature_hash": "70703c73fc87d8b5",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.__exit__:68aab4f1e8038d42",
         "name": "PreimportSourceObjectProxy.__exit__",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 379,
-        "end_line": 379,
+        "line": 384,
+        "end_line": 384,
         "signature_hash": "c1ffe2d5c68b9bfc",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.__init__:a7a15b583b461150",
@@ -209997,339 +210058,339 @@
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "line": 223,
-        "end_line": 283,
+        "end_line": 288,
         "signature_hash": "e302cb9ee2b77fc1",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._abort:b28fd57a1081c737",
         "name": "PreimportSourceObjectProxy._abort",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 363,
-        "end_line": 376,
+        "line": 368,
+        "end_line": 381,
         "signature_hash": "b2e3dab0b66e6371",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._read_stderr:2d91e7ea918a80ef",
         "name": "PreimportSourceObjectProxy._read_stderr",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 306,
-        "end_line": 314,
+        "line": 311,
+        "end_line": 319,
         "signature_hash": "ae44948b4ec7bfc8",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._read_stdout:258315d7dde17b55",
         "name": "PreimportSourceObjectProxy._read_stdout",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 293,
-        "end_line": 304,
+        "line": 298,
+        "end_line": 309,
         "signature_hash": "b3c6f30914736356",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._recv:0cc929af97767551",
         "name": "PreimportSourceObjectProxy._recv",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 316,
-        "end_line": 322,
+        "line": 321,
+        "end_line": 327,
         "signature_hash": "cf71d5d54d14a529",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._send:679755d41e4e35f6",
         "name": "PreimportSourceObjectProxy._send",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 324,
-        "end_line": 331,
+        "line": 329,
+        "end_line": 336,
         "signature_hash": "0f3801fa0da69a6e",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.bootstrap_source_sha256:e3dc656dc1356899",
         "name": "PreimportSourceObjectProxy.bootstrap_source_sha256",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 290,
-        "end_line": 291,
+        "line": 295,
+        "end_line": 296,
         "signature_hash": "7b9d693c15d636dc",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.call:633ca8866447b49c",
         "name": "PreimportSourceObjectProxy.call",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 333,
-        "end_line": 342,
+        "line": 338,
+        "end_line": 347,
         "signature_hash": "d258d0bf0a39568c",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.close:bb8eaf87cb07cf2a",
         "name": "PreimportSourceObjectProxy.close",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 347,
-        "end_line": 361,
+        "line": 352,
+        "end_line": 366,
         "signature_hash": "818fdb66f3084fa5",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.generate:720af85dd037901a",
         "name": "PreimportSourceObjectProxy.generate",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 344,
-        "end_line": 345,
+        "line": 349,
+        "end_line": 350,
         "signature_hash": "b670710ef00ce499",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.receipt:71db0629622b28b4",
         "name": "PreimportSourceObjectProxy.receipt",
         "kind": "method",
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
-        "line": 286,
-        "end_line": 287,
+        "line": 291,
+        "end_line": 292,
         "signature_hash": "c724ebd1d568bc4d",
-        "file_digest8": "c7c4fc729afa38db"
+        "file_digest8": "4f46409a14bbfb5e"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:IsolatedObjectProxy:99b4b77169b6ae3f",
         "name": "IsolatedObjectProxy",
         "kind": "class",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 203,
-        "end_line": 378,
+        "line": 204,
+        "end_line": 384,
         "signature_hash": "0117abb9f1a9f1d1",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:IsolationBoundaryError:fe393e89317e6b6f",
         "name": "IsolationBoundaryError",
         "kind": "class",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 28,
-        "end_line": 29,
+        "line": 29,
+        "end_line": 30,
         "signature_hash": "d03fbcab0f3545cd",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:IsolationReceipt:4822b69925913e93",
         "name": "IsolationReceipt",
         "kind": "class",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 42,
-        "end_line": 50,
+        "line": 43,
+        "end_line": 51,
         "signature_hash": "43991893361cf607",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:RemoteInvocationError:bf5804cc807cc4ba",
         "name": "RemoteInvocationError",
         "kind": "class",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 32,
-        "end_line": 38,
+        "line": 33,
+        "end_line": 39,
         "signature_hash": "4a8efc42736fe580",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_assert_picklable:126f1b5791cc415d",
         "name": "_assert_picklable",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 121,
-        "end_line": 125,
+        "line": 122,
+        "end_line": 126,
         "signature_hash": "f48dda0f57067120",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_canonical_json:369281609ee9b7af",
         "name": "_canonical_json",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 53,
-        "end_line": 60,
+        "line": 54,
+        "end_line": 61,
         "signature_hash": "caa6df7371712507",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_digest:7764460b50804694",
         "name": "_digest",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 63,
-        "end_line": 64,
+        "line": 64,
+        "end_line": 65,
         "signature_hash": "514f786724465716",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_factory_identity_root:65c4829dcccbc791",
         "name": "_factory_identity_root",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 67,
-        "end_line": 68,
+        "line": 68,
+        "end_line": 69,
         "signature_hash": "0d8941927e0455f0",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_resolve_symbol:a72cf569e68f1dae",
         "name": "_resolve_symbol",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 104,
-        "end_line": 114,
+        "line": 105,
+        "end_line": 115,
         "signature_hash": "a680b3be0b49f9dc",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_sanitized_error:f8b15142b58841cb",
         "name": "_sanitized_error",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 117,
-        "end_line": 118,
+        "line": 118,
+        "end_line": 119,
         "signature_hash": "3b4673b80ecbd8c4",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_validate_receipt_fields:796aa7012634aad6",
         "name": "_validate_receipt_fields",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 71,
-        "end_line": 101,
+        "line": 72,
+        "end_line": 102,
         "signature_hash": "1d23f52cd5edced1",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_worker_main:6062d2d7b06ecaa8",
         "name": "_worker_main",
         "kind": "function",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 128,
-        "end_line": 200,
+        "line": 129,
+        "end_line": 201,
         "signature_hash": "8343a91fa76c4ea9",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.__enter__:6d89cb21e88e7715",
         "name": "IsolatedObjectProxy.__enter__",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 374,
-        "end_line": 375,
+        "line": 380,
+        "end_line": 381,
         "signature_hash": "70703c73fc87d8b5",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.__exit__:88e18afa1e928ddb",
         "name": "IsolatedObjectProxy.__exit__",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 377,
-        "end_line": 378,
+        "line": 383,
+        "end_line": 384,
         "signature_hash": "c1ffe2d5c68b9bfc",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.__init__:a5302b5e30a039ea",
         "name": "IsolatedObjectProxy.__init__",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 211,
-        "end_line": 276,
+        "line": 212,
+        "end_line": 282,
         "signature_hash": "57db65f77d6cfa7b",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy._abort:6e631d5eeac7dfa3",
         "name": "IsolatedObjectProxy._abort",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 362,
-        "end_line": 372,
+        "line": 368,
+        "end_line": 378,
         "signature_hash": "b2e3dab0b66e6371",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy._raise_message:7bb1cf2bef21fc97",
         "name": "IsolatedObjectProxy._raise_message",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 296,
-        "end_line": 301,
+        "line": 302,
+        "end_line": 307,
         "signature_hash": "e89410d35d775c40",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy._recv:9e1bec54a3781390",
         "name": "IsolatedObjectProxy._recv",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 282,
-        "end_line": 294,
+        "line": 288,
+        "end_line": 300,
         "signature_hash": "cf71d5d54d14a529",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.call:46c4d7c2d0491111",
         "name": "IsolatedObjectProxy.call",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 303,
-        "end_line": 325,
+        "line": 309,
+        "end_line": 331,
         "signature_hash": "d258d0bf0a39568c",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.close:10297edfc6d722dc",
         "name": "IsolatedObjectProxy.close",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 330,
-        "end_line": 360,
+        "line": 336,
+        "end_line": 366,
         "signature_hash": "818fdb66f3084fa5",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.generate:294ef41ae56576c8",
         "name": "IsolatedObjectProxy.generate",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 327,
-        "end_line": 328,
+        "line": 333,
+        "end_line": 334,
         "signature_hash": "b670710ef00ce499",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.receipt:a0e548f492b7968a",
         "name": "IsolatedObjectProxy.receipt",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 279,
-        "end_line": 280,
+        "line": 285,
+        "end_line": 286,
         "signature_hash": "c724ebd1d568bc4d",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:RemoteInvocationError.__init__:4913dcaf4ef24176",
         "name": "RemoteInvocationError.__init__",
         "kind": "method",
         "file": "src/auraos/security/airllm_process_isolation.py",
-        "line": 35,
-        "end_line": 38,
+        "line": 36,
+        "end_line": 39,
         "signature_hash": "3567e6bfba46ef71",
-        "file_digest8": "1d4b441aa0f89a9e"
+        "file_digest8": "f8c22bf2ebb07382"
       },
       {
         "semantic_id": "src/auraos/security/airllm_secure_wrapper.py#class:AirLLMSecurityError:5f64aebd6742c5e0",
@@ -212677,9 +212738,9 @@
         "kind": "class",
         "file": "src/auraos/security/test_airllm_preimport_source_proxy.py",
         "line": 20,
-        "end_line": 173,
+        "end_line": 184,
         "signature_hash": "774e65d58a73ba97",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#function:digest:b4274b18eb6a1bc2",
@@ -212689,7 +212750,7 @@
         "line": 16,
         "end_line": 17,
         "signature_hash": "f7302d8b43923cbd",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests._target:63a91b9486feb8b1",
@@ -212699,7 +212760,7 @@
         "line": 21,
         "end_line": 25,
         "signature_hash": "2a6bbf596e536dc1",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_01_exact_bytes_execute_once_and_remain_resident:4f08d586fddad95f",
@@ -212709,7 +212770,7 @@
         "line": 27,
         "end_line": 42,
         "signature_hash": "86a24bcbd305635f",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_02_mismatch_does_not_execute_target_side_effect:b101aa61cbd4b874",
@@ -212719,7 +212780,7 @@
         "line": 44,
         "end_line": 57,
         "signature_hash": "b793474c9489e9cf",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_03_invalid_factory_is_rejected_after_exact_target_execution:12e8252eef46acc7",
@@ -212729,7 +212790,7 @@
         "line": 59,
         "end_line": 68,
         "signature_hash": "e2fb829373384f85",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_04_private_rpc_method_is_rejected_in_parent:d39341a60349a130",
@@ -212739,7 +212800,7 @@
         "line": 70,
         "end_line": 79,
         "signature_hash": "544afcf9442a172e",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_05_missing_method_is_sanitized_and_session_survives:c9660a4768cecf56",
@@ -212749,7 +212810,7 @@
         "line": 81,
         "end_line": 92,
         "signature_hash": "4377bb1bb8079f0b",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_06_child_exception_is_sanitized_and_session_survives:fac37ad26840f15d",
@@ -212759,7 +212820,7 @@
         "line": 94,
         "end_line": 105,
         "signature_hash": "609c5bd88d4663f0",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_07_unserializable_call_fails_before_send_and_session_survives:991ed06d610664db",
@@ -212769,7 +212830,7 @@
         "line": 107,
         "end_line": 117,
         "signature_hash": "83513a45263847ee",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_08_unserializable_result_is_sanitized_and_session_survives:1194fa54db4dcfed",
@@ -212779,7 +212840,7 @@
         "line": 119,
         "end_line": 129,
         "signature_hash": "67de2b59a66a5dda",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_09_timeout_kills_and_poisons_session:dbcd8e553be990f6",
@@ -212789,7 +212850,7 @@
         "line": 131,
         "end_line": 144,
         "signature_hash": "dec5cbc89cae4bfa",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_10_two_sessions_have_distinct_worker_identity:cf2e51bfdee574b9",
@@ -212799,7 +212860,7 @@
         "line": 146,
         "end_line": 155,
         "signature_hash": "dfffff2557794b7a",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_11_owner_launch_routes_through_preimport_mode:0466243f1e27f638",
@@ -212809,7 +212870,17 @@
         "line": 157,
         "end_line": 173,
         "signature_hash": "42b83fb349fd35bc",
-        "file_digest8": "dde81622fea82a1a"
+        "file_digest8": "06c5ae5a6cb51220"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_12_nonfinite_or_boolean_timeout_fails_before_subprocess_start:d10fa301763317ea",
+        "name": "PreimportSourceProxyTests.test_12_nonfinite_or_boolean_timeout_fails_before_subprocess_start",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_preimport_source_proxy.py",
+        "line": 175,
+        "end_line": 184,
+        "signature_hash": "e35252ed9944db14",
+        "file_digest8": "06c5ae5a6cb51220"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#class:AirLLMProcessIsolationTests:1863dfd0d802a975",
@@ -212817,9 +212888,9 @@
         "kind": "class",
         "file": "src/auraos/security/test_airllm_process_isolation.py",
         "line": 66,
-        "end_line": 154,
+        "end_line": 159,
         "signature_hash": "b9b7b2318fc34b9f",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#class:FakeBoundary:fcfa49421a27ae29",
@@ -212829,7 +212900,7 @@
         "line": 14,
         "end_line": 17,
         "signature_hash": "c89bf61342076c9f",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#class:IsolatedPatchedTarget:3956bce715137f86",
@@ -212839,17 +212910,17 @@
         "line": 38,
         "end_line": 63,
         "signature_hash": "2cd10328e02079cb",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#class:_PrivateTarget:3bad87418985b3b2",
         "name": "_PrivateTarget",
         "kind": "class",
         "file": "src/auraos/security/test_airllm_process_isolation.py",
-        "line": 157,
-        "end_line": 158,
+        "line": 162,
+        "end_line": 163,
         "signature_hash": "2a7a0b4820b5f056",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#function:process_global_hard_false_patch:ce5853692835820b",
@@ -212859,7 +212930,7 @@
         "line": 21,
         "end_line": 35,
         "signature_hash": "1ae877f336de0b1a",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests._proxy:7f232534c1a6fcff",
@@ -212869,7 +212940,7 @@
         "line": 67,
         "end_line": 68,
         "signature_hash": "8da4769a9a59eafb",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_01_spawned_child_has_distinct_pid:8399fc65c6b6ed4a",
@@ -212879,7 +212950,7 @@
         "line": 70,
         "end_line": 77,
         "signature_hash": "24690a77c7968798",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_02_child_hard_false_membrane_remains_active:0265227ece2379a2",
@@ -212889,7 +212960,7 @@
         "line": 79,
         "end_line": 83,
         "signature_hash": "57df52f2eb3a4e8f",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_03_child_rejects_true_without_mutating_parent:d87b7f3e8b7aa550",
@@ -212899,7 +212970,7 @@
         "line": 85,
         "end_line": 92,
         "signature_hash": "93ac7185947770d9",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_04_parent_bystander_is_unaffected_while_child_patch_is_live:0926430ff69c4ef5",
@@ -212909,7 +212980,7 @@
         "line": 94,
         "end_line": 101,
         "signature_hash": "36abac52470c04df",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_05_generate_executes_in_child:639a905c2b2d712e",
@@ -212919,7 +212990,7 @@
         "line": 103,
         "end_line": 108,
         "signature_hash": "4e98374aa079286a",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_06_private_method_names_fail_closed_in_parent:7c58a5a6a7ced0e0",
@@ -212929,7 +213000,7 @@
         "line": 110,
         "end_line": 115,
         "signature_hash": "efe5b9a3f25ad1eb",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_07_missing_method_fails_closed_without_child_exception_pickle:f319409a69721a96",
@@ -212939,7 +213010,7 @@
         "line": 117,
         "end_line": 121,
         "signature_hash": "6005492369790cbc",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_08_child_exception_crosses_as_sanitized_metadata:f67352989505a2a0",
@@ -212949,7 +213020,7 @@
         "line": 123,
         "end_line": 128,
         "signature_hash": "c0931358cc9c0281",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_09_close_is_idempotent_and_reaps_child:79b0d257e95af48d",
@@ -212959,7 +213030,7 @@
         "line": 130,
         "end_line": 137,
         "signature_hash": "02bc36f8bdf78d4b",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_10_unimportable_or_private_symbol_fails_closed:ce35992900e34728",
@@ -212969,7 +213040,7 @@
         "line": 139,
         "end_line": 141,
         "signature_hash": "b99321f1c54bf9bf",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_11_unserializable_call_fails_in_parent_without_killing_child:fd0011038ec84038",
@@ -212979,7 +213050,7 @@
         "line": 143,
         "end_line": 147,
         "signature_hash": "1ba7c83309e1a04e",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_12_unserializable_child_result_is_sanitized_and_session_survives:88130f8ccba5ced3",
@@ -212989,7 +213060,17 @@
         "line": 149,
         "end_line": 154,
         "signature_hash": "f6bafa3cf1ee31c4",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
+      },
+      {
+        "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_13_nonfinite_or_boolean_timeout_fails_before_child_start:9185fc3f16393794",
+        "name": "AirLLMProcessIsolationTests.test_13_nonfinite_or_boolean_timeout_fails_before_child_start",
+        "kind": "method",
+        "file": "src/auraos/security/test_airllm_process_isolation.py",
+        "line": 156,
+        "end_line": 159,
+        "signature_hash": "c7119ee0e0f657f8",
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:FakeBoundary.from_pretrained:6910afbf1da5bdc4",
@@ -212999,7 +213080,7 @@
         "line": 16,
         "end_line": 17,
         "signature_hash": "8601faf30a49dc2b",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:IsolatedPatchedTarget.__init__:cce4a03d73fbca8e",
@@ -213009,7 +213090,7 @@
         "line": 39,
         "end_line": 41,
         "signature_hash": "3d77650513b79756",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:IsolatedPatchedTarget.close:049d9afa2588e6c1",
@@ -213019,7 +213100,7 @@
         "line": 60,
         "end_line": 63,
         "signature_hash": "818fdb66f3084fa5",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:IsolatedPatchedTarget.crash:57f95b428ee62b16",
@@ -213029,7 +213110,7 @@
         "line": 54,
         "end_line": 55,
         "signature_hash": "66d008ac451e3552",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:IsolatedPatchedTarget.generate:d00c604ee88e01d4",
@@ -213039,7 +213120,7 @@
         "line": 46,
         "end_line": 52,
         "signature_hash": "ba03254252cc448c",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:IsolatedPatchedTarget.probe:ca6490421494cba7",
@@ -213049,7 +213130,7 @@
         "line": 43,
         "end_line": 44,
         "signature_hash": "89ba9b5886117954",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:IsolatedPatchedTarget.unpickleable:5086e369db0f9b6c",
@@ -213059,7 +213140,7 @@
         "line": 57,
         "end_line": 58,
         "signature_hash": "1b0cff61c842777b",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:process_global_hard_false_patch.guarded:ef4ccf117df67785",
@@ -213069,7 +213150,7 @@
         "line": 24,
         "end_line": 29,
         "signature_hash": "16fc869950a7f4fb",
-        "file_digest8": "faf75dabc46ab464"
+        "file_digest8": "7d742001d2761f39"
       },
       {
         "semantic_id": "src/auraos/security/test_airllm_secure_wrapper.py#class:DynamicModuleLoader:5ea901f3cb04630a",
@@ -273302,8 +273383,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ab700d9fb980532de86f5118c9d75a07",
-    "payload_hash": "22a136762a901e5fb27d924f2d4ba373"
+    "record_fingerprint": "77103d1886cc2655101247656aa06335",
+    "payload_hash": "da4c99f022c1c87267f2a8372e53b777"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273316,16 +273397,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1674,
-      "bytes": 26735254,
-      "tokens_est": 6674162,
+      "files": 1675,
+      "bytes": 26738625,
+      "tokens_est": 6675007,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1028,
-        "schema_or_lexicon": 273,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -274012,16 +274093,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1674,
-    "total_bytes": 26735254,
-    "text_tokens_est": 6674162,
+    "file_count": 1675,
+    "total_bytes": 26738625,
+    "text_tokens_est": 6675007,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1028,
-      "schema_or_lexicon": 273,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -275946,16 +276027,16 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "function",
-        "line": 38,
-        "end_line": 39,
+        "line": 39,
+        "end_line": 40,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_digest:15df5459449f8deb",
         "signature_hash": "514f786724465716"
       },
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 63,
-        "end_line": 64,
+        "line": 64,
+        "end_line": 65,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_digest:7764460b50804694",
         "signature_hash": "514f786724465716"
       },
@@ -279722,16 +279803,16 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "function",
-        "line": 34,
-        "end_line": 35,
+        "line": 35,
+        "end_line": 36,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_canonical_json:a679a4c040f79926",
         "signature_hash": "caa6df7371712507"
       },
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 53,
-        "end_line": 60,
+        "line": 54,
+        "end_line": 61,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_canonical_json:369281609ee9b7af",
         "signature_hash": "caa6df7371712507"
       },
@@ -374690,8 +374771,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "function",
-        "line": 42,
-        "end_line": 47,
+        "line": 43,
+        "end_line": 48,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_pickled:d767f6480490a5bf",
         "signature_hash": "9b7afe5c00843e5d"
       }
@@ -374700,8 +374781,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "function",
-        "line": 50,
-        "end_line": 56,
+        "line": 51,
+        "end_line": 57,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_unpickle:eabcd172d4a94bfa",
         "signature_hash": "9e4df1c7cc55892a"
       }
@@ -374710,8 +374791,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 68,
+        "line": 60,
+        "end_line": 69,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#function:_receipt_root:878e0d1113c3b1d7",
         "signature_hash": "bafec1cf44dcfaf1"
       }
@@ -374721,7 +374802,7 @@
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "class",
         "line": 222,
-        "end_line": 379,
+        "end_line": 384,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#class:PreimportSourceObjectProxy:0941e49b0cca6c8d",
         "signature_hash": "c582ee9f64b6c896"
       }
@@ -374731,7 +374812,7 @@
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
         "line": 223,
-        "end_line": 283,
+        "end_line": 288,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.__init__:a7a15b583b461150",
         "signature_hash": "e302cb9ee2b77fc1"
       }
@@ -374740,8 +374821,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 286,
-        "end_line": 287,
+        "line": 291,
+        "end_line": 292,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.receipt:71db0629622b28b4",
         "signature_hash": "c724ebd1d568bc4d"
       }
@@ -374750,8 +374831,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 290,
-        "end_line": 291,
+        "line": 295,
+        "end_line": 296,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.bootstrap_source_sha256:e3dc656dc1356899",
         "signature_hash": "7b9d693c15d636dc"
       }
@@ -374760,8 +374841,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 293,
-        "end_line": 304,
+        "line": 298,
+        "end_line": 309,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._read_stdout:258315d7dde17b55",
         "signature_hash": "b3c6f30914736356"
       }
@@ -374770,8 +374851,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 306,
-        "end_line": 314,
+        "line": 311,
+        "end_line": 319,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._read_stderr:2d91e7ea918a80ef",
         "signature_hash": "ae44948b4ec7bfc8"
       }
@@ -374780,8 +374861,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 316,
-        "end_line": 322,
+        "line": 321,
+        "end_line": 327,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._recv:0cc929af97767551",
         "signature_hash": "cf71d5d54d14a529"
       }
@@ -374790,8 +374871,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 324,
-        "end_line": 331,
+        "line": 329,
+        "end_line": 336,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._send:679755d41e4e35f6",
         "signature_hash": "0f3801fa0da69a6e"
       }
@@ -374800,8 +374881,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 333,
-        "end_line": 342,
+        "line": 338,
+        "end_line": 347,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.call:633ca8866447b49c",
         "signature_hash": "d258d0bf0a39568c"
       }
@@ -374810,8 +374891,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 344,
-        "end_line": 345,
+        "line": 349,
+        "end_line": 350,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.generate:720af85dd037901a",
         "signature_hash": "b670710ef00ce499"
       }
@@ -374820,8 +374901,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 347,
-        "end_line": 361,
+        "line": 352,
+        "end_line": 366,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.close:bb8eaf87cb07cf2a",
         "signature_hash": "818fdb66f3084fa5"
       }
@@ -374830,8 +374911,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 363,
-        "end_line": 376,
+        "line": 368,
+        "end_line": 381,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy._abort:b28fd57a1081c737",
         "signature_hash": "b2e3dab0b66e6371"
       }
@@ -374840,8 +374921,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 378,
-        "end_line": 378,
+        "line": 383,
+        "end_line": 383,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.__enter__:8f6ef783979a551a",
         "signature_hash": "70703c73fc87d8b5"
       }
@@ -374850,8 +374931,8 @@
       {
         "file": "src/auraos/security/airllm_preimport_source_proxy.py",
         "kind": "method",
-        "line": 379,
-        "end_line": 379,
+        "line": 384,
+        "end_line": 384,
         "semantic_id": "src/auraos/security/airllm_preimport_source_proxy.py#method:PreimportSourceObjectProxy.__exit__:68aab4f1e8038d42",
         "signature_hash": "c1ffe2d5c68b9bfc"
       }
@@ -374860,8 +374941,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "class",
-        "line": 28,
-        "end_line": 29,
+        "line": 29,
+        "end_line": 30,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:IsolationBoundaryError:fe393e89317e6b6f",
         "signature_hash": "d03fbcab0f3545cd"
       }
@@ -374870,8 +374951,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "class",
-        "line": 32,
-        "end_line": 38,
+        "line": 33,
+        "end_line": 39,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:RemoteInvocationError:bf5804cc807cc4ba",
         "signature_hash": "4a8efc42736fe580"
       }
@@ -374880,8 +374961,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 35,
-        "end_line": 38,
+        "line": 36,
+        "end_line": 39,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:RemoteInvocationError.__init__:4913dcaf4ef24176",
         "signature_hash": "3567e6bfba46ef71"
       }
@@ -374890,8 +374971,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "class",
-        "line": 42,
-        "end_line": 50,
+        "line": 43,
+        "end_line": 51,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:IsolationReceipt:4822b69925913e93",
         "signature_hash": "43991893361cf607"
       }
@@ -374900,8 +374981,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 67,
-        "end_line": 68,
+        "line": 68,
+        "end_line": 69,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_factory_identity_root:65c4829dcccbc791",
         "signature_hash": "0d8941927e0455f0"
       }
@@ -374910,8 +374991,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 71,
-        "end_line": 101,
+        "line": 72,
+        "end_line": 102,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_validate_receipt_fields:796aa7012634aad6",
         "signature_hash": "1d23f52cd5edced1"
       }
@@ -374920,8 +375001,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 104,
-        "end_line": 114,
+        "line": 105,
+        "end_line": 115,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_resolve_symbol:a72cf569e68f1dae",
         "signature_hash": "a680b3be0b49f9dc"
       }
@@ -374930,8 +375011,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 117,
-        "end_line": 118,
+        "line": 118,
+        "end_line": 119,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_sanitized_error:f8b15142b58841cb",
         "signature_hash": "3b4673b80ecbd8c4"
       }
@@ -374940,8 +375021,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 121,
-        "end_line": 125,
+        "line": 122,
+        "end_line": 126,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_assert_picklable:126f1b5791cc415d",
         "signature_hash": "f48dda0f57067120"
       }
@@ -374950,8 +375031,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "function",
-        "line": 128,
-        "end_line": 200,
+        "line": 129,
+        "end_line": 201,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#function:_worker_main:6062d2d7b06ecaa8",
         "signature_hash": "8343a91fa76c4ea9"
       }
@@ -374960,8 +375041,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "class",
-        "line": 203,
-        "end_line": 378,
+        "line": 204,
+        "end_line": 384,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#class:IsolatedObjectProxy:99b4b77169b6ae3f",
         "signature_hash": "0117abb9f1a9f1d1"
       }
@@ -374970,8 +375051,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 211,
-        "end_line": 276,
+        "line": 212,
+        "end_line": 282,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.__init__:a5302b5e30a039ea",
         "signature_hash": "57db65f77d6cfa7b"
       }
@@ -374980,8 +375061,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 279,
-        "end_line": 280,
+        "line": 285,
+        "end_line": 286,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.receipt:a0e548f492b7968a",
         "signature_hash": "c724ebd1d568bc4d"
       }
@@ -374990,8 +375071,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 282,
-        "end_line": 294,
+        "line": 288,
+        "end_line": 300,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy._recv:9e1bec54a3781390",
         "signature_hash": "cf71d5d54d14a529"
       }
@@ -375000,8 +375081,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 296,
-        "end_line": 301,
+        "line": 302,
+        "end_line": 307,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy._raise_message:7bb1cf2bef21fc97",
         "signature_hash": "e89410d35d775c40"
       }
@@ -375010,8 +375091,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 303,
-        "end_line": 325,
+        "line": 309,
+        "end_line": 331,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.call:46c4d7c2d0491111",
         "signature_hash": "d258d0bf0a39568c"
       }
@@ -375020,8 +375101,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 327,
-        "end_line": 328,
+        "line": 333,
+        "end_line": 334,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.generate:294ef41ae56576c8",
         "signature_hash": "b670710ef00ce499"
       }
@@ -375030,8 +375111,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 330,
-        "end_line": 360,
+        "line": 336,
+        "end_line": 366,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.close:10297edfc6d722dc",
         "signature_hash": "818fdb66f3084fa5"
       }
@@ -375040,8 +375121,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 362,
-        "end_line": 372,
+        "line": 368,
+        "end_line": 378,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy._abort:6e631d5eeac7dfa3",
         "signature_hash": "b2e3dab0b66e6371"
       }
@@ -375050,8 +375131,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 374,
-        "end_line": 375,
+        "line": 380,
+        "end_line": 381,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.__enter__:6d89cb21e88e7715",
         "signature_hash": "70703c73fc87d8b5"
       }
@@ -375060,8 +375141,8 @@
       {
         "file": "src/auraos/security/airllm_process_isolation.py",
         "kind": "method",
-        "line": 377,
-        "end_line": 378,
+        "line": 383,
+        "end_line": 384,
         "semantic_id": "src/auraos/security/airllm_process_isolation.py#method:IsolatedObjectProxy.__exit__:88e18afa1e928ddb",
         "signature_hash": "c1ffe2d5c68b9bfc"
       }
@@ -377315,7 +377396,7 @@
         "file": "src/auraos/security/test_airllm_preimport_source_proxy.py",
         "kind": "class",
         "line": 20,
-        "end_line": 173,
+        "end_line": 184,
         "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#class:PreimportSourceProxyTests:462d47ed8a111e2d",
         "signature_hash": "774e65d58a73ba97"
       }
@@ -377440,6 +377521,16 @@
         "signature_hash": "42b83fb349fd35bc"
       }
     ],
+    "PreimportSourceProxyTests.test_12_nonfinite_or_boolean_timeout_fails_before_subprocess_start": [
+      {
+        "file": "src/auraos/security/test_airllm_preimport_source_proxy.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 184,
+        "semantic_id": "src/auraos/security/test_airllm_preimport_source_proxy.py#method:PreimportSourceProxyTests.test_12_nonfinite_or_boolean_timeout_fails_before_subprocess_start:d10fa301763317ea",
+        "signature_hash": "e35252ed9944db14"
+      }
+    ],
     "FakeBoundary": [
       {
         "file": "src/auraos/security/test_airllm_process_isolation.py",
@@ -377555,7 +377646,7 @@
         "file": "src/auraos/security/test_airllm_process_isolation.py",
         "kind": "class",
         "line": 66,
-        "end_line": 154,
+        "end_line": 159,
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#class:AirLLMProcessIsolationTests:1863dfd0d802a975",
         "signature_hash": "b9b7b2318fc34b9f"
       }
@@ -377690,12 +377781,22 @@
         "signature_hash": "f6bafa3cf1ee31c4"
       }
     ],
+    "AirLLMProcessIsolationTests.test_13_nonfinite_or_boolean_timeout_fails_before_child_start": [
+      {
+        "file": "src/auraos/security/test_airllm_process_isolation.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 159,
+        "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#method:AirLLMProcessIsolationTests.test_13_nonfinite_or_boolean_timeout_fails_before_child_start:9185fc3f16393794",
+        "signature_hash": "c7119ee0e0f657f8"
+      }
+    ],
     "_PrivateTarget": [
       {
         "file": "src/auraos/security/test_airllm_process_isolation.py",
         "kind": "class",
-        "line": 157,
-        "end_line": 158,
+        "line": 162,
+        "end_line": 163,
         "semantic_id": "src/auraos/security/test_airllm_process_isolation.py#class:_PrivateTarget:3bad87418985b3b2",
         "signature_hash": "2a7a0b4820b5f056"
       }

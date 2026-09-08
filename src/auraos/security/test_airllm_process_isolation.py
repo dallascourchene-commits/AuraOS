@@ -153,6 +153,11 @@ class AirLLMProcessIsolationTests(unittest.TestCase):
             self.assertEqual(caught.exception.error_type, "IsolationBoundaryError")
             self.assertEqual(proxy.generate("after-error")["text"], "after-error")
 
+    def test_13_nonfinite_or_boolean_timeout_fails_before_child_start(self):
+        for value in (float("nan"), float("inf"), float("-inf"), True, False, 0, -1):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                IsolatedObjectProxy(__name__, "IsolatedPatchedTarget", timeout_seconds=value)
+
 
 class _PrivateTarget:
     pass
