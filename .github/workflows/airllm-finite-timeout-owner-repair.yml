@@ -1,0 +1,40 @@
+name: AirLLM Finite Timeout Owner Repair
+
+on:
+  pull_request:
+    paths:
+      - "src/auraos/security/airllm_process_isolation.py"
+      - "src/auraos/security/test_airllm_process_isolation.py"
+      - "src/auraos/security/airllm_preimport_source_proxy.py"
+      - "src/auraos/security/test_airllm_preimport_source_proxy.py"
+      - ".github/workflows/airllm-finite-timeout-owner-repair.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  finite-timeout-owner-repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact repair surface
+        run: |
+          python -m py_compile \
+            src/auraos/security/airllm_process_isolation.py \
+            src/auraos/security/airllm_preimport_source_proxy.py \
+            src/auraos/security/test_airllm_process_isolation.py \
+            src/auraos/security/test_airllm_preimport_source_proxy.py
+      - name: Run focused process-boundary regressions
+        working-directory: src/auraos/security
+        run: |
+          python -m unittest -v \
+            test_airllm_process_isolation \
+            test_airllm_preimport_source_proxy
