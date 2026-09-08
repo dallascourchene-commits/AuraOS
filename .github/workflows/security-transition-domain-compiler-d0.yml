@@ -1,0 +1,44 @@
+name: Security Transition Domain Compiler D0
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena/worker_cells/gpt56sol_security_transition_domain/**"
+      - "tests/test_security_transition_domain_compiler.py"
+      - ".github/workflows/security-transition-domain-compiler-d0.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-transition-domain-proof:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Fetch exact PR head without persisted credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="AUTHORIZATION: basic ${AUTH}" fetch --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --get-all http.https://github.com/.extraheader || true)"
+      - name: Compile worker
+        run: |
+          python -m py_compile tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py tests/test_security_transition_domain_compiler.py
+      - name: Run focused regressions
+        run: python -m unittest -v tests.test_security_transition_domain_compiler
+      - name: Run deterministic campaign twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/arena/worker_cells/gpt56sol_security_transition_domain
+          python campaign.py > /tmp/campaign-1.json
+          python campaign.py > /tmp/campaign-2.json
+          cmp /tmp/campaign-1.json /tmp/campaign-2.json
+          cat /tmp/campaign-1.json
