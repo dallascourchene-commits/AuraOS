@@ -41,7 +41,7 @@ class DomainTests(unittest.TestCase):
         for bad in (True, False, 1.0, -1, "1", None):
             with self.subTest(bad=bad), self.assertRaises(TransitionDomainError): exact_nonnegative_int(bad)
     def test_finite_positive_duration_rejects_exceptional_values(self):
-        for bad in (True, False, 0, -1, float("nan"), float("inf"), -float("inf"), "1", None):
+        for bad in (True, False, 0, -1, float("nan"), float("inf"), -float("inf"), 10**10000, "1", None):
             with self.subTest(bad=bad), self.assertRaises(TransitionDomainError): finite_positive_duration(bad)
         self.assertEqual(finite_positive_duration(3), 3.0)
         self.assertEqual(finite_positive_duration(0.25), 0.25)
