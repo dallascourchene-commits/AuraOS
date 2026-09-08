@@ -1,11 +1,19 @@
 """D0 GLM-5.3 × AirLLM v4 paged streamed-training reference.
 
 Nonpromoting control plane only. It does not execute GLM-5.3 or authorize G2/Gate10.
+
+2026-09-08 QICC/Tokyo child repair:
+- native forward/backward identity binds the full ordered token->expert route matrix,
+  not merely the union of paged experts;
+- 256-bit expert masks provide exact page-locality/chunk algebra;
+- reusable chunk-plan geometry is separated from runtime conditions, exact page/K27
+  addresses, and invocation identity;
+- separator receipts are read-only locality hints with a No-Mimic fallback.
 """
 from __future__ import annotations
 from dataclasses import dataclass, asdict
 from enum import Enum
-import hashlib, json
+import functools, hashlib, json, operator
 
 AIRLLM_V4_TAG="v4.0.0"
 AIRLLM_V4_SEMANTIC_COMMIT="ff35db207a0c559af9aa95d686057c3fe84f1d40"
@@ -13,6 +21,7 @@ AIRLLM_OBSERVED_HEAD="430adb15ee32b570063835176c10b3a8ac974d90"
 AIRLLM_PREVIOUS_AURA_PIN="55e435087d951da8c25ab3672e969025241a398e"
 GLM_EXPERT_CLASS="GlmMoeDsaExperts"
 UPSTREAM_PACKED_LORA_CLASS="Qwen4ExpTextExperts"
+QICC_RULESET="QICC_PHYSICS_CONDITIONED_ROUTE_V1"
 
 class Decision(str,Enum):
     BLOCK_SOURCE="BLOCK_SOURCE"; BLOCK_SECURITY="BLOCK_SECURITY"; BLOCK_EXPERT_ABI="BLOCK_EXPERT_ABI"
@@ -55,17 +64,49 @@ class ChunkLease:
     chunk_tokens:int|None; peak_declared_bytes:int|None; total_logical_expert_bytes:int|None; physical_io_bytes:int|None; physical_time_seconds:float|None; reason:str
     claim_ceiling:str="D0_LOGICAL_PLAN_ONLY"
 
+@dataclass(frozen=True)
+class ConditionedPlanLease:
+    profile_root:str; condition_root:str; address_root:str; invocation_id:str
+    plan_reuse_key:str; hydration_reuse_key:str; invocation_key:str; chunk:ChunkLease
+    claim_ceiling:str="D0_NONPROMOTING"
+
+@dataclass(frozen=True)
+class SeparatorReceipt:
+    chunk_tokens:int; component_count:int; component_sizes:tuple[int,...]; component_expert_counts:tuple[int,...]
+    global_expert_count:int; max_component_expert_count:int; factorized:bool; structure_root:str
+    claim_ceiling:str="K27_HYDRATION_STRUCTURE_ONLY"
+
 def _h(x):
     if hasattr(x,"__dataclass_fields__"): x=asdict(x)
     return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),default=str).encode()).hexdigest()
 
-def route_union(rows,experts=256):
-    ids=tuple(sorted({int(x) for row in rows for x in row}))
-    if not ids: raise ValueError("empty_native_route")
-    if ids[0]<0 or ids[-1]>=experts: raise ValueError("expert_out_of_range")
-    return ids
+def canonical_route_matrix(rows,experts=256):
+    """Exact native replay identity: token order and per-token top-k order are preserved."""
+    out=[]
+    for row in rows:
+        r=tuple(int(x) for x in row)
+        if not r: raise ValueError("empty_native_route_row")
+        if len(set(r))!=len(r): raise ValueError("duplicate_expert_in_route_row")
+        if min(r)<0 or max(r)>=experts: raise ValueError("expert_out_of_range")
+        out.append(r)
+    if not out: raise ValueError("empty_native_route_matrix")
+    return tuple(out)
 
-def route_root(rows,*,layer,pager_binding): return _h({"layer":int(layer),"pager":pager_binding,"native":route_union(rows)})
+def route_union(rows,experts=256):
+    matrix=canonical_route_matrix(rows,experts)
+    return tuple(sorted({x for row in matrix for x in row}))
+
+def route_masks(rows,experts=256):
+    matrix=canonical_route_matrix(rows,experts)
+    return tuple(sum(1<<x for x in row) for row in matrix)
+
+def route_root(rows,*,layer,pager_binding):
+    matrix=canonical_route_matrix(rows)
+    return _h({"layer":int(layer),"pager":pager_binding,"native_rows":matrix})
+
+def page_address_root(rows,*,layer,pager_binding):
+    matrix=canonical_route_matrix(rows); ids=tuple(sorted({x for row in matrix for x in row}))
+    return _h({"layer":int(layer),"pager":pager_binding,"native_rows":matrix,"page_union":ids})
 
 def assess(source:Source,abi:ABI,policy:Policy,g=Geometry()):
     full=g.expert_bytes(g.experts); top=g.expert_bytes(g.top_k); lora=g.lora_params(policy.rank); lora_bytes=2*lora
@@ -85,30 +126,76 @@ def assess(source:Source,abi:ABI,policy:Policy,g=Geometry()):
     return PortReceipt(d,r,full,top,1-top/full,lora,lora_bytes,_h(source))
 
 def mint_forward_lease(source:Source,rows,*,attempt,layer,adapter_generation,optimizer_generation):
-    ids=route_union(rows); sr=_h(source); rr=route_root([ids],layer=layer,pager_binding=source.pager_binding)
-    root=_h({"attempt":attempt,"layer":layer,"route":ids,"rr":rr,"sr":sr,"adapter":adapter_generation,"optim":optimizer_generation,"pages":ids})
+    matrix=canonical_route_matrix(rows); ids=route_union(matrix); sr=_h(source); rr=route_root(matrix,layer=layer,pager_binding=source.pager_binding)
+    root=_h({"attempt":attempt,"layer":layer,"route_union":ids,"ordered_route_root":rr,"sr":sr,"adapter":adapter_generation,"optim":optimizer_generation,"pages":ids})
     return ForwardLease(attempt,layer,ids,rr,sr,adapter_generation,optimizer_generation,ids,root)
 
 def backward_ready(lease:ForwardLease,source:Source,rows,*,attempt,adapter_generation,optimizer_generation,pages):
-    ids=route_union(rows); pp=tuple(sorted({int(x) for x in pages}))
+    matrix=canonical_route_matrix(rows); ids=route_union(matrix); pp=tuple(sorted({int(x) for x in pages}))
+    rr=route_root(matrix,layer=lease.layer,pager_binding=source.pager_binding)
     return (_h(source)==lease.source_root and attempt==lease.attempt and adapter_generation==lease.adapter_generation
-            and optimizer_generation==lease.optimizer_generation and ids==lease.route and pp==lease.pages
-            and route_root([ids],layer=lease.layer,pager_binding=source.pager_binding)==lease.route_root)
+            and optimizer_generation==lease.optimizer_generation and ids==lease.route and pp==lease.pages and rr==lease.route_root)
 
-def _chunk_counts(rows,c): return [len(route_union(rows[s:s+c])) for s in range(0,len(rows),c)]
+def _chunk_counts(rows,c):
+    masks=route_masks(rows); counts=[]
+    for s in range(0,len(masks),c):
+        m=functools.reduce(operator.or_,masks[s:s+c],0); counts.append(m.bit_count())
+    return counts
+
+def chunk_profile(rows,candidates=(1,2,4,8,16,32,64,128,256,512)):
+    matrix=canonical_route_matrix(rows); masks=route_masks(matrix); out=[]
+    for c in sorted({int(x) for x in candidates if 0<int(x)<=len(masks)}):
+        counts=[]
+        for s in range(0,len(masks),c):
+            m=functools.reduce(operator.or_,masks[s:s+c],0); counts.append(m.bit_count())
+        out.append((c,max(counts),sum(counts),tuple(counts)))
+    if not out: raise ValueError("no_chunk_candidates")
+    return tuple(out)
 def choose_chunk(rows,*,device_budget,reserved_nonexpert,rank=16,candidates=(1,2,4,8,16,32,64,128,256,512),g=Geometry()):
-    rows=[tuple(int(x) for x in r) for r in rows]
-    if not rows: raise ValueError("empty_route_matrix")
-    available=int(device_budget)-int(reserved_nonexpert); expert_bytes=g.expert_bytes(1)
-    adapter_working_per_expert=rank*(2*g.hidden+3*g.intermediate)*2*4 # params+grad+2 declared Adam tensors
+    matrix=canonical_route_matrix(rows); available=int(device_budget)-int(reserved_nonexpert); expert_bytes=g.expert_bytes(1)
+    adapter_working_per_expert=rank*(2*g.hidden+3*g.intermediate)*2*4
     feasible=[]
-    for c in sorted(set(int(x) for x in candidates if 0<int(x)<=len(rows))):
-        counts=_chunk_counts(rows,c); peak=max(counts); total=sum(counts)*expert_bytes; working=peak*(expert_bytes+adapter_working_per_expert)
+    for c,peak,total_count,_ in chunk_profile(matrix,candidates):
+        total=total_count*expert_bytes; working=peak*(expert_bytes+adapter_working_per_expert)
         if working<=available: feasible.append((total,-c,c,working))
     if not feasible: return ChunkLease(None,None,None,None,None,"no exact chunk candidate fits declared logical working-set budget")
     total,_,c,working=min(feasible)
-    return ChunkLease(c,working,total,None,None,"logical exact plan only; physical I/O requires independent attestation")
+    return ChunkLease(c,working,total,None,None,"logical exact bitset plan only; physical I/O requires independent attestation")
 
+def _condition_root(source,*,adapter_generation,optimizer_generation,device_budget,reserved_nonexpert,rank,candidates,qicc_runtime_fingerprint):
+    return _h({"source":source,"adapter_generation":adapter_generation,"optimizer_generation":optimizer_generation,
+               "device_budget":int(device_budget),"reserved_nonexpert":int(reserved_nonexpert),"rank":int(rank),
+               "candidates":tuple(sorted({int(x) for x in candidates})),"qicc_ruleset":QICC_RULESET,"qicc_runtime":qicc_runtime_fingerprint})
+def mint_conditioned_plan_lease(source:Source,rows,*,invocation_id,layer,adapter_generation,optimizer_generation,
+                                device_budget,reserved_nonexpert,rank=16,candidates=(1,2,4,8,16,32,64,128,256,512),
+                                qicc_runtime_fingerprint="qicc-runtime-unbound"):
+    matrix=canonical_route_matrix(rows); profile=chunk_profile(matrix,candidates); pr=_h(profile)
+    cr=_condition_root(source,adapter_generation=adapter_generation,optimizer_generation=optimizer_generation,
+        device_budget=device_budget,reserved_nonexpert=reserved_nonexpert,rank=rank,candidates=candidates,
+        qicc_runtime_fingerprint=qicc_runtime_fingerprint)
+    ar=page_address_root(matrix,layer=layer,pager_binding=source.pager_binding)
+    chunk=choose_chunk(matrix,device_budget=device_budget,reserved_nonexpert=reserved_nonexpert,rank=rank,candidates=candidates)
+    pk=_h({"profile":pr,"condition":cr}); hk=_h({"profile":pr,"condition":cr,"address":ar}); ik=_h({"hydration":hk,"invocation":invocation_id})
+    return ConditionedPlanLease(pr,cr,ar,invocation_id,pk,hk,ik,chunk)
+def can_reuse_plan(a,b): return a.plan_reuse_key==b.plan_reuse_key
+def can_reuse_hydration(a,b): return a.hydration_reuse_key==b.hydration_reuse_key
+def same_invocation(a,b): return a.invocation_key==b.invocation_key
+def separator_receipt(rows,*,chunk_tokens):
+    masks=route_masks(rows); chunk_masks=[]
+    for s in range(0,len(masks),int(chunk_tokens)):
+        chunk_masks.append(functools.reduce(operator.or_,masks[s:s+int(chunk_tokens)],0))
+    n=len(chunk_masks); seen=[False]*n; cms=[]; sizes=[]
+    for start in range(n):
+        if seen[start]: continue
+        seen[start]=True; stack=[start]; cm=0; size=0
+        while stack:
+            i=stack.pop(); cm|=chunk_masks[i]; size+=1
+            for j in range(n):
+                if not seen[j] and chunk_masks[i]&chunk_masks[j]: seen[j]=True; stack.append(j)
+        cms.append(cm); sizes.append(size)
+    gm=functools.reduce(operator.or_,chunk_masks,0); counts=tuple(x.bit_count() for x in cms)
+    root=_h({"chunk_tokens":int(chunk_tokens),"chunk_masks":tuple(chunk_masks),"component_sizes":tuple(sizes),"component_counts":counts})
+    return SeparatorReceipt(int(chunk_tokens),len(cms),tuple(sizes),counts,gm.bit_count(),max(counts),len(cms)>1,root)
 def default_source(): return Source(AIRLLM_V4_TAG,AIRLLM_V4_SEMANTIC_COMMIT,"airllm-v4-training-files","aura-hard-false","glm53-rev","glm53-index","pager-binding")
 def default_abi(): return ABI(GLM_EXPERT_CLASS,True,256,6144,2048,True,True,True)
 def default_policy(): return Policy(True,False,False,0.0,True,16,6*1024**3,False)
