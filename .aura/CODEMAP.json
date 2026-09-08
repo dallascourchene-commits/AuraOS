@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788886332,
+  "generated_at_unix": 1788886726,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1714,
+    "repo_file_count": 1716,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1683,7 +1683,9 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -1830,15 +1832,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1714,
-      "bytes": 26709887,
-      "tokens_est": 6667875,
+      "files": 1716,
+      "bytes": 26713716,
+      "tokens_est": 6668833,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1035,
+        "python_module": 1037,
         "schema_or_lexicon": 293,
         "support_file": 49
       }
@@ -158948,6 +158950,14 @@
         "end_line": 81,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_h:294d2a58deb4f2ff",
         "signature_hash": "b0be7f7549373d94"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:_h:cb5b07a1455ed63e",
+        "signature_hash": "b0be7f7549373d94"
       }
     ],
     "canonical_route_matrix": [
@@ -159088,6 +159098,14 @@
         "end_line": 181,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:can_reuse_hydration:0ac59ecb681b2b52",
         "signature_hash": "efb98869d66f7bf6"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:can_reuse_hydration:e2c62217718e64d4",
+        "signature_hash": "8b4ab6b05c7e6869"
       }
     ],
     "same_invocation": [
@@ -159140,6 +159158,56 @@
         "signature_hash": "dcff77fdf4f6b2e4"
       }
     ],
+    "K27HydrationLease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#class:K27HydrationLease:85dbc21c654d6b97",
+        "signature_hash": "a2c36e1a4f50148d"
+      }
+    ],
+    "page_set_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:page_set_root:4b55a4a7932abc29",
+        "signature_hash": "2bf2ce8d68b26e91"
+      }
+    ],
+    "condition_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:condition_root:1a07040e33bff6e5",
+        "signature_hash": "2ac7f7b267e275d4"
+      }
+    ],
+    "mint_k27_hydration_lease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:mint_k27_hydration_lease:b9ed27fa8c967295",
+        "signature_hash": "917437793f427b02"
+      }
+    ],
+    "replay_identity_differs": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:replay_identity_differs:46200fe9ba3ebd32",
+        "signature_hash": "1210a696218002da"
+      }
+    ],
     "routes": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
@@ -159157,6 +159225,14 @@
         "line": 10,
         "end_line": 64,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#class:T:319b083a1bb05beb",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#class:T:f69b4d4a5772445f",
         "signature_hash": "1a51332cd1dc4f10"
       },
       {
@@ -159350,6 +159426,36 @@
         "end_line": 64,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_separator_no_mimic:7b60d9ce1ef7a4eb",
         "signature_hash": "8c6c009c58e1c2d8"
+      }
+    ],
+    "T.test_same_pages_different_route_reuses_hydration_not_replay": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 11,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_same_pages_different_route_reuses_hydration_not_replay:e920d973a3c16139",
+        "signature_hash": "cbdc3ddd5fe286e5"
+      }
+    ],
+    "T.test_different_pages_do_not_reuse": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_different_pages_do_not_reuse:21a24afe88390209",
+        "signature_hash": "ae27c1383a1c8331"
+      }
+    ],
+    "T.test_source_or_optimizer_drift_blocks_reuse": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_source_or_optimizer_drift_blocks_reuse:595319554ea027ba",
+        "signature_hash": "664a42d6f467eabb"
       }
     ],
     "PortDecision": [
@@ -164457,6 +164563,12 @@
     "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
+    "python -m unittest": [
+      ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md",
+      "tools/awj032/training_o1_reference/README.md"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -165144,11 +165256,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
-      "tools/awj032/README.md",
-      "tools/awj032/training_o1_reference/README.md"
     ],
     "python aura_daemon.py": [
       "docs/staging/ready_review/README_STAGED.md"
@@ -174329,47 +174436,53 @@
       "path": ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 758,
-      "lines": 26,
-      "tokens_est": 190,
+      "bytes": 831,
+      "lines": 29,
+      "tokens_est": 208,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          26
+        ]
+      },
       "topology": {},
-      "digest8": "82086e06eb21a52a",
+      "digest8": "101daad2b4817aa1",
       "vector": [
-        -0.115546,
-        0.098152,
-        -0.152819,
-        0.070818,
-        -0.187607,
-        -0.093182,
-        0.120516,
-        -0.172698,
-        0.053424,
-        0.167728,
-        -0.123,
-        -0.284516,
-        0.205001,
-        0.269607,
-        -0.070818,
-        -0.21494,
-        -0.152819,
-        0.05094,
-        -0.065849,
-        0.118031,
-        0.195061,
-        0.155304,
-        -0.29694,
-        -0.30688,
-        -0.160273,
-        -0.120516,
-        0.185122,
-        -0.195061,
-        0.269607,
-        -0.001242,
-        0.282031,
-        -0.118031
+        0.115484,
+        0.14348,
+        -0.169143,
+        0.192474,
+        0.276462,
+        0.045494,
+        0.017498,
+        0.206472,
+        -0.145813,
+        0.295126,
+        -0.162144,
+        -0.127149,
+        0.036162,
+        -0.190141,
+        0.075823,
+        -0.285794,
+        -0.285794,
+        -0.122483,
+        -0.064158,
+        -0.248466,
+        -0.059492,
+        0.164477,
+        -0.211138,
+        -0.173809,
+        0.07349,
+        0.071157,
+        -0.218137,
+        -0.075823,
+        -0.124816,
+        -0.255465,
+        -0.239134,
+        0.183141
       ]
     },
     {
@@ -271036,6 +271149,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2139,
+      "lines": 36,
+      "tokens_est": 535,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "515370a13bbc6433",
+      "vector": [
+        -0.075341,
+        -0.28947,
+        -0.183727,
+        0.085916,
+        -0.054193,
+        -0.25246,
+        -0.300044,
+        0.051549,
+        -0.14143,
+        -0.006609,
+        -0.125569,
+        0.077985,
+        -0.249816,
+        -0.009252,
+        -0.159935,
+        -0.14143,
+        0.085916,
+        -0.025114,
+        0.210163,
+        0.281539,
+        -0.199589,
+        -0.159935,
+        0.25246,
+        0.017183,
+        0.233955,
+        0.099134,
+        -0.268321,
+        0.048906,
+        0.247173,
+        -0.149361,
+        0.276252,
+        -0.02247
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
       "role": "python_module",
       "binary": false,
@@ -271080,6 +271240,53 @@
         -0.204392,
         0.099521,
         -0.041735
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1617,
+      "lines": 24,
+      "tokens_est": 405,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "185ac1d619ea1444",
+      "vector": [
+        0.070452,
+        0.011124,
+        -0.253379,
+        -0.11742,
+        -0.16686,
+        0.134724,
+        -0.060564,
+        0.213827,
+        -0.211355,
+        0.01854,
+        0.211355,
+        0.263267,
+        0.075396,
+        0.00618,
+        -0.161916,
+        0.11742,
+        -0.147084,
+        0.013596,
+        -0.275627,
+        -0.159444,
+        0.152028,
+        0.11742,
+        0.082812,
+        0.305291,
+        -0.087756,
+        0.270683,
+        -0.156972,
+        0.08034,
+        -0.016068,
+        -0.270683,
+        0.270683,
+        0.312707
       ]
     },
     {
@@ -296127,15 +296334,15 @@
     }
   },
   "summary": {
-    "file_count": 1714,
-    "total_bytes": 26709887,
-    "text_tokens_est": 6667875,
+    "file_count": 1716,
+    "total_bytes": 26713716,
+    "text_tokens_est": 6668833,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1035,
+      "python_module": 1037,
       "schema_or_lexicon": 293,
       "support_file": 49
     },
@@ -297829,7 +298036,9 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -456970,6 +457179,76 @@
         "file_digest8": "1cad1bf8724d1dc3"
       },
       {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#class:K27HydrationLease:85dbc21c654d6b97",
+        "name": "K27HydrationLease",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 16,
+        "end_line": 22,
+        "signature_hash": "a2c36e1a4f50148d",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:_h:cb5b07a1455ed63e",
+        "name": "_h",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "b0be7f7549373d94",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:can_reuse_hydration:e2c62217718e64d4",
+        "name": "can_reuse_hydration",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 33,
+        "end_line": 33,
+        "signature_hash": "8b4ab6b05c7e6869",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:condition_root:1a07040e33bff6e5",
+        "name": "condition_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "2ac7f7b267e275d4",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:mint_k27_hydration_lease:b9ed27fa8c967295",
+        "name": "mint_k27_hydration_lease",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "917437793f427b02",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:page_set_root:4b55a4a7932abc29",
+        "name": "page_set_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "2bf2ce8d68b26e91",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:replay_identity_differs:46200fe9ba3ebd32",
+        "name": "replay_identity_differs",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "1210a696218002da",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#class:T:319b083a1bb05beb",
         "name": "T",
         "kind": "class",
@@ -457148,6 +457427,46 @@
         "end_line": 12,
         "signature_hash": "535425e68403cec6",
         "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#class:T:f69b4d4a5772445f",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 5,
+        "end_line": 22,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "185ac1d619ea1444"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_different_pages_do_not_reuse:21a24afe88390209",
+        "name": "T.test_different_pages_do_not_reuse",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 12,
+        "end_line": 16,
+        "signature_hash": "ae27c1383a1c8331",
+        "file_digest8": "185ac1d619ea1444"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_same_pages_different_route_reuses_hydration_not_replay:e920d973a3c16139",
+        "name": "T.test_same_pages_different_route_reuses_hydration_not_replay",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 6,
+        "end_line": 11,
+        "signature_hash": "cbdc3ddd5fe286e5",
+        "file_digest8": "185ac1d619ea1444"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_source_or_optimizer_drift_blocks_reuse:595319554ea027ba",
+        "name": "T.test_source_or_optimizer_drift_blocks_reuse",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 17,
+        "end_line": 22,
+        "signature_hash": "664a42d6f467eabb",
+        "file_digest8": "185ac1d619ea1444"
       },
       {
         "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
@@ -462340,7 +462659,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "17ba43e637534bd097ecb112068b505e",
-    "payload_hash": "2e3ef5a4373f67e310cb10d78c72ad93"
+    "record_fingerprint": "179937ea2f5aeddc9167503d3cc186a9",
+    "payload_hash": "e62482fda3a4681ddb85470bf5f4dccd"
   }
 }
