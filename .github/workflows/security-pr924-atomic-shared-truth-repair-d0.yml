@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/arena/transactional_shared_truth_commit.py"
       - "tests/test_transactional_shared_truth_commit_hosted.py"
+      - "tests/test_pr924_atomic_shared_truth_repair.py"
       - ".github/workflows/security-pr924-atomic-shared-truth-repair-d0.yml"
 
 permissions:
@@ -29,6 +30,6 @@ jobs:
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --get-all http.https://github.com/.extraheader || true)"
       - name: Compile repair surface
-        run: python -m py_compile tools/arena/transactional_shared_truth_commit.py tests/test_transactional_shared_truth_commit_hosted.py
+        run: python -m py_compile tools/arena/transactional_shared_truth_commit.py tests/test_transactional_shared_truth_commit_hosted.py tests/test_pr924_atomic_shared_truth_repair.py
       - name: Run focused shared-truth regressions
-        run: python -m unittest -v tests.test_transactional_shared_truth_commit_hosted
+        run: python -m unittest -v tests.test_transactional_shared_truth_commit_hosted tests.test_pr924_atomic_shared_truth_repair
