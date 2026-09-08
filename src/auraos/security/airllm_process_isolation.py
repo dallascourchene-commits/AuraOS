@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 import importlib
 import json
+import math
 import multiprocessing as mp
 import os
 import pickle
@@ -216,8 +217,13 @@ class IsolatedObjectProxy:
         timeout_seconds: float = 10.0,
         **init_kwargs: Any,
     ) -> None:
-        if timeout_seconds <= 0:
-            raise ValueError("timeout_seconds must be positive")
+        if (
+            isinstance(timeout_seconds, bool)
+            or not isinstance(timeout_seconds, (int, float))
+            or not math.isfinite(float(timeout_seconds))
+            or timeout_seconds <= 0
+        ):
+            raise ValueError("timeout_seconds must be a finite positive duration")
         if not isinstance(module_name, str) or not module_name:
             raise IsolationBoundaryError("module_name must be a non-empty string")
         if not isinstance(qualname, str) or not qualname or "<locals>" in qualname:
