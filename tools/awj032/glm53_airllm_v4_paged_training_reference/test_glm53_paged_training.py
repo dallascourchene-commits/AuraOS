@@ -38,4 +38,28 @@ class T(unittest.TestCase):
         l=choose_chunk(routes(512,8),device_budget=6*1024**3,reserved_nonexpert=1*1024**3); self.assertEqual(l.chunk_tokens,16); self.assertIsNone(l.physical_io_bytes)
     def test_hot_routes_admit_no_smaller_chunk(self):
         u=choose_chunk(routes(512,7),device_budget=6*1024**3,reserved_nonexpert=1*1024**3); h=choose_chunk(routes(512,7,True),device_budget=6*1024**3,reserved_nonexpert=1*1024**3); self.assertGreaterEqual(h.chunk_tokens,u.chunk_tokens)
+    def test_same_union_different_route_rejected(self):
+        a=[(0,1),(2,3)]; b=[(0,2),(1,3)]; self.assertEqual(route_union(a),route_union(b))
+        l=mint_forward_lease(default_source(),a,attempt='x',layer=2,adapter_generation='ag',optimizer_generation='og')
+        self.assertFalse(backward_ready(l,default_source(),b,attempt='x',adapter_generation='ag',optimizer_generation='og',pages=l.pages))
+    def test_topk_order_is_route_identity(self):
+        a=[(0,1,2,3)]; b=[(3,2,1,0)]; self.assertEqual(route_union(a),route_union(b)); self.assertNotEqual(route_root(a,layer=1,pager_binding='p'),route_root(b,layer=1,pager_binding='p'))
+    def test_bitset_profile_hs1000_matches_sets(self):
+        rng=random.Random(991); C=(1,2,4,8,16,32,64)
+        for _ in range(1000):
+            n=rng.randint(1,64); rs=[tuple(rng.sample(range(256),8)) for _ in range(n)]
+            for c,peak,total,counts in chunk_profile(rs,C):
+                ref=[len({x for row in rs[s:s+c] for x in row}) for s in range(0,n,c)]
+                self.assertEqual((peak,total,counts),(max(ref),sum(ref),tuple(ref)))
+    def test_conditioned_plan_vs_hydration_vs_invocation(self):
+        a=[(0,1),(2,3),(0,2),(1,3)]; b=[(10,11),(12,13),(10,12),(11,13)]
+        kw=dict(layer=5,adapter_generation='ag',optimizer_generation='og',device_budget=6<<30,reserved_nonexpert=1<<30,candidates=(1,2,4),qicc_runtime_fingerprint='qicc-r1')
+        x=mint_conditioned_plan_lease(default_source(),a,invocation_id='i1',**kw); y=mint_conditioned_plan_lease(default_source(),b,invocation_id='i2',**kw)
+        self.assertEqual(x.profile_root,y.profile_root); self.assertTrue(can_reuse_plan(x,y)); self.assertFalse(can_reuse_hydration(x,y)); self.assertFalse(same_invocation(x,y))
+    def test_condition_change_blocks_plan_reuse(self):
+        r=routes(16,5); kw=dict(invocation_id='i',layer=2,adapter_generation='ag',optimizer_generation='og',device_budget=6<<30,reserved_nonexpert=1<<30,qicc_runtime_fingerprint='qicc-r1')
+        a=mint_conditioned_plan_lease(default_source(),r,**kw); b=mint_conditioned_plan_lease(replace(default_source(),model_revision='new'),r,**kw); self.assertFalse(can_reuse_plan(a,b))
+    def test_separator_no_mimic(self):
+        d=[tuple(range(8)),tuple(range(8)),tuple(range(16,24)),tuple(range(16,24))]; s=separator_receipt(d,chunk_tokens=1); self.assertTrue(s.factorized); self.assertEqual(s.component_count,2)
+        c=[(0,1),(1,2),(2,3),(3,4)]; s=separator_receipt(c,chunk_tokens=1); self.assertFalse(s.factorized); self.assertEqual(s.component_count,1)
 if __name__=='__main__': unittest.main()
