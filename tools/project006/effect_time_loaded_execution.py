@@ -117,5 +117,6 @@ def attest_loaded_execution(manifest:ExecutionTopologyManifest, measurement:Load
     if measurement.unresolved_units: return hold(Disposition.HOLD_UNRESOLVED_UNIT,'UNRESOLVED_ANSWER_BEARING_UNIT')
     if measurement.serving_population_size>1:
         if expected.selected_worker_root is None or measurement.selected_worker_root!=expected.selected_worker_root: return hold(Disposition.HOLD_WORKER_SELECTION,'HETEROGENEOUS_WORKER_NOT_EXACTLY_SELECTED')
-    if expected.now_ms<evidence.issued_at_ms or expected.now_ms>evidence.expires_at_ms or expected.now_ms-measurement.observed_at_ms>expected.max_age_ms: return hold(Disposition.HOLD_STALE_EFFECT_TIME,'PROCESS_MEASUREMENT_STALE_AT_EFFECT_TIME')
+    if not (measurement.observed_at_ms<=evidence.issued_at_ms<=expected.now_ms<=evidence.expires_at_ms): return hold(Disposition.HOLD_STALE_EFFECT_TIME,'PROCESS_TIME_ORDER_INVALID_AT_EFFECT_TIME')
+    if expected.now_ms-measurement.observed_at_ms>expected.max_age_ms: return hold(Disposition.HOLD_STALE_EFFECT_TIME,'PROCESS_MEASUREMENT_STALE_AT_EFFECT_TIME')
     return ExecutionAttestation(Disposition.CURRENT_EFFECT_EXECUTABLE,True,(),mm,mr,measurement.process_identity_root)
