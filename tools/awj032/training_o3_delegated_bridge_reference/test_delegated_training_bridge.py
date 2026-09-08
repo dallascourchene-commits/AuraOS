@@ -30,6 +30,16 @@ class T(unittest.TestCase):
     def test_recovery_monotonic_time(self):
         self.rec.issue(self.attempt.attempt_root,'UNKNOWN',30)
         with self.assertRaises(ValueError): self.rec.issue(self.attempt.attempt_root,'NOT_STARTED',30)
+    def test_recovery_completed_is_terminal(self):
+        done=self.rec.issue(self.attempt.attempt_root,'COMPLETED',30)
+        with self.assertRaises(ValueError): self.rec.issue(self.attempt.attempt_root,'NOT_STARTED',31)
+        with self.assertRaises(ValueError): self.rec.issue(self.attempt.attempt_root,'UNKNOWN',31)
+        self.assertEqual(retry_decision(self.attempt,done,self.rec),'RETURN_ONLY_COMPLETED')
+    def test_recovery_unknown_may_resolve(self):
+        unknown=self.rec.issue(self.attempt.attempt_root,'UNKNOWN',30)
+        self.assertEqual(retry_decision(self.attempt,unknown,self.rec),'HOLD_RECONCILE_UNKNOWN')
+        not_started=self.rec.issue(self.attempt.attempt_root,'NOT_STARTED',31)
+        self.assertEqual(retry_decision(self.attempt,not_started,self.rec),'RETRY_CANDIDATE_D0')
     def test_empty_recovery_key(self):
         with self.assertRaises(ValueError): RecoveryAuthority({'r':b''},'r',1)
 if __name__=='__main__': unittest.main()
