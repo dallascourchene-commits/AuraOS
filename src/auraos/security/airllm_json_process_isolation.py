@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 import importlib
 import json
+import math
 import multiprocessing as mp
 import os
 import threading
@@ -202,10 +203,20 @@ class IsolatedSessionProxy:
         self._init_kwargs = {} if init_kwargs is None else dict(init_kwargs)
         _canonical_json(self._init_args)
         _canonical_json(self._init_kwargs)
-        if not isinstance(startup_timeout, (int, float)) or startup_timeout <= 0:
-            raise IsolationProtocolError("startup_timeout must be positive")
-        if not isinstance(call_timeout, (int, float)) or call_timeout <= 0:
-            raise IsolationProtocolError("call_timeout must be positive")
+        if (
+            isinstance(startup_timeout, bool)
+            or not isinstance(startup_timeout, (int, float))
+            or not math.isfinite(float(startup_timeout))
+            or startup_timeout <= 0
+        ):
+            raise IsolationProtocolError("startup_timeout must be a finite positive duration")
+        if (
+            isinstance(call_timeout, bool)
+            or not isinstance(call_timeout, (int, float))
+            or not math.isfinite(float(call_timeout))
+            or call_timeout <= 0
+        ):
+            raise IsolationProtocolError("call_timeout must be a finite positive duration")
         self._startup_timeout = float(startup_timeout)
         self._call_timeout = float(call_timeout)
         self._ctx = mp.get_context("spawn")
