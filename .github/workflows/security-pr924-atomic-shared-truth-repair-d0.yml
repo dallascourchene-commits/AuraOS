@@ -1,0 +1,34 @@
+name: PR924 Atomic Shared Truth Repair D0
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena/transactional_shared_truth_commit.py"
+      - "tests/test_transactional_shared_truth_commit_hosted.py"
+      - ".github/workflows/security-pr924-atomic-shared-truth-repair-d0.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  atomic-shared-truth-repair:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Fetch exact PR head without persisted credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="AUTHORIZATION: basic ${AUTH}" fetch --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --get-all http.https://github.com/.extraheader || true)"
+      - name: Compile repair surface
+        run: python -m py_compile tools/arena/transactional_shared_truth_commit.py tests/test_transactional_shared_truth_commit_hosted.py
+      - name: Run focused shared-truth regressions
+        run: python -m unittest -v tests.test_transactional_shared_truth_commit_hosted
