@@ -140,6 +140,11 @@ class GenerationBoundJsonServiceTests(unittest.TestCase):
         b = bind_generation(GEN_A, SURF_A, "m", ["test_airllm_generation_bound_json_service", "FakeLoaded"]).currentness_root
         self.assertNotEqual(a, b)
 
+    def test_13_nonfinite_or_boolean_timeout_fails_before_worker_start(self):
+        for value in (float("nan"), float("inf"), float("-inf"), True, False, 0, -1):
+            with self.subTest(value=value), self.assertRaises(IsolationProtocolError):
+                self.launch(timeout_seconds=value)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
