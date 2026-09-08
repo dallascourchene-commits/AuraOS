@@ -66,7 +66,7 @@ jobs:
           suite = unittest.TestSuite(loader.loadTestsFromModule(m) for m in (o1, o2, o3, r1))
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           assert result.wasSuccessful(), result
-          assert result.testsRun == 45, result.testsRun
+          assert result.testsRun == 47, result.testsRun
           assert not result.skipped, result.skipped
           receipt = {
               'schema': 'AWJ032_O1_O2_O3_R1_EXACT_HEAD_SUITE_V1',
