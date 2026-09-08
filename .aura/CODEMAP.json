@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788797106,
+  "generated_at_unix": 1788880161,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1710,
+    "repo_file_count": 1713,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1680,6 +1681,8 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
       "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -1826,16 +1829,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1710,
-      "bytes": 26688089,
-      "tokens_est": 6662424,
+      "files": 1713,
+      "bytes": 26699747,
+      "tokens_est": 6665339,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1033,
-        "schema_or_lexicon": 291,
+        "python_module": 1035,
+        "schema_or_lexicon": 292,
         "support_file": 49
       }
     },
@@ -40064,6 +40067,14 @@
         "end_line": 178,
         "semantic_id": "aura_current_code_quality_assessment.py#function:assess:c7724e796b72e3cf",
         "signature_hash": "6dfd7031ac01bfea"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:assess:35f525004851ff3e",
+        "signature_hash": "627967e9a4e31e1e"
       }
     ],
     "DIKWPStage": [
@@ -158774,6 +158785,392 @@
         "signature_hash": "8da6b94eb23fc2af"
       }
     ],
+    "Decision": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 20,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Decision:3f18b69f6ae7689e",
+        "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Decision:d2a9d7d52b7bc5a0",
+        "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 17,
+        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:Decision:979f72e763a33e7c",
+        "signature_hash": "d6a166dc8cfde9f6"
+      }
+    ],
+    "Geometry": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Geometry:3a2e5ccb43499029",
+        "signature_hash": "1550b2056b16f0be"
+      }
+    ],
+    "Geometry.sparse_layers": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.sparse_layers:276457734bc56336",
+        "signature_hash": "a9e64b013d6d92a8"
+      }
+    ],
+    "Geometry.expert_bytes": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.expert_bytes:21c2c945590aadd3",
+        "signature_hash": "0175d588b98022d5"
+      }
+    ],
+    "Geometry.lora_params": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.lora_params:a7f9e5a1548cc366",
+        "signature_hash": "5bed6d32d1b1910d"
+      }
+    ],
+    "Source": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Source:64949508ea978054",
+        "signature_hash": "257d2da909e85c25"
+      }
+    ],
+    "ABI": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ABI:42ecef13f7c8b15a",
+        "signature_hash": "3df6c4d75f633e7f"
+      }
+    ],
+    "Policy": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Policy:185c05d1b4e18356",
+        "signature_hash": "3ba31fc374c95232"
+      }
+    ],
+    "PortReceipt": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:PortReceipt:4b8acf065d3e8ad3",
+        "signature_hash": "e8bfa74defc8e48b"
+      },
+      {
+        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortReceipt:55dab8a84c9ebe99",
+        "signature_hash": "e8bfa74defc8e48b"
+      }
+    ],
+    "ForwardLease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ForwardLease:7a46d3a22c793f01",
+        "signature_hash": "5b840145a97a18e8"
+      }
+    ],
+    "ChunkLease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ChunkLease:0edef4552ab6c864",
+        "signature_hash": "41d30fcbb0d41b92"
+      }
+    ],
+    "_h": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_h:294d2a58deb4f2ff",
+        "signature_hash": "b0be7f7549373d94"
+      }
+    ],
+    "route_union": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_union:054407e70669ce86",
+        "signature_hash": "be31cdf93fa5281e"
+      }
+    ],
+    "route_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 68,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_root:75c1053fa50367df",
+        "signature_hash": "41779752850ac51c"
+      }
+    ],
+    "mint_forward_lease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:mint_forward_lease:024862064373d92c",
+        "signature_hash": "2be635ca1874c0bf"
+      }
+    ],
+    "backward_ready": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 96,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:backward_ready:9a560141d8c6a16c",
+        "signature_hash": "99d88a0f059e5b81"
+      }
+    ],
+    "_chunk_counts": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_chunk_counts:89a2d3fc77e21cc0",
+        "signature_hash": "83e4026777fca908"
+      }
+    ],
+    "choose_chunk": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:choose_chunk:ef6e82a3960409a3",
+        "signature_hash": "5fa44f9f069c0d4d"
+      }
+    ],
+    "default_source": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_source:68a79fbc99bc8ee2",
+        "signature_hash": "0615312424321b4f"
+      }
+    ],
+    "default_abi": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 113,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_abi:ce40c3384b7b30d0",
+        "signature_hash": "74af2d19855ecc6c"
+      }
+    ],
+    "default_policy": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_policy:30530edb9329ff5a",
+        "signature_hash": "dcff77fdf4f6b2e4"
+      }
+    ],
+    "routes": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 9,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#function:routes:872f9440f21fc220",
+        "signature_hash": "b9246add9f2a0d54"
+      }
+    ],
+    "T": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#class:T:319b083a1bb05beb",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/training_o1_reference/test_training_admission.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#class:T:6e048a14e0075c16",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:T:c29fab64d0b15a6f",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#class:T:ddc2e7dca89844fc",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#class:T:ba31ffd4c80a0bf9",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.test_v4_rank16_residency_is_blocked": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_v4_rank16_residency_is_blocked:dd0b042ed7bd55f7",
+        "signature_hash": "535425e68403cec6"
+      }
+    ],
+    "T.test_adapter_paging_closes_only_to_empirical": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_adapter_paging_closes_only_to_empirical:a1b5a85210d6fc6a",
+        "signature_hash": "4b692cab33d0f61e"
+      }
+    ],
+    "T.test_previous_airllm_pin_is_stale_for_v4_training": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_previous_airllm_pin_is_stale_for_v4_training:e8a1270e30d039ba",
+        "signature_hash": "e02e06e64b178ab2"
+      }
+    ],
+    "T.test_qwen_type_identity_is_not_glm_abi": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_qwen_type_identity_is_not_glm_abi:e13efefc1f646b52",
+        "signature_hash": "e781e16458e63e54"
+      }
+    ],
+    "T.test_geometry": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_geometry:f2a548877762cafe",
+        "signature_hash": "f4032be97c73bc89"
+      }
+    ],
+    "T.test_forward_backward_lease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_forward_backward_lease:fb091bb73e6e1b04",
+        "signature_hash": "54df78ca54505fcc"
+      }
+    ],
+    "T.test_eight_corner_noncompensation": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_eight_corner_noncompensation:4584d01de836ba7b",
+        "signature_hash": "ae93b60fbb835936"
+      }
+    ],
+    "T.test_hs1000_route_union_exact": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hs1000_route_union_exact:27ee584f8a85669c",
+        "signature_hash": "200e66fe64462927"
+      }
+    ],
+    "T.test_chunk_lease_uniform_512_six_gib": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_chunk_lease_uniform_512_six_gib:fc277f334f63742e",
+        "signature_hash": "a490710082492e81"
+      }
+    ],
+    "T.test_hot_routes_admit_no_smaller_chunk": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hot_routes_admit_no_smaller_chunk:44bf1d63c70c4a07",
+        "signature_hash": "066f0e225b7a5c4b"
+      }
+    ],
     "PortDecision": [
       {
         "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
@@ -158802,16 +159199,6 @@
         "end_line": 48,
         "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:TrainingSkeleton:b6943438928f8352",
         "signature_hash": "c0e1fdf246245b58"
-      }
-    ],
-    "PortReceipt": [
-      {
-        "file": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
-        "kind": "class",
-        "line": 52,
-        "end_line": 60,
-        "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortReceipt:55dab8a84c9ebe99",
-        "signature_hash": "e8bfa74defc8e48b"
       }
     ],
     "selected_expert_slice_plan": [
@@ -158992,24 +159379,6 @@
         "end_line": 19,
         "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Operation:28d0f4505c7ae057",
         "signature_hash": "53e5aa0f0ec78f71"
-      }
-    ],
-    "Decision": [
-      {
-        "file": "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
-        "kind": "class",
-        "line": 22,
-        "end_line": 29,
-        "semantic_id": "tools/awj032/model_capability_membrane_reference/capability_membrane.py#class:Decision:d2a9d7d52b7bc5a0",
-        "signature_hash": "d6a166dc8cfde9f6"
-      },
-      {
-        "file": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py",
-        "kind": "class",
-        "line": 10,
-        "end_line": 17,
-        "semantic_id": "tools/awj032/selective_transfer_revalidation_reference/selective_revalidation.py#class:Decision:979f72e763a33e7c",
-        "signature_hash": "d6a166dc8cfde9f6"
       }
     ],
     "SourceBinding": [
@@ -160604,40 +160973,6 @@
         "end_line": 17,
         "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#function:good:d8fd16dd51c61043",
         "signature_hash": "f5fccb79505d2b55"
-      }
-    ],
-    "T": [
-      {
-        "file": "tools/awj032/training_o1_reference/test_training_admission.py",
-        "kind": "class",
-        "line": 18,
-        "end_line": 53,
-        "semantic_id": "tools/awj032/training_o1_reference/test_training_admission.py#class:T:6e048a14e0075c16",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py",
-        "kind": "class",
-        "line": 10,
-        "end_line": 33,
-        "semantic_id": "tools/awj032/training_o2_transition_reference/test_transition_envelope.py#class:T:c29fab64d0b15a6f",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py",
-        "kind": "class",
-        "line": 10,
-        "end_line": 34,
-        "semantic_id": "tools/awj032/training_o3_delegated_bridge_reference/test_delegated_training_bridge.py#class:T:ddc2e7dca89844fc",
-        "signature_hash": "1a51332cd1dc4f10"
-      },
-      {
-        "file": "tools/awj032/training_r1_resolver_reference/test_resolver.py",
-        "kind": "class",
-        "line": 10,
-        "end_line": 27,
-        "semantic_id": "tools/awj032/training_r1_resolver_reference/test_resolver.py#class:T:ba31ffd4c80a0bf9",
-        "signature_hash": "1a51332cd1dc4f10"
       }
     ],
     "T.test_valid": [
@@ -173807,6 +174142,53 @@
         -0.064522,
         0.226515,
         -0.05354
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 758,
+      "lines": 26,
+      "tokens_est": 190,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "82086e06eb21a52a",
+      "vector": [
+        -0.115546,
+        0.098152,
+        -0.152819,
+        0.070818,
+        -0.187607,
+        -0.093182,
+        0.120516,
+        -0.172698,
+        0.053424,
+        0.167728,
+        -0.123,
+        -0.284516,
+        0.205001,
+        0.269607,
+        -0.070818,
+        -0.21494,
+        -0.152819,
+        0.05094,
+        -0.065849,
+        0.118031,
+        0.195061,
+        0.155304,
+        -0.29694,
+        -0.30688,
+        -0.160273,
+        -0.120516,
+        0.185122,
+        -0.195061,
+        0.269607,
+        -0.001242,
+        0.282031,
+        -0.118031
       ]
     },
     {
@@ -270379,6 +270761,100 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7476,
+      "lines": 115,
+      "tokens_est": 1869,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2a0fca9b21306064",
+      "vector": [
+        0.08499,
+        0.087088,
+        0.160537,
+        0.200408,
+        -0.145847,
+        0.068202,
+        -0.120665,
+        -0.072399,
+        0.261265,
+        0.238182,
+        0.221394,
+        -0.122763,
+        0.009443,
+        0.217196,
+        0.154241,
+        0.154241,
+        -0.026231,
+        0.225591,
+        -0.150044,
+        -0.19831,
+        0.212999,
+        0.150044,
+        0.259167,
+        -0.259167,
+        0.261265,
+        0.064005,
+        0.179423,
+        -0.200408,
+        -0.223492,
+        -0.145847,
+        -0.072399,
+        -0.229788
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3424,
+      "lines": 42,
+      "tokens_est": 856,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "baeecda51f4d022b",
+      "vector": [
+        0.189817,
+        -0.260557,
+        0.203965,
+        0.010611,
+        -0.229903,
+        0.064844,
+        -0.239335,
+        -0.102572,
+        -0.170953,
+        0.121436,
+        0.067202,
+        0.173311,
+        0.187459,
+        -0.050697,
+        0.267631,
+        -0.192175,
+        -0.203965,
+        0.248767,
+        -0.15209,
+        -0.053055,
+        0.293568,
+        -0.029475,
+        -0.024759,
+        -0.06956,
+        0.005895,
+        -0.038907,
+        -0.149732,
+        0.277063,
+        -0.293568,
+        -0.109646,
+        0.255841,
+        0.135584
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "role": "python_module",
       "binary": false,
@@ -295423,16 +295899,16 @@
     }
   },
   "summary": {
-    "file_count": 1710,
-    "total_bytes": 26688089,
-    "text_tokens_est": 6662424,
+    "file_count": 1713,
+    "total_bytes": 26699747,
+    "text_tokens_est": 6665339,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1033,
-      "schema_or_lexicon": 291,
+      "python_module": 1035,
+      "schema_or_lexicon": 292,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -295590,6 +296066,7 @@
       ".github/workflows/awj032-airllm-exact-head-verify.yml",
       ".github/workflows/awj032-airllm-g1-source-contract.yml",
       ".github/workflows/awj032-airllm-tiny-runtime.yml",
+      ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -297122,6 +297599,8 @@
       "tools/awj032/airllm_runtime_hard_false.py",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
       "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -455922,6 +456401,346 @@
         "file_digest8": "ea7fae03964050af"
       },
       {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ABI:42ecef13f7c8b15a",
+        "name": "ABI",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "3df6c4d75f633e7f",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ChunkLease:0edef4552ab6c864",
+        "name": "ChunkLease",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "41d30fcbb0d41b92",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Decision:3f18b69f6ae7689e",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 17,
+        "end_line": 20,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ForwardLease:7a46d3a22c793f01",
+        "name": "ForwardLease",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "5b840145a97a18e8",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Geometry:3a2e5ccb43499029",
+        "name": "Geometry",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 23,
+        "end_line": 28,
+        "signature_hash": "1550b2056b16f0be",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Policy:185c05d1b4e18356",
+        "name": "Policy",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "3ba31fc374c95232",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:PortReceipt:4b8acf065d3e8ad3",
+        "name": "PortReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "e8bfa74defc8e48b",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Source:64949508ea978054",
+        "name": "Source",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "257d2da909e85c25",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_chunk_counts:89a2d3fc77e21cc0",
+        "name": "_chunk_counts",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 98,
+        "end_line": 98,
+        "signature_hash": "83e4026777fca908",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_h:294d2a58deb4f2ff",
+        "name": "_h",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "b0be7f7549373d94",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:assess:35f525004851ff3e",
+        "name": "assess",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 70,
+        "end_line": 85,
+        "signature_hash": "627967e9a4e31e1e",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:backward_ready:9a560141d8c6a16c",
+        "name": "backward_ready",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 92,
+        "end_line": 96,
+        "signature_hash": "99d88a0f059e5b81",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:choose_chunk:ef6e82a3960409a3",
+        "name": "choose_chunk",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 99,
+        "end_line": 110,
+        "signature_hash": "5fa44f9f069c0d4d",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_abi:ce40c3384b7b30d0",
+        "name": "default_abi",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 113,
+        "end_line": 113,
+        "signature_hash": "74af2d19855ecc6c",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_policy:30530edb9329ff5a",
+        "name": "default_policy",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 114,
+        "end_line": 114,
+        "signature_hash": "dcff77fdf4f6b2e4",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_source:68a79fbc99bc8ee2",
+        "name": "default_source",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 112,
+        "end_line": 112,
+        "signature_hash": "0615312424321b4f",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:mint_forward_lease:024862064373d92c",
+        "name": "mint_forward_lease",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "2be635ca1874c0bf",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_root:75c1053fa50367df",
+        "name": "route_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 68,
+        "end_line": 68,
+        "signature_hash": "41779752850ac51c",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_union:054407e70669ce86",
+        "name": "route_union",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "be31cdf93fa5281e",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.expert_bytes:21c2c945590aadd3",
+        "name": "Geometry.expert_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 27,
+        "end_line": 27,
+        "signature_hash": "0175d588b98022d5",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.lora_params:a7f9e5a1548cc366",
+        "name": "Geometry.lora_params",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 28,
+        "end_line": 28,
+        "signature_hash": "5bed6d32d1b1910d",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.sparse_layers:276457734bc56336",
+        "name": "Geometry.sparse_layers",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "a9e64b013d6d92a8",
+        "file_digest8": "2a0fca9b21306064"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#class:T:319b083a1bb05beb",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 10,
+        "end_line": 40,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#function:routes:872f9440f21fc220",
+        "name": "routes",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 5,
+        "end_line": 9,
+        "signature_hash": "b9246add9f2a0d54",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_adapter_paging_closes_only_to_empirical:a1b5a85210d6fc6a",
+        "name": "T.test_adapter_paging_closes_only_to_empirical",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "4b692cab33d0f61e",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_chunk_lease_uniform_512_six_gib:fc277f334f63742e",
+        "name": "T.test_chunk_lease_uniform_512_six_gib",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "a490710082492e81",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_eight_corner_noncompensation:4584d01de836ba7b",
+        "name": "T.test_eight_corner_noncompensation",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "ae93b60fbb835936",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_forward_backward_lease:fb091bb73e6e1b04",
+        "name": "T.test_forward_backward_lease",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "54df78ca54505fcc",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_geometry:f2a548877762cafe",
+        "name": "T.test_geometry",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "f4032be97c73bc89",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hot_routes_admit_no_smaller_chunk:44bf1d63c70c4a07",
+        "name": "T.test_hot_routes_admit_no_smaller_chunk",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "066f0e225b7a5c4b",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hs1000_route_union_exact:27ee584f8a85669c",
+        "name": "T.test_hs1000_route_union_exact",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 32,
+        "end_line": 36,
+        "signature_hash": "200e66fe64462927",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_previous_airllm_pin_is_stale_for_v4_training:e8a1270e30d039ba",
+        "name": "T.test_previous_airllm_pin_is_stale_for_v4_training",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 15,
+        "end_line": 16,
+        "signature_hash": "e02e06e64b178ab2",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_qwen_type_identity_is_not_glm_abi:e13efefc1f646b52",
+        "name": "T.test_qwen_type_identity_is_not_glm_abi",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "e781e16458e63e54",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_v4_rank16_residency_is_blocked:dd0b042ed7bd55f7",
+        "name": "T.test_v4_rank16_residency_is_blocked",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "535425e68403cec6",
+        "file_digest8": "baeecda51f4d022b"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
         "name": "PortDecision",
         "kind": "class",
@@ -461112,7 +461931,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "081327d247cb0168aff54d37a189a9d8",
-    "payload_hash": "dab8e65086ed29b9e73e394236bc9fb1"
+    "record_fingerprint": "c94bd966d6e75ee022ece54088ac6d7c",
+    "payload_hash": "0ba8cd4e096566f603be09c8b109a024"
   }
 }
