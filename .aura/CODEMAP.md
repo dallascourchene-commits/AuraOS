@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1713
-- **total_bytes**: 26707632
-- **text_tokens_est**: 6667311
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 292, 'support_file': 49}
+- **file_count**: 1714
+- **total_bytes**: 26709887
+- **text_tokens_est**: 6667875
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 293, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1713,
+  "repo_file_count": 1714,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -317,6 +317,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+    "artifacts/arena/awj032_glm53_qicc_conditioned_route/EXPERIMENT.json",
     "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
     "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
     "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
@@ -1853,16 +1854,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1713,
-  "bytes": 26707632,
-  "tokens_est": 6667311,
+  "files": 1714,
+  "bytes": 26709887,
+  "tokens_est": 6667875,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1035,
-    "schema_or_lexicon": 292,
+    "schema_or_lexicon": 293,
     "support_file": 49
   }
 }
