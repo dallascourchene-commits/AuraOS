@@ -22,4 +22,7 @@ jobs:
         run: python -m compileall -q tools/awj032/glm53_airllm_v4_paged_training_reference
       - name: Run focused fail-closed tests
         working-directory: tools/awj032/glm53_airllm_v4_paged_training_reference
-        run: python -m unittest -v test_glm53_paged_training.py
+        run: |
+          python -m unittest -v \
+            test_glm53_paged_training.py \
+            test_glm53_qicc_k27_hydration.py
