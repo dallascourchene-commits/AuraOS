@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26483250
-- **text_tokens_est**: 6611153
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1654
+- **total_bytes**: 26508652
+- **text_tokens_est**: 6617501
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1654,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -203,6 +203,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/sco-phase2-finalize.yml",
     ".github/workflows/sco-phase3-advisory-runtime.yml",
     ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+    ".github/workflows/security-transition-domain-compiler-d0.yml",
     ".github/workflows/source-anchor-verify.yml",
     ".github/workflows/sync-analysis-codemap.yml",
     ".github/workflows/triad2-codemap-repair.yml",
@@ -1651,6 +1652,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_security_transition_domain_compiler.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1659,6 +1661,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/arena/worker_cells/gpt56sol_security_transition_domain/README.md",
+    "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+    "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1789,16 +1794,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26483250,
-  "tokens_est": 6611153,
+  "files": 1654,
+  "bytes": 26508652,
+  "tokens_est": 6617501,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 273,
+    "python_module": 1006,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }

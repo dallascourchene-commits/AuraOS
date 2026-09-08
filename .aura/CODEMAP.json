@@ -63,6 +63,7 @@
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+      ".github/workflows/security-transition-domain-compiler-d0.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
@@ -452,6 +453,12 @@
     ],
     "python -m aura_persistence_cli": [
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
+    ],
+    "python campaign.py > /tmp/campaign-1.json": [
+      ".github/workflows/security-transition-domain-compiler-d0.yml"
+    ],
+    "python campaign.py > /tmp/campaign-2.json": [
+      ".github/workflows/security-transition-domain-compiler-d0.yml"
     ],
     "python aura_codebase_navigator.py --refresh-topology": [
       ".github/workflows/triad2-codemap-repair.yml",
@@ -1060,7 +1067,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1654,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1240,6 +1247,7 @@
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+      ".github/workflows/security-transition-domain-compiler-d0.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
@@ -2688,6 +2696,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_security_transition_domain_compiler.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -2696,6 +2705,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_security_transition_domain/README.md",
+      "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -12222,6 +12234,67 @@
         -0.113784,
         0.195607,
         0.029405
+      ]
+    },
+    {
+      "path": ".github/workflows/security-transition-domain-compiler-d0.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1870,
+      "lines": 45,
+      "tokens_est": 468,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python campaign.py > /tmp/campaign-1.json",
+        "python campaign.py > /tmp/campaign-2.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          33
+        ],
+        "python campaign.py > /tmp/campaign-1.json": [
+          41
+        ],
+        "python campaign.py > /tmp/campaign-2.json": [
+          42
+        ]
+      },
+      "topology": {},
+      "digest8": "7325e8bac90a2438",
+      "vector": [
+        -0.169673,
+        0.140793,
+        0.15764,
+        0.222621,
+        0.111912,
+        0.244281,
+        0.212994,
+        -0.020457,
+        -0.208181,
+        0.253908,
+        0.116726,
+        0.121539,
+        0.080625,
+        0.268348,
+        0.277975,
+        -0.102285,
+        -0.229841,
+        -0.234654,
+        0.258722,
+        -0.022864,
+        0.092658,
+        0.032491,
+        0.160046,
+        -0.244281,
+        0.008423,
+        0.135979,
+        0.18652,
+        0.258722,
+        -0.155233,
+        0.131166,
+        0.058964,
+        0.145606
       ]
     },
     {
@@ -104141,6 +104214,53 @@
       ]
     },
     {
+      "path": "tests/test_security_transition_domain_compiler.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5534,
+      "lines": 86,
+      "tokens_est": 1384,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bf1e095ac0ec5683",
+      "vector": [
+        0.238694,
+        -0.236142,
+        0.269329,
+        -0.008935,
+        0.070204,
+        0.238694,
+        0.164661,
+        0.310175,
+        -0.088074,
+        -0.11105,
+        0.238694,
+        0.202954,
+        -0.256565,
+        -0.052334,
+        -0.085522,
+        0.006382,
+        -0.118709,
+        0.085522,
+        -0.251459,
+        -0.141685,
+        0.210613,
+        -0.269329,
+        0.151896,
+        0.116156,
+        -0.195295,
+        0.279541,
+        0.108497,
+        0.123815,
+        0.03957,
+        0.121262,
+        -0.088074,
+        0.098286
+      ]
+    },
+    {
       "path": "third_party/pascal/LICENSE",
       "role": "support_file",
       "binary": false,
@@ -104514,6 +104634,147 @@
         -0.016523,
         -0.261066,
         -0.208192
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_security_transition_domain/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4146,
+      "lines": 74,
+      "tokens_est": 1032,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d3024ede96fb9ade",
+      "vector": [
+        0.016762,
+        -0.290118,
+        0.014184,
+        -0.22049,
+        0.161177,
+        0.130231,
+        0.127652,
+        0.279803,
+        -0.277224,
+        -0.02192,
+        0.137967,
+        0.119915,
+        0.083812,
+        -0.037393,
+        -0.08897,
+        0.047708,
+        0.235963,
+        0.192123,
+        0.016762,
+        -0.26433,
+        -0.315906,
+        0.269487,
+        0.17665,
+        -0.112179,
+        -0.202438,
+        0.212753,
+        -0.078654,
+        -0.099285,
+        -0.117337,
+        -0.297855,
+        0.107021,
+        0.068339
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6205,
+      "lines": 105,
+      "tokens_est": 1552,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d36e5427c13a4527",
+      "vector": [
+        0.141177,
+        -0.026236,
+        -0.148673,
+        -0.103696,
+        0.008745,
+        0.273608,
+        0.233629,
+        -0.013743,
+        -0.298595,
+        -0.106195,
+        0.246122,
+        0.106195,
+        -0.228631,
+        0.046226,
+        0.243624,
+        0.221135,
+        -0.133681,
+        0.203644,
+        0.061218,
+        -0.056221,
+        -0.108694,
+        0.026236,
+        -0.103696,
+        0.278606,
+        -0.261115,
+        0.123686,
+        0.171161,
+        0.043727,
+        -0.056221,
+        -0.281104,
+        -0.256117,
+        -0.228631
+      ]
+    },
+    {
+      "path": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7647,
+      "lines": 176,
+      "tokens_est": 1912,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c5e02e609ee04a3a",
+      "vector": [
+        0.22759,
+        0.232074,
+        0.182745,
+        -0.095296,
+        0.10875,
+        -0.068389,
+        -0.028028,
+        -0.072874,
+        0.117719,
+        0.236559,
+        -0.176018,
+        -0.196198,
+        0.250013,
+        0.258982,
+        -0.283647,
+        0.267951,
+        0.036997,
+        -0.191714,
+        -0.036997,
+        -0.245528,
+        0.223105,
+        0.032513,
+        -0.124446,
+        -0.124446,
+        -0.110992,
+        -0.140142,
+        -0.22759,
+        0.238801,
+        -0.005606,
+        -0.019059,
+        0.279162,
+        -0.086327
       ]
     },
     {
@@ -105561,7 +105822,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788904532,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -105743,6 +106004,7 @@
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+      ".github/workflows/security-transition-domain-compiler-d0.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
@@ -107191,6 +107453,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_security_transition_domain_compiler.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -107199,6 +107462,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/arena/consequence_admission_kernel.py",
       "tools/arena/frontier27_runtime.py",
+      "tools/arena/worker_cells/gpt56sol_security_transition_domain/README.md",
+      "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+      "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -265297,6 +265563,156 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#class:DomainTests:3ab34aa486e37028",
+        "name": "DomainTests",
+        "kind": "class",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 39,
+        "end_line": 83,
+        "signature_hash": "6ae754f7a300f57f",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#function:binding:c07f0649022f0876",
+        "name": "binding",
+        "kind": "function",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 23,
+        "end_line": 29,
+        "signature_hash": "97c87ea61d7fe441",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#function:green:a4b7464c3334fdf9",
+        "name": "green",
+        "kind": "function",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 31,
+        "end_line": 37,
+        "signature_hash": "098ac0b126ba8068",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_authority_cannot_be_compensated:a52c3634dd93e445",
+        "name": "DomainTests.test_authority_cannot_be_compensated",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 74,
+        "end_line": 75,
+        "signature_hash": "308ff86250fcbc4f",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_boolean_evidence_cannot_alias_integer_truth:f40794eec8156de7",
+        "name": "DomainTests.test_boolean_evidence_cannot_alias_integer_truth",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 81,
+        "end_line": 83,
+        "signature_hash": "431266f441668ef5",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_causal_time_requires_partial_order:a1dda6bba0252e3d",
+        "name": "DomainTests.test_causal_time_requires_partial_order",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "5d358db6875f1fc4",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_declared_changes_cannot_hide_failed_axis:3205d5756c40b911",
+        "name": "DomainTests.test_declared_changes_cannot_hide_failed_axis",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 63,
+        "end_line": 69,
+        "signature_hash": "016dd6a49b881bf9",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_exact_int_rejects_bool_and_float:b5bf638d34791ec2",
+        "name": "DomainTests.test_exact_int_rejects_bool_and_float",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "0021e5bfc1f4c8d3",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_external_auth_only_after_local_exact:4bbfccf5ccd5839f",
+        "name": "DomainTests.test_external_auth_only_after_local_exact",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "17181a191c2ad3ed",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_finite_positive_duration_rejects_exceptional_values:8000ce051680cf0b",
+        "name": "DomainTests.test_finite_positive_duration_rejects_exceptional_values",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 43,
+        "end_line": 47,
+        "signature_hash": "0498d8c80241811a",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_green_is_only_eligible_path:2bfc0d7827bb6aef",
+        "name": "DomainTests.test_green_is_only_eligible_path",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 76,
+        "end_line": 77,
+        "signature_hash": "18f477d44fcf1920",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_local_transition_debt_precedes_external_auth:f430ea99a85059e9",
+        "name": "DomainTests.test_local_transition_debt_precedes_external_auth",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "6645aa3af556520c",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_parent_labels_must_be_distinct:7aa482c4c9980e89",
+        "name": "DomainTests.test_parent_labels_must_be_distinct",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "17c0d83189d386f1",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_reproof_cone_is_descendant_closed:bb7649e026d7fa5f",
+        "name": "DomainTests.test_reproof_cone_is_descendant_closed",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "2fb11d4ed4f1d4a0",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_terminal_completed_is_monotone:0c42f7016c24cceb",
+        "name": "DomainTests.test_terminal_completed_is_monotone",
+        "kind": "method",
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "line": 52,
+        "end_line": 56,
+        "signature_hash": "e72d765cce90a916",
+        "file_digest8": "bf1e095ac0ec5683"
+      },
+      {
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:AdmissionError:c6dcd94b5b7a6a86",
         "name": "AdmissionError",
         "kind": "class",
@@ -266405,6 +266821,256 @@
         "end_line": 416,
         "signature_hash": "07e9da2822c60349",
         "file_digest8": "b8e6e91c3558457f"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py#function:binding:86eef4a018c34bae",
+        "name": "binding",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "97c87ea61d7fe441",
+        "file_digest8": "d36e5427c13a4527"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py#function:evidence_from_bits:fc0f50df21d1c54c",
+        "name": "evidence_from_bits",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "a50e67411b39a171",
+        "file_digest8": "d36e5427c13a4527"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py#function:run:f044bdf7bc17ecc6",
+        "name": "run",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+        "line": 39,
+        "end_line": 103,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "d36e5427c13a4527"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:CrossPlaneBinding:13682c706eb33228",
+        "name": "CrossPlaneBinding",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 105,
+        "end_line": 119,
+        "signature_hash": "c120915885a70656",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:Decision:bf822ffb928af484",
+        "name": "Decision",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 15,
+        "end_line": 19,
+        "signature_hash": "d6a166dc8cfde9f6",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:ParentReceipt:c361de4c3e7da654",
+        "name": "ParentReceipt",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "0bcfde99b9c6f8ab",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:Readjudication:dbf9513abf8d3be7",
+        "name": "Readjudication",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 144,
+        "end_line": 148,
+        "signature_hash": "9fd03600d0c0a3bb",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:TransitionDomainError:d6eeaace4c982d3d",
+        "name": "TransitionDomainError",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "81903e7e618d7ff4",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:TransitionDomainSpec:f332b19877e3f533",
+        "name": "TransitionDomainSpec",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 88,
+        "end_line": 102,
+        "signature_hash": "a706786d9376f177",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:TransitionEvidence:ff3f049cbd775d9c",
+        "name": "TransitionEvidence",
+        "kind": "class",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 122,
+        "end_line": 141,
+        "signature_hash": "a990bd3adc27ec35",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:_hex64:bd5d781a7e0b6fd8",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "c3cfbe55dc9958df",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:canonical_root:73a7273a855486e0",
+        "name": "canonical_root",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "c5643fa856b9271b",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:causal_time_order:bf7e25a3da69be1c",
+        "name": "causal_time_order",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 43,
+        "end_line": 54,
+        "signature_hash": "0d7caa219f4984cb",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:compile_reproof_cone:79d26777dc86d3e0",
+        "name": "compile_reproof_cone",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 60,
+        "end_line": 76,
+        "signature_hash": "dfac9e67473171c4",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:exact_nonnegative_int:04a47314b8d5fbab",
+        "name": "exact_nonnegative_int",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "911e6c14c7726c54",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:finite_positive_duration:0e80e8622e54c328",
+        "name": "finite_positive_duration",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 32,
+        "end_line": 41,
+        "signature_hash": "96c1e242ad44a196",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:readjudicate:7ed008bff98c6a4e",
+        "name": "readjudicate",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 150,
+        "end_line": 175,
+        "signature_hash": "9ff5717586e8b219",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:terminal_transition_allowed:2da9d6ac854ef50b",
+        "name": "terminal_transition_allowed",
+        "kind": "function",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "ef81bdf56699f391",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:CrossPlaneBinding.binding_root:e8207ad203a0785f",
+        "name": "CrossPlaneBinding.binding_root",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 117,
+        "end_line": 119,
+        "signature_hash": "8f6c876409ac77f8",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:CrossPlaneBinding.validate:366ad13cc454f932",
+        "name": "CrossPlaneBinding.validate",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 109,
+        "end_line": 115,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:ParentReceipt.validate:1be12ea4d75300ab",
+        "name": "ParentReceipt.validate",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 83,
+        "end_line": 85,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionDomainSpec.spec_root:3fdd7f614f0cb3bf",
+        "name": "TransitionDomainSpec.spec_root",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 100,
+        "end_line": 102,
+        "signature_hash": "2af08a385cb13c4e",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionDomainSpec.validate:84a937826ba7b0c6",
+        "name": "TransitionDomainSpec.validate",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 93,
+        "end_line": 98,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionEvidence.local_exact:41612bbcd0a8b9b5",
+        "name": "TransitionEvidence.local_exact",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 139,
+        "end_line": 141,
+        "signature_hash": "d228daca570d57a2",
+        "file_digest8": "c5e02e609ee04a3a"
+      },
+      {
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionEvidence.validate:4439f8f5c5c346c8",
+        "name": "TransitionEvidence.validate",
+        "kind": "method",
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "line": 134,
+        "end_line": 137,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "c5e02e609ee04a3a"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -267657,8 +268323,8 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "record_fingerprint": "019ef5c564bb18123c7590acd7953ac6",
+    "payload_hash": "39d6740260c6253cc1a2f0d0da606f2e"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,16 +268337,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1654,
+      "bytes": 26508652,
+      "tokens_est": 6617501,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 239,
+        "knowledge_artifact": 240,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 273,
+        "python_module": 1006,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -268367,16 +269033,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1654,
+    "total_bytes": 26508652,
+    "text_tokens_est": 6617501,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 239,
+      "knowledge_artifact": 240,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 273,
+      "python_module": 1006,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -269597,6 +270263,14 @@
         "end_line": 732,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:run:243d8f61a6c67541",
         "signature_hash": "d981aa5a48724e5c"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 103,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py#function:run:f044bdf7bc17ecc6",
+        "signature_hash": "26799ab4ad82cbfb"
       }
     ],
     "run.record": [
@@ -334075,6 +334749,14 @@
         "end_line": 229,
         "semantic_id": "aura_pascal_spatial_presentation_part1.py#function:_hex64:aebaedfeb4247965",
         "signature_hash": "3956785c98c04eb6"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:_hex64:bd5d781a7e0b6fd8",
+        "signature_hash": "c3cfbe55dc9958df"
       }
     ],
     "_utc_timestamp": [
@@ -382675,6 +383357,22 @@
         "end_line": 35,
         "semantic_id": "tests/test_aura_architecture_harness_git_tree_routing.py#function:binding:7d52be074af4d521",
         "signature_hash": "97c87ea61d7fe441"
+      },
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 29,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#function:binding:c07f0649022f0876",
+        "signature_hash": "97c87ea61d7fe441"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py#function:binding:86eef4a018c34bae",
+        "signature_hash": "97c87ea61d7fe441"
       }
     ],
     "blob": [
@@ -423907,6 +424605,146 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "green": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 37,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#function:green:a4b7464c3334fdf9",
+        "signature_hash": "098ac0b126ba8068"
+      }
+    ],
+    "DomainTests": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 83,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#class:DomainTests:3ab34aa486e37028",
+        "signature_hash": "6ae754f7a300f57f"
+      }
+    ],
+    "DomainTests.test_exact_int_rejects_bool_and_float": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_exact_int_rejects_bool_and_float:b5bf638d34791ec2",
+        "signature_hash": "0021e5bfc1f4c8d3"
+      }
+    ],
+    "DomainTests.test_finite_positive_duration_rejects_exceptional_values": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 47,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_finite_positive_duration_rejects_exceptional_values:8000ce051680cf0b",
+        "signature_hash": "0498d8c80241811a"
+      }
+    ],
+    "DomainTests.test_causal_time_requires_partial_order": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_causal_time_requires_partial_order:a1dda6bba0252e3d",
+        "signature_hash": "5d358db6875f1fc4"
+      }
+    ],
+    "DomainTests.test_terminal_completed_is_monotone": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 56,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_terminal_completed_is_monotone:0c42f7016c24cceb",
+        "signature_hash": "e72d765cce90a916"
+      }
+    ],
+    "DomainTests.test_reproof_cone_is_descendant_closed": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_reproof_cone_is_descendant_closed:bb7649e026d7fa5f",
+        "signature_hash": "2fb11d4ed4f1d4a0"
+      }
+    ],
+    "DomainTests.test_local_transition_debt_precedes_external_auth": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_local_transition_debt_precedes_external_auth:f430ea99a85059e9",
+        "signature_hash": "6645aa3af556520c"
+      }
+    ],
+    "DomainTests.test_declared_changes_cannot_hide_failed_axis": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 69,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_declared_changes_cannot_hide_failed_axis:3205d5756c40b911",
+        "signature_hash": "016dd6a49b881bf9"
+      }
+    ],
+    "DomainTests.test_external_auth_only_after_local_exact": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_external_auth_only_after_local_exact:4bbfccf5ccd5839f",
+        "signature_hash": "17181a191c2ad3ed"
+      }
+    ],
+    "DomainTests.test_authority_cannot_be_compensated": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 75,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_authority_cannot_be_compensated:a52c3634dd93e445",
+        "signature_hash": "308ff86250fcbc4f"
+      }
+    ],
+    "DomainTests.test_green_is_only_eligible_path": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 77,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_green_is_only_eligible_path:2bfc0d7827bb6aef",
+        "signature_hash": "18f477d44fcf1920"
+      }
+    ],
+    "DomainTests.test_parent_labels_must_be_distinct": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_parent_labels_must_be_distinct:7aa482c4c9980e89",
+        "signature_hash": "17c0d83189d386f1"
+      }
+    ],
+    "DomainTests.test_boolean_evidence_cannot_alias_integer_truth": [
+      {
+        "file": "tests/test_security_transition_domain_compiler.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 83,
+        "semantic_id": "tests/test_security_transition_domain_compiler.py#method:DomainTests.test_boolean_evidence_cannot_alias_integer_truth:f40794eec8156de7",
+        "signature_hash": "431266f441668ef5"
+      }
+    ],
     "AdmissionError": [
       {
         "file": "tools/arena/consequence_admission_kernel.py",
@@ -423934,6 +424772,14 @@
         "line": 27,
         "end_line": 34,
         "semantic_id": "tools/arena/consequence_admission_kernel.py#class:Decision:40c2d58ba9052108",
+        "signature_hash": "d6a166dc8cfde9f6"
+      },
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 19,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:Decision:bf822ffb928af484",
         "signature_hash": "d6a166dc8cfde9f6"
       }
     ],
@@ -424975,6 +425821,216 @@
         "end_line": 454,
         "semantic_id": "tools/arena/frontier27_runtime.py#class:UsefulByteAccounting:1adcf67b04dc2f25",
         "signature_hash": "0d9f06875821b0a4"
+      }
+    ],
+    "evidence_from_bits": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/campaign.py#function:evidence_from_bits:fc0f50df21d1c54c",
+        "signature_hash": "a50e67411b39a171"
+      }
+    ],
+    "TransitionDomainError": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:TransitionDomainError:d6eeaace4c982d3d",
+        "signature_hash": "81903e7e618d7ff4"
+      }
+    ],
+    "canonical_root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:canonical_root:73a7273a855486e0",
+        "signature_hash": "c5643fa856b9271b"
+      }
+    ],
+    "exact_nonnegative_int": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:exact_nonnegative_int:04a47314b8d5fbab",
+        "signature_hash": "911e6c14c7726c54"
+      }
+    ],
+    "finite_positive_duration": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 41,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:finite_positive_duration:0e80e8622e54c328",
+        "signature_hash": "96c1e242ad44a196"
+      }
+    ],
+    "causal_time_order": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 54,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:causal_time_order:bf7e25a3da69be1c",
+        "signature_hash": "0d7caa219f4984cb"
+      }
+    ],
+    "terminal_transition_allowed": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:terminal_transition_allowed:2da9d6ac854ef50b",
+        "signature_hash": "ef81bdf56699f391"
+      }
+    ],
+    "compile_reproof_cone": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 76,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:compile_reproof_cone:79d26777dc86d3e0",
+        "signature_hash": "dfac9e67473171c4"
+      }
+    ],
+    "ParentReceipt": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:ParentReceipt:c361de4c3e7da654",
+        "signature_hash": "0bcfde99b9c6f8ab"
+      }
+    ],
+    "ParentReceipt.validate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 85,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:ParentReceipt.validate:1be12ea4d75300ab",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "TransitionDomainSpec": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 102,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:TransitionDomainSpec:f332b19877e3f533",
+        "signature_hash": "a706786d9376f177"
+      }
+    ],
+    "TransitionDomainSpec.validate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 98,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionDomainSpec.validate:84a937826ba7b0c6",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "TransitionDomainSpec.spec_root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 102,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionDomainSpec.spec_root:3fdd7f614f0cb3bf",
+        "signature_hash": "2af08a385cb13c4e"
+      }
+    ],
+    "CrossPlaneBinding": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 105,
+        "end_line": 119,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:CrossPlaneBinding:13682c706eb33228",
+        "signature_hash": "c120915885a70656"
+      }
+    ],
+    "CrossPlaneBinding.validate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 115,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:CrossPlaneBinding.validate:366ad13cc454f932",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "CrossPlaneBinding.binding_root": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 119,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:CrossPlaneBinding.binding_root:e8207ad203a0785f",
+        "signature_hash": "8f6c876409ac77f8"
+      }
+    ],
+    "TransitionEvidence": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 141,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:TransitionEvidence:ff3f049cbd775d9c",
+        "signature_hash": "a990bd3adc27ec35"
+      }
+    ],
+    "TransitionEvidence.validate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 137,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionEvidence.validate:4439f8f5c5c346c8",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "TransitionEvidence.local_exact": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 141,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#method:TransitionEvidence.local_exact:41612bbcd0a8b9b5",
+        "signature_hash": "d228daca570d57a2"
+      }
+    ],
+    "Readjudication": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 148,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#class:Readjudication:dbf9513abf8d3be7",
+        "signature_hash": "9fd03600d0c0a3bb"
+      }
+    ],
+    "readjudicate": [
+      {
+        "file": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 175,
+        "semantic_id": "tools/arena/worker_cells/gpt56sol_security_transition_domain/security_transition_domain.py#function:readjudicate:7ed008bff98c6a4e",
+        "signature_hash": "9ff5717586e8b219"
       }
     ],
     "_coordinates": [
