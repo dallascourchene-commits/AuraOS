@@ -1,0 +1,34 @@
+name: AirLLM Finite JSON Timeout Repair
+
+on:
+  pull_request:
+    paths:
+      - "src/auraos/security/airllm_json_process_isolation.py"
+      - "src/auraos/security/test_airllm_generation_bound_json_service.py"
+      - ".github/workflows/airllm-finite-json-timeout-repair.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  finite-json-timeout-repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact repair surface
+        run: |
+          python -m py_compile \
+            src/auraos/security/airllm_json_process_isolation.py \
+            src/auraos/security/airllm_generation_bound_json_service.py \
+            src/auraos/security/test_airllm_generation_bound_json_service.py
+      - name: Run focused generation-bound regression
+        working-directory: src/auraos/security
+        run: python -m unittest -v test_airllm_generation_bound_json_service
