@@ -30,7 +30,7 @@ LocalTransitionExact
   -> ELIGIBLE_FOR_FRESH_READJUDICATION
 ```
 
-Any local failure suppresses external-auth optimization and returns `REPROVE_LOCAL_FIRST`. Changed semantic dimensions are expanded only through their deterministic descendant cone.
+Any local failure suppresses external-auth optimization and returns `REPROVE_LOCAL_FIRST`. The reproof seed is the union of caller-declared changes and all observed failed local axes; that union is then expanded only through the deterministic descendant cone. A caller therefore cannot hide a failed invariant by supplying a narrower change list.
 
 ## Typed transition laws
 
@@ -40,6 +40,7 @@ Any local failure suppresses external-auth optimization and returns `REPROVE_LOC
 - `NewerReceipt != LawfulLifecycleTransition`
 - `COMPLETED -> retryable state` is forbidden within one durable attempt.
 - Python `bool` is not accepted as an integer identity/time/count.
+- Float-conversion overflow is a typed domain rejection, not an uncontrolled exception surface.
 - Context cannot compensate for a failed hard security axis.
 
 ## Empirical source of the third leg
@@ -48,14 +49,24 @@ The detector family produced five narrow repair children: #940 (terminal lifecyc
 
 ## Campaign
 
-`campaign.py` is stdlib-only and deterministic:
+`campaign.py` is stdlib-only and deterministic. It separates conceptual search geometry from implementation-facing proof:
 
-- exhaustive `3^13 = 1,594,323` transition-domain membrane states;
+- conceptual `3^13 = 1,594,323` lattice, with an 8-hard/5-context membrane retained as falsification geometry only;
+- actual implementation truth table across all `2^11 = 2,048` evidence states: exactly one all-green state may be eligible and no unsafe state may be eligible;
+- `9 × 2^9 = 4,608` failed-local-axis × declared-change-subset cases: every observed failed axis must remain in the compiled reproof cone;
 - all 24 strict orderings of observation / issuance / effect-time / expiry;
 - 1,000,000 random IEEE-754 bit patterns;
 - exhaustive lifecycle sequences through length 7.
 
-It requires exactly 243 valid contextual variants, zero hard-invalid repairs, one lawful causal ordering, zero non-finite admissions under the fixed duration domain, and zero post-completion retries.
+Current deterministic keeper results:
+
+- 13D contextual variants: 243; conceptual hard-invalid repairs: 0;
+- evidence truth table: 2,048 states, exactly 1 eligible, 0 unsafe eligible;
+- reproof-union campaign: 4,608 cases, 0 misses;
+- temporal orderings: legacy-shaped predicate accepts 4, only 1 is lawful, fixed predicate accepts 1;
+- IEEE-754: positivity-only admits 498 non-finite values, finite-positive domain admits 0;
+- lifecycle: legacy permits 2,778 post-completion retry sequences through length 7, fixed transition law permits 0;
+- campaign root: `07805a91bf3d9dce038d41cabad879ff43b685412a1922e94959f5b5e4239bce`.
 
 ## Authority ceiling
 
