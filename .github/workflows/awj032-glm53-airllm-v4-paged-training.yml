@@ -1,0 +1,25 @@
+name: AWJ032 GLM53 AirLLM v4 Paged Training
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_airllm_v4_paged_training_reference/**'
+      - '.github/workflows/awj032-glm53-airllm-v4-paged-training.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile reference
+        run: python -m compileall -q tools/awj032/glm53_airllm_v4_paged_training_reference
+      - name: Run focused fail-closed tests
+        working-directory: tools/awj032/glm53_airllm_v4_paged_training_reference
+        run: python -m unittest -v test_glm53_paged_training.py
