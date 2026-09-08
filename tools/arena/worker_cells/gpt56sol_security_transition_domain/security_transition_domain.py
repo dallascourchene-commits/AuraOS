@@ -158,7 +158,8 @@ def readjudicate(*, evidence: TransitionEvidence, binding: CrossPlaneBinding, de
     )
     local_failures = tuple(name for name, ok in axes if not ok)
     if local_failures:
-        seeds = changed or tuple(x for x in local_failures if x in dependency_graph)
+        failure_seeds = tuple(x for x in local_failures if x in dependency_graph)
+        seeds = tuple(sorted(set(changed).union(failure_seeds)))
         cone = compile_reproof_cone(dependency_graph, seeds) if seeds else ()
         return Readjudication(Decision.REPROVE_LOCAL_FIRST, local_failures, cone, root)
     if not evidence.external_auth_complete:
