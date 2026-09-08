@@ -95,7 +95,9 @@ class RecoveryAuthority:
     def issue(self,attempt_root,verdict,now):
         if not valid_int(now) or now<0: raise ValueError('recovery time')
         prev=self._current.get(attempt_root)
-        if prev is not None and now<=prev.issued_at: raise ValueError('recovery verdict time must increase monotonically')
+        if prev is not None:
+            if now<=prev.issued_at: raise ValueError('recovery verdict time must increase monotonically')
+            if prev.verdict=='COMPLETED' and verdict!='COMPLETED': raise ValueError('completed recovery verdict is terminal')
         p={'schema':SCHEMA,'kind':'recovery_verdict','attempt_root':attempt_root,'verdict':verdict,'key_id':self.active_key_id,'generation':self.generation,'issued_at':now}
         v=RecoveryVerdict(attempt_root,verdict,self.active_key_id,self.generation,now,hmac.new(self.keys[self.active_key_id],canon(p),sha256).hexdigest()); self._current[attempt_root]=v; return v
     def verify(self,v,expected_attempt_root,current_required=False):
