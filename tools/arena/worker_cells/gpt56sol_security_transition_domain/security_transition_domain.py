@@ -30,9 +30,15 @@ def exact_nonnegative_int(value: object, name: str = "value") -> int:
     return value
 
 def finite_positive_duration(value: object, name: str = "duration") -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)) or float(value) <= 0.0:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TransitionDomainError(f"{name}: finite positive duration required")
-    return float(value)
+    try:
+        normalized = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise TransitionDomainError(f"{name}: finite positive duration required") from exc
+    if not math.isfinite(normalized) or normalized <= 0.0:
+        raise TransitionDomainError(f"{name}: finite positive duration required")
+    return normalized
 
 def causal_time_order(*, observed_at_ms: object, issued_at_ms: object, now_ms: object, expires_at_ms: object, max_age_ms: Optional[object] = None) -> bool:
     observed = exact_nonnegative_int(observed_at_ms, "observed_at_ms")
