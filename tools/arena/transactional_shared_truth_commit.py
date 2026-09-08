@@ -59,11 +59,16 @@ class Decision:
 def state_root(rows):
     return digest(sorted((str(k), str(v)) for k, v in rows))
 
-def evaluate_snapshot(admission: AttemptAdmission, proposal: CommitProposal, current: dict[str, str]):
+def evaluate_admission_lineage(admission: AttemptAdmission, proposal: CommitProposal):
     if not admission.current: return False, "ATTEMPT_ADMISSION_STALE"
     if not admission.proof_bound: return False, "ATTEMPT_ADMISSION_NOT_PROOF_BOUND"
     if admission.operation_root != proposal.operation_root or admission.attempt_root != proposal.attempt_root:
         return False, "ATTEMPT_LINEAGE_MISMATCH"
+    return True, "OK_D0"
+
+def evaluate_snapshot(admission: AttemptAdmission, proposal: CommitProposal, current: dict[str, str]):
+    admitted, admission_reason = evaluate_admission_lineage(admission, proposal)
+    if not admitted: return False, admission_reason
     if not proposal.writes or len({k for k, _ in proposal.writes}) != len(proposal.writes):
         return False, "MALFORMED_WRITES"
     current_root = state_root(current.items())
@@ -100,6 +105,8 @@ class SharedTruthStore:
     def state(self): return dict(self.db.execute("SELECT key,value FROM truth_state ORDER BY key"))
     def state_root(self): return state_root(self.state().items())
     def commit(self, admission: AttemptAdmission, proposal: CommitProposal):
+        admitted, admission_reason = evaluate_admission_lineage(admission, proposal)
+        if not admitted: return Decision(Disposition.HOLD, admission_reason)
         patch_root = proposal.patch_root()
         commit_root = digest({"schema": SCHEMA, "operation_root": proposal.operation_root, "patch_root": patch_root})
         prior = self.db.execute("SELECT commit_receipt_root,post_state_root FROM commits WHERE commit_root=?", (commit_root,)).fetchone()
@@ -107,16 +114,23 @@ class SharedTruthStore:
             return Decision(Disposition.DEDUP_D0, "IDENTICAL_COMMIT_ALREADY_DURABLE", commit_root, prior[0], prior[1])
         current = self.state(); ok, reason = evaluate_snapshot(admission, proposal, current)
         if not ok: return Decision(Disposition.HOLD, reason)
-        post = dict(current)
-        for key, value in proposal.writes: post[key] = value
-        post_root = state_root(post.items())
-        receipt = digest({"schema": SCHEMA, "commit_root": commit_root, "operation_root": proposal.operation_root,
-                          "attempt_root": proposal.attempt_root, "patch_root": patch_root, "post_state_root": post_root,
-                          "admission": {"domain": admission.domain, "source_incarnation_root": admission.source_incarnation_root,
-                                        "workcell_root": admission.workcell_root, "lease_root": admission.lease_root}})
         with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            # A concurrent identical commit may have become durable while this caller
+            # waited for the write lock. Preserve cross-attempt dedup after the
+            # current/proof-bound admission lineage has already been validated.
+            prior_locked = self.db.execute("SELECT commit_receipt_root,post_state_root FROM commits WHERE commit_root=?", (commit_root,)).fetchone()
+            if prior_locked:
+                return Decision(Disposition.DEDUP_D0, "IDENTICAL_COMMIT_ALREADY_DURABLE", commit_root, prior_locked[0], prior_locked[1])
             live = self.state(); ok2, reason2 = evaluate_snapshot(admission, proposal, live)
             if not ok2: return Decision(Disposition.HOLD, reason2)
+            post = dict(live)
+            for key, value in proposal.writes: post[key] = value
+            post_root = state_root(post.items())
+            receipt = digest({"schema": SCHEMA, "commit_root": commit_root, "operation_root": proposal.operation_root,
+                              "attempt_root": proposal.attempt_root, "patch_root": patch_root, "post_state_root": post_root,
+                              "admission": {"domain": admission.domain, "source_incarnation_root": admission.source_incarnation_root,
+                                            "workcell_root": admission.workcell_root, "lease_root": admission.lease_root}})
             for key, value in proposal.writes:
                 self.db.execute("INSERT INTO truth_state(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", (key, value))
             self.db.execute("INSERT INTO commits VALUES(?,?,?,?,?,?,?,?)",
