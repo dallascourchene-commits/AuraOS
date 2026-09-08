@@ -60,6 +60,13 @@ class DomainTests(unittest.TestCase):
         r = readjudicate(evidence=green(value_domain_valid=False, external_auth_complete=False), binding=binding(), dependency_graph=GRAPH, changed_dimensions=("value_domain",))
         self.assertEqual(r.decision, Decision.REPROVE_LOCAL_FIRST)
         self.assertIn("causal_order", r.reproof_cone)
+    def test_declared_changes_cannot_hide_failed_axis(self):
+        r = readjudicate(evidence=green(value_domain_valid=False), binding=binding(), dependency_graph=GRAPH, changed_dimensions=("semantic_projection",))
+        self.assertEqual(r.decision, Decision.REPROVE_LOCAL_FIRST)
+        self.assertIn("semantic_projection", r.reproof_cone)
+        self.assertIn("value_domain", r.reproof_cone)
+        self.assertIn("causal_order", r.reproof_cone)
+        self.assertIn("lifecycle_transition", r.reproof_cone)
     def test_external_auth_only_after_local_exact(self):
         r = readjudicate(evidence=green(external_auth_complete=False), binding=binding(), dependency_graph=GRAPH)
         self.assertEqual(r.decision, Decision.READJUDICATE_EXTERNAL_AUTH)
