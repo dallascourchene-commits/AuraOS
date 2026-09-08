@@ -11,6 +11,7 @@
     ],
     "python -m py_compile": [
       ".github/scripts/umc_publish_five_files.sh",
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
       ".github/workflows/amd-track3.yml",
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
@@ -81,6 +82,10 @@
       "docs/AURA_CONSTRUCTION_FOUNDRY_DECISION_PR3.md",
       "docs/AURA_PASCAL_SPATIAL_PRESENTATION_PR2.md",
       "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python -m pip": [
       ".github/workflows/amd-track3.yml",
@@ -1025,9 +1030,6 @@
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
     ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
-    ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
     ],
@@ -1060,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1674,
+    "repo_file_count": 1675,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1181,6 +1183,7 @@
       ".github/umc_final5_payload/part-19",
       ".github/umc_final5_payload/part-20",
       ".github/umc_final5_payload/part-21",
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
       ".github/workflows/amd-track3.yml",
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
@@ -8450,6 +8453,63 @@
         0.139281,
         0.048266,
         0.004137
+      ]
+    },
+    {
+      "path": ".github/workflows/airllm-finite-timeout-owner-repair.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1382,
+      "lines": 41,
+      "tokens_est": 346,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          30
+        ],
+        "python -m unittest": [
+          38
+        ]
+      },
+      "topology": {},
+      "digest8": "a0355919f0c39392",
+      "vector": [
+        -0.107959,
+        -0.120369,
+        0.038468,
+        0.127814,
+        0.160078,
+        -0.028541,
+        -0.065768,
+        -0.110441,
+        0.259351,
+        0.105478,
+        -0.261833,
+        -0.182414,
+        0.199787,
+        0.026059,
+        -0.234532,
+        0.194823,
+        -0.060805,
+        0.110441,
+        0.207232,
+        -0.075696,
+        -0.21716,
+        -0.224605,
+        0.237014,
+        -0.254387,
+        0.137741,
+        0.050877,
+        0.296578,
+        0.043432,
+        0.239496,
+        0.204751,
+        -0.192341,
+        -0.261833
       ]
     },
     {
@@ -106761,7 +106821,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788898671,
+  "generated_at_unix": 1788898850,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -106884,6 +106944,7 @@
       ".github/umc_final5_payload/part-19",
       ".github/umc_final5_payload/part-20",
       ".github/umc_final5_payload/part-21",
+      ".github/workflows/airllm-finite-timeout-owner-repair.yml",
       ".github/workflows/amd-track3.yml",
       ".github/workflows/architect-code-quality-benchmark.yml",
       ".github/workflows/architect-consolidation-benchmark.yml",
@@ -273323,7 +273384,7 @@
       }
     ],
     "record_fingerprint": "77103d1886cc2655101247656aa06335",
-    "payload_hash": "9fbc317d6a334492eda06ff82b148d7b"
+    "payload_hash": "356271055a6dc053297fae163cce30e3"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -273336,16 +273397,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1674,
-      "bytes": 26736588,
-      "tokens_est": 6674497,
+      "files": 1675,
+      "bytes": 26737970,
+      "tokens_est": 6674843,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1028,
-        "schema_or_lexicon": 273,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -274032,16 +274093,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1674,
-    "total_bytes": 26736588,
-    "text_tokens_est": 6674497,
+    "file_count": 1675,
+    "total_bytes": 26737970,
+    "text_tokens_est": 6674843,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1028,
-      "schema_or_lexicon": 273,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
