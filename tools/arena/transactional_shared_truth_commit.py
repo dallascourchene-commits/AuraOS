@@ -60,6 +60,8 @@ def state_root(rows):
     return digest(sorted((str(k), str(v)) for k, v in rows))
 
 def evaluate_admission_lineage(admission: AttemptAdmission, proposal: CommitProposal):
+    if type(admission.current) is not bool or type(admission.proof_bound) is not bool:
+        return False, "ATTEMPT_ADMISSION_BOOL_INVALID"
     if not admission.current: return False, "ATTEMPT_ADMISSION_STALE"
     if not admission.proof_bound: return False, "ATTEMPT_ADMISSION_NOT_PROOF_BOUND"
     if admission.operation_root != proposal.operation_root or admission.attempt_root != proposal.attempt_root:
@@ -116,9 +118,6 @@ class SharedTruthStore:
         if not ok: return Decision(Disposition.HOLD, reason)
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
-            # A concurrent identical commit may have become durable while this caller
-            # waited for the write lock. Preserve cross-attempt dedup after the
-            # current/proof-bound admission lineage has already been validated.
             prior_locked = self.db.execute("SELECT commit_receipt_root,post_state_root FROM commits WHERE commit_root=?", (commit_root,)).fetchone()
             if prior_locked:
                 return Decision(Disposition.DEDUP_D0, "IDENTICAL_COMMIT_ALREADY_DURABLE", commit_root, prior_locked[0], prior_locked[1])
