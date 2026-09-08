@@ -49,6 +49,31 @@ class T(unittest.TestCase):
     def test_identity_conflict(self):
         p2=ActivationPlan(self.p.activation_id,H('other'),self.p.o22_prepare_root,self.p.target_release_root,self.p.expected_host_id,self.p.prior_process_binding_root,self.p.prior_serving_population_root)
         with self.assertRaisesRegex(ActivationError,'ACTIVATION_IDENTITY_CONFLICT'): self.j.prepare(p2,o21_state='COMMITTED',o21_target_release_root=p2.target_release_root,o21_commit_receipt_root=H('commit'))
+    def test_retirement_time_domain_rejects_noninteger(self):
+        for value in (float('nan'),float('inf'),float('-inf'),True,False,1.5,'1500'):
+            with self.subTest(value=value):
+                e=sign_retirement(KEY,self.p,observed_at_ms=value)
+                with self.assertRaisesRegex(ActivationError,'RETIREMENT_TIME_INVALID'): self.j.retire_old(self.p,e,key=KEY,now_ms=1500)
+    def test_retirement_now_must_be_exact_ms_integer(self):
+        e=sign_retirement(KEY,self.p)
+        for value in (float('nan'),float('inf'),True,1.5):
+            with self.subTest(value=value), self.assertRaisesRegex(ActivationError,'RETIREMENT_NOW_INVALID'): self.j.retire_old(self.p,e,key=KEY,now_ms=value)
+    def test_loaded_time_and_generation_domains_are_exact(self):
+        self.retire()
+        for kw,code in (({'observed_at_ms':float('nan')},'LOADED_TIME_INVALID'),({'valid_until_ms':float('inf')},'LOADED_TIME_INVALID'),({'process_generation':True},'LOADED_GENERATION_INVALID'),({'load_generation':False},'LOADED_GENERATION_INVALID')):
+            with self.subTest(kw=kw):
+                with self.assertRaisesRegex(ActivationError,code): self.j.bind_loaded(self.p,loaded(self.p,**kw),key=KEY,now_ms=1500)
+    def test_loaded_now_must_be_exact_ms_integer(self):
+        self.retire(); e=loaded(self.p)
+        for value in (float('nan'),float('inf'),True,1.5):
+            with self.subTest(value=value), self.assertRaisesRegex(ActivationError,'LOADED_NOW_INVALID'): self.j.bind_loaded(self.p,e,key=KEY,now_ms=value)
+    def test_postinstall_time_domain_and_now_are_exact(self):
+        self.retire(); e=loaded(self.p); self.load(e)
+        bad=sign_postinstall(KEY,self.p,e,o20_receipt_root=H('o20'),o19_receipt_root=H('o19'),issued_at_ms=float('nan'))
+        with self.assertRaisesRegex(ActivationError,'POSTINSTALL_TIME_INVALID'): self.j.bind_postinstall(self.p,bad,e,key=KEY,now_ms=1500)
+        good=sign_postinstall(KEY,self.p,e,o20_receipt_root=H('o20'),o19_receipt_root=H('o19'))
+        for value in (float('nan'),float('inf'),True,1.5):
+            with self.subTest(value=value), self.assertRaisesRegex(ActivationError,'POSTINSTALL_NOW_INVALID'): self.j.bind_postinstall(self.p,good,e,key=KEY,now_ms=value)
     def test_k27_absent_from_identity(self): self.assertNotIn('k27',ActivationPlan.__dataclass_fields__)
     def test_no_authority_fields(self): self.assertFalse(self.j.status(self.p.activation_id)['effect_authority']); self.assertFalse(self.j.status(self.p.activation_id)['gate10'])
 if __name__=='__main__': unittest.main()
