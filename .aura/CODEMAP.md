@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1715
-- **total_bytes**: 26773709
-- **text_tokens_est**: 6683797
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1045, 'schema_or_lexicon': 292, 'support_file': 53}
+- **file_count**: 1717
+- **total_bytes**: 26780594
+- **text_tokens_est**: 6685520
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1046, 'schema_or_lexicon': 293, 'support_file': 53}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1715,
+  "repo_file_count": 1717,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -208,6 +208,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/sco-phase2-finalize.yml",
     ".github/workflows/sco-phase3-advisory-runtime.yml",
     ".github/workflows/sco-temporal-persistence-e9-e12.yml",
+    ".github/workflows/security-pr924-atomic-shared-truth-repair-d0.yml",
     ".github/workflows/source-anchor-verify.yml",
     ".github/workflows/sync-analysis-codemap.yml",
     ".github/workflows/triad2-codemap-repair.yml",
@@ -1670,6 +1671,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_frontier27_runtime.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
+    "tests/test_pr924_atomic_shared_truth_repair.py",
     "tests/test_project006_effect_attempt_recovery_o11.py",
     "tests/test_render_four_tab_deployment.py",
     "tests/test_tecc_effect_admission_bridge.py",
@@ -1855,16 +1857,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1715,
-  "bytes": 26773709,
-  "tokens_est": 6683797,
+  "files": 1717,
+  "bytes": 26780594,
+  "tokens_est": 6685520,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1045,
-    "schema_or_lexicon": 292,
+    "python_module": 1046,
+    "schema_or_lexicon": 293,
     "support_file": 53
   }
 }
