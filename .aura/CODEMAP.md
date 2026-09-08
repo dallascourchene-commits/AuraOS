@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1713
-- **total_bytes**: 26699747
-- **text_tokens_est**: 6665339
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 292, 'support_file': 49}
+- **file_count**: 1716
+- **total_bytes**: 26713716
+- **text_tokens_est**: 6668833
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 252, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1037, 'schema_or_lexicon': 293, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1713,
+  "repo_file_count": 1716,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -317,6 +317,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
     "artifacts/arena/awj032_airllm_training_r1/README.md",
     "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+    "artifacts/arena/awj032_glm53_qicc_conditioned_route/EXPERIMENT.json",
     "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
     "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
     "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
@@ -1700,7 +1701,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/airllm_tiny_fixture_probe.py",
     "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+    "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
     "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+    "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
     "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
     "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
     "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -1853,16 +1856,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1713,
-  "bytes": 26699747,
-  "tokens_est": 6665339,
+  "files": 1716,
+  "bytes": 26713716,
+  "tokens_est": 6668833,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 252,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1035,
-    "schema_or_lexicon": 292,
+    "python_module": 1037,
+    "schema_or_lexicon": 293,
     "support_file": 49
   }
 }

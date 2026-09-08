@@ -1,0 +1,62 @@
+{
+  "schema": "GLM53QICCConditionedRouteExperimentV1",
+  "date": "2026-09-08",
+  "claim_ceiling": "D0_NONPROMOTING",
+  "tokyo_physics_rerun": {
+    "logical_invocations": 1000,
+    "naive_circuit_only_wrong_reuses": 608,
+    "fixed_physics_conditioned_wrong_reuses": 0,
+    "qiskit_checks": 200,
+    "qiskit_wrong": 0,
+    "root": "16d55e9441905b0b34d607b88c29cd614c6cff7d4f2a2290510bb50f233c29df"
+  },
+  "glm_route_replay": {
+    "same_union_different_route_cases": 1000,
+    "old_union_only_false_accepts": 1000,
+    "ordered_route_false_accepts": 0
+  },
+  "conditioned_cache": {
+    "logical_invocations": 1000,
+    "wrong_profile_only_plan_reuses": 800,
+    "wrong_profile_plus_condition_plan_reuses": 0,
+    "wrong_plan_key_hydration_reuses_without_address": 750,
+    "wrong_profile_condition_address_hydration_reuses": 0
+  },
+  "bitset_planner": {
+    "experts": 256,
+    "bench_route_matrices": 250,
+    "sequence_tokens": 512,
+    "top_k": 8,
+    "exact_profiles_checked": 100,
+    "matched_parent_set_median_seconds": 0.6974829650000629,
+    "bitset_median_seconds": 0.3034370750000335,
+    "local_median_speedup": 2.298608253457446
+  },
+  "q4_q5_contraction": {
+    "uniform_cases": 500,
+    "uniform_unique_plan_profiles": 500,
+    "uniform_separator_fast_paths": 0,
+    "uniform_median_connected_experts": 256,
+    "hot_biased_cases": 500,
+    "hot_biased_unique_plan_profiles": 500,
+    "hot_biased_separator_fast_paths": 0,
+    "hot_biased_median_connected_experts": 157,
+    "interpretation": "No generic cross-prompt plan-cache or component-factorization fast path earned by these synthetic controls. Reopen on real route-trace redundancy/separability evidence."
+  },
+  "qiskit_condition_axis_oracle": {
+    "qiskit": "2.5.2",
+    "cases": 1000,
+    "wrong": 0,
+    "max_error": 0.0,
+    "basis_states_seen": ["000","001","010","011","100","101","110","111"],
+    "authority": "diagnostic_oracle_only"
+  },
+  "laws": [
+    "RouteUnion != NativeRouteIdentity",
+    "PlanStructureKey != RuntimeConditionRoot != AddressRoot != InvocationKey",
+    "SamePlanGeometry != SameK27Hydration",
+    "QICCPlanReuse != ModelOutputReuse",
+    "MeasuredLifecycleWinRequired",
+    "NoMeasuredRedundancyOrSeparator => NoCacheOrFactorizationFastPath"
+  ]
+}

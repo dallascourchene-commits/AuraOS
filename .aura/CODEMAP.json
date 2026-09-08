@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788880161,
+  "generated_at_unix": 1788886726,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1713,
+    "repo_file_count": 1716,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -299,6 +299,7 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_glm53_qicc_conditioned_route/EXPERIMENT.json",
       "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
@@ -1682,7 +1683,9 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -1829,16 +1832,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1713,
-      "bytes": 26699747,
-      "tokens_est": 6665339,
+      "files": 1716,
+      "bytes": 26713716,
+      "tokens_est": 6668833,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 252,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1035,
-        "schema_or_lexicon": 292,
+        "python_module": 1037,
+        "schema_or_lexicon": 293,
         "support_file": 49
       }
     },
@@ -40071,8 +40074,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 70,
-        "end_line": 85,
+        "line": 111,
+        "end_line": 126,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:assess:35f525004851ff3e",
         "signature_hash": "627967e9a4e31e1e"
       }
@@ -158789,8 +158792,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 17,
-        "end_line": 20,
+        "line": 26,
+        "end_line": 29,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Decision:3f18b69f6ae7689e",
         "signature_hash": "d6a166dc8cfde9f6"
       },
@@ -158815,8 +158818,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 23,
-        "end_line": 28,
+        "line": 32,
+        "end_line": 37,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Geometry:3a2e5ccb43499029",
         "signature_hash": "1550b2056b16f0be"
       }
@@ -158825,8 +158828,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "method",
-        "line": 26,
-        "end_line": 26,
+        "line": 35,
+        "end_line": 35,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.sparse_layers:276457734bc56336",
         "signature_hash": "a9e64b013d6d92a8"
       }
@@ -158835,8 +158838,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "method",
-        "line": 27,
-        "end_line": 27,
+        "line": 36,
+        "end_line": 36,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.expert_bytes:21c2c945590aadd3",
         "signature_hash": "0175d588b98022d5"
       }
@@ -158845,8 +158848,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "method",
-        "line": 28,
-        "end_line": 28,
+        "line": 37,
+        "end_line": 37,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.lora_params:a7f9e5a1548cc366",
         "signature_hash": "5bed6d32d1b1910d"
       }
@@ -158855,8 +158858,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 31,
-        "end_line": 33,
+        "line": 40,
+        "end_line": 42,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Source:64949508ea978054",
         "signature_hash": "257d2da909e85c25"
       }
@@ -158865,8 +158868,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 36,
-        "end_line": 37,
+        "line": 45,
+        "end_line": 46,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ABI:42ecef13f7c8b15a",
         "signature_hash": "3df6c4d75f633e7f"
       }
@@ -158875,8 +158878,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 40,
-        "end_line": 42,
+        "line": 49,
+        "end_line": 51,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Policy:185c05d1b4e18356",
         "signature_hash": "3ba31fc374c95232"
       }
@@ -158885,8 +158888,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 45,
-        "end_line": 47,
+        "line": 54,
+        "end_line": 56,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:PortReceipt:4b8acf065d3e8ad3",
         "signature_hash": "e8bfa74defc8e48b"
       },
@@ -158903,8 +158906,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 50,
-        "end_line": 51,
+        "line": 59,
+        "end_line": 60,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ForwardLease:7a46d3a22c793f01",
         "signature_hash": "5b840145a97a18e8"
       }
@@ -158913,48 +158916,106 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "class",
-        "line": 54,
-        "end_line": 56,
+        "line": 63,
+        "end_line": 65,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ChunkLease:0edef4552ab6c864",
         "signature_hash": "41d30fcbb0d41b92"
+      }
+    ],
+    "ConditionedPlanLease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ConditionedPlanLease:27469cfadc7b9648",
+        "signature_hash": "64fbcbd56db74b4f"
+      }
+    ],
+    "SeparatorReceipt": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:SeparatorReceipt:0efdf63959f1e8bc",
+        "signature_hash": "12b9fe70ca8e3d1c"
       }
     ],
     "_h": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 58,
-        "end_line": 60,
+        "line": 79,
+        "end_line": 81,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_h:294d2a58deb4f2ff",
         "signature_hash": "b0be7f7549373d94"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:_h:cb5b07a1455ed63e",
+        "signature_hash": "b0be7f7549373d94"
+      }
+    ],
+    "canonical_route_matrix": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:canonical_route_matrix:a327cd18296c46c8",
+        "signature_hash": "735d3af400097696"
       }
     ],
     "route_union": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 62,
-        "end_line": 66,
+        "line": 95,
+        "end_line": 97,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_union:054407e70669ce86",
         "signature_hash": "be31cdf93fa5281e"
+      }
+    ],
+    "route_masks": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_masks:4388ac4943ae0a76",
+        "signature_hash": "37170d52ef71fa3d"
       }
     ],
     "route_root": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 68,
-        "end_line": 68,
+        "line": 103,
+        "end_line": 105,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_root:75c1053fa50367df",
         "signature_hash": "41779752850ac51c"
+      }
+    ],
+    "page_address_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:page_address_root:716eb763aa98de52",
+        "signature_hash": "450657d032851dc3"
       }
     ],
     "mint_forward_lease": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 87,
-        "end_line": 90,
+        "line": 128,
+        "end_line": 131,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:mint_forward_lease:024862064373d92c",
         "signature_hash": "2be635ca1874c0bf"
       }
@@ -158963,8 +159024,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 92,
-        "end_line": 96,
+        "line": 133,
+        "end_line": 137,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:backward_ready:9a560141d8c6a16c",
         "signature_hash": "99d88a0f059e5b81"
       }
@@ -158973,28 +159034,106 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 98,
-        "end_line": 98,
+        "line": 139,
+        "end_line": 143,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_chunk_counts:89a2d3fc77e21cc0",
         "signature_hash": "83e4026777fca908"
+      }
+    ],
+    "chunk_profile": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 153,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:chunk_profile:48c617b2cf0b91ff",
+        "signature_hash": "c81bbe50ff78d97f"
       }
     ],
     "choose_chunk": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 99,
-        "end_line": 110,
+        "line": 154,
+        "end_line": 163,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:choose_chunk:ef6e82a3960409a3",
         "signature_hash": "5fa44f9f069c0d4d"
+      }
+    ],
+    "_condition_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_condition_root:470eda0b0ffd0fce",
+        "signature_hash": "aa4dd163e739f632"
+      }
+    ],
+    "mint_conditioned_plan_lease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 169,
+        "end_line": 179,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:mint_conditioned_plan_lease:1e5606d6c454147e",
+        "signature_hash": "f76add6f93104270"
+      }
+    ],
+    "can_reuse_plan": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 180,
+        "end_line": 180,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:can_reuse_plan:a32f985187cc14e1",
+        "signature_hash": "01769d14fa6839a1"
+      }
+    ],
+    "can_reuse_hydration": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 181,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:can_reuse_hydration:0ac59ecb681b2b52",
+        "signature_hash": "efb98869d66f7bf6"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:can_reuse_hydration:e2c62217718e64d4",
+        "signature_hash": "8b4ab6b05c7e6869"
+      }
+    ],
+    "same_invocation": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 182,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:same_invocation:d0902db627f62542",
+        "signature_hash": "6206ad9fb863b584"
+      }
+    ],
+    "separator_receipt": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 198,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:separator_receipt:2161cf54c29d6689",
+        "signature_hash": "ddfd8ce6de30dbdc"
       }
     ],
     "default_source": [
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 112,
-        "end_line": 112,
+        "line": 199,
+        "end_line": 199,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_source:68a79fbc99bc8ee2",
         "signature_hash": "0615312424321b4f"
       }
@@ -159003,8 +159142,8 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 113,
-        "end_line": 113,
+        "line": 200,
+        "end_line": 200,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_abi:ce40c3384b7b30d0",
         "signature_hash": "74af2d19855ecc6c"
       }
@@ -159013,10 +159152,60 @@
       {
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
         "kind": "function",
-        "line": 114,
-        "end_line": 114,
+        "line": 201,
+        "end_line": 201,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_policy:30530edb9329ff5a",
         "signature_hash": "dcff77fdf4f6b2e4"
+      }
+    ],
+    "K27HydrationLease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#class:K27HydrationLease:85dbc21c654d6b97",
+        "signature_hash": "a2c36e1a4f50148d"
+      }
+    ],
+    "page_set_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:page_set_root:4b55a4a7932abc29",
+        "signature_hash": "2bf2ce8d68b26e91"
+      }
+    ],
+    "condition_root": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:condition_root:1a07040e33bff6e5",
+        "signature_hash": "2ac7f7b267e275d4"
+      }
+    ],
+    "mint_k27_hydration_lease": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:mint_k27_hydration_lease:b9ed27fa8c967295",
+        "signature_hash": "917437793f427b02"
+      }
+    ],
+    "replay_identity_differs": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:replay_identity_differs:46200fe9ba3ebd32",
+        "signature_hash": "1210a696218002da"
       }
     ],
     "routes": [
@@ -159034,8 +159223,16 @@
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
         "kind": "class",
         "line": 10,
-        "end_line": 40,
+        "end_line": 64,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#class:T:319b083a1bb05beb",
+        "signature_hash": "1a51332cd1dc4f10"
+      },
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#class:T:f69b4d4a5772445f",
         "signature_hash": "1a51332cd1dc4f10"
       },
       {
@@ -159169,6 +159366,96 @@
         "end_line": 40,
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hot_routes_admit_no_smaller_chunk:44bf1d63c70c4a07",
         "signature_hash": "066f0e225b7a5c4b"
+      }
+    ],
+    "T.test_same_union_different_route_rejected": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_same_union_different_route_rejected:c1a694109f95ef8b",
+        "signature_hash": "546ec49ecd418a7e"
+      }
+    ],
+    "T.test_topk_order_is_route_identity": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_topk_order_is_route_identity:c4fa6106c0fa8d04",
+        "signature_hash": "9592f75c4f14d66d"
+      }
+    ],
+    "T.test_bitset_profile_hs1000_matches_sets": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_bitset_profile_hs1000_matches_sets:926b08b984379af0",
+        "signature_hash": "ec03a7cad39da1c5"
+      }
+    ],
+    "T.test_conditioned_plan_vs_hydration_vs_invocation": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_conditioned_plan_vs_hydration_vs_invocation:9667df9002a92f8b",
+        "signature_hash": "487c985e4375a06e"
+      }
+    ],
+    "T.test_condition_change_blocks_plan_reuse": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_condition_change_blocks_plan_reuse:cf2df5637b4c1e68",
+        "signature_hash": "7fcf61001dcfbdeb"
+      }
+    ],
+    "T.test_separator_no_mimic": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_separator_no_mimic:7b60d9ce1ef7a4eb",
+        "signature_hash": "8c6c009c58e1c2d8"
+      }
+    ],
+    "T.test_same_pages_different_route_reuses_hydration_not_replay": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 11,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_same_pages_different_route_reuses_hydration_not_replay:e920d973a3c16139",
+        "signature_hash": "cbdc3ddd5fe286e5"
+      }
+    ],
+    "T.test_different_pages_do_not_reuse": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 16,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_different_pages_do_not_reuse:21a24afe88390209",
+        "signature_hash": "ae27c1383a1c8331"
+      }
+    ],
+    "T.test_source_or_optimizer_drift_blocks_reuse": [
+      {
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_source_or_optimizer_drift_blocks_reuse:595319554ea027ba",
+        "signature_hash": "664a42d6f467eabb"
       }
     ],
     "PortDecision": [
@@ -164276,6 +164563,12 @@
     "python tools/awj032/airllm_tiny_fixture_probe.py \\": [
       ".github/workflows/awj032-airllm-tiny-runtime.yml"
     ],
+    "python -m unittest": [
+      ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md",
+      "tools/awj032/training_o1_reference/README.md"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -164963,11 +165256,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
-      "tools/awj032/README.md",
-      "tools/awj032/training_o1_reference/README.md"
     ],
     "python aura_daemon.py": [
       "docs/staging/ready_review/README_STAGED.md"
@@ -174148,47 +174436,53 @@
       "path": ".github/workflows/awj032-glm53-airllm-v4-paged-training.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 758,
-      "lines": 26,
-      "tokens_est": 190,
+      "bytes": 831,
+      "lines": 29,
+      "tokens_est": 208,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          26
+        ]
+      },
       "topology": {},
-      "digest8": "82086e06eb21a52a",
+      "digest8": "101daad2b4817aa1",
       "vector": [
-        -0.115546,
-        0.098152,
-        -0.152819,
-        0.070818,
-        -0.187607,
-        -0.093182,
-        0.120516,
-        -0.172698,
-        0.053424,
-        0.167728,
-        -0.123,
-        -0.284516,
-        0.205001,
-        0.269607,
-        -0.070818,
-        -0.21494,
-        -0.152819,
-        0.05094,
-        -0.065849,
-        0.118031,
-        0.195061,
-        0.155304,
-        -0.29694,
-        -0.30688,
-        -0.160273,
-        -0.120516,
-        0.185122,
-        -0.195061,
-        0.269607,
-        -0.001242,
-        0.282031,
-        -0.118031
+        0.115484,
+        0.14348,
+        -0.169143,
+        0.192474,
+        0.276462,
+        0.045494,
+        0.017498,
+        0.206472,
+        -0.145813,
+        0.295126,
+        -0.162144,
+        -0.127149,
+        0.036162,
+        -0.190141,
+        0.075823,
+        -0.285794,
+        -0.285794,
+        -0.122483,
+        -0.064158,
+        -0.248466,
+        -0.059492,
+        0.164477,
+        -0.211138,
+        -0.173809,
+        0.07349,
+        0.071157,
+        -0.218137,
+        -0.075823,
+        -0.124816,
+        -0.255465,
+        -0.239134,
+        0.183141
       ]
     },
     {
@@ -182930,6 +183224,53 @@
         0.059949,
         0.003827,
         -0.264032
+      ]
+    },
+    {
+      "path": "artifacts/arena/awj032_glm53_qicc_conditioned_route/EXPERIMENT.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2255,
+      "lines": 63,
+      "tokens_est": 564,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "18077da89b1a3c81",
+      "vector": [
+        0.207128,
+        0.146441,
+        -0.141163,
+        -0.222959,
+        0.270453,
+        0.127971,
+        -0.193935,
+        0.088392,
+        -0.162272,
+        0.143802,
+        -0.035621,
+        -0.075199,
+        0.164911,
+        0.101585,
+        -0.156995,
+        0.286285,
+        -0.112139,
+        -0.027705,
+        0.011874,
+        0.31267,
+        -0.075199,
+        0.22032,
+        0.149079,
+        0.186019,
+        0.009235,
+        -0.320586,
+        0.307393,
+        0.101585,
+        -0.281008,
+        0.014512,
+        -0.040898,
+        0.149079
       ]
     },
     {
@@ -270764,94 +271105,188 @@
       "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 7476,
-      "lines": 115,
-      "tokens_est": 1869,
-      "symbol_count": 22,
+      "bytes": 12806,
+      "lines": 202,
+      "tokens_est": 3202,
+      "symbol_count": 34,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2a0fca9b21306064",
+      "digest8": "1cad1bf8724d1dc3",
       "vector": [
-        0.08499,
-        0.087088,
-        0.160537,
-        0.200408,
-        -0.145847,
-        0.068202,
-        -0.120665,
-        -0.072399,
-        0.261265,
-        0.238182,
-        0.221394,
-        -0.122763,
-        0.009443,
-        0.217196,
-        0.154241,
-        0.154241,
-        -0.026231,
-        0.225591,
-        -0.150044,
-        -0.19831,
-        0.212999,
-        0.150044,
-        0.259167,
-        -0.259167,
-        0.261265,
-        0.064005,
-        0.179423,
-        -0.200408,
-        -0.223492,
-        -0.145847,
-        -0.072399,
-        -0.229788
+        -0.168706,
+        0.138618,
+        0.274013,
+        -0.151513,
+        -0.181601,
+        -0.226732,
+        0.052653,
+        -0.20739,
+        0.125724,
+        -0.196645,
+        0.200943,
+        0.065548,
+        -0.226732,
+        0.265417,
+        0.170855,
+        0.044057,
+        -0.050504,
+        0.248224,
+        0.069846,
+        -0.250373,
+        -0.215987,
+        -0.018268,
+        0.001075,
+        0.209539,
+        0.114978,
+        -0.190197,
+        0.209539,
+        -0.226732,
+        0.018268,
+        -0.220285,
+        -0.03761,
+        0.23318
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2139,
+      "lines": 36,
+      "tokens_est": 535,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "515370a13bbc6433",
+      "vector": [
+        -0.075341,
+        -0.28947,
+        -0.183727,
+        0.085916,
+        -0.054193,
+        -0.25246,
+        -0.300044,
+        0.051549,
+        -0.14143,
+        -0.006609,
+        -0.125569,
+        0.077985,
+        -0.249816,
+        -0.009252,
+        -0.159935,
+        -0.14143,
+        0.085916,
+        -0.025114,
+        0.210163,
+        0.281539,
+        -0.199589,
+        -0.159935,
+        0.25246,
+        0.017183,
+        0.233955,
+        0.099134,
+        -0.268321,
+        0.048906,
+        0.247173,
+        -0.149361,
+        0.276252,
+        -0.02247
       ]
     },
     {
       "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 3424,
-      "lines": 42,
-      "tokens_est": 856,
-      "symbol_count": 12,
+      "bytes": 5979,
+      "lines": 66,
+      "tokens_est": 1495,
+      "symbol_count": 18,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "baeecda51f4d022b",
+      "digest8": "00d5acf6d6da6152",
       "vector": [
-        0.189817,
-        -0.260557,
-        0.203965,
-        0.010611,
-        -0.229903,
-        0.064844,
-        -0.239335,
-        -0.102572,
-        -0.170953,
-        0.121436,
-        0.067202,
-        0.173311,
-        0.187459,
-        -0.050697,
-        0.267631,
-        -0.192175,
-        -0.203965,
-        0.248767,
-        -0.15209,
-        -0.053055,
-        0.293568,
-        -0.029475,
-        -0.024759,
-        -0.06956,
-        0.005895,
-        -0.038907,
-        -0.149732,
-        0.277063,
-        -0.293568,
-        -0.109646,
-        0.255841,
-        0.135584
+        0.245057,
+        -0.075978,
+        -0.257898,
+        -0.193691,
+        -0.161588,
+        0.238636,
+        0.153027,
+        0.195831,
+        0.251477,
+        0.195831,
+        0.020332,
+        -0.144466,
+        0.065277,
+        -0.18513,
+        -0.172289,
+        -0.27288,
+        0.204392,
+        0.007491,
+        -0.069558,
+        -0.253618,
+        -0.028893,
+        0.035314,
+        0.18727,
+        -0.236496,
+        -0.202252,
+        -0.140185,
+        0.071698,
+        -0.260038,
+        -0.170149,
+        -0.204392,
+        0.099521,
+        -0.041735
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1617,
+      "lines": 24,
+      "tokens_est": 405,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "185ac1d619ea1444",
+      "vector": [
+        0.070452,
+        0.011124,
+        -0.253379,
+        -0.11742,
+        -0.16686,
+        0.134724,
+        -0.060564,
+        0.213827,
+        -0.211355,
+        0.01854,
+        0.211355,
+        0.263267,
+        0.075396,
+        0.00618,
+        -0.161916,
+        0.11742,
+        -0.147084,
+        0.013596,
+        -0.275627,
+        -0.159444,
+        0.152028,
+        0.11742,
+        0.082812,
+        0.305291,
+        -0.087756,
+        0.270683,
+        -0.156972,
+        0.08034,
+        -0.016068,
+        -0.270683,
+        0.270683,
+        0.312707
       ]
     },
     {
@@ -295899,16 +296334,16 @@
     }
   },
   "summary": {
-    "file_count": 1713,
-    "total_bytes": 26699747,
-    "text_tokens_est": 6665339,
+    "file_count": 1716,
+    "total_bytes": 26713716,
+    "text_tokens_est": 6668833,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 252,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1035,
-      "schema_or_lexicon": 292,
+      "python_module": 1037,
+      "schema_or_lexicon": 293,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -296217,6 +296652,7 @@
       "artifacts/arena/awj032_airllm_training_r1/PROOF_RECEIPT_R1.json",
       "artifacts/arena/awj032_airllm_training_r1/README.md",
       "artifacts/arena/awj032_airllm_training_reviewfix/PROOF_RECEIPT_REVIEWFIX_PUBLISHED.json",
+      "artifacts/arena/awj032_glm53_qicc_conditioned_route/EXPERIMENT.json",
       "artifacts/arena/awj032_glm53_streamed_training_port/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/REBASE_MANIFEST.json",
       "artifacts/arena/awj032_model_capability_membrane/external_world_kv.json",
@@ -297600,7 +298036,9 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/airllm_tiny_fixture_probe.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+      "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
       "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py",
       "tools/awj032/glm53_streamed_training_port_reference/test_glm53_training_port.py",
       "tools/awj032/model_capability_membrane_reference/capability_membrane.py",
@@ -456405,220 +456843,410 @@
         "name": "ABI",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 36,
-        "end_line": 37,
+        "line": 45,
+        "end_line": 46,
         "signature_hash": "3df6c4d75f633e7f",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ChunkLease:0edef4552ab6c864",
         "name": "ChunkLease",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 54,
-        "end_line": 56,
+        "line": 63,
+        "end_line": 65,
         "signature_hash": "41d30fcbb0d41b92",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ConditionedPlanLease:27469cfadc7b9648",
+        "name": "ConditionedPlanLease",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "64fbcbd56db74b4f",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Decision:3f18b69f6ae7689e",
         "name": "Decision",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 17,
-        "end_line": 20,
+        "line": 26,
+        "end_line": 29,
         "signature_hash": "d6a166dc8cfde9f6",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:ForwardLease:7a46d3a22c793f01",
         "name": "ForwardLease",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 50,
-        "end_line": 51,
+        "line": 59,
+        "end_line": 60,
         "signature_hash": "5b840145a97a18e8",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Geometry:3a2e5ccb43499029",
         "name": "Geometry",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 23,
-        "end_line": 28,
+        "line": 32,
+        "end_line": 37,
         "signature_hash": "1550b2056b16f0be",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Policy:185c05d1b4e18356",
         "name": "Policy",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 40,
-        "end_line": 42,
+        "line": 49,
+        "end_line": 51,
         "signature_hash": "3ba31fc374c95232",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:PortReceipt:4b8acf065d3e8ad3",
         "name": "PortReceipt",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 45,
-        "end_line": 47,
+        "line": 54,
+        "end_line": 56,
         "signature_hash": "e8bfa74defc8e48b",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:SeparatorReceipt:0efdf63959f1e8bc",
+        "name": "SeparatorReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "12b9fe70ca8e3d1c",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#class:Source:64949508ea978054",
         "name": "Source",
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 31,
-        "end_line": 33,
+        "line": 40,
+        "end_line": 42,
         "signature_hash": "257d2da909e85c25",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_chunk_counts:89a2d3fc77e21cc0",
         "name": "_chunk_counts",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 98,
-        "end_line": 98,
+        "line": 139,
+        "end_line": 143,
         "signature_hash": "83e4026777fca908",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_condition_root:470eda0b0ffd0fce",
+        "name": "_condition_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 165,
+        "end_line": 168,
+        "signature_hash": "aa4dd163e739f632",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:_h:294d2a58deb4f2ff",
         "name": "_h",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 58,
-        "end_line": 60,
+        "line": 79,
+        "end_line": 81,
         "signature_hash": "b0be7f7549373d94",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:assess:35f525004851ff3e",
         "name": "assess",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 70,
-        "end_line": 85,
+        "line": 111,
+        "end_line": 126,
         "signature_hash": "627967e9a4e31e1e",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:backward_ready:9a560141d8c6a16c",
         "name": "backward_ready",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 92,
-        "end_line": 96,
+        "line": 133,
+        "end_line": 137,
         "signature_hash": "99d88a0f059e5b81",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:can_reuse_hydration:0ac59ecb681b2b52",
+        "name": "can_reuse_hydration",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 181,
+        "end_line": 181,
+        "signature_hash": "efb98869d66f7bf6",
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:can_reuse_plan:a32f985187cc14e1",
+        "name": "can_reuse_plan",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 180,
+        "end_line": 180,
+        "signature_hash": "01769d14fa6839a1",
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:canonical_route_matrix:a327cd18296c46c8",
+        "name": "canonical_route_matrix",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 83,
+        "end_line": 93,
+        "signature_hash": "735d3af400097696",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:choose_chunk:ef6e82a3960409a3",
         "name": "choose_chunk",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 99,
-        "end_line": 110,
+        "line": 154,
+        "end_line": 163,
         "signature_hash": "5fa44f9f069c0d4d",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:chunk_profile:48c617b2cf0b91ff",
+        "name": "chunk_profile",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 145,
+        "end_line": 153,
+        "signature_hash": "c81bbe50ff78d97f",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_abi:ce40c3384b7b30d0",
         "name": "default_abi",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 113,
-        "end_line": 113,
+        "line": 200,
+        "end_line": 200,
         "signature_hash": "74af2d19855ecc6c",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_policy:30530edb9329ff5a",
         "name": "default_policy",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 114,
-        "end_line": 114,
+        "line": 201,
+        "end_line": 201,
         "signature_hash": "dcff77fdf4f6b2e4",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:default_source:68a79fbc99bc8ee2",
         "name": "default_source",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 112,
-        "end_line": 112,
+        "line": 199,
+        "end_line": 199,
         "signature_hash": "0615312424321b4f",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:mint_conditioned_plan_lease:1e5606d6c454147e",
+        "name": "mint_conditioned_plan_lease",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 169,
+        "end_line": 179,
+        "signature_hash": "f76add6f93104270",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:mint_forward_lease:024862064373d92c",
         "name": "mint_forward_lease",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 87,
-        "end_line": 90,
+        "line": 128,
+        "end_line": 131,
         "signature_hash": "2be635ca1874c0bf",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:page_address_root:716eb763aa98de52",
+        "name": "page_address_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 107,
+        "end_line": 109,
+        "signature_hash": "450657d032851dc3",
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_masks:4388ac4943ae0a76",
+        "name": "route_masks",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 99,
+        "end_line": 101,
+        "signature_hash": "37170d52ef71fa3d",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_root:75c1053fa50367df",
         "name": "route_root",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 68,
-        "end_line": 68,
+        "line": 103,
+        "end_line": 105,
         "signature_hash": "41779752850ac51c",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:route_union:054407e70669ce86",
         "name": "route_union",
         "kind": "function",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 62,
-        "end_line": 66,
+        "line": 95,
+        "end_line": 97,
         "signature_hash": "be31cdf93fa5281e",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:same_invocation:d0902db627f62542",
+        "name": "same_invocation",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 182,
+        "end_line": 182,
+        "signature_hash": "6206ad9fb863b584",
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#function:separator_receipt:2161cf54c29d6689",
+        "name": "separator_receipt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
+        "line": 183,
+        "end_line": 198,
+        "signature_hash": "ddfd8ce6de30dbdc",
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.expert_bytes:21c2c945590aadd3",
         "name": "Geometry.expert_bytes",
         "kind": "method",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 27,
-        "end_line": 27,
+        "line": 36,
+        "end_line": 36,
         "signature_hash": "0175d588b98022d5",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.lora_params:a7f9e5a1548cc366",
         "name": "Geometry.lora_params",
         "kind": "method",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 28,
-        "end_line": 28,
+        "line": 37,
+        "end_line": 37,
         "signature_hash": "5bed6d32d1b1910d",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py#method:Geometry.sparse_layers:276457734bc56336",
         "name": "Geometry.sparse_layers",
         "kind": "method",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_paged_training.py",
-        "line": 26,
-        "end_line": 26,
+        "line": 35,
+        "end_line": 35,
         "signature_hash": "a9e64b013d6d92a8",
-        "file_digest8": "2a0fca9b21306064"
+        "file_digest8": "1cad1bf8724d1dc3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#class:K27HydrationLease:85dbc21c654d6b97",
+        "name": "K27HydrationLease",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 16,
+        "end_line": 22,
+        "signature_hash": "a2c36e1a4f50148d",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:_h:cb5b07a1455ed63e",
+        "name": "_h",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "b0be7f7549373d94",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:can_reuse_hydration:e2c62217718e64d4",
+        "name": "can_reuse_hydration",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 33,
+        "end_line": 33,
+        "signature_hash": "8b4ab6b05c7e6869",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:condition_root:1a07040e33bff6e5",
+        "name": "condition_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "2ac7f7b267e275d4",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:mint_k27_hydration_lease:b9ed27fa8c967295",
+        "name": "mint_k27_hydration_lease",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "917437793f427b02",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:page_set_root:4b55a4a7932abc29",
+        "name": "page_set_root",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "2bf2ce8d68b26e91",
+        "file_digest8": "515370a13bbc6433"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py#function:replay_identity_differs:46200fe9ba3ebd32",
+        "name": "replay_identity_differs",
+        "kind": "function",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/glm53_qicc_k27_hydration.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "1210a696218002da",
+        "file_digest8": "515370a13bbc6433"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#class:T:319b083a1bb05beb",
@@ -456626,9 +457254,9 @@
         "kind": "class",
         "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
         "line": 10,
-        "end_line": 40,
+        "end_line": 64,
         "signature_hash": "1a51332cd1dc4f10",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#function:routes:872f9440f21fc220",
@@ -456638,7 +457266,7 @@
         "line": 5,
         "end_line": 9,
         "signature_hash": "b9246add9f2a0d54",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_adapter_paging_closes_only_to_empirical:a1b5a85210d6fc6a",
@@ -456648,7 +457276,17 @@
         "line": 13,
         "end_line": 14,
         "signature_hash": "4b692cab33d0f61e",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_bitset_profile_hs1000_matches_sets:926b08b984379af0",
+        "name": "T.test_bitset_profile_hs1000_matches_sets",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 47,
+        "end_line": 53,
+        "signature_hash": "ec03a7cad39da1c5",
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_chunk_lease_uniform_512_six_gib:fc277f334f63742e",
@@ -456658,7 +457296,27 @@
         "line": 37,
         "end_line": 38,
         "signature_hash": "a490710082492e81",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_condition_change_blocks_plan_reuse:cf2df5637b4c1e68",
+        "name": "T.test_condition_change_blocks_plan_reuse",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "7fcf61001dcfbdeb",
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_conditioned_plan_vs_hydration_vs_invocation:9667df9002a92f8b",
+        "name": "T.test_conditioned_plan_vs_hydration_vs_invocation",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "487c985e4375a06e",
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_eight_corner_noncompensation:4584d01de836ba7b",
@@ -456668,7 +457326,7 @@
         "line": 24,
         "end_line": 31,
         "signature_hash": "ae93b60fbb835936",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_forward_backward_lease:fb091bb73e6e1b04",
@@ -456678,7 +457336,7 @@
         "line": 21,
         "end_line": 23,
         "signature_hash": "54df78ca54505fcc",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_geometry:f2a548877762cafe",
@@ -456688,7 +457346,7 @@
         "line": 19,
         "end_line": 20,
         "signature_hash": "f4032be97c73bc89",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hot_routes_admit_no_smaller_chunk:44bf1d63c70c4a07",
@@ -456698,7 +457356,7 @@
         "line": 39,
         "end_line": 40,
         "signature_hash": "066f0e225b7a5c4b",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_hs1000_route_union_exact:27ee584f8a85669c",
@@ -456708,7 +457366,7 @@
         "line": 32,
         "end_line": 36,
         "signature_hash": "200e66fe64462927",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_previous_airllm_pin_is_stale_for_v4_training:e8a1270e30d039ba",
@@ -456718,7 +457376,7 @@
         "line": 15,
         "end_line": 16,
         "signature_hash": "e02e06e64b178ab2",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_qwen_type_identity_is_not_glm_abi:e13efefc1f646b52",
@@ -456728,7 +457386,37 @@
         "line": 17,
         "end_line": 18,
         "signature_hash": "e781e16458e63e54",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_same_union_different_route_rejected:c1a694109f95ef8b",
+        "name": "T.test_same_union_different_route_rejected",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "546ec49ecd418a7e",
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_separator_no_mimic:7b60d9ce1ef7a4eb",
+        "name": "T.test_separator_no_mimic",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 62,
+        "end_line": 64,
+        "signature_hash": "8c6c009c58e1c2d8",
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_topk_order_is_route_identity:c4fa6106c0fa8d04",
+        "name": "T.test_topk_order_is_route_identity",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "9592f75c4f14d66d",
+        "file_digest8": "00d5acf6d6da6152"
       },
       {
         "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_paged_training.py#method:T.test_v4_rank16_residency_is_blocked:dd0b042ed7bd55f7",
@@ -456738,7 +457426,47 @@
         "line": 11,
         "end_line": 12,
         "signature_hash": "535425e68403cec6",
-        "file_digest8": "baeecda51f4d022b"
+        "file_digest8": "00d5acf6d6da6152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#class:T:f69b4d4a5772445f",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 5,
+        "end_line": 22,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "185ac1d619ea1444"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_different_pages_do_not_reuse:21a24afe88390209",
+        "name": "T.test_different_pages_do_not_reuse",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 12,
+        "end_line": 16,
+        "signature_hash": "ae27c1383a1c8331",
+        "file_digest8": "185ac1d619ea1444"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_same_pages_different_route_reuses_hydration_not_replay:e920d973a3c16139",
+        "name": "T.test_same_pages_different_route_reuses_hydration_not_replay",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 6,
+        "end_line": 11,
+        "signature_hash": "cbdc3ddd5fe286e5",
+        "file_digest8": "185ac1d619ea1444"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py#method:T.test_source_or_optimizer_drift_blocks_reuse:595319554ea027ba",
+        "name": "T.test_source_or_optimizer_drift_blocks_reuse",
+        "kind": "method",
+        "file": "tools/awj032/glm53_airllm_v4_paged_training_reference/test_glm53_qicc_k27_hydration.py",
+        "line": 17,
+        "end_line": 22,
+        "signature_hash": "664a42d6f467eabb",
+        "file_digest8": "185ac1d619ea1444"
       },
       {
         "semantic_id": "tools/awj032/glm53_streamed_training_port_reference/glm53_training_port.py#class:PortDecision:468a9940650cb514",
@@ -461931,7 +462659,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "c94bd966d6e75ee022ece54088ac6d7c",
-    "payload_hash": "0ba8cd4e096566f603be09c8b109a024"
+    "record_fingerprint": "179937ea2f5aeddc9167503d3cc186a9",
+    "payload_hash": "e62482fda3a4681ddb85470bf5f4dccd"
   }
 }
