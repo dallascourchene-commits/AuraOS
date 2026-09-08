@@ -15,6 +15,7 @@ class ActivationState(str,Enum):
     ACTIVATED='ACTIVATED'
 
 def _hex64(x): return isinstance(x,str) and len(x)==64 and set(x)<=HEX
+def _ms(x): return type(x) is int and x>=0
 def _root(o): return hashlib.sha256(json.dumps(o,sort_keys=True,separators=(',',':'),default=lambda x:x.value if isinstance(x,Enum) else x.__dict__).encode()).hexdigest()
 def _mac(key,payload): return hmac.new(key,json.dumps(payload,sort_keys=True,separators=(',',':')).encode(),hashlib.sha256).hexdigest()
 
@@ -36,8 +37,8 @@ class RetirementEvidence:
         for x in (self.plan_root,self.retired_process_binding_root,self.retired_population_root,self.mac_hex):
             if not _hex64(x): raise ActivationError('RETIREMENT_ROOT_INVALID')
         if not self.host_id or not self.verifier_id or not self.observer_id or self.verifier_id==self.observer_id: raise ActivationError('RETIREMENT_ACTOR_INVALID')
-        if not isinstance(self.remaining_old_workers,int) or self.remaining_old_workers<0: raise ActivationError('RETIREMENT_COUNT_INVALID')
-        if min(self.observed_at_ms,self.valid_until_ms)<0 or self.valid_until_ms<self.observed_at_ms: raise ActivationError('RETIREMENT_TIME_INVALID')
+        if type(self.remaining_old_workers) is not int or self.remaining_old_workers<0: raise ActivationError('RETIREMENT_COUNT_INVALID')
+        if not _ms(self.observed_at_ms) or not _ms(self.valid_until_ms) or self.valid_until_ms<self.observed_at_ms: raise ActivationError('RETIREMENT_TIME_INVALID')
 
 def sign_retirement(key:bytes,plan:ActivationPlan,*,remaining_old_workers=0,observed_at_ms=1000,valid_until_ms=2000,verifier_id='retire-verifier',observer_id='retire-observer'):
     p={'plan_root':plan.plan_root,'host_id':plan.expected_host_id,'retired_process_binding_root':plan.prior_process_binding_root,'retired_population_root':plan.prior_serving_population_root,'remaining_old_workers':remaining_old_workers,'observed_at_ms':observed_at_ms,'valid_until_ms':valid_until_ms,'verifier_id':verifier_id,'observer_id':observer_id}
@@ -52,8 +53,8 @@ class LoadedProcessAdmission:
         for x in (self.plan_root,self.installed_runtime_root,self.process_binding_root,self.effect_time_witness_root,self.serving_population_root,self.mac_hex):
             if not _hex64(x): raise ActivationError('LOADED_ROOT_INVALID')
         if not self.host_id or not self.selected_worker_id or not self.verifier_id or not self.observer_id or self.verifier_id==self.observer_id: raise ActivationError('LOADED_ACTOR_INVALID')
-        if not isinstance(self.process_generation,int) or self.process_generation<0 or not isinstance(self.load_generation,int) or self.load_generation<0: raise ActivationError('LOADED_GENERATION_INVALID')
-        if min(self.observed_at_ms,self.valid_until_ms)<0 or self.valid_until_ms<self.observed_at_ms: raise ActivationError('LOADED_TIME_INVALID')
+        if type(self.process_generation) is not int or self.process_generation<0 or type(self.load_generation) is not int or self.load_generation<0: raise ActivationError('LOADED_GENERATION_INVALID')
+        if not _ms(self.observed_at_ms) or not _ms(self.valid_until_ms) or self.valid_until_ms<self.observed_at_ms: raise ActivationError('LOADED_TIME_INVALID')
 
 def sign_loaded(key:bytes,plan:ActivationPlan,*,process_binding_root:str,effect_time_witness_root:str,serving_population_root:str,selected_worker_id='worker-new',process_generation=2,load_generation=1,disposition='ADMIT_EFFECT_TIME_PROCESS_D0',observed_at_ms=1100,valid_until_ms=2000,verifier_id='process-verifier',observer_id='process-observer'):
     p={'schema':LOADED_SCHEMA,'plan_root':plan.plan_root,'host_id':plan.expected_host_id,'installed_runtime_root':plan.target_release_root,'disposition':disposition,'process_binding_root':process_binding_root,'effect_time_witness_root':effect_time_witness_root,'process_generation':process_generation,'load_generation':load_generation,'serving_population_root':serving_population_root,'selected_worker_id':selected_worker_id,'observed_at_ms':observed_at_ms,'valid_until_ms':valid_until_ms,'verifier_id':verifier_id,'observer_id':observer_id}
@@ -67,7 +68,7 @@ class PostInstallProofSet:
         for x in (self.plan_root,self.o20_receipt_root,self.o19_receipt_root,self.loaded_process_receipt_root,self.mac_hex):
             if not _hex64(x): raise ActivationError('POSTINSTALL_ROOT_INVALID')
         if not self.verifier_id or not self.observer_id or self.verifier_id==self.observer_id: raise ActivationError('POSTINSTALL_ACTOR_INVALID')
-        if min(self.issued_at_ms,self.expires_at_ms)<0 or self.expires_at_ms<self.issued_at_ms: raise ActivationError('POSTINSTALL_TIME_INVALID')
+        if not _ms(self.issued_at_ms) or not _ms(self.expires_at_ms) or self.expires_at_ms<self.issued_at_ms: raise ActivationError('POSTINSTALL_TIME_INVALID')
 
 def sign_postinstall(key:bytes,plan:ActivationPlan,loaded:LoadedProcessAdmission,*,o20_receipt_root:str,o19_receipt_root:str,o20_current_exact=True,o19_physical_wake_accepted=True,issued_at_ms=1200,expires_at_ms=2000,verifier_id='post-verifier',observer_id='post-observer'):
     p={'plan_root':plan.plan_root,'o20_receipt_root':o20_receipt_root,'o19_receipt_root':o19_receipt_root,'o20_current_exact':bool(o20_current_exact),'o19_physical_wake_accepted':bool(o19_physical_wake_accepted),'loaded_process_receipt_root':_root(loaded.unsigned()),'verifier_id':verifier_id,'observer_id':observer_id,'issued_at_ms':issued_at_ms,'expires_at_ms':expires_at_ms}
@@ -106,6 +107,7 @@ class ActivationJournal:
     def retire_old(self,plan:ActivationPlan,e:RetirementEvidence,*,key:bytes,now_ms:int):
         row=self._read(plan.activation_id)
         if not row or row[0]!=ActivationState.PREPARED.value: raise ActivationError('RETIREMENT_STATE_INVALID')
+        if not _ms(now_ms): raise ActivationError('RETIREMENT_NOW_INVALID')
         e.validate()
         if not hmac.compare_digest(_mac(key,e.unsigned()),e.mac_hex): raise ActivationError('RETIREMENT_UNAUTHENTICATED')
         if e.plan_root!=plan.plan_root or e.host_id!=plan.expected_host_id or e.retired_process_binding_root!=plan.prior_process_binding_root or e.retired_population_root!=plan.prior_serving_population_root: raise ActivationError('RETIREMENT_BINDING_MISMATCH')
@@ -119,6 +121,7 @@ class ActivationJournal:
     def bind_loaded(self,plan:ActivationPlan,e:LoadedProcessAdmission,*,key:bytes,now_ms:int):
         row=self._read(plan.activation_id)
         if not row or row[0]!=ActivationState.OLD_GENERATION_RETIRED.value: raise ActivationError('LOADED_STATE_INVALID')
+        if not _ms(now_ms): raise ActivationError('LOADED_NOW_INVALID')
         e.validate()
         if not hmac.compare_digest(_mac(key,e.unsigned()),e.mac_hex): raise ActivationError('LOADED_ADMISSION_UNAUTHENTICATED')
         if e.plan_root!=plan.plan_root or e.host_id!=plan.expected_host_id or e.installed_runtime_root!=plan.target_release_root: raise ActivationError('LOADED_BINDING_MISMATCH')
@@ -133,6 +136,7 @@ class ActivationJournal:
     def bind_postinstall(self,plan:ActivationPlan,p:PostInstallProofSet,loaded:LoadedProcessAdmission,*,key:bytes,now_ms:int):
         row=self._read(plan.activation_id)
         if not row or row[0]!=ActivationState.NEW_PROCESS_CURRENT.value: raise ActivationError('POSTINSTALL_STATE_INVALID')
+        if not _ms(now_ms): raise ActivationError('POSTINSTALL_NOW_INVALID')
         p.validate()
         if not hmac.compare_digest(_mac(key,p.unsigned()),p.mac_hex): raise ActivationError('POSTINSTALL_UNAUTHENTICATED')
         lr=_root(loaded.unsigned())
