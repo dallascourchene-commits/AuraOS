@@ -1,0 +1,234 @@
+name: Aura Arena XSuite Artifact Ferry
+
+on:
+  push:
+    branches:
+      - arena/artifact-ferry-xsuite-20260909
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-hermetic-cp313-wheelhouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PYTHON_VERSION: '3.13'
+      XSUITE_ALLOW_KERNEL_COMPILATION: '1'
+    steps:
+      - name: Checkout receipt anchor
+        uses: actions/checkout@v4
+
+      - name: Set up CPython 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Prepare artifact ferry workcell
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python -m pip install --upgrade pip setuptools wheel
+          mkdir -p ferry/upstream ferry/wheelhouse ferry/receipts
+          cat > ferry/requirements-top.txt <<'EOF'
+          xobjects==0.6.10
+          xdeps==0.10.20
+          xpart==0.23.18
+          xtrack==0.112.0
+          xfields==0.27.2
+          xcoll==0.12.1
+          xsuite==0.60.0
+          EOF
+
+      - name: Download exact upstream release artifacts
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python -m pip download --no-deps --dest ferry/upstream -r ferry/requirements-top.txt
+          sha256sum ferry/upstream/* | sort > ferry/receipts/upstream_sha256.txt
+          ls -lah ferry/upstream | tee ferry/receipts/upstream_listing.txt
+
+      - name: Verify canonical upstream hashes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          root = Path('ferry/upstream')
+          expected = {
+              'xobjects-0.6.10.tar.gz': 'b5a9197cf2b3cad332a7b3a5400d3dfe9f5e55712421af1b81daa71953427e0c',
+              'xpart-0.23.18.tar.gz': '522fb5cd20dc5993f78a12f3367f4bbb270bc37bc1d4642274bc6637cd2c0b53',
+              'xtrack-0.112.0.tar.gz': '24507c97e09b3b678eb4539f1a6d295092e71292394ae2f2576146f5b29b701d',
+              'xfields-0.27.2.tar.gz': '86994ee333dc11ed51cb40e50df5f7d928ee39d1f9b238b8ab3e3d6f418d07c4',
+          }
+          prefix_expected = {
+              'xdeps-0.10.20-': 'b3c8aa612ecb5a8c5bdb7bfdf37a4c0400b80e406d5672a254d7efb7e4b0bbe4',
+              'xcoll-0.12.1-': '67042a504e8673b43223a971d4059d36325f61313959b23db0a6e0b8056a374b',
+              'xsuite-0.60.0-': 'cad9b71099a99e09c2aed0641bd093f0933ef44566b8ef825da6917ecbef707f',
+          }
+          rows=[]
+          for name, want in expected.items():
+              p=root/name
+              assert p.exists(), f'missing {name}'
+              got=hashlib.sha256(p.read_bytes()).hexdigest()
+              assert got==want, (name, got, want)
+              rows.append({'file':name,'sha256':got,'verified':True})
+          for prefix, want in prefix_expected.items():
+              matches=sorted(root.glob(prefix+'*'))
+              assert len(matches)==1, (prefix,[p.name for p in matches])
+              p=matches[0]
+              got=hashlib.sha256(p.read_bytes()).hexdigest()
+              assert got==want, (p.name, got, want)
+              rows.append({'file':p.name,'sha256':got,'verified':True})
+          Path('ferry/receipts/canonical_hash_verification.json').write_text(json.dumps(rows,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(rows,indent=2))
+          PY
+
+      - name: Build source-only Xsuite component wheels
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python -m pip wheel --no-deps --wheel-dir ferry/wheelhouse \
+            ferry/upstream/xobjects-0.6.10.tar.gz \
+            ferry/upstream/xpart-0.23.18.tar.gz \
+            ferry/upstream/xtrack-0.112.0.tar.gz \
+            ferry/upstream/xfields-0.27.2.tar.gz
+          cp ferry/upstream/xdeps-0.10.20-*.whl ferry/wheelhouse/
+          cp ferry/upstream/xcoll-0.12.1-*.whl ferry/wheelhouse/
+          cp ferry/upstream/xsuite-0.60.0-*.whl ferry/wheelhouse/
+
+      - name: Materialize third-party runtime closure
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python -m pip download --only-binary=:all: --dest ferry/wheelhouse \
+            numpy scipy cffi pandas tqdm requests 'ruamel-yaml>=0.17.31' meson
+          sha256sum ferry/wheelhouse/* | sort > ferry/receipts/wheelhouse_sha256.txt
+          ls -lah ferry/wheelhouse | tee ferry/receipts/wheelhouse_listing.txt
+
+      - name: Prove clean offline reinstall
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python -m venv ferry/runtime
+          ferry/runtime/bin/python -m pip install --no-index --find-links=ferry/wheelhouse xsuite==0.60.0
+          ferry/runtime/bin/python -m pip check | tee ferry/receipts/pip_check.txt
+          ferry/runtime/bin/python -m pip freeze --all | sort > ferry/receipts/runtime_freeze.txt
+
+      - name: Execute Xcoll EverestCrystal CPU canary
+        shell: bash
+        run: |
+          set -euxo pipefail
+          ferry/runtime/bin/python - <<'PY'
+          import json, platform, sys
+          import numpy as np
+          import xobjects as xo
+          import xdeps
+          import xpart as xp
+          import xtrack as xt
+          import xfields as xf
+          import xcoll as xc
+          import xsuite
+
+          versions = {}
+          for name, mod in [('xobjects',xo),('xdeps',xdeps),('xpart',xp),('xtrack',xt),('xfields',xf),('xcoll',xc),('xsuite',xsuite)]:
+              versions[name] = getattr(mod, '__version__', None)
+
+          context = xo.ContextCpu()
+          particle_ref = xt.Particles('proton', p0c=4e11)
+          crystal = xc.EverestCrystal(
+              length=0.002,
+              material=xc.materials.Silicon,
+              bending_angle=149e-6,
+              width=0.002,
+              height=0.05,
+              side='+',
+              miscut=0.0,
+              lattice='strip',
+              jaw=0.001,
+              _context=context,
+          )
+          n=64
+          particles = xp.build_particles(
+              x=np.full(n, 1.5e-3),
+              px=np.linspace(-25e-6, 150e-6, n),
+              y=np.zeros(n),
+              py=np.zeros(n),
+              particle_ref=particle_ref,
+              _context=context,
+          )
+          before_px=np.array(particles.px).copy()
+          crystal.track(particles)
+          after_px=np.array(particles.px).copy()
+          states=np.array(particles.state)
+          receipt={
+              'schema':'AURA_ARENA_XSUITE_EVEREST_EXECUTABLE_CANARY_V1',
+              'python':sys.version,
+              'platform':platform.platform(),
+              'versions':versions,
+              'context':type(context).__name__,
+              'element':type(crystal).__name__,
+              'particles':n,
+              'survivors':int((states>0).sum()),
+              'lost':int((states<=0).sum()),
+              'finite_px_after':bool(np.isfinite(after_px).all()),
+              'px_changed_count':int((np.abs(after_px-before_px)>0).sum()),
+              'executed':True,
+              'claim_ceiling':'D0_LOCAL_EXECUTABLE_SMOKE_NOT_PHYSICS_VALIDATION',
+          }
+          assert receipt['versions']['xobjects']=='0.6.10', receipt
+          assert receipt['versions']['xdeps']=='0.10.20', receipt
+          assert receipt['versions']['xpart']=='0.23.18', receipt
+          assert receipt['versions']['xtrack']=='0.112.0', receipt
+          assert receipt['versions']['xfields']=='0.27.2', receipt
+          assert receipt['versions']['xcoll']=='0.12.1', receipt
+          assert receipt['finite_px_after']
+          open('ferry/receipts/everest_cpu_canary.json','w').write(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,indent=2,sort_keys=True))
+          PY
+
+      - name: Seal ferry manifest
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, platform, sys
+          def sha(p):
+              return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          receipt_dir=Path('ferry/receipts')
+          manifest={
+              'schema':'AURA_ARENA_CAPABILITY_FERRY_RECEIPT_V1',
+              'capability':'XSUITE_XCOLL_EVEREST_CP313_CPU',
+              'carrier':'GITHUB_ACTIONS_UBUNTU_LATEST',
+              'aura_repo':os.environ.get('GITHUB_REPOSITORY'),
+              'aura_commit':os.environ.get('GITHUB_SHA'),
+              'aura_ref':os.environ.get('GITHUB_REF'),
+              'source_policy':'PINNED_RELEASE_ARTIFACTS_PLUS_SHA256',
+              'offline_reinstall_proved':True,
+              'everest_canary_proved':True,
+              'claim_ceiling':'D0_LOCAL_EXECUTABLE_SMOKE_NOT_LHC_OR_PHYSICS_QUALIFICATION',
+              'receipt_hashes':{},
+          }
+          for p in sorted(receipt_dir.glob('*')):
+              if p.name!='ferry_manifest.json' and p.is_file():
+                  manifest['receipt_hashes'][p.name]=sha(p)
+          body=json.dumps(manifest,sort_keys=True,separators=(',',':')).encode()
+          manifest['receipt_root']=hashlib.sha256(body).hexdigest()
+          (receipt_dir/'ferry_manifest.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(manifest,indent=2,sort_keys=True))
+          PY
+
+      - name: Upload sealed Arena capability capsule
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-arena-xsuite-xcoll-everest-cp313
+          path: |
+            ferry/upstream
+            ferry/wheelhouse
+            ferry/receipts
+            ferry/requirements-top.txt
+          if-no-files-found: error
+          retention-days: 30
