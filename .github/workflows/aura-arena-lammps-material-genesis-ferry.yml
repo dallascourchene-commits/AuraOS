@@ -1,0 +1,141 @@
+name: Aura Arena LAMMPS Material Genesis Ferry
+
+on:
+  push:
+    branches:
+      - arena/artifact-ferry-lammps-material-genesis-20260909
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  materialize-lammps-aluminum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout carrier anchor
+        uses: actions/checkout@v4
+
+      - name: Acquire and verify immutable LAMMPS release
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p ferry/bin ferry/potentials ferry/receipts ferry/canary
+          URL='https://github.com/lammps/lammps/releases/download/patch_2Sep2026/lammps-linux-x86_64-2Sep2026.tar.gz'
+          curl -fL --retry 4 --retry-delay 2 "$URL" -o ferry/lammps-linux-x86_64-2Sep2026.tar.gz
+          echo 'b48d0b0977171f8f1957003b9f574ef420339e9ec9cdf0ee46bf2f3f13cb87fe  ferry/lammps-linux-x86_64-2Sep2026.tar.gz' | sha256sum -c -
+          sha256sum ferry/lammps-linux-x86_64-2Sep2026.tar.gz > ferry/receipts/lammps_release_sha256.txt
+          tar -xzf ferry/lammps-linux-x86_64-2Sep2026.tar.gz -C ferry
+          find ferry/lammps-static/bin -maxdepth 1 -type f -perm -111 -printf '%f\n' | sort | tee ferry/receipts/executables.txt
+
+      - name: Acquire exact aluminum EAM donor
+        shell: bash
+        run: |
+          set -euxo pipefail
+          RAW='https://raw.githubusercontent.com/lammps/lammps/patch_2Sep2026/potentials/Al_zhou.eam.alloy'
+          curl -fL --retry 4 --retry-delay 2 "$RAW" -o ferry/potentials/Al_zhou.eam.alloy
+          BLOB=$(git hash-object ferry/potentials/Al_zhou.eam.alloy)
+          test "$BLOB" = '36abfcd373ecc9d011a2a4391e5338fb9de40506'
+          printf '%s\n' "$BLOB" > ferry/receipts/al_zhou_git_blob.txt
+          sha256sum ferry/potentials/Al_zhou.eam.alloy > ferry/receipts/al_zhou_sha256.txt
+
+      - name: Select static solver and record version
+        shell: bash
+        run: |
+          set -euxo pipefail
+          LMP=$(find ferry/lammps-static/bin -maxdepth 1 -type f -perm -111 -name 'lmp*' | sort | head -n 1)
+          test -n "$LMP"
+          printf '%s\n' "$LMP" > ferry/receipts/selected_lammps_binary.txt
+          "$LMP" -h > ferry/receipts/lammps_help.txt
+          head -n 25 ferry/receipts/lammps_help.txt
+
+      - name: Execute bounded FCC aluminum EAM canary
+        shell: bash
+        run: |
+          set -euxo pipefail
+          LMP=$(cat ferry/receipts/selected_lammps_binary.txt)
+          POT=$(realpath ferry/potentials/Al_zhou.eam.alloy)
+          cat > ferry/canary/in.al_fcc <<EOF
+          units metal
+          atom_style atomic
+          boundary p p p
+          lattice fcc 4.04958
+          region box block 0 4 0 4 0 4 units lattice
+          create_box 1 box
+          create_atoms 1 box
+          mass 1 26.9815385
+          pair_style eam/alloy
+          pair_coeff * * $POT Al
+          neighbor 2.0 bin
+          neigh_modify every 1 delay 0 check yes
+          velocity all create 300.0 30909 mom yes rot no dist gaussian
+          timestep 0.001
+          thermo 5
+          thermo_style custom step atoms temp pe ke etotal press
+          run 0
+          variable n equal count(all)
+          variable epa equal pe/count(all)
+          print "AURA_AL_FCC_INITIAL atoms=\${n} pe_per_atom_eV=\${epa}"
+          fix INT all nve
+          run 20
+          variable epa2 equal pe/count(all)
+          variable t2 equal temp
+          print "AURA_AL_FCC_FINAL atoms=\${n} temp_K=\${t2} pe_per_atom_eV=\${epa2}"
+          EOF
+          "$LMP" -in ferry/canary/in.al_fcc -log ferry/canary/log.lammps | tee ferry/canary/stdout.txt
+          grep 'AURA_AL_FCC_' ferry/canary/stdout.txt | tee ferry/receipts/al_fcc_markers.txt
+
+      - name: Seal executable runtime receipt
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, math, re, os
+          root=Path('ferry')
+          text=(root/'receipts/al_fcc_markers.txt').read_text()
+          mi=re.search(r'AURA_AL_FCC_INITIAL atoms=([0-9.]+) pe_per_atom_eV=([-+0-9.eE]+)',text)
+          mf=re.search(r'AURA_AL_FCC_FINAL atoms=([0-9.]+) temp_K=([-+0-9.eE]+) pe_per_atom_eV=([-+0-9.eE]+)',text)
+          assert mi and mf, text
+          atoms=int(float(mi.group(1))); ti=float(mf.group(2)); ei=float(mi.group(2)); ef=float(mf.group(3))
+          assert atoms==256, atoms
+          assert all(math.isfinite(x) for x in (ti,ei,ef))
+          def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          receipt={
+            'schema':'AURA_MATERIAL_GENESIS_LAMMPS_AL_FCC_RUNTIME_V1_D0',
+            'carrier':'GITHUB_ACTIONS_UBUNTU_LATEST',
+            'lammps_release':'patch_2Sep2026',
+            'lammps_release_sha256':'b48d0b0977171f8f1957003b9f574ef420339e9ec9cdf0ee46bf2f3f13cb87fe',
+            'al_potential_path':'lammps/lammps@patch_2Sep2026:potentials/Al_zhou.eam.alloy',
+            'al_potential_git_blob':'36abfcd373ecc9d011a2a4391e5338fb9de40506',
+            'al_potential_sha256':sha(root/'potentials/Al_zhou.eam.alloy'),
+            'atoms':atoms,
+            'lattice_fcc_angstrom':4.04958,
+            'steps':20,
+            'final_temperature_K':ti,
+            'initial_pe_per_atom_eV':ei,
+            'final_pe_per_atom_eV':ef,
+            'executed':True,
+            'material_accuracy_qualified':False,
+            'claim_ceiling':'D0_EXECUTABLE_ATOMISTIC_RUNTIME_CANARY_NOT_MATERIAL_QUALIFICATION',
+            'aura_repo':os.environ.get('GITHUB_REPOSITORY'),
+            'aura_commit':os.environ.get('GITHUB_SHA'),
+          }
+          body=json.dumps(receipt,sort_keys=True,separators=(',',':')).encode()
+          receipt['receipt_root']=hashlib.sha256(body).hexdigest()
+          (root/'receipts/material_genesis_lammps_receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,indent=2,sort_keys=True))
+          PY
+
+      - name: Upload sealed atomistic capability capsule
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-material-genesis-lammps-al-fcc-2sep2026
+          path: |
+            ferry/lammps-static
+            ferry/potentials
+            ferry/canary
+            ferry/receipts
+          if-no-files-found: error
+          retention-days: 30
