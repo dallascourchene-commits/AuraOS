@@ -89,6 +89,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-arena-xsuite-artifact-ferry.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-showcase.yml",
@@ -305,6 +306,10 @@
     ],
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
+    ],
+    "python -m venv": [
+      ".github/workflows/aura-arena-xsuite-artifact-ferry.yml",
+      "README.md"
     ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
@@ -671,9 +676,6 @@
     ],
     "python aura_icm_cli.py list ./icm_workspaces": [
       "ICM_WORKSPACE_README.md"
-    ],
-    "python -m venv": [
-      "README.md"
     ],
     "python aura_daemon.py": [
       "README.md",
@@ -1060,7 +1062,7 @@
     ]
   },
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1650,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1188,6 +1190,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-arena-xsuite-artifact-ferry.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -8935,6 +8938,66 @@
         0.083353,
         0.128562,
         -0.241583
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-arena-xsuite-artifact-ferry.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9596,
+      "lines": 235,
+      "tokens_est": 2399,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pip",
+        "python -m venv"
+      ],
+      "command_lines": {
+        "python -m pip": [
+          32,
+          48,
+          93,
+          106
+        ],
+        "python -m venv": [
+          115
+        ]
+      },
+      "topology": {},
+      "digest8": "d510c46e0645da99",
+      "vector": [
+        0.32932,
+        -0.150661,
+        -0.126662,
+        0.214658,
+        -0.214658,
+        -0.027999,
+        0.193326,
+        -0.025332,
+        -0.07333,
+        -0.078664,
+        -0.110662,
+        -0.004,
+        0.299988,
+        -0.115995,
+        -0.070664,
+        -0.227991,
+        -0.270656,
+        -0.150661,
+        -0.16666,
+        -0.17466,
+        0.123995,
+        0.225325,
+        0.310655,
+        0.187993,
+        -0.091996,
+        -0.190659,
+        0.08933,
+        0.25999,
+        -0.07333,
+        -0.177326,
+        -0.15866,
+        0.054665
       ]
     },
     {
@@ -105561,7 +105624,7 @@
       ]
     }
   ],
-  "generated_at_unix": 1788637463,
+  "generated_at_unix": 1788975482,
   "generated_by": "aura_codebase_navigator",
   "incremental_refresh": {
     "changed_paths": [
@@ -105691,6 +105754,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-arena-xsuite-artifact-ferry.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -267658,7 +267722,7 @@
       }
     ],
     "record_fingerprint": "626d6c11aec007000552801b268f1ec3",
-    "payload_hash": "ed9cf2ed96dfbf0691d3f83bc834abec"
+    "payload_hash": "b2e600595e66a4c5ff6210656202c56c"
   },
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "navigation_protocol": [
@@ -267671,16 +267735,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26483250,
-      "tokens_est": 6611153,
+      "files": 1650,
+      "bytes": 26492846,
+      "tokens_est": 6613552,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1003,
-        "schema_or_lexicon": 273,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -268367,16 +268431,16 @@
   "root": "/home/runner/work/AuraOS/AuraOS",
   "status": "AURA_CODEMAP_ACTIVE",
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26483250,
-    "text_tokens_est": 6611153,
+    "file_count": 1650,
+    "total_bytes": 26492846,
+    "text_tokens_est": 6613552,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1003,
-      "schema_or_lexicon": 273,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
