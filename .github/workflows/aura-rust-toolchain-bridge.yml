@@ -33,8 +33,8 @@ jobs:
           SYSROOT="$(rustc --print sysroot)"
           BASE="$(dirname "$SYSROOT")"
           NAME="$(basename "$SYSROOT")"
-          ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.xz"
-          tar -C "$BASE" -cJf "$ARCHIVE" "$NAME"
+          ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.gz"
+          tar -C "$BASE" -czf "$ARCHIVE" "$NAME"
           sha256sum "$ARCHIVE" > "${ARCHIVE}.sha256"
           cat "${ARCHIVE}.sha256"
 
@@ -42,11 +42,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.xz"
+          ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.gz"
           sha256sum -c "${ARCHIVE}.sha256"
           mkdir -p "$RUNNER_TEMP/aura-rust-verify"
-          tar -xJf "$ARCHIVE" -C "$RUNNER_TEMP/aura-rust-verify"
-          TOOLCHAIN_DIR="$(find "$RUNNER_TEMP/aura-rust-verify" -mindepth 1 -maxdepth 1 -type d | head -n1)"
+          tar -xzf "$ARCHIVE" -C "$RUNNER_TEMP/aura-rust-verify"
+          TOOLCHAIN_DIR="$(find "$RUNNER_TEMP/aura-rust-verify" -mindepth 1 -maxdepth 1 -type d -print -quit)"
           test -x "$TOOLCHAIN_DIR/bin/rustc"
           test -x "$TOOLCHAIN_DIR/bin/cargo"
           export PATH="$TOOLCHAIN_DIR/bin:$PATH"
@@ -98,8 +98,8 @@ jobs:
         with:
           name: aura-rust-1.98.1-x86_64-unknown-linux-gnu
           path: |
-            rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz
-            rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz.sha256
+            rust-1.98.1-x86_64-unknown-linux-gnu.tar.gz
+            rust-1.98.1-x86_64-unknown-linux-gnu.tar.gz.sha256
             aura-rust-bridge-manifest.json
             rustc-version.txt
             cargo-version.txt
@@ -112,7 +112,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.xz"
+          ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.gz"
           if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" \
               "$ARCHIVE" "${ARCHIVE}.sha256" aura-rust-bridge-manifest.json rustc-version.txt cargo-version.txt \
