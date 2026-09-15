@@ -5,7 +5,7 @@ RUST_VERSION="${AURA_RUST_VERSION:-1.98.1}"
 TARGET="${AURA_RUST_TARGET:-x86_64-unknown-linux-gnu}"
 REPO="dallascourchene-commits/AuraOS"
 TAG="aura-rust-${RUST_VERSION}-${TARGET}"
-ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.xz"
+ARCHIVE="rust-${RUST_VERSION}-${TARGET}.tar.gz"
 BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
 
 case "$(uname -s)-$(uname -m)" in
@@ -40,17 +40,22 @@ fetch "$BASE_URL/$ARCHIVE" "$TMP/$ARCHIVE"
 fetch "$BASE_URL/$ARCHIVE.sha256" "$TMP/$ARCHIVE.sha256"
 fetch "$BASE_URL/aura-rust-bridge-manifest.json" "$TMP/aura-rust-bridge-manifest.json"
 
-echo "[2/7] Verifying SHA-256 before extraction"
+echo "[2/7] Verifying SHA-256 and bridge manifest before extraction"
 (
   cd "$TMP"
   sha256sum -c "$ARCHIVE.sha256"
 )
 ARCHIVE_SHA256="$(sha256sum "$TMP/$ARCHIVE" | awk '{print $1}')"
+grep -Fq "\"rust_version\": \"$RUST_VERSION\"" "$TMP/aura-rust-bridge-manifest.json" || { echo "HOLD_BRIDGE_MANIFEST_VERSION_MISMATCH" >&2; exit 4; }
+grep -Fq "\"target\": \"$TARGET\"" "$TMP/aura-rust-bridge-manifest.json" || { echo "HOLD_BRIDGE_MANIFEST_TARGET_MISMATCH" >&2; exit 4; }
+grep -Fq "\"archive_sha256\": \"$ARCHIVE_SHA256\"" "$TMP/aura-rust-bridge-manifest.json" || { echo "HOLD_BRIDGE_MANIFEST_SHA_MISMATCH" >&2; exit 4; }
+grep -Fq '"rustc_smoke": "AURA_RUST_RUSTC_OK"' "$TMP/aura-rust-bridge-manifest.json" || { echo "HOLD_BRIDGE_RUSTC_SMOKE_MISSING" >&2; exit 4; }
+grep -Fq '"cargo_offline_smoke": "AURA_RUST_CARGO_OK"' "$TMP/aura-rust-bridge-manifest.json" || { echo "HOLD_BRIDGE_CARGO_SMOKE_MISSING" >&2; exit 4; }
 
 echo "[3/7] Extracting into isolated staging directory"
 mkdir -p "$TMP/extract"
-tar -xJf "$TMP/$ARCHIVE" -C "$TMP/extract"
-TOOLCHAIN_DIR="$(find "$TMP/extract" -mindepth 1 -maxdepth 1 -type d | head -n1)"
+tar -xzf "$TMP/$ARCHIVE" -C "$TMP/extract"
+TOOLCHAIN_DIR="$(find "$TMP/extract" -mindepth 1 -maxdepth 1 -type d -print -quit)"
 test -n "$TOOLCHAIN_DIR"
 test -x "$TOOLCHAIN_DIR/bin/rustc"
 test -x "$TOOLCHAIN_DIR/bin/cargo"
@@ -65,7 +70,7 @@ printf '%s\n' "$RUSTC_VERBOSE"
 printf '%s\n' "$CARGO_VERBOSE"
 case "$RUSTC_VERBOSE" in
   *"rustc ${RUST_VERSION}"*) ;;
-  *) echo "HOLD_RUST_VERSION_MISMATCH" >&2; exit 4 ;;
+  *) echo "HOLD_RUST_VERSION_MISMATCH" >&2; exit 5 ;;
 esac
 
 cat > "$TMP/hello.rs" <<'RS'
@@ -123,6 +128,8 @@ test "$("$TMP/cargo-promoted/target/debug/aura-rust-smoke")" = "AURA_RUST_CARGO_
 
 RUSTC_LINE="$(rustc --version)"
 CARGO_LINE="$(cargo --version)"
+BRIDGE_SOURCE_COMMIT="$(sed -n 's/.*\"source_commit\": \"\([^\"]*\)\".*/\1/p' "$TMP/aura-rust-bridge-manifest.json" | head -n1)"
+BRIDGE_RUN_ID="$(sed -n 's/.*\"workflow_run_id\": \"\([^\"]*\)\".*/\1/p' "$TMP/aura-rust-bridge-manifest.json" | head -n1)"
 cat > "$RECEIPT" <<EOF
 {
   "schema": "aura.rust.install.receipt.v1",
@@ -136,6 +143,8 @@ cat > "$RECEIPT" <<EOF
   "rustc_path": "$FINAL_DIR/bin/rustc",
   "cargo_path": "$FINAL_DIR/bin/cargo",
   "bridge_release": "$TAG",
+  "bridge_source_commit": "$BRIDGE_SOURCE_COMMIT",
+  "bridge_workflow_run_id": "$BRIDGE_RUN_ID",
   "bridge_manifest_url": "$BASE_URL/aura-rust-bridge-manifest.json",
   "rustc_smoke": "AURA_RUST_RUSTC_OK",
   "cargo_offline_smoke": "AURA_RUST_CARGO_OK"
