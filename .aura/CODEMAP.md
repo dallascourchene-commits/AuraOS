@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26499410
-- **text_tokens_est**: 6615194
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 11, 'python_module': 1003, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1654
+- **total_bytes**: 26502532
+- **text_tokens_est**: 6615975
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 11, 'python_module': 1003, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1654,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1661,6 +1661,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/arena/consequence_admission_kernel.py",
     "tools/arena/frontier27_runtime.py",
+    "tools/bootstrap/RUST_WSL_HANDOFF.md",
     "tools/bootstrap/aura-rust-doctor.sh",
     "tools/bootstrap/install-aura-rust-wsl.sh",
     "tools/construction_demo_assets/README.md",
@@ -1793,12 +1794,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26499410,
-  "tokens_est": 6615194,
+  "files": 1654,
+  "bytes": 26502532,
+  "tokens_est": 6615975,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 239,
+    "knowledge_artifact": 240,
     "native_accelerator": 12,
     "operator_script": 11,
     "python_module": 1003,
