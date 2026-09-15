@@ -1,6 +1,12 @@
 name: Aura Rust Bootstrap E2E
 
 on:
+  push:
+    paths:
+      - 'tools/bootstrap/install-aura-rust-wsl.sh'
+      - 'tools/bootstrap/install-aura-rust-wsl.ps1'
+      - 'tools/bootstrap/aura-rust-doctor.sh'
+      - '.github/workflows/aura-rust-bootstrap-e2e.yml'
   workflow_run:
     workflows:
       - Aura Rust Toolchain Bridge
@@ -13,7 +19,7 @@ permissions:
 
 jobs:
   laptop-like-bootstrap:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.run_number >= 3) }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.run_number >= 3) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current bootstrap scripts
@@ -21,12 +27,28 @@ jobs:
         with:
           ref: main
 
-      - name: Syntax-check bootstrap surfaces
+      - name: Syntax-check Bash bootstrap surfaces
         shell: bash
         run: |
           set -euo pipefail
           bash -n tools/bootstrap/install-aura-rust-wsl.sh
           bash -n tools/bootstrap/aura-rust-doctor.sh
+
+      - name: Syntax-check Windows PowerShell launcher
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path 'tools/bootstrap/install-aura-rust-wsl.ps1'),
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Host 'READY_POWERSHELL_PARSE'
 
       - name: Install from public release into isolated user home
         shell: bash
