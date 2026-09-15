@@ -15,15 +15,23 @@ if (-not (Get-Command wsl.exe -ErrorAction SilentlyContinue)) {
 $Bash = @'
 set -euo pipefail
 export AURA_RUST_VERSION="__RUST_VERSION__"
+if command -v curl >/dev/null 2>&1; then
+  fetch() { curl --fail --silent --show-error --location --retry 3 --retry-all-errors "$1" -o "$2"; }
+elif command -v wget >/dev/null 2>&1; then
+  fetch() { wget -q --tries=3 -O "$2" "$1"; }
+else
+  printf 'HOLD_MISSING_PREREQUISITE: curl or wget\n' >&2
+  exit 3
+fi
 tmp_install="$(mktemp)"
 tmp_doctor="$(mktemp)"
 cleanup() { rm -f "$tmp_install" "$tmp_doctor"; }
 trap cleanup EXIT
-curl --fail --silent --show-error --location --retry 3 --retry-all-errors "__INSTALLER_URL__" -o "$tmp_install"
+fetch "__INSTALLER_URL__" "$tmp_install"
 bash -n "$tmp_install"
 bash "$tmp_install"
 . "$HOME/.config/aura/rust.env"
-curl --fail --silent --show-error --location --retry 3 --retry-all-errors "__DOCTOR_URL__" -o "$tmp_doctor"
+fetch "__DOCTOR_URL__" "$tmp_doctor"
 bash -n "$tmp_doctor"
 bash "$tmp_doctor"
 printf 'AURA_RUST_WINDOWS_WSL_HANDOFF_READY\n'
