@@ -1,0 +1,61 @@
+name: Aura Rust Bootstrap E2E
+
+on:
+  workflow_run:
+    workflows:
+      - Aura Rust Toolchain Bridge
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  laptop-like-bootstrap:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current bootstrap scripts
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Syntax-check bootstrap surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n tools/bootstrap/install-aura-rust-wsl.sh
+          bash -n tools/bootstrap/aura-rust-doctor.sh
+
+      - name: Install from public release into isolated user home
+        shell: bash
+        run: |
+          set -euo pipefail
+          TEST_HOME="$RUNNER_TEMP/aura-rust-e2e-home"
+          mkdir -p "$TEST_HOME"
+          HOME="$TEST_HOME" bash tools/bootstrap/install-aura-rust-wsl.sh | tee "$RUNNER_TEMP/aura-rust-install.log"
+          grep -Fq 'READY_RUST_TOOLCHAIN' "$RUNNER_TEMP/aura-rust-install.log"
+          test -f "$TEST_HOME/.local/state/aura/rust-install-receipt.json"
+          grep -Fq '"status": "READY_RUST_TOOLCHAIN"' "$TEST_HOME/.local/state/aura/rust-install-receipt.json"
+
+      - name: Re-prove installed toolchain offline with doctor
+        shell: bash
+        run: |
+          set -euo pipefail
+          TEST_HOME="$RUNNER_TEMP/aura-rust-e2e-home"
+          HOME="$TEST_HOME" bash tools/bootstrap/aura-rust-doctor.sh | tee "$RUNNER_TEMP/aura-rust-doctor.log"
+          grep -Fq 'READY_RUST_TOOLCHAIN_DOCTOR' "$RUNNER_TEMP/aura-rust-doctor.log"
+          grep -Fq 'AURA_RUST_DOCTOR_RUSTC_OK' "$RUNNER_TEMP/aura-rust-doctor.log"
+          grep -Fq 'AURA_RUST_DOCTOR_CARGO_OK' "$RUNNER_TEMP/aura-rust-doctor.log"
+
+      - name: Publish E2E receipt artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-rust-bootstrap-e2e-receipt
+          path: |
+            ${{ runner.temp }}/aura-rust-install.log
+            ${{ runner.temp }}/aura-rust-doctor.log
+            ${{ runner.temp }}/aura-rust-e2e-home/.local/state/aura/rust-install-receipt.json
+          if-no-files-found: error
+          retention-days: 7
